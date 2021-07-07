@@ -57,6 +57,16 @@ Run the following command to create a zip of the console JSONs to match the netw
 
 ### Create Identities
 * Switch to Nodes page and perform the following steps
+#### ordererca
+* Select CA "ordererca-local"
+* Associate Identity
+* Enter admin/adminpw for enroll id and secret
+* Select the overflow menu (3 dots) against "ordererAdmin"
+* Select "Enroll identity"
+* Enter "ordererAdminpw" for Enroll secret
+* Next
+* Enter identity display name as "OrdererMSP Admin"
+* Click "Add Identity to wallet"
 #### org1ca
 * Select CA "org1ca-local"
 * Associate Identity
@@ -77,17 +87,6 @@ Run the following command to create a zip of the console JSONs to match the netw
 * Enter "org2adminpw" for Enroll secret
 * Next
 * Enter identity display name as "Org2MSP Admin"
-* Click "Add Identity to wallet"
-
-#### ordererca
-* Select CA "ordererca-local"
-* Associate Identity
-* Enter admin/adminpw for enroll id and secret
-* Select the overflow menu (3 dots) against "ordererAdmin"
-* Select "Enroll identity"
-* Enter "ordererAdminpw" for Enroll secret
-* Next
-* Enter identity display name as "OrdererMSP Admin"
 * Click "Add Identity to wallet"
 
 ### Associate Identity
