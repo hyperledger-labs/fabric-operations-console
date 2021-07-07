@@ -93,6 +93,7 @@ Run the following command to create a zip of the console JSONs to match the netw
 * Enter identity display name as "Org2MSP Admin"
 * Click "Add Identity to wallet"
 
+
 ### Associate Identity
 * Switch to Nodes page and perform the following steps
 * Select peer "org1_peer1 - local"
