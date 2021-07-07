@@ -20,9 +20,11 @@ For more Information see the [documentation for the current IBM production offer
 
 You can use the following steps to provision a network using Fabric test-network, add grpc-web proxy on that of that and import components into Console so that you can manage the test network.
 ## Prerequisites
+* zip
 * jq
 * docker
 * docker-compose
+* _[WSL2](https://docs.microsoft.com/en-us/windows/wsl/install-win10) (Windows only)_
 
 ## Setup
 Clone console
@@ -57,6 +59,7 @@ Run the following command to create a zip of the console JSONs to match the netw
 
 ### Create Identities
 * Switch to Nodes page and perform the following steps
+
 #### ordererca
 * Select CA "ordererca-local"
 * Associate Identity
@@ -67,6 +70,7 @@ Run the following command to create a zip of the console JSONs to match the netw
 * Next
 * Enter identity display name as "OrdererMSP Admin"
 * Click "Add Identity to wallet"
+
 #### org1ca
 * Select CA "org1ca-local"
 * Associate Identity
@@ -88,6 +92,7 @@ Run the following command to create a zip of the console JSONs to match the netw
 * Next
 * Enter identity display name as "Org2MSP Admin"
 * Click "Add Identity to wallet"
+
 
 ### Associate Identity
 * Switch to Nodes page and perform the following steps
