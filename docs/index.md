@@ -1,5 +1,8 @@
 ---
 keywords: Fabric Operatons Console, install operations console, Hyperledger Fabric Docker, Fabric test, Fabric samples
+layout: default
+title: Home
+nav_order: 1
 ---
 # Getting started with Fabric Operatons Console
 
@@ -9,14 +12,14 @@ Fabric Operatons Console is ideal for any customers who want to store their data
 
 Before installing the Fabric Operatons Console, you need to download and install the Fabric samples for set up and run the Fabric test in your local environment. Make sure you have installed all of the <a href="https://hyperledger-fabric.readthedocs.io/en/latest/prereqs.html" target="_blank">Fabric prerequisites <img src="images/external.png" width="10" alt="external" valign="middle"></a> before <a href="https://hyperledger-fabric.readthedocs.io/en/latest/install.html" target="_blank">installing the Fabric Samples, Binaries and Docker Images <img src="images/external.png" width="10" alt="external" valign="middle"></a>.
 
-Once you have completed downloading the samples and Hyperledger Fabric Docker images, use the scripts provided in the <a href="https://github.com/hyperledger/fabric-samples" target="_blank">`fabric-samples` repository <img src="images/external.png" width="10" alt="external" valign="middle"></a> and  the `./network.sh` to deploy and set up a test network. The test network contains two peer organizations with one peer each and a single node raft ordering service. 
+Once you have completed downloading the samples and Hyperledger Fabric Docker images, use the scripts provided in the <a href="https://github.com/hyperledger/fabric-samples" target="_blank">`fabric-samples` repository <img src="images/external.png" width="10" alt="external" valign="middle"></a> and  the `./network.sh` to deploy and set up a test network. The test network contains two peer organizations with one peer each and a single node raft ordering service.
 
 
 ## Installation
 
 ### Step one: Install the Fabric Operatons Console
 
-### Step two: 
+### Step two:
 
 ### Step three: Connect networks across clouds
 
