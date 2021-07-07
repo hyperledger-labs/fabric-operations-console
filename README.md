@@ -37,15 +37,6 @@ https://hyperledger-fabric.readthedocs.io/en/latest/test_network.html
 
 `./scripts/setupNetwork.sh up`
 
-## Build grpc proxy image
-Ensure that the `docker` has enough resources to be able to build the images. We recommend 2 CPUs and 4 GB RAM available to build. 
-
-`./scripts/buildImages.sh`
-
-If you do not have enough memory allocated to docker, the following command will fail with out of memory error similar to the below.
-
-```#16 109.5 The build failed because the process exited too early. This probably means the system ran out of memory or someone called `kill -9` on the process.```
-
 ## Bring up console
 `./scripts/setupConsole.sh up`
 
@@ -186,15 +177,14 @@ _Note: even though this command is for running Apollo in dev mode, Athena still 
 lerna run test
 ```
 
-## Building the Docker image
+## Build your own docker images (for console and grpc-web proxy)
+Ensure that the `docker` has enough resources to be able to build the images. We recommend 2 CPUs and 4 GB RAM available to build.
 
-There is a Makefile in the `common/deploy_scripts` directory. It contains commands to `build`, `tag` and `push` the console image.
+`./scripts/buildImages.sh`
 
-Example usage (from the root directory):
+If you do not have enough memory allocated to docker, the following command will fail with out of memory error similar to the below.
 
-```bash
-./docker/build_image.sh
-```
+```#16 109.5 The build failed because the process exited too early. This probably means the system ran out of memory or someone called `kill -9` on the process.```
 
 ## Notes:
 * When making a Git commit, a pre-commit Git hook will call `lerna run lint`.
