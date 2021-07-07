@@ -1,0 +1,50 @@
+name: Common CI
+
+on:
+  pull_request:
+    branches: [ main ]
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  audit:
+    name: ${{ matrix.project }} audit
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [apollo, athena, stitch]
+    defaults:
+      run:
+        working-directory: ./packages/${{ matrix.project }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - run: cp ../../common/deploy_scripts/edit_package.json.js ./edit_package.json.js
+      - run: node ./edit_package.json.js
+      - run: cat ./package.json
+      - run: npm audit
+        working-directory: ./apollo
+        continue-on-error: true
+
+  detect-secrets:
+    name: Detect secrets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - run: pip install --upgrade git+https://github.com/ibm/detect-secrets.git@master#egg=detect-secrets
+      - run: npm install -g lerna
+      - name: Run detect-secrets in all projects that support it
+        run: lerna run detect-secrets --stream
