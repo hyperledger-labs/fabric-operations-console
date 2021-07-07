@@ -12,5 +12,4 @@ gem "jekyll-theme-cayman", "~> 0.1.1"
 
 gem "kramdown-parser-gfm", "~> 1.1"
 
-# gem "jekyll-theme-leap-day", "~> 0.1.1"
 gem "just-the-docs", "~> 0.3.3"

@@ -1,7 +1,7 @@
+remote_theme: pmarsceill/just-the-docs
 title: Fabric Operations Console
 aux_links:
   "GitHub":
     - "//github.com/hyperledger-labs/fabric-operations-console"
 
-# theme: jekyll-theme-leap-day
 theme: just-the-docs
