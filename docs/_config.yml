@@ -3,4 +3,5 @@ aux_links:
   "GitHub":
     - "//github.com/hyperledger-labs/fabric-operations-console"
 
-theme: jekyll-theme-leap-day
+# theme: jekyll-theme-leap-day
+theme: just-the-docs
