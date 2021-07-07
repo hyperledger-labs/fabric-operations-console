@@ -1,0 +1,23 @@
+name: Stitch CI
+
+on:
+  pull_request:
+    branches: [ main ]
+
+defaults:
+  run:
+    working-directory: ./packages/stitch
+    shell: bash
+
+jobs:
+  build-test:
+    name: Build code and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - run: npm ci
+      - run: npm run build_all
+      - run: npm run test

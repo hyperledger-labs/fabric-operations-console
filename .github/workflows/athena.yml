@@ -1,0 +1,77 @@
+name: Athena CI
+
+on:
+  pull_request:
+    branches: [ main ]
+
+defaults:
+  run:
+    working-directory: ./packages/athena
+    shell: bash
+
+env:
+  DB_CONNECTION_STRING: http://127.0.0.1:5984/
+
+jobs:
+  test-suite:
+    name: Test suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: Setup CouchDB
+        uses: cobot/couchdb-action@v4
+        with:
+          couchdb version: '2.3.1'
+      - run: curl ${{ env.DB_CONNECTION_STRING }}
+      - run: npm config set registry https://registry.npmjs.org/
+      - run: npm ci
+      - name: Install stitch dependencies
+        run: cd ../stitch && npm ci && cd -
+      - run: npm run test
+
+  start-athena:
+    name: Start Athena
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: Setup CouchDB
+        uses: cobot/couchdb-action@v4
+        with:
+          couchdb version: '2.3.1'
+      - run: curl ${{ env.DB_CONNECTION_STRING }}
+      - run: npm config set registry https://registry.npmjs.org/
+      - run: npm ci
+      - run: ../../common/deploy_scripts/test_run_athena.sh
+
+  openapi:
+    name: Validate OpenAPI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - run: npm config set registry https://registry.npmjs.org/
+      - run: npm install -g ibm-openapi-validator
+      - run: npm run validate
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - run: npm ci
+      - run: npm run lint
