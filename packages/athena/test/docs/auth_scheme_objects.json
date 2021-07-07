@@ -1,0 +1,338 @@
+{
+	"default_get_response": {
+		"configtxlator_url": "http://localhost:3000",
+		"auth_scheme": "initial",
+		"authenticated": false,
+		"host_url": "http://localhost:3000",
+		"login_uri": "http://localhost:3000",
+		"logout_uri": "http://localhost:3000",
+		"admin_list": [],
+		"access_list": [],
+		"all_users": []
+	},
+	"populated_get_response": {
+		"access_list": [
+			{
+				"roles": [
+					"reader"
+				],
+				"created": 1538651194801,
+				"email": "some_access_holder@us.ibm.com",
+				"uuid": "67ca95d2de57f06da27be3c9fc00e864"
+			}
+		],
+		"admin_list": [
+			{
+				"roles": [
+					"manager"
+				],
+				"created": 1538651194801,
+				"email": "someone_else@us.ibm.com",
+				"uuid": "67ca95d2de57f06da27be3c9fc00e865"
+			}
+		],
+		"all_users": {
+			"some_access_holder@us.ibm.com": {
+				"roles": [
+					"reader"
+				],
+				"created": 1538651194801,
+				"email": "some_access_holder@us.ibm.com",
+				"uuid": "67ca95d2de57f06da27be3c9fc00e864"
+			},
+			"someone_else@us.ibm.com": {
+				"roles": [
+					"manager"
+				],
+				"created": 1538651194801,
+				"email": "someone_else@us.ibm.com",
+				"uuid": "67ca95d2de57f06da27be3c9fc00e865"
+			}
+		},
+		"auth_scheme": "appid",
+		"authenticated": true,
+		"configtxlator_url": "http://localhost:3000",
+		"host_url": "http://localhost:3000",
+		"id": 1,
+		"login_uri": "http://localhost:3000",
+		"logout_uri": "http://localhost:3000"
+	},
+	"something": {
+		"access_list": [
+			{
+				"created": 1538651194801,
+				"email": "some_access_holder@us.ibm.com",
+				"uuid": "67ca95d2de57f06da27be3c9fc00e864"
+			}
+		],
+		"admin_list": [
+			{
+				"created": 1538651194801,
+				"email": "someone_else@us.ibm.com",
+				"uuid": "67ca95d2de57f06da27be3c9fc00e865"
+			}
+		],
+		"all_users": {
+			"some_access_holder@us.ibm.com": {
+				"roles": [
+					"reader"
+				],
+				"created": 1538651194801,
+				"email": "some_access_holder@us.ibm.com",
+				"uuid": "67ca95d2de57f06da27be3c9fc00e864"
+			},
+			"someone_else@us.ibm.com": {
+				"roles": [
+					"manager"
+				],
+				"created": 1538651194801,
+				"email": "someone_else@us.ibm.com",
+				"uuid": "67ca95d2de57f06da27be3c9fc00e865"
+			}
+		},
+		"auth_scheme": "appid",
+		"authenticated": true,
+		"configtxlator_url": "http://localhost:3000",
+		"host_url": "http://localhost:3000",
+		"id": 1,
+		"login_uri": "http://localhost:3000",
+		"logout_uri": "http://localhost:3000"
+	},
+	"ev_settings": {
+		"auth_scheme": "initial",
+		"host_url": "http://localhost:3000",
+		"configtxlator_url": "http://localhost:3000",
+		"login_uri": "http://localhost:3000",
+		"logout_uri": "http://localhost:3000",
+		"admin_list": [
+			{
+				"email": "someone_else@us.ibm.com",
+				"uuid": "67ca95d2de57f06da27be3c9fc00e865",
+				"created": 1538651194801
+			}
+		],
+		"access_list": [
+			{
+				"email": "some_access_holder@us.ibm.com",
+				"uuid": "67ca95d2de57f06da27be3c9fc00e864",
+				"created": 1538651194801
+			}
+		],
+		"all_users": {
+			"someone_else@us.ibm.com": {
+				"uuid": "67ca95d2de57f06da27be3c9fc00e865",
+				"created": 1538651194801,
+				"roles": [
+					"manager"
+				],
+				"email": "someone_else@us.ibm.com"
+			},
+			"some_access_holder@us.ibm.com": {
+				"uuid": "67ca95d2de57f06da27be3c9fc00e864",
+				"created": 1538651194801,
+				"roles": [
+					"reader"
+				],
+				"email": "some_access_holder@us.ibm.com"
+			}
+		}
+	},
+	"app_id": {
+		"oauth_url": "http://oauth_url.com",
+		"secret": "abcdef",
+		"tenant_id": "tenant 1",
+		"client_id": "client 1",
+		"admin_list": [
+			"someone@us.ibm.com"
+		],
+		"access_list": [
+			"someone_else@us.ibm.com"
+		]
+	},
+	"ev_settings_with_app_id": {
+		"access_list": [
+			"someone_else@us.ibm.com"
+		],
+		"admin_list": [
+			"someone@us.ibm.com"
+		],
+		"all_users": {
+			"some_access_holder@us.ibm.com": {
+				"roles": [
+					"reader"
+				],
+				"created": 1538651194801,
+				"email": "some_access_holder@us.ibm.com",
+				"uuid": "67ca95d2de57f06da27be3c9fc00e864"
+			},
+			"someone_else@us.ibm.com": {
+				"roles": [
+					"manager"
+				],
+				"created": 1538651194801,
+				"email": "someone_else@us.ibm.com",
+				"uuid": "67ca95d2de57f06da27be3c9fc00e865"
+			}
+		},
+		"auth_scheme": "appid",
+		"client_id": "client 1",
+		"configtxlator_url": "http://localhost:3000",
+		"host_url": "http://localhost:3000",
+		"login_uri": "http://localhost:3000",
+		"logout_uri": "http://localhost:3000",
+		"oauth_url": "http://oauth_url.com",
+		"secret": "abcdef",
+		"tenant_id": "tenant 1"
+	},
+	"athena_system": {
+		"_id": "00_settings_athena",
+		"_rev": "50-d71513c963a4effbd80db4e2ed46ec87",
+		"admin_list": [
+			"someone@us.ibm.com"
+		],
+		"access_list": {
+			"someone_else@us.ibm.com": {
+				"created": 1553636622550,
+				"roles": [
+					"reader",
+					"writer",
+					"manager"
+				],
+				"uuid": "646674f9-1c57-42bd-9b05-33a858a4ff2e"
+			}
+		},
+		"auth_scheme": "appid",
+		"app_id": {
+			"oauth_url": "http://oauth_url.com",
+			"secret": "abcdef",
+			"tenant_id": "tenant 1",
+			"client_id": "client 1"
+		},
+		"bluemix_docs_url": "https://console-regional.stage1.ng.bluemix.net",
+		"configtxlators": {
+			"1.0.0": "https://configtxlator-prod-1dot1.ng.bluemix.net",
+			"1.1.0": "https://configtxlator-prod-1dot1.ng.bluemix.net",
+			"1.2.0": "https://configtxlator-dev.ng.bluemix.net"
+		},
+		"db_defaults": {
+			"DB_COMPONENTS": {
+				"description": "db",
+				"design_docs": [
+					"components_design_doc.json"
+				],
+				"name": "athena_components"
+			},
+			"DB_SESSIONS": {
+				"description": "db for browser sessions",
+				"design_docs": [],
+				"name": "athena_sessions"
+			},
+			"DB_SYSTEM": {
+				"description": "db to store settings to configure athena",
+				"design_docs": [
+					"settings_design_doc.json"
+				],
+				"name": "athena_system"
+			}
+		},
+		"enforce_backend_ssl": false,
+		"feature_flags": {
+			"remote_peer_config_enabled": true
+		},
+		"support_key": "admin",
+		"support_password": "password",
+		"memory_cache_enabled": true,
+		"node_startup_max_wait_s": 20,
+		"session_secret": "ohnoididnotchangethepassword",
+		"system_channel_id": "testchainid",
+		"type": "settings",
+		"zone": "dev"
+	},
+	"stub_view": {
+		"total_rows": 9,
+		"offset": 0,
+		"rows": [
+			{
+				"id": "V_b_M5eEPCaEfERE",
+				"key": "api_key_doc",
+				"value": "V_b_M5eEPCaEfERE",
+				"doc": {
+					"_id": "V_b_M5eEPCaEfERE",
+					"_rev": "1-3a14fc37f9276400bbeb8de01e274cb6",
+					"roles": [
+						"writer",
+						"manager"
+					],
+					"description": "batman's key",
+					"debug_api_secret_plain_text": "__yT0w50xv7JPba03oNsUlNZjLa17et2",
+					"salt": "pNZuzi8vY9szNFgs",
+					"hashed_secret": "6056483447c214a0c5b5fd1df693845b1028bb654439169ed517139aab92a64216d491a7f9fb9926455ac1dd42d34b129f9f1760e41787800da0492ccfca033c",
+					"timestamp": 1554231315294,
+					"type": "api_key_doc"
+				}
+			},
+			{
+				"id": "nQLNRSMEfO8jpDhs",
+				"key": "api_key_doc",
+				"value": "nQLNRSMEfO8jpDhs",
+				"doc": {
+					"_id": "nQLNRSMEfO8jpDhs",
+					"_rev": "5-fe1cd12472140384999298045441cb36",
+					"roles": [
+						"manager"
+					],
+					"description": "spiderman's key",
+					"debug_api_secret_plain_text": "Qi4mRoqS1UMKD8GbZUsOLGJW",
+					"salt": "Ac4_VTP_kZZ18R3z",
+					"hashed_secret": "c44a7d8e17120e3ff316d6ab0a7d90241bad268ff9463381924f0013dd42c3e71447a863434d151bf6c3e0b7e5850e48dcdae8e974e1f6d68e0dd4e3d939ab63",
+					"timestamp": 1554230715046,
+					"type": "api_key_doc"
+				}
+			}
+		]
+	},
+	"some_response": [
+		{
+			"api_key": "V_b_M5eEPCaEfERE",
+			"roles": [
+				"writer",
+				"manager"
+			],
+			"ts_created": 1554231315294,
+			"description": "batman's key"
+		},
+		{
+			"api_key": "nQLNRSMEfO8jpDhs",
+			"roles": [
+				"manager"
+			],
+			"ts_created": 1554230715046,
+			"description": "spiderman's key"
+		}
+	],
+	"get_users_information_response": {
+		"authorized_actions": [],
+		"censoredEmail": "",
+		"crn": {
+			"account_id": null,
+			"c_name": "bluemix",
+			"c_type": "public",
+			"instance_id": null,
+			"location": "us-south",
+			"resource_id": null,
+			"resource_type": null,
+			"service_name": "blockchain",
+			"version": "v1"
+		},
+		"crn_string": "?",
+		"logged": true,
+		"loggedInAs": {
+			"email": "someone_else@us.ibm.com",
+			"name": "someone_else"
+		},
+		"session_expires_in_ms": null,
+		"session_id": "?",
+		"statusCode": 200,
+		"uuid": "67ca95d2de57f06da27be3c9fc00e865"
+	}
+}

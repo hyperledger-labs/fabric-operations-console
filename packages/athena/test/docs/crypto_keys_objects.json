@@ -1,0 +1,56 @@
+{
+	"store_doc_body_valid": {
+		"name": "crypto_key_1",
+		"private_key": "private_key",
+		"public_key": "public_key"
+	},
+	"create_doc_valid_body": {
+		"name": "crypto_doc_1",
+		"private_key": "private_key_1",
+		"public_key": "public_key_1",
+		"timestamp": 12345678,
+		"type": "key_doc"
+	},
+	"create_doc_no_private_key": {
+		"name": "crypto_doc_1",
+		"public_key": "public_key_1",
+		"timestamp": 12345678,
+		"type": "key_doc"
+	},
+	"get_doc_return_object": {
+		"keys": {
+			"crypto_keys_test_id": {
+				"name": "crypto_keys_api_key",
+				"private_key": "private key",
+				"public_key": "public key"
+			}
+		}
+	},
+	"get_doc_return_object_with_uuid": {
+		"uuid": "admin",
+		"name": "crypto_key_1",
+		"private_key": "private key",
+		"public_key": "public key"
+	},
+	"keys_valid": {
+		"total_rows": 1,
+		"offset": 0,
+		"rows": [
+			{
+				"_id": "crypto_key_1",
+				"key": "key1",
+				"value": {
+					"_id": "crypto_keys_test_id",
+					"name": "crypto_keys_api_key",
+					"private_key": "private key",
+					"public_key": "public key"
+				}
+			}
+		]
+	},
+	"delete_response_valid": {
+		"ok": true,
+		"id": "crypto_key_1",
+		"rev": "2-6d57f2acb1b122eff793ae45a109a5c0"
+	}
+}

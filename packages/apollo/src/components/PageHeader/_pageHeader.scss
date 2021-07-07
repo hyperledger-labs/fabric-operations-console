@@ -1,0 +1,15 @@
+.ibp-page-header {
+	padding: 1rem 0 0 0;
+	padding-bottom: 2rem;
+	.ibp-page-header-tooltip {
+		.bx--tooltip__label {
+			@include carbon--type-style('productive-heading-05');
+		}
+	}
+}
+.ibp-iks-support-with-link {
+	font-size: 0.875rem;
+	letter-spacing: 0.01rem;
+	line-height: 1.125rem;
+	margin-top: 0.5rem;
+}

@@ -1,0 +1,33 @@
+.ibp-actions-title {
+	@include carbon--type-style('label-01');
+	color: $field-label-color;
+	margin-bottom: 1rem;
+}
+
+.ibp-identity-action.bx--btn {
+	margin-right: 1rem;
+}
+
+.ibp-hidden {
+	display: none;
+}
+
+#confirm_remove:not(:disabled) {
+	background-color: $carbon--red-60;
+}
+
+#confirm_remove:focus,
+#confirm_remove:hover:not(:disabled) {
+	background-color: $carbon--red-60;
+}
+
+.ibp-remove-identity-desc,
+.ibp-remove-identity-confirm {
+	margin-bottom: 1rem;
+}
+
+.ibp-expiration-date {
+	margin-top: 0.5rem;
+	@include carbon--type-style('body-short-02');
+	color: $carbon--cool-gray-50;
+}

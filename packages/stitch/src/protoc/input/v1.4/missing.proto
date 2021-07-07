@@ -1,0 +1,54 @@
+/*
+Copyright IBM Corp. 2017 All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+		 http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+syntax = "proto3";
+
+import "common/policies";
+import "peer/chaincode";
+
+option java_package = "org.hyperledger.fabric.protos.peer";
+option go_package = "github.com/hyperledger/fabric/protos/peer";
+
+package missing;
+
+// LifecycleEvent is used as the payload of the chaincode event emitted by LSCC
+message ChaincodeData  {
+
+	// Name of the chaincode
+	string name = 1;
+
+	// Version of the chaincode
+	string version = 2;
+
+	// Escc for the chaincode instance
+	string escc = 3;
+
+	// Vscc for the chaincode instance
+	string vscc = 4;
+
+	// Policy endorsement policy for the chaincode instance
+	bytes policy = 5;
+
+	// Data data specific to the package
+	bytes data = 6;
+
+	// Id of the chaincode that's the unique fingerprint for the CC This is not
+	// currently used anywhere but serves as a good eyecatcher
+	bytes id = 7;
+
+	// InstantiationPolicy for the chaincode
+	bytes instantiation_policy = 8;
+}

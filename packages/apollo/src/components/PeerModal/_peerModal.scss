@@ -1,0 +1,40 @@
+.ibp-actions-title {
+	@include carbon--font-weight('semibold');
+	color: $field-label-color;
+	margin-bottom: 1rem;
+}
+
+div .ibp-peer-action {
+	margin-right: 1rem;
+	margin-bottom: 1rem;
+}
+
+.ibp-hidden {
+	display: none;
+}
+
+#confirm_remove:not(:disabled) {
+	background-color: $inverse-support-01;
+}
+
+#confirm_remove:focus,
+#confirm_remove:hover:not(:disabled) {
+	background-color: $hover-danger;
+}
+
+.ibp-peer-hsm-desc,
+.ibp-peer-log-settings,
+.ibp-manage-peer-certs,
+.ibp-remove-peer-desc,
+.ibp-remove-peer-confirm {
+	margin-bottom: 1rem;
+}
+
+.ibp-no-identities {
+	margin-bottom: 1rem;
+}
+
+.ibp-peer-log-identity,
+.ibp-peer-config-override-desc-with-link {
+	margin-top: 1rem;
+}

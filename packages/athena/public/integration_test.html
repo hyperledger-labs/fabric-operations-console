@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="English">
+<head>
+    <meta charset="utf-8">
+    <title>OpTools Integration Test</title>
+    <meta name="description" content="OpTools Integration Test">
+    <meta name="Chris Sharp" content="IBM Blockchain Development">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <script type="text/javascript" src="/js/integration_test_client_script.js" defer="defer"></script>
+</head>
+<body>
+<form id="test_input_form" action="/" method="post">
+    <section class="container">
+        <div class="first_column">
+            <h1>Options</h1>
+            <div class="logging-level">
+                Logging level
+                <br>
+                <input type="radio" name="logging" id="verbose" value="verbose" checked><label for="verbose">verbose</label>
+                <br>
+                <input type="radio" name="logging" id="debug" value="debug"> <label for="debug">debug</label>
+            </div>
+        </div>
+        <div class="column">
+            <h1>
+                Test Selection
+            </h1>
+            <div class="run_all_checkbox"><input id="run_all" type="checkbox"><label for="run_all">- Run all tests</label></div>
+            <div class="input_checkbox"><input id="create_ca" type="checkbox"><label for="create_ca">- Create CA</label></div>
+            <div class="input_checkbox"><input id="create_peer" type="checkbox"><label for="create_peer">- Create Peer</label></div>
+            <div class="input_checkbox"><input id="create_orderer" type="checkbox"><label for="create_orderer">- Create Orderer</label></div>
+            <div class="input_checkbox"><input id="import_ca" type="checkbox"><label for="import_ca">- Import CA</label></div>
+            <div class="input_checkbox"><input id="import_peer" type="checkbox"><label for="import_peer">- Import Peer</label></div>
+            <div class="input_checkbox"><input id="import_orderer" type="checkbox"><label for="import_orderer">- Import Orderer</label></div>
+            <div class="input_checkbox"><input id="edit_created_peer" type="checkbox"><label for="edit_created_peer">- Edit Created Peer</label></div>
+            <div class="input_checkbox"><input id="edit_imported_peer" type="checkbox"><label for="edit_imported_peer">- Edit Imported Peer</label></div>
+            <div class="input_checkbox"><input id="delete_created_components_from_deployer" type="checkbox"><label
+                    for="delete_created_components_from_deployer">- Delete Created Components</label></div>
+            <div class="input_checkbox"><input id="delete_imported_peer" type="checkbox" name="delete_imported_peer"><label for="delete_imported_peer">- Delete
+                Imported Peer</label></div>
+            <div class="input_checkbox"><input id="delete_imported_components_by_tag" type="checkbox"><label for="delete_imported_components_by_tag">- Delete
+                Imported Components By Tag</label></div>
+            <div class="input_checkbox"><input id="get_all_components_from_deployer_test" type="checkbox"><label
+                    for="get_all_components_from_deployer_test">- Get All Created Components</label></div>
+            <div class="input_checkbox"><input id="get_all_components_from_athena_test" type="checkbox"><label for="get_all_components_from_athena_test">-
+                Get All Imported Components</label></div>
+            <input type="button" id="uncheck_all_button" name="uncheck_all" onclick="select_or_deselect_boxes(true)" value="Select All">
+            <input type="button" id="check_all_button" name="uncheck_all" onclick="select_or_deselect_boxes(false)" value="Deselect All">
+        </div>
+        <div class="column">
+            <h1>Credentials</h1>
+            <span class="text_box_span" style="display:inline-block;">
+                <label for="token_input_text_area" style="display:block; padding-bottom:10px;">Paste Token or API Key
+                    Here<span style="color:red"> *</span>
+                    <br>
+                    <input type="radio" name="authentication_type" id="token" value="token" checked><label for="token">token</label>
+                    <input type="radio" name="authentication_type" id="api_key" value="api_key"> <label for="api_key">api key</label>
+                </label>
+                <textarea class="text_box" id="token_input_text_area" required></textarea>
+            </span>
+        </div>
+    </section>
+    <div class="buttons">
+        <input class="base_button" id="submit_button" type="submit" value="Run Tests">
+        <button class="base_button download_logs_button" id="download_logs_button" type="button">Download Logs</button>
+    </div>
+</form>
+</body>
+
+</html>

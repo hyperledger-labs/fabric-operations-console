@@ -1,0 +1,17 @@
+{
+	"_id": "_design/all",
+	"views": {
+		"_blockchain_configs": {
+			"map": "function(doc){ if(doc.type && (doc.type === 'swarm' || doc.type === 'lpar')){ emit(doc.arch, doc._id); }}"
+		},
+		"_env_configs": {
+			"map": "function(doc){ if(doc.type && doc.type === 'config'){ emit(null, doc._id); }}"
+		}
+	},
+	"indexes": {
+		"partial": {
+			"analyzer": "keyword",
+			"index": "function (doc) {\n\t\tif (doc._id.indexOf('_design') > -1) return;\n\t\t\n\t\tindex('default', doc._id, { \"boost\": 1 });\n\n\t\tif (doc.friendly_name && typeof(doc.friendly_name) === 'string') {\n\t\t\tindex('friendly_name', doc.friendly_name, { store: true, facet: true });\n\t\t}\n\n\t\tif (doc.type && typeof(doc.type) === 'string') {\n\t\t\tindex('type', doc.type, { store: true, facet: true });\n\t\t}\n\n\t\tif (doc.cm_name && typeof(doc.cm_name) === 'string') {\n\t\t\tindex('cm_name', doc.cm_name, { store: true, facet: true });\n\t\t}\n\n\t\tif (doc.node_type && typeof(doc.node_type) === 'string') {\n\t\t\tindex('node_type', doc.node_type, { store: true, facet: true });\n\t\t}\n\n\t\tif (doc.status && typeof(doc.status) === 'string') {\n\t\t\tindex('status', doc.status, { store: true, facet: true });\n\t\t}\n\n\t\tif (doc.service_instances && typeof(doc.service_instances) === 'object') {\n\t\t\tconst serviceInstanceIDs = Object.keys(doc.service_instances);\n\n\t\t\tindex('num_service_instances', serviceInstanceIDs.length, { store: true, facet: true });\n\n\t\t\tfor (var i = 0; i < serviceInstanceIDs.length; i++) {\n\t\t\t\tconst serviceInstanceID = serviceInstanceIDs[i];\n\t\t\t\tconst serviceInstance = doc.service_instances[serviceInstanceID];\n\n\t\t\t\tindex('service_instance_id', serviceInstanceID, { store: true, facet: true });\n\n\t\t\t\tif (serviceInstance.companyName && typeof(serviceInstance.companyName) === 'string') {\n\t\t\t\t\tindex('service_instance_company', serviceInstance.companyName, { store: true, facet: true });\n\t\t\t\t}\n\n\t\t\t\tif (serviceInstance.email && typeof(serviceInstance.email) === 'string') {\n\t\t\t\t\tindex('service_instance_email', serviceInstance.email, { store: true, facet: true });\n\t\t\t\t}\n\t\t\t\t\n\t\t\t\tif (serviceInstance.orgGuid && typeof(serviceInstance.orgGuid) === 'string') {\n\t\t\t\t\tindex('service_instance_orgguid', serviceInstance.orgGuid, { store: true, facet: true });\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\n\t\tif (doc.orgs && typeof(doc.orgs) === 'object') {\n\t\t\tconst orgIDs = Object.keys(doc.orgs);\n\n\t\t\tindex('num_orgs', orgIDs.length, { store: true, facet: true });\n\n\t\t\tfor (var i = 0; i < orgIDs.length; ++i) {\n\t\t\t\tconst orgID = orgIDs[i];\n\n\t\t\t\tindex('org_id', orgID, { store: true, facet: true });\n\t\t\t}\n\t\t}\n\n\t\tif (doc.nodes && typeof(doc.nodes) === 'object') {\n\t\t\tconst nodeIDs = Object.keys(doc.nodes);\n\n\t\t\tindex('num_nodes', nodeIDs.length, { store: true, facet: true });\n\n\t\t\tfor (var i = 0; i < nodeIDs.length; ++i) {\n\t\t\t\tconst nodeID = nodeIDs[i];\n\t\t\t\tconst node = doc.nodes[nodeID];\n\n\t\t\t\tindex('node_id', nodeID, { store: true, facet: true });\n\t\t\t}\n\t\t}\n\t}"
+		}
+	}
+}

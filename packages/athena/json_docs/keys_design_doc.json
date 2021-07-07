@@ -1,0 +1,14 @@
+{
+	"_id": "_design/athena-v1",
+	"views": {
+		"all": {
+			"map": "function(doc){ if(doc.type && doc.type == 'key_doc') emit(doc._id, doc)}"
+		},
+		"current_user": {
+			"map": "function(doc){ if(doc.type && doc.type == 'key_doc') emit(doc.uuid, doc)}"
+		},
+		"current_user_passed_id": {
+			"map": "function(doc){ if(doc.type && doc.type == 'key_doc' && doc.uuid) emit([doc._id, doc.uuid], doc)}"
+		}
+	}
+}

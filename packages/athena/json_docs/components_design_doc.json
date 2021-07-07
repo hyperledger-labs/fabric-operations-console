@@ -1,0 +1,30 @@
+{
+	"_id": "_design/athena-v1",
+	"views": {
+		"current_user": {
+			"map": "function(doc){ if(doc.type && doc.type == 'key_doc') emit(doc.uuid, doc);}"
+		},
+		"by_cluster_id": {
+			"map": "function(doc){ if(doc.type && doc.cluster_id) emit(doc.cluster_id, doc.display_name);}"
+		},
+		"by_tag": {
+			"map": "function(doc){ if(doc.type && doc.tags) { for(var i in doc.tags){ var tag = doc.tags[i]; emit(tag, doc.display_name);} }}"
+		},
+		"_doc_types": {
+			"map": "function (doc) { emit(doc.type, doc._id); } "
+		},
+		"sig_col_by_channel": {
+			"map": "function (doc) { if(doc.type === 'signature_collection') emit([doc.channel, doc.timestamp], doc.originator_msp); } "
+		},
+		"_conflicts": {
+			"map": "function (doc) { if (doc._conflicts) {emit(null, [doc._rev].concat(doc._conflicts));}}"
+		},
+		"_by_types_and_timestamp": {
+			"map": "function (doc) { emit([doc.type, doc.timestamp], doc._id); } "
+		},
+		"all_ids": {
+			"map": "function (doc) { emit(['doc_id', doc._id], 1); if(doc.cluster_id) emit(['cluster_id', doc.cluster_id], 1) } ",
+			"reduce": "_count"
+		}
+	}
+}

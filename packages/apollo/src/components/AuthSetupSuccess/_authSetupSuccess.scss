@@ -1,0 +1,7 @@
+.ibp__auth-success-desc {
+	margin-top: 1rem;
+}
+
+.ibp__auth-success-bold {
+	@include carbon--font-weight('semibold');
+}

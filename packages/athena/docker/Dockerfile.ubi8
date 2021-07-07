@@ -1,0 +1,90 @@
+ARG ARCH
+ARG REGISTRY
+ARG NODE_VER
+
+FROM $REGISTRY/node.$ARCH:$NODE_VER-ubi8 as client
+#FROM registry.access.redhat.com/ubi8/nodejs-12 as client
+
+ENV SERVER_HOME=/home/athena
+ENV CLIENT_HOME=/home/athena/apollo
+
+# Create app directory
+USER 0
+RUN mkdir -p $SERVER_HOME
+
+# look at the users/groups in the image...
+RUN cat /etc/passwd
+RUN cat /etc/group
+
+# Bundle app source
+COPY --chown=1000:0 . $SERVER_HOME
+WORKDIR $SERVER_HOME
+
+WORKDIR $SERVER_HOME/apollo
+
+# we need to add python for apollo's npm install when using redhat's node 12 image
+#RUN microdnf install python2 -y \
+#	&& export PATH="$PATH:/usr/bin/python2"
+
+USER 1000
+RUN npm ci \
+	&& npm run build
+
+FROM $REGISTRY/node.$ARCH:$NODE_VER-ubi8 as server
+#FROM registry.access.redhat.com/ubi8/nodejs-12 as server
+
+ARG IBP_VER
+ARG CONSOLE_TAG
+ARG BUILD_ID
+ARG BUILD_DATE
+
+LABEL name="IBM Blockchain Platform Console" \
+	io.k8s.display-name="IBM Blockchain Platform Console" \
+	summary="The console image for IBM Blockchain Platform." \
+	description="This image contains the console for the IBM Blockchain Platform and Red Hat UBI 8 as the base OS." \
+	io.k8s.description="This image contains the console for the IBM Blockchain Platform and Red Hat UBI 8 as the base OS." \
+	vendor="IBM" \
+	maintainer="IBM" \
+	version=$IBP_VER \
+	console_version=$CONSOLE_TAG \
+	release=$BUILD_ID \
+	ibp.build-date=$BUILD_DATE \
+	io.openshift.tags="blockchain"
+
+ENV SERVER_HOME=/home/athena
+ENV CLIENT_HOME=/home/athena/apollo
+COPY --chown=1000:0 . $SERVER_HOME
+WORKDIR $SERVER_HOME
+
+# Allows us to bake the license acceptance into the image for Saas
+ARG LICENSE_HARDCODE=false
+ENV LICENSE=$LICENSE_HARDCODE
+
+USER 0
+RUN (microdnf update || true)\
+	&& npm install --production --no-save \
+	# Make sure we can see what packages are getting installed
+	&& npm ls --production > npm_ls_prod.txt \
+	&& (microdnf clean all || true)
+
+COPY --chown=1000:0 --from=client $CLIENT_HOME/build $SERVER_HOME/apollo/build
+EXPOSE 3000
+
+ADD licenses/*.tar /licenses
+COPY --chown=1000:0 licenses/docker-entrypoint.sh /docker-entrypoint.sh
+RUN chown -R 1000:0 /home /licenses
+USER 1000
+
+# winston is having issues opening files in the logs folder...
+#RUN ls
+#RUN ls -ld logs
+#RUN ls logs
+#RUN who
+#RUN whoami
+#RUN groups
+#RUN id -g -n
+#RUN id -G
+RUN chmod -R 777 ./logs
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD [ "npm", "start" ]

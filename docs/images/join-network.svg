@@ -1,0 +1,93 @@
+<svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="848" height="549">
+  <path fill="#dcdcdc" d="M0 0h848v549H0z"/>
+  <path fill="#fff" d="M457.5 245.5h134v59h-134v-59z"/>
+  <path fill="none" stroke="#001588" stroke-width="3" d="M457.5 304.5h134v-59h-134v59z"/>
+  <path fill="#001588" d="M464 298h38v-17h-38v17zM545 298h38v-17h-38v17zM505 298h37v-17h-37v17z"/>
+  <path fill="#c5c5c5" d="M508 293h7v-8h-7v8zM516 293h7v-8h-7v8zM524 293h7v-8h-7v8zM532 293h7v-8h-7v8z"/>
+  <path d="M512.5 280.2h.3l-.5.5v-6.9l.5.5h-.8v-1h1.3v7.9h-.8zm-11.6-5.9h8v-1h-8zm-11 0h8v-1h-8zm-3 0h-5.4l.5-.5v1.7h-1v-2.2h5.9zm-2.4.2l-3 6-3-6zM568.5 280.2h.3l-.5.5v-6.9l.5.5h-.8v-1h1.3v7.9h-.8zm-11.6-5.9h8v-1h-8zm-11 0h8v-1h-8zm-3 0h-5.4l.5-.5v1.7h-1v-2.2h5.9zm-2.4.2l-3 6-3-6z" fill="#767171"/>
+  <path fill="#c5c5c5" d="M549 293h7v-8h-7v8zM557 293h7v-8h-7v8zM565 293h7v-8h-7v8z"/>
+  <g data-name="UI-Icon/checkmark--outline/$ui-05" fill="#5a6872">
+    <path d="M267 156.5a6.5 6.5 0 1 0-6.5-6.5 6.49 6.49 0 0 0 6.5 6.5zm0 1.5a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+    <path d="M270.3 146.7l1.4 1.4-5.9 5.9-3.5-3.4 1.4-1.4 2.1 2 4.5-4.5z"/>
+  </g>
+  <path data-name="Rectangle" fill="#a2a3a2" d="M24 37h348v152H24z"/>
+  <text transform="translate(43.21 72)" font-size="19" fill="#fff" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    Org1<tspan x="13.53" y="0" letter-spacing="-.02em"></tspan>
+  </text>
+  <path data-name="Rectangle" fill="#c5c5c5" d="M307 25h106v36H307z"/>
+  <text transform="translate(330.18 49)" font-size="16" fill="#565656" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    Org1 CA<tspan x="11.39" y="0" letter-spacing="-.02em"></tspan>
+  </text>
+  <path data-name="Rectangle" fill="#c5c5c5" d="M249 93h106v56H249z"/>
+  <text transform="translate(266.26 117)" font-size="16" fill="#565656" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    Org1 MSP<tspan x="11.39" y="0" letter-spacing="-.02em"></tspan>
+  </text>
+  <text transform="translate(267.62 137)" font-size="16" fill="#565656" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    definition
+  </text>
+  <path data-name="Rectangle" fill="#011688" stroke="#857b7b" d="M22.5 358.5h347v151h-347z"/>
+  <text transform="translate(41.21 393)" font-size="19" fill="#fff" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    Org2<tspan x="13.53" y="0" letter-spacing="-.02em"></tspan>
+  </text>
+  <path data-name="Rectangle" fill="#fff" stroke="#fff" d="M41.5 416.5h105v61h-105z"/>
+  <text transform="translate(54.12 453)" font-size="16" fill="#010f5e" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    <tspan letter-spacing="-.02em">Peer Org2</tspan>
+  </text>
+  <path data-name="Rectangle" fill="#fff" stroke="#fff" d="M305.5 346.5h105v35h-105z"/>
+  <text transform="translate(328.18 370)" font-size="16" fill="#010f5e" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    Org2 CA<tspan x="11.39" y="0" letter-spacing="-.02em"></tspan>
+  </text>
+  <path data-name="Rectangle" fill="#fff" stroke="#fff" d="M249.5 417.5h105v55h-105z"/>
+  <text transform="translate(266.26 441)" font-size="16" fill="#010f5e" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    Org2 MSP<tspan x="11.39" y="0" letter-spacing="-.02em"></tspan>
+  </text>
+  <text transform="translate(267.62 461)" font-size="16" fill="#010f5e" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    definition
+  </text>
+  <path data-name="Rectangle" fill="#c5c5c5" d="M45 91h106v62H45z"/>
+  <text transform="translate(58.12 128)" font-size="16" fill="#565656" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    <tspan letter-spacing="-.02em">Peer Org1</tspan>
+  </text>
+  <path data-name="Fill-1" d="M140.9 445h51v39c-25.5 0-25.5 14.9-51 6.4z" fill="#0ccaeb"/>
+  <path data-name="Fill-1" d="M144 114h52v39.8c-26 0-26 15.2-52 6.5z" fill="#a2a3a2" stroke="#777" stroke-miterlimit="10"/>
+  <text transform="translate(151 138)" font-size="14" fill="#fff" font-family="IBMPlexSans-Medium, IBM Plex Sans" letter-spacing="-.01em" style="isolation:isolate">
+    Ledger<tspan x="7.04" y="0" letter-spacing="0em"></tspan>
+  </text>
+  <text transform="translate(194.69 138)" font-size="14" fill="#fff" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+  </text>
+  <path fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2" d="M121 153v262.5"/>
+  <ellipse cx="261.5" cy="275.5" rx="194.5" ry="51.5" fill="#979797" stroke="#a2a3a2"/>
+  <text transform="translate(151 153)" font-size="14" fill="#fff" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    X
+  </text>
+  <path data-name="Rectangle" fill="#a2a3a2" d="M435 194h348v152H435z"/>
+  <text transform="translate(145 469)" font-size="14" fill="#fff" font-family="IBMPlexSans-Medium, IBM Plex Sans" letter-spacing="-.01em" style="isolation:isolate">
+    Ledger<tspan x="7.04" y="0" letter-spacing="0em"></tspan>
+  </text>
+  <text transform="translate(188.69 469)" font-size="14" fill="#fff" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+  </text>
+  <text transform="translate(145 484)" font-size="14" fill="#fff" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    X
+  </text>
+  <text transform="translate(663.12 292)" font-size="16" fill="#565656" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    definition
+  </text>
+  <text transform="translate(216.75 287)" font-size="19" fill="#565656" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    Channel1
+  </text>
+  <path data-name="Rectangle" fill="#c5c5c5" d="M718 182h106v36H718z"/>
+  <text transform="translate(731.23 206)" font-size="16" fill="#565656" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    Orderer CA<tspan x="11.39" y="0" letter-spacing="0em"></tspan>
+  </text>
+  <text transform="translate(455.45 229)" font-size="19" fill="#fff" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    Orderer Org<tspan x="13.53" y="0" letter-spacing="0em"></tspan>
+  </text>
+  <path data-name="Rectangle" fill="#c5c5c5" d="M632 248h125v56H632z"/>
+  <path fill="#c5c5c5" d="M462 247h125v56H462z"/>
+  <text transform="translate(651.31 272)" font-size="16" fill="#565656" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    Orderer MSP<tspan x="11.39" y="0" letter-spacing="0em"></tspan>
+  </text>
+  <text transform="translate(496.32 271)" font-size="16" fill="#565656" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    Orderer<tspan x="11.39" y="0" letter-spacing="0em"></tspan>
+  </text>
+</svg>

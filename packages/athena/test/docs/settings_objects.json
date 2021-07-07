@@ -1,0 +1,15 @@
+{
+	"settings_doc": {
+		"crn": {
+			"account_id": "a/df663f1351e50279adcc6be42918ae07",
+			"c_name": "staging",
+			"c_type": "public",
+			"instance_id": "388410b9-fb38-41d8-8352-ebe6b32eac78",
+			"location": "us-south",
+			"resource_id": "",
+			"resource_type": "",
+			"service_name": "blockchain",
+			"version": "v1"
+		}
+	}
+}

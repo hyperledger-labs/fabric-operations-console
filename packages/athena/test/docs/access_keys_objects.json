@@ -1,0 +1,91 @@
+{
+	"create_body_valid": {
+		"service_cred_id": "access_key_test_id",
+		"role": "manager",
+		"description": "description of the access key"
+	},
+	"create_body_no_service_cred_id": {
+		"role": "reader",
+		"description": "description of the access key"
+	},
+	"create_body_service_cred_id_empty_string": {
+		"service_cred_id": "",
+		"role": "reader",
+		"description": "description of the access key"
+	},
+	"create_body_no_role": {
+		"service_cred_id": "access_key_test_id",
+		"description": "description of the access key"
+	},
+	"create_response_valid": {
+		"service_cred_id": "access_key_test_id",
+		"api_key": "access_keys_api_key",
+		"api_secret": "api_secret",
+		"role": "reader",
+		"message": "created"
+	},
+	"get_response_valid": {
+		"service_cred_id": "access_key_test_id",
+		"api_key": "access_keys_api_key",
+		"api_secret": "api_secret",
+		"timestamp": 12345678
+	},
+	"get_doc_response": {
+		"_id": "service_cred_id",
+		"_rev": "1-62a4d812892cf7d2571b76f5d7ed5f17",
+		"role": "reader",
+		"api_key": "key",
+		"api_secret": "secret",
+		"timestamp": 1550258611648,
+		"type": "api_key_doc"
+	},
+	"keys_valid": {
+		"total_rows": 1,
+		"offset": 0,
+		"rows": [
+			{
+				"_id": "service_cred_id",
+				"key": "key1",
+				"value": {
+					"_id": "access_key_test_id",
+					"api_key": "access_keys_api_key",
+					"api_secret": "api_secret",
+					"timestamp": 12345678,
+					"role": "reader",
+					"message": "created"
+				}
+			}
+		]
+	},
+	"keys_valid_one_deleted": {
+		"total_rows": 1,
+		"offset": 0,
+		"rows": [
+			{
+				"_id": "service_cred_id",
+				"key": "key1",
+				"value": {
+					"_id": "access_key_test_id",
+					"api_key": "access_keys_api_key",
+					"api_secret": "api_secret",
+					"timestamp": 12345678,
+					"role": "reader",
+					"message": "created"
+				}
+			},
+			{
+				"_id": "service_cred_id_2",
+				"key": "key2",
+				"value": {
+					"_id": "access_key_test_id_2",
+					"api_key": "access_keys_api_key_2",
+					"api_secret": "api_secret_2",
+					"timestamp": 12345678,
+					"role": "reader",
+					"message": "created",
+					"deleted": true
+				}
+			}
+		]
+	}
+}

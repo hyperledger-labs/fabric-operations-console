@@ -1,0 +1,13 @@
+.ibp-node-ca-tile-name {
+	@include carbon--type-style('body-short-01');
+	@include carbon--font-weight('regular');
+	color: $carbon--cool-gray-30;
+}
+
+.ipb-node-ca-tile-cloud-type {
+	@include carbon--font-weight('semibold');
+	bottom: 1rem;
+	color: $carbon--cool-gray-30;
+	position: absolute;
+	font-size: 0.875rem;
+}

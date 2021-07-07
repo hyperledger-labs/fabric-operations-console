@@ -1,0 +1,194 @@
+{
+	"before_logging": {
+		"_id": "00_settings_athena",
+		"_rev": "2-0cbec978c6144e958305e099eeae62cc",
+		"access_list": {
+			"someone@gmail.com": {
+				"roles": [
+					"manager"
+				],
+				"created": 1549477652326,
+				"uuid": "some_uuid"
+			}
+		},
+		"admin_contact_email": "someone@gmail.com",
+		"app_id": {
+			"client_id": "some_client_id",
+			"oauth_url": "https://fake_oauth_url",
+			"secret": "a_secret",
+			"tenant_id": "fake_tenant_id"
+		},
+		"app_port": 3000,
+		"auth_scheme": "initial",
+		"configtxlator": "http://example.com:80",
+		"configtxlators": {
+			"v1.1.0": "http://example.com:80",
+			"v1.2.0": "http://example.com:80"
+		},
+		"crn": {
+			"instance_id": "-"
+		},
+		"crn_string": "-",
+		"db_custom_names": null,
+		"db_defaults": {
+			"DB_COMPONENTS": {
+				"description": "db for peers/cas/orderers/collections/msps docs",
+				"design_docs": [
+					"../json_docs/components_design_doc.json"
+				],
+				"name": "athena_components"
+			},
+			"DB_SESSIONS": {
+				"description": "db for browser sessions",
+				"design_docs": [],
+				"name": "athena_sessions"
+			},
+			"DB_SYSTEM": {
+				"description": "db to store internal settings and internal transactions",
+				"design_docs": [
+					"../json_docs/default_settings_doc.json",
+					"../json_docs/system_design_doc.json"
+				],
+				"name": "athena_system"
+			}
+		},
+		"deployer_timeout": 30000,
+		"deployer_url": "http://example.com:80",
+		"enforce_backend_ssl": false,
+		"environment": "prod",
+		"feature_flags": {
+			"create_channel_enabled": true,
+			"remote_peer_config_enabled": true,
+			"saas_enabled": true
+		},
+		"file_logging": {
+			"client": {
+				"enabled": true,
+				"level": "info",
+				"unique_name": false
+			},
+			"server": {
+				"enabled": false,
+				"level": "silly",
+				"unique_name": false
+			}
+		},
+		"host_url": "http://localhost:3000",
+		"http_timeout": 120000,
+		"ibmid": {
+			"client_id": "username",
+			"client_secret": "secret",
+			"url": "https://example.com"
+		},
+		"initial_admin": "someone@gmail.com",
+		"support_key": "admin",
+		"support_password": "password",
+		"memory_cache_enabled": true,
+		"message_type": "settings_doc_update",
+		"proxy_tls_fabric_reqs": false,
+		"proxy_tls_http_url": null,
+		"proxy_tls_ws_url": "http://localhost:3000",
+		"region": "local",
+		"session_secret": "ohnoididnotchangethepassword",
+		"system_channel_id": "testchainid",
+		"type": "settings",
+		"version": "v1.0",
+		"zone": "dev"
+	},
+	"after_logging": {
+		"_id": "00_settings_athena",
+		"_rev": "2-0cbec978c6144e958305e099eeae62cc",
+		"access_list": {
+			"someone@gmail.com": {
+				"roles": [
+					"manager"
+				],
+				"created": 1549477652326,
+				"uuid": "some_uuid"
+			}
+		},
+		"admin_contact_email": "someone@gmail.com",
+		"app_id": {
+			"client_id": "some_client_id",
+			"oauth_url": "https://fake_oauth_url",
+			"secret": "a_secret",
+			"tenant_id": "fake_tenant_id"
+		},
+		"app_port": 3000,
+		"auth_scheme": "initial",
+		"configtxlator": "http://example.com:80",
+		"configtxlators": {
+			"v1.1.0": "http://example.com:80",
+			"v1.2.0": "http://example.com:80"
+		},
+		"crn": {
+			"instance_id": "-"
+		},
+		"crn_string": "-",
+		"db_custom_names": null,
+		"db_defaults": {
+			"DB_COMPONENTS": {
+				"description": "db for peers/cas/orderers/collections/msps docs",
+				"design_docs": [
+					"../json_docs/components_design_doc.json"
+				],
+				"name": "athena_components"
+			},
+			"DB_SESSIONS": {
+				"description": "db for browser sessions",
+				"design_docs": [],
+				"name": "athena_sessions"
+			},
+			"DB_SYSTEM": {
+				"description": "db to store internal settings and internal transactions",
+				"design_docs": [
+					"../json_docs/default_settings_doc.json",
+					"../json_docs/system_design_doc.json"
+				],
+				"name": "athena_system"
+			}
+		},
+		"deployer_timeout": 30000,
+		"deployer_url": "http://example.com:80",
+		"enforce_backend_ssl": false,
+		"environment": "prod",
+		"feature_flags": {
+			"create_channel_enabled": true,
+			"remote_peer_config_enabled": true,
+			"saas_enabled": true
+		},
+		"file_logging": {
+			"client": {
+				"enabled": false,
+				"level": "info",
+				"unique_name": false
+			},
+			"server": {
+				"enabled": true,
+				"level": "silly",
+				"unique_name": false
+			}
+		},
+		"host_url": "http://localhost:3000",
+		"http_timeout": 120000,
+		"ibmid": {
+			"client_id": "username",
+			"client_secret": "secret",
+			"url": "https://example.com"
+		},
+		"initial_admin": "someone@gmail.com",
+		"support_key": "admin",
+		"support_password": "password",
+		"memory_cache_enabled": true,
+		"message_type": "settings_doc_update",
+		"proxy_tls_fabric_reqs": false,
+		"proxy_tls_http_url": null,
+		"proxy_tls_ws_url": "http://localhost:3000",
+		"region": "local",
+		"session_secret": "ohnoididnotchangethepassword",
+		"system_channel_id": "testchainid",
+		"type": "settings",
+		"version": "v1.0",
+		"zone": "dev"
+	}
+}

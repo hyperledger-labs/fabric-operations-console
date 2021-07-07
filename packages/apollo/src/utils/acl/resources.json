@@ -1,0 +1,20 @@
+{
+	"keys": [
+		"lscc/ChaincodeExists",
+		"lscc/GetDeploymentSpec",
+		"lscc/GetChaincodeData",
+		"lscc/GetInstantiatedChaincodes",
+		"qscc/GetChainInfo",
+		"qscc/GetBlockByNumber",
+		"qscc/GetBlockByHash",
+		"qscc/GetTransactionByID",
+		"qscc/GetBlockByTxID",
+		"cscc/GetConfigBlock",
+		"cscc/GetConfigTree",
+		"cscc/SimulateConfigTreeUpdate",
+		"peer/Propose",
+		"peer/ChaincodeToChaincode",
+		"event/Block",
+		"event/FilteredBlock"
+	]
+}

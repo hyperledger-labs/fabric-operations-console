@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="208px" height="127px" viewBox="0 0 208 127" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Channels Illustration</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-27.1%" y="-27.1%" width="154.1%" height="154.1%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradient-2">
+            <stop stop-color="#50565B" offset="0%"></stop>
+            <stop stop-color="#6E757C" offset="100%"></stop>
+        </linearGradient>
+        <filter x="-27.1%" y="-27.1%" width="154.1%" height="154.1%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <filter x="-27.1%" y="-27.1%" width="154.1%" height="154.1%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <filter x="-36.4%" y="-36.4%" width="172.7%" height="172.7%" filterUnits="objectBoundingBox" id="filter-5">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Handover" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Channels" transform="translate(-132.000000, -306.000000)" fill-rule="nonzero">
+            <g id="Channels-Copy-3" transform="translate(112.000000, 247.000000)">
+                <g id="Channels-Illustration" transform="translate(29.000000, 66.000000)">
+                    <g id="Left-Card" filter="url(#filter-1)" opacity="0.50499907" transform="translate(54.500803, 54.500000) rotate(-20.000000) translate(-54.500803, -54.500000) translate(12.000803, 12.000000)">
+                        <rect id="Rectangle" fill="#373D42" x="0" y="0" width="85" height="85" rx="1"></rect>
+                        <rect id="Rectangle" fill="url(#linearGradient-2)" x="8" y="8" width="47" height="9" rx="1"></rect>
+                        <rect id="Rectangle-Copy" fill="#6E757C" x="8" y="21" width="24" height="6" rx="1"></rect>
+                        <rect id="Rectangle-Copy-2" fill="#50565B" x="8" y="71" width="31" height="6" rx="1"></rect>
+                    </g>
+                    <rect id="Rectangle" fill="#202529" transform="translate(135.500803, 54.500000) rotate(20.000000) translate(-135.500803, -54.500000) " x="93.0008031" y="12" width="85" height="85" rx="1"></rect>
+                    <g id="Right-Card" filter="url(#filter-3)" opacity="0.495233445" transform="translate(135.500803, 54.500000) rotate(20.000000) translate(-135.500803, -54.500000) translate(93.000803, 12.000000)">
+                        <rect id="Rectangle" fill="#373D42" x="0" y="0" width="85" height="85" rx="1"></rect>
+                        <rect id="Rectangle" fill="url(#linearGradient-2)" x="8" y="8" width="47" height="9" rx="1"></rect>
+                        <rect id="Rectangle-Copy" fill="#6E757C" x="8" y="21" width="24" height="6"></rect>
+                        <rect id="Rectangle-Copy-2" fill="#50565B" x="8" y="71" width="31" height="6"></rect>
+                    </g>
+                    <g id="Top-Card" filter="url(#filter-4)" transform="translate(53.000000, 12.000000)">
+                        <rect id="Rectangle" fill="#373D42" x="0" y="0" width="85" height="85" rx="1"></rect>
+                        <rect id="Rectangle" fill="url(#linearGradient-2)" x="8" y="8" width="47" height="9" rx="1"></rect>
+                        <rect id="Rectangle-Copy" fill="#6E757C" x="8" y="21" width="24" height="6" rx="1"></rect>
+                        <rect id="Rectangle-Copy-2" fill="#50565B" x="8" y="71" width="31" height="6" rx="1"></rect>
+                    </g>
+                    <g id="Icon" filter="url(#filter-5)" transform="translate(101.000000, 85.000000)">
+                        <circle id="Oval" fill="#0F6FFF" cx="11" cy="11" r="11"></circle>
+                        <g id="api" transform="translate(5.000000, 5.000000)" fill="#FFFFFF">
+                            <path d="M10,8.4 C9.71789528,8.40413698 9.44190047,8.4827955 9.2,8.628 L7.964,7.392 C8.55533069,6.5596693 8.55533069,5.4443307 7.964,4.612 L9.2,3.372 C9.89447927,3.77875297 10.7830101,3.6063292 11.2749473,2.96934629 C11.7668845,2.33236338 11.7090958,1.42910402 11.1399959,0.8600041 C10.570896,0.29090418 9.66763662,0.23311549 9.03065371,0.725052691 C8.3936708,1.21698989 8.22124703,2.10552073 8.628,2.8 L7.392,4.036 C6.5596693,3.44466931 5.4443307,3.44466931 4.612,4.036 L3.372,2.8 C3.77875297,2.10552073 3.6063292,1.21698989 2.96934629,0.725052691 C2.33236338,0.23311549 1.42910402,0.29090418 0.8600041,0.8600041 C0.29090418,1.42910402 0.23311549,2.33236338 0.725052691,2.96934629 C1.21698989,3.6063292 2.10552073,3.77875297 2.8,3.372 L4.036,4.608 C3.44466931,5.4403307 3.44466931,6.5556693 4.036,7.388 L2.8,8.628 C2.10552073,8.22124703 1.21698989,8.3936708 0.725052691,9.03065371 C0.23311549,9.66763662 0.29090418,10.570896 0.8600041,11.1399959 C1.42910402,11.7090958 2.33236338,11.7668845 2.96934629,11.2749473 C3.6063292,10.7830101 3.77875297,9.89447927 3.372,9.2 L4.608,7.964 C5.4403307,8.55533069 6.5556693,8.55533069 7.388,7.964 L8.628,9.2 C8.26530955,9.82825948 8.37068906,10.6219171 8.88475931,11.1337629 C9.39882957,11.6456087 10.1929367,11.7475455 10.8196175,11.3821339 C11.4462982,11.0167224 11.7487162,10.2754124 11.5564651,9.57591695 C11.3642139,8.87642154 10.7254074,8.39380009 10,8.4 Z M10,1.2 C10.4418278,1.2 10.8,1.5581722 10.8,2 C10.8,2.4418278 10.4418278,2.8 10,2.8 C9.5581722,2.8 9.2,2.4418278 9.2,2 C9.2,1.5581722 9.5581722,1.2 10,1.2 Z M1.2,2 C1.2,1.5581722 1.5581722,1.2 2,1.2 C2.4418278,1.2 2.8,1.5581722 2.8,2 C2.8,2.4418278 2.4418278,2.8 2,2.8 C1.5581722,2.8 1.2,2.4418278 1.2,2 Z M2,10.8 C1.5581722,10.8 1.2,10.4418278 1.2,10 C1.2,9.5581722 1.5581722,9.2 2,9.2 C2.4418278,9.2 2.8,9.5581722 2.8,10 C2.8,10.4418278 2.4418278,10.8 2,10.8 Z M6,7.6 C5.1163444,7.6 4.4,6.8836556 4.4,6 C4.4,5.1163444 5.1163444,4.4 6,4.4 C6.8836556,4.4 7.6,5.1163444 7.6,6 C7.6,6.42434638 7.43142906,6.83131264 7.13137085,7.13137085 C6.83131264,7.43142906 6.42434638,7.6 6,7.6 Z M10,10.8 C9.5581722,10.8 9.2,10.4418278 9.2,10 C9.2,9.5581722 9.5581722,9.2 10,9.2 C10.4418278,9.2 10.8,9.5581722 10.8,10 C10.8,10.4418278 10.4418278,10.8 10,10.8 Z" id="Shape"></path>
+                        </g>
+                    </g>
+                    <g id="Dots" transform="translate(8.000000, 1.000000)">
+                        <circle id="Oval-Copy-15" fill="#373D42" cx="171.5" cy="84.5" r="3.5"></circle>
+                        <circle id="Oval-Copy-16" fill="#373D42" cx="17.5" cy="10.5" r="3.5"></circle>
+                        <circle id="Oval-Copy-17" fill="#D7306D" cx="2.5" cy="83.5" r="2.5"></circle>
+                        <circle id="Oval-Copy-18" fill="#373D42" cx="171.5" cy="98.5" r="2.5"></circle>
+                        <circle id="Oval-Copy-19" fill="#BB8EFF" cx="164.5" cy="11.5" r="2.5"></circle>
+                        <circle id="Oval-Copy-20" fill="#373D42" cx="4.5" cy="5.5" r="2.5"></circle>
+                        <circle id="Oval-Copy-21" fill="#373D42" cx="80.5" cy="102.5" r="2.5"></circle>
+                        <circle id="Oval-Copy-22" fill="#FFA768" cx="28" cy="2" r="2"></circle>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

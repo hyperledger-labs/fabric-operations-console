@@ -1,0 +1,12 @@
+node_modules
+src
+e2e
+test
+*.log
+data
+env/prod.json
+env/sp_prod.json
+env/local.json
+env/admin.json
+env/old
+server/libs/fabric-sdk-node/node_modules

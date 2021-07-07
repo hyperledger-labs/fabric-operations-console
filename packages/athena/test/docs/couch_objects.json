@@ -1,0 +1,50 @@
+{
+	"valid_create_or_delete_response": {
+		"ok": true,
+		"id": "cf2cec3c2edffa78fac5c3ac5d5a688b",
+		"rev": "2-ec3de7dc1f5c77f506d302d8246f0af4"
+	},
+	"error_create_or_delete_response": {
+		"ok": false,
+		"id": "cf2cec3c2edffa78fac5c3ac5d5a688b",
+		"rev": "2-ec3de7dc1f5c77f506d302d8246f0af4"
+	},
+	"response": {
+		"statusCode": 200,
+		"body": "{\"_id\":\"c88180380a7ae3d355ffff438500291f\",\"_rev\":\"8-6e2133b042f06c4a4e28c8c6da767ecf\",\"short_name\":\"edited node\",\"description\":\"my favorite edited node\",\"url\":\"<some url w/protocol and port here>\",\"msp_id\":\"PeerOrg1\",\"location\":\"<geo location description>\",\"ca_name\":\"org1CA\",\"users\":[{\"affiliation\":\"org1\",\"enroll_id\":\"admin\",\"enroll_secret\":\"bla-ba-bla-ba-bla\"}],\"type\":\"fabric-ca\",\"timestamp\":1538158288770,\"additional_property\":\"some additional property\",\"edited_timestamp\":1538228917559}\n",
+		"headers": {
+			"cache-control": "must-revalidate",
+			"connection": "close",
+			"content-length": "546",
+			"content-type": "application/json",
+			"date": "Mon, 01 Oct 2018 00:11:00 GMT",
+			"etag": "\"8-6e2133b042f06c4a4e28c8c6da767ecf\"",
+			"server": "CouchDB/2.2.0 (Erlang OTP/19)",
+			"x-couch-request-id": "8071d53c3d",
+			"x-couchdb-body-time": "0"
+		},
+		"request": {
+			"uri": {
+				"protocol": "http:",
+				"slashes": true,
+				"auth": null,
+				"host": "127.0.0.1:5984",
+				"port": "5984",
+				"hostname": "127.0.0.1",
+				"hash": null,
+				"search": "?undefined",
+				"query": "undefined",
+				"pathname": "/athena_networks/c88180380a7ae3d355ffff438500291f",
+				"path": "/athena_networks/c88180380a7ae3d355ffff438500291f?undefined",
+				"href": "http://127.0.0.1:5984/athena_networks/c88180380a7ae3d355ffff438500291f?undefined"
+			},
+			"method": "GET",
+			"headers": {
+				"Accept": "application/json"
+			}
+		}
+	},
+	"payload": {
+		"docs": []
+	}
+}

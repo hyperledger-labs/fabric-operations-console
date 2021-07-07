@@ -1,0 +1,1463 @@
+syntax = "proto3";
+
+option go_package = "github.com/hyperledger/fabric-protos-go/orderer/etcdraft";
+option java_package = "org.hyperledger.fabric.protos.orderer.etcdraft";
+option java_outer_classname = "TransactionPackage";
+
+message common {
+
+    enum Status {
+
+        UNKNOWN = 0;
+        SUCCESS = 200;
+        BAD_REQUEST = 400;
+        FORBIDDEN = 403;
+        NOT_FOUND = 404;
+        REQUEST_ENTITY_TOO_LARGE = 413;
+        INTERNAL_SERVER_ERROR = 500;
+        NOT_IMPLEMENTED = 501;
+        SERVICE_UNAVAILABLE = 503;
+    }
+
+    enum HeaderType {
+
+        MESSAGE = 0;
+        CONFIG = 1;
+        CONFIG_UPDATE = 2;
+        ENDORSER_TRANSACTION = 3;
+        ORDERER_TRANSACTION = 4;
+        DELIVER_SEEK_INFO = 5;
+        CHAINCODE_PACKAGE = 6;
+        PEER_ADMIN_OPERATION = 8;
+    }
+
+    enum BlockMetadataIndex {
+
+        SIGNATURES = 0;
+        LAST_CONFIG = 1;
+        TRANSACTIONS_FILTER = 2;
+        ORDERER = 3;
+        COMMIT_HASH = 4;
+    }
+
+    message LastConfig {
+
+        uint64 index = 1;
+    }
+
+    message Metadata {
+
+        bytes value = 1;
+        repeated MetadataSignature signatures = 2;
+    }
+
+    message MetadataSignature {
+
+        bytes signature_header = 1;
+        bytes signature = 2;
+    }
+
+    message Header {
+
+        bytes channel_header = 1;
+        bytes signature_header = 2;
+    }
+
+    message ChannelHeader {
+
+        int32 type = 1;
+        int32 version = 2;
+        google.protobuf.Timestamp timestamp = 3;
+        string channel_id = 4;
+        string tx_id = 5;
+        uint64 epoch = 6;
+        bytes extension = 7;
+        bytes tls_cert_hash = 8;
+    }
+
+    message SignatureHeader {
+
+        bytes creator = 1;
+        bytes nonce = 2;
+    }
+
+    message Payload {
+
+        Header header = 1;
+        bytes data = 2;
+    }
+
+    message Envelope {
+
+        bytes payload = 1;
+        bytes signature = 2;
+    }
+
+    message Block {
+
+        BlockHeader header = 1;
+        BlockData data = 2;
+        BlockMetadata metadata = 3;
+    }
+
+    message BlockHeader {
+
+        uint64 number = 1;
+        bytes previous_hash = 2;
+        bytes data_hash = 3;
+    }
+
+    message BlockData {
+
+        repeated bytes data = 1;
+    }
+
+    message BlockMetadata {
+
+        repeated bytes metadata = 1;
+    }
+
+    message OrdererBlockMetadata {
+
+        LastConfig last_config = 1;
+        bytes consenter_metadata = 2;
+    }
+
+    message ConfigEnvelope {
+
+        Config config = 1;
+        Envelope last_update = 2;
+    }
+
+    message Config {
+
+        uint64 sequence = 1;
+        ConfigGroup channel_group = 2;
+
+        reserved 3, "type";
+    }
+
+    message ConfigUpdateEnvelope {
+
+        bytes config_update = 1;
+        repeated ConfigSignature signatures = 2;
+    }
+
+    message ConfigUpdate {
+
+        string channel_id = 1;
+        ConfigGroup read_set = 2;
+        ConfigGroup write_set = 3;
+        map<string, bytes> isolated_data = 5;
+
+        reserved 4, "type";
+    }
+
+    message ConfigGroup {
+
+        uint64 version = 1;
+        map<string, ConfigGroup> groups = 2;
+        map<string, ConfigValue> values = 3;
+        map<string, ConfigPolicy> policies = 4;
+        string mod_policy = 5;
+    }
+
+    message ConfigValue {
+
+        uint64 version = 1;
+        bytes value = 2;
+        string mod_policy = 3;
+    }
+
+    message ConfigPolicy {
+
+        uint64 version = 1;
+        Policy policy = 2;
+        string mod_policy = 3;
+    }
+
+    message ConfigSignature {
+
+        bytes signature_header = 1;
+        bytes signature = 2;
+    }
+
+    message HashingAlgorithm {
+
+        string name = 1;
+    }
+
+    message BlockDataHashingStructure {
+
+        uint32 width = 1;
+    }
+
+    message OrdererAddresses {
+
+        repeated string addresses = 1;
+    }
+
+    message Consortium {
+
+        string name = 1;
+    }
+
+    message Capabilities {
+
+        map<string, Capability> capabilities = 1;
+    }
+
+    message Capability {
+    }
+
+    message BlockchainInfo {
+
+        uint64 height = 1;
+        bytes current_block_hash = 2;
+        bytes previous_block_hash = 3;
+    }
+
+    message Policy {
+
+        int32 type = 1;
+        bytes value = 2;
+
+        enum PolicyType {
+
+            UNKNOWN = 0;
+            SIGNATURE = 1;
+            MSP = 2;
+            IMPLICIT_META = 3;
+        }
+    }
+
+    message SignaturePolicyEnvelope {
+
+        int32 version = 1;
+        SignaturePolicy rule = 2;
+        repeated MSPPrincipal identities = 3;
+    }
+
+    message SignaturePolicy {
+
+        oneof Type {
+
+            int32 signed_by = 1;
+            NOutOf n_out_of = 2;
+        }
+
+        message NOutOf {
+
+            int32 n = 1;
+            repeated SignaturePolicy rules = 2;
+        }
+    }
+
+    message ImplicitMetaPolicy {
+
+        string sub_policy = 1;
+        Rule rule = 2;
+
+        enum Rule {
+
+            ANY = 0;
+            ALL = 1;
+            MAJORITY = 2;
+        }
+    }
+
+    message ApplicationPolicy {
+
+        option deprecated = true;
+
+        oneof Type {
+
+            SignaturePolicyEnvelope signature_policy = 1;
+            string channel_config_policy_reference = 2;
+        }
+    }
+
+    message MSPPrincipal {
+
+        Classification principal_classification = 1;
+        bytes principal = 2;
+
+        enum Classification {
+
+            ROLE = 0;
+            ORGANIZATION_UNIT = 1;
+            IDENTITY = 2;
+            ANONYMITY = 3;
+            COMBINED = 4;
+        }
+    }
+
+    message OrganizationUnit {
+
+        string msp_identifier = 1;
+        string organizational_unit_identifier = 2;
+        bytes certifiers_identifier = 3;
+    }
+
+    message MSPRole {
+
+        string msp_identifier = 1;
+        MSPRoleType role = 2;
+
+        enum MSPRoleType {
+
+            MEMBER = 0;
+            ADMIN = 1;
+            CLIENT = 2;
+            PEER = 3;
+            ORDERER = 4;
+        }
+    }
+
+    message MSPIdentityAnonymity {
+
+        MSPIdentityAnonymityType anonymity_type = 1;
+
+        enum MSPIdentityAnonymityType {
+
+            NOMINAL = 0;
+            ANONYMOUS = 1;
+        }
+    }
+
+    message CombinedPrincipal {
+
+        repeated MSPPrincipal principals = 1;
+    }
+
+    message CollectionConfigPackage {
+
+        option deprecated = true;
+
+        repeated CollectionConfig config = 1;
+    }
+
+    message CollectionConfig {
+
+        option deprecated = true;
+
+        oneof payload {
+
+            StaticCollectionConfig static_collection_config = 1;
+        }
+    }
+
+    message StaticCollectionConfig {
+
+        option deprecated = true;
+
+        string name = 1;
+        CollectionPolicyConfig member_orgs_policy = 2;
+        int32 required_peer_count = 3;
+        int32 maximum_peer_count = 4;
+        uint64 block_to_live = 5;
+        bool member_only_read = 6;
+        bool member_only_write = 7;
+        ApplicationPolicy endorsement_policy = 8;
+    }
+
+    message CollectionPolicyConfig {
+
+        option deprecated = true;
+
+        oneof payload {
+
+            SignaturePolicyEnvelope signature_policy = 1;
+        }
+    }
+}
+
+message google {
+
+    message protobuf {
+
+        message Timestamp {
+
+            int64 seconds = 1;
+            int32 nanos = 2;
+        }
+    }
+}
+
+message rwset {
+
+    message TxReadWriteSet {
+
+        DataModel data_model = 1;
+        repeated NsReadWriteSet ns_rwset = 2;
+
+        enum DataModel {
+
+            KV = 0;
+        }
+    }
+
+    message NsReadWriteSet {
+
+        string namespace = 1;
+        bytes rwset = 2;
+        repeated CollectionHashedReadWriteSet collection_hashed_rwset = 3;
+    }
+
+    message CollectionHashedReadWriteSet {
+
+        string collection_name = 1;
+        bytes hashed_rwset = 2;
+        bytes pvt_rwset_hash = 3;
+    }
+
+    message TxPvtReadWriteSet {
+
+        TxReadWriteSet.DataModel data_model = 1;
+        repeated NsPvtReadWriteSet ns_pvt_rwset = 2;
+    }
+
+    message NsPvtReadWriteSet {
+
+        string namespace = 1;
+        repeated CollectionPvtReadWriteSet collection_pvt_rwset = 2;
+    }
+
+    message CollectionPvtReadWriteSet {
+
+        string collection_name = 1;
+        bytes rwset = 2;
+    }
+}
+
+message kvrwset {
+
+    message KVRWSet {
+
+        repeated KVRead reads = 1;
+        repeated RangeQueryInfo range_queries_info = 2;
+        repeated KVWrite writes = 3;
+        repeated KVMetadataWrite metadata_writes = 4;
+    }
+
+    message HashedRWSet {
+
+        repeated KVReadHash hashed_reads = 1;
+        repeated KVWriteHash hashed_writes = 2;
+        repeated KVMetadataWriteHash metadata_writes = 3;
+    }
+
+    message KVRead {
+
+        string key = 1;
+        Version version = 2;
+    }
+
+    message KVWrite {
+
+        string key = 1;
+        bool is_delete = 2;
+        bytes value = 3;
+    }
+
+    message KVMetadataWrite {
+
+        string key = 1;
+        repeated KVMetadataEntry entries = 2;
+    }
+
+    message KVReadHash {
+
+        bytes key_hash = 1;
+        Version version = 2;
+    }
+
+    message KVWriteHash {
+
+        bytes key_hash = 1;
+        bool is_delete = 2;
+        bytes value_hash = 3;
+    }
+
+    message KVMetadataWriteHash {
+
+        bytes key_hash = 1;
+        repeated KVMetadataEntry entries = 2;
+    }
+
+    message KVMetadataEntry {
+
+        string name = 1;
+        bytes value = 2;
+    }
+
+    message Version {
+
+        uint64 block_num = 1;
+        uint64 tx_num = 2;
+    }
+
+    message RangeQueryInfo {
+
+        oneof reads_info {
+
+            QueryReads raw_reads = 4;
+            QueryReadsMerkleSummary reads_merkle_hashes = 5;
+        }
+
+        string start_key = 1;
+        string end_key = 2;
+        bool itr_exhausted = 3;
+    }
+
+    message QueryReads {
+
+        repeated KVRead kv_reads = 1;
+    }
+
+    message QueryReadsMerkleSummary {
+
+        uint32 max_degree = 1;
+        uint32 max_level = 2;
+        repeated bytes max_level_hashes = 3;
+    }
+}
+
+message msp {
+
+    message SerializedIdentity {
+
+        string mspid = 1;
+        bytes id_bytes = 2;
+    }
+
+    message SerializedIdemixIdentity {
+
+        bytes nym_x = 1;
+        bytes nym_y = 2;
+        bytes ou = 3;
+        bytes role = 4;
+        bytes proof = 5;
+    }
+
+    message MSPConfig {
+
+        int32 type = 1;
+        bytes config = 2;
+    }
+
+    message FabricMSPConfig {
+
+        string name = 1;
+        repeated bytes root_certs = 2;
+        repeated bytes intermediate_certs = 3;
+        repeated bytes admins = 4;
+        repeated bytes revocation_list = 5;
+        SigningIdentityInfo signing_identity = 6;
+        repeated FabricOUIdentifier organizational_unit_identifiers = 7;
+        FabricCryptoConfig crypto_config = 8;
+        repeated bytes tls_root_certs = 9;
+        repeated bytes tls_intermediate_certs = 10;
+        FabricNodeOUs fabric_node_ous = 11;
+    }
+
+    message FabricCryptoConfig {
+
+        string signature_hash_family = 1;
+        string identity_identifier_hash_function = 2;
+    }
+
+    message IdemixMSPConfig {
+
+        string name = 1;
+        bytes ipk = 2;
+        IdemixMSPSignerConfig signer = 3;
+        bytes revocation_pk = 4;
+        int64 epoch = 5;
+    }
+
+    message IdemixMSPSignerConfig {
+
+        bytes cred = 1;
+        bytes sk = 2;
+        string organizational_unit_identifier = 3;
+        int32 role = 4;
+        string enrollment_id = 5;
+        bytes credential_revocation_information = 6;
+    }
+
+    message SigningIdentityInfo {
+
+        bytes public_signer = 1;
+        KeyInfo private_signer = 2;
+    }
+
+    message KeyInfo {
+
+        string key_identifier = 1;
+        bytes key_material = 2;
+    }
+
+    message FabricOUIdentifier {
+
+        bytes certificate = 1;
+        string organizational_unit_identifier = 2;
+    }
+
+    message FabricNodeOUs {
+
+        bool enable = 1;
+        FabricOUIdentifier client_ou_identifier = 2;
+        FabricOUIdentifier peer_ou_identifier = 3;
+        FabricOUIdentifier admin_ou_identifier = 4;
+        FabricOUIdentifier orderer_ou_identifier = 5;
+    }
+}
+
+message orderer {
+
+    message BroadcastResponse {
+
+        common.Status status = 1;
+        string info = 2;
+    }
+
+    message SeekNewest {
+    }
+
+    message SeekOldest {
+    }
+
+    message SeekSpecified {
+
+        uint64 number = 1;
+    }
+
+    message SeekPosition {
+
+        oneof Type {
+
+            SeekNewest newest = 1;
+            SeekOldest oldest = 2;
+            SeekSpecified specified = 3;
+        }
+    }
+
+    message SeekInfo {
+
+        SeekPosition start = 1;
+        SeekPosition stop = 2;
+        SeekBehavior behavior = 3;
+        SeekErrorResponse error_response = 4;
+
+        enum SeekBehavior {
+
+            BLOCK_UNTIL_READY = 0;
+            FAIL_IF_NOT_READY = 1;
+        }
+
+        enum SeekErrorResponse {
+
+            STRICT = 0;
+            BEST_EFFORT = 1;
+        }
+    }
+
+    message DeliverResponse {
+
+        oneof Type {
+
+            common.Status status = 1;
+            common.Block block = 2;
+        }
+    }
+    service AtomicBroadcast {
+        rpc Broadcast (stream common.Envelope) returns (stream BroadcastResponse);
+        rpc Deliver (stream common.Envelope) returns (stream DeliverResponse);
+    }
+
+    message ConsensusType {
+
+        string type = 1;
+        bytes metadata = 2;
+        State state = 3;
+
+        enum State {
+
+            STATE_NORMAL = 0;
+            STATE_MAINTENANCE = 1;
+        }
+    }
+
+    message BatchSize {
+
+        uint32 max_message_count = 1;
+        uint32 absolute_max_bytes = 2;
+        uint32 preferred_max_bytes = 3;
+    }
+
+    message BatchTimeout {
+
+        string timeout = 1;
+    }
+
+    message KafkaBrokers {
+
+        repeated string brokers = 1;
+    }
+
+    message ChannelRestrictions {
+
+        uint64 max_count = 1;
+    }
+}
+
+message protos {
+
+    message ChaincodeID {
+
+        string path = 1;
+        string name = 2;
+        string version = 3;
+    }
+
+    message ChaincodeInput {
+
+        repeated bytes args = 1;
+        map<string, bytes> decorations = 2;
+        bool is_init = 3;
+    }
+
+    message ChaincodeSpec {
+
+        Type type = 1;
+        ChaincodeID chaincode_id = 2;
+        ChaincodeInput input = 3;
+        int32 timeout = 4;
+
+        enum Type {
+
+            UNDEFINED = 0;
+            GOLANG = 1;
+            NODE = 2;
+            CAR = 3;
+            JAVA = 4;
+        }
+    }
+
+    message ChaincodeDeploymentSpec {
+
+        ChaincodeSpec chaincode_spec = 1;
+        bytes code_package = 3;
+
+        reserved 2, 4, "effective_date", "exec_env";
+    }
+
+    message ChaincodeInvocationSpec {
+
+        ChaincodeSpec chaincode_spec = 1;
+
+        reserved 2, "id_generation_alg";
+    }
+
+    message LifecycleEvent {
+
+        string chaincode_name = 1;
+    }
+
+    message CDSData {
+
+        bytes hash = 1;
+        bytes metadatahash = 2;
+    }
+
+    message ChaincodeData {
+
+        string name = 1;
+        string version = 2;
+        string escc = 3;
+        string vscc = 4;
+        common.SignaturePolicyEnvelope policy = 5;
+        bytes data = 6;
+        bytes id = 7;
+        common.SignaturePolicyEnvelope instantiation_policy = 8;
+    }
+
+    message ChaincodeEvent {
+
+        string chaincode_id = 1;
+        string tx_id = 2;
+        string event_name = 3;
+        bytes payload = 4;
+    }
+
+    message ChaincodeMessage {
+
+        Type type = 1;
+        google.protobuf.Timestamp timestamp = 2;
+        bytes payload = 3;
+        string txid = 4;
+        SignedProposal proposal = 5;
+        ChaincodeEvent chaincode_event = 6;
+        string channel_id = 7;
+
+        enum Type {
+
+            UNDEFINED = 0;
+            REGISTER = 1;
+            REGISTERED = 2;
+            INIT = 3;
+            READY = 4;
+            TRANSACTION = 5;
+            COMPLETED = 6;
+            ERROR = 7;
+            GET_STATE = 8;
+            PUT_STATE = 9;
+            DEL_STATE = 10;
+            INVOKE_CHAINCODE = 11;
+            RESPONSE = 13;
+            GET_STATE_BY_RANGE = 14;
+            GET_QUERY_RESULT = 15;
+            QUERY_STATE_NEXT = 16;
+            QUERY_STATE_CLOSE = 17;
+            KEEPALIVE = 18;
+            GET_HISTORY_FOR_KEY = 19;
+            GET_STATE_METADATA = 20;
+            PUT_STATE_METADATA = 21;
+            GET_PRIVATE_DATA_HASH = 22;
+        }
+    }
+
+    message GetState {
+
+        string key = 1;
+        string collection = 2;
+    }
+
+    message GetStateMetadata {
+
+        string key = 1;
+        string collection = 2;
+    }
+
+    message PutState {
+
+        string key = 1;
+        bytes value = 2;
+        string collection = 3;
+    }
+
+    message PutStateMetadata {
+
+        string key = 1;
+        string collection = 3;
+        StateMetadata metadata = 4;
+    }
+
+    message DelState {
+
+        string key = 1;
+        string collection = 2;
+    }
+
+    message GetStateByRange {
+
+        string start_key = 1;
+        string end_key = 2;
+        string collection = 3;
+        bytes metadata = 4;
+    }
+
+    message GetQueryResult {
+
+        string query = 1;
+        string collection = 2;
+        bytes metadata = 3;
+    }
+
+    message QueryMetadata {
+
+        int32 page_size = 1;
+        string bookmark = 2;
+    }
+
+    message GetHistoryForKey {
+
+        string key = 1;
+    }
+
+    message QueryStateNext {
+
+        string id = 1;
+    }
+
+    message QueryStateClose {
+
+        string id = 1;
+    }
+
+    message QueryResultBytes {
+
+        bytes result_bytes = 1;
+    }
+
+    message QueryResponse {
+
+        repeated QueryResultBytes results = 1;
+        bool has_more = 2;
+        string id = 3;
+        bytes metadata = 4;
+    }
+
+    message QueryResponseMetadata {
+
+        int32 fetched_records_count = 1;
+        string bookmark = 2;
+    }
+
+    message StateMetadata {
+
+        string metakey = 1;
+        bytes value = 2;
+    }
+
+    message StateMetadataResult {
+
+        repeated StateMetadata entries = 1;
+    }
+    service ChaincodeSupport {
+        rpc Register (stream ChaincodeMessage) returns (stream ChaincodeMessage);
+    }
+    service Chaincode {
+        rpc Connect (stream ChaincodeMessage) returns (stream ChaincodeMessage);
+    }
+
+    message AnchorPeers {
+
+        repeated AnchorPeer anchor_peers = 1;
+    }
+
+    message AnchorPeer {
+
+        string host = 1;
+        int32 port = 2;
+    }
+
+    message APIResource {
+
+        string policy_ref = 1;
+    }
+
+    message ACLs {
+
+        map<string, APIResource> acls = 1;
+    }
+
+    message PrivateDataImplicitCollection {
+
+        int32 max_peer_count = 1;
+        int32 required_peer_count = 2;
+    }
+
+    message FilteredBlock {
+
+        string channel_id = 1;
+        uint64 number = 2;
+        repeated FilteredTransaction filtered_transactions = 4;
+    }
+
+    message FilteredTransaction {
+
+        oneof Data {
+
+            FilteredTransactionActions transaction_actions = 4;
+        }
+
+        string txid = 1;
+        common.HeaderType type = 2;
+        TxValidationCode tx_validation_code = 3;
+    }
+
+    message FilteredTransactionActions {
+
+        repeated FilteredChaincodeAction chaincode_actions = 1;
+    }
+
+    message FilteredChaincodeAction {
+
+        ChaincodeEvent chaincode_event = 1;
+    }
+
+    message BlockAndPrivateData {
+
+        common.Block block = 1;
+        map<uint64, rwset.TxPvtReadWriteSet> private_data_map = 2;
+    }
+
+    message DeliverResponse {
+
+        oneof Type {
+
+            common.Status status = 1;
+            common.Block block = 2;
+            FilteredBlock filtered_block = 3;
+            BlockAndPrivateData block_and_private_data = 4;
+        }
+    }
+    service Deliver {
+        rpc Deliver (stream common.Envelope) returns (stream DeliverResponse);
+        rpc DeliverFiltered (stream common.Envelope) returns (stream DeliverResponse);
+        rpc DeliverWithPrivateData (stream common.Envelope) returns (stream DeliverResponse);
+    }
+    service Endorser {
+        rpc ProcessProposal (SignedProposal) returns (ProposalResponse);
+    }
+
+    message SignedProposal {
+
+        bytes proposal_bytes = 1;
+        bytes signature = 2;
+    }
+
+    message Proposal {
+
+        bytes header = 1;
+        bytes payload = 2;
+        bytes extension = 3;
+    }
+
+    message ChaincodeHeaderExtension {
+
+        ChaincodeID chaincode_id = 2;
+
+        reserved 1, "payload_visbility";
+    }
+
+    message ChaincodeProposalPayload {
+
+        bytes input = 1;
+        map<string, bytes> Transient_map = 2;
+    }
+
+    message ChaincodeAction {
+
+        bytes results = 1;
+        bytes events = 2;
+        Response response = 3;
+        ChaincodeID chaincode_id = 4;
+
+        reserved 5, "token_operations";
+    }
+
+    message ProposalResponse {
+
+        int32 version = 1;
+        google.protobuf.Timestamp timestamp = 2;
+        Response response = 4;
+        bytes payload = 5;
+        Endorsement endorsement = 6;
+    }
+
+    message Response {
+
+        int32 status = 1;
+        string message = 2;
+        bytes payload = 3;
+    }
+
+    message ProposalResponsePayload {
+
+        bytes proposal_hash = 1;
+        bytes extension = 2;
+    }
+
+    message Endorsement {
+
+        bytes endorser = 1;
+        bytes signature = 2;
+    }
+
+    message ChaincodeQueryResponse {
+
+        repeated ChaincodeInfo chaincodes = 1;
+    }
+
+    message ChaincodeInfo {
+
+        string name = 1;
+        string version = 2;
+        string path = 3;
+        string input = 4;
+        string escc = 5;
+        string vscc = 6;
+        bytes id = 7;
+    }
+
+    message ChannelQueryResponse {
+
+        repeated ChannelInfo channels = 1;
+    }
+
+    message ChannelInfo {
+
+        string channel_id = 1;
+    }
+
+    message ChaincodeIdentifier {
+
+        bytes hash = 1;
+        string version = 2;
+    }
+
+    message ChaincodeValidation {
+
+        string name = 1;
+        bytes argument = 2;
+    }
+
+    message VSCCArgs {
+
+        string endorsement_policy_ref = 1;
+    }
+
+    message ChaincodeEndorsement {
+
+        string name = 1;
+    }
+
+    message ConfigTree {
+
+        common.Config channel_config = 1;
+        common.Config resources_config = 2;
+    }
+
+    message SignedChaincodeDeploymentSpec {
+
+        bytes chaincode_deployment_spec = 1;
+        bytes instantiation_policy = 2;
+        repeated Endorsement owner_endorsements = 3;
+    }
+
+    message ProcessedTransaction {
+
+        common.Envelope transaction_envelope = 1;
+        int32 validation_code = 2;
+    }
+
+    message Transaction {
+
+        repeated TransactionAction actions = 1;
+    }
+
+    message TransactionAction {
+
+        bytes header = 1;
+        bytes payload = 2;
+    }
+
+    message ChaincodeActionPayload {
+
+        bytes chaincode_proposal_payload = 1;
+        ChaincodeEndorsedAction action = 2;
+    }
+
+    message ChaincodeEndorsedAction {
+
+        bytes proposal_response_payload = 1;
+        repeated Endorsement endorsements = 2;
+    }
+
+    enum TxValidationCode {
+
+        VALID = 0;
+        NIL_ENVELOPE = 1;
+        BAD_PAYLOAD = 2;
+        BAD_COMMON_HEADER = 3;
+        BAD_CREATOR_SIGNATURE = 4;
+        INVALID_ENDORSER_TRANSACTION = 5;
+        INVALID_CONFIG_TRANSACTION = 6;
+        UNSUPPORTED_TX_PAYLOAD = 7;
+        BAD_PROPOSAL_TXID = 8;
+        DUPLICATE_TXID = 9;
+        ENDORSEMENT_POLICY_FAILURE = 10;
+        MVCC_READ_CONFLICT = 11;
+        PHANTOM_READ_CONFLICT = 12;
+        UNKNOWN_TX_TYPE = 13;
+        TARGET_CHAIN_NOT_FOUND = 14;
+        MARSHAL_TX_ERROR = 15;
+        NIL_TXACTION = 16;
+        EXPIRED_CHAINCODE = 17;
+        CHAINCODE_VERSION_CONFLICT = 18;
+        BAD_HEADER_EXTENSION = 19;
+        BAD_CHANNEL_HEADER = 20;
+        BAD_RESPONSE_PAYLOAD = 21;
+        BAD_RWSET = 22;
+        ILLEGAL_WRITESET = 23;
+        INVALID_WRITESET = 24;
+        INVALID_CHAINCODE = 25;
+        NOT_VALIDATED = 254;
+        INVALID_OTHER_REASON = 255;
+    }
+
+    enum MetaDataKeys {
+
+        VALIDATION_PARAMETER = 0;
+        VALIDATION_PARAMETER_V2 = 1;
+    }
+
+    message CollectionConfigPackage {
+
+        repeated CollectionConfig config = 1;
+    }
+
+    message CollectionConfig {
+
+        oneof payload {
+
+            StaticCollectionConfig static_collection_config = 1;
+        }
+    }
+
+    message StaticCollectionConfig {
+
+        string name = 1;
+        CollectionPolicyConfig member_orgs_policy = 2;
+        int32 required_peer_count = 3;
+        int32 maximum_peer_count = 4;
+        uint64 block_to_live = 5;
+        bool member_only_read = 6;
+        bool member_only_write = 7;
+        ApplicationPolicy endorsement_policy = 8;
+    }
+
+    message CollectionPolicyConfig {
+
+        oneof payload {
+
+            common.SignaturePolicyEnvelope signature_policy = 1;
+        }
+    }
+
+    message ApplicationPolicy {
+
+        oneof Type {
+
+            common.SignaturePolicyEnvelope signature_policy = 1;
+            string channel_config_policy_reference = 2;
+        }
+    }
+}
+
+message lifecycle {
+
+    message InstallChaincodeArgs {
+
+        bytes chaincode_install_package = 1;
+    }
+
+    message InstallChaincodeResult {
+
+        string package_id = 1;
+        string label = 2;
+    }
+
+    message QueryInstalledChaincodeArgs {
+
+        string package_id = 1;
+    }
+
+    message QueryInstalledChaincodeResult {
+
+        string package_id = 1;
+        string label = 2;
+        map<string, References> references = 3;
+
+        message References {
+
+            repeated Chaincode chaincodes = 1;
+        }
+
+        message Chaincode {
+
+            string name = 1;
+            string version = 2;
+        }
+    }
+
+    message GetInstalledChaincodePackageArgs {
+
+        string package_id = 1;
+    }
+
+    message GetInstalledChaincodePackageResult {
+
+        bytes chaincode_install_package = 1;
+    }
+
+    message QueryInstalledChaincodesArgs {
+    }
+
+    message QueryInstalledChaincodesResult {
+
+        repeated InstalledChaincode installed_chaincodes = 1;
+
+        message InstalledChaincode {
+
+            string package_id = 1;
+            string label = 2;
+            map<string, References> references = 3;
+        }
+
+        message References {
+
+            repeated Chaincode chaincodes = 1;
+        }
+
+        message Chaincode {
+
+            string name = 1;
+            string version = 2;
+        }
+    }
+
+    message ApproveChaincodeDefinitionForMyOrgArgs {
+
+        int64 sequence = 1;
+        string name = 2;
+        string version = 3;
+        string endorsement_plugin = 4;
+        string validation_plugin = 5;
+        bytes validation_parameter = 6;
+        protos.CollectionConfigPackage collections = 7;
+        bool init_required = 8;
+        ChaincodeSource source = 9;
+    }
+
+    message ChaincodeSource {
+
+        oneof Type {
+
+            Unavailable unavailable = 1;
+            Local local_package = 2;
+        }
+
+        message Unavailable {
+        }
+
+        message Local {
+
+            string package_id = 1;
+        }
+    }
+
+    message ApproveChaincodeDefinitionForMyOrgResult {
+    }
+
+    message CommitChaincodeDefinitionArgs {
+
+        int64 sequence = 1;
+        string name = 2;
+        string version = 3;
+        string endorsement_plugin = 4;
+        string validation_plugin = 5;
+        bytes validation_parameter = 6;
+        protos.CollectionConfigPackage collections = 7;
+        bool init_required = 8;
+    }
+
+    message CommitChaincodeDefinitionResult {
+    }
+
+    message CheckCommitReadinessArgs {
+
+        int64 sequence = 1;
+        string name = 2;
+        string version = 3;
+        string endorsement_plugin = 4;
+        string validation_plugin = 5;
+        bytes validation_parameter = 6;
+        protos.CollectionConfigPackage collections = 7;
+        bool init_required = 8;
+    }
+
+    message CheckCommitReadinessResult {
+
+        map<string, bool> approvals = 1;
+    }
+
+    message QueryChaincodeDefinitionArgs {
+
+        string name = 1;
+    }
+
+    message QueryChaincodeDefinitionResult {
+
+        int64 sequence = 1;
+        string version = 2;
+        string endorsement_plugin = 3;
+        string validation_plugin = 4;
+        bytes validation_parameter = 5;
+        protos.CollectionConfigPackage collections = 6;
+        bool init_required = 7;
+        map<string, bool> approvals = 8;
+    }
+
+    message QueryChaincodeDefinitionsArgs {
+    }
+
+    message QueryChaincodeDefinitionsResult {
+
+        repeated ChaincodeDefinition chaincode_definitions = 1;
+
+        message ChaincodeDefinition {
+
+            string name = 1;
+            int64 sequence = 2;
+            string version = 3;
+            string endorsement_plugin = 4;
+            string validation_plugin = 5;
+            bytes validation_parameter = 6;
+            protos.CollectionConfigPackage collections = 7;
+            bool init_required = 8;
+        }
+    }
+
+    message ChaincodeEndorsementInfo {
+
+        string version = 1;
+        bool init_required = 2;
+        string endorsement_plugin = 3;
+    }
+
+    message ChaincodeValidationInfo {
+
+        string validation_plugin = 1;
+        bytes validation_parameter = 2;
+    }
+}
+
+message etcdraft {
+
+    message ConfigMetadata {
+
+        repeated Consenter consenters = 1;
+        Options options = 2;
+    }
+
+    message Consenter {
+
+        string host = 1;
+        uint32 port = 2;
+        bytes client_tls_cert = 3;
+        bytes server_tls_cert = 4;
+    }
+
+    message Options {
+
+        string tick_interval = 1;
+        uint32 election_tick = 2;
+        uint32 heartbeat_tick = 3;
+        uint32 max_inflight_blocks = 4;
+        uint32 snapshot_interval_size = 5;
+    }
+}
