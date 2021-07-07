@@ -1,0 +1,33 @@
+{
+	"valid_post_body": {
+		"_id": "someone@mail.com",
+		"email_notifications": "enabled",
+		"auto_logout_interval": 2000,
+		"preferences": {
+			"color": "green",
+			"car": "toyota",
+			"phone": "iphone"
+		}
+	},
+	"valid_post_response": {
+		"_id": "someone@mail.com",
+		"_rev": "29-f26a54ec4ff751981c4b25ad111b63e6",
+		"email_notifications": "enabled",
+		"timestamp": 1537620210898,
+		"auto_logout_interval": 2000,
+		"preferences": {
+			"color": "green",
+			"car": "toyota",
+			"phone": "iphone"
+		}
+	},
+	"post_body_missing_id": {
+		"email_notifications": "enabled",
+		"auto_logout_interval": 2000,
+		"preferences": {
+			"color": "green",
+			"car": "toyota",
+			"phone": "iphone"
+		}
+	}
+}

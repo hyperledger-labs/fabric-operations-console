@@ -1,0 +1,324 @@
+{
+	"get_metrics_resp": {
+		"http_access_format": "<response_date> <process_id> <username> <method> <route> HTTP/<http_version> <status_code> <user_agent_hash> <response_ms> <ip_hash>",
+		"http_access_max_logs": 10000,
+		"last_x_days_metrics": {
+			"_days": 7,
+			"codes": {},
+			"methods": {},
+			"routes": {},
+			"user_agents": {}
+		},
+		"seen_user_agents": {}
+	},
+	"get_metrics_resp2": {
+		"http_access_format": "<response_date> <process_id> <username> <method> <route> HTTP/<http_version> <status_code> <user_agent_hash> <response_ms> <ip_hash>",
+		"http_access_max_logs": 10000,
+		"last_x_days_metrics": {
+			"_days": 7,
+			"codes": {},
+			"methods": {},
+			"routes": {},
+			"user_agents": {}
+		},
+		"seen_user_agents": {
+			"efbd": {
+				"hash": "efbd",
+				"str": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0"
+			}
+		}
+	},
+	"get_metrics_resp3": {
+		"http_access_format": "<response_date> <process_id> <username> <method> <route> HTTP/<http_version> <status_code> <user_agent_hash> <response_ms> <ip_hash>",
+		"http_access_max_logs": 10000,
+		"last_x_days_metrics": {
+			"_days": 7,
+			"codes": {},
+			"methods": {},
+			"routes": {},
+			"user_agents": {}
+		},
+		"seen_user_agents": {}
+	},
+	"append_data": {
+		"_id": "01_http_metrics_m1dpu",
+		"_rev": "1-e365c9e0d16de377ef736e03e8ec8df0",
+		"http_access_max_logs": 10000,
+		"http_access_format": "<response_date> <process_id> <username> <method> <route> HTTP/<http_version> <status_code> <user_agent_hash> <response_ms> <ip_hash>",
+		"http_access": [
+			"2020/09/17-21:14:34.998Z m1dpu - GET /api/v3/settings HTTP/1.1 200 7b7d 24 localhost",
+			"2020/09/17-21:14:44.750Z m1dpu - GET / HTTP/1.1 200 7b7d 6 localhost",
+			"2020/09/17-21:14:44.853Z m1dpu - GET /stitch-dependencies.min.js HTTP/1.1 304 7b7d 4 localhost",
+			"2020/09/17-21:14:44.859Z m1dpu - GET /stitch-main-min.js HTTP/1.1 304 7b7d 1 localhost",
+			"2020/09/17-21:14:44.851Z m1dpu - GET /static/css/main.:id.chunk.css HTTP/1.1 200 7b7d 32 localhost",
+			"2020/09/17-21:14:44.851Z m1dpu - GET /static/js/main.:id.chunk.js HTTP/1.1 200 7b7d 95 localhost",
+			"2020/09/17-21:14:44.973Z m1dpu - POST /api/v1/logs HTTP/1.1 401 7b7d 4 localhost",
+			"2020/09/17-21:14:44.978Z m1dpu - GET /v2.0-protobuf-bundle.json HTTP/1.1 200 7b7d 2 localhost",
+			"2020/09/17-21:14:44.862Z m1dpu - GET /static/js/:id.chunk.js HTTP/1.1 200 7b7d 179 localhost",
+			"2020/09/17-21:14:45.444Z m1dpu - GET /api/v2/users/info HTTP/1.1 202 7b7d 7 localhost",
+			"2020/09/17-21:14:45.496Z m1dpu - GET /api/v2/authscheme HTTP/1.1 200 7b7d 2 localhost",
+			"2020/09/17-21:14:45.540Z m1dpu - GET /api/v2/settings HTTP/1.1 200 7b7d 9 localhost",
+			"2020/09/17-21:14:45.626Z m1dpu - GET /api/v2/signature_collections HTTP/1.1 401 7b7d 4 localhost",
+			"2020/09/17-21:14:45.550Z m1dpu - GET /auth/login HTTP/1.1 302 7b7d 210 localhost",
+			"2020/09/17-21:14:58.848Z m1dpu d******a@us.ibm.com GET /auth/login HTTP/1.1 302 7b7d 617 localhost",
+			"2020/09/17-21:14:59.605Z m1dpu d******a@us.ibm.com POST /api/v1/logs HTTP/1.1 200 7b7d 86 localhost",
+			"2020/09/17-21:15:00.039Z m1dpu d******a@us.ibm.com GET /api/v2/users/info HTTP/1.1 200 7b7d 7 localhost",
+			"2020/09/17-21:15:00.099Z m1dpu d******a@us.ibm.com GET /api/v2/authscheme HTTP/1.1 200 7b7d 6 localhost",
+			"2020/09/17-21:15:00.175Z m1dpu d******a@us.ibm.com GET /api/v2/permissions/users HTTP/1.1 200 7b7d 10 localhost",
+			"2020/09/17-21:15:00.176Z m1dpu d******a@us.ibm.com GET /api/v2/settings HTTP/1.1 200 7b7d 27 localhost",
+			"2020/09/17-21:15:00.177Z m1dpu d******a@us.ibm.com GET /api/v2/users/info HTTP/1.1 200 7b7d 47 localhost",
+			"2020/09/17-21:15:00.177Z m1dpu d******a@us.ibm.com GET /api/v2/settings HTTP/1.1 200 7b7d 61 localhost",
+			"2020/09/17-21:15:00.240Z m1dpu d******a@us.ibm.com GET /api/v2/settings HTTP/1.1 200 7b7d 17 localhost",
+			"2020/09/17-21:15:00.267Z m1dpu d******a@us.ibm.com GET /api/v2/settings HTTP/1.1 200 7b7d 18 localhost",
+			"2020/09/17-21:15:00.241Z m1dpu d******a@us.ibm.com GET /deployer/api/v2/instance/$iid/type/all/versions HTTP/1.1 200 7b7d 100 localhost",
+			"2020/09/17-21:15:00.258Z m1dpu d******a@us.ibm.com GET /deployer/api/v2/instance/$iid/status HTTP/1.1 404 7b7d 88 localhost",
+			"2020/09/17-21:15:00.177Z m1dpu d******a@us.ibm.com GET /api/v2/webhooks/templates HTTP/1.1 200 7b7d 174 localhost",
+			"2020/09/17-21:15:00.355Z m1dpu d******a@us.ibm.com GET /api/v2/signature_collections HTTP/1.1 404 7b7d 128 localhost",
+			"2020/09/17-21:15:00.375Z m1dpu d******a@us.ibm.com GET /api/v2/components HTTP/1.1 200 7b7d 1535 localhost",
+			"2020/09/17-21:15:01.983Z m1dpu d******a@us.ibm.com GET /api/v2/settings HTTP/1.1 200 7b7d 23 localhost",
+			"2020/09/17-21:15:02.117Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 503 7b7d 166 localhost",
+			"2020/09/17-21:15:02.111Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 503 7b7d 179 localhost",
+			"2020/09/17-21:15:02.123Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 816 localhost",
+			"2020/09/17-21:15:02.943Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 503 7b7d 151 localhost",
+			"2020/09/17-21:15:03.104Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 503 7b7d 161 localhost",
+			"2020/09/17-21:15:02.306Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 983 localhost",
+			"2020/09/17-21:15:02.101Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1285 localhost",
+			"2020/09/17-21:15:03.273Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 200 7b7d 164 localhost",
+			"2020/09/17-21:15:02.131Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1313 localhost",
+			"2020/09/17-21:15:02.296Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1304 localhost",
+			"2020/09/17-21:15:02.137Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1812 localhost",
+			"2020/09/17-21:15:03.452Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 790 localhost",
+			"2020/09/17-21:15:03.390Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1248 localhost",
+			"2020/09/17-21:15:03.292Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1533 localhost",
+			"2020/09/17-21:15:03.447Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1417 localhost",
+			"2020/09/17-21:15:03.603Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1509 localhost",
+			"2020/09/17-21:15:05.118Z m1dpu d******a@us.ibm.com POST /api/v1/logs HTTP/1.1 200 7b7d 5 localhost",
+			"2020/09/17-21:15:04.641Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 960 localhost",
+			"2020/09/17-21:15:03.952Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1951 localhost",
+			"2020/09/17-21:15:04.832Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1108 localhost",
+			"2020/09/17-21:15:05.128Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 858 localhost",
+			"2020/09/17-21:15:04.873Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1759 localhost",
+			"2020/09/17-21:15:05.917Z m1dpu d******a@us.ibm.com POST /api/v2/components/status HTTP/1.1 207 7b7d 1744 localhost",
+			"2020/09/17-21:15:05.604Z m1dpu d******a@us.ibm.com POST /api/v2/components/status HTTP/1.1 207 7b7d 2297 localhost",
+			"2020/09/17-21:15:06.018Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1932 localhost",
+			"2020/09/17-21:15:05.960Z m1dpu d******a@us.ibm.com POST /api/v2/components/status HTTP/1.1 207 7b7d 2026 localhost",
+			"2020/09/17-21:15:07.915Z m1dpu d******a@us.ibm.com GET /ca/:id HTTP/1.1 404 7b7d 178 localhost",
+			"2020/09/17-21:15:07.922Z m1dpu d******a@us.ibm.com GET /ca/:id HTTP/1.1 404 7b7d 219 localhost",
+			"2020/09/17-21:15:08.047Z m1dpu d******a@us.ibm.com GET /peer/:id HTTP/1.1 404 7b7d 219 localhost",
+			"2020/09/17-21:15:08.058Z m1dpu d******a@us.ibm.com GET /peer/:id HTTP/1.1 404 7b7d 229 localhost",
+			"2020/09/17-21:15:07.970Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 552 localhost",
+			"2020/09/17-21:15:08.547Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 933 localhost",
+			"2020/09/17-21:15:10.160Z m1dpu d******a@us.ibm.com POST /api/v1/logs HTTP/1.1 200 7b7d 8 localhost",
+			"2020/09/17-21:15:09.488Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 930 localhost"
+		],
+		"seen_user_agents": {
+			"7b7d": {
+				"str": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:80.0) Gecko/20100101 Firefox/80.0",
+				"hash": "7b7d"
+			}
+		},
+		"message_type": "rec_http_metrics",
+		"tx_id": 1600377311965,
+		"type": "pillow_talk_doc",
+		"timestamp": 1600377312167,
+		"process_id": "m1dpu"
+	},
+	"response": {
+		"http_access_max_logs": 10000,
+		"http_access_format": "<response_date> <process_id> <username> <method> <route> HTTP/<http_version> <status_code> <user_agent_hash> <response_ms> <ip_hash>",
+		"http_access": [
+			"2020/09/17-21:14:34.998Z m1dpu - GET /api/v3/settings HTTP/1.1 200 7b7d 24 localhost",
+			"2020/09/17-21:14:44.750Z m1dpu - GET / HTTP/1.1 200 7b7d 6 localhost",
+			"2020/09/17-21:14:44.851Z m1dpu - GET /static/css/main.:id.chunk.css HTTP/1.1 200 7b7d 32 localhost",
+			"2020/09/17-21:14:44.851Z m1dpu - GET /static/js/main.:id.chunk.js HTTP/1.1 200 7b7d 95 localhost",
+			"2020/09/17-21:14:44.853Z m1dpu - GET /stitch-dependencies.min.js HTTP/1.1 304 7b7d 4 localhost",
+			"2020/09/17-21:14:44.859Z m1dpu - GET /stitch-main-min.js HTTP/1.1 304 7b7d 1 localhost",
+			"2020/09/17-21:14:44.862Z m1dpu - GET /static/js/:id.chunk.js HTTP/1.1 200 7b7d 179 localhost",
+			"2020/09/17-21:14:44.973Z m1dpu - POST /api/v1/logs HTTP/1.1 401 7b7d 4 localhost",
+			"2020/09/17-21:14:44.978Z m1dpu - GET /v2.0-protobuf-bundle.json HTTP/1.1 200 7b7d 2 localhost",
+			"2020/09/17-21:14:45.444Z m1dpu - GET /api/v2/users/info HTTP/1.1 202 7b7d 7 localhost",
+			"2020/09/17-21:14:45.496Z m1dpu - GET /api/v2/authscheme HTTP/1.1 200 7b7d 2 localhost",
+			"2020/09/17-21:14:45.540Z m1dpu - GET /api/v2/settings HTTP/1.1 200 7b7d 9 localhost",
+			"2020/09/17-21:14:45.550Z m1dpu - GET /auth/login HTTP/1.1 302 7b7d 210 localhost",
+			"2020/09/17-21:14:45.626Z m1dpu - GET /api/v2/signature_collections HTTP/1.1 401 7b7d 4 localhost",
+			"2020/09/17-21:14:58.848Z m1dpu d******a@us.ibm.com GET /auth/login HTTP/1.1 302 7b7d 617 localhost",
+			"2020/09/17-21:14:59.605Z m1dpu d******a@us.ibm.com POST /api/v1/logs HTTP/1.1 200 7b7d 86 localhost",
+			"2020/09/17-21:15:00.039Z m1dpu d******a@us.ibm.com GET /api/v2/users/info HTTP/1.1 200 7b7d 7 localhost",
+			"2020/09/17-21:15:00.099Z m1dpu d******a@us.ibm.com GET /api/v2/authscheme HTTP/1.1 200 7b7d 6 localhost",
+			"2020/09/17-21:15:00.175Z m1dpu d******a@us.ibm.com GET /api/v2/permissions/users HTTP/1.1 200 7b7d 10 localhost",
+			"2020/09/17-21:15:00.176Z m1dpu d******a@us.ibm.com GET /api/v2/settings HTTP/1.1 200 7b7d 27 localhost",
+			"2020/09/17-21:15:00.177Z m1dpu d******a@us.ibm.com GET /api/v2/settings HTTP/1.1 200 7b7d 61 localhost",
+			"2020/09/17-21:15:00.177Z m1dpu d******a@us.ibm.com GET /api/v2/users/info HTTP/1.1 200 7b7d 47 localhost",
+			"2020/09/17-21:15:00.177Z m1dpu d******a@us.ibm.com GET /api/v2/webhooks/templates HTTP/1.1 200 7b7d 174 localhost",
+			"2020/09/17-21:15:00.240Z m1dpu d******a@us.ibm.com GET /api/v2/settings HTTP/1.1 200 7b7d 17 localhost",
+			"2020/09/17-21:15:00.241Z m1dpu d******a@us.ibm.com GET /deployer/api/v2/instance/$iid/type/all/versions HTTP/1.1 200 7b7d 100 localhost",
+			"2020/09/17-21:15:00.258Z m1dpu d******a@us.ibm.com GET /deployer/api/v2/instance/$iid/status HTTP/1.1 404 7b7d 88 localhost",
+			"2020/09/17-21:15:00.267Z m1dpu d******a@us.ibm.com GET /api/v2/settings HTTP/1.1 200 7b7d 18 localhost",
+			"2020/09/17-21:15:00.355Z m1dpu d******a@us.ibm.com GET /api/v2/signature_collections HTTP/1.1 404 7b7d 128 localhost",
+			"2020/09/17-21:15:00.375Z m1dpu d******a@us.ibm.com GET /api/v2/components HTTP/1.1 200 7b7d 1535 localhost",
+			"2020/09/17-21:15:01.983Z m1dpu d******a@us.ibm.com GET /api/v2/settings HTTP/1.1 200 7b7d 23 localhost",
+			"2020/09/17-21:15:02.101Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1285 localhost",
+			"2020/09/17-21:15:02.111Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 503 7b7d 179 localhost",
+			"2020/09/17-21:15:02.117Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 503 7b7d 166 localhost",
+			"2020/09/17-21:15:02.123Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 816 localhost",
+			"2020/09/17-21:15:02.131Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1313 localhost",
+			"2020/09/17-21:15:02.137Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1812 localhost",
+			"2020/09/17-21:15:02.296Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1304 localhost",
+			"2020/09/17-21:15:02.306Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 983 localhost",
+			"2020/09/17-21:15:02.943Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 503 7b7d 151 localhost",
+			"2020/09/17-21:15:03.104Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 503 7b7d 161 localhost",
+			"2020/09/17-21:15:03.273Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 200 7b7d 164 localhost",
+			"2020/09/17-21:15:03.292Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1533 localhost",
+			"2020/09/17-21:15:03.390Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1248 localhost",
+			"2020/09/17-21:15:03.447Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1417 localhost",
+			"2020/09/17-21:15:03.452Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 790 localhost",
+			"2020/09/17-21:15:03.603Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1509 localhost",
+			"2020/09/17-21:15:03.952Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1951 localhost",
+			"2020/09/17-21:15:04.641Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 960 localhost",
+			"2020/09/17-21:15:04.832Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1108 localhost",
+			"2020/09/17-21:15:04.873Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1759 localhost",
+			"2020/09/17-21:15:05.118Z m1dpu d******a@us.ibm.com POST /api/v1/logs HTTP/1.1 200 7b7d 5 localhost",
+			"2020/09/17-21:15:05.128Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 858 localhost",
+			"2020/09/17-21:15:05.604Z m1dpu d******a@us.ibm.com POST /api/v2/components/status HTTP/1.1 207 7b7d 2297 localhost",
+			"2020/09/17-21:15:05.917Z m1dpu d******a@us.ibm.com POST /api/v2/components/status HTTP/1.1 207 7b7d 1744 localhost",
+			"2020/09/17-21:15:05.960Z m1dpu d******a@us.ibm.com POST /api/v2/components/status HTTP/1.1 207 7b7d 2026 localhost",
+			"2020/09/17-21:15:06.018Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 1932 localhost",
+			"2020/09/17-21:15:07.915Z m1dpu d******a@us.ibm.com GET /ca/:id HTTP/1.1 404 7b7d 178 localhost",
+			"2020/09/17-21:15:07.922Z m1dpu d******a@us.ibm.com GET /ca/:id HTTP/1.1 404 7b7d 219 localhost",
+			"2020/09/17-21:15:07.970Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 552 localhost",
+			"2020/09/17-21:15:08.047Z m1dpu d******a@us.ibm.com GET /peer/:id HTTP/1.1 404 7b7d 219 localhost",
+			"2020/09/17-21:15:08.058Z m1dpu d******a@us.ibm.com GET /peer/:id HTTP/1.1 404 7b7d 229 localhost",
+			"2020/09/17-21:15:08.547Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 933 localhost",
+			"2020/09/17-21:15:09.488Z m1dpu d******a@us.ibm.com POST /api/v2/proxy/ HTTP/1.1 500 7b7d 930 localhost",
+			"2020/09/17-21:15:10.160Z m1dpu d******a@us.ibm.com POST /api/v1/logs HTTP/1.1 200 7b7d 8 localhost"
+		],
+		"process_ids": [
+			"m1dpu"
+		],
+		"seen_user_agents": {
+			"7b7d": {
+				"str": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:80.0) Gecko/20100101 Firefox/80.0",
+				"hash": "7b7d"
+			}
+		},
+		"last_x_days_metrics": {
+			"_days": 365,
+			"codes": {
+				"200": 24,
+				"202": 1,
+				"207": 3,
+				"302": 2,
+				"304": 2,
+				"401": 2,
+				"404": 6,
+				"500": 20,
+				"503": 4
+			},
+			"methods": {
+				"GET": 32,
+				"POST": 32
+			},
+			"routes": {
+				"/ GET": {
+					"avg_response_ms": 6,
+					"count": 1
+				},
+				"/api/v1/logs POST": {
+					"avg_response_ms": 25.8,
+					"count": 4
+				},
+				"/api/v2/authscheme GET": {
+					"avg_response_ms": 4,
+					"count": 2
+				},
+				"/api/v2/components GET": {
+					"avg_response_ms": 1535,
+					"count": 1
+				},
+				"/api/v2/components/status POST": {
+					"avg_response_ms": 2022.3,
+					"count": 3
+				},
+				"/api/v2/permissions/users GET": {
+					"avg_response_ms": 10,
+					"count": 1
+				},
+				"/api/v2/proxy/ POST": {
+					"avg_response_ms": 1032.5,
+					"count": 25
+				},
+				"/api/v2/settings GET": {
+					"avg_response_ms": 25.8,
+					"count": 6
+				},
+				"/api/v2/signature_collections GET": {
+					"avg_response_ms": 66,
+					"count": 2
+				},
+				"/api/v2/users/info GET": {
+					"avg_response_ms": 20.3,
+					"count": 3
+				},
+				"/api/v2/webhooks/templates GET": {
+					"avg_response_ms": 174,
+					"count": 1
+				},
+				"/api/v3/settings GET": {
+					"avg_response_ms": 24,
+					"count": 1
+				},
+				"/auth/login GET": {
+					"avg_response_ms": 413.5,
+					"count": 2
+				},
+				"/ca/:id GET": {
+					"avg_response_ms": 198.5,
+					"count": 2
+				},
+				"/deployer/api/v2/instance/$iid/status GET": {
+					"avg_response_ms": 88,
+					"count": 1
+				},
+				"/deployer/api/v2/instance/$iid/type/all/versions GET": {
+					"avg_response_ms": 100,
+					"count": 1
+				},
+				"/peer/:id GET": {
+					"avg_response_ms": 224,
+					"count": 2
+				},
+				"/static/css/main.:id.chunk.css GET": {
+					"avg_response_ms": 32,
+					"count": 1
+				},
+				"/static/js/:id.chunk.js GET": {
+					"avg_response_ms": 179,
+					"count": 1
+				},
+				"/static/js/main.:id.chunk.js GET": {
+					"avg_response_ms": 95,
+					"count": 1
+				},
+				"/stitch-dependencies.min.js GET": {
+					"avg_response_ms": 4,
+					"count": 1
+				},
+				"/stitch-main-min.js GET": {
+					"avg_response_ms": 1,
+					"count": 1
+				},
+				"/v2.0-protobuf-bundle.json GET": {
+					"avg_response_ms": 2,
+					"count": 1
+				}
+			},
+			"user_agents": {
+				"7b7d": {
+					"count": 64,
+					"hash": "7b7d",
+					"str": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:80.0) Gecko/20100101 Firefox/80.0"
+				}
+			}
+		}
+	}
+}

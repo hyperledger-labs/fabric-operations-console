@@ -1,0 +1,36 @@
+{
+	"_id": "_design/athena-v1",
+	"views": {
+		"webhooks_by_ts_completed": {
+			"map": "function (doc) { if (doc.type === 'webhook_tx') {var ts_completed = doc.ts_completed; if(!ts_completed) { ts_completed = 9999999999999;} emit(ts_completed, doc._id);}}"
+		},
+		"notifications": {
+			"map": "function (doc) { \n  var ts = 0; \n  if (doc.type === 'webhook_tx' || doc.type === 'other' || doc.type === 'notification' || doc.type === 'pillow_talk_doc') { emit(doc.type, doc._rev);}}"
+		},
+		"active_notifications_by_ts": {
+			"map": "function (doc) { \n  var ts = 0; \n  if (doc.type === 'webhook_tx') {\n    ts = doc.ts_completed; \n    if(doc.status === 'pending') { ts = 9999999999999;} \n    if(!ts) { ts = 9999999999999;}\n    if(!doc.archived) { emit(ts, doc.type); }\n  }\n  else if (doc.type === 'other' || doc.type === 'notification') { \n    ts = doc.ts_display; \n    if(!ts) { ts = 9999999999999;}\n    if(!doc.archived) { emit(ts, doc.type); }\n  }\n}"
+		},
+		"all_notifications_by_ts": {
+			"map": "function (doc) { \n  var ts = 0; \n  if (doc.type === 'webhook_tx') {\n    ts = doc.ts_completed; \n    if(doc.status === 'pending') { ts = 9999999999999;} \n    if(!ts) { ts = 9999999999999;}\n    emit(ts, doc._rev);\n  }\n  else if (doc.type === 'other' || doc.type === 'notification') { \n    ts = doc.ts_display; \n    if(!ts) { ts = 9999999999999;}\n     emit(ts, doc._rev);\n  }\n}"
+		},
+		"component_notifications": {
+			"map": "function (doc) { \n  var ts = 0; \n  if (doc.type === 'notification' && doc.component_id) { emit(doc.component_id, doc._id);}}"
+		},
+		"pillow_docs": {
+			"map": "function (doc) { if (doc.type === 'pillow_talk_doc') {emit(doc.timestamp, doc);}}"
+		},
+		"_doc_types": {
+			"map": "function (doc) { emit(doc.type, doc._id); } ",
+			"reduce": "_count"
+		},
+		"json_validation": {
+			"map": "function(doc) {\n    if (doc.type === 'json_validation') {\n        emit(null, doc._id);\n    }\n}"
+		},
+		"_conflicts": {
+			"map": "function (doc) { if (doc._conflicts) {emit(null, [doc._rev].concat(doc._conflicts));}}"
+		}
+	},
+	"filters": {
+		"broadcast": "function (doc, req) { if (doc.type === 'pillow_talk_doc' || doc._id === '00_settings_athena') {return true;} return false; }"
+	}
+}

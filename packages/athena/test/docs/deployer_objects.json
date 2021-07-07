@@ -1,0 +1,1097 @@
+{
+	"components_body": {
+		"msp_id": "org2",
+		"type": "fabric-peer",
+		"config": {},
+		"display_name": "My Peer"
+	},
+	"fabric-peer_body": {
+		"msp_id": "org2",
+		"type": "fabric-peer",
+		"config": {},
+		"display_name": "My Peer"
+	},
+	"fabric-ca_body": {
+		"type": "fabric-ca",
+		"enroll_id": "admin",
+		"enroll_secret": "admin",
+		"display_name": "My Ca"
+	},
+	"fabric-orderer_body": {
+		"msp_id": "org2",
+		"type": "fabric-orderer",
+		"orderer_type": "solo",
+		"config": {},
+		"display_name": "My Orderer"
+	},
+	"components_invalid_body": {
+		"msp_id": "org2",
+		"type": "fabric-peer",
+		"display_name": "My Peer"
+	},
+	"components_invalid_response": {
+		"statusCode": 400,
+		"msgs": [
+			"Expected parameter 'config' to exist."
+		],
+		"raw": [
+			{
+				"key": "missing_required",
+				"symbols": {
+					"$PROPERTY_NAME": "config"
+				}
+			}
+		]
+	},
+	"fabric-ca_invalid_body": {
+		"type": "fabric-ca",
+		"enroll_id": "admin",
+		"enroll_secret": "admin",
+		"display_name": "My Ca",
+		"config_override": {
+			"registry": {
+				"ca": {}
+			}
+		}
+	},
+	"fabric-ca_invalid_response": {
+		"statusCode": 400,
+		"msgs": [
+			"Expected parameter 'config_override.ca' to exist.",
+			"Parameter 'enroll_id' is an unknown key for object.",
+			"Parameter 'enroll_secret' is an unknown key for object."
+		]
+	},
+	"fabric-orderer_invalid_body": {
+		"type": "fabric-ca",
+		"display_name": "My Ca",
+		"config_override": {}
+	},
+	"fabric-orderer_invalid_response": {
+		"statusCode": 400,
+		"msgs": [
+			"Expected parameter 'config' to exist.",
+			"Expected parameter 'msp_id' to exist.",
+			"Expected parameter 'cluster_name' to exist.",
+			"Expected parameter 'orderer_type' to exist."
+		]
+	},
+	"fabric-peer_invalid_body": {
+		"type": "fabric-ca",
+		"display_name": "My Ca",
+		"config_override": {}
+	},
+	"fabric-peer_invalid_response": {
+		"statusCode": 400,
+		"msgs": [
+			"Expected parameter 'config' to exist.",
+			"Expected parameter 'msp_id' to exist."
+		]
+	},
+	"error_body": {
+		"statusCode": 400,
+		"msg": [
+			"Missing field \"ca_host\". should be in config.enrollment.component.cahost",
+			"Missing field \"ca_port\". should be in config.enrollment.component.caport",
+			"Missing field \"ca_name\". should be in config.enrollment.component.caname",
+			"Missing field \"ca_cert\". should be in config.enrollment.component.catls.cacert",
+			"Missing field \"enroll_id\". should be in config.enrollment.component.enrollid",
+			"Missing field \"enroll_secret\". should be in config.enrollment.component.enrollsecret",
+			"Missing field \"admin_certs\". should be in config.enrollment.component.admincerts"
+		]
+	},
+	"proxy_default_get_response": {
+		"ca_name": "ca",
+		"tlsca_name": "tlsca",
+		"name": "ca1",
+		"resource_warnings": "none",
+		"zone": "dal10",
+		"region": "us-south",
+		"status": "unknown",
+		"storage": "stuff",
+		"resources": "res things",
+		"deployed_individualResources": "something"
+	},
+	"all_proxy_default_get_response": {
+		"ca1": {
+			"ca_name": "ca",
+			"tlsca_name": "tlsca",
+			"name": "ca1",
+			"resource_warnings": "none",
+			"zone": "dal10",
+			"region": "us-south",
+			"status": "unknown",
+			"storage": "stuff",
+			"resources": "res things",
+			"deployed_individualResources": "something"
+		}
+	},
+	"validate_peer_opts_called_with": {
+		"body": {
+			"config": [
+				{
+					"config_item_one": "config value one"
+				}
+			],
+			"config_length": 1,
+			"display_name": "My Peer",
+			"msp_id": "org2",
+			"orderer_type": "etcdraft",
+			"type": "fabric-peer"
+		},
+		"expected_properties": {
+			"cluster_name": {
+				"required": true,
+				"_type": "String",
+				"value": "<some user defined nick name for the cluster>"
+			},
+			"config": {
+				"max_length": 9,
+				"min_length": 1,
+				"required": true,
+				"_type": "Array",
+				"value": "<e.g., PeerOrg1>"
+			},
+			"config_length": {
+				"possible_values": [
+					1,
+					3,
+					5,
+					7,
+					9
+				],
+				"required": true,
+				"_type": "enum",
+				"value": "<e.g., PeerOrg1>"
+			},
+			"display_name": {
+				"required": false,
+				"_type": "String",
+				"value": "<some user defined nick name for 1 node>"
+			},
+			"msp_id": {
+				"required": true,
+				"_type": "String",
+				"value": "<e.g., PeerOrg1>"
+			},
+			"type": {
+				"required": true,
+				"_type": "String",
+				"value": "fabric-peer"
+			}
+		}
+	},
+	"validate_ca_opts_called_with": {
+		"body": {
+			"config": [
+				{
+					"config_item_one": "config value one"
+				}
+			],
+			"config_length": 1,
+			"display_name": "My Ca",
+			"enroll_id": "admin",
+			"enroll_secret": "admin",
+			"orderer_type": "etcdraft",
+			"type": "fabric-ca"
+		},
+		"expected_properties": {
+			"config": {
+				"max_length": 9,
+				"min_length": 1,
+				"required": true,
+				"_type": "Array",
+				"value": "<e.g., PeerOrg1>"
+			},
+			"config_length": {
+				"possible_values": [
+					1,
+					3,
+					5,
+					7,
+					9
+				],
+				"required": true,
+				"_type": "enum",
+				"value": "<e.g., PeerOrg1>"
+			},
+			"display_name": {
+				"required": true,
+				"_type": "String",
+				"value": "<some user defined nick name>"
+			},
+			"msp_id": {
+				"required": true,
+				"_type": "String",
+				"value": "<e.g., PeerOrg1>"
+			},
+			"type": {
+				"required": true,
+				"_type": "String",
+				"value": "fabric-peer"
+			}
+		}
+	},
+	"validate_components_opts_called_with": {
+		"body": {
+			"config": [
+				{
+					"config_item_one": "config value one"
+				}
+			],
+			"config_length": 1,
+			"display_name": "My Peer",
+			"msp_id": "org2",
+			"orderer_type": "etcdraft",
+			"type": "fabric-peer"
+		},
+		"expected_properties": {
+			"config": {
+				"max_length": 9,
+				"min_length": 1,
+				"required": true,
+				"_type": "Array",
+				"value": "<e.g., PeerOrg1>"
+			},
+			"config_length": {
+				"possible_values": [
+					1,
+					3,
+					5,
+					7,
+					9
+				],
+				"required": true,
+				"_type": "enum",
+				"value": "<e.g., PeerOrg1>"
+			},
+			"display_name": {
+				"required": true,
+				"_type": "String",
+				"value": "<some user defined nick name>"
+			},
+			"msp_id": {
+				"required": true,
+				"_type": "String",
+				"value": "<e.g., PeerOrg1>"
+			},
+			"type": {
+				"required": true,
+				"_type": "String",
+				"value": "fabric-peer"
+			}
+		}
+	},
+	"fmt_body_athena_to_dep_generic_response_1": {
+		"crypto": [
+			{},
+			{}
+		],
+		"parameters": {
+			"display_name": "test-name"
+		},
+		"dep_component_id": "test",
+		"resources": {
+			"sub_component": {}
+		},
+		"storage": {},
+		"caadmin": {
+			"user": "test-id"
+		},
+		"statedb": "A+",
+		"systemchannelname": "channel 1",
+		"version": 1,
+		"orderertype": "orderer",
+		"prefix": "testname",
+		"number": 2,
+		"zone": [
+			"mine1",
+			"mine1"
+		],
+		"region": [
+			"somewhere",
+			"somewhere"
+		]
+	},
+	"fmt_body_athena_to_dep_generic_response_2": {
+		"crypto": [
+			{}
+		],
+		"parameters": {
+			"display_name": "test-name"
+		},
+		"dep_component_id": "test",
+		"resources": {
+			"sub_component": {}
+		},
+		"storage": {},
+		"caadmin": {
+			"user": "test-id"
+		},
+		"statedb": "A+",
+		"systemchannelname": "channel 1",
+		"version": 1,
+		"orderertype": "orderer",
+		"prefix": "testname",
+		"number": 1,
+		"zone": [
+			"theirs"
+		],
+		"region": [
+			"somewhere"
+		]
+	},
+	"fmt_body_athena_to_dep_generic_response_3": {
+		"crypto": {},
+		"parameters": {
+			"display_name": "test-name"
+		},
+		"dep_component_id": "test",
+		"resources": {
+			"sub_component": {}
+		},
+		"storage": {},
+		"caadmin": {
+			"user": "test-id"
+		},
+		"statedb": "A+",
+		"systemchannelname": "channel 1",
+		"version": 1,
+		"orderertype": "orderer",
+		"prefix": "testname",
+		"zone": "single"
+	},
+	"get_all_comps_deployer_response": {
+		"components": [
+			{
+				"ca_name": "ca",
+				"dep_component_id": "ca1",
+				"display_name": "ca one",
+				"location": "-",
+				"name": "ca one",
+				"node_type": "fabric-ca",
+				"region": "us-south",
+				"resources": "something",
+				"scheme_version": "v0",
+				"storage": "stuff",
+				"tlsca_name": "tlsca",
+				"type": "fabric-ca",
+				"zone": "dal10",
+				"last_k8s_sync_ts": 0
+			}
+		]
+	},
+	"get_all_comps_deployer_ak_response": {
+		"components": [
+			{
+				"ca_name": "ca",
+				"dep_component_id": "ca1",
+				"display_name": "ca one",
+				"location": "-",
+				"region": "us-south",
+				"resources": "something",
+				"scheme_version": "v0",
+				"storage": "stuff",
+				"tlsca_name": "tlsca",
+				"type": "fabric-ca",
+				"zone": "dal10",
+				"last_k8s_sync_ts": 0
+			}
+		]
+	},
+	"empty_body_error": {
+		"statusCode": 400,
+		"msgs": [
+			"Expected parameter 'config' to exist.",
+			"Expected parameter 'msp_id' to exist.",
+			"Expected parameter 'display_name' to exist."
+		]
+	},
+	"missing_type_error": {
+		"statusCode": 400,
+		"msgs": [
+			"Expected the component 'type' to be in the body or route."
+		]
+	},
+	"missing_type_error_apollo": {
+		"statusCode": 400,
+		"msgs": [
+			"Expected the component 'type' to be in the body or route."
+		],
+		"raw": [
+			{
+				"key": "missing_type"
+			}
+		]
+	},
+	"error_invalid_deployer": {
+		"statusCode": 500,
+		"msg": "body received from deployer was not valid JSON"
+	},
+	"error_record_deployer_op_failed": {
+		"statusCode": 500,
+		"msg": "problem provisioning component"
+	},
+	"athena_config_spec_v2_msp": {
+		"msp": {
+			"component": {
+				"keystore": "a",
+				"signcerts": "b",
+				"admincerts": [
+					"d"
+				],
+				"cacerts": [
+					"c"
+				],
+				"intermediatecerts": [
+					"e"
+				]
+			},
+			"tls": {
+				"keystore": "f",
+				"signcerts": "g",
+				"cacerts": [
+					"h"
+				],
+				"intermediatecerts": [
+					"i"
+				]
+			}
+		}
+	},
+	"athena_config_spec_v3_msp": {
+		"msp": {
+			"ca": {
+				"root_certs": [
+					"c"
+				],
+				"intermediate_certs": [
+					"e"
+				]
+			},
+			"tlsca": {
+				"root_certs": [
+					"h"
+				],
+				"intermediate_certs": [
+					"i"
+				]
+			},
+			"component": {
+				"ekey": "a",
+				"ecert": "b",
+				"admin_certs": [
+					"d"
+				],
+				"tls_key": "f",
+				"tls_cert": "g"
+			}
+		}
+	},
+	"deployer_crypto_spec_v3_msp": {
+		"msp": {
+			"component": {
+				"keystore": "a",
+				"signcerts": "b",
+				"admincerts": [
+					"d"
+				],
+				"cacerts": [
+					"c"
+				],
+				"intermediatecerts": [
+					"e"
+				]
+			},
+			"tls": {
+				"keystore": "f",
+				"signcerts": "g",
+				"cacerts": [
+					"h"
+				],
+				"intermediatecerts": [
+					"i"
+				]
+			}
+		}
+	},
+	"athena_config_spec_v3_missing_msp": {
+		"msp": {
+			"ca": {
+				"root_certs": null,
+				"intermediate_certs": null
+			},
+			"tlsca": {
+				"root_certs": [],
+				"intermediate_certs": []
+			},
+			"component": {
+				"ekey": "a",
+				"ecert": null,
+				"admin_certs": null,
+				"tls_key": "f",
+				"tls_cert": "g"
+			}
+		}
+	},
+	"deployer_crypto_spec_v3_missing_msp": {
+		"msp": {
+			"component": {
+				"keystore": "a",
+				"signcerts": "",
+				"admincerts": [],
+				"cacerts": [],
+				"intermediatecerts": []
+			},
+			"tls": {
+				"keystore": "f",
+				"signcerts": "g",
+				"cacerts": [],
+				"intermediatecerts": []
+			}
+		}
+	},
+	"athena_config_spec_v2_enrollment": {
+		"enrollment": {
+			"component": {
+				"cahost": "z",
+				"caport": 1234,
+				"caname": "ca",
+				"catls": {
+					"cacert": "a"
+				},
+				"enrollid": "user",
+				"enrollsecret": "admin",
+				"admincerts": [
+					"b"
+				]
+			},
+			"tls": {
+				"cahost": "y",
+				"caport": "w",
+				"caname": "tlsca",
+				"catls": {
+					"cacert": "c"
+				},
+				"enrollid": "user2",
+				"enrollsecret": "admin2",
+				"csr": {
+					"hosts": [
+						"s"
+					]
+				}
+			}
+		}
+	},
+	"athena_config_spec_v3_enrollment": {
+		"enrollment": {
+			"ca": {
+				"host": "z",
+				"port": "1234",
+				"name": "ca",
+				"tls_cert": "a",
+				"enroll_id": "user",
+				"enroll_secret": "admin"
+			},
+			"tlsca": {
+				"host": "y",
+				"port": "w",
+				"name": "tlsca",
+				"tls_cert": "c",
+				"enroll_id": "user2",
+				"enroll_secret": "admin2",
+				"csr_hosts": [
+					"s"
+				]
+			},
+			"component": {
+				"admin_certs": [
+					"b"
+				]
+			}
+		}
+	},
+	"deployer_crypto_spec_v3_enrollment": {
+		"enrollment": {
+			"component": {
+				"cahost": "z",
+				"caport": "1234",
+				"caname": "ca",
+				"catls": {
+					"cacert": "a"
+				},
+				"enrollid": "user",
+				"enrollsecret": "admin",
+				"admincerts": [
+					"b"
+				]
+			},
+			"tls": {
+				"cahost": "y",
+				"caport": "w",
+				"caname": "tlsca",
+				"catls": {
+					"cacert": "c"
+				},
+				"enrollid": "user2",
+				"enrollsecret": "admin2",
+				"csr": {
+					"hosts": [
+						"s"
+					]
+				}
+			}
+		}
+	},
+	"peer_default_resources": {
+		"type": "fabric-peer",
+		"resources": {
+			"peer": {
+				"requests": {
+					"cpu": "200m",
+					"memory": "400Mi"
+				}
+			},
+			"proxy": {
+				"requests": {
+					"cpu": "100m",
+					"memory": "200Mi"
+				}
+			},
+			"fluentd": {
+				"requests": {
+					"cpu": "100m",
+					"memory": "200Mi"
+				}
+			},
+			"couchdb": {
+				"requests": {
+					"cpu": "200m",
+					"memory": "400Mi"
+				}
+			},
+			"dind": {
+				"requests": {
+					"cpu": "500m",
+					"memory": "1000Mi"
+				}
+			}
+		},
+		"storage": {
+			"peer": {
+				"size": "100Gi"
+			},
+			"statedb": {
+				"size": "100Gi"
+			}
+		}
+	},
+	"orderer_default_resources": {
+		"type": "fabric-orderer",
+		"resources": {
+			"orderer": {
+				"requests": {
+					"cpu": "250m",
+					"memory": "500Mi"
+				}
+			},
+			"proxy": {
+				"requests": {
+					"cpu": "100m",
+					"memory": "200Mi"
+				}
+			}
+		},
+		"storage": {
+			"orderer": {
+				"size": "100Gi"
+			}
+		}
+	},
+	"ca_default_resources": {
+		"type": "fabric-ca",
+		"resources": {
+			"ca": {
+				"requests": {
+					"cpu": "100m",
+					"memory": "200Mi"
+				}
+			}
+		},
+		"storage": {
+			"ca": {
+				"size": "20Gi"
+			}
+		}
+	},
+	"peer_doc": {
+		"_id": "mypeerv2-a",
+		"_rev": "2-b79ceb0822acd11fab229a0fbc4680fc",
+		"api_url": "grpcs://fake-example.us-south.containers.appdomain.cloud:443",
+		"ca_root_certs": [
+			"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNJVENDQWNlZ0F3SUJBZ0lVR3RBZmZ4QzBUUzN5U3FGUkY2UWUrT0wzOTUwd0NnWUlLb1pJemowRUF3SXcKWmpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVJjd0ZRWURWUVFERXc1dGVXTmhZWFIwCmNuTjJNeTFqWVRBZUZ3MHlNREE1TVRBeE16VTRNREJhRncwek5UQTVNRGN4TXpVNE1EQmFNR1l4Q3pBSkJnTlYKQkFZVEFsVlRNUmN3RlFZRFZRUUlFdzVPYjNKMGFDQkRZWEp2YkdsdVlURVVNQklHQTFVRUNoTUxTSGx3WlhKcwpaV1JuWlhJeER6QU5CZ05WQkFzVEJrWmhZbkpwWXpFWE1CVUdBMVVFQXhNT2JYbGpZV0YwZEhKemRqTXRZMkV3CldUQVRCZ2NxaGtqT1BRSUJCZ2dxaGtqT1BRTUJCd05DQUFUamZSdmthL0hMczhXM280ZVFXeCsveFE3eGZuamsKNUVVdjZPQ25mUmlWSnUzYVZ1WVkzeGZnSjRyRTgySkxIZFFOdzlnVTg1Rm96MjR4QWtNbDZ6aEdvMU13VVRBTwpCZ05WSFE4QkFmOEVCQU1DQVFZd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFRmdRVTR4dmZ1alRFCnN6Z3M4NWl3VzR5SkU0S0w5cE13RHdZRFZSMFJCQWd3Qm9jRWZ3QUFBVEFLQmdncWhrak9QUVFEQWdOSUFEQkYKQWlFQTBIYlg5cGJJQnlJaHhlYXFWQ3AxUXRCS2sxbFY5MGt4dG12VEpMZDNWdndDSUdFM1FPc2FHanFmVFVwdApLZVlZa2VyRzRFWmp1dDJ0OGJRWGNQUXdVRGY0Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K"
+		],
+		"dep_component_id": "mypeerv2a",
+		"display_name": "My Peer v2-a",
+		"ecert": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNhRENDQWcrZ0F3SUJBZ0lVWDZHa3cvR1VXZnVUTlVUYUlTRU1sd1JaUE93d0NnWUlLb1pJemowRUF3SXcKWmpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVJjd0ZRWURWUVFERXc1dGVXTmhZWFIwCmNuTjJNeTFqWVRBZUZ3MHlNREE1TVRBeE56QTNNREJhRncweU1UQTVNVEF4TnpFeU1EQmFNQjR4RFRBTEJnTlYKQkFzVEJIQmxaWEl4RFRBTEJnTlZCQU1UQkhCbFpYSXdXVEFUQmdjcWhrak9QUUlCQmdncWhrak9QUU1CQndOQwpBQVNTYXR2UnVVSXE4V0Vmd1lseTM5Q2l5UG01N1ZZS3cvMTVabkpEbXd5ZENQUS9zSmhReGU1NmVuWWV2OVgzCmFJWHFEa0NMbnZIbTk1SWJDVjdlY1RLZ280SGlNSUhmTUE0R0ExVWREd0VCL3dRRUF3SUhnREFNQmdOVkhSTUIKQWY4RUFqQUFNQjBHQTFVZERnUVdCQlNoZGRQT28zbmoyVi9MUVdKRkhSRWpEcTB0Z1RBZkJnTlZIU01FR0RBVwpnQlRqRzkrNk5NU3pPQ3p6bUxCYmpJa1Rnb3Yya3pBb0JnTlZIUkVFSVRBZmdoMXBZbkF0YjNCbGNtRjBiM0l0Ck4yTm1abUpqWm1NM1pDMXJjVzEwYWpCVkJnZ3FBd1FGQmdjSUFRUkpleUpoZEhSeWN5STZleUpvWmk1QlptWnAKYkdsaGRHbHZiaUk2SWlJc0ltaG1Ma1Z1Y205c2JHMWxiblJKUkNJNkluQmxaWElpTENKb1ppNVVlWEJsSWpvaQpjR1ZsY2lKOWZUQUtCZ2dxaGtqT1BRUURBZ05IQURCRUFpQlZsTml6Y1lDUzhxd3o5M3NxQTdhREw3dTBXNHNPCm8wbHIwcFd0WEg0bjZBSWdNTW9SY0JVS1VLbG5lM2pBenN1QXMrak53S0NmVjQyMWZNMjhiaUNtUElNPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==",
+		"grpcwp_url": "https://fake-example.us-south.containers.appdomain.cloud:443",
+		"location": "ibm_saas",
+		"msp_id": "org2",
+		"node_ou": {
+			"enabled": true
+		},
+		"operations_url": "https://fake-example.us-south.containers.appdomain.cloud:443",
+		"region": "us-south",
+		"resources": {
+			"couchdb": {
+				"limits": {
+					"cpu": "200m",
+					"memory": "400Mi"
+				},
+				"msg": "legacy field, reference \"statedb\" instead",
+				"requests": {
+					"cpu": "200m",
+					"memory": "400Mi"
+				}
+			},
+			"dind": {
+				"limits": {
+					"cpu": "500m",
+					"memory": "1000Mi"
+				},
+				"requests": {
+					"cpu": "500m",
+					"memory": "1000Mi"
+				}
+			},
+			"fluentd": {
+				"limits": {
+					"cpu": "100m",
+					"memory": "200Mi"
+				},
+				"requests": {
+					"cpu": "100m",
+					"memory": "200Mi"
+				}
+			},
+			"init": {
+				"limits": {
+					"cpu": "100m",
+					"memory": "200M"
+				},
+				"requests": {
+					"cpu": "100m",
+					"memory": "200M"
+				}
+			},
+			"peer": {
+				"limits": {
+					"cpu": "200m",
+					"memory": "400Mi"
+				},
+				"requests": {
+					"cpu": "200m",
+					"memory": "400Mi"
+				}
+			},
+			"proxy": {
+				"limits": {
+					"cpu": "100m",
+					"memory": "200Mi"
+				},
+				"requests": {
+					"cpu": "100m",
+					"memory": "200Mi"
+				}
+			},
+			"statedb": {
+				"limits": {
+					"cpu": "200m",
+					"memory": "400Mi"
+				},
+				"requests": {
+					"cpu": "200m",
+					"memory": "400Mi"
+				}
+			}
+		},
+		"scheme_version": "v1",
+		"storage": {
+			"peer": {
+				"class": "portworx-1reps",
+				"size": "100Gi"
+			},
+			"statedb": {
+				"class": "portworx-1reps",
+				"size": "10Gi"
+			}
+		},
+		"tags": [
+			"fabric-peer",
+			"ibm_saas"
+		],
+		"timestamp": 1599757938120,
+		"tls_ca_root_certs": [
+			"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNGVENDQWJ5Z0F3SUJBZ0lVRjNqWlpmRGx4TTBramsvaHhDU2ZwVXBKV2Jrd0NnWUlLb1pJemowRUF3SXcKYVRFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVJvd0dBWURWUVFERXhGdGVXTmhZWFIwCmNuTjJNeTEwYkhOallUQWVGdzB5TURBNU1UQXhNelU0TURCYUZ3MHpOVEE1TURjeE16VTRNREJhTUdreEN6QUoKQmdOVkJBWVRBbFZUTVJjd0ZRWURWUVFJRXc1T2IzSjBhQ0JEWVhKdmJHbHVZVEVVTUJJR0ExVUVDaE1MU0hsdwpaWEpzWldSblpYSXhEekFOQmdOVkJBc1RCa1poWW5KcFl6RWFNQmdHQTFVRUF4TVJiWGxqWVdGMGRISnpkak10CmRHeHpZMkV3V1RBVEJnY3Foa2pPUFFJQkJnZ3Foa2pPUFFNQkJ3TkNBQVRaanhVbk9YN0liR2FSMUI5OXIvTDUKRDhORkUzTVRlRUZjcE53UW1FbjdxOWpFNW5FcjZUemJVVDY0RVFSbDlUYlRMeTMwN2R0a3Vmc2MwZ05WclQvLwpvMEl3UURBT0JnTlZIUThCQWY4RUJBTUNBUVl3RHdZRFZSMFRBUUgvQkFVd0F3RUIvekFkQmdOVkhRNEVGZ1FVClc2U3Raa2V0Z0NtaU1peGxNbjlaaDJTWDN2VXdDZ1lJS29aSXpqMEVBd0lEUndBd1JBSWdMdjBocVpmSGxFM2wKamIrOCtkLzlVVjBRRFQ4OW5YZi9qTllKRjRLUnZFWUNJQjNIMFFUMHdMb0M0eVMvd09GeVRCcTJnQzRGWHdJaAppVlhnZ0Rnb1ZsMzAKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo="
+		],
+		"tls_cert": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUQ5RENDQTVxZ0F3SUJBZ0lVSmRvMHNKSnh1YkwrQms0aksrajdMTTAwRDhRd0NnWUlLb1pJemowRUF3SXcKYVRFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVJvd0dBWURWUVFERXhGdGVXTmhZWFIwCmNuTjJNeTEwYkhOallUQWVGdzB5TURBNU1UQXhOekEzTURCYUZ3MHpOVEE1TURjeE16VTRNREJhTUI0eERUQUwKQmdOVkJBc1RCSEJsWlhJeERUQUxCZ05WQkFNVEJIQmxaWEl3V1RBVEJnY3Foa2pPUFFJQkJnZ3Foa2pPUFFNQgpCd05DQUFTN2NOYlJ4TGU1NThrdDNDaDlKd0owYVdpU0FFZ3lVVnUxazJoZzBmam92aE9VYVhXdDRsWmdWR2hmCkgvY01nTFhxTWR6M3IzdFY5TWszWCsvQUNwcXRvNElDYVRDQ0FtVXdEZ1lEVlIwUEFRSC9CQVFEQWdPb01CMEcKQTFVZEpRUVdNQlFHQ0NzR0FRVUZCd01CQmdnckJnRUZCUWNEQWpBTUJnTlZIUk1CQWY4RUFqQUFNQjBHQTFVZApEZ1FXQkJSbGtFdVJOWXc5VHZXQXNGby9reUV4bk5wYzJ6QWZCZ05WSFNNRUdEQVdnQlJicEsxbVI2MkFLYUl5CkxHVXlmMW1IWkpmZTlUQ0NBWTBHQTFVZEVRU0NBWVF3Z2dHQWdubDJZWEpoWkRBNU1Ea3RiWGx3WldWeWRqSmgKTFhCbFpYSXViM0JsYm5Ob2FXWjBOSGd0YVdKd2RqSXRkR1Z6ZEMwMk9HVXhNR1kxT0RObU1ESTJOVEk1Wm1VMwpZVGc1WkdFME1ERTJPV1ZtTkMwd01EQXdMblZ6TFhOdmRYUm9MbU52Ym5SaGFXNWxjbk11WVhCd1pHOXRZV2x1CkxtTnNiM1ZrZ245MllYSmhaREE1TURrdGJYbHdaV1Z5ZGpKaExXOXdaWEpoZEdsdmJuTXViM0JsYm5Ob2FXWjAKTkhndGFXSndkakl0ZEdWemRDMDJPR1V4TUdZMU9ETm1NREkyTlRJNVptVTNZVGc1WkdFME1ERTJPV1ZtTkMwdwpNREF3TG5WekxYTnZkWFJvTG1OdmJuUmhhVzVsY25NdVlYQndaRzl0WVdsdUxtTnNiM1ZrZ254MllYSmhaREE1Ck1Ea3RiWGx3WldWeWRqSmhMV2R5Y0dOM1pXSXViM0JsYm5Ob2FXWjBOSGd0YVdKd2RqSXRkR1Z6ZEMwMk9HVXgKTUdZMU9ETm1NREkyTlRJNVptVTNZVGc1WkdFME1ERTJPV1ZtTkMwd01EQXdMblZ6TFhOdmRYUm9MbU52Ym5SaAphVzVsY25NdVlYQndaRzl0WVdsdUxtTnNiM1ZraHdSL0FBQUJNRlVHQ0NvREJBVUdCd2dCQkVsN0ltRjBkSEp6CklqcDdJbWhtTGtGbVptbHNhV0YwYVc5dUlqb2lJaXdpYUdZdVJXNXliMnhzYldWdWRFbEVJam9pY0dWbGNpSXMKSW1obUxsUjVjR1VpT2lKd1pXVnlJbjE5TUFvR0NDcUdTTTQ5QkFNQ0EwZ0FNRVVDSVFEcU9LdlRvRE56eXJoLwo3aU5GS1laOTYrdTladWNzbnNxTlhTZWpXRjY2d0FJZ1VNZk9sa3JrWkVvaW02TmppdGtHZXBWQ29uTU1ScitnCjhBZy82dE5mNk5FPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==",
+		"type": "fabric-peer",
+		"url2use": "/grpcwp/https%3A%2F%2F0909-mypeerv2a-grpcweb.openshift4x-ibpv2-test-68e10f583f026529fe7a89da40169ef4-0000.us-south.containers.appdomain.cloud%3A443",
+		"version": "1.4.8",
+		"zone": "dal13"
+	},
+	"peer_dep_response": {
+		"name": "mypeerv3h",
+		"endpoints": {
+			"api": "grpcs://fake-example.us-south.containers.appdomain.cloud:443",
+			"grpcweb": "https://fake-example.us-south.containers.appdomain.cloud:443",
+			"operations": "https://fake-example.us-south.containers.appdomain.cloud:443"
+		},
+		"resources": {
+			"requests": {
+				"cpu": "1123m",
+				"memory": "2255M"
+			},
+			"limits": {
+				"cpu": "1123m",
+				"memory": "2255M"
+			}
+		},
+		"individualResources": {
+			"init": {
+				"limits": {
+					"cpu": "100m",
+					"memory": "200M"
+				},
+				"requests": {
+					"cpu": "100m",
+					"memory": "200M"
+				}
+			},
+			"peer": {
+				"limits": {
+					"cpu": "200m",
+					"memory": "400Mi"
+				},
+				"requests": {
+					"cpu": "200m",
+					"memory": "400Mi"
+				}
+			},
+			"proxy": {
+				"limits": {
+					"cpu": "100m",
+					"memory": "200Mi"
+				},
+				"requests": {
+					"cpu": "100m",
+					"memory": "200Mi"
+				}
+			},
+			"fluentd": {
+				"limits": {
+					"cpu": "100m",
+					"memory": "200Mi"
+				},
+				"requests": {
+					"cpu": "100m",
+					"memory": "200Mi"
+				}
+			},
+			"dind": {
+				"limits": {
+					"cpu": "500m",
+					"memory": "1000Mi"
+				},
+				"requests": {
+					"cpu": "500m",
+					"memory": "1000Mi"
+				}
+			},
+			"couchdb": {
+				"limits": {
+					"cpu": "200m",
+					"memory": "400Mi"
+				},
+				"requests": {
+					"cpu": "200m",
+					"memory": "400Mi"
+				}
+			}
+		},
+		"storage": {
+			"statedb": {
+				"size": "10Gi",
+				"class": "portworx-1reps"
+			},
+			"peer": {
+				"size": "100Gi",
+				"class": "portworx-1reps"
+			}
+		},
+		"crstatus": {
+			"type": "Deploying",
+			"status": "True",
+			"reason": "waitingForPods",
+			"lastHeartbeatTime": "2020-09-10 16:04:23.336518211 +0000 UTC m=+52538.322169424",
+			"version": "2.5.1"
+		},
+		"version": "1.4.8-0",
+		"creation_timestamp": 1599753869,
+		"last_updated": 1599753869,
+		"nodeou": {
+			"enabled": true
+		},
+		"msp": {
+			"tls": {
+				"cacerts": [
+					"fake - deps tls.cacerts"
+				],
+				"signcerts": "fake - deps tls.signcerts"
+			},
+			"component": {
+				"cacerts": [
+					"fake - deps component.cacerts"
+				],
+				"signcerts": "fake - deps component.signcerts",
+				"admincerts": [
+					"fake - deps component.admincerts"
+				]
+			}
+		},
+		"region": "us-south",
+		"zone": "dal13",
+		"replicas": 1
+	},
+	"peer_v3_response": {
+		"api_url": "grpcs://fake-example.us-south.containers.appdomain.cloud:443",
+		"backend_addr": "grpcs://fake-example.us-south.containers.appdomain.cloud:443",
+		"dep_component_id": "mypeerv3h",
+		"display_name": "My Peer v2-a",
+		"grpcwp_url": "https://fake-example.us-south.containers.appdomain.cloud:443",
+		"id": "mypeerv2-a",
+		"location": "ibm_saas",
+		"msp": {
+			"ca": {
+				"root_certs": [
+					"fake - deps component.cacerts"
+				]
+			},
+			"component": {
+				"admin_certs": [
+					"fake - deps component.admincerts"
+				],
+				"ecert": "fake - deps component.signcerts",
+				"tls_cert": "fake - deps tls.signcerts"
+			},
+			"tlsca": {
+				"root_certs": [
+					"fake - deps tls.cacerts"
+				]
+			}
+		},
+		"msp_id": "org2",
+		"name": "My Peer v2-a",
+		"node_id": "mypeerv2-a",
+		"node_ou": {
+			"enabled": true
+		},
+		"node_type": "fabric-peer",
+		"operations_url": "https://fake-example.us-south.containers.appdomain.cloud:443",
+		"region": "us-south",
+		"resources": {
+			"couchdb": {
+				"limits": {
+					"cpu": "200m",
+					"memory": "400Mi"
+				},
+				"msg": "legacy field, reference \"statedb\" instead",
+				"requests": {
+					"cpu": "200m",
+					"memory": "400Mi"
+				}
+			},
+			"dind": {
+				"limits": {
+					"cpu": "500m",
+					"memory": "1000Mi"
+				},
+				"requests": {
+					"cpu": "500m",
+					"memory": "1000Mi"
+				}
+			},
+			"fluentd": {
+				"limits": {
+					"cpu": "100m",
+					"memory": "200Mi"
+				},
+				"requests": {
+					"cpu": "100m",
+					"memory": "200Mi"
+				}
+			},
+			"init": {
+				"limits": {
+					"cpu": "100m",
+					"memory": "200M"
+				},
+				"requests": {
+					"cpu": "100m",
+					"memory": "200M"
+				}
+			},
+			"peer": {
+				"limits": {
+					"cpu": "200m",
+					"memory": "400Mi"
+				},
+				"requests": {
+					"cpu": "200m",
+					"memory": "400Mi"
+				}
+			},
+			"proxy": {
+				"limits": {
+					"cpu": "100m",
+					"memory": "200Mi"
+				},
+				"requests": {
+					"cpu": "100m",
+					"memory": "200Mi"
+				}
+			},
+			"statedb": {
+				"limits": {
+					"cpu": "200m",
+					"memory": "400Mi"
+				},
+				"requests": {
+					"cpu": "200m",
+					"memory": "400Mi"
+				}
+			}
+		},
+		"scheme_version": "v1",
+		"short_name": "mypeerv2-a",
+		"storage": {
+			"peer": {
+				"class": "portworx-1reps",
+				"size": "100Gi"
+			},
+			"statedb": {
+				"class": "portworx-1reps",
+				"size": "10Gi"
+			}
+		},
+		"tags": [
+			"fabric-peer",
+			"ibm_saas"
+		],
+		"timestamp": 1599757938120,
+		"type": "fabric-peer",
+		"url2use": "/grpcwp/https%3A%2F%2F0909-mypeerv2a-grpcweb.openshift4x-ibpv2-test-68e10f583f026529fe7a89da40169ef4-0000.us-south.containers.appdomain.cloud%3A443",
+		"version": "1.4.8-0",
+		"zone": "dal13"
+	}
+}

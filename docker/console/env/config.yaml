@@ -1,0 +1,8 @@
+---
+version: v1.0
+app_port: 3000
+auth_scheme: couchdb
+initial_admin: admin
+configtxlator_url_original: http://localhost:7059
+host_url: http://localhost:3000
+default_user_password_initial: password

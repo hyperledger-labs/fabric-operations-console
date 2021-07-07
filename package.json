@@ -1,0 +1,12 @@
+{
+  "name": "root",
+  "private": true,
+  "devDependencies": {
+    "husky": "^6.0.0",
+    "lerna": "^4.0.0"
+  },
+  "scripts":{
+	  "prepare": "husky install",
+	  "install-detect-secrets": "pip install --upgrade git+https://github.com/ibm/detect-secrets.git@master#egg=detect-secrets"
+  }
+}

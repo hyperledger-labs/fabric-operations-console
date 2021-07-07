@@ -1,0 +1,21 @@
+{
+	"get_response_body": {
+		"_id": "c88180380a7ae3d355ffff438500291f",
+		"_rev": "1-b0473046fda12cebb3ee3d4d2c968763",
+		"type": "fabric-ca",
+		"short_name": "node",
+		"url": "<some url w/protocol and port here>",
+		"msp_id": "PeerOrg1",
+		"location": "<geo location description>",
+		"ca_name": "org1CA",
+		"users": [
+			{
+				"affiliation": "org1",
+				"enroll_id": "admin",
+				"enroll_secret": "bla"
+			}
+		],
+		"timestamp": 1538158288770,
+		"additional_property": "some additional property"
+	}
+}

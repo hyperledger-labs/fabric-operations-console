@@ -1,0 +1,88 @@
+body {
+    background-color: #778899;
+}
+
+.run_all_checkbox {
+    margin: 10px;
+}
+
+.input_checkbox {
+    margin: 20px;
+}
+
+.buttons {
+    width: 85%;
+}
+
+.base_button {
+    margin: 0 0 0 40%;
+    height: 50px;
+    width: 200px;
+    font-size: 18px;
+    background-color: #E8E8E8;
+    color: #1a1717;
+}
+
+.download_logs_button {
+    margin-left: 20px;
+}
+
+.download_logs_button:disabled {
+    cursor: not-allowed;
+    color: #808080;
+    background-color: #d3d3d3;
+}
+
+.container {
+    display: inline-block;
+    width: 60%;
+    margin: 0 0 0 20%;
+    height: 650px;
+    padding: 40px;
+    white-space: nowrap;
+}
+
+.first_column {
+    float: left;
+    padding: 2%;
+    width: 20%;
+}
+
+.column {
+    float: left;
+    padding: 20px;
+    width: 30%;
+    height: 95%;
+    border-left: 1px solid #f8f8ff;
+}
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.logging-level {
+    size: 8px;
+    padding: 10px;
+}
+
+.left_side {
+    width: 30%;
+    float: left;
+    border-right: 1px solid black;
+    height: 100%;
+}
+.right_side {
+    margin-left: 30%;
+    height: 100%;
+}
+
+.text_box {
+    height: 400px;
+    width: 300px;
+}
+
+.text_box_span {
+    margin: 0 0 0 15%
+}

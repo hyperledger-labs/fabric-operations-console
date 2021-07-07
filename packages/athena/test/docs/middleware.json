@@ -1,0 +1,174 @@
+{
+	"actions": [
+		"blockchain.components.create",
+		"blockchain.components.delete",
+		"blockchain.components.remove",
+		"blockchain.components.import",
+		"blockchain.components.export",
+		"blockchain.optools.restart",
+		"blockchain.optools.logs",
+		"blockchain.optools.view",
+		"blockchain.users.manage",
+		"blockchain.apikeys.manage",
+		"blockchain.notifications.manage"
+	],
+	"array_of_similar_functions_to_run_simultaneously": [
+		{
+			"name": "verify_create_action_session",
+			"index": 1
+		},
+		{
+			"name": "verify_create_action_ak",
+			"index": 1
+		},
+		{
+			"name": "verify_create_action_session",
+			"index": 3,
+			"not_called": true
+		},
+		{
+			"name": "verify_create_action_session",
+			"index": 3,
+			"not_called": true
+		},
+		{
+			"name": "verify_create_action_ak",
+			"index": 2,
+			"not_called": true
+		},
+		{
+			"name": "verify_delete_action_session",
+			"index": 1
+		},
+		{
+			"name": "verify_delete_action_session",
+			"index": 1,
+			"remove_actions": true
+		},
+		{
+			"name": "verify_delete_action_ak",
+			"index": 1
+		},
+		{
+			"name": "verify_remove_action_session",
+			"index": 1
+		},
+		{
+			"name": "verify_remove_action_session",
+			"index": 1,
+			"remove_actions": true
+		},
+		{
+			"name": "verify_remove_action_ak",
+			"index": 1
+		},
+		{
+			"name": "verify_restart_action_session",
+			"index": 1
+		},
+		{
+			"name": "verify_restart_action_session",
+			"index": 1,
+			"remove_actions": true
+		},
+		{
+			"name": "verify_restart_action_ak",
+			"index": 1
+		},
+		{
+			"name": "verify_logs_action_session",
+			"index": 1
+		},
+		{
+			"name": "verify_logs_action_session",
+			"index": 1,
+			"remove_actions": true
+		},
+		{
+			"name": "verify_logs_action_ak",
+			"index": 1
+		},
+		{
+			"name": "verify_view_action_session",
+			"index": 1
+		},
+		{
+			"name": "verify_view_action_session",
+			"index": 1,
+			"remove_actions": true
+		},
+		{
+			"name": "verify_view_action_ak",
+			"index": 1
+		},
+		{
+			"name": "verify_settings_action_session",
+			"index": 1
+		},
+		{
+			"name": "verify_settings_action_session",
+			"index": 1,
+			"remove_actions": true
+		},
+		{
+			"name": "verify_settings_action_ak",
+			"index": 1
+		},
+		{
+			"name": "verify_users_action_session",
+			"index": 1
+		},
+		{
+			"name": "verify_users_action_session",
+			"index": 1,
+			"remove_actions": true
+		},
+		{
+			"name": "verify_users_action_ak",
+			"index": 1
+		},
+		{
+			"name": "verify_users_action_init_ak",
+			"index": 1
+		},
+		{
+			"name": "verify_apiKey_action_session",
+			"index": 1
+		},
+		{
+			"name": "verify_apiKey_action_session",
+			"index": 1,
+			"remove_actions": true
+		},
+		{
+			"name": "verify_apiKey_action_ak",
+			"index": 1
+		},
+		{
+			"name": "verify_notifications_action_session",
+			"index": 1
+		},
+		{
+			"name": "verify_notifications_action_session",
+			"index": 1,
+			"remove_actions": true
+		},
+		{
+			"name": "verify_notifications_action_ak",
+			"index": 1
+		},
+		{
+			"name": "verify_sigCollections_action_session",
+			"index": 1
+		},
+		{
+			"name": "verify_sigCollections_action_session",
+			"index": 1,
+			"remove_actions": true
+		},
+		{
+			"name": "verify_sigCollections_action_ak",
+			"index": 1
+		}
+	]
+}

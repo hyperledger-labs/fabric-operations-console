@@ -1,0 +1,478 @@
+{
+	"fabric_ca": {
+		"short_name": {
+			"value": "<some user unique name>",
+			"_type": "String",
+			"required": true
+		},
+		"display_name": {
+			"value": "<some user defined name>",
+			"_type": "String",
+			"required": true
+		},
+		"type": {
+			"value": "fabric-ca",
+			"_type": "String",
+			"required": true
+		},
+		"description": {
+			"value": "",
+			"_type": "String",
+			"required": false
+		},
+		"ca_name": {
+			"value": "org1CA",
+			"_type": "String",
+			"required": true
+		},
+		"enroll_id": {
+			"value": "admin",
+			"_type": "String",
+			"required": false
+		},
+		"enroll_secret": {
+			"value": "secret",
+			"_type": "String",
+			"required": false
+		},
+		"certificate": {
+			"value": "cert",
+			"_type": "String",
+			"required": false
+		},
+		"api_url": {
+			"value": "<some url>",
+			"_type": "String",
+			"required": true
+		}
+	},
+	"fabric_peer": {
+		"short_name": {
+			"value": "<some user unique name>",
+			"_type": "String",
+			"required": true
+		},
+		"display_name": {
+			"value": "<some user defined name>",
+			"_type": "String",
+			"required": true
+		},
+		"type": {
+			"value": "fabric-peer",
+			"_type": "String",
+			"required": false
+		},
+		"description": {
+			"value": "",
+			"_type": "String",
+			"required": false
+		},
+		"location": {
+			"value": "<ibm_sass or null>",
+			"_type": "String",
+			"required": false
+		},
+		"msp_id": {
+			"value": "<e.g., PeerOrg1>",
+			"_type": "String",
+			"required": false
+		},
+		"grpcwp_url": {
+			"value": "<some url>",
+			"_type": "String",
+			"required": true
+		}
+	},
+	"fabric_orderer": {
+		"short_name": {
+			"value": "<some user unique name>",
+			"_type": "String",
+			"required": true
+		},
+		"display_name": {
+			"value": "<some user defined name>",
+			"_type": "String",
+			"required": true
+		},
+		"type": {
+			"value": "fabric-orderer",
+			"_type": "String",
+			"required": false
+		},
+		"description": {
+			"value": "",
+			"_type": "String",
+			"required": false
+		},
+		"location": {
+			"value": "<ibm_sass or null>",
+			"_type": "String",
+			"required": false
+		},
+		"msp_id": {
+			"value": "<e.g., OrdererOrg1>",
+			"_type": "String",
+			"required": false
+		},
+		"grpcwp_url": {
+			"value": "<some url>",
+			"_type": "String",
+			"required": true
+		}
+	},
+	"msp_definition": {
+		"type": {
+			"value": "msp",
+			"_type": "String",
+			"required": true
+		},
+		"msp_id": {
+			"value": "<some id here>",
+			"_type": "String",
+			"required": true
+		},
+		"root_certs": {
+			"value": [
+				"<some base64 cert here>"
+			],
+			"_type": "Array",
+			"required": true,
+			"min_length": 1
+		},
+		"intermediate_certs": {
+			"value": [
+				"<some base64 cert here>"
+			],
+			"_type": "Array",
+			"required": false
+		},
+		"certificate": {
+			"value": "<ca's base64 cert here>",
+			"_type": "String",
+			"required": false
+		},
+		"admins": {
+			"value": [],
+			"_type": "Array",
+			"required": true,
+			"min_length": 1
+		},
+		"tls_root_certs": {
+			"value": [
+				"<some base64 cert here>"
+			],
+			"_type": "Array",
+			"required": false
+		},
+		"revocation_list": {
+			"value": [
+				"<some base64 cert here>"
+			],
+			"_type": "Array",
+			"required": false
+		},
+		"organizational_unit_identifiers": {
+			"value": [
+				"<some id here>"
+			],
+			"_type": "Array",
+			"required": false
+		},
+		"fabric_node_ous": {
+			"value": [
+				"<some id here>"
+			],
+			"_type": "Array",
+			"required": false
+		}
+	},
+	"user_props": {
+		"type": "msp_definition",
+		"msp_id": "org1",
+		"root_certs": [
+			"cert1",
+			"cert2"
+		],
+		"admins": [
+			"admin1",
+			"admin2"
+		]
+	},
+	"fabric_ca_node_obj": {
+		"body": {
+			"type": "fabric-ca",
+			"short_name": "some_name",
+			"api_url": "some url w/protocol and port here",
+			"msp_id": "PeerOrg1",
+			"location": null,
+			"ca_name": "org1CA",
+			"enroll_id": "admin",
+			"enroll_secret": "secret"
+		}
+	},
+	"fabric_peer_node_obj": {
+		"body": {
+			"type": "fabric-peer",
+			"short_name": "some_name",
+			"location": null,
+			"private_key": "-----BEGIN PRIVATE KEY-----\\nfake_private_key\\n-----END PRIVATE KEY-----",
+			"cert": "-----BEGIN CERTIFICATE-----\\nfake-cert\\n-----END CERTIFICATE-----",
+			"msp_id": "PeerOrg1",
+			"api_url": "some url w/protocol and port here",
+			"grpcwp_url": "some url w/protocol and port here"
+		}
+	},
+	"fabric_orderer_node_obj": {
+		"body": {
+			"type": "fabric-peer",
+			"short_name": "some_name",
+			"location": null,
+			"private_key": "-----BEGIN PRIVATE KEY-----\\nfake_private_key\\n-----END PRIVATE KEY-----",
+			"cert": "-----BEGIN CERTIFICATE-----\\nfake-cert\\n-----END CERTIFICATE-----",
+			"msp_id": "PeerOrg1",
+			"api_url": "some url w/protocol and port here",
+			"grpcwp_url": "some url w/protocol and port here"
+		}
+	},
+	"nodes": [
+		{
+			"_id": "6e08fe0e990f73593300df411f013036",
+			"_rev": "1-fac9d6a5b76741854fb7ccfd6867d0b6",
+			"type": "fabric-peer",
+			"short_name": "David",
+			"location": null,
+			"msp_id": "PeerOrg1",
+			"url": "http://istillneedthisvm.rtp.raleigh.ibm.com:8080",
+			"timestamp": 1539772893852,
+			"name": "David"
+		}
+	],
+	"request_response": {
+		"statusCode": 200,
+		"body": "{\"backend_addr\":\"dal-zbc04c.5.secure.blockchain.ibm.com:20407\",\"backend_tls\":true,\"backend_tls_no_verify\":false,\"backend_max_call_recv_msg_size_bytes\":104857600,\"run_tls_server\":true,\"run_http_server\":true,\"use_websockets\":true,\"server_http_max_write_timeout_ns\":300000000000,\"server_http_max_read_timeout_ns\":300000000000,\"keep_alive_client_interval_ns\":120000000000,\"keep_alive_client_timeout_ns\":20000000000}",
+		"headers": {
+			"content-type": "application/json",
+			"date": "Tue, 13 Nov 2018 10:40:49 GMT",
+			"content-length": "411",
+			"connection": "close"
+		},
+		"request": {
+			"uri": {
+				"protocol": "http:",
+				"slashes": true,
+				"auth": null,
+				"host": "istillneedthisvm.rtp.raleigh.ibm.com:8080",
+				"port": "8080",
+				"hostname": "istillneedthisvm.rtp.raleigh.ibm.com",
+				"hash": null,
+				"search": null,
+				"query": null,
+				"pathname": "/settings",
+				"path": "/settings",
+				"href": "http://istillneedthisvm.rtp.raleigh.ibm.com:8080/settings"
+			},
+			"method": "GET",
+			"headers": {
+				"Accept": "application/json"
+			}
+		}
+	},
+	"add_backend_addr_response_fabric_peer": [
+		{
+			"_id": "6e08fe0e990f73593300df411f013036",
+			"_rev": "1-fac9d6a5b76741854fb7ccfd6867d0b6",
+			"type": "fabric-peer",
+			"short_name": "David",
+			"location": null,
+			"msp_id": "PeerOrg1",
+			"url": "http://istillneedthisvm.rtp.raleigh.ibm.com:8080",
+			"timestamp": 1539772893852,
+			"name": "David",
+			"backend_addr": "dal-zbc04c.5.secure.blockchain.ibm.com:20407"
+		}
+	],
+	"add_backend_addr_response_fabric_orderer": [
+		{
+			"_id": "6e08fe0e990f73593300df411f013036",
+			"_rev": "1-fac9d6a5b76741854fb7ccfd6867d0b6",
+			"type": "fabric-orderer",
+			"short_name": "David",
+			"location": null,
+			"msp_id": "PeerOrg1",
+			"url": "http://istillneedthisvm.rtp.raleigh.ibm.com:8080",
+			"timestamp": 1539772893852,
+			"name": "David",
+			"backend_addr": "dal-zbc04c.5.secure.blockchain.ibm.com:20407"
+		}
+	],
+	"add_backend_addr_response_null_addr": [
+		{
+			"_id": "6e08fe0e990f73593300df411f013036",
+			"_rev": "1-fac9d6a5b76741854fb7ccfd6867d0b6",
+			"type": "fabric-peer",
+			"short_name": "David",
+			"location": null,
+			"msp_id": "PeerOrg1",
+			"url": "http://istillneedthisvm.rtp.raleigh.ibm.com:8080",
+			"timestamp": 1539772893852,
+			"name": "David",
+			"backend_addr": null
+		}
+	],
+	"msp_definition_request_body": {
+		"body": {
+			"type": "msp",
+			"msp_id": "PeerOrg1",
+			"name": "msp_definition_1",
+			"url": "https://url.looking.thingy.com",
+			"root_certs": [
+				"cert1",
+				"cert2"
+			],
+			"intermediate_certs": [
+				"intermediate_cert1",
+				"intermediate_cert2"
+			],
+			"certificate": "certificate_for_test",
+			"admins": [
+				"admin1",
+				"admin2"
+			],
+			"tls_root_certs": [
+				"tls_root_cert1",
+				"tls_root_cert2"
+			],
+			"revocation_list": [
+				"revoked_user1",
+				"revoked_user2"
+			],
+			"organizational_unit_identifiers": [
+				"unit1",
+				"unit2"
+			],
+			"fabric_node_ous": [
+				"ous1",
+				"ous2"
+			]
+		}
+	},
+	"body_to_validate": {
+		"msp_id": "org1",
+		"type": "fabric-peer",
+		"config": [
+			"some array member for the test"
+		],
+		"config_length": 1,
+		"cluster_name": "some wonderful cluster",
+		"testable_number": 8,
+		"config_nested": {
+			"enrollment": {
+				"component": {
+					"cahost": "169.46.223.99",
+					"caport": "31156",
+					"caname": "ca",
+					"catls": {
+						"cacert": "ca_cert"
+					},
+					"enrollid": "admin",
+					"enrollsecret": "admin",
+					"admincerts": [
+						"admin_cert"
+					]
+				},
+				"tls": {
+					"cahost": "169.46.223.99",
+					"caport": "31156",
+					"caname": "tlsca",
+					"catls": {
+						"cacert": "ca_cert"
+					},
+					"enrollid": "admin",
+					"enrollsecret": "admin",
+					"admincerts": [
+						"cert1"
+					],
+					"csr": {
+						"hosts": []
+					}
+				}
+			}
+		}
+	},
+	"properties_to_validate": {
+		"msp_id": {
+			"value": "<e.g., PeerOrg1>",
+			"_type": "String",
+			"required": true
+		},
+		"type": {
+			"value": "fabric-peer",
+			"_type": "String",
+			"required": true
+		},
+		"config": {
+			"value": "<e.g., PeerOrg1>",
+			"_type": "Array",
+			"required": true,
+			"min_length": 1,
+			"max_length": 9
+		},
+		"config_length": {
+			"value": "<e.g., PeerOrg1>",
+			"_type": "enum",
+			"required": true,
+			"possible_values": [
+				1,
+				3,
+				5,
+				7,
+				9
+			]
+		},
+		"display_name": {
+			"value": "<some user defined nick name for 1 node>",
+			"_type": "String",
+			"required": false
+		},
+		"cluster_name": {
+			"value": "<some user defined nick name for the cluster>",
+			"_type": "String",
+			"required": true
+		},
+		"testable_number": {
+			"value": "some number",
+			"_type": "Number",
+			"required": true,
+			"min": 6,
+			"max": 10
+		},
+		"config_nested": {
+			"enrollment": {
+				"component": {
+					"cahost": {
+						"value": "",
+						"type": "number",
+						"required": true
+					},
+					"caport": {
+						"value": "",
+						"type": "number",
+						"required": true
+					},
+					"caname": {
+						"value": "",
+						"type": "string",
+						"required": true
+					},
+					"catls": {
+						"cacert": {
+							"value": "",
+							"type": "string",
+							"required": true
+						}
+					}
+				}
+			}
+		}
+	}
+}

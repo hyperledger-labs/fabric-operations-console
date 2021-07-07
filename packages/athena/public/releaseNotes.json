@@ -1,0 +1,280 @@
+[
+	{
+		"version": "2.5.2-42",
+		"date": "25 Mar 2021",
+		"description": [
+			{
+				"title": "Bug fixes",
+				"details": "Miscellaneous bug fixes."
+			}
+		]
+	},
+	{
+		"version": "2.5.1-56",
+		"date": "12 Jan 2021",
+		"description": [
+			{
+				"title": "New logging configuration panel",
+				"details": "A new panel is available to override peer and ordering node log levels for specific component loggers."
+			}
+		]
+	},
+	{
+		"version": "2.5.1-38",
+		"date": "02 Nov 2020",
+		"description": [
+			{
+				"title": "Fabric 2.x node upgrade",
+				"details": "It is now possible to upgrade your existing CA, peer, and ordering nodes to Fabric v2.x images."
+			},
+			{
+				"title": "Fabric v2.x Lifecycle support",
+				"details": "The platform now includes support for Fabric v2.x smart contract lifecycle deployment."
+			},
+			{
+				"title": "Certificate renewal enhancements",
+				"details": "Use the console to renew CA TLS, and peer or ordering node enrollment and TLS certificates from the console before or after they expire."
+			},
+			{
+				"title": "CA enhancement",
+				"details": "Registered users can now be deleted from a CA."
+			}
+		]
+	},
+	{
+		"version": "2.5.0-41",
+		"date": "25 Aug 2020",
+		"description": [
+			{
+				"title": "Certificate Expiry visibility",
+				"details": "Certificate expiration dates have been added throughout the component details and channels making it easier to monitor and track certificate expiration dates."
+			}
+		]
+	},
+	{
+		"version": "2.5.0-31",
+		"date": "14 July 2020",
+		"description": [
+			{
+				"title": "Bug fixes",
+				"details": "Miscellaneous bug fixes and security patches."
+			}
+		]
+	},
+	{
+		"version": "2.5.0-26",
+		"date": "18 June 2020",
+		"description": [
+			{
+				"title": "Peer and ordering node images",
+				"details": "The platform introduces the capability to deploy new peer and ordering nodes based on either Hyperledger Fabric v1.4 or v2.x."
+			},
+			{
+				"title": "Elimination of Docker daemon dependency",
+				"details": "Leveraging the Fabric v2 external chaincode launcher capability, when you deploy a peer based on the Fabric v2.1.1 image, smart contracts are deployed into their own pod rather than inside a container on the peer pod."
+			},
+			{
+				"title": "Multizone-capable storage",
+				"details": "If your Kubernetes cluster is configured to use multizone-capable storage, new peer and ordering nodes can be deployed that leverage multizone storage, effectively extending their high availability across cluster zones."
+			}
+		]
+	},
+	{
+		"version": "2.1.3-108",
+		"date": "20 May 2020",
+		"description": [
+			{
+				"title": "Support for Intermediate Certificate Authorities (CAs)",
+				"details": "You now have the option to configure an intermediate CA using the console or APIs to override the default CA settings."
+			},
+			{
+				"title": "Updated connection profile",
+				"details": "The generated connection profile that client applications use to connect to the network has been streamlined and is now downloadable from the Organizations tab."
+			}
+		]
+	},
+	{
+		"version": "2.1.3-101",
+		"date": "16 Apr 2020",
+		"description": [
+			{
+				"title": "Bug fixes",
+				"details": "Various bug fixes"
+			}
+		]
+	},
+	{
+		"version": "2.1.3-88",
+		"date": "24 Mar 2020",
+		"description": [
+			{
+				"title": "Hardware Security Module (HSM) support for node identities",
+				"details": "Full cryptographic HSM support is now available for HSMs that implement the PKCS #11 standard."
+			},
+			{
+				"title": "Support for adding and removing ordering nodes from an existing ordering service",
+				"details": "Previously, an ordering service could only contain one or five ordering nodes and they all were contributed from the same organization. Now, the ordering service can be deployed across multiple organizations in a blockchain network, enabling individual organizations to add and remove individual ordering nodes as required."
+			},
+			{
+				"title": "Ability to override default CA, peer, ordering node configuration",
+				"details": "Hyperledger Fabric includes many configuration options for a CA, peer, or ordering node."
+			},
+			{
+				"title": "v2 APIs available",
+				"details": "New IBM Blockchain Platform console APIs using the route /v2/ are now available."
+			},
+			{
+				"title": "Hyperledger Fabric v1.4.6",
+				"details": "All new nodes are deployed using Hyperledger Fabric v1.4.6."
+			}
+		]
+	},
+	{
+		"version": "0.4.30",
+		"date": "11 Dec 2019",
+		"description": [
+			{
+				"title": "Bug fixes",
+				"details": "Various bug fixes"
+			}
+		]
+	},
+	{
+		"version": "0.4.15",
+		"date": "06 Nov 2019",
+		"description": [
+			{
+				"title": "Simplified component creation flows",
+				"details": "Peer, CA and ordering service creation has been streamlined. Now, when you create a node, you have to select a checkbox to configure advanced deployment options."
+			}
+		]
+	},
+	{
+		"version": "0.4.1",
+		"date": "02 Oct 2019",
+		"description": [
+			{
+				"title": "Zone selection for ordering nodes",
+				"details": "Allows users to deploy their ordering nodes into distributed zones."
+			},
+			{
+				"title": "Anchor peer during join",
+				"details": "Users can now choose to bootstrap the automatic communication between organizations by specifying a peer as an anchor peer when the peer is being joined to the channel."
+			},
+			{
+				"title": "Add peer to a channel from Channels tab",
+				"details": "A peer can now be joined to a channel directly from the Channels tab."
+			},
+			{
+				"title": "Export/Import all",
+				"details": "Allows for the bulk export and import of nodes, MSPs, and identities, rather than having to export and import these components one at a time."
+			},
+			{
+				"title": "Hyperledger Fabric v1.4.3",
+				"details": "All new nodes are deployed using Hyperledger Fabric v1.4.3."
+			}
+		]
+	},
+	{
+		"version": "0.3.50",
+		"date": "21 Aug 2019",
+		"description": [
+			{
+				"title": "Ability to update admin certs for peer nodes",
+				"details": "You now have the ability to upload admin certs on the peers."
+			},
+			{
+				"title": "CA Updates",
+				"details": "The console UI no longer uses enroll IDs and secrets for management of a CA. After you create a new CA, you now need to generate certificates yourself by using the Set identity button. Existing CAs are not affected."
+			},
+			{
+				"title": "Select Peer zones",
+				"details": "When you deploy a peer and multiple zones are configured in your Kubernetes cluster, you now have the ability from the console UI to select the zone where the peer gets deployed"
+			},
+			{
+				"title": "Peer database support now includes LevelDB",
+				"details": "You now have the option to choose between CouchDB and LevelDB for your Peer database."
+			}
+		]
+	},
+	{
+		"version": "0.3.31",
+		"date": "24 July 2019",
+		"description": [
+			{
+				"title": "IAM multi-policy fixes",
+				"details": ""
+			},
+			{
+				"title": "Miscellaneous fixes",
+				"details": ""
+			}
+		]
+	},
+	{
+		"version": "0.3.27",
+		"date": "10 July 2019",
+		"description": [
+			{
+				"title": "Anchor peer removal",
+				"details": "You now have the ability to remove anchor peers from a channel."
+			},
+			{
+				"title": "Miscellaneous bug fixes and enhancements",
+				"details": ""
+			}
+		]
+	},
+	{
+		"version": "0.2.25",
+		"date": "24 May 2019",
+		"description": [
+			{
+				"title": "Raft consensus protocol",
+				"details": "The five node Raft ordering service, recommended for production networks, is now available. In addition, for development and testing purposes, you can deploy a single node Raft ordering service"
+			}
+		]
+	},
+	{
+		"version": "0.1.91",
+		"date": "10 May 2019",
+		"description": [
+			{
+				"title": "Console APIs",
+				"details": "APIs are now available to provision, edit, and delete peer, orderer, and CA nodes, making it possible to script the building of your blockchain network."
+			},
+			{
+				"title": "Channel Governance",
+				"details": "Channel updates now allow policies to be reconfigured. You can also control which channel members need to sign a channel update and orchestrate signature collection"
+			}
+		]
+	},
+	{
+		"version": "0.1.60",
+		"date": "10 April 2019",
+		"description": [
+			{
+				"title": "Resource Allocation",
+				"details": "Ability to specify resource allocation for nodes in paid cluster during deployment and then scale their resources up or down at a later time according to usage patterns."
+			},
+			{
+				"title": "Identity and Access Management",
+				"details": "Use Identity and Access Management (IAM) to control user access to the console UI."
+			}
+		]
+	},
+	{
+		"version": "0.1.51",
+		"date": "03 April 2019",
+		"description": [
+			{
+				"title": "Support for External CA",
+				"details": "You have the option to use certificates from an external CA, one that is not hosted by IBM."
+			},
+			{
+				"title": "Tuning orderer performance",
+				"details": "New orderer tuning parameters are available in the console to give you more control over your orderer throughput and performance."
+			}
+		]
+	}
+]

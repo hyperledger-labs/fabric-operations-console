@@ -1,0 +1,67 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+/dist
+/tmp
+
+# dependencies
+/node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+
+#System Files
+.DS_Store
+Thumbs.db
+
+# dsh
+/env/dev.json
+/env/my_config.yaml
+/data/
+
+# Logs
+/logs/*.log
+# logs
+*.log
+npm-debug.log*
+
+# Coverage directory used by tools like istanbul
+coverage
+
+# nyc test coverage
+.nyc_output
+
+# Test reports
+*.tap
+
+# Compiled binary addons (http://nodejs.org/api/addons.html)
+build/Release
+
+# Optional npm cache directory
+.npm
+
+# wallaby
+athena.wallaby.js
+
+# don't include fileUploads
+fileUploads
+bundle.js
+
+# other
+/logs/athena_restart.log
+/public/stitch.html
+/public/js/index.js
+public/legacy/
+public/js/jsrsasign-all-min.js
+scripts/one_time_fixes/dup_fixes
+_backups
+scripts/reports
+
+# AppScan
+*.irx
+*.zip

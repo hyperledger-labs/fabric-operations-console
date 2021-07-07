@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="209" height="111" viewBox="0 0 209 111">
+  <defs>
+    <filter id="group-copysvg-a" width="138.3%" height="183.6%" x="-19.2%" y="-41.8%" filterUnits="objectBoundingBox">
+      <feOffset dy="2" in="SourceAlpha" result="shadowOffsetOuter1"/>
+      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="5"/>
+      <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0"/>
+      <feMerge>
+        <feMergeNode in="shadowMatrixOuter1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <linearGradient id="group-copysvg-b" x1="100%" x2="0%" y1="50%" y2="50%">
+      <stop offset="0%" stop-color="#50565B"/>
+      <stop offset="100%" stop-color="#6E757C"/>
+    </linearGradient>
+    <linearGradient id="group-copysvg-c" x1="100%" x2="14.169%" y1="50%" y2="50%">
+      <stop offset="0%" stop-color="#697077"/>
+      <stop offset="100%" stop-color="#6E757C"/>
+    </linearGradient>
+    <linearGradient id="group-copysvg-d" x1="50%" x2="50%" y1="87.486%" y2="0%">
+      <stop offset="0%" stop-color="#646B71"/>
+      <stop offset="100%" stop-color="#53595E"/>
+    </linearGradient>
+    <filter id="group-copysvg-e" width="134.8%" height="149.5%" x="-17.4%" y="-24.7%" filterUnits="objectBoundingBox">
+      <feOffset dy="2" in="SourceAlpha" result="shadowOffsetOuter1"/>
+      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="5"/>
+      <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0"/>
+      <feMerge>
+        <feMergeNode in="shadowMatrixOuter1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="group-copysvg-f" width="138.3%" height="183.6%" x="-19.2%" y="-41.8%" filterUnits="objectBoundingBox">
+      <feOffset dy="2" in="SourceAlpha" result="shadowOffsetOuter1"/>
+      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="5"/>
+      <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0"/>
+      <feMerge>
+        <feMergeNode in="shadowMatrixOuter1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="group-copysvg-g" width="172.7%" height="172.7%" x="-36.4%" y="-36.4%" filterUnits="objectBoundingBox">
+      <feOffset dy="2" in="SourceAlpha" result="shadowOffsetOuter1"/>
+      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="1"/>
+      <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0"/>
+      <feMerge>
+        <feMergeNode in="shadowMatrixOuter1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <path id="group-copysvg-h" d="M10.76625,7.60875 L9.75,6.59625 L9.75,4.875 C9.75002419,2.94913003 8.29121643,1.336337 6.375,1.14375 L6.375,0.375 L5.62499372,0.375 L5.625,1.14375 C3.70878357,1.336337 2.24997581,2.94913003 2.25,4.875 L2.25,6.59625 L1.23375,7.60875 C1.16355506,7.67951956 1.12442372,7.77532388 1.12499372,7.875 L1.125,9 C1.125,9.20710678 1.29289322,9.375 1.5,9.375 L4.12499372,9.375 C4.125,10.4105339 4.96446609,11.25 6,11.25 C7.03553391,11.25 7.875,10.4105339 7.875,9.375 L10.5,9.375 C10.7071068,9.375 10.875,9.20710678 10.875,9 L10.875,7.875 C10.8755763,7.77532388 10.8364449,7.67951956 10.76625,7.60875 Z M6,10.5 C5.37867966,10.5 4.875,9.99632034 4.875,9.375 L7.125,9.375 C7.125,9.99632034 6.62132034,10.5 6,10.5 L6,10.5 Z M10.125,8.625 L1.875,8.625 L1.875,8.02875 L2.89125,7.0125 C2.96052906,6.94265226 2.99958577,6.84837745 3,6.75 L3,4.875 C3,3.21814575 4.34314575,1.875 6,1.875 C7.65685425,1.875 9,3.21814575 9,4.875 L9,6.75 C8.99942372,6.84967612 9.03855506,6.94548044 9.10875,7.01625 L10.125,8.02875 L10.125,8.625 Z"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd" transform="translate(9 6)">
+    <g filter="url(#group-copysvg-a)" opacity=".5" transform="rotate(-20 119.097 21)">
+      <rect width="120" height="55" fill="#373D42" fill-rule="nonzero" rx="1"/>
+      <rect width="74" height="6" x="8" y="7" fill="url(#group-copysvg-b)" fill-rule="nonzero" rx="1"/>
+      <rect width="64" height="4" x="8" y="16" fill="#6E757C" fill-rule="nonzero" rx="1"/>
+      <rect width="25" height="4" x="8" y="44" fill="#6E757C" fill-rule="nonzero" rx="1"/>
+      <rect width="106" height="2" x="8" y="31" fill="url(#group-copysvg-c)" fill-rule="nonzero" rx="1"/>
+      <rect width="16" height="4" x="98" y="44" fill="#6E757C" fill-rule="nonzero" rx="1"/>
+      <rect width="8" height="6" x="94" y="7" fill="#6E757C" fill-rule="nonzero" rx="1"/>
+      <rect width="8" height="6" x="105" y="7" fill="#6E757C" fill-rule="nonzero" rx="1"/>
+      <path fill="url(#group-copysvg-d)" d="M1,0 L3,0 L3,55 L1,55 C0.44771525,55 6.76353751e-17,54.5522847 0,54 L0,1 C-6.76353751e-17,0.44771525 0.44771525,1.01453063e-16 1,0 Z"/>
+    </g>
+    <rect width="120" height="55" x="64.787" y="19.863" fill="#202529" fill-rule="nonzero" rx="1" transform="rotate(20 124.787 47.363)"/>
+    <g filter="url(#group-copysvg-e)" opacity=".5" transform="translate(59 1)">
+      <rect width="120" height="55" x="5.787" y="18.863" fill="#373D42" fill-rule="nonzero" rx="1" transform="rotate(20 65.787 46.363)"/>
+      <rect width="74" height="6" x="20.677" y="21.788" fill="url(#group-copysvg-b)" fill-rule="nonzero" rx="1" transform="rotate(20 57.677 24.788)"/>
+      <rect width="64" height="4" x="18.242" y="28.595" fill="#6E757C" fill-rule="nonzero" rx="1" transform="rotate(20 50.242 30.595)"/>
+      <rect width="25" height="4" x="9.842" y="48.237" fill="#6E757C" fill-rule="nonzero" rx="1" transform="rotate(20 22.342 50.237)"/>
+      <rect width="106" height="2" x="12.188" y="49.933" fill="url(#group-copysvg-c)" fill-rule="nonzero" rx="1" transform="rotate(20 65.188 50.933)"/>
+      <rect width="16" height="4" x="94.686" y="77.48" fill="#6E757C" fill-rule="nonzero" rx="1" transform="rotate(20 102.686 79.48)"/>
+      <rect width="8" height="6" x="103.481" y="39.915" fill="#6E757C" fill-rule="nonzero" rx="1" transform="rotate(20 107.48 42.915)"/>
+      <rect width="8" height="6" x="113.817" y="43.677" fill="#6E757C" fill-rule="nonzero" rx="1" transform="rotate(20 117.817 46.677)"/>
+      <path fill="url(#group-copysvg-d)" d="M10.3150929,-1.14542271 L12.3150929,-1.14542271 L12.3150929,53.8545773 L10.3150929,53.8545773 C9.76280812,53.8545773 9.31509287,53.406862 9.31509287,52.8545773 L9.31509287,-0.145422713 C9.31509287,-0.697707463 9.76280812,-1.14542271 10.3150929,-1.14542271 Z" transform="rotate(20 10.815 26.355)"/>
+    </g>
+    <g filter="url(#group-copysvg-f)" transform="translate(36 17.958)">
+      <rect width="120" height="55" fill="#373D42" fill-rule="nonzero" rx="1"/>
+      <rect width="74" height="6" x="8" y="7" fill="url(#group-copysvg-b)" fill-rule="nonzero" rx="1"/>
+      <rect width="64" height="4" x="8" y="16" fill="#6E757C" fill-rule="nonzero" opacity=".5" rx="1"/>
+      <rect width="25" height="4" x="8" y="44" fill="#6E757C" fill-rule="nonzero" opacity=".5" rx="1"/>
+      <rect width="106" height="2" x="8" y="31" fill="url(#group-copysvg-c)" fill-rule="nonzero" rx="1"/>
+      <rect width="16" height="4" x="98" y="44" fill="#6E757C" fill-rule="nonzero" opacity=".5" rx="1"/>
+      <rect width="8" height="6" x="94" y="7" fill="#6E757C" fill-rule="nonzero" rx="1"/>
+      <rect width="8" height="6" x="105" y="7" fill="#6E757C" fill-rule="nonzero" rx="1"/>
+      <path fill="url(#group-copysvg-d)" d="M1,0 L3,0 L3,55 L1,55 C0.44771525,55 6.76353751e-17,54.5522847 0,54 L0,1 C-6.76353751e-17,0.44771525 0.44771525,1.01453063e-16 1,0 Z"/>
+    </g>
+    <g filter="url(#group-copysvg-g)" transform="translate(104 61.958)">
+      <circle cx="11" cy="11" r="11" fill="#0F6FFF" fill-rule="nonzero"/>
+      <use fill="#FFF" transform="translate(5 5)" xlink:href="#group-copysvg-h"/>
+    </g>
+    <g fill-rule="nonzero" transform="translate(2 3.958)">
+      <circle cx="189.5" cy="73.5" r="3.5" fill="#373D42"/>
+      <circle cx="80.5" cy="87.5" r="3.5" fill="#FFA768"/>
+      <circle cx="2.5" cy="79.5" r="2.5" fill="#373D42"/>
+      <circle cx="145.5" cy="91.5" r="2.5" fill="#373D42"/>
+      <circle cx="171.5" cy="11.5" r="2.5" fill="#D7306D"/>
+      <circle cx="27.5" cy="2.5" r="2.5" fill="#373D42"/>
+      <circle cx="7.5" cy="21.5" r="2.5" fill="#BB8EFF"/>
+    </g>
+  </g>
+</svg>

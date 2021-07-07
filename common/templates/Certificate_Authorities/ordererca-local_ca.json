@@ -1,0 +1,11 @@
+{
+    "display_name": "ordererca - local",
+    "api_url": "https://ca_orderer:9054",
+    "operations_url": "http://ca_orderer:19054",
+    "ca_url": "https://ca_orderer:9054",
+    "type": "fabric-ca",
+    "ca_name": "ca-orderer",
+    "tlsca_name": "ca-orderer",
+    "tls_cert": "<TLS_CERT>",
+    "name": "ordererca - local"
+}

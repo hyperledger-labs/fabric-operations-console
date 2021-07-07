@@ -1,0 +1,40 @@
+.hidden_section {
+	height: 0px;
+	overflow: hidden;
+}
+
+.ibp-upload-definition {
+	margin-top: 2rem;
+}
+
+.ibp-identity-type-toggle {
+	margin-bottom: 2rem;
+}
+
+.ibp-toggle-cert-details {
+	.ibp-link {
+		background-color: transparent;
+		border-top: none;
+		border-left: none;
+		border-right: none;
+		color: $action;
+		cursor: pointer;
+		font-size: 100%;
+		margin-bottom: 0.25rem;
+		margin-top: 0px;
+		padding: 0px;
+	}
+}
+
+.ibp-msp-cert-expiry {
+	color: $warning;
+	padding-left: 1.25rem;
+	position: relative;
+	svg {
+		position: absolute;
+		bottom: 0.25rem;
+		left: 0px;
+		fill: $warning;
+		margin-right: 0.5rem;
+	}
+}

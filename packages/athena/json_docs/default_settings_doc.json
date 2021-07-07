@@ -1,0 +1,264 @@
+{
+	"_id": "00_settings_athena",
+	"access_list": {},
+	"activity_tracker_path": null,
+	"app_id": {
+		"client_id": "-",
+		"oauth_url": "http://example.com",
+		"secret": "-",
+		"tenant_id": "-"
+	},
+	"integration_test_enabled": false,
+	"app_port": 3000,
+	"auth_scheme": "initial",
+	"backend_address_timeout_ms": 3000,
+	"ca_proxy_timeout": 10000,
+	"cluster_data": {
+		"type": null
+	},
+	"configtxlator_timeout": 90000,
+	"configtxlator_url_original": "http://example.com:80",
+	"configtxlators": {
+		"v1.1.0": "http://example.com:80",
+		"v1.2.0": "http://example.com:80"
+	},
+	"cookie_name": "com.ibm.cloud.console.blockchain.optools",
+	"crn": {
+		"instance_id": "-"
+	},
+	"crn_string": "-",
+	"db_custom_names": null,
+	"db_defaults": {
+		"DB_COMPONENTS": {
+			"description": "db for peers/cas/orderers/collections/msps docs",
+			"design_docs": [
+				"../json_docs/components_design_doc.json",
+				"../json_docs/template.json"
+			],
+			"name": "athena_components"
+		},
+		"DB_SESSIONS": {
+			"description": "db for browser sessions",
+			"design_docs": [],
+			"name": "athena_sessions"
+		},
+		"DB_SYSTEM": {
+			"description": "db to store internal settings and internal transactions",
+			"design_docs": [
+				"../json_docs/default_settings_doc.json",
+				"../json_docs/system_design_doc.json",
+				"../json_docs/json_validation/ibp_openapi_v3.yaml",
+				"../json_docs/json_validation/ibp_openapi_v2.yaml"
+			],
+			"name": "athena_system"
+		}
+	},
+	"default_user_password": null,
+	"default_user_password_initial": "ohnoididnotchangethepassword",
+	"deployer_timeout": 105000,
+	"deployer_url": "http://example.com:80",
+	"dynamic_config": true,
+	"dynamic_tls": true,
+	"enforce_backend_ssl": false,
+	"environment": "prod",
+	"fabric_capabilities": {
+		"application": [
+			"V1_1",
+			"V1_2",
+			"V1_3",
+			"V1_4_2",
+			"V2_0"
+		],
+		"channel": [
+			"V1_3",
+			"V1_4_2",
+			"V1_4_3",
+			"V2_0"
+		],
+		"orderer": [
+			"V1_1",
+			"V1_4_2",
+			"V2_0"
+		]
+	},
+	"fabric_get_block_timeout_ms": 10000,
+	"fabric_instantiate_timeout_ms": 300000,
+	"fabric_join_channel_timeout_ms": 25000,
+	"fabric_install_cc_timeout_ms": 300000,
+	"fabric_lc_install_cc_timeout_ms": 300000,
+	"fabric_general_timeout_ms": 10000,
+	"fabric_lc_get_cc_timeout_ms": 180000,
+	"feature_flags": {
+		"capabilities_enabled": true,
+		"create_channel_enabled": true,
+		"high_availability": false,
+		"remote_peer_config_enabled": true,
+		"saas_enabled": true,
+		"templates_enabled": false,
+		"scale_raft_nodes_enabled": false,
+		"hsm_enabled": false,
+		"enable_ou_identifier": false,
+		"patch_1_4to2_x_enabled": true,
+		"lifecycle2_0_enabled": true,
+		"import_only_enabled": true
+	},
+	"file_logging": {
+		"client": {
+			"enabled": false,
+			"level": "info",
+			"unique_name": false
+		},
+		"server": {
+			"enabled": true,
+			"level": "silly",
+			"unique_name": false
+		}
+	},
+	"csp_header_values": [
+		"connect-src *",
+		"default-src *.medallia.eu",
+		"font-src 'self' *.s81c.com fonts.gstatic.com",
+		"frame-ancestors 'none'",
+		"img-src 'self' *.ibm.com appboy-images.com *.medallia.eu",
+		"script-src 'self' 'unsafe-eval' 'unsafe-inline' *.ibm.com api.segment.com cdn.segment.com console.bluemix.net *.braze.com lpcdn.lpsnmedia.net *.liveperson.net *.medallia.eu *.kampyle.com",
+		"style-src 'self' 'unsafe-inline' *.ibm.com *.medallia.eu"
+	],
+	"host_url": "http://localhost:3000",
+	"host_white_list": [
+		".*"
+	],
+	"hsm": null,
+	"http_timeout": 120000,
+	"http_status_timeout": 1000,
+	"http_metrics_enabled": true,
+	"iam_api_key": null,
+	"iam_cache_enabled": true,
+	"ibmid": {
+		"client_id": "username",
+		"client_secret": "secret",
+		"url": "https://iam.cloud.ibm.com/identity/.well-known/openid-configuration"
+	},
+	"ignore_config_file": false,
+	"inactivity_timeouts": {
+		"enabled": false,
+		"max_idle_time": 900000
+	},
+	"infrastructure": "kubernetes",
+	"initial_admin": "-",
+	"ldap": {},
+	"lockout_limit": 5,
+	"max_req_per_min": 50,
+	"max_req_per_min_ak": 50,
+	"min_password_len": 8,
+	"max_password_len": 128,
+	"min_username_len": 6,
+	"max_username_len": 64,
+	"max_components": 250,
+	"memory_cache_enabled": true,
+	"message_type": "settings_doc_update",
+	"proxy_tls_fabric_reqs": "always",
+	"proxy_tls_http_url": null,
+	"proxy_tls_ws_url": null,
+	"proxy_cache_enabled": true,
+	"regex": {
+		"is_grpc_url": {
+			"source": "^grpcs?://[\\w-._~]+:\\d{1,5}$",
+			"flags": "i",
+			"notes": "grpc or grpcs && hostname && port (no basic auth, no path)"
+		},
+		"is_http_url": {
+			"source": "^https?://[\\w-._~]+",
+			"flags": "i",
+			"notes": "http or https && hostname (port allowed) (no basic auth, no path)"
+		},
+		"is_http_url_with_auth": {
+			"source": "^https?://[^\\s/]+$",
+			"flags": "i",
+			"notes": "http or https protocol && hostname (port & basic auth allowed) (no path)"
+		},
+		"only_host_and_port": {
+			"source": "^[\\w-._~]+:\\d{1,5}$",
+			"flags": "i",
+			"notes": "hostname && port (no protocol, no basic auth, no path)"
+		},
+		"is_url": {
+			"source": "^\\w+://[\\w-._~]+:\\d{1,5}$",
+			"flags": "i",
+			"notes": "any protocol && hostname && port (no basic auth, no path)"
+		},
+		"is_basic_auth_url": {
+			"source": "^\\w+://[\\w-._~@:]+:\\d{1,5}",
+			"flags": "i",
+			"notes": "any protocol && hostname && port && basic auth allowed && path allowed"
+		},
+		"invalid_msp_id": {
+			"source": "[^a-zA-Z\\d-.]",
+			"flags": ""
+		},
+		"invalid_enroll_characters": {
+			"source": "[:\\/<>#{}%`[\\]\\\\^~|\\s\"]",
+			"flags": ""
+		},
+		"starts_with_non_letter": {
+			"source": "^[^a-zA-Z]+",
+			"flags": ""
+		},
+		"is_valid_id": {
+			"source": "^[a-z][a-z0-9]+$",
+			"flags": "",
+			"notes": "couchdb needs it to start with a letter, deployer can't do underscores or dashes, must be lower case, can contain numbers"
+		}
+	},
+	"region": "local",
+	"session_cache_enabled": true,
+	"session_secret": null,
+	"support_key": null,
+	"support_password": null,
+	"system_channel_id": "testchainid",
+	"trust_proxy": "loopback, linklocal, uniquelocal",
+	"the_default_resources_map": {
+		"ca": {
+			"cpu": "100m",
+			"memory": "200Mi",
+			"storage": "20Gi"
+		},
+		"couchdb": {
+			"cpu": "200m",
+			"memory": "400Mi",
+			"storage": "100Gi"
+		},
+		"dind": {
+			"cpu": "500m",
+			"memory": "1000Mi"
+		},
+		"chaincodelauncher": {
+			"cpu": "200m",
+			"memory": "400Mi"
+		},
+		"fluentd": {
+			"cpu": "100m",
+			"memory": "200Mi"
+		},
+		"leveldb": {
+			"cpu": "100m",
+			"memory": "200Mi",
+			"storage": "100Gi"
+		},
+		"orderer": {
+			"cpu": "250m",
+			"memory": "500Mi",
+			"storage": "100Gi"
+		},
+		"peer": {
+			"cpu": "200m",
+			"memory": "400Mi",
+			"storage": "100Gi"
+		},
+		"proxy": {
+			"cpu": "100m",
+			"memory": "200Mi"
+		}
+	},
+	"trust_unknown_certs": false,
+	"type": "settings"
+}

@@ -1,0 +1,10 @@
+node_modules
+src
+test
+*.log
+data
+env/prod.json
+env/sp_prod.json
+env/local.json
+env/admin.json
+env/old

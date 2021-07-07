@@ -1,0 +1,59 @@
+.ibp-main {
+	background-color: $background;
+	color: $text;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	width: 100%;
+
+	.bx--data-table-v2-container {
+		overflow: visible;
+		padding-top: 1rem;
+		padding-bottom: 2rem;
+	}
+
+	.mt-s-06 {
+		margin-top: $spacing-06;
+	}
+}
+
+.ibp-main-content {
+	display: flex;
+	flex-grow: 9999;
+	flex-direction: row;
+	padding: 3rem 0;
+}
+
+.ibp-page-content {
+	width: 100%;
+	margin-left: 3.25rem;
+	z-index: $pageContentLayer;
+}
+
+@media (min-width: 1600px) {
+	.ibp-page-content {
+		margin-left: 3.25rem;
+	}
+}
+
+.ibp-timeout-warning {
+	.bx--modal-header {
+		button {
+			display: none;
+		}
+	}
+}
+
+.ibp-timeout-modal {
+	.mt-5 {
+		margin-top: $spacing-05;
+	}
+
+	.bx--btn--secondary {
+		display: none;
+	}
+
+	.bx--modal-close {
+		display: none;
+	}
+}

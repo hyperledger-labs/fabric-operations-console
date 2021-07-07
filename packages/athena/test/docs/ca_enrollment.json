@@ -1,0 +1,1065 @@
+{
+	"tlsOptions": {
+		"trustedRoots": [],
+		"verify": false
+	},
+	"bootStrapUser": {
+		"enrollmentID": "admin",
+		"enrollmentSecret": "3316d99a3d"
+	},
+	"caService": {
+		"_cryptoSuite": {
+			"_hashAlgo": "SHA2",
+			"_keySize": 256,
+			"_cryptoKeyStore": {
+				"logger": {
+					"domain": null,
+					"_events": {},
+					"_eventsCount": 0,
+					"transports": {
+						"console": {
+							"domain": null,
+							"_events": {},
+							"_eventsCount": 0,
+							"silent": false,
+							"raw": false,
+							"name": "console",
+							"handleExceptions": false,
+							"exceptionsLevel": "error",
+							"humanReadableUnhandledException": false,
+							"json": false,
+							"colorize": true,
+							"prettyPrint": false,
+							"timestamp": false,
+							"showLevel": true,
+							"label": null,
+							"logstash": false,
+							"depth": null,
+							"align": false,
+							"stderrLevels": {
+								"error": true,
+								"debug": true
+							},
+							"eol": "\n"
+						}
+					},
+					"_names": [
+						"console"
+					],
+					"padLevels": false,
+					"levels": {
+						"error": 0,
+						"warn": 1,
+						"info": 2,
+						"verbose": 3,
+						"debug": 4,
+						"silly": 5
+					},
+					"id": null,
+					"level": "info",
+					"emitErrs": false,
+					"stripColors": false,
+					"exitOnError": true,
+					"exceptionHandlers": {},
+					"profilers": {},
+					"rewriters": [],
+					"filters": []
+				},
+				"_store": null,
+				"_storeConfig": {
+					"opts": {
+						"path": "/Users/lcsharp/.hfc-key-store"
+					}
+				}
+			},
+			"_curveName": "secp256r1",
+			"_ecdsaCurve": {
+				"curve": {
+					"type": "short",
+					"p": "ffffffff00000001000000000000000000000000ffffffffffffffffffffffff",
+					"red": {
+						"m": "ffffffff00000001000000000000000000000000ffffffffffffffffffffffff",
+						"prime": null,
+						"shift": 260,
+						"r": "100000000000000000000000000000000000000000000000000000000000000000",
+						"r2": "4fffffffdfffffffffffffffefffffffbffffffff000000000000000300",
+						"rinv": "fffffffe00000003fffffffd0000000200000001fffffffe000000030000000",
+						"minv": "f00000000fffffffdfffffffffffffffffffffffeffffffffffffffffffffffff"
+					},
+					"zero": "0",
+					"one": "fffffffeffffffffffffffffffffffff0000000000000000000000010",
+					"two": "1fffffffdfffffffffffffffffffffffe0000000000000000000000020",
+					"n": "ffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551",
+					"g": [
+						"8905f76b53755c669fb732b7762251075ba95fc4fedb60179e730d418a9143c1",
+						"571ff18a5885d8552e88688dd21f3258b4ab8e43a19e45cddf25357ce95560a8",
+						{
+							"doubles": {
+								"step": 4,
+								"points": [
+									[
+										"4d63c80e103b72385ef2f7c2c83f5495882e074effe2e6b808b0b650bc6fb805",
+										"4edf7b261efe21ff5c4623bb1580e9e3670c318eb0b6587f2f11bd652a23f9b6"
+									],
+									[
+										"c3da19630dd962c0e3d423e90f35a1550fbc6d849cba56d486d8ffa696946fc7",
+										"99d49ebc14d5e53c6ce581ff52305aa0704b7c2589dfca5e673fdb03cfd5d8b3"
+									]
+								]
+							},
+							"naf": {
+								"wnd": 8,
+								"points": [
+									[
+										"6936a3fd6ff747e46ad77dd87cbbc98b027f849e87d81fbffac3f904eebc1272",
+										"5f06a2ab587cc06a88208311a2ee98e583e47ac3861fe1ab04c5c1fc983a7ebd"
+									],
+									[
+										"9079606490523c7d41cb5aad076c20c90ec6499d4b9537dbe1b8aaec45c61f5c",
+										"3a076bb9dd1e915c540a9877e7a1f6873c568ef75eb882beb309b4ae7ba4f107"
+									]
+								]
+							}
+						}
+					],
+					"_wnafT1": [
+						null,
+						null,
+						null,
+						null
+					],
+					"_wnafT2": [
+						null,
+						null,
+						null,
+						null
+					],
+					"_maxwellTrick": true,
+					"redN": "8648c209fe30feb0c0166ce652e96b789b10543d3fe99319ad169483335f5689",
+					"a": "ffffffcf00000031000000000000000000000030ffffffffffffffffffffffcf",
+					"b": "c30061dd487483415a220abf7212ed6acf005cca8843090d89cdf6229c4bddfd",
+					"tinv": "7fffffff7fffffffffffffffffffffff8000000000000000000000008",
+					"zeroA": false,
+					"threeA": true,
+					"_endoWnafT1": [
+						null,
+						null,
+						null,
+						null
+					],
+					"_endoWnafT2": [
+						null,
+						null,
+						null,
+						null
+					]
+				},
+				"g": [
+					"8905f76b53755c669fb732b7762251075ba95fc4fedb60179e730d418a9143c1",
+					"571ff18a5885d8552e88688dd21f3258b4ab8e43a19e45cddf25357ce95560a8",
+					{
+						"doubles": {
+							"step": 4,
+							"points": [
+								[
+									"4d63c80e103b72385ef2f7c2c83f5495882e074effe2e6b808b0b650bc6fb805",
+									"4edf7b261efe21ff5c4623bb1580e9e3670c318eb0b6587f2f11bd652a23f9b6"
+								],
+								[
+									"c3da19630dd962c0e3d423e90f35a1550fbc6d849cba56d486d8ffa696946fc7",
+									"99d49ebc14d5e53c6ce581ff52305aa0704b7c2589dfca5e673fdb03cfd5d8b3"
+								]
+							]
+						},
+						"naf": {
+							"wnd": 8,
+							"points": [
+								[
+									"6936a3fd6ff747e46ad77dd87cbbc98b027f849e87d81fbffac3f904eebc1272",
+									"5f06a2ab587cc06a88208311a2ee98e583e47ac3861fe1ab04c5c1fc983a7ebd"
+								],
+								[
+									"9079606490523c7d41cb5aad076c20c90ec6499d4b9537dbe1b8aaec45c61f5c",
+									"3a076bb9dd1e915c540a9877e7a1f6873c568ef75eb882beb309b4ae7ba4f107"
+								]
+							]
+						}
+					}
+				],
+				"n": "ffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551"
+			},
+			"_hashOutputSize": 32,
+			"_ecdsa": {
+				"curve": {
+					"type": "short",
+					"p": "ffffffff00000001000000000000000000000000ffffffffffffffffffffffff",
+					"red": {
+						"m": "ffffffff00000001000000000000000000000000ffffffffffffffffffffffff",
+						"prime": null,
+						"shift": 260,
+						"r": "100000000000000000000000000000000000000000000000000000000000000000",
+						"r2": "4fffffffdfffffffffffffffefffffffbffffffff000000000000000300",
+						"rinv": "fffffffe00000003fffffffd0000000200000001fffffffe000000030000000",
+						"minv": "f00000000fffffffdfffffffffffffffffffffffeffffffffffffffffffffffff"
+					},
+					"zero": "0",
+					"one": "fffffffeffffffffffffffffffffffff0000000000000000000000010",
+					"two": "1fffffffdfffffffffffffffffffffffe0000000000000000000000020",
+					"n": "ffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551",
+					"g": [
+						"8905f76b53755c669fb732b7762251075ba95fc4fedb60179e730d418a9143c1",
+						"571ff18a5885d8552e88688dd21f3258b4ab8e43a19e45cddf25357ce95560a8",
+						{
+							"doubles": {
+								"step": 4,
+								"points": [
+									[
+										"4d63c80e103b72385ef2f7c2c83f5495882e074effe2e6b808b0b650bc6fb805",
+										"4edf7b261efe21ff5c4623bb1580e9e3670c318eb0b6587f2f11bd652a23f9b6"
+									],
+									[
+										"c3da19630dd962c0e3d423e90f35a1550fbc6d849cba56d486d8ffa696946fc7",
+										"99d49ebc14d5e53c6ce581ff52305aa0704b7c2589dfca5e673fdb03cfd5d8b3"
+									]
+								]
+							},
+							"naf": {
+								"wnd": 8,
+								"points": [
+									[
+										"6936a3fd6ff747e46ad77dd87cbbc98b027f849e87d81fbffac3f904eebc1272",
+										"5f06a2ab587cc06a88208311a2ee98e583e47ac3861fe1ab04c5c1fc983a7ebd"
+									],
+									[
+										"9079606490523c7d41cb5aad076c20c90ec6499d4b9537dbe1b8aaec45c61f5c",
+										"3a076bb9dd1e915c540a9877e7a1f6873c568ef75eb882beb309b4ae7ba4f107"
+									]
+								]
+							}
+						}
+					],
+					"_wnafT1": [
+						null,
+						null,
+						null,
+						null
+					],
+					"_wnafT2": [
+						null,
+						null,
+						null,
+						null
+					],
+					"_maxwellTrick": true,
+					"redN": "8648c209fe30feb0c0166ce652e96b789b10543d3fe99319ad169483335f5689",
+					"a": "ffffffcf00000031000000000000000000000030ffffffffffffffffffffffcf",
+					"b": "c30061dd487483415a220abf7212ed6acf005cca8843090d89cdf6229c4bddfd",
+					"tinv": "7fffffff7fffffffffffffffffffffff8000000000000000000000008",
+					"zeroA": false,
+					"threeA": true,
+					"_endoWnafT1": [
+						null,
+						null,
+						null,
+						null
+					],
+					"_endoWnafT2": [
+						null,
+						null,
+						null,
+						null
+					]
+				},
+				"n": "ffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551",
+				"nh": "7fffffff800000007fffffffffffffffde737d56d38bcf4279dce5617e3192a8",
+				"g": [
+					"8905f76b53755c669fb732b7762251075ba95fc4fedb60179e730d418a9143c1",
+					"571ff18a5885d8552e88688dd21f3258b4ab8e43a19e45cddf25357ce95560a8",
+					{
+						"doubles": {
+							"step": 4,
+							"points": [
+								[
+									"4d63c80e103b72385ef2f7c2c83f5495882e074effe2e6b808b0b650bc6fb805",
+									"4edf7b261efe21ff5c4623bb1580e9e3670c318eb0b6587f2f11bd652a23f9b6"
+								],
+								[
+									"c3da19630dd962c0e3d423e90f35a1550fbc6d849cba56d486d8ffa696946fc7",
+									"99d49ebc14d5e53c6ce581ff52305aa0704b7c2589dfca5e673fdb03cfd5d8b3"
+								]
+							]
+						},
+						"naf": {
+							"wnd": 8,
+							"points": [
+								[
+									"6936a3fd6ff747e46ad77dd87cbbc98b027f849e87d81fbffac3f904eebc1272",
+									"5f06a2ab587cc06a88208311a2ee98e583e47ac3861fe1ab04c5c1fc983a7ebd"
+								],
+								[
+									"9079606490523c7d41cb5aad076c20c90ec6499d4b9537dbe1b8aaec45c61f5c",
+									"3a076bb9dd1e915c540a9877e7a1f6873c568ef75eb882beb309b4ae7ba4f107"
+								]
+							]
+						}
+					}
+				]
+			}
+		},
+		"caName": "org1CA",
+		"_fabricCAClient": {
+			"_caName": "org1CA",
+			"_httpClient": {
+				"globalAgent": {
+					"domain": null,
+					"_events": {},
+					"_eventsCount": 1,
+					"defaultPort": 443,
+					"protocol": "https:",
+					"options": {
+						"path": null
+					},
+					"requests": {},
+					"sockets": {},
+					"freeSockets": {},
+					"keepAliveMsecs": 1000,
+					"keepAlive": false,
+					"maxSockets": null,
+					"maxFreeSockets": 256,
+					"maxCachedSessions": 100,
+					"_sessionCache": {
+						"map": {},
+						"list": []
+					}
+				}
+			},
+			"_hostname": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com",
+			"_port": 31011,
+			"_tlsOptions": {
+				"trustedRoots": [],
+				"verify": false
+			},
+			"_baseAPI": "/api/v1/",
+			"_cryptoPrimitives": {
+				"_hashAlgo": "SHA2",
+				"_keySize": 256,
+				"_cryptoKeyStore": {
+					"logger": {
+						"domain": null,
+						"_events": {},
+						"_eventsCount": 0,
+						"transports": {
+							"console": {
+								"domain": null,
+								"_events": {},
+								"_eventsCount": 0,
+								"silent": false,
+								"raw": false,
+								"name": "console",
+								"handleExceptions": false,
+								"exceptionsLevel": "error",
+								"humanReadableUnhandledException": false,
+								"json": false,
+								"colorize": true,
+								"prettyPrint": false,
+								"timestamp": false,
+								"showLevel": true,
+								"label": null,
+								"logstash": false,
+								"depth": null,
+								"align": false,
+								"stderrLevels": {
+									"error": true,
+									"debug": true
+								},
+								"eol": "\n"
+							}
+						},
+						"_names": [
+							"console"
+						],
+						"padLevels": false,
+						"levels": {
+							"error": 0,
+							"warn": 1,
+							"info": 2,
+							"verbose": 3,
+							"debug": 4,
+							"silly": 5
+						},
+						"id": null,
+						"level": "info",
+						"emitErrs": false,
+						"stripColors": false,
+						"exitOnError": true,
+						"exceptionHandlers": {},
+						"profilers": {},
+						"rewriters": [],
+						"filters": []
+					},
+					"_store": null,
+					"_storeConfig": {
+						"opts": {
+							"path": "/Users/lcsharp/.hfc-key-store"
+						}
+					}
+				},
+				"_curveName": "secp256r1",
+				"_ecdsaCurve": {
+					"curve": {
+						"type": "short",
+						"p": "ffffffff00000001000000000000000000000000ffffffffffffffffffffffff",
+						"red": {
+							"m": "ffffffff00000001000000000000000000000000ffffffffffffffffffffffff",
+							"prime": null,
+							"shift": 260,
+							"r": "100000000000000000000000000000000000000000000000000000000000000000",
+							"r2": "4fffffffdfffffffffffffffefffffffbffffffff000000000000000300",
+							"rinv": "fffffffe00000003fffffffd0000000200000001fffffffe000000030000000",
+							"minv": "f00000000fffffffdfffffffffffffffffffffffeffffffffffffffffffffffff"
+						},
+						"zero": "0",
+						"one": "fffffffeffffffffffffffffffffffff0000000000000000000000010",
+						"two": "1fffffffdfffffffffffffffffffffffe0000000000000000000000020",
+						"n": "ffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551",
+						"g": [
+							"8905f76b53755c669fb732b7762251075ba95fc4fedb60179e730d418a9143c1",
+							"571ff18a5885d8552e88688dd21f3258b4ab8e43a19e45cddf25357ce95560a8",
+							{
+								"doubles": {
+									"step": 4,
+									"points": [
+										[
+											"4d63c80e103b72385ef2f7c2c83f5495882e074effe2e6b808b0b650bc6fb805",
+											"4edf7b261efe21ff5c4623bb1580e9e3670c318eb0b6587f2f11bd652a23f9b6"
+										],
+										[
+											"c3da19630dd962c0e3d423e90f35a1550fbc6d849cba56d486d8ffa696946fc7",
+											"99d49ebc14d5e53c6ce581ff52305aa0704b7c2589dfca5e673fdb03cfd5d8b3"
+										]
+									]
+								},
+								"naf": {
+									"wnd": 8,
+									"points": [
+										[
+											"6936a3fd6ff747e46ad77dd87cbbc98b027f849e87d81fbffac3f904eebc1272",
+											"5f06a2ab587cc06a88208311a2ee98e583e47ac3861fe1ab04c5c1fc983a7ebd"
+										],
+										[
+											"9079606490523c7d41cb5aad076c20c90ec6499d4b9537dbe1b8aaec45c61f5c",
+											"3a076bb9dd1e915c540a9877e7a1f6873c568ef75eb882beb309b4ae7ba4f107"
+										]
+									]
+								}
+							}
+						],
+						"_wnafT1": [
+							null,
+							null,
+							null,
+							null
+						],
+						"_wnafT2": [
+							null,
+							null,
+							null,
+							null
+						],
+						"_maxwellTrick": true,
+						"redN": "8648c209fe30feb0c0166ce652e96b789b10543d3fe99319ad169483335f5689",
+						"a": "ffffffcf00000031000000000000000000000030ffffffffffffffffffffffcf",
+						"b": "c30061dd487483415a220abf7212ed6acf005cca8843090d89cdf6229c4bddfd",
+						"tinv": "7fffffff7fffffffffffffffffffffff8000000000000000000000008",
+						"zeroA": false,
+						"threeA": true,
+						"_endoWnafT1": [
+							null,
+							null,
+							null,
+							null
+						],
+						"_endoWnafT2": [
+							null,
+							null,
+							null,
+							null
+						]
+					},
+					"g": [
+						"8905f76b53755c669fb732b7762251075ba95fc4fedb60179e730d418a9143c1",
+						"571ff18a5885d8552e88688dd21f3258b4ab8e43a19e45cddf25357ce95560a8",
+						{
+							"doubles": {
+								"step": 4,
+								"points": [
+									[
+										"4d63c80e103b72385ef2f7c2c83f5495882e074effe2e6b808b0b650bc6fb805",
+										"4edf7b261efe21ff5c4623bb1580e9e3670c318eb0b6587f2f11bd652a23f9b6"
+									],
+									[
+										"c3da19630dd962c0e3d423e90f35a1550fbc6d849cba56d486d8ffa696946fc7",
+										"99d49ebc14d5e53c6ce581ff52305aa0704b7c2589dfca5e673fdb03cfd5d8b3"
+									]
+								]
+							},
+							"naf": {
+								"wnd": 8,
+								"points": [
+									[
+										"6936a3fd6ff747e46ad77dd87cbbc98b027f849e87d81fbffac3f904eebc1272",
+										"5f06a2ab587cc06a88208311a2ee98e583e47ac3861fe1ab04c5c1fc983a7ebd"
+									],
+									[
+										"9079606490523c7d41cb5aad076c20c90ec6499d4b9537dbe1b8aaec45c61f5c",
+										"3a076bb9dd1e915c540a9877e7a1f6873c568ef75eb882beb309b4ae7ba4f107"
+									]
+								]
+							}
+						}
+					],
+					"n": "ffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551"
+				},
+				"_hashOutputSize": 32,
+				"_ecdsa": {
+					"curve": {
+						"type": "short",
+						"p": "ffffffff00000001000000000000000000000000ffffffffffffffffffffffff",
+						"red": {
+							"m": "ffffffff00000001000000000000000000000000ffffffffffffffffffffffff",
+							"prime": null,
+							"shift": 260,
+							"r": "100000000000000000000000000000000000000000000000000000000000000000",
+							"r2": "4fffffffdfffffffffffffffefffffffbffffffff000000000000000300",
+							"rinv": "fffffffe00000003fffffffd0000000200000001fffffffe000000030000000",
+							"minv": "f00000000fffffffdfffffffffffffffffffffffeffffffffffffffffffffffff"
+						},
+						"zero": "0",
+						"one": "fffffffeffffffffffffffffffffffff0000000000000000000000010",
+						"two": "1fffffffdfffffffffffffffffffffffe0000000000000000000000020",
+						"n": "ffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551",
+						"g": [
+							"8905f76b53755c669fb732b7762251075ba95fc4fedb60179e730d418a9143c1",
+							"571ff18a5885d8552e88688dd21f3258b4ab8e43a19e45cddf25357ce95560a8",
+							{
+								"doubles": {
+									"step": 4,
+									"points": [
+										[
+											"4d63c80e103b72385ef2f7c2c83f5495882e074effe2e6b808b0b650bc6fb805",
+											"4edf7b261efe21ff5c4623bb1580e9e3670c318eb0b6587f2f11bd652a23f9b6"
+										],
+										[
+											"c3da19630dd962c0e3d423e90f35a1550fbc6d849cba56d486d8ffa696946fc7",
+											"99d49ebc14d5e53c6ce581ff52305aa0704b7c2589dfca5e673fdb03cfd5d8b3"
+										]
+									]
+								},
+								"naf": {
+									"wnd": 8,
+									"points": [
+										[
+											"6936a3fd6ff747e46ad77dd87cbbc98b027f849e87d81fbffac3f904eebc1272",
+											"5f06a2ab587cc06a88208311a2ee98e583e47ac3861fe1ab04c5c1fc983a7ebd"
+										],
+										[
+											"9079606490523c7d41cb5aad076c20c90ec6499d4b9537dbe1b8aaec45c61f5c",
+											"3a076bb9dd1e915c540a9877e7a1f6873c568ef75eb882beb309b4ae7ba4f107"
+										]
+									]
+								}
+							}
+						],
+						"_wnafT1": [
+							null,
+							null,
+							null,
+							null
+						],
+						"_wnafT2": [
+							null,
+							null,
+							null,
+							null
+						],
+						"_wnafT3": [
+							null,
+							null,
+							null,
+							null
+						],
+						"_wnafT4": [
+							null,
+							null,
+							null,
+							null
+						],
+						"_maxwellTrick": true,
+						"redN": "8648c209fe30feb0c0166ce652e96b789b10543d3fe99319ad169483335f5689",
+						"a": "ffffffcf00000031000000000000000000000030ffffffffffffffffffffffcf",
+						"b": "c30061dd487483415a220abf7212ed6acf005cca8843090d89cdf6229c4bddfd",
+						"tinv": "7fffffff7fffffffffffffffffffffff8000000000000000000000008",
+						"zeroA": false,
+						"threeA": true,
+						"_endoWnafT1": [
+							null,
+							null,
+							null,
+							null
+						],
+						"_endoWnafT2": [
+							null,
+							null,
+							null,
+							null
+						]
+					},
+					"n": "ffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551",
+					"nh": "7fffffff800000007fffffffffffffffde737d56d38bcf4279dce5617e3192a8",
+					"g": [
+						"8905f76b53755c669fb732b7762251075ba95fc4fedb60179e730d418a9143c1",
+						"571ff18a5885d8552e88688dd21f3258b4ab8e43a19e45cddf25357ce95560a8",
+						{
+							"doubles": {
+								"step": 4,
+								"points": [
+									[
+										"4d63c80e103b72385ef2f7c2c83f5495882e074effe2e6b808b0b650bc6fb805",
+										"4edf7b261efe21ff5c4623bb1580e9e3670c318eb0b6587f2f11bd652a23f9b6"
+									],
+									[
+										"c3da19630dd962c0e3d423e90f35a1550fbc6d849cba56d486d8ffa696946fc7",
+										"99d49ebc14d5e53c6ce581ff52305aa0704b7c2589dfca5e673fdb03cfd5d8b3"
+									]
+								]
+							},
+							"naf": {
+								"wnd": 8,
+								"points": [
+									[
+										"6936a3fd6ff747e46ad77dd87cbbc98b027f849e87d81fbffac3f904eebc1272",
+										"5f06a2ab587cc06a88208311a2ee98e583e47ac3861fe1ab04c5c1fc983a7ebd"
+									],
+									[
+										"9079606490523c7d41cb5aad076c20c90ec6499d4b9537dbe1b8aaec45c61f5c",
+										"3a076bb9dd1e915c540a9877e7a1f6873c568ef75eb882beb309b4ae7ba4f107"
+									]
+								]
+							}
+						}
+					]
+				}
+			}
+		}
+	},
+	"enrollment": {
+		"key": {
+			"ECDSA_KEY": {
+				"_key": {
+					"type": "EC",
+					"isPrivate": true,
+					"isPublic": false,
+					"curveName": "secp256r1",
+					"ecparams": {},
+					"prvKeyHex": "abcde",
+					"pubKeyHex": "fghijk"
+				}
+			},
+			"certificate": "-----BEGIN CERTIFICATE-----\ncert\fake-cert\n-----END CERTIFICATE-----\n",
+			"rootCertificate": "-----BEGIN CERTIFICATE-----\nroot-cert\fake-roote-cert==\n-----END CERTIFICATE-----\n"
+		}
+	},
+	"admin": {
+		"_name": "admin",
+		"_roles": null,
+		"_affiliation": "",
+		"_enrollmentSecret": "",
+		"_identity": null,
+		"_signingIdentity": null,
+		"_mspId": "",
+		"_cryptoSuite": null
+	},
+	"resp_getUsers": {
+		"result": {
+			"identities": [
+				{
+					"id": "admin",
+					"type": "client",
+					"affiliation": "",
+					"attrs": [
+						{
+							"name": "hf.Registrar.Roles",
+							"value": "client,user,peer"
+						},
+						{
+							"name": "hf.Registrar.DelegateRoles",
+							"value": "client,user,peer"
+						},
+						{
+							"name": "hf.Revoker",
+							"value": "1"
+						},
+						{
+							"name": "hf.GenCRL",
+							"value": "1"
+						},
+						{
+							"name": "hf.Registrar.Attributes",
+							"value": "*"
+						},
+						{
+							"name": "hf.AffiliationMgr",
+							"value": "1"
+						}
+					],
+					"max_enrollments": -1
+				},
+				{
+					"id": "ibmuser",
+					"type": "client",
+					"affiliation": "",
+					"attrs": [
+						{
+							"name": "hf.AffiliationMgr",
+							"value": "1"
+						},
+						{
+							"name": "hf.Registrar.Roles",
+							"value": "client,user,peer,orderer"
+						},
+						{
+							"name": "hf.Registrar.DelegateRoles",
+							"value": "client,user,peer,orderer"
+						},
+						{
+							"name": "hf.Revoker",
+							"value": "1"
+						},
+						{
+							"name": "hf.IntermediateCA",
+							"value": "1"
+						},
+						{
+							"name": "hf.GenCRL",
+							"value": "1"
+						},
+						{
+							"name": "hf.Registrar.Attributes",
+							"value": "*"
+						}
+					],
+					"max_enrollments": -1
+				},
+				{
+					"id": "org1_admin",
+					"type": "client",
+					"affiliation": "org1",
+					"attrs": [
+						{
+							"name": "hf.EnrollmentID",
+							"value": "org1_admin",
+							"ecert": true
+						},
+						{
+							"name": "hf.Type",
+							"value": "client",
+							"ecert": true
+						},
+						{
+							"name": "hf.Affiliation",
+							"value": "org1",
+							"ecert": true
+						}
+					],
+					"max_enrollments": 1
+				},
+				{
+					"id": "peer1",
+					"type": "client",
+					"affiliation": "org1",
+					"attrs": [
+						{
+							"name": "hf.EnrollmentID",
+							"value": "peer1",
+							"ecert": true
+						},
+						{
+							"name": "hf.Type",
+							"value": "client",
+							"ecert": true
+						},
+						{
+							"name": "hf.Affiliation",
+							"value": "org1",
+							"ecert": true
+						}
+					],
+					"max_enrollments": 1
+				},
+				{
+					"id": "chris1",
+					"type": "client",
+					"affiliation": "org1",
+					"attrs": [
+						{
+							"name": "hf.EnrollmentID",
+							"value": "chris1",
+							"ecert": true
+						},
+						{
+							"name": "hf.Type",
+							"value": "client",
+							"ecert": true
+						},
+						{
+							"name": "hf.Affiliation",
+							"value": "org1",
+							"ecert": true
+						}
+					],
+					"max_enrollments": -1
+				},
+				{
+					"id": "user1",
+					"type": "client",
+					"affiliation": "org1",
+					"attrs": [
+						{
+							"name": "hf.EnrollmentID",
+							"value": "user1",
+							"ecert": true
+						},
+						{
+							"name": "hf.Type",
+							"value": "client",
+							"ecert": true
+						},
+						{
+							"name": "hf.Affiliation",
+							"value": "org1",
+							"ecert": true
+						}
+					],
+					"max_enrollments": -1
+				}
+			],
+			"caname": "org1CA"
+		},
+		"errors": [],
+		"messages": [],
+		"success": true
+	},
+	"getUsers_response": [
+		{
+			"id": "admin",
+			"type": "client",
+			"affiliation": "",
+			"attrs": [
+				{
+					"name": "hf.Registrar.Roles",
+					"value": "client,user,peer"
+				},
+				{
+					"name": "hf.Registrar.DelegateRoles",
+					"value": "client,user,peer"
+				},
+				{
+					"name": "hf.Revoker",
+					"value": "1"
+				},
+				{
+					"name": "hf.GenCRL",
+					"value": "1"
+				},
+				{
+					"name": "hf.Registrar.Attributes",
+					"value": "*"
+				},
+				{
+					"name": "hf.AffiliationMgr",
+					"value": "1"
+				}
+			],
+			"max_enrollments": -1
+		},
+		{
+			"id": "ibmuser",
+			"type": "client",
+			"affiliation": "",
+			"attrs": [
+				{
+					"name": "hf.AffiliationMgr",
+					"value": "1"
+				},
+				{
+					"name": "hf.Registrar.Roles",
+					"value": "client,user,peer,orderer"
+				},
+				{
+					"name": "hf.Registrar.DelegateRoles",
+					"value": "client,user,peer,orderer"
+				},
+				{
+					"name": "hf.Revoker",
+					"value": "1"
+				},
+				{
+					"name": "hf.IntermediateCA",
+					"value": "1"
+				},
+				{
+					"name": "hf.GenCRL",
+					"value": "1"
+				},
+				{
+					"name": "hf.Registrar.Attributes",
+					"value": "*"
+				}
+			],
+			"max_enrollments": -1
+		},
+		{
+			"id": "org1_admin",
+			"type": "client",
+			"affiliation": "org1",
+			"attrs": [
+				{
+					"name": "hf.EnrollmentID",
+					"value": "org1_admin",
+					"ecert": true
+				},
+				{
+					"name": "hf.Type",
+					"value": "client",
+					"ecert": true
+				},
+				{
+					"name": "hf.Affiliation",
+					"value": "org1",
+					"ecert": true
+				}
+			],
+			"max_enrollments": 1
+		},
+		{
+			"id": "peer1",
+			"type": "client",
+			"affiliation": "org1",
+			"attrs": [
+				{
+					"name": "hf.EnrollmentID",
+					"value": "peer1",
+					"ecert": true
+				},
+				{
+					"name": "hf.Type",
+					"value": "client",
+					"ecert": true
+				},
+				{
+					"name": "hf.Affiliation",
+					"value": "org1",
+					"ecert": true
+				}
+			],
+			"max_enrollments": 1
+		},
+		{
+			"id": "chris1",
+			"type": "client",
+			"affiliation": "org1",
+			"attrs": [
+				{
+					"name": "hf.EnrollmentID",
+					"value": "chris1",
+					"ecert": true
+				},
+				{
+					"name": "hf.Type",
+					"value": "client",
+					"ecert": true
+				},
+				{
+					"name": "hf.Affiliation",
+					"value": "org1",
+					"ecert": true
+				}
+			],
+			"max_enrollments": -1
+		},
+		{
+			"id": "user1",
+			"type": "client",
+			"affiliation": "org1",
+			"attrs": [
+				{
+					"name": "hf.EnrollmentID",
+					"value": "user1",
+					"ecert": true
+				},
+				{
+					"name": "hf.Type",
+					"value": "client",
+					"ecert": true
+				},
+				{
+					"name": "hf.Affiliation",
+					"value": "org1",
+					"ecert": true
+				}
+			],
+			"max_enrollments": -1
+		}
+	],
+	"resp_getAffiliations": {
+		"result": {
+			"name": "",
+			"affiliations": [
+				{
+					"name": "org1",
+					"affiliations": [
+						{
+							"name": "org1.department1"
+						},
+						{
+							"name": "org1.department2"
+						}
+					]
+				},
+				{
+					"name": "org2",
+					"affiliations": [
+						{
+							"name": "org2.department1"
+						}
+					]
+				}
+			],
+			"caname": "org1CA"
+		},
+		"errors": [],
+		"messages": [],
+		"success": true
+	},
+	"getAffiliations_response": [
+		{
+			"name": "org1",
+			"affiliations": [
+				{
+					"name": "org1.department1"
+				},
+				{
+					"name": "org1.department2"
+				}
+			]
+		},
+		{
+			"name": "org2",
+			"affiliations": [
+				{
+					"name": "org2.department1"
+				}
+			]
+		}
+	]
+}

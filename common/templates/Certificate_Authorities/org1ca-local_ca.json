@@ -1,0 +1,11 @@
+{
+    "display_name": "org1ca - local",
+    "api_url": "https://ca_org1:7054",
+    "operations_url": "http://ca_org1:17054",
+    "ca_url": "https://ca_org1:7054",
+    "name": "org1ca - local",
+    "type": "fabric-ca",
+    "ca_name": "ca-org1",
+    "tlsca_name": "ca-org1",
+    "tls_cert": "<TLS_CERT>"
+}

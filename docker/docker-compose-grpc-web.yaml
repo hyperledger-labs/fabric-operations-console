@@ -1,0 +1,73 @@
+version: '2'
+
+networks:
+    test:
+      name: fabric_test
+
+services:
+  proxy.peer0.org1.example.com:
+    container_name: proxy.peer0.org1.example.com
+    image: ghcr.io/hyperledger-labs/grpc-web:latest
+    environment:
+      - BACKEND_ADDRESS=peer0.org1.example.com:7051
+      - SERVER_TLS_CERT_FILE=/certs/tls/server.crt
+      - SERVER_TLS_KEY_FILE=/certs/tls/server.key
+      - BACKEND_TLS_CA_FILES=/certs/tls/ca.crt
+      - SERVER_BIND_ADDRESS=0.0.0.0
+      - SERVER_HTTP_DEBUG_PORT=8080
+      - SERVER_HTTP_TLS_PORT=7443
+      - BACKEND_TLS=true
+      - SERVER_HTTP_MAX_WRITE_TIMEOUT=5m
+      - SERVER_HTTP_MAX_READ_TIMEOUT=5m
+      - USE_WEBSOCKETS=true
+    volumes:
+      - ../fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/certs/tls
+    ports:
+        - "7443:7443"
+    networks:
+        - test
+
+  proxy.peer0.org2.example.com:
+    container_name: proxy.peer0.org2.example.com
+    image: ghcr.io/hyperledger-labs/grpc-web:latest
+    environment:
+      - LICENSE=accept
+      - BACKEND_ADDRESS=peer0.org2.example.com:9051
+      - SERVER_TLS_CERT_FILE=/certs/tls/server.crt
+      - SERVER_TLS_KEY_FILE=/certs/tls/server.key
+      - BACKEND_TLS_CA_FILES=/certs/tls/ca.crt
+      - SERVER_BIND_ADDRESS=0.0.0.0
+      - SERVER_HTTP_DEBUG_PORT=8081
+      - SERVER_HTTP_TLS_PORT=7444
+      - BACKEND_TLS=true
+      - SERVER_HTTP_MAX_WRITE_TIMEOUT=5m
+      - SERVER_HTTP_MAX_READ_TIMEOUT=5m
+      - USE_WEBSOCKETS=true
+    volumes:
+      - ../fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls:/certs/tls
+    ports:
+    - "7444:7444"
+    networks:
+        - test
+
+  proxy.orderer.example.com:
+    container_name: proxy.orderer.example.com
+    image: ghcr.io/hyperledger-labs/grpc-web:latest
+    environment:
+      - BACKEND_ADDRESS=orderer.example.com:7050
+      - SERVER_TLS_CERT_FILE=/certs/tls/server.crt
+      - SERVER_TLS_KEY_FILE=/certs/tls/server.key
+      - BACKEND_TLS_CA_FILES=/certs/tls/ca.crt
+      - SERVER_BIND_ADDRESS=0.0.0.0
+      - SERVER_HTTP_DEBUG_PORT=8082
+      - SERVER_HTTP_TLS_PORT=7445
+      - BACKEND_TLS=true
+      - SERVER_HTTP_MAX_WRITE_TIMEOUT=5m
+      - SERVER_HTTP_MAX_READ_TIMEOUT=5m
+      - USE_WEBSOCKETS=true
+    volumes:
+      - ../fabric-samples/test-network/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls:/certs/tls
+    ports:
+    - "7445:7445"
+    networks:
+        - test

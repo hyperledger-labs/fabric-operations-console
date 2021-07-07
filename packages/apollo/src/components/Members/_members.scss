@@ -1,0 +1,131 @@
+.ibp-members-auth-services-label {
+	padding-bottom: 1rem;
+	display: flex;
+	.bx--tooltip__label {
+		@include carbon--type-style('productive-heading-04');
+	}
+}
+
+.ibp-members-auth-services-container {
+	background: $carbon--cool-gray-90;
+	height: 7.625rem;
+	margin-top: 1rem;
+	padding-left: 1.5rem;
+	padding-top: 1rem;
+	width: 23rem;
+}
+
+.ibp-members-iam-info-container {
+	background: $carbon--cool-gray-90;
+	height: 12rem;
+	margin-top: 1rem;
+	padding-left: 1.5rem;
+	position: relative;
+	width: 35rem;
+}
+
+.ibp-members-appId-lock-img {
+	height: 1.875rem;
+	margin-top: 1.5rem;
+	width: 1.375rem;
+}
+
+.ibp-members-app-id-label {
+	@include carbon--type-style('body-short-02');
+	@include carbon--font-weight('semibold');
+	padding-top: 0.5rem;
+}
+
+.ibp-members-cloud-service-label {
+	@include carbon--type-style('body-short-01');
+	color: $carbon--cool-gray-40;
+	margin-top: 0.25rem;
+}
+
+.ibp-members-configure-label.bx--link {
+	@include carbon--type-style('body-short-01');
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.ibp-auth-members-modal-title {
+	@include carbon--type-style('productive-heading-05');
+	@include carbon--font-weight('light');
+	color: $text;
+}
+
+.ibp-auth-members-modal-desc {
+	margin-top: 1.5rem;
+}
+
+.ibp-members-iam-title {
+	@include carbon--type-style('productive-heading-03');
+	color: $carbon--cool-gray-10;
+	padding-top: 1rem;
+}
+
+.ibp-members-iam-desc {
+	@include carbon--type-style('body-short-02');
+	color: $carbon--white-0;
+	padding-top: 1rem;
+}
+
+.ibp-members-iam-link {
+	padding-top: 1.5rem;
+}
+
+.ibp-iam-learn-more {
+	@include carbon--type-style('body-short-01');
+	color: $carbon--blue-40;
+	display: block;
+	margin-top: 1.5rem;
+	width: max-content;
+}
+
+.ibp-nodes-iam-invite-users {
+	@include carbon--type-style('body-short-01');
+	background: $action;
+	border: 2px solid transparent;
+	bottom: 0;
+	color: $carbon--white-0;
+	cursor: pointer;
+	display: inline-block;
+	margin-bottom: 0.5px;
+	margin-left: 0.125rem;
+	margin-right: 0.125rem;
+	overflow: hidden;
+	padding: 1rem;
+	position: absolute;
+	right: 0;
+	text-align: left;
+	text-decoration: none;
+	transition: $basic-duo-transition;
+	&:hover {
+		background-color: $actionHover;
+	}
+	&:focus {
+		border: 2px solid $white;
+		box-shadow: inset 0px 0px 0px 1px $carbon--cool-gray-100;
+		outline: 0;
+	}
+	.ibp-iam-launch-icon {
+		height: 1rem;
+		margin-left: 1rem;
+		width: 1rem;
+	}
+}
+
+#authenticated_members {
+	.ibp-deleting-spinner {
+		margin-top: -0.5rem;
+		float: right;
+	}
+}
+
+.ibp-members-member-role-icon {
+	margin-left: 1.5rem;
+}
+
+.ipb-members-row {
+	margin-bottom: 2rem;
+}

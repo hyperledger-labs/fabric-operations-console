@@ -1,0 +1,65 @@
+<svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="848" height="549">
+  <path fill="#dcdcdc" stroke="#dcdcdc" d="M.5.5h847v548H.5z"/>
+  <g data-name="UI-Icon checkmark--outline ui-05" fill="#5a6872">
+    <path d="M266.9 156.5a6.5 6.5 0 1 0-6.5-6.5 6.49 6.49 0 0 0 6.5 6.5zm0 1.5a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+    <path d="M270.3 146.7l1.4 1.4-5.9 5.9-3.5-3.4 1.4-1.4 2.1 2 4.5-4.5z"/>
+  </g>
+  <path fill="#011688" stroke="#857b7b" d="M24.5 37.5h347v151h-347z"/>
+  <text transform="translate(43.16 71.99)" font-size="19" fill="#fff" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    Org1
+  </text>
+  <path fill="#fff" stroke="#fff" d="M307.4 25.5h105v35h-105z"/>
+  <text transform="translate(330.13 48.99)" font-size="16" fill="#010f5e" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    Org1 CA
+  </text>
+  <path fill="#fff" stroke="#fff" d="M249.4 93.5h105v55h-105z"/>
+  <text transform="translate(264.32 116.99)" font-size="16" fill="#010f5e" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    Org1 MSP
+  </text>
+  <text transform="translate(267.57 136.99)" font-size="16" fill="#010f5e" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    definition
+  </text>
+  <path fill="#fff" stroke="#fff" d="M45.4 91.5h105v61h-105z"/>
+  <path d="M146.9 114h51v39c-25.5 0-25.5 14.9-51 6.4z" fill="#0ccaeb"/>
+  <text transform="translate(58.07 127.99)" font-size="16" fill="#010f5e" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    Peer Org1
+  </text>
+  <text transform="translate(150.95 137.99)" font-size="14" fill="#fff" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    Ledger
+  </text>
+  <text transform="translate(150.95 152.99)" font-size="14" fill="#fff" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    X
+  </text>
+  <ellipse cx="261.4" cy="275.5" rx="194.5" ry="51.5" fill="#fff" stroke="#979797"/>
+  <text transform="translate(218.7 286.99)" font-size="19" fill="#010f5e" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    Channel 1
+  </text>
+  <path fill="#011688" stroke="#857b7b" d="M435.5 167h347v214.5h-347z"/>
+  <text transform="translate(455.4 201.49)" font-size="19" fill="#fff" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    Ordering Service Org
+  </text>
+  <path fill="#fff" stroke="#fff" d="M649.9 155h173.6v35H649.9z"/>
+  <text transform="translate(665.32 178.49)" font-size="16" fill="#010f5e" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    Ordering service CA
+  </text>
+  <path fill="#fff" stroke="#fff" d="M632.5 252h135.8v55H632.5z"/>
+  <text transform="translate(639.49 275.84)" font-size="16" fill="#010f5e" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    Ordering service
+  </text>
+  <text transform="translate(646.19 295.84)" font-size="16" fill="#010f5e" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    MSP definition
+  </text>
+  <path fill="#011688" d="M464 289h10v10h-10z"/>
+  <path fill="#fff" d="M457.5 218H617v136.5H457.5V218z"/>
+  <path fill="none" stroke="#001588" d="M457.5 354.5H617V218H457.5v136.5z"/>
+  <path fill="none" stroke="#fff" d="M93.9 152.5v95"/>
+  <circle cx="537.2" cy="299.5" r="32.1" fill="none" stroke="#12c3f4" stroke-width="2"/>
+  <circle cx="506.3" cy="293" r="8.3" fill="#010f5e"/>
+  <circle cx="537.2" cy="269.5" r="8.3" fill="#010f5e"/>
+  <circle cx="567.9" cy="293" r="8.3" fill="#010f5e"/>
+  <circle cx="519" cy="327.3" r="8.3" fill="#010f5e"/>
+  <circle cx="553.9" cy="327.3" r="8.3" fill="#010f5e"/>
+  <text transform="translate(473.95 243.92)" font-size="12" fill="#010f5e" font-family="IBMPlexSans-Medium, IBM Plex Sans" style="isolation:isolate">
+    Ordering service nodes
+  </text>
+</svg>

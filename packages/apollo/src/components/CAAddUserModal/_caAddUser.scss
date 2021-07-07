@@ -1,0 +1,26 @@
+.ibp-modal-title {
+	margin-bottom: 2rem;
+}
+
+.ibp-modal-desc {
+	margin-bottom: 2rem;
+}
+
+.ibp-add-user-loading {
+	position: relative;
+}
+
+.ibp-add-users-root-check {
+	display: flex;
+	flex-direction: row;
+	width: 11rem;
+}
+
+hr {
+	border: 0;
+	border-top: 1px solid $carbon--cool-gray-70;
+	display: block;
+	height: 1px;
+	margin: 1em 0;
+	padding: 0;
+}

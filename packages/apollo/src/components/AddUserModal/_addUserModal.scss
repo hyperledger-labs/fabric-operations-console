@@ -1,0 +1,29 @@
+.ibp-auth-settings-email-title {
+	@include carbon--type-style('label-01');
+	color: $carbon--cool-gray-30;
+	margin-top: 2rem;
+}
+
+.ibp-auth-settings-roles-title {
+	@include carbon--type-style('body-short-01');
+	color: $carbon--cool-gray-10;
+	margin-top: 2rem;
+}
+
+.ibp-auth-settings-roles-desc {
+	@include carbon--type-style('body-short-01');
+	color: $carbon--cool-gray-30;
+	margin: 0.5rem 0 0 2rem;
+}
+
+.ibp-auth-settings-role {
+	padding-top: 1rem;
+}
+
+.bx--checkbox-label.ibp-auth-settings-role-label {
+	padding-left: 2rem;
+}
+
+.ibp-user-email {
+	margin-top: 2rem;
+}

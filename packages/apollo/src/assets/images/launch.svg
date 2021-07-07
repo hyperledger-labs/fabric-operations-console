@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="13px" height="13px" viewBox="0 0 13 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>icon/navigation/draggable/16</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M13,14 L3,14 C2.44771525,14 2,13.5522847 2,13 L2,3 C2,2.44771525 2.44771525,2 3,2 L7.5,2 L7.5,3 L3,3 L3,13 L13,13 L13,8.5 L14,8.5 L14,13 C14,13.5522847 13.5522847,14 13,14 Z M10.5,1 L10.5,2 L13.295,2 L9,6.295 L9.705,7 L14,2.705 L14,5.5 L15,5.5 L15,1 L10.5,1 L10.5,1 Z" id="path-1"></path>
+    </defs>
+    <g id="Scratch-6" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Nodes-//-Overview-Copy-19" transform="translate(-690.000000, -156.000000)">
+            <g id="Group-3-Copy-7" transform="translate(496.000000, 139.000000)">
+                <g id="icon/action/launch/16" transform="translate(192.000000, 16.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="launch-icon-color" fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

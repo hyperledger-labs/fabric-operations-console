@@ -1,0 +1,33 @@
+{
+    "display_name": "Org1 MSP",
+    "msp_id": "Org1MSP",
+    "type": "msp",
+    "admins": [],
+    "root_certs": [
+        "<CERT>"
+    ],
+    "tls_root_certs": [
+        "<CERT>"
+    ],
+    "fabric_node_ous": {
+        "admin_ou_identifier": {
+            "certificate": "<CERT>",
+            "organizational_unit_identifier": "admin"
+        },
+        "client_ou_identifier": {
+            "certificate": "<CERT>",
+            "organizational_unit_identifier": "client"
+        },
+        "enable": true,
+        "orderer_ou_identifier": {
+            "certificate": "<CERT>",
+            "organizational_unit_identifier": "orderer"
+        },
+        "peer_ou_identifier": {
+            "certificate": "<CERT>",
+            "organizational_unit_identifier": "peer"
+        }
+    },
+    "host_url": "http://localhost:3002",
+    "name": "Org1 MSP"
+}

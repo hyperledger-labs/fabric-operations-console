@@ -1,0 +1,101 @@
+{
+	"populated_rows": {
+		"rows": [
+			{
+				"_id": "c88180380a7ae3d355ffff438500291f",
+				"_rev": "1-b0473046fda12cebb3ee3d4d2c968763",
+				"type": "fabric-ca",
+				"short_name": "node",
+				"url": "<some url w/protocol and port here>",
+				"msp_id": "PeerOrg1",
+				"location": "<geo location description>",
+				"ca_name": "org1CA",
+				"users": [
+					{
+						"affiliation": "org1",
+						"enroll_id": "admin",
+						"enroll_secret": "bla"
+					}
+				],
+				"timestamp": 1538158288770,
+				"additional_property": "some additional property",
+				"doc": {
+					"_id": "testing id",
+					"athena_messages": [
+						"athena message"
+					],
+					"tx_id": "tx id",
+					"type": "webhook_tx",
+					"description": "some description",
+					"ts_completed": "completed"
+				}
+			},
+			{
+				"_id": "c88180380a7ae3d355ffff438500291f",
+				"_rev": "1-b0473046fda12cebb3ee3d4d2c968763",
+				"type": "fabric-ca",
+				"short_name": "node",
+				"url": "<some url w/protocol and port here>",
+				"msp_id": "PeerOrg1",
+				"location": "<geo location description>",
+				"ca_name": "org1CA",
+				"users": [
+					{
+						"affiliation": "org1",
+						"enroll_id": "admin",
+						"enroll_secret": "bla"
+					}
+				],
+				"timestamp": 1538158288770,
+				"additional_property": "some additional property",
+				"doc": {
+					"_id": "testing id",
+					"athena_messages": [
+						"athena message"
+					],
+					"tx_id": "tx id",
+					"type": "other",
+					"description": "some description",
+					"ts_completed": "completed"
+				}
+			}
+		]
+	},
+	"non_populated_rows": {
+		"rows": []
+	},
+	"create_body_valid_message": {
+		"status": "success",
+		"message": "test message for create body notification",
+		"ts_display": 12345678,
+		"by": "admin",
+		"tag": "tag"
+	},
+	"create_body_invalid_message_property": {
+		"status": "success",
+		"message": {}
+	},
+	"get_response": {
+		"notifications": [
+			{
+				"description": "some description",
+				"id": "tx id",
+				"message": "some description: athena message",
+				"ts_completed": "completed",
+				"ts_display": "completed",
+				"type": "webhook_tx"
+			},
+			{
+				"athena_messages": [
+					"athena message"
+				],
+				"description": "some description",
+				"id": "testing id",
+				"ts_completed": "completed",
+				"tx_id": "tx id",
+				"type": "other"
+			}
+		],
+		"returning": 2
+	}
+}

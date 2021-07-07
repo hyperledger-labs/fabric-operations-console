@@ -1,0 +1,108 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1018.61 774">
+  <defs>
+    <style>
+      .cls-2{fill:#5a6872}.cls-3{fill:#011688;stroke:#857b7b}.cls-13,.cls-16,.cls-4,.cls-7{isolation:isolate;font-family:IBMPlexSans-Medium,IBM Plex Sans;font-weight:500}.cls-4{font-size:19px}.cls-13,.cls-16,.cls-4,.cls-6{fill:#fff}.cls-5{letter-spacing:-.02em}.cls-29,.cls-6{stroke:#fff}.cls-7{font-size:16px}.cls-31,.cls-7{fill:#010f5e}.cls-8{letter-spacing:-.02em}.cls-9{letter-spacing:0}.cls-10{letter-spacing:-.02em}.cls-11{letter-spacing:0}.cls-12{fill:#0ccaeb}.cls-13,.cls-16{font-size:14px}.cls-13{letter-spacing:-.01em}.cls-14{letter-spacing:0}.cls-15{letter-spacing:-.01em}.cls-22{letter-spacing:0}.cls-23{letter-spacing:.01em}.cls-24{letter-spacing:-.01em}.cls-29{fill:none}
+    </style>
+  </defs>
+  <path id="Rectangle" fill="#dcdcdc" stroke="#dcdcdc" d="M89.15 120.09h847v548h-847z"/>
+  <g id="UI-Icon_checkmark--outline_ui-05" data-name="UI-Icon/checkmark--outline/$ui-05">
+    <path id="Oval-2" class="cls-2" d="M355.65 276.09a6.5 6.5 0 1 0-6.5-6.5 6.49 6.49 0 0 0 6.5 6.5zm0 1.5a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+    <path id="check" class="cls-2" d="M358.95 266.29l1.4 1.4-5.9 5.9-3.5-3.4 1.4-1.4 2.1 2 4.5-4.5z"/>
+  </g>
+  <path id="Rectangle-2" data-name="Rectangle" class="cls-3" d="M113.15 157.09h347v151h-347z"/>
+  <text class="cls-4" transform="translate(131.86 191.59)">
+    Org 1<tspan class="cls-5" x="13.53" y="0"></tspan>
+  </text>
+  <path id="Rectangle-3" data-name="Rectangle" class="cls-6" d="M396.15 145.09h105v35h-105z"/>
+  <text class="cls-7" transform="translate(418.83 168.59)">
+    Org1 CA<tspan class="cls-8" x="11.39" y="0">r</tspan>
+  </text>
+  <path id="Rectangle-4" data-name="Rectangle" class="cls-6" d="M338.15 213.09h105v55h-105z"/>
+  <text class="cls-7" transform="translate(353.02 236.59)">
+    Org1 MSP<tspan class="cls-8" x="11.39" y="0">r</tspan>
+  </text>
+  <text class="cls-7" transform="translate(356.27 256.59)">
+    definition
+  </text>
+  <path id="Rectangle-5" data-name="Rectangle" class="cls-3" d="M111.15 478.09h347v151h-347z"/>
+  <text class="cls-4" transform="translate(129.86 512.59)">
+    Org 2<tspan class="cls-5" x="13.53" y="0"></tspan>
+  </text>
+  <path id="Rectangle-6" data-name="Rectangle" class="cls-6" d="M130.15 536.09h105v61h-105z"/>
+  <text class="cls-7" transform="translate(142.77 572.59)">
+    <tspan class="cls-10">Peer Org2</tspan>
+  </text>
+  <path id="Rectangle-7" data-name="Rectangle" class="cls-6" d="M394.15 466.09h105v35h-105z"/>
+  <text class="cls-7" transform="translate(416.83 489.59)">
+    Org2 CA<tspan class="cls-8" x="11.39" y="0"></tspan>
+  </text>
+  <path id="Rectangle-8" data-name="Rectangle" class="cls-6" d="M338.15 537.09h105v55h-105z"/>
+  <text class="cls-7" transform="translate(353.02 560.59)">
+    Org2 MSP<tspan class="cls-8" x="11.39" y="0"></tspan>
+  </text>
+  <text class="cls-7" transform="translate(356.27 580.59)">
+    definition
+  </text>
+  <path id="Rectangle-9" data-name="Rectangle" class="cls-6" d="M134.15 211.09h105v61h-105z"/>
+  <g id="Group-3">
+    <path id="Fill-1" class="cls-12" d="M235.55 233.59h51v39c-25.5 0-25.5 14.9-51 6.4z"/>
+  </g>
+  <g id="Group-3-Copy">
+    <path id="Fill-1-2" data-name="Fill-1" class="cls-12" d="M229.55 564.59h51v39c-25.5 0-25.5 14.9-51 6.4z"/>
+  </g>
+  <text class="cls-7" transform="translate(146.77 247.59)">
+    <tspan class="cls-10">Peer Org1</tspan><tspan class="cls-11" x="9.71" y="0"></tspan>
+  </text>
+  <text class="cls-13" transform="translate(239.65 257.59)">
+    Ledger<tspan class="cls-14" x="7.04" y="0"></tspan>
+  </text>
+  <text class="cls-16" transform="translate(283.35 257.59)">
+  </text>
+  <text class="cls-16" transform="translate(239.65 272.59)">
+    X
+  </text>
+  <text class="cls-13" transform="translate(233.65 588.59)">
+    Ledger<tspan class="cls-14" x="7.04" y="0"></tspan>
+  </text>
+  <text class="cls-16" transform="translate(277.35 588.59)">
+  </text>
+  <text class="cls-16" transform="translate(233.65 603.59)">
+    X
+  </text>
+  <ellipse id="Oval" cx="350.15" cy="395.09" rx="194.5" ry="51.5" stroke="#979797" fill="#fff"/>
+  <text transform="translate(307.4 406.59)" style="isolation:isolate" fill="#010f5e" font-size="19" font-family="IBMPlexSans-Medium,IBM Plex Sans" font-weight="500">
+    Channel 1
+  </text>
+  <path id="Rectangle-10" data-name="Rectangle" class="cls-3" d="M524.15 286.59h347v214.5h-347z"/>
+  <text class="cls-4" transform="translate(544.1 321.09)">
+    Ordering Service Org<tspan x="13.53" y="0" letter-spacing="0"></tspan>
+  </text>
+  <path id="Rectangle-11" data-name="Rectangle" class="cls-6" d="M738.57 274.59h173.58v35H738.57z"/>
+  <text class="cls-7" transform="translate(754.02 298.09)">
+    Ordering service CA<tspan class="cls-22" x="11.39" y="0"></tspan>
+  </text>
+  <path id="Rectangle-12" data-name="Rectangle" class="cls-6" d="M721.15 371.64h135.83v55H721.15z"/>
+  <text class="cls-7" transform="translate(728.19 395.44)">
+    Ordering service<tspan class="cls-22" x="11.39" y="0"></tspan>
+  </text>
+  <text class="cls-7" transform="translate(734.89 415.44)">
+    MSP definition
+  </text>
+  <path id="Rectangle-13" data-name="Rectangle" fill="#011688" d="M552.65 408.59h10v10h-10z"/>
+  <g id="Group-18">
+    <g id="Group-5">
+      <path id="Fill-1-3" data-name="Fill-1" fill="#fff" d="M546.15 337.59h159.5v136.53h-159.5V337.59z"/>
+      <path id="Stroke-3" stroke="#001588" fill="none" d="M546.15 474.12h159.5V337.59h-159.5v136.53z"/>
+    </g>
+  </g>
+  <path class="cls-29" d="M182.65 272.09v95M184.65 422.09v111"/>
+  <circle cx="625.9" cy="419.09" r="32.14" stroke="#12c3f4" stroke-width="2" fill="none"/>
+  <circle class="cls-31" cx="595.04" cy="412.58" r="8.35"/>
+  <circle class="cls-31" cx="625.9" cy="389.06" r="8.35"/>
+  <circle class="cls-31" cx="656.63" cy="412.58" r="8.35"/>
+  <circle class="cls-31" cx="607.67" cy="446.93" r="8.35"/>
+  <circle class="cls-31" cx="642.6" cy="446.93" r="8.35"/>
+  <text transform="translate(562.65 363.52)" style="isolation:isolate" font-size="12" fill="#010f5e" font-family="IBMPlexSans-Medium,IBM Plex Sans" font-weight="500">
+    Ordering service nodes<tspan x="8.54" y="0" letter-spacing="0"></tspan>
+  </text>
+</svg>

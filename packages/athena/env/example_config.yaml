@@ -1,0 +1,9 @@
+---
+version: v1.0
+auth_scheme: couchdb
+initial_admin: ibm@us.ibm.com
+configtxlator_url_original: http://example.com:80
+enforce_backend_ssl: false
+host_url: http://localhost:3000
+region: local
+system_channel_id: testchainid

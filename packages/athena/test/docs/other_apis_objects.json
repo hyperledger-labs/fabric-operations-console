@@ -1,0 +1,247 @@
+{
+	"ev_settings": {
+		"ATHENA_ID": "?",
+		"AUTH_SCHEME": "appid",
+		"CALLBACK_URI": "?",
+		"CONFIGTXLATOR_URL": "?",
+		"CONFIGTXLATOR_URL_ORIGINAL": "?",
+		"CONFIGTXLATOR_TIMEOUT": "?",
+		"CRN": {},
+		"CRN_STRING": "?",
+		"DB_SYSTEM": "athena_system",
+		"DEPLOYER_URL": "?",
+		"ENVIRONMENT": "?",
+		"FEATURE_FLAGS": {},
+		"FILE_LOGGING": {
+			"client": {
+				"enabled": true,
+				"file_name": "athena_client.log",
+				"level": "debug",
+				"path": "./logs"
+			},
+			"server": {
+				"enabled": true,
+				"file_name": "athena.log",
+				"level": "debug",
+				"path": "./logs"
+			}
+		},
+		"HOST_URL": "?",
+		"LANDING_URL": "?",
+		"LOGIN_URI": "?",
+		"LOGOUT_URI": "?",
+		"PORT": "?",
+		"PROXY_TLS_FABRIC_REQS": "?",
+		"PROXY_TLS_WS_URL": "?",
+		"REGION": "?",
+		"TIMESTAMPS": {
+			"born": "?",
+			"next_settings_update": "?",
+			"now": 1551109837362,
+			"up_time": "?"
+		},
+		"VERSION": "?",
+		"IAM_URL": "?",
+		"IAM_CACHE_ENABLED": "?",
+		"HTTP_TIMEOUT": "?",
+		"DEPLOYER_TIMEOUT": "?",
+		"BACKEND_ADDRESS_TIMEOUT_MS": "?",
+		"MAX_REQ_PER_MIN": "?",
+		"CSP_HEADER_VALUES": "?",
+		"CLUSTER_DATA": {},
+		"IGNORE_CONFIG_FILE": "?",
+		"HOST_WHITE_LIST": [],
+		"IBM_ID_CALLBACK_URL": "?",
+		"IBM_ID_URL": "?",
+		"VERSIONS": {},
+		"TRUST_UNKNOWN_CERTS": "?",
+		"MAX_REQ_PER_MIN_AK": "?",
+		"INFRASTRUCTURE": "?",
+		"GRPCWPP_TIMEOUT": "?",
+		"MEMORY_CACHE_ENABLED": true,
+		"SESSION_CACHE_ENABLED": true,
+		"PROXY_CACHE_ENABLED": true,
+		"TRANSACTION_VISIBILITY": "?"
+	},
+	"health_response_valid": {
+		"OPTOOLS": {
+			"born": "?",
+			"instance_id": "?",
+			"memory_usage": {
+				"external": "112.0 KB",
+				"heapTotal": "79.9 MB",
+				"heapUsed": "69.1 MB",
+				"rss": "108.7 MB"
+			},
+			"now": 1556654955211,
+			"up_time": "?"
+		},
+		"OS": {
+			"arch": -1,
+			"cpus": [
+				{
+					"model": "Intel(R) Core(TM) i7-4870HQ CPU @ 2.50GHz",
+					"speed": 2500,
+					"times": {
+						"idle": 12325570,
+						"irq": 0,
+						"nice": 0,
+						"sys": 1600490,
+						"user": 2309710
+					}
+				},
+				{
+					"model": "Intel(R) Core(TM) i7-4870HQ CPU @ 2.50GHz",
+					"speed": 2500,
+					"times": {
+						"idle": 15802210,
+						"irq": 0,
+						"nice": 0,
+						"sys": 166240,
+						"user": 265090
+					}
+				},
+				{
+					"model": "Intel(R) Core(TM) i7-4870HQ CPU @ 2.50GHz",
+					"speed": 2500,
+					"times": {
+						"idle": 13313740,
+						"irq": 0,
+						"nice": 0,
+						"sys": 1082960,
+						"user": 1837550
+					}
+				},
+				{
+					"model": "Intel(R) Core(TM) i7-4870HQ CPU @ 2.50GHz",
+					"speed": 2500,
+					"times": {
+						"idle": 15848340,
+						"irq": 0,
+						"nice": 0,
+						"sys": 132850,
+						"user": 252230
+					}
+				},
+				{
+					"model": "Intel(R) Core(TM) i7-4870HQ CPU @ 2.50GHz",
+					"speed": 2500,
+					"times": {
+						"idle": 13943960,
+						"irq": 0,
+						"nice": 0,
+						"sys": 748900,
+						"user": 1541080
+					}
+				},
+				{
+					"model": "Intel(R) Core(TM) i7-4870HQ CPU @ 2.50GHz",
+					"speed": 2500,
+					"times": {
+						"idle": 15849920,
+						"irq": 0,
+						"nice": 0,
+						"sys": 123700,
+						"user": 259690
+					}
+				},
+				{
+					"model": "Intel(R) Core(TM) i7-4870HQ CPU @ 2.50GHz",
+					"speed": 2500,
+					"times": {
+						"idle": 14231900,
+						"irq": 0,
+						"nice": 0,
+						"sys": 587360,
+						"user": 1414420
+					}
+				},
+				{
+					"model": "Intel(R) Core(TM) i7-4870HQ CPU @ 2.50GHz",
+					"speed": 2500,
+					"times": {
+						"idle": 15852290,
+						"irq": 0,
+						"nice": 0,
+						"sys": 112240,
+						"user": 268650
+					}
+				}
+			],
+			"endian": "LE",
+			"free_memory": "222.5 MB",
+			"loadavg": [
+				1.22314453125,
+				1.732421875,
+				1.78466796875
+			],
+			"total_memory": "16.0 GB",
+			"type": "Darwin",
+			"up_time": "7.6 hrs"
+		}
+	},
+	"ev_settings_keys_subset": [
+		"ACTIVITY_TRACKER_PATH",
+		"ATHENA_ID",
+		"AUTH_SCHEME",
+		"CALLBACK_URI",
+		"CLUSTER_DATA",
+		"CONFIGTXLATOR_URL",
+		"CRN",
+		"CRN_STRING",
+		"DB_SYSTEM",
+		"DEPLOYER_URL",
+		"ENVIRONMENT",
+		"FEATURE_FLAGS",
+		"FILE_LOGGING",
+		"CSP_HEADER_VALUES",
+		"THE_DEFAULT_RESOURCES_MAP",
+		"TIMEOUTS",
+		"HOST_URL",
+		"IAM_CACHE_ENABLED",
+		"MEMORY_CACHE_ENABLED",
+		"IAM_URL",
+		"IBM_ID_CALLBACK_URL",
+		"IBM_ID_URL",
+		"IGNORE_CONFIG_FILE",
+		"INFRASTRUCTURE",
+		"LANDING_URL",
+		"LOGIN_URI",
+		"LOGOUT_URI",
+		"MAX_REQ_PER_MIN",
+		"MAX_REQ_PER_MIN_AK",
+		"PORT",
+		"PROXY_TLS_WS_URL",
+		"PROXY_TLS_FABRIC_REQS",
+		"PROXY_TLS_HTTP_URL",
+		"REGION",
+		"SESSION_CACHE_ENABLED",
+		"TIMESTAMPS",
+		"TRANSACTION_VISIBILITY",
+		"TRUST_UNKNOWN_CERTS",
+		"VERSIONS",
+		"LDAP",
+		"MAX_COMPONENTS"
+	],
+	"ev_settings_keys_subset2": [
+		"GRPCWPP_TIMEOUT",
+		"HTTP_TIMEOUT",
+		"WS_TIMEOUT",
+		"DEPLOYER_TIMEOUT",
+		"BACKEND_ADDRESS_TIMEOUT",
+		"CONFIGTXLATOR_TIMEOUT",
+		"CLIENT"
+	],
+	"edit_settings_error": {
+		"statusCode": 400,
+		"msgs": [
+			"Expected parameter 'file_logging.client.enabled' to be of type: 'boolean', but instead was: 'string'.",
+			"Expected parameter 'file_logging.client.level' to be of type: 'string', but instead was: 'object'.",
+			"Expected parameter 'file_logging.client.level' to be one of these values: 'error', 'warn', 'info', 'verbose', 'debug', 'silly'.",
+			"Expected parameter 'file_logging.client.unique_name' to be of type: 'boolean', but instead was: 'string'.",
+			"Expected parameter 'file_logging.server.enabled' to be of type: 'boolean', but instead was: 'string'.",
+			"Expected parameter 'file_logging.server.level' to be one of these values: 'error', 'warn', 'info', 'verbose', 'debug', 'silly'.",
+			"Expected parameter 'file_logging.server.unique_name' to be of type: 'boolean', but instead was: 'string'."
+		]
+	}
+}

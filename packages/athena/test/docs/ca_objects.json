@@ -1,0 +1,1735 @@
+{
+	"fabricCAClient": {
+		"ca_name": "org1CA",
+		"msp_id": "org1CA",
+		"protocol": "https:",
+		"hostname": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com",
+		"port": "31011",
+		"tlsOptions": {
+			"trustedRoots": {},
+			"verify": false
+		},
+		"baseAPI": "/api/v1/",
+		"enrollmentID": "admin",
+		"enrollmentSecret": "3316d99a3d",
+		"enroll_id": "admin",
+		"enroll_secret": "secret",
+		"method": "POST",
+		"enrollment": {
+			"pvtkey": {
+				"_key": {
+					"type": "EC",
+					"isPrivate": true,
+					"isPublic": false,
+					"curveName": "secp256r1",
+					"ecparams": {
+						"name": "secp256r1",
+						"keylen": 256,
+						"curve": {
+							"q": {
+								"0": 67108863,
+								"1": 67108863,
+								"2": 67108863,
+								"3": 262143,
+								"4": 0,
+								"5": 0,
+								"6": 0,
+								"7": 1024,
+								"8": 67043328,
+								"9": 4194303,
+								"t": 10,
+								"s": 0
+							},
+							"a": {
+								"x": {
+									"0": 67108860,
+									"1": 67108863,
+									"2": 67108863,
+									"3": 262143,
+									"4": 0,
+									"5": 0,
+									"6": 0,
+									"7": 1024,
+									"8": 67043328,
+									"9": 4194303,
+									"t": 10,
+									"s": 0
+								},
+								"q": "~enrollment~pvtkey~_key~ecparams~curve~q"
+							},
+							"b": {
+								"x": {
+									"0": 64118859,
+									"1": 59707273,
+									"2": 51340220,
+									"3": 46346574,
+									"4": 6626566,
+									"5": 27664815,
+									"6": 45864279,
+									"7": 38772431,
+									"8": 30976570,
+									"9": 1487245,
+									"t": 10,
+									"s": 0
+								},
+								"q": "~enrollment~pvtkey~_key~ecparams~curve~q"
+							},
+							"infinity": {
+								"curve": "~enrollment~pvtkey~_key~ecparams~curve",
+								"x": null,
+								"y": null,
+								"z": {
+									"0": 1,
+									"t": 1,
+									"s": 0
+								},
+								"zinv": null
+							}
+						},
+						"G": {
+							"curve": "~enrollment~pvtkey~_key~ecparams~curve",
+							"x": {
+								"x": {
+									"0": 10011286,
+									"1": 5132662,
+									"2": 54136650,
+									"3": 33863596,
+									"4": 41354109,
+									"5": 15274044,
+									"6": 63860310,
+									"7": 17375202,
+									"8": 32694572,
+									"9": 1754612,
+									"t": 10,
+									"s": 0
+								},
+								"q": "~enrollment~pvtkey~_key~ecparams~curve~q"
+							},
+							"y": {
+								"x": {
+									"0": 62870005,
+									"1": 26221069,
+									"2": 32304315,
+									"3": 22916293,
+									"4": 36425267,
+									"5": 50587525,
+									"6": 41858215,
+									"7": 33451579,
+									"8": 48430618,
+									"9": 1308880,
+									"t": 10,
+									"s": 0
+								},
+								"q": "~enrollment~pvtkey~_key~ecparams~curve~q"
+							},
+							"z": "~enrollment~pvtkey~_key~ecparams~curve~infinity~z",
+							"zinv": null
+						},
+						"n": {
+							"0": 6497617,
+							"1": 41070783,
+							"2": 32001851,
+							"3": 45522014,
+							"4": 62711546,
+							"5": 67108863,
+							"6": 67108863,
+							"7": 1023,
+							"8": 67043328,
+							"9": 4194303,
+							"t": 10,
+							"s": 0
+						},
+						"h": {
+							"0": 1,
+							"t": 1,
+							"s": 0
+						}
+					},
+					"prvKeyHex": "private-key",
+					"pubKeyHex": "public-key"
+				}
+			},
+			"public_key": {
+				"_key": {
+					"type": "EC",
+					"isPrivate": false,
+					"isPublic": true,
+					"curveName": "secp256r1",
+					"ecparams": "~enrollment~pvtkey~_key~ecparams",
+					"prvKeyHex": null,
+					"pubKeyHex": "public-key"
+				}
+			},
+			"pubKey": {
+				"_key": "~enrollment~public_key~_key"
+			},
+			"certificate": "-----BEGIN CERTIFICATE----- some-cert -----END CERTIFICATE----- ",
+			"rootCertificate": "-----BEGIN CERTIFICATE----- some-cert -----END CERTIFICATE----- ",
+			"key": {
+				"_key": "~enrollment~pvtkey"
+			}
+		}
+	},
+	"request_resp_get_users": {
+		"statusCode": 201,
+		"body": "{\"result\":{\"identities\":[{\"id\":\"admin\",\"type\":\"client\",\"affiliation\":\"\",\"attrs\":[{\"name\":\"hf.Registrar.Roles\",\"value\":\"client,user,peer\"}],\"max_enrollments\":-1}], \"caname\":\"org1CA\"},\"errors\":[],\"messages\":[],\"success\":true}",
+		"headers": {
+			"content-type": "application/json",
+			"date": "Thu, 08 Nov 2018 17:59:32 GMT",
+			"x-envoy-upstream-service-time": "193",
+			"server": "ibmblockchain",
+			"connection": "close",
+			"transfer-encoding": "chunked"
+		},
+		"request": {
+			"uri": {
+				"protocol": "https:",
+				"slashes": true,
+				"auth": null,
+				"host": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011",
+				"port": "31011",
+				"hostname": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com",
+				"hash": null,
+				"search": null,
+				"query": null,
+				"pathname": "/api/v1/identities",
+				"path": "/api/v1/identities",
+				"href": "https://nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011/api/v1/identities"
+			},
+			"method": "GET",
+			"headers": {
+				"Authorization": "auth-token"
+			}
+		}
+	},
+	"request_resp_get_users_body_is_array": {
+		"statusCode": 201,
+		"body": {
+			"result": {
+				"identities": [
+					{
+						"id": "admin",
+						"type": "client",
+						"affiliation": "",
+						"attrs": [
+							{
+								"name": "hf.Registrar.Roles",
+								"value": "client,user,peer"
+							}
+						],
+						"max_enrollments": -1
+					}
+				],
+				"caname": "org1CA"
+			},
+			"errors": [],
+			"messages": [],
+			"success": true
+		},
+		"headers": {
+			"content-type": "application/json",
+			"date": "Thu, 08 Nov 2018 17:59:32 GMT",
+			"x-envoy-upstream-service-time": "193",
+			"server": "ibmblockchain",
+			"connection": "close",
+			"transfer-encoding": "chunked"
+		},
+		"request": {
+			"uri": {
+				"protocol": "https:",
+				"slashes": true,
+				"auth": null,
+				"host": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011",
+				"port": "31011",
+				"hostname": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com",
+				"hash": null,
+				"search": null,
+				"query": null,
+				"pathname": "/api/v1/identities",
+				"path": "/api/v1/identities",
+				"href": "https://nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011/api/v1/identities"
+			},
+			"method": "GET",
+			"headers": {
+				"Authorization": "auth-token"
+			}
+		}
+	},
+	"get_users_resp": {
+		"result": {
+			"identities": [
+				{
+					"id": "admin",
+					"type": "client",
+					"affiliation": "",
+					"attrs": [
+						{
+							"name": "hf.Registrar.Roles",
+							"value": "client,user,peer"
+						}
+					],
+					"max_enrollments": -1
+				}
+			],
+			"caname": "org1CA"
+		},
+		"errors": [],
+		"messages": [],
+		"success": true
+	},
+	"request_resp_register_identity": {
+		"statusCode": 201,
+		"body": "{\"result\":{\"id\":\"user6\",\"type\":\"client\",\"affiliation\":\"org1\",\"attrs\":[{\"name\":\"hf.Affiliation\",\"value\":\"org1\",\"ecert\":true}],\"max_enrollments\":-1,\"secret\":\"passwd\",\"caname\":\"org1CA\"}\n,\"errors\":[],\"messages\":[],\"success\":true}",
+		"headers": {
+			"content-type": "application/json",
+			"location": "/api/v1/identities/user6",
+			"date": "Thu, 08 Nov 2018 18:40:25 GMT",
+			"x-envoy-upstream-service-time": "2536",
+			"server": "ibmblockchain",
+			"connection": "close",
+			"transfer-encoding": "chunked"
+		},
+		"request": {
+			"uri": {
+				"protocol": "https:",
+				"slashes": true,
+				"auth": null,
+				"host": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011",
+				"port": "31011",
+				"hostname": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com",
+				"hash": null,
+				"search": null,
+				"query": null,
+				"pathname": "/api/v1/identities",
+				"path": "/api/v1/identities",
+				"href": "https://nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011/api/v1/identities"
+			},
+			"method": "POST",
+			"headers": {
+				"Authorization": "auth-token",
+				"content-length": 91
+			}
+		}
+	},
+	"request_resp_register_identity_body_is_array": {
+		"statusCode": 201,
+		"body": {
+			"result": {
+				"id": "user6",
+				"type": "client",
+				"affiliation": "org1",
+				"attrs": [
+					{
+						"name": "hf.Affiliation",
+						"value": "org1",
+						"ecert": true
+					}
+				],
+				"max_enrollments": -1,
+				"secret": "passwd",
+				"caname": "org1CA"
+			},
+			"errors": [],
+			"messages": [],
+			"success": true
+		},
+		"headers": {
+			"content-type": "application/json",
+			"location": "/api/v1/identities/user6",
+			"date": "Thu, 08 Nov 2018 18:40:25 GMT",
+			"x-envoy-upstream-service-time": "2536",
+			"server": "ibmblockchain",
+			"connection": "close",
+			"transfer-encoding": "chunked"
+		},
+		"request": {
+			"uri": {
+				"protocol": "https:",
+				"slashes": true,
+				"auth": null,
+				"host": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011",
+				"port": "31011",
+				"hostname": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com",
+				"hash": null,
+				"search": null,
+				"query": null,
+				"pathname": "/api/v1/identities",
+				"path": "/api/v1/identities",
+				"href": "https://nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011/api/v1/identities"
+			},
+			"method": "POST",
+			"headers": {
+				"Authorization": "auth-token",
+				"content-length": 91
+			}
+		}
+	},
+	"request_resp_register_identity_body_with_errors": {
+		"statusCode": 399,
+		"body": "{\"result\":\"\",\"errors\":[{\"code\":52,\"message\":\"Failed to add identity: Registration of 'user6' failed: Identity 'user6' is already registered\"}\n],\"messages\":[],\"success\":false}",
+		"headers": {
+			"content-type": "application/json",
+			"date": "Thu, 08 Nov 2018 18:56:29 GMT",
+			"x-envoy-upstream-service-time": "40",
+			"server": "ibmblockchain",
+			"connection": "close",
+			"transfer-encoding": "chunked"
+		},
+		"request": {
+			"uri": {
+				"protocol": "https:",
+				"slashes": true,
+				"auth": null,
+				"host": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011",
+				"port": "31011",
+				"hostname": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com",
+				"hash": null,
+				"search": null,
+				"query": null,
+				"pathname": "/api/v1/identities",
+				"path": "/api/v1/identities",
+				"href": "https://nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011/api/v1/identities"
+			},
+			"method": "POST",
+			"headers": {
+				"Authorization": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUI4VENDQVppZ0F3SUJBZ0lVVDJMUGJUNy9KRGsyREZRcVdad1RWalVGY1Rnd0NnWUlLb1pJemowRUF3SXcKYnpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVNBd0hnWURWUVFERXhkbVlXSnlhV010ClkyRXRjMlZ5ZG1WeUxXOXlaekZEUVRBZUZ3MHhPREV4TURneE9EVXhNREJhRncweE9URXhNRGd4T0RVMk1EQmEKTUNFeER6QU5CZ05WQkFzVEJtTnNhV1Z1ZERFT01Bd0dBMVVFQXhNRllXUnRhVzR3V1RBVEJnY3Foa2pPUFFJQgpCZ2dxaGtqT1BRTUJCd05DQUFTZXQzeTN2ZzdRbWxoOXBteUVURFNpZFJ2cWk0a1JLaHBUZm9kdXQ2SVBpSUJFCmQydHJuMlNHVmgxTmVjTlJQcXJOYm1BdW9OUTJwSTZQUlhRVE9uR2NvMkF3WGpBT0JnTlZIUThCQWY4RUJBTUMKQjRBd0RBWURWUjBUQVFIL0JBSXdBREFkQmdOVkhRNEVGZ1FVVjBtc1R5amVyTTlUd0xWQkhTVEpEcmt0SEw0dwpId1lEVlIwakJCZ3dGb0FVSk9IYU50NkZDaHgwaWpvc1E2VUtDUXR2ZjlBd0NnWUlLb1pJemowRUF3SURSd0F3ClJBSWdQT0JzaVZ6cElWNTl2T3ZjUmJRUnI5UHVvZVVUVVloZUtxdmZMWFNkNEVVQ0lGV3FjUE4rRi9MZWw2REYKekNseDM1aEkxakhuSFhwTzhtTmZyNUZyRTZ6RwotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==.MEUCIQC0ocIhRKQ7cRZHiOzV6pbnp3iqphQeni3Tf4vOW7tUUAIgA4IuS08iK6ymqy9vBsLGP+G34kYXrt+43qSgJYFP9FU=",
+				"content-length": 91
+			}
+		}
+	},
+	"register_identity_resp": {
+		"result": {
+			"id": "user6",
+			"type": "client",
+			"affiliation": "org1",
+			"attrs": [
+				{
+					"name": "hf.Affiliation",
+					"value": "org1",
+					"ecert": true
+				}
+			],
+			"max_enrollments": -1,
+			"secret": "passwd",
+			"caname": "org1CA"
+		},
+		"errors": [],
+		"messages": [],
+		"success": true
+	},
+	"request_resp_get_affiliations": {
+		"statusCode": 200,
+		"body": "{\"result\":{\"name\":\"\",\"affiliations\":[{\"name\":\"org1\",\"affiliations\":[{\"name\":\"org1.department1\"},{\"name\":\"org1.department2\"}]},{\"name\":\"org2\",\"affiliations\":[{\"name\":\"org2.department1\"}]}],\"caname\":\"org1CA\"}\n,\"errors\":[],\"messages\":[],\"success\":true}",
+		"headers": {
+			"content-type": "application/json",
+			"date": "Thu, 08 Nov 2018 19:17:55 GMT",
+			"x-envoy-upstream-service-time": "31",
+			"server": "ibmblockchain",
+			"connection": "close",
+			"transfer-encoding": "chunked"
+		},
+		"request": {
+			"uri": {
+				"protocol": "https:",
+				"slashes": true,
+				"auth": null,
+				"host": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011",
+				"port": "31011",
+				"hostname": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com",
+				"hash": null,
+				"search": null,
+				"query": null,
+				"pathname": "/api/v1/affiliations",
+				"path": "/api/v1/affiliations",
+				"href": "https://nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011/api/v1/affiliations"
+			},
+			"method": "GET",
+			"headers": {
+				"Authorization": "auth-token"
+			}
+		}
+	},
+	"request_resp_get_affiliations_body_is_array": {
+		"statusCode": 200,
+		"body": {
+			"result": {
+				"name": "",
+				"affiliations": [
+					{
+						"name": "org1",
+						"affiliations": [
+							{
+								"name": "org1.department1"
+							},
+							{
+								"name": "org1.department2"
+							}
+						]
+					},
+					{
+						"name": "org2",
+						"affiliations": [
+							{
+								"name": "org2.department1"
+							}
+						]
+					}
+				],
+				"caname": "org1CA"
+			},
+			"errors": [],
+			"messages": [],
+			"success": true
+		},
+		"headers": {
+			"content-type": "application/json",
+			"date": "Thu, 08 Nov 2018 19:17:55 GMT",
+			"x-envoy-upstream-service-time": "31",
+			"server": "ibmblockchain",
+			"connection": "close",
+			"transfer-encoding": "chunked"
+		},
+		"request": {
+			"uri": {
+				"protocol": "https:",
+				"slashes": true,
+				"auth": null,
+				"host": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011",
+				"port": "31011",
+				"hostname": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com",
+				"hash": null,
+				"search": null,
+				"query": null,
+				"pathname": "/api/v1/affiliations",
+				"path": "/api/v1/affiliations",
+				"href": "https://nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011/api/v1/affiliations"
+			},
+			"method": "GET",
+			"headers": {
+				"Authorization": "auth-token"
+			}
+		}
+	},
+	"get_affiliations_resp": {
+		"result": {
+			"name": "",
+			"affiliations": [
+				{
+					"name": "org1",
+					"affiliations": [
+						{
+							"name": "org1.department1"
+						},
+						{
+							"name": "org1.department2"
+						}
+					]
+				},
+				{
+					"name": "org2",
+					"affiliations": [
+						{
+							"name": "org2.department1"
+						}
+					]
+				}
+			],
+			"caname": "org1CA"
+		},
+		"errors": [],
+		"messages": [],
+		"success": true
+	},
+	"resp_affiliations": {
+		"result": {
+			"name": "",
+			"affiliations": [
+				{
+					"name": "org1",
+					"affiliations": [
+						{
+							"name": "org1.department1"
+						},
+						{
+							"name": "org1.department2"
+						}
+					]
+				},
+				{
+					"name": "org2",
+					"affiliations": [
+						{
+							"name": "org2.department1"
+						}
+					]
+				}
+			],
+			"caname": "org1CA"
+		},
+		"errors": [],
+		"messages": [],
+		"success": true
+	},
+	"resp_certs": {
+		"certificate": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tIHNvbWUtY2VydCAtLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tIA==",
+		"private_key": "fmVucm9sbG1lbnR+cHZ0a2V5",
+		"message": "ok"
+	},
+	"enroll_resp": {
+		"pvtkey": {
+			"_key": {
+				"type": "EC",
+				"isPrivate": true,
+				"isPublic": false,
+				"curveName": "secp256r1",
+				"ecparams": {
+					"name": "secp256r1",
+					"keylen": 256,
+					"curve": {
+						"q": {
+							"0": 67108863,
+							"1": 67108863,
+							"2": 67108863,
+							"3": 262143,
+							"4": 0,
+							"5": 0,
+							"6": 0,
+							"7": 1024,
+							"8": 67043328,
+							"9": 4194303,
+							"t": 10,
+							"s": 0
+						},
+						"a": {
+							"x": {
+								"0": 67108860,
+								"1": 67108863,
+								"2": 67108863,
+								"3": 262143,
+								"4": 0,
+								"5": 0,
+								"6": 0,
+								"7": 1024,
+								"8": 67043328,
+								"9": 4194303,
+								"t": 10,
+								"s": 0
+							},
+							"q": "~pvtkey~_key~ecparams~curve~q"
+						},
+						"b": {
+							"x": {
+								"0": 64118859,
+								"1": 59707273,
+								"2": 51340220,
+								"3": 46346574,
+								"4": 6626566,
+								"5": 27664815,
+								"6": 45864279,
+								"7": 38772431,
+								"8": 30976570,
+								"9": 1487245,
+								"t": 10,
+								"s": 0
+							},
+							"q": "~pvtkey~_key~ecparams~curve~q"
+						},
+						"infinity": {
+							"curve": "~pvtkey~_key~ecparams~curve",
+							"x": null,
+							"y": null,
+							"z": {
+								"0": 1,
+								"t": 1,
+								"s": 0
+							},
+							"zinv": null
+						}
+					},
+					"G": {
+						"curve": "~pvtkey~_key~ecparams~curve",
+						"x": {
+							"x": {
+								"0": 10011286,
+								"1": 5132662,
+								"2": 54136650,
+								"3": 33863596,
+								"4": 41354109,
+								"5": 15274044,
+								"6": 63860310,
+								"7": 17375202,
+								"8": 32694572,
+								"9": 1754612,
+								"t": 10,
+								"s": 0
+							},
+							"q": "~pvtkey~_key~ecparams~curve~q"
+						},
+						"y": {
+							"x": {
+								"0": 62870005,
+								"1": 26221069,
+								"2": 32304315,
+								"3": 22916293,
+								"4": 36425267,
+								"5": 50587525,
+								"6": 41858215,
+								"7": 33451579,
+								"8": 48430618,
+								"9": 1308880,
+								"t": 10,
+								"s": 0
+							},
+							"q": "~pvtkey~_key~ecparams~curve~q"
+						},
+						"z": "~pvtkey~_key~ecparams~curve~infinity~z",
+						"zinv": null
+					},
+					"n": {
+						"0": 6497617,
+						"1": 41070783,
+						"2": 32001851,
+						"3": 45522014,
+						"4": 62711546,
+						"5": 67108863,
+						"6": 67108863,
+						"7": 1023,
+						"8": 67043328,
+						"9": 4194303,
+						"t": 10,
+						"s": 0
+					},
+					"h": {
+						"0": 1,
+						"t": 1,
+						"s": 0
+					}
+				},
+				"prvKeyHex": "private-key-hex",
+				"pubKeyHex": "public-key-hex"
+			}
+		},
+		"public_key": {
+			"_key": {
+				"type": "EC",
+				"isPrivate": false,
+				"isPublic": true,
+				"curveName": "secp256r1",
+				"ecparams": "~pvtkey~_key~ecparams",
+				"prvKeyHex": null,
+				"pubKeyHex": "public-key-hex"
+			}
+		},
+		"pubKey": {
+			"_key": "~public_key~_key"
+		},
+		"certificate": "-----BEGIN CERTIFICATE----- some-cert -----END CERTIFICATE----- ",
+		"rootCertificate": "-----BEGIN CERTIFICATE----- some-cert -----END CERTIFICATE----- "
+	},
+	"delete_ca_identity_request_body": {
+		"statusCode": 403,
+		"body": "{\"result\":\"\",\"errors\":[],\"messages\":[\"successfully deleted user2\"],\"success\":true}",
+		"headers": {
+			"content-type": "application/json",
+			"date": "Thu, 08 Nov 2018 21:02:21 GMT",
+			"x-envoy-upstream-service-time": "55",
+			"server": "ibmblockchain",
+			"connection": "close",
+			"transfer-encoding": "chunked"
+		},
+		"request": {
+			"uri": {
+				"protocol": "https:",
+				"slashes": true,
+				"auth": null,
+				"host": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011",
+				"port": "31011",
+				"hostname": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com",
+				"hash": null,
+				"search": null,
+				"query": null,
+				"pathname": "/api/v1/identities/user2",
+				"path": "/api/v1/identities/user2",
+				"href": "https://nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011/api/v1/identities/user2"
+			},
+			"method": "DELETE",
+			"headers": {
+				"Authorization": "auth-token",
+				"content-length": 0
+			}
+		}
+	},
+	"delete_ca_identity_request_body_is_array": {
+		"statusCode": 403,
+		"body": {
+			"result": "",
+			"errors": [],
+			"messages": [
+				{
+					"message": "successfully deleted user2"
+				}
+			],
+			"success": true
+		},
+		"headers": {
+			"content-type": "application/json",
+			"date": "Thu, 08 Nov 2018 21:02:21 GMT",
+			"x-envoy-upstream-service-time": "55",
+			"server": "ibmblockchain",
+			"connection": "close",
+			"transfer-encoding": "chunked"
+		},
+		"request": {
+			"uri": {
+				"protocol": "https:",
+				"slashes": true,
+				"auth": null,
+				"host": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011",
+				"port": "31011",
+				"hostname": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com",
+				"hash": null,
+				"search": null,
+				"query": null,
+				"pathname": "/api/v1/identities/user2",
+				"path": "/api/v1/identities/user2",
+				"href": "https://nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011/api/v1/identities/user2"
+			},
+			"method": "DELETE",
+			"headers": {
+				"Authorization": "auth-token",
+				"content-length": 0
+			}
+		}
+	},
+	"delete_ca_identity_body_had_errors": {
+		"statusCode": 403,
+		"body": "{\"result\":\"\",\"errors\":[{\"code\":56,\"message\":\"Identity removal is disabled\"}\n],\"messages\":[],\"success\":false}",
+		"headers": {
+			"content-type": "application/json",
+			"date": "Thu, 08 Nov 2018 21:02:21 GMT",
+			"x-envoy-upstream-service-time": "55",
+			"server": "ibmblockchain",
+			"connection": "close",
+			"transfer-encoding": "chunked"
+		},
+		"request": {
+			"uri": {
+				"protocol": "https:",
+				"slashes": true,
+				"auth": null,
+				"host": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011",
+				"port": "31011",
+				"hostname": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com",
+				"hash": null,
+				"search": null,
+				"query": null,
+				"pathname": "/api/v1/identities/user2",
+				"path": "/api/v1/identities/user2",
+				"href": "https://nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011/api/v1/identities/user2"
+			},
+			"method": "DELETE",
+			"headers": {
+				"Authorization": "auth-token",
+				"content-length": 0
+			}
+		}
+	},
+	"delete_ca_identity_body_is_array_and_had_errors": {
+		"statusCode": 403,
+		"body": {
+			"result": "",
+			"errors": [
+				{
+					"code": 56,
+					"message": "Identity removal is disabled"
+				}
+			],
+			"messages": [],
+			"success": false
+		},
+		"headers": {
+			"content-type": "application/json",
+			"date": "Thu, 08 Nov 2018 21:02:21 GMT",
+			"x-envoy-upstream-service-time": "55",
+			"server": "ibmblockchain",
+			"connection": "close",
+			"transfer-encoding": "chunked"
+		},
+		"request": {
+			"uri": {
+				"protocol": "https:",
+				"slashes": true,
+				"auth": null,
+				"host": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011",
+				"port": "31011",
+				"hostname": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com",
+				"hash": null,
+				"search": null,
+				"query": null,
+				"pathname": "/api/v1/identities/user2",
+				"path": "/api/v1/identities/user2",
+				"href": "https://nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011/api/v1/identities/user2"
+			},
+			"method": "DELETE",
+			"headers": {
+				"Authorization": "auth-token",
+				"content-length": 0
+			}
+		}
+	},
+	"common_setup_return": {
+		"ca_name": "org1CA",
+		"msp_id": "org1CA",
+		"protocol": "https:",
+		"hostname": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com",
+		"port": "31011",
+		"tlsOptions": {
+			"trustedRoots": [],
+			"verify": false
+		},
+		"baseAPI": "/api/v1/",
+		"enrollmentID": "admin",
+		"enrollmentSecret": "secret",
+		"method": "POST",
+		"enrollment": {
+			"pvtkey": {
+				"_key": {
+					"type": "EC",
+					"isPrivate": true,
+					"isPublic": false,
+					"curveName": "secp256r1",
+					"ecparams": {
+						"name": "secp256r1",
+						"keylen": 256,
+						"curve": {
+							"q": {
+								"0": 67108863,
+								"1": 67108863,
+								"2": 67108863,
+								"3": 262143,
+								"4": 0,
+								"5": 0,
+								"6": 0,
+								"7": 1024,
+								"8": 67043328,
+								"9": 4194303,
+								"t": 10,
+								"s": 0
+							},
+							"a": {
+								"x": {
+									"0": 67108860,
+									"1": 67108863,
+									"2": 67108863,
+									"3": 262143,
+									"4": 0,
+									"5": 0,
+									"6": 0,
+									"7": 1024,
+									"8": 67043328,
+									"9": 4194303,
+									"t": 10,
+									"s": 0
+								},
+								"q": "~pvtkey~_key~ecparams~curve~q"
+							},
+							"b": {
+								"x": {
+									"0": 64118859,
+									"1": 59707273,
+									"2": 51340220,
+									"3": 46346574,
+									"4": 6626566,
+									"5": 27664815,
+									"6": 45864279,
+									"7": 38772431,
+									"8": 30976570,
+									"9": 1487245,
+									"t": 10,
+									"s": 0
+								},
+								"q": "~pvtkey~_key~ecparams~curve~q"
+							},
+							"infinity": {
+								"curve": "~pvtkey~_key~ecparams~curve",
+								"x": null,
+								"y": null,
+								"z": {
+									"0": 1,
+									"t": 1,
+									"s": 0
+								},
+								"zinv": null
+							}
+						},
+						"G": {
+							"curve": "~pvtkey~_key~ecparams~curve",
+							"x": {
+								"x": {
+									"0": 10011286,
+									"1": 5132662,
+									"2": 54136650,
+									"3": 33863596,
+									"4": 41354109,
+									"5": 15274044,
+									"6": 63860310,
+									"7": 17375202,
+									"8": 32694572,
+									"9": 1754612,
+									"t": 10,
+									"s": 0
+								},
+								"q": "~pvtkey~_key~ecparams~curve~q"
+							},
+							"y": {
+								"x": {
+									"0": 62870005,
+									"1": 26221069,
+									"2": 32304315,
+									"3": 22916293,
+									"4": 36425267,
+									"5": 50587525,
+									"6": 41858215,
+									"7": 33451579,
+									"8": 48430618,
+									"9": 1308880,
+									"t": 10,
+									"s": 0
+								},
+								"q": "~pvtkey~_key~ecparams~curve~q"
+							},
+							"z": "~pvtkey~_key~ecparams~curve~infinity~z",
+							"zinv": null
+						},
+						"n": {
+							"0": 6497617,
+							"1": 41070783,
+							"2": 32001851,
+							"3": 45522014,
+							"4": 62711546,
+							"5": 67108863,
+							"6": 67108863,
+							"7": 1023,
+							"8": 67043328,
+							"9": 4194303,
+							"t": 10,
+							"s": 0
+						},
+						"h": {
+							"0": 1,
+							"t": 1,
+							"s": 0
+						}
+					},
+					"prvKeyHex": "private-key-hex",
+					"pubKeyHex": "public-key-hex"
+				}
+			},
+			"public_key": {
+				"_key": {
+					"type": "EC",
+					"isPrivate": false,
+					"isPublic": true,
+					"curveName": "secp256r1",
+					"ecparams": "~pvtkey~_key~ecparams",
+					"prvKeyHex": null,
+					"pubKeyHex": "public-key-hex"
+				}
+			},
+			"pubKey": {
+				"_key": "~public_key~_key"
+			},
+			"certificate": "-----BEGIN CERTIFICATE----- some-cert -----END CERTIFICATE----- ",
+			"rootCertificate": "-----BEGIN CERTIFICATE----- some-cert -----END CERTIFICATE----- ",
+			"key": {
+				"_key": {
+					"type": "EC",
+					"isPrivate": true,
+					"isPublic": false,
+					"curveName": "secp256r1",
+					"ecparams": {
+						"name": "secp256r1",
+						"keylen": 256,
+						"curve": {
+							"q": {
+								"0": 67108863,
+								"1": 67108863,
+								"2": 67108863,
+								"3": 262143,
+								"4": 0,
+								"5": 0,
+								"6": 0,
+								"7": 1024,
+								"8": 67043328,
+								"9": 4194303,
+								"t": 10,
+								"s": 0
+							},
+							"a": {
+								"x": {
+									"0": 67108860,
+									"1": 67108863,
+									"2": 67108863,
+									"3": 262143,
+									"4": 0,
+									"5": 0,
+									"6": 0,
+									"7": 1024,
+									"8": 67043328,
+									"9": 4194303,
+									"t": 10,
+									"s": 0
+								},
+								"q": "~pvtkey~_key~ecparams~curve~q"
+							},
+							"b": {
+								"x": {
+									"0": 64118859,
+									"1": 59707273,
+									"2": 51340220,
+									"3": 46346574,
+									"4": 6626566,
+									"5": 27664815,
+									"6": 45864279,
+									"7": 38772431,
+									"8": 30976570,
+									"9": 1487245,
+									"t": 10,
+									"s": 0
+								},
+								"q": "~pvtkey~_key~ecparams~curve~q"
+							},
+							"infinity": {
+								"curve": "~pvtkey~_key~ecparams~curve",
+								"x": null,
+								"y": null,
+								"z": {
+									"0": 1,
+									"t": 1,
+									"s": 0
+								},
+								"zinv": null
+							}
+						},
+						"G": {
+							"curve": "~pvtkey~_key~ecparams~curve",
+							"x": {
+								"x": {
+									"0": 10011286,
+									"1": 5132662,
+									"2": 54136650,
+									"3": 33863596,
+									"4": 41354109,
+									"5": 15274044,
+									"6": 63860310,
+									"7": 17375202,
+									"8": 32694572,
+									"9": 1754612,
+									"t": 10,
+									"s": 0
+								},
+								"q": "~pvtkey~_key~ecparams~curve~q"
+							},
+							"y": {
+								"x": {
+									"0": 62870005,
+									"1": 26221069,
+									"2": 32304315,
+									"3": 22916293,
+									"4": 36425267,
+									"5": 50587525,
+									"6": 41858215,
+									"7": 33451579,
+									"8": 48430618,
+									"9": 1308880,
+									"t": 10,
+									"s": 0
+								},
+								"q": "~pvtkey~_key~ecparams~curve~q"
+							},
+							"z": "~pvtkey~_key~ecparams~curve~infinity~z",
+							"zinv": null
+						},
+						"n": {
+							"0": 6497617,
+							"1": 41070783,
+							"2": 32001851,
+							"3": 45522014,
+							"4": 62711546,
+							"5": 67108863,
+							"6": 67108863,
+							"7": 1023,
+							"8": 67043328,
+							"9": 4194303,
+							"t": 10,
+							"s": 0
+						},
+						"h": {
+							"0": 1,
+							"t": 1,
+							"s": 0
+						}
+					},
+					"prvKeyHex": "private-key-hex",
+					"pubKeyHex": "public-key-hex"
+				}
+			}
+		}
+	},
+	"enroll_request": {
+		"ca_name": "org1CA",
+		"msp_id": "org1CA",
+		"protocol": "https:",
+		"hostname": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com",
+		"port": "31011",
+		"tlsOptions": {
+			"trustedRoots": [],
+			"verify": false
+		},
+		"baseAPI": "/api/v1/",
+		"enrollmentID": "admin",
+		"enrollmentSecret": "secret",
+		"method": "POST"
+	},
+	"csr": "-----BEGIN CERTIFICATE REQUEST----- csr -----END CERTIFICATE REQUEST-----",
+	"do_enrollment_response": {
+		"statusCode": 201,
+		"body": "{\"result\":{\"Cert\":\"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUI4akNDQVppZ0F3SUJBZ0lVWElqd0pSL2wyczBoRWZEYVluSEREWnA1NnFVd0NnWUlLb1pJemowRUF3SXcKYnpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVNBd0hnWURWUVFERXhkbVlXSnlhV010ClkyRXRjMlZ5ZG1WeUxXOXlaekZEUVRBZUZ3MHhPREV4TURreE9ERTRNREJhRncweE9URXhNRGt4T0RJek1EQmEKTUNFeER6QU5CZ05WQkFzVEJtTnNhV1Z1ZERFT01Bd0dBMVVFQXhNRllXUnRhVzR3V1RBVEJnY3Foa2pPUFFJQgpCZ2dxaGtqT1BRTUJCd05DQUFTQ1NJbGExV2dPS1VaNFlVZkZMU24rd1BUcGlQZEY3U2hpQStqNzR5NzlyZWgzCmN4YlkwYnpmRStmamN3UUU3bnFNaG10VzNCaVJzdlVJak1jblJGRGlvMkF3WGpBT0JnTlZIUThCQWY4RUJBTUMKQjRBd0RBWURWUjBUQVFIL0JBSXdBREFkQmdOVkhRNEVGZ1FVekc2Y0lLZnNXaXdWdFZIaEttOTNhQ0xhR0dVdwpId1lEVlIwakJCZ3dGb0FVSk9IYU50NkZDaHgwaWpvc1E2VUtDUXR2ZjlBd0NnWUlLb1pJemowRUF3SURTQUF3ClJRSWhBSVJzU1JRR1pSaXpydnh1a0FjSEx2Wmd2SjZaQWlNNG1pcE9zakNDcWxyMUFpQlVtT1J0YkhsYkt5UEMKWmlDWUphdlpYczJUNG4rWDQ3S1BPZ1VvVVp2a1dRPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=\",\"ServerInfo\":{\"CAName\":\"org1CA\",\"CAChain\":\"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNKVENDQWN1Z0F3SUJBZ0lVRU9nNTM5VStaNDJySCtmUXdVUlliWFZ6Ly9vd0NnWUlLb1pJemowRUF3SXcKYnpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVNBd0hnWURWUVFERXhkbVlXSnlhV010ClkyRXRjMlZ5ZG1WeUxXOXlaekZEUVRBZUZ3MHhPREEyTVRReE5ESTJNREJhRncwek16QTJNVEF4TkRJMk1EQmEKTUc4eEN6QUpCZ05WQkFZVEFsVlRNUmN3RlFZRFZRUUlFdzVPYjNKMGFDQkRZWEp2YkdsdVlURVVNQklHQTFVRQpDaE1MU0hsd1pYSnNaV1JuWlhJeER6QU5CZ05WQkFzVEJrWmhZbkpwWXpFZ01CNEdBMVVFQXhNWFptRmljbWxqCkxXTmhMWE5sY25abGNpMXZjbWN4UTBFd1dUQVRCZ2NxaGtqT1BRSUJCZ2dxaGtqT1BRTUJCd05DQUFSWkM2aHUKSHowMVMyK1JuWlV2bnRoc2xiSzNscVhENExZYTRpMjYxM2x0SEVoWEdSbUlyQlN4STNoN1dFMitkSUNOb0lRaQo1eVpPQ3B5em9wQWFhUlBybzBVd1F6QU9CZ05WSFE4QkFmOEVCQU1DQVFZd0VnWURWUjBUQVFIL0JBZ3dCZ0VCCi93SUJBVEFkQmdOVkhRNEVGZ1FVSk9IYU50NkZDaHgwaWpvc1E2VUtDUXR2ZjlBd0NnWUlLb1pJemowRUF3SUQKU0FBd1JRSWhBTGtQZ2N4MndGY0x6RFZDb0lYQTNzcXBVL25OODFLUlJGaDFWM0NiNVl2aEFpQTU2VWwva1pCawppM3NnYnpMajJ5SExJeUZjb0FtN1NFeEFlRzFLSmNaSFVRPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=\",\"Version\":\"\"}}\n,\"errors\":[],\"messages\":[],\"success\":true}",
+		"headers": {
+			"content-type": "application/json",
+			"date": "Fri, 09 Nov 2018 18:23:26 GMT",
+			"x-envoy-upstream-service-time": "2521",
+			"server": "ibmblockchain",
+			"connection": "close",
+			"transfer-encoding": "chunked"
+		},
+		"request": {
+			"uri": {
+				"protocol": "https:",
+				"slashes": true,
+				"auth": null,
+				"host": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011",
+				"port": "31011",
+				"hostname": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com",
+				"hash": null,
+				"search": null,
+				"query": null,
+				"pathname": "/api/v1/enroll",
+				"path": "/api/v1/enroll",
+				"href": "https://nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011/api/v1/enroll"
+			},
+			"method": "POST",
+			"headers": {
+				"Authorization": "Basic BASIC-AUTH",
+				"content-length": 412
+			}
+		}
+	},
+	"do_enrollment_response_body_is_object": {
+		"statusCode": 201,
+		"body": {
+			"result": {
+				"Cert": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUI4akNDQVppZ0F3SUJBZ0lVYzlCZlplNFIyTmU1L2hFMWN1QzB0RjY5YnBVd0NnWUlLb1pJemowRUF3SXcKYnpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVNBd0hnWURWUVFERXhkbVlXSnlhV010ClkyRXRjMlZ5ZG1WeUxXOXlaekZEUVRBZUZ3MHhPREV4TURreE9EUTBNREJhRncweE9URXhNRGt4T0RRNE1EQmEKTUNFeER6QU5CZ05WQkFzVEJtTnNhV1Z1ZERFT01Bd0dBMVVFQXhNRllXUnRhVzR3V1RBVEJnY3Foa2pPUFFJQgpCZ2dxaGtqT1BRTUJCd05DQUFTUVBiV2FiaVpFTVpNRFBIRjNqODdoSmoxM1hLdnErM2FKM3RuZDd5SVM4dnFuClJYUzBmZ3ZwM25LL1BGdDRqMWkzNTNlQ3pvT1NBcE4vU1kxOHV3SXdvMkF3WGpBT0JnTlZIUThCQWY4RUJBTUMKQjRBd0RBWURWUjBUQVFIL0JBSXdBREFkQmdOVkhRNEVGZ1FVbnp6Z0NNYWVSYkRBbXROZkFXSm9EeGwxNnZJdwpId1lEVlIwakJCZ3dGb0FVSk9IYU50NkZDaHgwaWpvc1E2VUtDUXR2ZjlBd0NnWUlLb1pJemowRUF3SURTQUF3ClJRSWhBTDZpaFdNdEx5WVAxcXllWHdkejdtdUNKT1JLMHlDL0I2WjJuaUR4dUR2WEFpQmxjUnJDQ3dEaVhLZFkKT3UveUhwWloxaVliOE9naW5UNDNsWE9lMEJZNFRRPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=",
+				"ServerInfo": {
+					"CAName": "org1CA",
+					"CAChain": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNKVENDQWN1Z0F3SUJBZ0lVRU9nNTM5VStaNDJySCtmUXdVUlliWFZ6Ly9vd0NnWUlLb1pJemowRUF3SXcKYnpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVNBd0hnWURWUVFERXhkbVlXSnlhV010ClkyRXRjMlZ5ZG1WeUxXOXlaekZEUVRBZUZ3MHhPREEyTVRReE5ESTJNREJhRncwek16QTJNVEF4TkRJMk1EQmEKTUc4eEN6QUpCZ05WQkFZVEFsVlRNUmN3RlFZRFZRUUlFdzVPYjNKMGFDQkRZWEp2YkdsdVlURVVNQklHQTFVRQpDaE1MU0hsd1pYSnNaV1JuWlhJeER6QU5CZ05WQkFzVEJrWmhZbkpwWXpFZ01CNEdBMVVFQXhNWFptRmljbWxqCkxXTmhMWE5sY25abGNpMXZjbWN4UTBFd1dUQVRCZ2NxaGtqT1BRSUJCZ2dxaGtqT1BRTUJCd05DQUFSWkM2aHUKSHowMVMyK1JuWlV2bnRoc2xiSzNscVhENExZYTRpMjYxM2x0SEVoWEdSbUlyQlN4STNoN1dFMitkSUNOb0lRaQo1eVpPQ3B5em9wQWFhUlBybzBVd1F6QU9CZ05WSFE4QkFmOEVCQU1DQVFZd0VnWURWUjBUQVFIL0JBZ3dCZ0VCCi93SUJBVEFkQmdOVkhRNEVGZ1FVSk9IYU50NkZDaHgwaWpvc1E2VUtDUXR2ZjlBd0NnWUlLb1pJemowRUF3SUQKU0FBd1JRSWhBTGtQZ2N4MndGY0x6RFZDb0lYQTNzcXBVL25OODFLUlJGaDFWM0NiNVl2aEFpQTU2VWwva1pCawppM3NnYnpMajJ5SExJeUZjb0FtN1NFeEFlRzFLSmNaSFVRPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=",
+					"Version": ""
+				}
+			},
+			"errors": [],
+			"messages": [],
+			"success": true
+		},
+		"headers": {
+			"content-type": "application/json",
+			"date": "Fri, 09 Nov 2018 18:23:26 GMT",
+			"x-envoy-upstream-service-time": "2521",
+			"server": "ibmblockchain",
+			"connection": "close",
+			"transfer-encoding": "chunked"
+		},
+		"request": {
+			"uri": {
+				"protocol": "https:",
+				"slashes": true,
+				"auth": null,
+				"host": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011",
+				"port": "31011",
+				"hostname": "nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com",
+				"hash": null,
+				"search": null,
+				"query": null,
+				"pathname": "/api/v1/enroll",
+				"path": "/api/v1/enroll",
+				"href": "https://nb040a579035e462496dcb3651c784394-org1-ca.us01.blockchain.ibm.com:31011/api/v1/enroll"
+			},
+			"method": "POST",
+			"headers": {
+				"Authorization": "Basic BASIC-AUTH",
+				"content-length": 412
+			}
+		}
+	},
+	"enroll_response": {
+		"enrollmentCert": "-----BEGIN CERTIFICATE-----\nMIIB8jCCAZigAwIBAgIUXIjwJR/l2s0hEfDaYnHDDZp56qUwCgYIKoZIzj0EAwIw\nbzELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMSAwHgYDVQQDExdmYWJyaWMt\nY2Etc2VydmVyLW9yZzFDQTAeFw0xODExMDkxODE4MDBaFw0xOTExMDkxODIzMDBa\nMCExDzANBgNVBAsTBmNsaWVudDEOMAwGA1UEAxMFYWRtaW4wWTATBgcqhkjOPQIB\nBggqhkjOPQMBBwNCAASCSIla1WgOKUZ4YUfFLSn+wPTpiPdF7ShiA+j74y79reh3\ncxbY0bzfE+fjcwQE7nqMhmtW3BiRsvUIjMcnRFDio2AwXjAOBgNVHQ8BAf8EBAMC\nB4AwDAYDVR0TAQH/BAIwADAdBgNVHQ4EFgQUzG6cIKfsWiwVtVHhKm93aCLaGGUw\nHwYDVR0jBBgwFoAUJOHaNt6FChx0ijosQ6UKCQtvf9AwCgYIKoZIzj0EAwIDSAAw\nRQIhAIRsSRQGZRizrvxukAcHLvZgvJ6ZAiM4mipOsjCCqlr1AiBUmORtbHlbKyPC\nZiCYJavZXs2T4n+X47KPOgUoUZvkWQ==\n-----END CERTIFICATE-----\n",
+		"caCertChain": "-----BEGIN CERTIFICATE-----\nMIICJTCCAcugAwIBAgIUEOg539U+Z42rH+fQwURYbXVz//owCgYIKoZIzj0EAwIw\nbzELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMSAwHgYDVQQDExdmYWJyaWMt\nY2Etc2VydmVyLW9yZzFDQTAeFw0xODA2MTQxNDI2MDBaFw0zMzA2MTAxNDI2MDBa\nMG8xCzAJBgNVBAYTAlVTMRcwFQYDVQQIEw5Ob3J0aCBDYXJvbGluYTEUMBIGA1UE\nChMLSHlwZXJsZWRnZXIxDzANBgNVBAsTBkZhYnJpYzEgMB4GA1UEAxMXZmFicmlj\nLWNhLXNlcnZlci1vcmcxQ0EwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARZC6hu\nHz01S2+RnZUvnthslbK3lqXD4LYa4i2613ltHEhXGRmIrBSxI3h7WE2+dICNoIQi\n5yZOCpyzopAaaRPro0UwQzAOBgNVHQ8BAf8EBAMCAQYwEgYDVR0TAQH/BAgwBgEB\n/wIBATAdBgNVHQ4EFgQUJOHaNt6FChx0ijosQ6UKCQtvf9AwCgYIKoZIzj0EAwID\nSAAwRQIhALkPgcx2wFcLzDVCoIXA3sqpU/nN81KRRFh1V3Cb5YvhAiA56Ul/kZBk\ni3sgbzLj2yHLIyFcoAm7SExAeG1KJcZHUQ==\n-----END CERTIFICATE-----\n"
+	},
+	"enroll_response_body_is_object": {
+		"enrollmentCert": "-----BEGIN CERTIFICATE-----\nMIIB8jCCAZigAwIBAgIUc9BfZe4R2Ne5/hE1cuC0tF69bpUwCgYIKoZIzj0EAwIw\nbzELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMSAwHgYDVQQDExdmYWJyaWMt\nY2Etc2VydmVyLW9yZzFDQTAeFw0xODExMDkxODQ0MDBaFw0xOTExMDkxODQ4MDBa\nMCExDzANBgNVBAsTBmNsaWVudDEOMAwGA1UEAxMFYWRtaW4wWTATBgcqhkjOPQIB\nBggqhkjOPQMBBwNCAASQPbWabiZEMZMDPHF3j87hJj13XKvq+3aJ3tnd7yIS8vqn\nRXS0fgvp3nK/PFt4j1i353eCzoOSApN/SY18uwIwo2AwXjAOBgNVHQ8BAf8EBAMC\nB4AwDAYDVR0TAQH/BAIwADAdBgNVHQ4EFgQUnzzgCMaeRbDAmtNfAWJoDxl16vIw\nHwYDVR0jBBgwFoAUJOHaNt6FChx0ijosQ6UKCQtvf9AwCgYIKoZIzj0EAwIDSAAw\nRQIhAL6ihWMtLyYP1qyeXwdz7muCJORK0yC/B6Z2niDxuDvXAiBlcRrCCwDiXKdY\nOu/yHpZZ1iYb8OginT43lXOe0BY4TQ==\n-----END CERTIFICATE-----\n",
+		"caCertChain": "-----BEGIN CERTIFICATE-----\nMIICJTCCAcugAwIBAgIUEOg539U+Z42rH+fQwURYbXVz//owCgYIKoZIzj0EAwIw\nbzELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMSAwHgYDVQQDExdmYWJyaWMt\nY2Etc2VydmVyLW9yZzFDQTAeFw0xODA2MTQxNDI2MDBaFw0zMzA2MTAxNDI2MDBa\nMG8xCzAJBgNVBAYTAlVTMRcwFQYDVQQIEw5Ob3J0aCBDYXJvbGluYTEUMBIGA1UE\nChMLSHlwZXJsZWRnZXIxDzANBgNVBAsTBkZhYnJpYzEgMB4GA1UEAxMXZmFicmlj\nLWNhLXNlcnZlci1vcmcxQ0EwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARZC6hu\nHz01S2+RnZUvnthslbK3lqXD4LYa4i2613ltHEhXGRmIrBSxI3h7WE2+dICNoIQi\n5yZOCpyzopAaaRPro0UwQzAOBgNVHQ8BAf8EBAMCAQYwEgYDVR0TAQH/BAgwBgEB\n/wIBATAdBgNVHQ4EFgQUJOHaNt6FChx0ijosQ6UKCQtvf9AwCgYIKoZIzj0EAwID\nSAAwRQIhALkPgcx2wFcLzDVCoIXA3sqpU/nN81KRRFh1V3Cb5YvhAiA56Ul/kZBk\ni3sgbzLj2yHLIyFcoAm7SExAeG1KJcZHUQ==\n-----END CERTIFICATE-----\n"
+	},
+	"signing_identity_opts": {
+		"certificate": "-----BEGIN CERTIFICATE----- certificate -----END CERTIFICATE-----",
+		"_enrollment_key": "abc",
+		"msp_id": "org1CA",
+		"public_key": {
+			"prop1": "value 1",
+			"prop2": "value 2"
+		}
+	},
+	"signing_identity_some_fake_properties": {
+		"certificate": "-----BEGIN CERTIFICATE----- certificate -----END CERTIFICATE-----",
+		"public_key": {
+			"prop1": "value 1",
+			"prop2": "value 2"
+		},
+		"msp_id": "org1CA",
+		"signer": {
+			"_key": "abc"
+		}
+	},
+	"sign_msg": ".LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUI4akNDQVppZ0F3SUJBZ0lVSFY3N09oNDUwQXlvakJoYnU1UG4xTlMzaUtvd0NnWUlLb1pJemowRUF3SXcKYnpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVNBd0hnWURWUVFERXhkbVlXSnlhV010ClkyRXRjMlZ5ZG1WeUxXOXlaekZEUVRBZUZ3MHhPREV4TVRJeE5ERXlNREJhRncweE9URXhNVEl4TkRFM01EQmEKTUNFeER6QU5CZ05WQkFzVEJtTnNhV1Z1ZERFT01Bd0dBMVVFQXhNRllXUnRhVzR3V1RBVEJnY3Foa2pPUFFJQgpCZ2dxaGtqT1BRTUJCd05DQUFUMXBIMXR5a3U2OTlyajk1eE1ya3FnWkErVklxM0I3TUxabVlHanBEblpVZ0V5CjZGdmZNNzZEN3BiNFZxdnExSVM5UEZZamZHaGhQUHFvZUV6YUo1eXZvMkF3WGpBT0JnTlZIUThCQWY4RUJBTUMKQjRBd0RBWURWUjBUQVFIL0JBSXdBREFkQmdOVkhRNEVGZ1FVVUVPWGlETHV3enQzZHdUWVN1bTZHMXpLc2FVdwpId1lEVlIwakJCZ3dGb0FVSk9IYU50NkZDaHgwaWpvc1E2VUtDUXR2ZjlBd0NnWUlLb1pJemowRUF3SURTQUF3ClJRSWhBT1llaXg2UlkySUVQa05PMXRCVUNzeGtjUTBoaGE5VStTVkg2U3NaRnhUSkFpQjR5QXZNZThXMmw0eSsKbStDRTVxa0gzYkZaMVd0VUJYeGFIRnQ2ZjlldGtBPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=",
+	"generate_auth_token_sig": [
+		48,
+		69,
+		2,
+		33,
+		0,
+		175,
+		163,
+		191,
+		107,
+		230,
+		127,
+		61,
+		221,
+		222,
+		107,
+		49,
+		141,
+		113,
+		205,
+		172,
+		219,
+		201,
+		132,
+		77,
+		211,
+		75,
+		144,
+		104,
+		85,
+		52,
+		141,
+		38,
+		9,
+		38,
+		220,
+		73,
+		112,
+		2,
+		32,
+		36,
+		30,
+		13,
+		156,
+		173,
+		124,
+		255,
+		234,
+		21,
+		176,
+		165,
+		61,
+		230,
+		253,
+		61,
+		167,
+		23,
+		104,
+		179,
+		212,
+		178,
+		72,
+		195,
+		132,
+		21,
+		39,
+		114,
+		23,
+		139,
+		142,
+		123,
+		128
+	],
+	"sign_opts": {
+		"signingIdentity": {
+			"signer": {
+				"prvKeyHex": {
+					"_key": {
+						"type": "EC",
+						"isPrivate": true,
+						"isPublic": false,
+						"curveName": "secp256r1",
+						"ecparams": {
+							"name": "secp256r1",
+							"keylen": 256,
+							"curve": {
+								"q": {
+									"0": 67108863,
+									"1": 67108863,
+									"2": 67108863,
+									"3": 262143,
+									"4": 0,
+									"5": 0,
+									"6": 0,
+									"7": 1024,
+									"8": 67043328,
+									"9": 4194303,
+									"t": 10,
+									"s": 0
+								},
+								"a": {
+									"x": {
+										"0": 67108860,
+										"1": 67108863,
+										"2": 67108863,
+										"3": 262143,
+										"4": 0,
+										"5": 0,
+										"6": 0,
+										"7": 1024,
+										"8": 67043328,
+										"9": 4194303,
+										"t": 10,
+										"s": 0
+									},
+									"q": "~enrollment~pvtkey~_key~ecparams~curve~q"
+								},
+								"b": {
+									"x": {
+										"0": 64118859,
+										"1": 59707273,
+										"2": 51340220,
+										"3": 46346574,
+										"4": 6626566,
+										"5": 27664815,
+										"6": 45864279,
+										"7": 38772431,
+										"8": 30976570,
+										"9": 1487245,
+										"t": 10,
+										"s": 0
+									},
+									"q": "~enrollment~pvtkey~_key~ecparams~curve~q"
+								},
+								"infinity": {
+									"curve": "~enrollment~pvtkey~_key~ecparams~curve",
+									"x": null,
+									"y": null,
+									"z": {
+										"0": 1,
+										"t": 1,
+										"s": 0
+									},
+									"zinv": null
+								}
+							},
+							"G": {
+								"curve": "~enrollment~pvtkey~_key~ecparams~curve",
+								"x": {
+									"x": {
+										"0": 10011286,
+										"1": 5132662,
+										"2": 54136650,
+										"3": 33863596,
+										"4": 41354109,
+										"5": 15274044,
+										"6": 63860310,
+										"7": 17375202,
+										"8": 32694572,
+										"9": 1754612,
+										"t": 10,
+										"s": 0
+									},
+									"q": "~enrollment~pvtkey~_key~ecparams~curve~q"
+								},
+								"y": {
+									"x": {
+										"0": 62870005,
+										"1": 26221069,
+										"2": 32304315,
+										"3": 22916293,
+										"4": 36425267,
+										"5": 50587525,
+										"6": 41858215,
+										"7": 33451579,
+										"8": 48430618,
+										"9": 1308880,
+										"t": 10,
+										"s": 0
+									},
+									"q": "~enrollment~pvtkey~_key~ecparams~curve~q"
+								},
+								"z": "~enrollment~pvtkey~_key~ecparams~curve~infinity~z",
+								"zinv": null
+							},
+							"n": {
+								"0": 6497617,
+								"1": 41070783,
+								"2": 32001851,
+								"3": 45522014,
+								"4": 62711546,
+								"5": 67108863,
+								"6": 67108863,
+								"7": 1023,
+								"8": 67043328,
+								"9": 4194303,
+								"t": 10,
+								"s": 0
+							},
+							"h": {
+								"0": 1,
+								"t": 1,
+								"s": 0
+							}
+						},
+						"prvKeyHex": "private-key",
+						"pubKeyHex": "public-key"
+					}
+				}
+			}
+		}
+	},
+	"reenroll_body": {
+		"ca_url": "https://fakedomain.com",
+		"ca_name": "org1CA",
+		"certificate": "some cert",
+		"private_key": "some private key"
+	},
+	"reenroll_response": {
+		"result": {
+			"Cert": "some cert"
+		},
+		"private_key": "some private key"
+	},
+	"reenroll_return_object": {
+		"ca_name": "org1CA",
+		"enroll_id": "admin",
+		"certificate": "some cert",
+		"private_key": "c29tZSBwcml2YXRlIGtleQ=="
+	},
+	"key_pair": {
+		"prvKeyObj": {
+			"_key": {
+				"type": "EC",
+				"isPrivate": true,
+				"isPublic": false,
+				"curveName": "secp256r1",
+				"ecparams": {
+					"name": "secp256r1",
+					"keylen": 256,
+					"curve": {
+						"q": {
+							"0": 67108863,
+							"1": 67108863,
+							"2": 67108863,
+							"3": 262143,
+							"4": 0,
+							"5": 0,
+							"6": 0,
+							"7": 1024,
+							"8": 67043328,
+							"9": 4194303,
+							"t": 10,
+							"s": 0
+						},
+						"a": {
+							"x": {
+								"0": 67108860,
+								"1": 67108863,
+								"2": 67108863,
+								"3": 262143,
+								"4": 0,
+								"5": 0,
+								"6": 0,
+								"7": 1024,
+								"8": 67043328,
+								"9": 4194303,
+								"t": 10,
+								"s": 0
+							},
+							"q": "~pvtkey~_key~ecparams~curve~q"
+						},
+						"b": {
+							"x": {
+								"0": 64118859,
+								"1": 59707273,
+								"2": 51340220,
+								"3": 46346574,
+								"4": 6626566,
+								"5": 27664815,
+								"6": 45864279,
+								"7": 38772431,
+								"8": 30976570,
+								"9": 1487245,
+								"t": 10,
+								"s": 0
+							},
+							"q": "~pvtkey~_key~ecparams~curve~q"
+						},
+						"infinity": {
+							"curve": "~pvtkey~_key~ecparams~curve",
+							"x": null,
+							"y": null,
+							"z": {
+								"0": 1,
+								"t": 1,
+								"s": 0
+							},
+							"zinv": null
+						}
+					},
+					"G": {
+						"curve": "~pvtkey~_key~ecparams~curve",
+						"x": {
+							"x": {
+								"0": 10011286,
+								"1": 5132662,
+								"2": 54136650,
+								"3": 33863596,
+								"4": 41354109,
+								"5": 15274044,
+								"6": 63860310,
+								"7": 17375202,
+								"8": 32694572,
+								"9": 1754612,
+								"t": 10,
+								"s": 0
+							},
+							"q": "~pvtkey~_key~ecparams~curve~q"
+						},
+						"y": {
+							"x": {
+								"0": 62870005,
+								"1": 26221069,
+								"2": 32304315,
+								"3": 22916293,
+								"4": 36425267,
+								"5": 50587525,
+								"6": 41858215,
+								"7": 33451579,
+								"8": 48430618,
+								"9": 1308880,
+								"t": 10,
+								"s": 0
+							},
+							"q": "~pvtkey~_key~ecparams~curve~q"
+						},
+						"z": "~pvtkey~_key~ecparams~curve~infinity~z",
+						"zinv": null
+					},
+					"n": {
+						"0": 6497617,
+						"1": 41070783,
+						"2": 32001851,
+						"3": 45522014,
+						"4": 62711546,
+						"5": 67108863,
+						"6": 67108863,
+						"7": 1023,
+						"8": 67043328,
+						"9": 4194303,
+						"t": 10,
+						"s": 0
+					},
+					"h": {
+						"0": 1,
+						"t": 1,
+						"s": 0
+					}
+				},
+				"prvKeyHex": "private-key-hex",
+				"pubKeyHex": "public-key-hex"
+			}
+		},
+		"public_key": {
+			"_key": {
+				"type": "EC",
+				"isPrivate": false,
+				"isPublic": true,
+				"curveName": "secp256r1",
+				"ecparams": "~pvtkey~_key~ecparams",
+				"prvKeyHex": null,
+				"pubKeyHex": "public-key-hex"
+			}
+		},
+		"pubKeyObj": {
+			"_key": "~public_key~_key"
+		},
+		"certificate": "-----BEGIN CERTIFICATE----- some-cert -----END CERTIFICATE----- ",
+		"rootCertificate": "-----BEGIN CERTIFICATE----- some-cert -----END CERTIFICATE----- "
+	},
+	"reenroll_resp": {
+		"result": {
+			"id": "user6",
+			"type": "client",
+			"affiliation": "org1",
+			"attrs": [
+				{
+					"name": "hf.Affiliation",
+					"value": "org1",
+					"ecert": true
+				}
+			],
+			"max_enrollments": -1,
+			"secret": "passwd",
+			"caname": "org1CA"
+		},
+		"errors": [],
+		"messages": [],
+		"success": true,
+		"private_key": "12345"
+	},
+	"createFabricCAClient_opts_body": {
+		"ca_url": "https://some_url:3000",
+		"ca_name": "test name",
+		"msp_id": "Org1",
+		"enroll_id": "admin",
+		"enroll_secret": "secret",
+		"method": "GET"
+	},
+	"success_output1": {
+		"statusCode": 403,
+		"msg": "{\"result\":\"\",\"errors\":[],\"messages\":[\"successfully deleted user2\"],\"success\":true}"
+	},
+	"error_output2": {
+		"statusCode": 403,
+		"msg": "{\"result\":\"\",\"errors\":[{\"code\":56,\"message\":\"Identity removal is disabled\"}\n],\"messages\":[],\"success\":false}"
+	},
+	"enrollment_results": {
+		"result": {
+			"Cert": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUI4akNDQVppZ0F3SUJBZ0lVWElqd0pSL2wyczBoRWZEYVluSEREWnA1NnFVd0NnWUlLb1pJemowRUF3SXcKYnpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVNBd0hnWURWUVFERXhkbVlXSnlhV010ClkyRXRjMlZ5ZG1WeUxXOXlaekZEUVRBZUZ3MHhPREV4TURreE9ERTRNREJhRncweE9URXhNRGt4T0RJek1EQmEKTUNFeER6QU5CZ05WQkFzVEJtTnNhV1Z1ZERFT01Bd0dBMVVFQXhNRllXUnRhVzR3V1RBVEJnY3Foa2pPUFFJQgpCZ2dxaGtqT1BRTUJCd05DQUFTQ1NJbGExV2dPS1VaNFlVZkZMU24rd1BUcGlQZEY3U2hpQStqNzR5NzlyZWgzCmN4YlkwYnpmRStmamN3UUU3bnFNaG10VzNCaVJzdlVJak1jblJGRGlvMkF3WGpBT0JnTlZIUThCQWY4RUJBTUMKQjRBd0RBWURWUjBUQVFIL0JBSXdBREFkQmdOVkhRNEVGZ1FVekc2Y0lLZnNXaXdWdFZIaEttOTNhQ0xhR0dVdwpId1lEVlIwakJCZ3dGb0FVSk9IYU50NkZDaHgwaWpvc1E2VUtDUXR2ZjlBd0NnWUlLb1pJemowRUF3SURTQUF3ClJRSWhBSVJzU1JRR1pSaXpydnh1a0FjSEx2Wmd2SjZaQWlNNG1pcE9zakNDcWxyMUFpQlVtT1J0YkhsYkt5UEMKWmlDWUphdlpYczJUNG4rWDQ3S1BPZ1VvVVp2a1dRPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=",
+			"ServerInfo": {
+				"CAName": "org1CA",
+				"CAChain": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNKVENDQWN1Z0F3SUJBZ0lVRU9nNTM5VStaNDJySCtmUXdVUlliWFZ6Ly9vd0NnWUlLb1pJemowRUF3SXcKYnpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVNBd0hnWURWUVFERXhkbVlXSnlhV010ClkyRXRjMlZ5ZG1WeUxXOXlaekZEUVRBZUZ3MHhPREEyTVRReE5ESTJNREJhRncwek16QTJNVEF4TkRJMk1EQmEKTUc4eEN6QUpCZ05WQkFZVEFsVlRNUmN3RlFZRFZRUUlFdzVPYjNKMGFDQkRZWEp2YkdsdVlURVVNQklHQTFVRQpDaE1MU0hsd1pYSnNaV1JuWlhJeER6QU5CZ05WQkFzVEJrWmhZbkpwWXpFZ01CNEdBMVVFQXhNWFptRmljbWxqCkxXTmhMWE5sY25abGNpMXZjbWN4UTBFd1dUQVRCZ2NxaGtqT1BRSUJCZ2dxaGtqT1BRTUJCd05DQUFSWkM2aHUKSHowMVMyK1JuWlV2bnRoc2xiSzNscVhENExZYTRpMjYxM2x0SEVoWEdSbUlyQlN4STNoN1dFMitkSUNOb0lRaQo1eVpPQ3B5em9wQWFhUlBybzBVd1F6QU9CZ05WSFE4QkFmOEVCQU1DQVFZd0VnWURWUjBUQVFIL0JBZ3dCZ0VCCi93SUJBVEFkQmdOVkhRNEVGZ1FVSk9IYU50NkZDaHgwaWpvc1E2VUtDUXR2ZjlBd0NnWUlLb1pJemowRUF3SUQKU0FBd1JRSWhBTGtQZ2N4MndGY0x6RFZDb0lYQTNzcXBVL25OODFLUlJGaDFWM0NiNVl2aEFpQTU2VWwva1pCawppM3NnYnpMajJ5SExJeUZjb0FtN1NFeEFlRzFLSmNaSFVRPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=",
+				"Version": ""
+			}
+		},
+		"errors": [],
+		"messages": [],
+		"success": true
+	},
+	"enrollment_result2": "problem trying to create a buffer from the enrollmentCert or the caCertChain.check the faultyArgument property of the error: TypeError [ERR_INVALID_ARG_TYPE]: The first argument must be of type string or an instance of Buffer, ArrayBuffer, or Array or an Array-like Object. Received type number (1)",
+	"enrollment_result3": "problem trying to create a buffer from the caCertChain cert. check the faultyArgument property of the error: TypeError [ERR_INVALID_ARG_TYPE]: The first argument must be of type string or an instance of Buffer, ArrayBuffer, or Array or an Array-like Object. Received type number (1)"
+}

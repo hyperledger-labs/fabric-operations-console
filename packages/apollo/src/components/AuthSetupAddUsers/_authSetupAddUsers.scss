@@ -1,0 +1,23 @@
+.ibp__auth-configuration--admin-email {
+	@include carbon--type-style('label-01');
+	color: $carbon--cool-gray-30;
+	margin-top: 1.5rem;
+}
+
+.ibp-admin-contact-email {
+	margin-top: 1rem;
+	width: 30rem;
+}
+
+.ibp-admin-contact-help-icon {
+	margin-left: 0.5rem;
+	margin-top: 0.5rem;
+}
+
+.ibp__auth-configuration--input-field.ibp__auth-admin-email-input {
+	margin: 0.5rem 0;
+}
+
+.ibp-add-users.ibp-error-panel {
+	width: 33rem;
+}

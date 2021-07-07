@@ -1,0 +1,5 @@
+apollo/**
+.git/**
+coverage/**
+libs/passport-bluemix-obc/**
+**/*min.js
