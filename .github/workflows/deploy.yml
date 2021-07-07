@@ -14,5 +14,5 @@ jobs:
       - name: Build
         run: ./docker/build_image.sh
 
-      # - name: Push
-      #   run: ./docker/publish_image.sh
+      - name: Push
+        run: ./docker/publish_image.sh
