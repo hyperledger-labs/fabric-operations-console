@@ -27,9 +27,9 @@ You can use the following steps to provision a network using Fabric test-network
 ## Setup
 Clone console
 
-`git clone https://github.com/IBM-Blockchain/console`
+`git clone https://github.com/hyperledger-labs/fabric-operations-console`
 
-`cd console`
+`cd fabric-operations-console`
 
 ## Bring up a Fabric 2.2.3 network
 You can find more information on the test network setup from here
