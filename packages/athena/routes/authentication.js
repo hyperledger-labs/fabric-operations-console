@@ -44,14 +44,12 @@ module.exports = function (logger, ev, t, passport) {
 		const notice = { message: 'user logging out of the IBP console' };
 		t.notifications.procrastinate(req, notice);
 
-		t.session_store._destroySessionByUuid(t.middleware.getUuid(req), (err, resp) => {	// delete all sessions by this id
-			req.session.destroy(() => {														// important to call destroy so express ask for new sid
-				if (req.query && req.query.action === 'no_redirect') {
-					res.status(200).send('OK');
-				} else {
-					res.redirect(ev.LANDING_URL);
-				}
-			});
+		req.session.destroy(() => {														// important to call destroy so express ask for new sid
+			if (req.query && req.query.action === 'no_redirect') {
+				res.status(200).send('OK');
+			} else {
+				res.redirect(ev.LANDING_URL);
+			}
 		});
 	});
 

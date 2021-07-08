@@ -428,9 +428,6 @@ module.exports = function (logger, ev, t) {
 			if (outgoing_body.cluster_name) {
 				component_doc.cluster_name = outgoing_body.cluster_name;
 			}
-			if (outgoing_body.prefix) {
-				component_doc.prefix = outgoing_body.prefix;						// deployer's raft orderer node prefix on id
-			}
 		}
 
 		return component_doc;
@@ -511,10 +508,6 @@ module.exports = function (logger, ev, t) {
 					ret.orderertype = t.deployer.typeMapA2D[ret.orderertype];	// if it matches, convert athena type to deployer
 				}
 
-				if (incoming_body.prefix || ret.parameters.display_name) {	// (optional) set prefix if found, else derive from display name
-					const prefix = build_minimal_name(incoming_body.prefix || ret.parameters.display_name);
-					if (prefix) { ret.prefix = prefix; }					// only add it if we built one
-				}
 				if (incoming_body.cluster_id) {
 					ret.cluster_id = incoming_body.cluster_id;				// deployer doesn't care about this field, but provision_component needs it
 				}
@@ -646,17 +639,6 @@ module.exports = function (logger, ev, t) {
 				ret.push(array_field[index2copy]);
 			}
 			return ret;
-		}
-
-		// make a prefix that deployer can use (it will form part of the hostname for raft components) - pad it
-		function build_minimal_name(display_name) {
-			let temp_name = make_subdomain(display_name);			// first build a name that is a valid url name
-			if (!temp_name) { return null; }						// screw it, let deployer pick something
-			if (temp_name.length < ev.MIN_SHORT_NAME_LENGTH) {
-				temp_name += t.misc.simpleRandomString(ev.MIN_SHORT_NAME_LENGTH - temp_name.length - 1);	// pad it
-			}
-			temp_name = temp_name.substring(0, ev.MAX_SHORT_NAME_LENGTH);	// limit is made up, seems like a good idea - dsh
-			return temp_name.toLowerCase();							// must be lowercase
 		}
 
 		// make a subdomain that deployer can use (it will form part of the hostname for the component) - do not pad it

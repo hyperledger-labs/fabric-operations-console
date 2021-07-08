@@ -79,9 +79,12 @@
 		- valid sub-properties: "key_should_exist", "key_should_not_exist"
 	x-validate_paid_plan_feature
 		- boolean. applies to any type. validates if this field is only for paid k8s plans
-	x-validate_comp_not_imported
+	x-validate_invalid_params_for_import
 		- boolean. applies to query parameters. validates the query parameters provided. against the component being edited in this api.
-		- will generate an error if it was imported && query parameter is invalid for imported components.
+		- will generate an error if component was imported && query parameter is invalid for imported components.
+	x-validate_comp_not_imported
+		- boolean. applies to the whole api.
+		- will generate an error if component was imported. b/c that's an invalid api for imported components.
 	x-validate_case_insensitive: true
 		- boolean. applies to keys in an object type. it means the text of this key can be in any case (uppercase/lowercase/mixed).
 	x-validate_overwrite_key: "SomeSpecificCase"
@@ -713,7 +716,7 @@ module.exports = (logger, ev, t, opts) => {
 		}
 
 		// check for incorrect use of "deployment_attrs"
-		if (body_spec['x-validate_comp_not_imported'] === true) {
+		if (body_spec['x-validate_invalid_params_for_import'] === true) {
 			if (t.component_lib.include_deployment_data(req)) {					// its a problem if the component is imported && deployment data is asked for
 				if (req._component_doc && req._component_doc.location !== ev.STR.LOCATION_IBP_SAAS) {
 					const symbols = {
@@ -722,6 +725,14 @@ module.exports = (logger, ev, t, opts) => {
 					};
 					errors.push({ key: 'invalid_query_param_import', symbols: symbols });
 				}
+			}
+		}
+
+		// check if component is imported and trying to change k8s stuff (invalid api)
+		if (body_spec['x-validate_comp_not_imported'] === true) {
+			if (req._component_doc && req._component_doc.location !== ev.STR.LOCATION_IBP_SAAS) {
+				const symbols = {};
+				errors.push({ key: 'invalid_on_imported_comps', symbols: symbols });
 			}
 		}
 

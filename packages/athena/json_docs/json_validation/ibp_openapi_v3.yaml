@@ -123,6 +123,9 @@ x-validate_error_messages:
   # query parameter is not applicable to the component in the api
   invalid_query_param_import: "The query parameter '$PROPERTY_NAME' with value '$VALUE' is not applicable on imported components."
 
+  # this api is not applicable to imported components
+  invalid_on_imported_comps: "This api is not applicable on imported components."
+
   # this array is not the same length as the master array field
   unmatched_lengths: "Expected array '$PROPERTY_NAME' to be the same length as '$MASTER_PROPERTY' ($LEN elements)."
 
@@ -11462,6 +11465,7 @@ components:
         hf.IntermediateCA:
           type: boolean
           example: true
+          description: If `true` the CA **can** be an intermediate CA.
           x-validate_case_insensitive: true
           x-validate_overwrite_key: hf.IntermediateCA
         hf.GenCRL:
@@ -13944,6 +13948,7 @@ components:
         - storage
       x-validate_no_extra_keys: true
       x-validate_only_one_key: all
+      x-validate_comp_not_imported: true
       properties:
         config_override:
           type: object
@@ -13993,6 +13998,7 @@ components:
         - storage
       x-validate_no_extra_keys: true
       x-validate_only_one_key: ak
+      x-validate_comp_not_imported: true
       properties:
         admin_certs:
           type: array
@@ -14055,6 +14061,7 @@ components:
         - storage
       x-validate_no_extra_keys: true
       x-validate_only_one_key: ak
+      x-validate_comp_not_imported: true
       properties:
         admin_certs:
           type: array
@@ -16495,7 +16502,7 @@ components:
     CaActionsBody:
       type: object
       x-validate_no_extra_keys: true
-      x-validate_comp_not_imported: true
+      x-validate_invalid_params_for_import: true
       properties:
         restart:
           $ref: '#/components/schemas/action_restart'
@@ -16505,7 +16512,7 @@ components:
     PeerActionsBody:
       type: object
       x-validate_no_extra_keys: true
-      x-validate_comp_not_imported: true
+      x-validate_invalid_params_for_import: true
       properties:
         restart:
           $ref: '#/components/schemas/action_restart'
@@ -16521,7 +16528,7 @@ components:
     OrdererActionsBody:
       type: object
       x-validate_no_extra_keys: true
-      x-validate_comp_not_imported: true
+      x-validate_invalid_params_for_import: true
       properties:
         restart:
           $ref: '#/components/schemas/action_restart'
@@ -16810,7 +16817,7 @@ components:
         enum:
           - included
           - omitted
-        x-validate_comp_not_imported: true
+        x-validate_invalid_params_for_import: true
 
     QueryParsedCerts:
       name: parsed_certs

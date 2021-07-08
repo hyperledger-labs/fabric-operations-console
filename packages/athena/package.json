@@ -1,6 +1,6 @@
 {
 	"name": "athena",
-	"version": "2.5.2-60",
+	"version": "2.5.2-72",
 	"license": "SEE LICENSE IN athena_license.txt",
 	"scripts": {
 		"start": "node server_watcher.js",
@@ -40,7 +40,6 @@
 		"jsrsasign": "^10.2.0",
 		"node-cache": "5.1.*",
 		"passport": "0.4.*",
-		"passport-bluemix-obc": "file:libs/passport-bluemix-obc",
 		"passport-idaas-openidconnect": "2.0.*",
 		"passport-ldapauth": "3.0.*",
 		"passport-oauth": "1.0.*",
@@ -49,12 +48,12 @@
 		"selfsigned": "^1.10.8",
 		"uuid": "3.3.*",
 		"winston": "2.4.*",
-		"ws": "6.2.*"
+		"ws": "7.4.*"
 	},
 	"devDependencies": {
 		"chai": "^4.1.2",
 		"chai-http": "^4.2.0",
-		"eslint": "^7.28.0",
+		"eslint": "^5.14.1",
 		"ibm-openapi-validator": "^0.46.0",
 		"mocha": "^7.1.1",
 		"node-mocks-http": "^1.7.3",

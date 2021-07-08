@@ -516,10 +516,8 @@ module.exports = function (logger, ev, t) {
 										logger.error('error updating config settings', err);
 										return cb({ statusCode: 500, msg: 'could not update config settings' }, null);
 									} else {
-										t.session_store._destroySessionByUuid(t.middleware.getUuid(req), () => {	// force re-login
-											req.session.destroy(() => {			// important to call destroy so express ask for new sid
-												cb(null, { message: 'ok', details: 'password updated' });	// all good
-											});
+										req.session.destroy(() => {			// important to call destroy so express ask for new sid
+											cb(null, { message: 'ok', details: 'password updated' });	// all good
 										});
 									}
 								});

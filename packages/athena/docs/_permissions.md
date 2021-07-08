@@ -66,8 +66,8 @@ Assigning roles to users is done differently depending on what auth scheme is in
 - **How to enable** - the setting `auth_scheme` should be set to `appid`.
 - **Pre-reqs** - App ID service instance.
 
-### 7. IBM ID (legacy IBM IAM)
-- **Notes** - this auth scheme is only used for IBP SaaS Dev. it should not be used by any other. this is the legacy IBM ID/IAM system.
+### 7. IBM ID [legacy IBM IAM] (discontinued)
+- **Notes** - this auth scheme is discontinued. this auth scheme was only used for IBP SaaS Dev. this is the legacy IBM ID/IAM system.
 - **Login** - the list of users that can login is determined by the IBM ID system. This means the users that have permissions to the specific IBP service instance (aka resource) will be able to login.
 - **Roles** - all users that have access to the IBP service instance (resource) will received the role `MANAGER`.
 - **API keys** -  not available.
