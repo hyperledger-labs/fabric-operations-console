@@ -151,7 +151,6 @@ class ExportModal extends React.Component {
 		const list = [];
 		if (this.props.exportIdentity) {
 			const id_list = await IdentityApi.getIdentities();
-			const list = [];
 			id_list.forEach(id => {
 				list.push({
 					...id,

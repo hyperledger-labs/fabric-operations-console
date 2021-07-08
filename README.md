@@ -170,6 +170,7 @@ lerna run dev:athena
 Starts Apollo and Athena in dev mode. Apollo proxies its backend requests to Athena.
 
 ```sh
+lerna run build_all
 lerna run dev:apollo
 ```
 
