@@ -337,15 +337,6 @@ function setup_routes_and_start() {
 	app.options('/ak/', cors());									// enable pre-flight cors OPTIONS res
 	app.use('/ak/', cors());										// cors * only on api routes
 
-	// prevent serving of the integration test html if its not enabled
-	app.use('/integration_test.html', (req, res, next) => {
-		if (ev.integration_test_enabled === true) {					// if its enabled, let the public folder route do it
-			next();
-		} else {
-			return res.status(400).send('400 - Integration testing not enabled');
-		}
-	});
-
 	// routes that do not need to be protected nor need user context go before setup_session()
 	app.get(['/version.txt', '/releaseNotes.json'], (req, res) => {								// list files in public folder that should not be cached
 		no_cache_headers(res);
@@ -491,7 +482,6 @@ function setup_routes_and_start() {
 	app.use('/', require('./routes/permission_apis.js')(logger, ev, tools));
 	app.use('/', require('./routes/signature_collection_apis.js')(logger, ev, tools));
 	app.use('/', require('./routes/webhook_apis.js')(logger, ev, tools));
-	app.use('/', require('./routes/integration_test_apis.js')(logger, ev, tools));
 	app.use('/', require('./routes/performance_apis.js')(logger, ev, tools));
 	app.use('/', require('./routes/db_backups_apis.js')(logger, ev, tools));
 
