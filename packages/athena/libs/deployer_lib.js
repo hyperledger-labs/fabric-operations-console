@@ -403,17 +403,17 @@ module.exports = function (logger, ev, t) {
 			let url2use = '';
 			if (fmt_body.orderertype === ev.STR.RAFT) {									// raft orderer clusters use different routes than other components
 				if (!is_appending_raft) {												// creating new raft cluster
-					logger.debug('[deployer lib]', req._tx_id, 'rafting we be. orderer type:', fmt_body.orderertype, 'prefix:', fmt_body.prefix);
+					logger.debug('[deployer lib]', req._tx_id, 'rafting we be. orderer type:', fmt_body.orderertype, 'id:', fmt_body.dep_component_id);
 					url2use = '/api/v3/instance/' + parsed.iid + '/type/orderer/component';
 				} else {																// appending to an existing raft cluster
-					logger.debug('[deployer lib]', req._tx_id, 'raft appending we be. orderer type:', fmt_body.orderertype, 'prefix:', fmt_body.prefix);
+					logger.debug('[deployer lib]', req._tx_id, 'raft appending we be. orderer type:', fmt_body.orderertype, 'id:', fmt_body.dep_component_id);
 					url2use = '/api/v3/instance/' + parsed.iid + '/precreate/type/orderer/component';
 				}
 				if (fmt_body.dep_component_id) {										// only add if found, id is optional
 					url2use += '/' + fmt_body.dep_component_id;
 				}
 			} else {																	// every other component uses this route
-				logger.debug('[deployer lib]', req._tx_id, 'type:', fmt_body.type, 'prefix:', fmt_body.prefix);
+				logger.debug('[deployer lib]', req._tx_id, 'type:', fmt_body.type, 'id:', fmt_body.dep_component_id);
 				url2use = '/api/v3/instance/' + parsed.iid + '/type/' + parsed.component_type + '/component';
 				if (fmt_body.dep_component_id) {										// only add if found, id is optional
 					url2use += '/' + fmt_body.dep_component_id;
@@ -488,9 +488,8 @@ module.exports = function (logger, ev, t) {
 					return cb_fmt(null, body2dep);
 				} else {
 					// do NOT copy `version`, the older version might not exist, and thus the user will be unable to add future nodes
-					const copy_fields = ['prefix', 'cluster_name', 'resources', 'storage', /*'version',*/ 'display_name'];	// fields to copy from existing doc
-					body2dep.prefix = null;																	// in case users ignore doc, clear fields first
-					body2dep.cluster_name = null;															// ditto
+					const copy_fields = ['cluster_name', 'resources', 'storage', /*'version',*/ 'display_name'];	// fields to copy from existing doc
+					body2dep.cluster_name = null;															// in case users ignore doc, clear fields first
 
 					for (let i in component_docs) {															// iter b/c single doc_might have field missing
 						for (let x in copy_fields) {
@@ -500,7 +499,7 @@ module.exports = function (logger, ev, t) {
 							}
 						}
 					}
-					logger.debug('[deploy lib] found existing raft doc. prefix:', body2dep.prefix, 'cluster_name:', body2dep.cluster_name, body2dep.cluster_id);
+					logger.debug('[deploy lib] found existing raft doc. cluster_name:', body2dep.cluster_name, 'cluster_id:', body2dep.cluster_id);
 					return cb_fmt(null, body2dep);
 				}
 			});

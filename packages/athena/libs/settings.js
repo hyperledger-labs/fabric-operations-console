@@ -190,6 +190,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 				settings.TRUST_PROXY = athena.trust_proxy;
 				settings.HSM = athena.hsm;
 				settings.LOCKOUT_LIMIT = !isNaN(athena.lockout_limit) ? Number(athena.lockout_limit) : 4;
+				settings.DISABLED_COMPACTION = athena.disabled_compaction;
 
 				const versions = t.ot_misc.parse_versions();
 				settings.ATHENA_VERSION = (versions && versions.tag) ? versions.tag : '-';

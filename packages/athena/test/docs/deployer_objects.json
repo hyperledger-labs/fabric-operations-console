@@ -302,7 +302,6 @@
 		"systemchannelname": "channel 1",
 		"version": 1,
 		"orderertype": "orderer",
-		"prefix": "testname",
 		"number": 2,
 		"zone": [
 			"mine1",
@@ -332,7 +331,6 @@
 		"systemchannelname": "channel 1",
 		"version": 1,
 		"orderertype": "orderer",
-		"prefix": "testname",
 		"number": 1,
 		"zone": [
 			"theirs"
@@ -358,7 +356,6 @@
 		"systemchannelname": "channel 1",
 		"version": 1,
 		"orderertype": "orderer",
-		"prefix": "testname",
 		"zone": "single"
 	},
 	"get_all_comps_deployer_response": {

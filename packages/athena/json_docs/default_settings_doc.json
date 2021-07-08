@@ -57,6 +57,7 @@
 	"default_user_password_initial": "ohnoididnotchangethepassword",
 	"deployer_timeout": 105000,
 	"deployer_url": "http://example.com:80",
+	"disabled_compaction": false,
 	"dynamic_config": true,
 	"dynamic_tls": true,
 	"enforce_backend_ssl": false,
@@ -100,7 +101,8 @@
 		"enable_ou_identifier": false,
 		"patch_1_4to2_x_enabled": true,
 		"lifecycle2_0_enabled": true,
-		"import_only_enabled": true
+		"import_only_enabled": true,
+		"mustgather_enabled": false
 	},
 	"file_logging": {
 		"client": {
@@ -147,8 +149,8 @@
 	"initial_admin": "-",
 	"ldap": {},
 	"lockout_limit": 5,
-	"max_req_per_min": 50,
-	"max_req_per_min_ak": 50,
+	"max_req_per_min": 25,
+	"max_req_per_min_ak": 25,
 	"min_password_len": 8,
 	"max_password_len": 128,
 	"min_username_len": 6,

@@ -109,6 +109,7 @@ module.exports = function (logger, ev, t) {
 				LDAP_ATTR_MAP: ev.LDAP.LDAP_ATTR_MAP || '?',
 			},
 			MAX_COMPONENTS: ev.MAX_COMPONENTS,					// 0 is valid i guess, don't make it a question mark
+			DISABLED_COMPACTION: ev.DISABLED_COMPACTION, 		// false is valid, don't make this a question mark
 		};
 		return t.misc.sortItOut(ret);
 	};

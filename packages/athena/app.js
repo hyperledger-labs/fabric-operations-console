@@ -39,7 +39,6 @@ const cors = require('cors');
 const compression = require('compression');
 const RateLimit = require('express-rate-limit');
 const OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
-const IBMCloudOAuth2Strategy = require('passport-bluemix-obc').BlueMixOAuth2Strategy;
 const LDAPStrategy = require('passport-ldapauth');
 const OpenIDConnectStrategy = require('passport-idaas-openidconnect').IDaaSOIDCStrategy;
 const WebSocket = require('ws');
@@ -90,7 +89,6 @@ if (!process.env.DB_CONNECTION_STRING) {							// if there is no db string... lo
 
 	console.log('Loading env variables from env folder', defaultEnvFile);
 	const tmp = require(tools.path.join(__dirname, '/env/' + defaultEnvFile));
-	console.log('Loaded envs from ', defaultEnvFile, ' = ', tmp);
 	for (const i in tmp) { process.env[i] = tmp[i]; }
 } else {
 	console.log('\n\nApp is starting');
@@ -273,11 +271,13 @@ function setup_routes_and_start() {
 	const cache_max_age_secs = (ev.ENVIRONMENT === 'prod') ? (DAYS_CACHE_PROD * DAY_SECS) : (DAYS_CACHE_STAGING * DAY_SECS);
 	const cache_max_age_str = (ev.ENVIRONMENT === 'prod') ? (DAYS_CACHE_PROD + 'd') : (DAYS_CACHE_STAGING + 'd');
 
-	const comp_delay = Math.round(1000 * DAY_SECS - (1000 * 60 * 60 * Math.random()));
-	logger.debug('[db] compaction will run in', tools.misc.friendly_ms(comp_delay));
-	setTimeout(() => {
-		ev.compact_all_dbs();												// compact dbs after running for 24ish hours (23-24hrs)
-	}, comp_delay);
+	if (!ev.DISABLED_COMPACTION) {
+		const comp_delay = Math.round(1000 * DAY_SECS - (1000 * 60 * 60 * Math.random()));
+		logger.debug('[db] compaction will run in', tools.misc.friendly_ms(comp_delay));
+		setTimeout(() => {
+			ev.compact_all_dbs();												// compact dbs after running for 24ish hours (23-24hrs)
+		}, comp_delay);
+	}
 
 	if (ev.TRUST_PROXY) {
 		logger.debug('[startup] setting trust proxy to:', JSON.stringify(ev.TRUST_PROXY));
@@ -854,53 +854,10 @@ function setup_debug_log() {
 // Passport
 //---------------------
 function setup_passport() {
-	const url_parts = tools.misc.break_up_url(ev.HOST_URL);
-	let callback_url = url_parts.protocol + '//' + url_parts.hostname + ev.LOGIN_URI;
-	if (url_parts.hostname === 'localhost') {			// only local host needs the port in the url
-		callback_url = url_parts.protocol + '//' + url_parts.hostname + ':' + url_parts.port + ev.LOGIN_URI;
-	}
 	if (ev.AUTH_SCHEME === 'appid') {
 		logger.error('[startup] "appid" is no longer supported 08/29/2019');
 	} else if (ev.AUTH_SCHEME === 'ibmid' && ev.IBM_ID.CLIENT_ID && ev.IBM_ID.CLIENT_SECRET) {
-		logger.info('[startup] setting up the ibm id (old iam) auth scheme');
-		passport.use(ev.IBM_ID.STRATEGY_NAME, new IBMCloudOAuth2Strategy({
-			authorizationURL: ev.IBM_ID.URL + '/login/oauth/authorize',
-			tokenURL: ev.IBM_ID.URL + '/uaa/oauth/token',
-			clientID: ev.IBM_ID.CLIENT_ID,
-			scope: 'openid',
-			response_type: 'code',
-			grant_type: 'client_credentials',
-			clientSecret: ev.IBM_ID.CLIENT_SECRET,
-			profileURL: ev.IBM_ID.URL + '/login/userinfo',
-			callbackURL: callback_url,						// if not localhost do not include the PORT, mccp freaks & can't match it w/list
-		}, function (accessToken, refreshToken, profile, done) {
-			profile = (profile) ? profile._json : null;
-			if (profile) {
-				profile.authorized_actions = [				// add actions, middleware will look for it
-					ev.STR.CREATE_ACTION,					// for temp compatibility lets add all roles so ibmid continues to work
-					ev.STR.DELETE_ACTION,
-					ev.STR.REMOVE_ACTION,
-					ev.STR.IMPORT_ACTION,
-					ev.STR.EXPORT_ACTION,
-					ev.STR.RESTART_ACTION,
-					ev.STR.LOGS_ACTION,
-					ev.STR.VIEW_ACTION,
-					ev.STR.SETTINGS_ACTION,
-					ev.STR.USERS_ACTION,
-					ev.STR.API_KEY_ACTION,
-					ev.STR.NOTIFICATIONS_ACTION,
-					ev.STR.SIG_COLLECTION_ACTION,
-					ev.STR.C_MANAGE_ACTION,
-				];
-			}
-			return done(null, profile);
-		}));
-		passport.serializeUser(function (user, done) {
-			return done(null, user);
-		});
-		passport.deserializeUser(function (obj, done) {
-			return done(null, obj);
-		});
+		logger.error('[startup] "ibmid" is no longer supported 05/26/2021');
 	} else if (ev.AUTH_SCHEME === 'iam' && ev.IAM.CLIENT_ID && ev.IAM.CLIENT_SECRET && ev.IAM_API_KEY) {
 		logger.info('[startup] setting up the ibm id (iam) auth scheme');
 		passport.use(ev.IAM.STRATEGY_NAME, new OAuth2Strategy({

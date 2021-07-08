@@ -388,9 +388,6 @@ The process above describes the OpTools ID. However there is another ID for the 
 	// [optional] - k8s worker architecture to use for component (x or z)
 	"arch": "?",
 
-	// [optional] each ordering node will have this "prefix" on their pod id (only seen in k8s)
-	"prefix": "asdf"
-
 	// [optional] the resource settings per individual node
 	// meaning *each* orderer gets these cpu/memory settings:
 	"resources": {
@@ -481,8 +478,8 @@ The process above describes the OpTools ID. However there is another ID for the 
 	"tls_cert": "<base 64 encoded root cert of your tls CA>",
 
 	// [Note 2]
-	// under "normal" circumstances you should not send "cluster_name", "prefix", or "append".
-	// we will pick up the name and prefix from the existing cluster based on the cluster_id.
+	// under "normal" circumstances you should not send "cluster_name", or "append".
+	// we will pick up the name from the existing cluster based on the cluster_id.
 	// *however* if you are joining an **external cluster** (one that the UI does NOT know)...
 	// you will need to set these fields: "external_append", "cluster_name".
 
@@ -491,11 +488,7 @@ The process above describes the OpTools ID. However there is another ID for the 
 
 	// ONLY SET THIS IF NOTE 2 IS TRUE
 	// the name displayed on the tile that groups the cluster
-	"cluster_name": "My Raft Orderers",
-
-	// ONLY SET THIS IF NOTE 2 IS TRUE, even if note 2 is true this is not required
-	// each ordering node will have this "prefix" on their pod id (only seen in k8s)
-	"prefix": "asdf"
+	"cluster_name": "My Raft Orderers"
 }
 ```
 - **Response** (OpTools response is sent after deployer responds):

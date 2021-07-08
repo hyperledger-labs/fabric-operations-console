@@ -20,13 +20,12 @@
 Thumbs.db
 
 # dsh
-/env/dev.json
-/env/my_config.yaml
+/env
 /data/
 
 # Logs
 /logs/*.log
-# logs
+logs
 *.log
 npm-debug.log*
 

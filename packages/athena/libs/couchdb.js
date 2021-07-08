@@ -144,7 +144,7 @@ module.exports = (logger, t, DB_CONNECTION_STRING) => {
 				method: 'PUT',
 				baseUrl: couch_url,
 				timeout: 30000,
-				url: '/' + opts.db_name + '/' + doc._id,
+				uri: '/' + opts.db_name + '/' + doc._id,
 				body: JSON.stringify(doc),
 				headers: {
 					'Accept': 'application/json'
@@ -267,7 +267,7 @@ module.exports = (logger, t, DB_CONNECTION_STRING) => {
 		const options = {
 			method: 'GET',
 			baseUrl: couch_url,
-			url: '/' + opts.db_name + '/' + opts._id + '?' + (opts.query ? opts.query : null),
+			uri: '/' + opts.db_name + '/' + opts._id + '?' + (opts.query ? opts.query : ''),
 			timeout: 30000,
 			headers: {
 				'Accept': 'application/json'
