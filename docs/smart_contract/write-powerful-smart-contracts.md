@@ -1,12 +1,13 @@
 ---
 layout: default
 title: Writing powerful smart contracts
-parent: Getting Started with Fabric Operations Console
+parent: Deploy a smart contract
 nav_order: 2
 keywords: smart contract, lifecycle, package, definition
 ---
 
 # Writing powerful smart contracts
+{: .no_toc }
 
 As Hyperledger Fabric and the Fabric Operatons Console have evolved, their processes have been made more decentralized and collaborative. This is why, for example, the old “Kafka” ordering service, in which a single organization owned and managed the ordering service, was replaced with a “Raft” ordering service in which multiple organizations can administer the ordering service and contribute nodes.
 
@@ -88,7 +89,7 @@ While updating the version in the definition is enforced by Fabric whenever a ne
 
 Like everything else about your network, your smart contracts should be tailored for your use case. While a simple smart contract shared in its entirety among every member of a channel might adequately fulfill your needs, the new lifecycle opens opportunities for specialization and separation of concerns that didn't exist before and shouldn't be ignored.
 
-For more information about smart contract best practices (as well as how smart contracts relate to the concept of "chaincode"), see <a href="https://hyperledger-fabric.readthedocs.io/en/release-2.0/smartcontract/smartcontract.html" target="_blank">smart contracts and chaincode <img src="/docs/images/external.png" width="10" alt="external" valign="middle"></a>.
+For more information about smart contract best practices (as well as how smart contracts relate to the concept of "chaincode"), see <a href="https://hyperledger-fabric.readthedocs.io/en/release-2.0/smartcontract/smartcontract.html" target="_blank">smart contracts and chaincode <img src="../images/external.png" width="10" alt="external" valign="middle"></a>.
 
 ## Smart contract development tooling
 
@@ -97,4 +98,4 @@ While a smart contract can be packaged using the peer CLI.
 
 ## Installing a package and proposing a definition
 
-For information about how to use the console to install smart contract packages and propose and commit smart contract definitions on a channel, see [deploy a smart contract using Fabric v2.x](/docs/smart_contracts/console-smart-contracts-v2.md).
+For information about how to use the console to install smart contract packages and propose and commit smart contract definitions on a channel, see [deploy a smart contract using Fabric v2.x](../smart_contracts/console-smart-contracts-v2.md).

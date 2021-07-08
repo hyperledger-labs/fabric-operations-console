@@ -2,6 +2,7 @@
 layout: default
 title: Home
 nav_order: 1
+permalink: /
 description: "Homepage for Fabric Operations Console"
 keywords: Fabric Operatons Console, install operations console, Hyperledger Fabric Docker, Fabric test, Fabric samples
 ---
