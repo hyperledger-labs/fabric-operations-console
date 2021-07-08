@@ -17,7 +17,6 @@ Before installing the Fabric Operatons Console, you need to download and install
 
 Once you have completed downloading the samples and Hyperledger Fabric Docker images, use the scripts provided in the <a href="https://github.com/hyperledger/fabric-samples" target="_blank">`fabric-samples` repository <img src="images/external.png" width="10" alt="external" valign="middle"></a> and  the `./network.sh` to deploy and set up a test network. The test network contains two peer organizations with one peer each and a single node raft ordering service.
 
-
 ## Installation
 
 ### Step one: Install the Fabric Operatons Console
