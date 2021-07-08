@@ -9,8 +9,6 @@ keywords: getting started tutorials, create a CA, enroll, register, create an MS
 
 # Build a network
 
-{: .no_toc }
-
 **Target audience:** This topic is designed for network operators who are responsible for creating, monitoring, and managing the hyperledger fabric network.
 
 If you have not already deployed your Fabric Operatons Console to a cluster, see [getting started with Fabric Operatons Console](../index.md).

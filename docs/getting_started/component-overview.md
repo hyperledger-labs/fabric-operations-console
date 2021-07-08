@@ -8,7 +8,6 @@ keywords: operation console components, ca, certificate authorities, peer, order
 ---
 
 # Fabric Operations Console component overview
-{: .no_toc }
 
 The components and structure of the Operation Console are based on the underlying infrastructure and tools of <a href="https://hyperledger-fabric.readthedocs.io/en/latest/" target="_blank">Hyperledger Fabric <img src="../images/external.png" width="10" alt="external" valign="middle"></a>. Networks based on Fabric include several standard components that can be deployed in a number of configurations to support a wide variety of use cases.
 

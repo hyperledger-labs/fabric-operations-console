@@ -7,7 +7,6 @@ keywords: smart contract, lifecycle, package, definition
 ---
 
 # Writing powerful smart contracts
-{: .no_toc }
 
 As Hyperledger Fabric and the Fabric Operatons Console have evolved, their processes have been made more decentralized and collaborative. This is why, for example, the old “Kafka” ordering service, in which a single organization owned and managed the ordering service, was replaced with a “Raft” ordering service in which multiple organizations can administer the ordering service and contribute nodes.
 

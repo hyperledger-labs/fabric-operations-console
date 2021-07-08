@@ -10,8 +10,6 @@ keywords: getting started tutorials, create a CA, enroll, register, create an MS
 
 # Join a network
 
-{: .no_toc }
-
 Fabric Operatons Console enables you to develop, deploy, and operate fabric applications and networks. You can learn more about fabric components and how they work together by visiting the [component overview](../getting_started/component-overview.md). This tutorial is the second part in the [sample network tutorial series](../getting_started/console-build-network.md#sample-network-tutorial-series) and describes how to create nodes in the Fabric  Operatons Console and connect them to a fabric consortium hosted in another cluster.
 
 **Target audience:** This topic is designed for network operators who are responsible for creating, monitoring, and managing the fabric network.  

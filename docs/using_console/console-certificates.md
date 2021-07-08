@@ -2,13 +2,12 @@
 layout: default
 title: Managing organizations
 parent: Advanced deployment options
-nav_order: 6
+nav_order: 4
 description: "Managing organizations in Fabric Operations Console"
 keywords: admin certificate, Node OU, admin identity, expiration
 ---
 
 # Managing certificates
-{: .no_toc }
 
 Fabric Operatons Console is based on Hyperledger Fabric and builds permissioned fabric networks. Participants are known as members of the network, and their activities and access to network resources are verified continuously. 
 

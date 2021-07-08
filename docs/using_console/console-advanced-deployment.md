@@ -3,13 +3,13 @@ layout: default
 title: Advanced deployment options
 nav_order: 4
 has_children: true
+has_toc: false
 permalink: ../using_console
 description: "Advanced deployment options in Fabric Operations Console"
 keywords: deployment, advanced, CouchDB, LevelDB, external CA, resource allocation
 ---
 
 # Advanced deployment options
-{: .no_toc }
 
 When you deploy a node from the console, there are various advanced deployment options available for each node type. The following topic provides more details about each of those options.
 

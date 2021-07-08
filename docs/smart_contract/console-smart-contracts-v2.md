@@ -8,7 +8,6 @@ keywords: smart contract, private data, private data collection, anchor peer, im
 ---
 
 # Deploy a smart contract using Fabric v2.x
-{: .no_toc }
 
 Using the **Hyperledger Fabric v2.x chaincode lifecycle** to learn how to create and package a smart contract and how to propose the smart contract definition to channel members on a channel that runs `application capability 2.x`. Learn how to install the smart contract package on peers that run a Fabric 2.x image. Finally, see how channel members can approve and commit the smart contract definition to the channel.
 

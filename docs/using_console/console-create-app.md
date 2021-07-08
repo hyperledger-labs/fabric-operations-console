@@ -2,13 +2,12 @@
 layout: default
 title: Creating applications
 parent: Advanced deployment options
-nav_order: 8
+nav_order: 7
 description: "Creating applications in Fabric Operations Console"
 keywords: client application, Commercial Paper, SDK, wallet, generate a certificate, generate a private key, fabric gateway, APIs, smart contract
 ---
 
 # Creating applications
-{: .no_toc }
 
 After you install smart contracts and deploy your nodes, you can use client applications to transact with other members of your network. Applications can invoke the business logic that is contained in smart contracts to create, transfer, or update assets on the fabric ledger. Use this tutorial to learn how to use client applications to interact with networks that you manage from Fabric Operatons Console.
 

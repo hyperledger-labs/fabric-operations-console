@@ -3,14 +3,13 @@ layout: default
 title: Deploy a smart contract
 nav_order: 3
 has_children: true
+has_toc: false
 permalink: ../smart_contract
 description: "Deploying a smart contract in Fabric Operations Console"
 keywords: smart contract, private data, private data collection, anchor peer, implicit collections
 ---
 
 # Deploy a smart contract
-
-{: .no_toc }
 
  A smart contract is the code, packaged as chaincode, that applications interact with to read and update data on the Fabric Hyperledger. A smart contract turns business logic into an executable program that is agreed to and verified by all members of a fabric network. This tutorial is the third part in the [sample network tutorial series](#sample-network-tutorial-series) and describes how to deploy smart contracts to start transactions in the fabric network.
 

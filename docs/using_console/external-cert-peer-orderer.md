@@ -2,13 +2,12 @@
 layout: default
 title: Using certificates from an external CA with your peer or ordering service
 parent: Advanced deployment options
-nav_order: 7
+nav_order: 5
 description: "Using certificates from an external CA with your peer or ordering service in Fabric Operations Console"
 keywords: external CA, ordering service, import msp, organization msp
 ---
 
 ## Using certificates from an external CA with your peer or ordering service
-{: .no_toc }
 
 Instead of using a Fabric Operatons Console Certificate Authority as your peer or ordering service's CA, you can use certificates from an external CA, one that is not hosted by Hyperledger Fabric. To use an external CA, the CA needs to issue certificates in <a href="https://hyperledger-fabric.readthedocs.io/en/release-2.2/identity/identity.html#digital-certificates" target="_blank">X.509 <img src="../images/external.png" width="10" alt="external" valign="middle"></a> format.
 

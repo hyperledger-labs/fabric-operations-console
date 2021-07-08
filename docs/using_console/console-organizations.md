@@ -2,13 +2,12 @@
 layout: default
 title: Managing organizations
 parent: Advanced deployment options
-nav_order: 5
+nav_order: 6
 description: "Managing organizations in Fabric Operations Console"
 keywords: organizations, MSPs, create an MSP, MSP JSON file, consortium, system channel, remove an organization
 ---
 
 # Managing organizations
-{: .no_toc }
 
 You can use the Fabric Operatons Console to create a formal organization definition that is known as a Membership Services Provider (MSP). Your organization's MSP definition allows other members of the fabric consortium to verify the identity of your nodes and applications. Your MSP definition also contains your organization's admin certificates.
 
