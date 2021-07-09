@@ -147,47 +147,47 @@ describe('ResetPasswordModal component', () => {
 				.text()
 				.should.deep.equal('reset_password_desc');
 			component
-				.find('default')
+				.find('_default')
 				.at(0)
 				.props()
 				.scope.should.deep.equal(SCOPE);
 			component
-				.find('default')
+				.find('_default')
 				.at(0)
 				.props()
 				.id.should.deep.equal(SCOPE + '-reset-password');
 			component
-				.find('default')
+				.find('_default')
 				.at(0)
 				.props()
 				.fields[0].name.should.deep.equal('username');
 			component
-				.find('default')
+				.find('_default')
 				.at(0)
 				.props()
 				.fields[0].default.should.deep.equal('an@email');
 			component
-				.find('default')
+				.find('_default')
 				.at(0)
 				.props()
 				.fields[0].disabled.should.deep.equal(true);
 			component
-				.find('default')
+				.find('_default')
 				.at(0)
 				.props()
 				.fields[1].name.should.deep.equal('defaultPassword');
 			component
-				.find('default')
+				.find('_default')
 				.at(0)
 				.props()
 				.fields[1].placeholder.should.deep.equal('defaultPassword_placeholder');
 			component
-				.find('default')
+				.find('_default')
 				.at(0)
 				.props()
 				.fields[1].default.should.deep.equal('');
 			component
-				.find('default')
+				.find('_default')
 				.at(0)
 				.props()
 				.fields[1].disabled.should.deep.equal(true);
