@@ -32,8 +32,7 @@
 		"DB_COMPONENTS": {
 			"description": "db for peers/cas/orderers/collections/msps docs",
 			"design_docs": [
-				"../json_docs/components_design_doc.json",
-				"../json_docs/template.json"
+				"../json_docs/components_design_doc.json"
 			],
 			"name": "athena_components"
 		},
