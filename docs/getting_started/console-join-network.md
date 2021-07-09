@@ -1,49 +1,54 @@
 ---
+layout: default
+title: Join a network
+parent: Getting Started with Fabric Operations Console
+nav_order: 2
+description: "Join a network in Fabric Operations Console"
 keywords: getting started tutorials, create a CA, enroll, register, create an MSP, wallet, create a peer, create ordering service, Raft, join a network, system channel, multicloud
 ---
 
 
 # Join a network
 
-Fabric Operatons Console enables you to develop, deploy, and operate fabric applications and networks. You can learn more about fabric components and how they work together by visiting the [component overview](component-overview.md). This tutorial is the second part in the [sample network tutorial series](console-build-network.md#sample-network-tutorial-series) and describes how to create nodes in the Fabric  Operatons Console and connect them to a fabric consortium hosted in another cluster.
+Fabric Operatons Console enables you to develop, deploy, and operate fabric applications and networks. You can learn more about fabric components and how they work together by visiting the [component overview](../getting_started/component-overview.md). This tutorial is the second part in the [sample network tutorial series](../getting_started/console-build-network.md#sample-network-tutorial-series) and describes how to create nodes in the Fabric  Operatons Console and connect them to a fabric consortium hosted in another cluster.
 
 **Target audience:** This topic is designed for network operators who are responsible for creating, monitoring, and managing the fabric network.  
 
 
-If you have not already deployed your Fabric  Operatons Console to a cluster, see [getting started with Fabric  Operatons Console](index.md).  
+If you have not already deployed your Fabric  Operatons Console to a cluster, see [getting started with Fabric  Operatons Console](../getting_started/getting-started.md).  
 
-You need to pay close attention to the resources at your disposal when you choose to deploy nodes and create channels. It is your responsibility to manage your cluster and deploy additional resources if necessary. For more information about component sizings and how the console interacts with your service cluster, see [allocating resources](console-advanced-deployment.md#allocating-resources).
+You need to pay close attention to the resources at your disposal when you choose to deploy nodes and create channels. It is your responsibility to manage your cluster and deploy additional resources if necessary. For more information about component sizings and how the console interacts with your service cluster, see [allocating resources](../using_console/console-advanced-deployment.md#allocating-resources).
 
 
 ## Sample network tutorial series
 
 You are currently on the second part of our three-part tutorial series. This tutorial guides you through the process of using the console to create and join a peer node to an existing Fabric  Operatons Console network. 
 
-* [Build a network tutorial](console-build-network.md#build-a-network) guides you through the process of hosting a network by creating an ordering service and a peer.
+* [Build a network tutorial](../getting_started/console-build-network.md#build-a-network) guides you through the process of hosting a network by creating an ordering service and a peer.
 * **Join a network tutorial** (Current tutorial) Guides you through the process of joining an existing network by creating a peer and joining it to a channel.
-* [Deploy a smart contract using Fabric v2.x](console-smart-contracts-v2.md) provides information on how to write a smart contract and deploy it on your network.
+* [Deploy a smart contract using Fabric v2.x](../smart_contracts/console-smart-contracts-v2.md) provides information on how to write a smart contract and deploy it on your network.
 
 You can use the steps in these tutorials to build a network with multiple organizations in one cluster for the purposes of development and testing. Use the **Build a network** tutorial if you want to form a fabric consortium by creating an ordering service and adding organizations. Use the **Join a network** tutorial to connect a peer to the network. Following the tutorials with different consortium members allows you to create a truly **distributed** fabric network.
 
-This tutorial is meant to show how to join a peer to an **existing** network. It presumes that an ordering service has already been created using another Fabric  Operatons Console (it is possible to join peers created in the Fabric  Operatons Console to any network running Hyperledger Fabric based components using the Fabric APIs or the CLI, but we will not show that process here). If you don't have an existing network to join, visit the [build a network tutorial](console-build-network.md#build-a-network) to learn how to create one. The **Join a network** tutorial takes you through the steps to create the following `Org2` fabric components, highlighted in the blue box:
-<p style="text-align:center"><img src ="images/join-network.svg" alt="Figure 1. Join network structure" align="center"><br><em>Figure 1. Join network structure.</em></p>
+This tutorial is meant to show how to join a peer to an **existing** network. It presumes that an ordering service has already been created using another Fabric  Operatons Console (it is possible to join peers created in the Fabric  Operatons Console to any network running Hyperledger Fabric based components using the Fabric APIs or the CLI, but we will not show that process here). If you don't have an existing network to join, visit the [build a network tutorial](../getting_started/console-build-network.md#build-a-network) to learn how to create one. The **Join a network** tutorial takes you through the steps to create the following `Org2` fabric components, highlighted in the blue box:
+<p style="text-align:center"><img src="../images/join-network.svg" alt="Figure 1. Join network structure" align="center"><br><em>Figure 1. Join network structure.</em></p>
 
 Perform the steps in the **Join a network** tutorial to create the following components and complete the following actions:
 
 * **One peer organization** `Org2`  
   Create the Org2 Membership Services Provider (MSP) definition which defines the organization `Org2`.
 * **One peer** `Peer Org2`   
-  The ledger, `Ledger x` in the illustration above, is maintained by distributed peers. The peer is deployed with <a href="https://hyperledger-fabric.readthedocs.io/en/release-2.2/couchdb_as_state_database.html" target="_blank">Couch DB <img src="images/external.png" width="10" alt="external" valign="middle"></a> as the state database.
+  The ledger, `Ledger x` in the illustration above, is maintained by distributed peers. The peer is deployed with <a href="https://hyperledger-fabric.readthedocs.io/en/release-2.2/couchdb_as_state_database.html" target="_blank">Couch DB <img src="../images/external.png" width="10" alt="external" valign="middle"></a> as the state database.
 * **One Certificate Authority (CA)** `Org2 CA`
   A CA is the node that issues certificates to all organization admins as well as to nodes associated with an organization. We will create one CA for the peer organization `Org2`.
 * **Joining one channel**
-  The tutorial describes how to join the channel that was created by the [build a network tutorial](console-build-network.md#build-a-network).
+  The tutorial describes how to join the channel that was created by the [build a network tutorial](../getting_started/console-build-network.md#build-a-network).
 
 >**_TIP:_** Throughout this tutorial we supply **recommended values** for some of the fields in the console. This allows the names and identities to be easier to recognize in the tabs and drop-down lists. These values are not mandatory, but you will find them helpful, especially since you will have to remember certain values, especially the IDs and secrets of registered users, you input at a previous step. If you forget these values, you will have to register additional users for your admins and components. We provide a table of the recommended values after each task and recommend that if you do not use sample values that you record the values you do use somewhere as you proceed through the tutorial.
 
 ## Step one: Create a peer organization and a peer
 
-For each organization that you want to create with the console, you should deploy at least one CA. A CA is the node that issues certificates to all network participants (peers, ordering services, clients, admins, and so on). These certificates, which include a signing certificate and private key, allow network participants to communicate, authenticate, and ultimately transact. These CAs will create all of the identities and certificates that belong to your organization, in addition to defining the organization itself. You can then use those identities to deploy nodes, create admin identities, and submit transactions. For more information about your CA and the identities that you will need to create, see [managing identities](console-identities.md#managing-identities).
+For each organization that you want to create with the console, you should deploy at least one CA. A CA is the node that issues certificates to all network participants (peers, ordering services, clients, admins, and so on). These certificates, which include a signing certificate and private key, allow network participants to communicate, authenticate, and ultimately transact. These CAs will create all of the identities and certificates that belong to your organization, in addition to defining the organization itself. You can then use those identities to deploy nodes, create admin identities, and submit transactions. For more information about your CA and the identities that you will need to create, see [managing identities](../using_console/console-identities.md#managing-identities).
 
 In this tutorial, we will create one organization. Therefore, we will need to create **one CA**.
 
@@ -69,7 +74,7 @@ Perform the following steps from your console:
 After you deploy the CA, you will use it when you create your organization MSP, register users, and to create your entry point to a network, the **peer**.
 
 
-Advanced users may already have their own CA, and not want to create a new CA in the console. If your existing CA can issue certificates in `X.509` format, you can use certificates from your own third-party CA instead of creating new certificates here. The CA should sign using ECDSA and the defaults should be set to use P256 curve. See this topic on [using certificates from an external CA with your peer or ordering node](console-advanced-deployment.md#using-certificates-from-an-external-ca-with-your-peer-or-ordering-service) for more information.
+Advanced users may already have their own CA, and not want to create a new CA in the console. If your existing CA can issue certificates in `X.509` format, you can use certificates from your own third-party CA instead of creating new certificates here. The CA should sign using ECDSA and the defaults should be set to use P256 curve. See this topic on [using certificates from an external CA with your peer or ordering node](../using_console/console-advanced-deployment.md#using-certificates-from-an-external-ca-with-your-peer-or-ordering-service) for more information.
 
 ### Associating the CA admin identity
 
@@ -112,8 +117,8 @@ Each node or application that you want to create needs certificates and private 
 Once you have associated the CA admin, you can use the CA tile to create these identities by completing the following steps:
 
 1. Click the `Org2 CA` tile and ensure the `admin` identity that you created for the CA is visible in the table. Then click the **Register user** button.
-2. First we'll register the organization admin, which we can do by giving an **Enroll ID** of `org2admin` and a **secret** of `org2adminpw`. Then set the `Type` for this identity as `admin`. You can ignore the **Maximum enrollments** field. If you want to learn more about enrollments, see [registering identities](ibp-console-identities.md#registering-identities). Click **Next**.
-3. This tutorial does not configure attributes on identities, see [registering identities](console-identities.md#registering-identities) if you want to learn more. Click **Register user**.
+2. First we'll register the organization admin, which we can do by giving an **Enroll ID** of `org2admin` and a **secret** of `org2adminpw`. Then set the `Type` for this identity as `admin`. You can ignore the **Maximum enrollments** field. If you want to learn more about enrollments, see [registering identities](../using_console/console-identities.md#registering-identities). Click **Next**.
+3. This tutorial does not configure attributes on identities, see [registering identities](../using_console/console-identities.md#registering-identities) if you want to learn more. Click **Register user**.
 4. After the organization admin has been registered, repeat this same process for the identity of the peer (also using the `Org2 CA`). For the peer identity, give an enroll ID of `peer2` and a secret of `peer2pw`. This is a node identity, so select `peer` as the **Type**. You can ignore the **Maximum enrollments** field and, on the next panel, do not assign any **Attributes**, as before.
 
 >**_NOTE:_** Registering these identities with the CA is only the first step in **creating** an identity. You will not be able to use these identities until they have been **enrolled**. For the `org2admin` identity, this will happen during the creation of the MSP, which we will see in the next step. In the case of the peer2 identity, it happens during the creation of the peer.
@@ -164,11 +169,11 @@ After you have created the MSP, you should be able to see the peer organization 
   | **Identity** | Org2 MSP Admin  | Org2 identity |
   {: caption="Table 6. Check your Wallet" caption-side="bottom"}
 
-For more information about MSPs, see [managing organizations](console-organizations.md#managng-organizations).
+For more information about MSPs, see [managing organizations](../using_console/console-organizations.md#managng-organizations).
 
 ### Creating a peer
 
-After you have [created a CA](console-join-network.md#creating-your-peer-organization-ca), used it to register identities, and created the [peer organization MSP](console-join-network.md#creating-your-peer-organization-ca), you're ready to create a peer.
+After you have [created a CA](../getting_started/console-join-network.md#creating-your-peer-organization-ca), used it to register identities, and created the [peer organization MSP](../getting_started/console-join-network.md#creating-your-peer-organization-ca), you're ready to create a peer.
 
 **What role do peers play?**
 
@@ -177,7 +182,6 @@ It's important to remember that organizations themselves do not maintain ledgers
 From a resource allocation perspective, it is possible to join the same peers to multiple channels. The design of the peer ensures that the data from one channel cannot pass to another through the peer. However, because the peer will store a separate ledger for each channel, it is necessary to ensure that the peer has enough processing power and storage to handle the transaction and data load.
 
 **Deploying your peer**
-{: #ibp-console-join-network-deploy-peer-role}
 
 Use your console to perform the following steps:
 
@@ -191,10 +195,10 @@ Use your console to perform the following steps:
    * Select the **Enroll ID** for the peer identity that you created for your peer from the drop-down list, `peer2`, and enter its associated **secret**, `peer2pw`.
    * Then, select `Org2 MSP` from the drop-down list
    * The **TLS Certificate Signing Request (CSR) hostname** is an option available to advanced users who want to specify a custom domain name that can be used to address the peer endpoint. Custom domain names are not a part of this tutorial, so leave the **TLS CSR hostname** blank for now.
-   * In the **Fabric version** drop down list, the best practice is to select the **latest available version**, as it will contain the latest bug fixes. It might also be necessary to select the latest version in order to have access to the latest features. Note that if you select any version higher than v2.0, no smart contract container will be deployed along with your peer. Instead, each smart contract will be deployed into its own pod when it is deployed on the channel or invoked for the first time. Golang smart contracts that are currently running on a Fabric v1.4 peer need to be upgraded if you plan to run them on a Fabric v2.x peer. See this [topic](console-smart-contracts-v2.md#vendoring-smart-contracts) on vendoring the shim for more information.
+   * In the **Fabric version** drop down list, the best practice is to select the **latest available version**, as it will contain the latest bug fixes. It might also be necessary to select the latest version in order to have access to the latest features. Note that if you select any version higher than v2.0, no smart contract container will be deployed along with your peer. Instead, each smart contract will be deployed into its own pod when it is deployed on the channel or invoked for the first time. Golang smart contracts that are currently running on a Fabric v1.4 peer need to be upgraded if you plan to run them on a Fabric v2.x peer. See this [topic](../smart_contracts/console-smart-contracts-v2.md#vendoring-smart-contracts) on vendoring the shim for more information.
    * Click **Next**.
 7. The last side panel asks you to **Associate an identity** to make it the admin of your peer. For the purpose of this tutorial, make your organization admin, `Org2 MSP Admin`, the admin of your peer as well. It is possible to register and enroll a different identity with the `Org2 CA` and make that identity the admin of your peer, but this tutorial uses the `Org2 MSP Admin` identity.
-8. Review the summary and click **Add peer**.  The **Edit configuration JSON** button allows you to override configuration settings for the peer. For this tutorial, the default settings are sufficient. If you are deploying a peer on s390x, you may need to increase the timeout on your peer. See [c ustomizing a peer configuration](console-advanced-deployment.md#customizing-a-peer-configuration) to learn more about the options that are available.
+8. Review the summary and click **Add peer**.  The **Edit configuration JSON** button allows you to override configuration settings for the peer. For this tutorial, the default settings are sufficient. If you are deploying a peer on s390x, you may need to increase the timeout on your peer. See [c ustomizing a peer configuration](../using_console/console-advanced-deployment.md#customizing-a-peer-configuration) to learn more about the options that are available.
 
 **Task: Deploying a peer**
 
@@ -212,7 +216,7 @@ Use your console to perform the following steps:
 
 ## Step two: Add Org2 to an existing channel
 
-In the [build a network tutorial](console-build-network.md#build-a-network), Org1 created a channel, `channel1`, with itself as the only member. For Org2 to join this channel, it must export its MSP to Org1:
+In the [build a network tutorial](../getting_started/console-build-network.md#build-a-network), Org1 created a channel, `channel1`, with itself as the only member. For Org2 to join this channel, it must export its MSP to Org1:
 
 1. Navigate to the **Organizations** tab. You can see the organizations available for export are listed under **Available organizations**. Click the **Export** button inside the `Org2 MSP` organization tile to download the JSON configuration file that represents the MSP of the peer organization.
 2. Send this file to Org1 in an out of band operation.
@@ -267,15 +271,15 @@ Your peer can now be joined to `channel1`.
 2. Click the **Join channel** button to launch the side panels.
 3. Select `Ordering Service` and click **Next**.
 4. Enter `channel1` and click **Next**.
-5. Select which peers you want to join the channel. For purposes of this tutorial, click `Peer Org2`. Leave the tab for **Make anchor peer** selected. It is a best practice for each organization to have at least one anchor peer on each channel, as anchor peers bootstrap the inter-organizational communication that is necessary for <a href="https://hyperledger-fabric.readthedocs.io/en/release-2.2/private-data/private-data.html" target="_blank">private data <img src="images/external.png" width="10" alt="external" valign="middle"></a> and <a href="https://hyperledger-fabric.readthedocs.io/en/release-2.2/discovery-overview.html" target="_blank">service discovery <img src="images/external.png" width="10" alt="external" valign="middle"></a> to work. While it is only necessary to have one anchor peer on each channel, it does not hurt to make all peer anchor peers. The only downside will be a short term increase in the stress on your communication layer when new organizations join their peers to the channel, as these peers are designed to contact every anchor peer in every organization to find out about the peers belonging to that organization. Note that you can also make a peer an anchor peer later through the **Channels** tab.
+5. Select which peers you want to join the channel. For purposes of this tutorial, click `Peer Org2`. Leave the tab for **Make anchor peer** selected. It is a best practice for each organization to have at least one anchor peer on each channel, as anchor peers bootstrap the inter-organizational communication that is necessary for <a href="https://hyperledger-fabric.readthedocs.io/en/release-2.2/private-data/private-data.html" target="_blank">private data <img src="../images/external.png" width="10" alt="external" valign="middle"></a> and <a href="https://hyperledger-fabric.readthedocs.io/en/release-2.2/discovery-overview.html" target="_blank">service discovery <img src="../images/external.png" width="10" alt="external" valign="middle"></a> to work. While it is only necessary to have one anchor peer on each channel, it does not hurt to make all peer anchor peers. The only downside will be a short term increase in the stress on your communication layer when new organizations join their peers to the channel, as these peers are designed to contact every anchor peer in every organization to find out about the peers belonging to that organization. Note that you can also make a peer an anchor peer later through the **Channels** tab.
 6. Click **Join channel**.
 
-    >**_IMPORTANT:_** In these tutorials, we create all of our peers using default options, which means that every peer uses CouchDB. As a result, you don't have to worry about a conflict between the database type used by your peer and any other peers on the channel. However, in a production scenario, a best practice will be to ensure that the peer you are joining to this channel uses the same database type as other peers on the channel. For more information, see [LevelDB vs CouchDB](console-advanced-deployment.md#state-database).
+    >**_IMPORTANT:_** In these tutorials, we create all of our peers using default options, which means that every peer uses CouchDB. As a result, you don't have to worry about a conflict between the database type used by your peer and any other peers on the channel. However, in a production scenario, a best practice will be to ensure that the peer you are joining to this channel uses the same database type as other peers on the channel. For more information, see [LevelDB vs CouchDB](../using_console/console-advanced-deployment.md#state-database).
 
 
 ## Step four: Creating a channel
 
->**_NOTE:_** In this tutorial, we will presume that users will not be attempting to edit any of the advanced options. For information about editing advanced options both before and after a channel has been created, see [advanced channel deployment and management](console-advanced-channel.md#advanced-channel-deployment-and-management).
+>**_NOTE:_** In this tutorial, we will presume that users will not be attempting to edit any of the advanced options. For information about editing advanced options both before and after a channel has been created, see [advanced channel deployment and management](../using_console/console-advanced-channel.md#advanced-channel-deployment-and-management).
 
 ### Join the consortium hosted by the ordering service
 
@@ -330,7 +334,7 @@ Perform the following steps from your console:
 
 1. Navigate to the **Channels** tab.
 2. Click **Create channel**. The create channel panel will open. From here, you will perform all of the steps to create your channel.
-3. On the **Prerequisites** panel, you can decide whether or not you want to specify any **Advanced channel configuration** options. See [advanced options](console-advanced-channel.md/#advanced-options) to learn more. For the purposes of this tutorial, we'll assume you don't want to specify any advanced channel configuration options, so click **Next**.
+3. On the **Prerequisites** panel, you can decide whether or not you want to specify any **Advanced channel configuration** options. See [advanced options](../using_console/console-advanced-channel.md/#advanced-options) to learn more. For the purposes of this tutorial, we'll assume you don't want to specify any advanced channel configuration options, so click **Next**.
 4. On the **Channel details** page, give you channel a name and specify the ordering service the channel will be hosted on. In this tutorial, our channel is called `channel2` while the ordering service is called `Ordering Service`.
 5. On the **Organizations** page, select the organizations who will be part of this channel. Since we have two organizations, select and add `Org1 MSP (org1msp)` and then `Org2 MSP (org2msp)`. After clicking **Add**, you can assign an organization a role on the channel. Because each channel must have at least one operator, make both organizations **Operator**.
 6. Next, choose a **Update policy** for the channel. This is the policy that will dictate how many organizations will have to approve updates to the channel configuration. As this channel includes two organizations, this policy should be `2 out of 2`, meaning both organizations have to approve updates to the channel. As you add organizations to the channel, you should change this policy to reflect the needs of your use case. A sensible standard is to use a majority of organizations. For example, `3 out of 5`.
@@ -359,5 +363,5 @@ The next step is to join a peer to this channel. Click the pending tile and sele
 
 After you have joined your peer to a channel, use the following steps to deploy a smart contract and begin submitting transactions to the fabric:
 
-- [Deploy a smart contract on your network using Fabric v2.x](console-smart-contracts-v2.md) using the console.
-- After you have installed and instantiated your smart contract, you can [submit transactions using your client application](console-create-app.md). The [commercial paper sample](console-create-app.md#running-the-commercial-paper-sample) can be used to deploy an example smart contract and submit transactions from sample application code.
+- [Deploy a smart contract on your network using Fabric v2.x](../smart_contracts/console-smart-contracts-v2.md) using the console.
+- After you have installed and instantiated your smart contract, you can [submit transactions using your client application](../using_console/console-create-app.md). The [commercial paper sample](../using_console/console-create-app.md#running-the-commercial-paper-sample) can be used to deploy an example smart contract and submit transactions from sample application code.

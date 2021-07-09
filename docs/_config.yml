@@ -1,7 +1,11 @@
 remote_theme: pmarsceill/just-the-docs
 title: Fabric Operations Console
 aux_links:
-  "GitHub":
-    - "//github.com/hyperledger-labs/fabric-operations-console"
+  "Fabric Operations Console":
+    - "/github.com/hyperledger-labs/fabric-operations-console"
+
+# Back to top link
+back_to_top: true
+back_to_top_text: "Back to top"
 
 theme: just-the-docs

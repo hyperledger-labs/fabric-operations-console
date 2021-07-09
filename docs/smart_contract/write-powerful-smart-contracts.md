@@ -1,4 +1,8 @@
 ---
+layout: default
+title: Writing powerful smart contracts
+parent: Deploy a smart contract
+nav_order: 2
 keywords: smart contract, lifecycle, package, definition
 ---
 
@@ -84,7 +88,7 @@ While updating the version in the definition is enforced by Fabric whenever a ne
 
 Like everything else about your network, your smart contracts should be tailored for your use case. While a simple smart contract shared in its entirety among every member of a channel might adequately fulfill your needs, the new lifecycle opens opportunities for specialization and separation of concerns that didn't exist before and shouldn't be ignored.
 
-For more information about smart contract best practices (as well as how smart contracts relate to the concept of "chaincode"), see <a href="https://hyperledger-fabric.readthedocs.io/en/release-2.0/smartcontract/smartcontract.html" target="_blank">smart contracts and chaincode <img src="images/external.png" width="10" alt="external" valign="middle"></a>.
+For more information about smart contract best practices (as well as how smart contracts relate to the concept of "chaincode"), see <a href="https://hyperledger-fabric.readthedocs.io/en/release-2.0/smartcontract/smartcontract.html" target="_blank">smart contracts and chaincode <img src="../images/external.png" width="10" alt="external" valign="middle"></a>.
 
 ## Smart contract development tooling
 
@@ -93,4 +97,4 @@ While a smart contract can be packaged using the peer CLI.
 
 ## Installing a package and proposing a definition
 
-For information about how to use the console to install smart contract packages and propose and commit smart contract definitions on a channel, see [deploy a smart contract using Fabric v2.x](console-smart-contracts-v2.md).
+For information about how to use the console to install smart contract packages and propose and commit smart contract definitions on a channel, see [deploy a smart contract using Fabric v2.x](../smart_contracts/console-smart-contracts-v2.md).

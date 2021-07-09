@@ -1,4 +1,11 @@
 ---
+layout: default
+title: Advanced deployment options
+nav_order: 4
+has_children: true
+has_toc: false
+permalink: ../using_console
+description: "Advanced deployment options in Fabric Operations Console"
 keywords: deployment, advanced, CouchDB, LevelDB, external CA, resource allocation
 ---
 
@@ -26,7 +33,6 @@ Because your instance of the Fabric  Operatons Console and your cluster do not c
 
 | **Component** (all containers) | CPU**  | Memory (GB) | Storage (GB) |
 |--------------------------------|---------------|-----------------------|------------------------|
-| **Peer (Hyperledger Fabric v1.4)**                       | 1.1           | 2.8                   | 200 (includes 100GB for peer and 100GB for state database)|
 | **Peer (Hyperledger Fabric v2.x)**                       | 0.7           | 2.0                   | 200 (includes 100GB for peer and 100GB for state database)|
 | **CA**                         | 0.1           | 0.2                   | 20                     |
 | **Ordering node**              | 0.35          | 0.7                   | 100                    |
@@ -149,7 +155,7 @@ You can use the console to configure resource allocation or the CA database and 
 			}
 		},
 		"affiliations": {
-      	"ibp": []
+      	"fabric": []
     	},
 		"csr": {
 			"cn": "ca",
@@ -282,7 +288,7 @@ Here is an example of the minimum required `JSON` parameters for any override wh
 		]
 	  },
 		"affiliations": {
-			"ibp": []
+			"fabric": []
     	},
 	}
 }
@@ -337,7 +343,7 @@ You can insert additional fields or modify the `JSON` that is visible in the **C
 		]
 		},
 		"affiliations": {
-			"ibp": []
+			"fabric": []
     },
 		"cfg": {
 			"identities": {
@@ -499,7 +505,7 @@ When you deploy a peer, the following advanced deployment options are available:
 * Resource allocation - Configure the CPU, memory, and storage for the node.
 * Peer configuration override - Choose this option when you want to override peer configuration.
 
->**_IMPORTANT:_** You also have the ability to choose the version of Fabric that will be used to deploy your peer. It is recommended to always choose the latest version, as this version will have the latest fixes and improvements. However, note that you might have to re-vendor your smart contract if it was written in Golang. For more information, see [write and package your smart contract](console-smart-contracts-v2.md).
+>**_IMPORTANT:_** You also have the ability to choose the version of Fabric that will be used to deploy your peer. It is recommended to always choose the latest version, as this version will have the latest fixes and improvements. However, note that you might have to re-vendor your smart contract if it was written in Golang. For more information, see [write and package your smart contract](../smart_contracts/console-smart-contracts-v2.md).
 
 
 ### State database
