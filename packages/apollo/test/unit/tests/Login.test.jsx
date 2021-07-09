@@ -153,7 +153,7 @@ describe('Login component', () => {
 				.hasClass('ibp-login-button')
 				.should.equal(true);
 			component
-				.find('ForwardRef(Button)')
+				.find('Button')
 				.at(0)
 				.hasClass('login-button')
 				.should.equal(true);
@@ -207,7 +207,7 @@ describe('Login component', () => {
 				.hasClass('ibp-login-button')
 				.should.equal(true);
 			component
-				.find('ForwardRef(Button)')
+				.find('Button')
 				.at(0)
 				.hasClass('login-button')
 				.should.equal(true);
@@ -259,7 +259,7 @@ describe('Login component', () => {
 				.hasClass('ibp-login-button')
 				.should.equal(true);
 			component
-				.find('ForwardRef(Button)')
+				.find('Button')
 				.at(0)
 				.hasClass('login-button')
 				.should.equal(true);
