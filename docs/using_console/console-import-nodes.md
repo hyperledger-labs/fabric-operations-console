@@ -1,4 +1,9 @@
 ---
+layout: default
+title: Advanced channel deployment and management
+parent: Advanced deployment options
+nav_order: 2
+description: "Advanced channel deployment and management in Fabric Operations Console"
 keywords: import nodes, import CA, Certificate Authorities, import orderer, import MSP, import peer
 ---
 
@@ -69,7 +74,7 @@ If you intend to operate an imported node, you have two options:
        4. This new identity would be sent back to the console where the peer was created and added as an admin of the peer.
        5. Then the peer could be exported to the console where the new identity was created, allowing the new identity to operate the imported peer.
 
-In either case, because this new admin identity would only be an admin of the peer and not the organization that owns the peer, it preserves a separation of roles between the organization admin (the sign cert listed in the MSP, which might also be the peer admin in the console where the peer was created), and the new admin of the peer which was just created and associated. This peer admin would not be an organization admin by default. However, if it fits a use case to make an identity the admin of both the organization and an imported peer, this is achievable, see [updating an organization MSP definition](console-organizations.md).
+In either case, because this new admin identity would only be an admin of the peer and not the organization that owns the peer, it preserves a separation of roles between the organization admin (the sign cert listed in the MSP, which might also be the peer admin in the console where the peer was created), and the new admin of the peer which was just created and associated. This peer admin would not be an organization admin by default. However, if it fits a use case to make an identity the admin of both the organization and an imported peer, this is achievable, see [updating an organization MSP definition](../using_console/console-organizations.md).
 
 Note that this flow would be most practical for a peer, since the admins of ordering nodes do not have many responsibilities in the Fabric Operatons Console.
 
@@ -87,7 +92,7 @@ After you complete the **Add identity** panel, you can view the new admin identi
 
 Because MSPs define an organization, they are required when creating channels, creating nodes (to identify which organization the node will belong to), and validating signatures. For the latter reason, **your MSP must be known (in other words, exported and then imported) by every member of every channel you belong to unless your organization will not be involved in validation or endorsement**.
 
-To act as an administrator for an organization, you must have an identity in your Wallet listed in the MSP as an admin of the organization. This means either importing the identity listed in the MSP or by following the process listed in [updating an organization MSP definition](console-organizations.md#updating-an-organization-msp-definition). This MSP can then be exported to the console where the added identity was created, making the exported identity able to act as an admin of the organization.
+To act as an administrator for an organization, you must have an identity in your Wallet listed in the MSP as an admin of the organization. This means either importing the identity listed in the MSP or by following the process listed in [updating an organization MSP definition](../using_console/console-organizations.md#updating-an-organization-msp-definition). This MSP can then be exported to the console where the added identity was created, making the exported identity able to act as an admin of the organization.
 
 The exports and imports of MSPs are performed in the **Organizations** tab.
 
@@ -96,7 +101,7 @@ The exports and imports of MSPs are performed in the **Organizations** tab.
  1. Navigate to the **Organizations** tab and click your organization MSP tile.
  2. In the tile that opens, click the **Export** icon.
 
-<p style="text-align:center"><img src ="images/export-msp.png" alt="Figure 1. Export MSP button" align="center"><br><em>Figure 1. Export MSP button</em></p>
+<p style="text-align:center"><img src="../images/export-msp.png" alt="Figure 1. Export MSP button" align="center"><br><em>Figure 1. Export MSP button</em></p>
 
  3. A JSON file is generated and downloaded to your local system.
  4. Share this file with the other organization admins of your channel.
@@ -113,7 +118,7 @@ The exports and imports of MSPs are performed in the **Organizations** tab.
 
 ## Importing a peer
 
-A peer is the component that maintains a ledger and runs a smart contract to perform query and update operations on the ledger. Organization members own and maintain peers. Each organization that joins a consortium should deploy at least one peer and minimally two for High Availability (HA) on each channel. You can learn more about peers in the [overview of components](component-overview.md#peers).
+A peer is the component that maintains a ledger and runs a smart contract to perform query and update operations on the ledger. Organization members own and maintain peers. Each organization that joins a consortium should deploy at least one peer and minimally two for High Availability (HA) on each channel. You can learn more about peers in the [overview of components](../getting_started/component-overview.md#peers).
 
 After you import a peer into the console, you can install smart contracts on the peer and join the peer to channels.
 
@@ -138,11 +143,11 @@ After you import the peer into the console, you can install smart contracts on t
 
 ## Importing a CA
 
-A CA node is the component that issues certificates to all network entities (peers, ordering services, clients, and so on) so that these entities can communicate, authenticate, and ultimately transact. Each organization has their own CA that acts as their root of trust. You should add your organizations whether you are joining or building a consortium. You can learn more about CAs in the [overview of components](component-overview.md).
+A CA node is the component that issues certificates to all network entities (peers, ordering services, clients, and so on) so that these entities can communicate, authenticate, and ultimately transact. Each organization has their own CA that acts as their root of trust. You should add your organizations whether you are joining or building a consortium. You can learn more about CAs in the [overview of components](../getting_started/component-overview.md).
 
 After you import a CA, you can use it to register and enroll users or create organization definitions exactly as you would with any other CA.
 
-To import a CA to the console and operate it, the network operator must have already exported the CA from the Fabric Operatons Console where it was deployed. Importing a CA allows you to register new users and [enroll identities](console-identities.md#enrolling-an-identity).
+To import a CA to the console and operate it, the network operator must have already exported the CA from the Fabric Operatons Console where it was deployed. Importing a CA allows you to register new users and [enroll identities](../using_console/console-identities.md#enrolling-an-identity).
 
 ### Before you begin
 
@@ -158,11 +163,11 @@ Navigate to the **Nodes** tab.
 
 If you see the location field, you can choose whether to specify the location where the CA was created or to have the CA re-exported, in which case the console will not ask for this information.
 
-After you have imported the CA into the console, you can use your CA to create new identities and generate the necessary certificates to operate your components and submit transactions to the network. To do this, you will need to associate an admin identity with the CA. To learn more, see [managing certificate authorities](console-identities.md).
+After you have imported the CA into the console, you can use your CA to create new identities and generate the necessary certificates to operate your components and submit transactions to the network. To do this, you will need to associate an admin identity with the CA. To learn more, see [managing certificate authorities](../using_console/console-identities.md).
 
 ## Importing an ordering service
 
-An ordering service is the component that collects transactions from network members, orders the transactions, and bundles them into blocks. It is the common binding of consortiums and needs to be deployed if you are founding a consortium that other organizations will join. You can learn more about ordering services in the [overview of components](component-overview.md#ordering-services).
+An ordering service is the component that collects transactions from network members, orders the transactions, and bundles them into blocks. It is the common binding of consortiums and needs to be deployed if you are founding a consortium that other organizations will join. You can learn more about ordering services in the [overview of components](../getting_started/component-overview.md#ordering-services).
 
 Importing an ordering service into the console allows you to create new channels for peers to transact privately.
 
@@ -172,7 +177,7 @@ Importing an ordering service into the console allows you to create new channels
 
 Even in the world of Hyperledger Fabric, ordering node admins do not have many responsibilities. In the Fabric  Operatons Console, these responsibilities are reduced even further, and because of the [limitations](#limitations) imposed on imported nodes, these responsibilities are reduced to nothing. As a result, there is not much point in becoming an additional admin of an ordering node.
 
-Far more useful than becoming the admin of an ordering node is becoming an admin of the ordering organization itself. This role gives you administrative rights over the ordering service (allowing you to add organizations to the consortium or nodes to the ordering service) as well as over the system channel, giving you the permission to modify system channel [capabilities](console-advanced-channel/#advanced-options).
+Far more useful than becoming the admin of an ordering node is becoming an admin of the ordering organization itself. This role gives you administrative rights over the ordering service (allowing you to add organizations to the consortium or nodes to the ordering service) as well as over the system channel, giving you the permission to modify system channel [capabilities](../using_console/console-advanced-channel/#advanced-options).
 
 Note that it is not necessary for your organization to become an ordering service administrator. You will still need to import the ordering service if you want to create or edit a channel (your organization must be added to the consortium by an ordering service administrator first), as your console must know about the ordering service before you can select it from the drop down list.
 

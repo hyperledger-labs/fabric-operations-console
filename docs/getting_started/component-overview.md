@@ -1,22 +1,27 @@
 ---
+layout: default
+title: Fabric Operations Console component overview
+parent: Getting Started with Fabric Operations Console
+nav_order: 3
+description: "Component overview in Fabric Operations Console"
 keywords: operation console components, ca, certificate authorities, peer, ordering service, orderer, channel, smart contract, applications
 ---
 
-# Operation Console component overview
+# Fabric Operations Console component overview
 
-The components and structure of the Operation Console are based on the underlying infrastructure and tools of <a href="https://hyperledger-fabric.readthedocs.io/en/latest/" target="_blank">Hyperledger Fabric <img src="images/external.png" width="10" alt="external" valign="middle"></a>. Networks based on Fabric include several standard components that can be deployed in a number of configurations to support a wide variety of use cases.
+The components and structure of the Operation Console are based on the underlying infrastructure and tools of <a href="https://hyperledger-fabric.readthedocs.io/en/latest/" target="_blank">Hyperledger Fabric <img src="../images/external.png" width="10" alt="external" valign="middle"></a>. Networks based on Fabric include several standard components that can be deployed in a number of configurations to support a wide variety of use cases.
 
-For a more comprehensive overview of Fabric networks and the interrelation of the components that comprise it, see <a href="https://hyperledger-fabric.readthedocs.io/en/latest/network/network.html" target="_blank">this document on the structure of a fabric network <img src="images/external.png" width="10" alt="external" valign="middle"></a> from the Fabric community documentation, which shows how a network can be started and matured.
+For a more comprehensive overview of Fabric networks and the interrelation of the components that comprise it, see <a href="https://hyperledger-fabric.readthedocs.io/en/latest/network/network.html" target="_blank">this document on the structure of a fabric network <img src="../images/external.png" width="10" alt="external" valign="middle"></a> from the Fabric community documentation, which shows how a network can be started and matured.
 
-For the purposes of this overview, we focus just on certificate authorities (CAs), orderers, peers, smart contracts, and applications. As you can see from the [build a network tutorial](console-build-network), this sequence is not arbitrary; it reflects the proper order in which components in a network based on Fabric are deployed.
+For the purposes of this overview, we focus just on certificate authorities (CAs), orderers, peers, smart contracts, and applications. As you can see from the [build a network tutorial](../getting_started/console-build-network.md), this sequence is not arbitrary; it reflects the proper order in which components in a network based on Fabric are deployed.
 
 ## Peers
 
-At a conceptual level, a fabric network is comprised mainly of organizations (as organizations decide on how a network is structured, as well as owning nodes and managing identities). At a physical level, however, a fabric network is comprised primarily of peer nodes that are owned and administered by organizations. Peers are the fundamental elements of the network because they host ledgers and smart contracts (which are contained in <a href="https://hyperledger-fabric.readthedocs.io/en/latest/developapps/chaincodenamespace.html" target="_blank">"chaincode" <img src="images/external.png" width="10" alt="external" valign="middle"></a>), and are therefore where transactions are executed and validated.
+At a conceptual level, a fabric network is comprised mainly of organizations (as organizations decide on how a network is structured, as well as owning nodes and managing identities). At a physical level, however, a fabric network is comprised primarily of peer nodes that are owned and administered by organizations. Peers are the fundamental elements of the network because they host ledgers and smart contracts (which are contained in <a href="https://hyperledger-fabric.readthedocs.io/en/latest/developapps/chaincodenamespace.html" target="_blank">"chaincode" <img src="../images/external.png" width="10" alt="external" valign="middle"></a>), and are therefore where transactions are executed and validated.
 
 More accurately, the peer hosts **instances** of the ledger, and **instances** of smart contracts. Because smart contracts and ledgers are used to encapsulate the shared processes and shared information in a network, these aspects of a peer make them a good starting point to understand what a Fabric network does.
 
-To learn more about peers specifically, check out <a href="https://hyperledger-fabric.readthedocs.io/en/latest/peers/peers.html" target="_blank">peers <img src="images/external.png" width="10" alt="external" valign="middle"> <img src="images/external.png" width="10" alt="external" valign="middle"></a> from the Fabric community documentation.
+To learn more about peers specifically, check out <a href="https://hyperledger-fabric.readthedocs.io/en/latest/peers/peers.html" target="_blank">peers <img src="../images/external.png" width="10" alt="external" valign="middle"> <img src="../images/external.png" width="10" alt="external" valign="middle"></a> from the Fabric community documentation.
 
 The Fabric Operatons Console allows you to create peers, join them to channels, create anchor peers, install smart contracts, and seamlessly upgrade your peers.
 
@@ -28,9 +33,9 @@ In Hyperledger Fabric, this component is the Certificate Authority (CA), which c
 
 An organization MSP, for example, has an MSP subfolder called **admins**. Any user whose certificate is inside that admin folder is an admin of the organization. Because this MSP defines the organization, it is listed in the configuration on every channel of which the organization is a member. As a result, whenever an admin of the organization tries to perform an action, the signing certificate of the admin (which is attached to all of its interactions) is checked against the certificates listed in the MSP. Does the certificate match the one listed in the channel configuration? If it does, the other organizations will validate it and the action can be performed. If not, the request to execute the transaction is rejected.
 
-Fabric Operatons Console CAs are based on the <a href="https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/" target="_blank">Hyperledger Fabric CA <img src="images/external.png" width="10" alt="external" valign="middle"></a>, though it is possible to use another CA if it uses a PKI based on x.509 certificates. Because non-Fabric CAs are not configured to create properly formatted MSPs, users who want to use this kind of CA must create the MSP for themselves.
+Fabric Operatons Console CAs are based on the <a href="https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/" target="_blank">Hyperledger Fabric CA <img src="../images/external.png" width="10" alt="external" valign="middle"></a>, though it is possible to use another CA if it uses a PKI based on x.509 certificates. Because non-Fabric CAs are not configured to create properly formatted MSPs, users who want to use this kind of CA must create the MSP for themselves.
 
-For more information about how certificate authorities are used to establish identity and membership, see <a href="https://hyperledger-fabric.readthedocs.io/en/latest/identity/identity.html" target="_blank">Hyperledger Fabric documentation on identity <img src="images/external.png" width="10" alt="external" valign="middle"></a> and on <a href="https://hyperledger-fabric.readthedocs.io/en/latest/membership/membership.html" target="_blank">membership <img src="images/external.png" width="10" alt="external" valign="middle"></a>.
+For more information about how certificate authorities are used to establish identity and membership, see <a href="https://hyperledger-fabric.readthedocs.io/en/latest/identity/identity.html" target="_blank">Hyperledger Fabric documentation on identity <img src="../images/external.png" width="10" alt="external" valign="middle"></a> and on <a href="https://hyperledger-fabric.readthedocs.io/en/latest/membership/membership.html" target="_blank">membership <img src="../images/external.png" width="10" alt="external" valign="middle"></a>.
 
 ## Ordering services
 
@@ -42,7 +47,7 @@ The ordering service performs one other key function: it maintains what is known
 
 The Fabric Operatons Console uses an implementation of the Raft protocol, in which a leader node is dynamically elected among the ordering nodes in a channel (this collection of nodes is known as the “consenter set”), and that leader replicates messages to the follower nodes. Because the system can sustain the loss of nodes, including leader nodes, as long as there is a majority of ordering nodes (what’s known as a “quorum”) remaining, Raft is said to be “crash fault tolerant” (CFT). In the Fabric Operatons Console, users have the ability to select a single node ordering service or a five node ordering service, though it is possible to add or remove nodes from an ordering service and from channels later on. Similarly, it is possible for either one organization or multiple organizations to manage the ordering service and contribute nodes.
 
-For more information about the ordering service, see <a href="https://hyperledger-fabric.readthedocs.io/en/latest/orderer/ordering_service.html" target="_blank">the Ordering Service <img src="images/external.png" width="10" alt="external" valign="middle"></a>.
+For more information about the ordering service, see <a href="https://hyperledger-fabric.readthedocs.io/en/latest/orderer/ordering_service.html" target="_blank">the Ordering Service <img src="../images/external.png" width="10" alt="external" valign="middle"></a>.
 
 ## Channels
 
@@ -52,7 +57,7 @@ As discussed in the section on [peers](#peers), data in a fabric network is stor
 
 The Fabric Operatons Console allows channels to be easily created and managed. Channel configuration updates allow the members of a channel to edit channel parameters to fit their use case. For example, more members can be added to a channel, or the capabilities of a channel can be changed. Because changes to a channel must be approved by channel members, the Fabric Operatons Console provides a mechanism for the collection of necessary signatures.
 
-For more information about channels and how to use them, see the <a href="https://hyperledger-fabric.readthedocs.io/en/latest/channels.html" target="_blank">Hyperledger Fabric documentation <img src="images/external.png" width="10" alt="external" valign="middle"></a>.
+For more information about channels and how to use them, see the <a href="https://hyperledger-fabric.readthedocs.io/en/latest/channels.html" target="_blank">Hyperledger Fabric documentation <img src="../images/external.png" width="10" alt="external" valign="middle"></a>.
 
 ## Smart contracts
 
@@ -62,16 +67,16 @@ The same need exists in fabric networks. The industry term for these business mo
 
 Where contracts in the business world are signed and filed with law firms, smart contracts are installed on peers and deployed on a channel.
 
-See <a href="https://hyperledger-fabric.readthedocs.io/en/latest/smartcontract/smartcontract.html" target="_blank">smart contracts <img src="images/external.png" width="10" alt="external" valign="middle"></a> for more information.
+See <a href="https://hyperledger-fabric.readthedocs.io/en/latest/smartcontract/smartcontract.html" target="_blank">smart contracts <img src="../images/external.png" width="10" alt="external" valign="middle"></a> for more information.
 
 ## Applications
 
 Client applications in a Fabric-based network like Fabric Operatons Console leverage underlying infrastructures such as APIs, SDKs, and smart contracts to allow client interactions (invokes and queries) at a higher level of abstraction.
 
-For a look at how applications interact with a network based on Fabric, check out the <a href="https://hyperledger-fabric.readthedocs.io/en/latest/developapps/developing_applications.html" target="_blank">developing applications <img src="images/external.png" width="10" alt="external" valign="middle"></a> topic in the Hyperledger Fabric documentation. 
+For a look at how applications interact with a network based on Fabric, check out the <a href="https://hyperledger-fabric.readthedocs.io/en/latest/developapps/developing_applications.html" target="_blank">developing applications <img src="../images/external.png" width="10" alt="external" valign="middle"></a> topic in the Hyperledger Fabric documentation. 
 
 ## An example network
 
 **Figure 1** depicts an example of a deployed fabric network that consists of two organizations, Org A, and Org B. Each organization has their own Certificate Authority that is responsible for distributing cryptographic identity material. There is also an ordering service with five Raft nodes that defines policies and network participants. Lastly, client applications in possession of a properly signed x509 certificate can send calls to their associated peers on the network.
 
-<p style="text-align:center"><img src ="images/console_network_2-01.png" alt="Figure 1. An example fabric network with two members that leverage channels to isolate data" align="center"><br><em>Figure 1. An example fabric network with two members that leverage channels to isolate data.</em></p>
+<p style="text-align:center"><img src="../images/console_network_2-01.png" alt="Figure 1. An example fabric network with two members that leverage channels to isolate data" align="center"><br><em>Figure 1. An example fabric network with two members that leverage channels to isolate data.</em></p>

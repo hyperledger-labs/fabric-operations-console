@@ -1,10 +1,15 @@
 ---
+layout: default
+title: Using certificates from an external CA with your peer or ordering service
+parent: Advanced deployment options
+nav_order: 5
+description: "Using certificates from an external CA with your peer or ordering service in Fabric Operations Console"
 keywords: external CA, ordering service, import msp, organization msp
 ---
 
 ## Using certificates from an external CA with your peer or ordering service
 
-Instead of using a Fabric Operatons Console Certificate Authority as your peer or ordering service's CA, you can use certificates from an external CA, one that is not hosted by Hyperledger Fabric. To use an external CA, the CA needs to issue certificates in <a href="https://hyperledger-fabric.readthedocs.io/en/release-2.2/identity/identity.html#digital-certificates" target="_blank">X.509 <img src="images/external.png" width="10" alt="external" valign="middle"></a> format.
+Instead of using a Fabric Operatons Console Certificate Authority as your peer or ordering service's CA, you can use certificates from an external CA, one that is not hosted by Hyperledger Fabric. To use an external CA, the CA needs to issue certificates in <a href="https://hyperledger-fabric.readthedocs.io/en/release-2.2/identity/identity.html#digital-certificates" target="_blank">X.509 <img src="../images/external.png" width="10" alt="external" valign="middle"></a> format.
 
 ### Before you begin
 
@@ -12,14 +17,14 @@ Instead of using a Fabric Operatons Console Certificate Authority as your peer o
 **Note:** The certificates inside the files can be in either `PEM` format or `base64 encoded` format.
 	* **Peer or ordering node identity certificate** This is the signing certificate from your external CA that the peer or ordering node will use. This certificate must contain the Organizational Unit (OU) attribute "peer" or "orderer" depending on the type of node it is used for.
 	* **Peer or ordering node identity private key** This is your private key corresponding to the signed certificate from your third-party CA that this peer or ordering node will use.
-	* **Peer or ordering service TLS CA certificate** This is the public signing certificate created by your external TLS CA that will be used by this peer or ordering node. The certificate needs to contain the x.509 Subject alternative name (SAN) for the peer or ordering nodes. If you are using the <a href="https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/clientcli.html" target="_blank">Fabric CA client <img src="images/external.png" width="10" alt="external" valign="middle"></a> to enroll the identity, you specify the SAN by passing the `--csr.hosts` parameter on the `enroll` command. If the host name is not yet known, you can specify a wild card with the domain name, for example: `--csr.hosts '*.ibpv2-cluster.us-south.containers.appdomain.cloud,127.0.0.1'`.
+	* **Peer or ordering service TLS CA certificate** This is the public signing certificate created by your external TLS CA that will be used by this peer or ordering node. The certificate needs to contain the x.509 Subject alternative name (SAN) for the peer or ordering nodes. If you are using the <a href="https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/clientcli.html" target="_blank">Fabric CA client <img src="../images/external.png" width="10" alt="external" valign="middle"></a> to enroll the identity, you specify the SAN by passing the `--csr.hosts` parameter on the `enroll` command. If the host name is not yet known, you can specify a wild card with the domain name, for example: `--csr.hosts '*.fabricv2-cluster.us-south.containers.appdomain.cloud,127.0.0.1'`.
 	* **Peer or ordering service TLS CA private key** This is the private key corresponding to the signed certificate from your TLS CA that will be used by this peer or ordering node for secure communications with other members on the network.
 	* **CA root certificate** (Optional) This is the root certificate of your external CA. You can also provide an intermediate CA root certificate or both.
 	* **TLS CA root certificate** (Optional) This is the root certificate of your external TLS CA. You must provide either a TLS CA root certificate or an intermediate TLS CA certificate, you can also provide both.
 	* **Intermediate CA TLS certificate**: (Optional) This is the TLS certificate if your TLS certificate is issued by an intermediate TLS CA. Upload the intermediate TLS CA certificate. You must provide either a TLS CA root certificate or an intermediate TLS CA certificate, you may also provide both.
 	* **Peer or ordering service admin identity certificate** This is the signing certificate from your external CA that the admin identity of this peer or ordering service will use. This certificate is also known as your peer or ordering service admin identity key. This certificate must contain the OU attribute "admin".
 	* **Peer or ordering service admin identity private key** This is the private key corresponding to the signed certificate from your external CA that the admin identity of this peer or ordering service will use.
-	* **Peer or ordering service organization MSP definition** You must manually generate this file by using instructions that are provided in [manually building a MSP JSON file](console-organizations.md#manually-building-a-msp-json-file).
+	* **Peer or ordering service organization MSP definition** You must manually generate this file by using instructions that are provided in [manually building a MSP JSON file](../using_console/console-organizations.md#manually-building-a-msp-json-file).
 
 2. Import the generated peer or ordering service organization MSP definition file into the console, by clicking the **Organizations** tab followed by **import MSP definition**.
 
@@ -36,7 +41,7 @@ Replace:
 - `identity.1.pem` with the name of the PKCS #1 private key `.PEM` file.
 - `identity.8.pem` with the name that you want to give your PKCS #8 private key `.PEM` file.
 
-Now the private key can be used by the console. If you plan to include it in an [organization MSP](console-organizations.md#manually-building-a-msp-json-file) file, it needs to be encoded in base64 format.
+Now the private key can be used by the console. If you plan to include it in an [organization MSP](../using_console/console-organizations.md#manually-building-a-msp-json-file) file, it needs to be encoded in base64 format.
 
 ### Option 1: Create a new peer or single-node ordering service using certificates from an external CA
 
@@ -186,7 +191,7 @@ After you create the `JSON` file with all of the certificates for the ordering n
 4. In **Number of ordering nodes**, select **Five ordering nodes**. Then select **External Certificate Authority configuration** and click **Next**.
 5. Click **Add file** to upload the `JSON` file that contains all of the certificates.
 6. Select the **Organization MSP** definition that you imported.
-7.  On the next panel, you have the opportunity to configure resource allocation for the nodes. The selections that you make here are applied to all five ordering nodes. If you want to learn more about how to allocate resources to your node, see this topic on [allocating resources](console-advanced-deployment.md#allocating-resources).
+7.  On the next panel, you have the opportunity to configure resource allocation for the nodes. The selections that you make here are applied to all five ordering nodes. If you want to learn more about how to allocate resources to your node, see this topic on [allocating resources](../using_console/console-advanced-deployment.md#allocating-resources).
 8. Review the summary and click **Add ordering service**.
 9. After you have created the ordering service, you can upload the orderer admin identity to the Fabric Operatons Console. On the **Wallet** tab, click **Add identity**:
   - In the **Name** field, enter an identity name that is used for your reference only.
@@ -198,6 +203,6 @@ After you create the `JSON` file with all of the certificates for the ordering n
 #### What's next
 
 You have gathered all of your peer or ordering service certificates from your third-party CA, created their corresponding organization MSP definition and created a peer or ordering service. If you are following along in the tutorials, you can return to the next step.
-- If you created the peer node, the next step is to [create the node that orders transactions](console-build-network.md#step-two-create-the-ordering-service).
-- If you created the node to join an existing network, the next step is to [add your organization to list of organizations that can transact](console-join-network.md#join-the-consortium-hosted-by-the-ordering-service).
-- If you created an ordering service, the next step is to [create a channel](console-build-network.md#step-four-create-a-channel).
+- If you created the peer node, the next step is to [create the node that orders transactions](../getting_started/console-build-network.md#step-two-create-the-ordering-service).
+- If you created the node to join an existing network, the next step is to [add your organization to list of organizations that can transact](../getting_started/console-join-network.md#join-the-consortium-hosted-by-the-ordering-service).
+- If you created an ordering service, the next step is to [create a channel](../getting_started/console-build-network.md#step-four-create-a-channel).
