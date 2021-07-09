@@ -21,7 +21,7 @@ import StitchApi from '../rest/StitchApi';
 import { VALIDATION_ERRORS } from '../rest/ValidatedRestApi';
 const semver = require('semver');
 const JSZip = require('jszip');
-const decompress = require('decompress');
+const decompressTargz = require('decompress-targz');
 
 const Buffer = window.Buffer || require('buffer').Buffer;
 
@@ -1295,7 +1295,7 @@ const Helper = {
 	async readLocalChaincodePackageFile(file) {
 		const buffer = await Helper.readLocalBinaryFile(file, CHAINCODE_LIMIT);
 		const uint8 = new Uint8Array(buffer);
-		const files = await decompress(buffer);
+		const files = await decompressTargz()(buffer);
 		let pkg_id = null;
 		let pkg_version = null;
 		let metadata = null;
