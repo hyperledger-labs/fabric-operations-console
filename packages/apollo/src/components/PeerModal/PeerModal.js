@@ -82,6 +82,7 @@ class PeerModal extends React.Component {
 			new_log_spec: null,
 		});
 		this.identities = null;
+		this.tls_identities = [];
 		this.initData();
 	}
 
@@ -97,7 +98,9 @@ class PeerModal extends React.Component {
 
 	getIdentities() {
 		let root_certs = _.get(this.props, 'peer.msp.ca.root_certs');
+		let tls_root_certs = _.get(this.props, 'peer.msp.tlsca.root_certs');
 		let matched_identities = [];
+		let matched_tls_identities = [];
 		IdentityApi.getIdentities()
 			.then(async identities => {
 				if (identities.length) {
@@ -110,8 +113,18 @@ class PeerModal extends React.Component {
 						if (match) {
 							matched_identities.push(l_identity);
 						}
+
+						let tls_opts = {
+							certificate_b64pem: l_identity.cert,
+							root_certs_b64pems: tls_root_certs,
+						};
+						let tls_match = await StitchApi.isIdentityFromRootCert(tls_opts);
+						if (tls_match) {
+							matched_tls_identities.push(l_identity);
+						}
 					}
 					this.identities = matched_identities;
+					this.tls_identities = matched_tls_identities;
 					const identity = this.getDefaultIdentity();
 					this.props.updateState(SCOPE, {
 						identity,
@@ -1366,13 +1379,13 @@ class PeerModal extends React.Component {
 		});
 		let log_level_identity = null;
 		let log_spec = null;
-		for (let i = 0; i < this.identities.length && !log_level_identity; i++) {
+		for (let i = 0; i < this.tls_identities.length && !log_level_identity; i++) {
 			const match = await StitchApi.isIdentityFromRootCert({
-				certificate_b64pem: this.identities[i].cert,
+				certificate_b64pem: this.tls_identities[i].cert,
 				root_certs_b64pems: _.get(this.props.peer, 'msp.tlsca.root_certs'),
 			});
 			if (match) {
-				log_level_identity = this.identities[i];
+				log_level_identity = this.tls_identities[i];
 			}
 		}
 		if (log_level_identity) {
