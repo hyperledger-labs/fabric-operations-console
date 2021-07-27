@@ -84,10 +84,10 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Get deployer data on a component - via a deployer request
 	//--------------------------------------------------
-	app.get('/api/saas/v1/components/:athena_component_id', t.middleware.verify_view_action_session, (req, res) => {
+	app.get('/api/saas/v1/components/:athena_component_id', t.middleware.verify_view_action_session_dep, (req, res) => {
 		get_comp_data(req, res);
 	});
-	app.get('/ak/api/v1/kubernetes/components/:athena_component_id', t.middleware.verify_view_action_ak, (req, res) => {
+	app.get('/ak/api/v1/kubernetes/components/:athena_component_id', t.middleware.verify_view_action_ak_dep, (req, res) => {
 		get_comp_data(req, res);
 	});
 

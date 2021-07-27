@@ -110,6 +110,7 @@ module.exports = function (logger, ev, t) {
 			},
 			MAX_COMPONENTS: ev.MAX_COMPONENTS,					// 0 is valid i guess, don't make it a question mark
 			DISABLED_COMPACTION: ev.DISABLED_COMPACTION, 		// false is valid, don't make this a question mark
+			IMPORT_ONLY: ev.IMPORT_ONLY, // false is valid, don't make this a question mark
 		};
 		return t.misc.sortItOut(ret);
 	};

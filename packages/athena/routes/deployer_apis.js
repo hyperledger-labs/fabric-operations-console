@@ -218,10 +218,10 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Get all k8s deployments (aka get all components) - (only returns provisioned components, will not list imported components)
 	//--------------------------------------------------
-	app.get('/api/saas/v[123]/components', t.middleware.verify_view_action_session, (req, res) => {
+	app.get('/api/saas/v[123]/components', t.middleware.verify_view_action_session_dep, (req, res) => {
 		get_all_components(req, res);
 	});
-	app.get('/ak/api/v[123]/kubernetes/components', t.middleware.verify_view_action_ak, (req, res) => {
+	app.get('/ak/api/v[123]/kubernetes/components', t.middleware.verify_view_action_ak_dep, (req, res) => {
 		get_all_components(req, res);
 	});
 
@@ -246,7 +246,7 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Send/submit genesis or config block to an orderer node (aka finish raft append)
 	//--------------------------------------------------
-	app.put('/api/saas/v[123]/components/:athena_component_id/config', t.middleware.verify_view_action_session, (req, res) => {
+	app.put('/api/saas/v[123]/components/:athena_component_id/config', t.middleware.verify_view_action_session_dep, (req, res) => {
 		t.deployer.send_config_block(req, (errObj, ret) => {
 			if (errObj) {
 				res.status(t.ot_misc.get_code(errObj)).json(errObj);
@@ -256,7 +256,7 @@ module.exports = (logger, ev, t) => {
 			}
 		});
 	});
-	app.put('/ak/api/v[123]/kubernetes/components/:athena_component_id/config', t.middleware.verify_view_action_ak, (req, res) => {
+	app.put('/ak/api/v[123]/kubernetes/components/:athena_component_id/config', t.middleware.verify_view_action_ak_dep, (req, res) => {
 		t.deployer.send_config_block(req, (errObj, ret) => {
 			if (errObj) {
 				res.status(t.ot_misc.get_code(errObj)).json(errObj);
@@ -270,7 +270,7 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Proxy mustgather file download through to deployer
 	//--------------------------------------------------
-	app.get('/deployer/api/v3/instance/:siid/mustgather/download', (req, res) => {
+	app.get('/deployer/api/v3/instance/:siid/mustgather/download', t.middleware.verify_create_action_session, (req, res) => {
 		const downloadUrl = `${encodeURI(t.misc.format_url(ev.DEPLOYER_URL))}/api/v3/instance/${req.params.siid}/mustgather/download`;
 		t.request.get(downloadUrl).pipe(res);
 	});
@@ -300,7 +300,7 @@ module.exports = (logger, ev, t) => {
 		}
 		return proxy(req, res);
 	});
-	app.get('/ak/deployer/api/v*/*', t.middleware.verify_view_action_ak, (req, res) => {
+	app.get('/ak/deployer/api/v*/*', t.middleware.verify_view_action_ak_dep, (req, res) => {
 		req.path2use = req.originalUrl.substring(12);								// strip off the "/ak/deployer" part
 		req._key_src = req.path2use;
 		req._key = t.misc.hash_str(req._key_src);
@@ -448,10 +448,10 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Edit admin certs
 	//--------------------------------------------------
-	app.put('/api/saas/v[123]/components/:athena_component_id/certs', t.middleware.verify_manage_action_session, (req, res) => {
+	app.put('/api/saas/v[123]/components/:athena_component_id/certs', t.middleware.verify_manage_action_session_dep, (req, res) => {
 		edit_admin_certs(req, res);
 	});
-	app.put('/ak/api/v[123]/kubernetes/components/:athena_component_id/certs', t.middleware.verify_manage_action_ak, (req, res) => {
+	app.put('/ak/api/v[123]/kubernetes/components/:athena_component_id/certs', t.middleware.verify_manage_action_ak_dep, (req, res) => {
 		edit_admin_certs(req, res);
 	});
 
@@ -475,10 +475,10 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Get fabric versions supported by deployer
 	//--------------------------------------------------
-	app.get('/api/saas/v[123]/fabric/versions', t.middleware.verify_view_action_session, (req, res) => {
+	app.get('/api/saas/v[123]/fabric/versions', t.middleware.verify_view_action_session_dep, (req, res) => {
 		get_fab_versions(req, res);
 	});
-	app.get('/ak/api/v[123]/kubernetes/fabric/versions', t.middleware.verify_view_action_ak, (req, res) => {
+	app.get('/ak/api/v[123]/kubernetes/fabric/versions', t.middleware.verify_view_action_ak_dep, (req, res) => {
 		get_fab_versions(req, res);
 	});
 
@@ -512,10 +512,10 @@ module.exports = (logger, ev, t) => {
 		'/ak/api/v[3]/kubernetes/components/fabric-orderer/:athena_component_id/actions',
 		'/ak/api/v[3]/kubernetes/components/fabric-peer/:athena_component_id/actions',
 	];
-	app.post(action_urls_ses, t.middleware.verify_manage_action_session, (req, res) => {
+	app.post(action_urls_ses, t.middleware.verify_manage_action_session_dep, (req, res) => {
 		perform_action(req, res);
 	});
-	app.post(action_urls_ak, t.middleware.verify_manage_action_ak, (req, res) => {
+	app.post(action_urls_ak, t.middleware.verify_manage_action_ak_dep, (req, res) => {
 		perform_action(req, res);
 	});
 

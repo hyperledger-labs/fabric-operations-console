@@ -1,16 +1,15 @@
 /*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * IBM Confidential
+ * OCO Source Materials
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * 5737-J29, 5737-B18
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
+ * (C) Copyright IBM Corp. 2018  All Rights Reserved.
+ *
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has been
+ * deposited with the U.S. Copyright Office.
+ */
 //------------------------------------------------------------
 // middleware.test.js - test for middleware
 //------------------------------------------------------------
@@ -43,6 +42,9 @@ const filename = tools.path.basename(__filename);
 const path_to_current_file = tools.path.join(__dirname + '/' + filename);
 const POS_ALLOW = 2;
 const POS_PERMIT = 3;
+
+const POS_ALLOW_b = 3;
+const POS_PERMIT_b = 4;
 
 const req = {
 	headers: {
@@ -107,7 +109,7 @@ describe('Middleware', () => {
 						{
 							itStatement: 'should call next - "user.name" equals "ev.SUPPORT_KEY" and the support key is valid test_id=phjzhr',
 							expectBlock: (done) => {
-								middleware['verify_create_action_ak'][POS_ALLOW](req, res, nextSpy);
+								middleware['verify_create_action_ak'][POS_ALLOW_b](req, res, nextSpy);
 								expect(nextSpy.called).to.be.true;
 								nextSpy.resetHistory();
 								done();
@@ -117,7 +119,7 @@ describe('Middleware', () => {
 							itStatement: 'should call forbidden - "user.name" equals "ev.SUPPORT_KEY" but "validSupportKey" is unauthorized test_id=ykptsq',
 							expectBlock: (done) => {
 								req.actions = ['abc'];
-								middleware['verify_create_action_ak'][POS_ALLOW](req, res, nextSpy);
+								middleware['verify_create_action_ak'][POS_ALLOW_b](req, res, nextSpy);
 								expect(nextSpy.called).to.be.false;
 								expect(tools.stubs.forbiddenSpy.called).to.be.true;
 								tools.stubs.forbiddenSpy.resetHistory();
@@ -134,7 +136,7 @@ describe('Middleware', () => {
 									'admin': {}
 								};
 								common.ev.SUPPORT_KEY = 'this is not a valid support key';
-								middleware['verify_create_action_ak'][POS_ALLOW](req, res, nextSpy);
+								middleware['verify_create_action_ak'][POS_ALLOW_b](req, res, nextSpy);
 								expect(tools.stubs.unauthorizedSpy.called).to.be.true;
 								expect(nextSpy.called).to.be.false;
 								tools.stubs.unauthorizedSpy.resetHistory();
@@ -160,7 +162,7 @@ describe('Middleware', () => {
 								};
 								req.actions = null;
 								common.ev.SUPPORT_KEY = 'this is not a valid support key';
-								middleware['verify_create_action_ak'][POS_ALLOW](req, res, nextSpy);
+								middleware['verify_create_action_ak'][POS_ALLOW_b](req, res, nextSpy);
 								expect(nextSpy.called).to.be.true;
 								tools.stubs.unauthorizedSpy.resetHistory();
 								nextSpy.resetHistory();
@@ -187,7 +189,7 @@ describe('Middleware', () => {
 								};
 								req.actions = null;
 								common.ev.SUPPORT_KEY = 'this is not a valid support key';
-								middleware['verify_create_action_ak'][POS_ALLOW](req, res, nextSpy);
+								middleware['verify_create_action_ak'][POS_ALLOW_b](req, res, nextSpy);
 								expect(tools.stubs.unauthorizedSpy.called).to.be.true;
 								expect(nextSpy.called).to.be.false;
 								tools.stubs.unauthorizedSpy.resetHistory();
@@ -215,7 +217,7 @@ describe('Middleware', () => {
 								};
 								req.actions = null;
 								common.ev.SUPPORT_KEY = 'this is not a valid support key';
-								middleware['verify_create_action_ak'][POS_ALLOW](req, res, nextSpy);
+								middleware['verify_create_action_ak'][POS_ALLOW_b](req, res, nextSpy);
 								expect(tools.stubs.unauthorizedSpy.called).to.be.false;
 								expect(nextSpy.called).to.be.true;
 								tools.stubs.unauthorizedSpy.resetHistory();
@@ -238,7 +240,7 @@ describe('Middleware', () => {
 								const store_actions = JSON.parse(JSON.stringify(req.actions));
 								common.ev.SUPPORT_KEY = 'this is not a valid support key';
 								req.actions = null;
-								middleware['verify_create_action_ak'][POS_ALLOW](req, res, nextSpy);
+								middleware['verify_create_action_ak'][POS_ALLOW_b](req, res, nextSpy);
 								expect(nextSpy.called).to.be.true;
 								nextSpy.resetHistory();
 								common.ev.SUPPORT_KEY = store_support_key;
@@ -256,7 +258,7 @@ describe('Middleware', () => {
 							expectBlock: (done) => {
 								const store_support_key = common.ev.SUPPORT_KEY;
 								common.ev.SUPPORT_KEY = 'this is not a valid support key';
-								middleware['verify_create_action_ak'][POS_ALLOW](req, res, nextSpy);
+								middleware['verify_create_action_ak'][POS_ALLOW_b](req, res, nextSpy);
 								expect(nextSpy.called).to.be.false;
 								nextSpy.resetHistory();
 								common.ev.SUPPORT_KEY = store_support_key;
@@ -273,7 +275,7 @@ describe('Middleware', () => {
 							expectBlock: (done) => {
 								const store_support_key = common.ev.SUPPORT_KEY;
 								common.ev.SUPPORT_KEY = 'this is not a valid support key';
-								middleware['verify_create_action_ak'][POS_ALLOW](req, res, nextSpy);
+								middleware['verify_create_action_ak'][POS_ALLOW_b](req, res, nextSpy);
 								expect(tools.stubs.unauthorizedSpy.called).to.be.true;
 								expect(nextSpy.called).to.be.false;
 								tools.stubs.unauthorizedSpy.resetHistory();
@@ -293,7 +295,7 @@ describe('Middleware', () => {
 							expectBlock: (done) => {
 								const store_support_key = common.ev.SUPPORT_KEY;
 								common.ev.SUPPORT_KEY = 'this is not a valid support key';
-								middleware['verify_create_action_ak'][POS_ALLOW](req, res, nextSpy);
+								middleware['verify_create_action_ak'][POS_ALLOW_b](req, res, nextSpy);
 								expect(tools.stubs.unauthorizedSpy.called).to.be.true;
 								expect(nextSpy.called).to.be.false;
 								tools.stubs.unauthorizedSpy.resetHistory();
@@ -313,7 +315,7 @@ describe('Middleware', () => {
 							expectBlock: (done) => {
 								const store_support_key = common.ev.SUPPORT_KEY;
 								common.ev.SUPPORT_KEY = 'this is not a valid support key';
-								middleware['verify_create_action_ak'][POS_ALLOW](req, res, nextSpy);
+								middleware['verify_create_action_ak'][POS_ALLOW_b](req, res, nextSpy);
 								expect(tools.stubs.unauthorizedSpy.called).to.be.true;
 								expect(nextSpy.called).to.be.false;
 								tools.stubs.unauthorizedSpy.resetHistory();
@@ -381,7 +383,7 @@ describe('Middleware', () => {
 									}
 								};
 								req.headers.authorization = 'Basic ' + tools.misc.b64('ADMIN:random');	// all caps to test case insensitivity
-								middleware['verify_create_action_ak'][POS_ALLOW](req, res, nextSpy);
+								middleware['verify_create_action_ak'][POS_ALLOW_b](req, res, nextSpy);
 								expect(nextSpy.called).to.be.true;
 								nextSpy.resetHistory();
 								tools.stubs.verify_secret.restore();
@@ -395,48 +397,7 @@ describe('Middleware', () => {
 				}
 			]
 		},
-		// run array of functions through a generic test
-		{
-			suiteDescribe: 'run array of functions through a generic test',
-			mainDescribe: 'Run run array of functions through a generic test',
-			testData: [
-				{
-					arrayOfInfoToTest: [
-						{
-							itStatement: 'should run test for each similar middleware function described in the array test_id=vnhoas',
-							expectBlock: (done) => {
-								const func_names_and_indexes = middleware_objects.array_of_similar_functions_to_run_simultaneously;
-								test_next_spy_calls(func_names_and_indexes);
 
-								function test_next_spy_calls(func) {
-									let actions_store;
-									for (const i in func) {
-										if (func[i].remove_actions) {
-											actions_store = JSON.parse(JSON.stringify(req.actions));
-											req.actions = null;
-										}
-										middleware[func[i].name][func[i].index](req, res, nextSpy);
-										if (func[i].not_called) {
-											expect(nextSpy.called).to.be.false;
-										} else {
-											expect(nextSpy.called).to.be.true;
-										}
-										nextSpy.resetHistory();
-										if (func[i].auth) {
-											tools.stubs.isAuthorized.restore();
-										}
-										if (func[i].remove_actions) {
-											req.actions = actions_store;
-										}
-									}
-									done();
-								}
-							}
-						},
-					]
-				}
-			]
-		},
 		// create saas components
 		{
 			suiteDescribe: 'create saas components',
@@ -464,7 +425,7 @@ describe('Middleware', () => {
 							expectBlock: (done) => {
 								const current_authorization = req.headers.authorization;
 								req.headers.authorization = 'bearer test';
-								middleware.verify_create_action_ak[POS_ALLOW](req, res, nextSpy);
+								middleware.verify_create_action_ak[POS_ALLOW_b](req, res, nextSpy);
 								expect(nextSpy.called).to.be.true;
 								nextSpy.resetHistory();
 								tools.stubs.isAuthorized.restore();
@@ -478,7 +439,7 @@ describe('Middleware', () => {
 							expectBlock: (done) => {
 								const current_authorization = req.headers.authorization;
 								req.headers.authorization = 'not-good-enough';
-								middleware.verify_create_action_ak[POS_ALLOW](req, res, nextSpy);
+								middleware.verify_create_action_ak[POS_ALLOW_b](req, res, nextSpy);
 								expect(nextSpy.called).to.be.false;
 								nextSpy.resetHistory();
 								req.headers.authorization = current_authorization;
@@ -490,7 +451,7 @@ describe('Middleware', () => {
 							expectBlock: (done) => {
 								const current_support_password = common.ev.SUPPORT_PASSWORD;
 								common.ev.SUPPORT_PASSWORD = 'not good enough';
-								middleware.verify_create_action_ak[POS_ALLOW](req, res, nextSpy);
+								middleware.verify_create_action_ak[POS_ALLOW_b](req, res, nextSpy);
 								expect(nextSpy.called).to.be.false;
 								nextSpy.resetHistory();
 								common.ev.SUPPORT_PASSWORD = current_support_password;
@@ -505,7 +466,7 @@ describe('Middleware', () => {
 							expectBlock: (done) => {
 								const current_support_password = common.ev.SUPPORT_PASSWORD;
 								common.ev.SUPPORT_PASSWORD = 'not good enough';
-								middleware.verify_create_action_ak[POS_ALLOW](req, res, nextSpy);
+								middleware.verify_create_action_ak[POS_ALLOW_b](req, res, nextSpy);
 								expect(nextSpy.called).to.be.false;
 								expect(tools.stubs.unauthorizedSpy.called).to.be.true;
 								nextSpy.resetHistory();
@@ -523,7 +484,7 @@ describe('Middleware', () => {
 							expectBlock: (done) => {
 								const current_support_password = common.ev.SUPPORT_PASSWORD;
 								common.ev.SUPPORT_PASSWORD = 'not good enough';
-								middleware.verify_create_action_ak[POS_ALLOW](req, res, nextSpy);
+								middleware.verify_create_action_ak[POS_ALLOW_b](req, res, nextSpy);
 								expect(nextSpy.called).to.be.false;
 								expect(tools.stubs.unauthorizedSpy.called).to.be.true;
 								nextSpy.resetHistory();
@@ -543,7 +504,7 @@ describe('Middleware', () => {
 							expectBlock: (done) => {
 								const current_support_password = common.ev.SUPPORT_PASSWORD;
 								common.ev.SUPPORT_PASSWORD = 'not good enough';
-								middleware.verify_create_action_ak[POS_ALLOW](req, res, nextSpy);
+								middleware.verify_create_action_ak[POS_ALLOW_b](req, res, nextSpy);
 								expect(nextSpy.called).to.be.false;
 								nextSpy.resetHistory();
 								common.ev.SUPPORT_PASSWORD = current_support_password;

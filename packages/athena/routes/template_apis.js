@@ -31,7 +31,7 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Get all templates
 	//--------------------------------------------------
-	app.get('/api/v[123]/templates', t.middleware.verify_view_action_session, (req, res) => {
+	app.get('/api/v[123]/templates', t.middleware.verify_view_action_session_dep, (req, res) => {
 		t.template.get_all_templates(req, (errObj, ret) => {
 			if (errObj) {
 				res.status(t.ot_misc.get_code(errObj)).json(errObj);
@@ -40,7 +40,7 @@ module.exports = (logger, ev, t) => {
 			}
 		});
 	});
-	app.get('/ak/api/v[123]/templates', t.middleware.verify_view_action_ak, (req, res) => {
+	app.get('/ak/api/v[123]/templates', t.middleware.verify_view_action_ak_dep, (req, res) => {
 		t.template.get_all_templates(req, (errObj, ret) => {
 			if (errObj) {
 				res.status(t.ot_misc.get_code(errObj)).json(errObj);

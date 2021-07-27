@@ -35,12 +35,12 @@ module.exports = function (logger, ev, t) {
 	exports.public = t.event_tracker.trackViaIntercept;
 
 	// create saas components
-	exports.verify_create_action_session = [eTrack, needCreateAction, checkAuthentication, permitAction];
-	exports.verify_create_action_ak = [eTrack, needCreateAction, allowAkToDoAction];
+	exports.verify_create_action_session = [eTrack, isDeployerConfigured, needCreateAction, checkAuthentication, permitAction];
+	exports.verify_create_action_ak = [eTrack, isDeployerConfigured, needCreateAction, allowAkToDoAction];
 
 	// delete saas components
-	exports.verify_delete_action_session = [eTrack, needDeleteAction, checkAuthentication, permitAction];
-	exports.verify_delete_action_ak = [eTrack, needDeleteAction, allowAkToDoAction];
+	exports.verify_delete_action_session = [eTrack, isDeployerConfigured, needDeleteAction, checkAuthentication, permitAction];
+	exports.verify_delete_action_ak = [eTrack, isDeployerConfigured, needDeleteAction, allowAkToDoAction];
 
 	// import component
 	exports.verify_import_action_session = [eTrack, needImportAction, checkAuthentication, permitAction];
@@ -53,6 +53,8 @@ module.exports = function (logger, ev, t) {
 	// manage a component
 	exports.verify_manage_action_session = [eTrack, needManageAction, checkAuthentication, permitAction];
 	exports.verify_manage_action_ak = [eTrack, needManageAction, allowAkToDoAction];
+	exports.verify_manage_action_session_dep = [eTrack, isDeployerConfigured, needManageAction, checkAuthentication, permitAction];
+	exports.verify_manage_action_ak_dep = [eTrack, isDeployerConfigured, needManageAction, allowAkToDoAction];
 
 	// restart athena
 	exports.verify_restart_action_session = [eTrack, needRestartAction, checkAuthentication, permitAction];
@@ -65,6 +67,8 @@ module.exports = function (logger, ev, t) {
 	// view ui
 	exports.verify_view_action_session = [eTrack, needViewAction, checkAuthentication, permitAction];
 	exports.verify_view_action_ak = [eTrack, needViewAction, allowAkToDoAction];
+	exports.verify_view_action_session_dep = [eTrack, isDeployerConfigured, needViewAction, checkAuthentication, permitAction];
+	exports.verify_view_action_ak_dep = [eTrack, isDeployerConfigured, needViewAction, allowAkToDoAction];
 
 	// change athena settings
 	exports.verify_settings_action_session = [eTrack, needSettingsAction, checkAuthentication, permitAction];
@@ -164,6 +168,22 @@ module.exports = function (logger, ev, t) {
 	//----------------------------------------------------------------------------------------------------------------------
 	// Actual Middleware
 	//----------------------------------------------------------------------------------------------------------------------
+
+	//--------------------------------------------------
+	// Check if deployer setting is set (this disables apis that need deployer)
+	//--------------------------------------------------
+	function isDeployerConfigured(req, res, next) {
+		if (ev.IMPORT_ONLY) {
+			logger.debug('[middle] this api requires deployer, but the "import_only_enabled" setting indicates there is no deployer.');
+			const resp = {
+				error: 'api is not available',
+				details: 'this api is not available to Console\'s without the "deployer" counterpart.'
+			};
+			return res.status(400).json(resp);
+		} else {
+			return next();
+		}
+	}
 
 	//--------------------------------------------------
 	// Check basic authorization/token for valid api key - middleware

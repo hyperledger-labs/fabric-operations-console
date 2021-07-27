@@ -208,6 +208,7 @@ const ev = {
 	HEALTHCHECK_ROUTE: '/api/v3/healthcheck',
 	LDAP: {},
 	MAX_COMPONENTS: 250,
+	IMPORT_ONLY: false
 };
 
 ev.ROLES_TO_ACTIONS = {};
