@@ -75,6 +75,20 @@ describe('Deployer APIs', () => {
 		tools.middleware.verify_manage_action_ak = (req, res, next) => {
 			return next();
 		};
+
+		tools.middleware.verify_manage_action_session_dep = (req, res, next) => {
+			return next();
+		};
+		tools.middleware.verify_manage_action_ak_dep = (req, res, next) => {
+			return next();
+		};
+		tools.middleware.verify_view_action_session_dep = (req, res, next) => {
+			return next();
+		};
+		tools.middleware.verify_view_action_ak_dep = (req, res, next) => {
+			return next();
+		};
+
 		deployer_lib = tools.deployer;
 		tools.stubs.record_deployer_operation = sinon.stub(deployer_lib, 'record_deployer_operation').callsArgWith(4, null, { prop: 'something here' });
 		tools.stubs.send_actions = sinon.stub(deployer_lib, 'send_actions').callsArgWith(1, null);

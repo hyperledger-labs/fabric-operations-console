@@ -261,10 +261,10 @@ module.exports = function (logger, ev, t) {
 	//--------------------------------------------------
 	// Bulk delete components from db
 	//--------------------------------------------------
-	app.delete('/api/v[123]/components/tags/:tag', t.middleware.verify_delete_action_session, (req, res) => {
+	app.delete('/api/v[123]/components/tags/:tag', t.middleware.verify_remove_action_session, (req, res) => {
 		bulk_delete_components(req, res);
 	});
-	app.delete('/ak/api/v[123]/components/tags/:tag', t.middleware.verify_delete_action_ak, (req, res) => {
+	app.delete('/ak/api/v[123]/components/tags/:tag', t.middleware.verify_remove_action_ak, (req, res) => {
 		bulk_delete_components(req, res);
 	});
 

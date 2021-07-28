@@ -163,6 +163,10 @@ module.exports = function (logger, ev, t) {
 			debug: [],
 		};
 
+		if (ev.IMPORT_ONLY) {
+			return cb(null, { message: 'skipped b/c import only' });	// an import only console cannot ask deployer, there isn't a deployer
+		}
+
 		t.component_lib.get_all_components({ _skip_cache: true }, (err, comp_docs) => {
 			if (err) {
 				if (t.ot_misc.get_code(err) !== 222) {

@@ -65,7 +65,7 @@ module.exports.handleResponse = (err, res, routeInfo, done) => {
 
 module.exports.restoreStubs = (stubs) => {
 	for (const i in stubs) {
-		if (Object.prototype.hasOwnProperty.call(stubs, i)) {
+		if (stubs.hasOwnProperty(i) && stubs[i].restore) {
 			stubs[i].restore();
 		}
 	}

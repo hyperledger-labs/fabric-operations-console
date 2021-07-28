@@ -848,29 +848,34 @@ module.exports = function (logger, ev, t) {
 
 	// send the request to the deployer and parse its response
 	function send_dep_req(opts, cb) {
-		opts._name = 'deployer';
-		opts._retry_codes = opts._retry_codes || {											// list of codes we will retry
-			'429': '429 rate limit exceeded aka too many reqs',
-		};
-		opts._max_attempts = opts._max_attempts || 2;
-		opts._start_ts = Date.now();
-		t.misc.retry_req(opts, (communication_err, resp) => {
-			const elapsed = Date.now() - opts._start_ts;
-			let ret = resp ? resp.body : null;
-			let code = t.ot_misc.get_code(resp);
-			const ts_str = '(took ' + t.misc.friendly_ms(elapsed) + ')';					// only used for logs, debug purposes
-			if (communication_err) {
-				// comm errors are already rolled into resp by retry_req(), so we don't need to use communication_err
-				logger.error('[deployer apis]', opts._tx_id, '- [1] unable to contact deployer.', ts_str);	// error already logged
-			} else {
-				if (t.ot_misc.is_error_code(code)) {
-					logger.error('[deployer apis]', opts._tx_id, '- [1] deployer responded with error code', code, resp.statusCode, ts_str, ret);
+		if (ev.IMPORT_ONLY) {
+			logger.warn('[deployer apis] import only mode, deployer data requested but there is no deployer to ask');
+			return cb(400, { error: 'import only - deployer is not available' });	// an import only console cannot ask deployer, there isn't a deployer
+		} else {
+			opts._name = 'deployer';
+			opts._retry_codes = opts._retry_codes || {											// list of codes we will retry
+				'429': '429 rate limit exceeded aka too many reqs',
+			};
+			opts._max_attempts = opts._max_attempts || 2;
+			opts._start_ts = Date.now();
+			t.misc.retry_req(opts, (communication_err, resp) => {
+				const elapsed = Date.now() - opts._start_ts;
+				let ret = resp ? resp.body : null;
+				let code = t.ot_misc.get_code(resp);
+				const ts_str = '(took ' + t.misc.friendly_ms(elapsed) + ')';					// only used for logs, debug purposes
+				if (communication_err) {
+					// comm errors are already rolled into resp by retry_req(), so we don't need to use communication_err
+					logger.error('[deployer apis]', opts._tx_id, '- [1] unable to contact deployer.', ts_str);	// error already logged
 				} else {
-					logger.info('[deployer apis]', opts._tx_id, '- [1] successful deployer response', code, ts_str);
+					if (t.ot_misc.is_error_code(code)) {
+						logger.error('[deployer apis]', opts._tx_id, '- [1] deployer responded with error code', code, resp.statusCode, ts_str, ret);
+					} else {
+						logger.info('[deployer apis]', opts._tx_id, '- [1] successful deployer response', code, ts_str);
+					}
 				}
-			}
-			return cb(code, ret);
-		});
+				return cb(code, ret);
+			});
+		}
 	}
 
 	// ------------------------------------------
@@ -1117,7 +1122,9 @@ module.exports = function (logger, ev, t) {
 
 			// ---- [1] Deployer data ---- //
 			(join) => {
-				if (!t.component_lib.include_deployment_data(req)) {
+				if (ev.IMPORT_ONLY) {
+					join(null, null);			// an import only console cannot ask deployer, there isn't a deployer
+				} else if (!t.component_lib.include_deployment_data(req)) {
 					join(null, null);
 				} else {
 					exports.get_all_components_api(req, (err3, ret) => {
@@ -1268,7 +1275,9 @@ module.exports = function (logger, ev, t) {
 
 			// ---- [1] Deployer data ---- //
 			(doc, callback) => {
-				if (!t.component_lib.include_deployment_data(req)) {
+				if (ev.IMPORT_ONLY) {
+					callback(null, null);			// an import only console cannot ask deployer, there isn't a deployer
+				} else if (!t.component_lib.include_deployment_data(req)) {
 					callback(null, null);
 				} else {
 					// load_component_by_id() will store the doc into req._component_doc

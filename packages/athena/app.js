@@ -574,9 +574,16 @@ function load_component_cache() {
 	if (tools.ot_misc.server_is_closed()) {							// skip performing db operations if the server is closed
 		logger.debug('[components] closed. skipping the cache update.');
 	} else {
-		logger.debug('[components] loading cache...');
-		const opts = { _skip_cache: true, _include_deployment_attributes: true };
-		tools.deployer.get_all_components(opts, () => { });
+		if (ev.IMPORT_ONLY) {
+			logger.debug('[components] import only mode detected');
+			logger.debug('[components] loading cache... (no dep)');
+			const opts = { _skip_cache: true };
+			tools.component_lib.get_all_components(opts, () => { });
+		} else {
+			logger.debug('[components] loading cache... (w/dep)');
+			const opts = { _skip_cache: true, _include_deployment_attributes: true };
+			tools.deployer.get_all_components(opts, () => { });
+		}
 	}
 }
 
