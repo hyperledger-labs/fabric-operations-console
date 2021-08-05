@@ -1061,5 +1061,53 @@ module.exports = function (logger, t) {
 		}
 	};
 
+	//--------------------------------------------------
+	// wait for the fabric component to start
+	//--------------------------------------------------
+	/* opts: {
+		comp_doc: {},
+		desired_max_ms: 10000,					// timeout for all retries of the status api check
+		timeout: 5000,							// timeout for a single status api check
+	}*/
+	exports.wait_for_component = (opts, cb) => {
+		const interval_ms = 10 * 1000;			// it wants ms
+		opts.desired_max_ms = opts.desired_max_ms || 5000;
+		opts.timeout = opts.timeout || 5000;
+		opts.desired_max_ms = isNaN(opts.desired_max_ms) ? 90000 : Number(opts.desired_max_ms);
+		const started = Date.now();
+
+		const attempts = Math.ceil(opts.desired_max_ms / interval_ms);
+		logger.debug('*[wait] starting polling to wait for component to start... max attempts:', attempts, opts.comp_doc._id);
+		let on_attempt = 0;
+
+		t.async.retry({
+			times: attempts,
+			interval: interval_ms,				// it wants ms
+		}, (done) => {
+			const log_attempts = 'on attempt: ' + (++on_attempt) + '/' + attempts;
+			const options = {
+				skip_cache: true,
+				_max_attempts: 1,
+			};
+			t.component_lib.get_status(opts.comp_doc, options, (resp) => {
+				const code = exports.get_code(resp);
+				if (exports.is_error_code(code)) {
+					logger.warn('*[wait] - could not reach component yet:', opts.comp_doc._id, code, log_attempts);
+					return done('cannot reach component');
+				} else {
+					logger.debug('*[wait] - component is alive', opts.comp_doc._id, code, log_attempts);
+					return done(null);
+				}
+			});
+		}, (err, body) => {
+			if (err) {
+				const elapsed = Date.now() - started;
+				const log_attempts = 'attempt: ' + on_attempt + '/' + attempts;
+				logger.warn('[wait] - could not reach component. giving up after', t.misc.friendly_ms(elapsed), opts.comp_doc._id, log_attempts);
+			}
+			return cb(err, body);
+		});
+	};
+
 	return exports;
 };

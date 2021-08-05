@@ -728,12 +728,14 @@ module.exports = function (logger, ev, t) {
 	// ------------------------------------------
 	/*
 	req: {
+		params: {},
 		headers: {},				// optional - forwarded to deployer
 		session: {},				// needed to get email address
 		body: {}
 	}
 	*/
 	exports.update_component = function (req, cb) {
+		//return cb(null, { athena_fmt: {}, deployer_resp: {}, tx_id: '' });
 		const opts = {
 			req: req,
 			id: req.params.athena_component_id,													// path has athena's component id
@@ -1325,6 +1327,11 @@ module.exports = function (logger, ev, t) {
 	}
 	*/
 	exports.get_component_api = function (req, cb) {
+		/*return cb(null, {
+			tls: {
+				cert: 'LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNWekNDQWY2Z0F3SUJBZ0lVY2ZtdkwrZjJqM084M2RmYVhldGk0aVQyckh3d0NnWUlLb1pJemowRUF3SXcKWFRFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVE0d0RBWURWUVFERXdWMGJITmpZVEFlCkZ3MHlNREF6TVRreE16SXhNREJhRncweU1UQXpNVGt4TXpJMk1EQmFNQ0V4RHpBTkJnTlZCQXNUQm1Oc2FXVnUKZERFT01Bd0dBMVVFQXhNRllXUnRhVzR3V1RBVEJnY3Foa2pPUFFJQkJnZ3Foa2pPUFFNQkJ3TkNBQVIrREJjNwpneXozK1dQUktMWFBnSURIckovQTNReTVYb0lFR3dJTXZ4SkEyQnZ2MUxzZGpDVXAxS24rZndmWDZ1T0RaemhmCktWRisyVEozOCtjVnZ1Q2FvNEhYTUlIVU1BNEdBMVVkRHdFQi93UUVBd0lEcURBZEJnTlZIU1VFRmpBVUJnZ3IKQmdFRkJRY0RBUVlJS3dZQkJRVUhBd0l3REFZRFZSMFRBUUgvQkFJd0FEQWRCZ05WSFE0RUZnUVVJelViUklQQQprWUNia2RlTDNWN3FJa2phNU5Rd0h3WURWUjBqQkJnd0ZvQVVJY3VHblVRZWpka2pQTnVjYStEQ09GeE14T3d3ClZRWURWUjBSQkU0d1RJSkViamsyTkRBM01DMXdaV1Z5TVM1cFluQjJNaTEwWlhOMExXTnNkWE4wWlhJdWRYTXQKYzI5MWRHZ3VZMjl1ZEdGcGJtVnljeTVoY0hCa2IyMWhhVzR1WTJ4dmRXU0hCSDhBQUFFd0NnWUlLb1pJemowRQpBd0lEUndBd1JBSWdYTUViK1RYcGlPQzNaeGFqc0xPMlZmaHdScmUrK1FxcUdoRys1S20vY1BVQ0lDV1gvV1M4CnNna21jYVdkZTdRUXVyOWp6ZDdVejRReHI3WG5OU2JSelc3bgotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCgo='
+			}
+		});*/
 		if (!req) { req = { params: {} }; }
 		const SKIP_CACHE = t.ot_misc.skip_cache(req);
 		req._key_src = 'GET ' + req.path; 							// this builds the lookup key for the cache, do not use "url" b/c query params mess up key
@@ -1994,6 +2001,16 @@ module.exports = function (logger, ev, t) {
 				_tx_id: parsed.debug_tx_id,
 			};
 			logger.debug('[deployer lib]', parsed.debug_tx_id, ' sending deployer api w/route:', opts.url);
+			/*return lc_cb(null, {
+				orderer: {
+					'2.2.99': {
+						default: true
+					},
+					'1.4.999': {
+						default: true
+					}
+				}
+			});*/
 			send_dep_req(opts, (err, depRespBody) => {									// then get deployer's docs
 				let { fmt_err, fmt_ret } = handle_dep_response(parsed, err, depRespBody);
 				if (fmt_err === null && fmt_ret && ev.PROXY_CACHE_ENABLED === true) {	// only cache success responses

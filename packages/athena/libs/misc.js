@@ -1231,8 +1231,13 @@ module.exports = function (logger, t) {
 	// decide if version b is higher than version a - example: B=0.2.3, A=0.1.9 would return true
 	// -----------------------------------------------------
 	exports.is_version_b_greater_than_a = (version_a, version_b) => {
-		let version_parts_a = version_a.trim().split('.');
-		let version_parts_b = version_b.trim().split('.');
+		let version_parts_a = version_a ? version_a.trim().replace(/-/g, '.').split('.') : null;		// treat 0.2.4-1 like 0.2.4.1
+		let version_parts_b = version_b ? version_b.trim().replace(/-/g, '.').split('.') : null;
+
+		if (version_parts_a === null || version_parts_b == null) {
+			return null;
+		}
+
 		for (let i in version_parts_a) {
 			if (version_parts_b[i] > version_parts_a[i]) {
 				return true;
@@ -1243,6 +1248,25 @@ module.exports = function (logger, t) {
 			}
 		}
 		return false;
+	};
+
+	// -----------------------------------------------------
+	// return the highest version from an array of versions
+	// -----------------------------------------------------
+	exports.get_highest_version = (list) => {
+		let max = null;
+		for (let i in list) {
+			if (typeof list[i] === 'string') {
+				if (max === null) {			// nothing to compare yet, first one is the highest so far
+					max = list[i];
+				} else {
+					if (exports.is_version_b_greater_than_a(max, list[i])) {
+						max = list[i];		// this one is higher, store it
+					}
+				}
+			}
+		}
+		return max;
 	};
 
 	// -----------------------------------------------------------------
@@ -1347,6 +1371,31 @@ module.exports = function (logger, t) {
 		} else {
 			const keys = Object.keys(obj);
 			if (keys === 0) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	};
+
+	// -----------------------------------------------------
+	// return true if the cert is expired or near expiration, if we cannot parse the cert return -1
+	// -----------------------------------------------------
+	exports.cert_is_near_expiration = (cert, near_ms, log_entry) => {
+		const parsed_cert = cert ? t.ot_misc.parseCertificate(cert) : null;
+		if (!parsed_cert) {
+			if (log_entry) { logger.warn('[misc cert] certificate is not parsable:', log_entry); }
+			return -1;
+		} else {
+			const time_left_ms = parsed_cert.not_after_ts ? (parsed_cert.not_after_ts - Date.now()) : 0;
+			const log_cn = parsed_cert.subject_parts && parsed_cert.subject_parts.CN ? ('CN: ' + parsed_cert.subject_parts.CN) : '';
+			near_ms = near_ms || 0;				// init to 0 if not set
+			if (log_entry) {
+				// if its negative, print it as negative
+				const log_time_left = (time_left_ms >= 0) ? exports.friendly_ms(time_left_ms) : ('-' + exports.friendly_ms(time_left_ms * -1));
+				logger.debug('[misc cert] time left on certificate:', log_entry, log_cn, log_time_left);
+			}
+			if (time_left_ms <= near_ms) {
 				return true;
 			} else {
 				return false;
