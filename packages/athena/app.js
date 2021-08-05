@@ -566,6 +566,7 @@ function setup_routes_and_start() {
 	clearInterval(load_cache_interval);
 	load_cache_interval = setInterval(() => {
 		load_component_cache();
+		tools.patch_lib.auto_upgrade_orderers();
 	}, (1000 * 60 * 60 * 24) + (1000 * Math.random() * 60 * 2));	// once per day + scatter calls from multi athenas
 }
 

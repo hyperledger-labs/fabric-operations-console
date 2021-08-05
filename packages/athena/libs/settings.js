@@ -191,6 +191,12 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 				settings.HSM = athena.hsm;
 				settings.LOCKOUT_LIMIT = !isNaN(athena.lockout_limit) ? Number(athena.lockout_limit) : 4;
 				settings.DISABLED_COMPACTION = athena.disabled_compaction;
+				settings.DISABLE_AUTO_FAB_UP = athena.disable_auto_fab_up;
+
+				// each key in this object is a version that is okay.
+				// any less will be auto upgraded to the highest minor version for that component that deployer has available.
+				settings.AUTO_FAB_UP_VERSIONS = athena.auto_fab_up_versions;
+				settings.AUTO_FAB_UP_EXP_TOO_CLOSE_DAYS = athena.auto_fab_up_exp_too_close_days;
 
 				const versions = t.ot_misc.parse_versions();
 				settings.ATHENA_VERSION = (versions && versions.tag) ? versions.tag : '-';
@@ -335,6 +341,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 					TLS_CERT_ORG: 'ibp2-auto-gen',
 					IBP_TOKEN: 'ibp',
 					IAM_TOKEN: 'iam',
+					FAB_UP_LOCK_NAME: 'auto_fabric_upgrade',
 				};
 
 				// manager - must match what is defined in RMC (this section ONLY applies to stand alone)

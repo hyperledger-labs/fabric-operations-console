@@ -1821,6 +1821,51 @@ describe('Misc', () => {
 								done();
 							}
 						},
+						{
+							itStatement: 'should show that lower versions are lower with dashes test_id=djrade',
+							expectBlock: (done) => {
+								expect(misc.is_version_b_greater_than_a('3.1.2-0', '0.0.0-9')).to.equal(false);
+								expect(misc.is_version_b_greater_than_a('3.1.2-0', '4.0.0-9')).to.equal(true);
+								expect(misc.is_version_b_greater_than_a('1.2.3-4', '1.2.3-4')).to.equal(false);
+								expect(misc.is_version_b_greater_than_a('1.2.3-4', '1.2.3-5')).to.equal(true);
+								expect(misc.is_version_b_greater_than_a('1.2.3-4', '1.2.4-0')).to.equal(true);
+								done();
+							}
+						},
+					]
+				}
+			]
+		},
+
+		//  get_highest_version
+		{
+			suiteDescribe: 'get_highest_version',
+			mainDescribe: 'Run get_highest_version',
+			testData: [
+				{
+					arrayOfInfoToTest: [
+						{
+							itStatement: 'should return highest version test_id=bpgipm',
+							expectBlock: (done) => {
+								expect(misc.get_highest_version(['3.1.2', '0.0.0'])).to.equal('3.1.2');
+								expect(misc.get_highest_version(['3.1.2', '2.50.1'])).to.equal('3.1.2');
+								expect(misc.get_highest_version(['3.1.2', '1.10.1'])).to.equal('3.1.2');
+								expect(misc.get_highest_version(['3.1.2', '1.0.100'])).to.equal('3.1.2');
+								expect(misc.get_highest_version(['3.1.2', '4.0.0'])).to.equal('4.0.0');
+								done();
+							}
+						},
+						{
+							itStatement: 'should return highest version with dashes test_id=usksds',
+							expectBlock: (done) => {
+								expect(misc.get_highest_version(['3.1.2-0', '0.0.0-9'])).to.equal('3.1.2-0');
+								expect(misc.get_highest_version(['3.1.2-0', '4.0.0-9'])).to.equal('4.0.0-9');
+								expect(misc.get_highest_version(['1.2.3-4', '1.2.3-4'])).to.equal('1.2.3-4');
+								expect(misc.get_highest_version(['1.2.3-4', '1.2.3-5'])).to.equal('1.2.3-5');
+								expect(misc.get_highest_version(['1.2.3-4', '1.2.3-0'])).to.equal('1.2.3-4');
+								done();
+							}
+						},
 					]
 				}
 			]
@@ -2182,6 +2227,45 @@ describe('Misc', () => {
 									}
 								};
 								expect(misc.conform_bytes(obj)).to.deep.equal(output);
+								done();
+							}
+						}
+					]
+				}
+			]
+		},
+
+		// cert_is_near_expiration
+		{
+			suiteDescribe: 'cert_is_near_expiration',
+			mainDescribe: 'Run cert_is_near_expiration',
+			testData: [
+				{
+					arrayOfInfoToTest: [
+						{
+							itStatement: 'should see cert as valid, aka not expired test_id=cjclpf',
+							expectBlock: (done) => {
+								const cert = 'LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNDVENDQWErZ0F3SUJBZ0lVSDBhWERYVHlPN1pBeEoxeEVFODhDV3RscCtBd0NnWUlLb1pJemowRUF3SXcKV2pFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVFzd0NRWURWUVFERXdKallUQWVGdzB5Ck1EQXpNVGt4TXpFME1EQmFGdzB6TlRBek1UWXhNekUwTURCYU1Gb3hDekFKQmdOVkJBWVRBbFZUTVJjd0ZRWUQKVlFRSUV3NU9iM0owYUNCRFlYSnZiR2x1WVRFVU1CSUdBMVVFQ2hNTFNIbHdaWEpzWldSblpYSXhEekFOQmdOVgpCQXNUQmtaaFluSnBZekVMTUFrR0ExVUVBeE1DWTJFd1dUQVRCZ2NxaGtqT1BRSUJCZ2dxaGtqT1BRTUJCd05DCkFBUW9OODU2aGZISjZjWGl3Y3RNMFJFc1V5ZTVwNElRbEdPSjhZN1BURzZjZWlHbEROamNOYWpla01GajlRUzcKU2lrbjN5aTNJemY3MVdSR0xmbWszcHZmbzFNd1VUQU9CZ05WSFE4QkFmOEVCQU1DQVFZd0R3WURWUjBUQVFILwpCQVV3QXdFQi96QWRCZ05WSFE0RUZnUVVZWXYzcUtBZjdLY3BLaFppbis1NVpoa0lhT2d3RHdZRFZSMFJCQWd3CkJvY0Vmd0FBQVRBS0JnZ3Foa2pPUFFRREFnTklBREJGQWlFQTlCVDNmb0ErMFlhbFBrNEZ3eFBlYlJyaGJWa24KaHd4aTl5cm1zQjlpb3pVQ0lEMC8rYUloQkt2S0FIaWExaTFMZE1UalU2bEZLbUY1TnYrZkNxRmYzNFVDCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K';
+								// this cert has 15 year life, todo replace in 15 years.... before March 16, 2035
+								expect(misc.cert_is_near_expiration(cert)).to.equal(false);
+								done();
+							}
+						},
+
+						{
+							itStatement: 'should see cert as expred test_id=nwspat',
+							expectBlock: (done) => {
+								const cert = 'LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNWekNDQWY2Z0F3SUJBZ0lVY2ZtdkwrZjJqM084M2RmYVhldGk0aVQyckh3d0NnWUlLb1pJemowRUF3SXcKWFRFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVE0d0RBWURWUVFERXdWMGJITmpZVEFlCkZ3MHlNREF6TVRreE16SXhNREJhRncweU1UQXpNVGt4TXpJMk1EQmFNQ0V4RHpBTkJnTlZCQXNUQm1Oc2FXVnUKZERFT01Bd0dBMVVFQXhNRllXUnRhVzR3V1RBVEJnY3Foa2pPUFFJQkJnZ3Foa2pPUFFNQkJ3TkNBQVIrREJjNwpneXozK1dQUktMWFBnSURIckovQTNReTVYb0lFR3dJTXZ4SkEyQnZ2MUxzZGpDVXAxS24rZndmWDZ1T0RaemhmCktWRisyVEozOCtjVnZ1Q2FvNEhYTUlIVU1BNEdBMVVkRHdFQi93UUVBd0lEcURBZEJnTlZIU1VFRmpBVUJnZ3IKQmdFRkJRY0RBUVlJS3dZQkJRVUhBd0l3REFZRFZSMFRBUUgvQkFJd0FEQWRCZ05WSFE0RUZnUVVJelViUklQQQprWUNia2RlTDNWN3FJa2phNU5Rd0h3WURWUjBqQkJnd0ZvQVVJY3VHblVRZWpka2pQTnVjYStEQ09GeE14T3d3ClZRWURWUjBSQkU0d1RJSkViamsyTkRBM01DMXdaV1Z5TVM1cFluQjJNaTEwWlhOMExXTnNkWE4wWlhJdWRYTXQKYzI5MWRHZ3VZMjl1ZEdGcGJtVnljeTVoY0hCa2IyMWhhVzR1WTJ4dmRXU0hCSDhBQUFFd0NnWUlLb1pJemowRQpBd0lEUndBd1JBSWdYTUViK1RYcGlPQzNaeGFqc0xPMlZmaHdScmUrK1FxcUdoRys1S20vY1BVQ0lDV1gvV1M4CnNna21jYVdkZTdRUXVyOWp6ZDdVejRReHI3WG5OU2JSelc3bgotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCgo=';
+								expect(misc.cert_is_near_expiration(cert)).to.equal(true);
+								done();
+							}
+						},
+
+						{
+							itStatement: 'should not be able to parse cert for expiratoin test_id=yjqqpp',
+							expectBlock: (done) => {
+								const cert = 'LS0tLS1CRUdJTiBDRVJUSUZJLS0tCgo=';		// junk
+								expect(misc.cert_is_near_expiration(cert)).to.equal(-1);
 								done();
 							}
 						}

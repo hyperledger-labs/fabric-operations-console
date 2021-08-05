@@ -32,7 +32,17 @@ module.exports = function (logger, ev, t) {
 
 			// the actual patch function/code
 			patch: fix_tls_cert,
-		}
+		},
+
+		// name of the patch
+		/*'auto_upgrade_orderers': {
+
+			// description of the patch, gets stored in patch doc
+			purpose: 'this patch upgrades older orderers fabric versions',
+
+			// the actual patch function/code
+			patch: auto_upgrade_orderers,
+		}*/
 	};
 
 	//--------------------------------------------------
@@ -268,30 +278,269 @@ module.exports = function (logger, ev, t) {
 
 			return null;														// no doc edits were done, return null
 		}
+	}
 
-		// populate the tls_cert field in the component doc with a value from deployer
-		function get_comps_tls_cert_from_deployer(comp_doc, cb_dep) {
-			const req_opts = {
-				_component_doc: comp_doc, 		// required
-				_skip_cache: true,
-				session: {},
-				params: {
-					athena_component_id: comp_doc._id,
-				}
-			};
-			t.deployer.get_component_api(req_opts, (dep_err, dep_data) => {
-				if (dep_err) {
-					logger.warn('[patch] error getting deployer data on component', dep_err);
-				}
+	// populate the tls_cert field in the component doc with a value from deployer
+	function get_comps_tls_cert_from_deployer(comp_doc, cb_dep) {
+		const req_opts = {
+			_component_doc: comp_doc, 		// required
+			_skip_cache: true,
+			session: {},
+			params: {
+				athena_component_id: comp_doc._id,
+			}
+		};
+		t.deployer.get_component_api(req_opts, (dep_err, dep_data) => {
+			if (dep_err) {
+				logger.warn('[patch] error getting deployer data on component', dep_err);
+			}
 
-				let conformed_deployer_data = null;
-				if (dep_data) {
-					conformed_deployer_data = t.comp_fmt.conform_deployer_field_names(null, dep_data);		// convert field names
+			let conformed_deployer_data = null;
+			if (dep_data) {
+				conformed_deployer_data = t.comp_fmt.conform_deployer_field_names(null, dep_data);		// convert field names
+			}
+
+			return cb_dep(null, conformed_deployer_data ? conformed_deployer_data.tls_cert : null);		// only need the cert
+		});
+	}
+
+	// ----------------------------------------------------------------------------------
+	// Patch 2 - 03/20/2020
+	// this patch upgrades orderer that are older than < 1.4.9 or < 2.2.1
+	// (the upgrade will NOT upgrade past major version changes)
+	// ----------------------------------------------------------------------------------
+	patch.auto_upgrade_orderers = (cb) => {
+		if (!cb) {
+			cb = function () { };
+		}
+		let wait_interval = null;
+
+		if (ev.DISABLE_AUTO_FAB_UP) {
+			logger.debug('[fab upgrade] auto fabric upgrade is disabled via setting. skipping.');
+		} else {
+			logger.debug('[fab upgrade] starting auto fabric upgrade check. looking for comps lower than:', ev.AUTO_FAB_UP_VERSIONS);
+
+			// get a lock if we can, prevents multiple athena instances from doing the same logic
+			t.lock_lib.apply({ lock: ev.STR.FAB_UP_LOCK_NAME, max_locked_sec: 5 * 60 }, (lock_err) => {
+				if (lock_err) {
+					logger.warn('[fab upgrade] unable to get lock for fabric upgrade check');
+					return cb();
+				} else {
+
+					// starts here
+					logger.debug('[fab upgrade] got lock. looking for old orderers');
+					get_available_fabric_versions((ver_errs, versions) => {
+						const orderer_keys = versions ? Object.keys(versions.orderer) : [];
+						logger.debug('[fab upgrade] orderer versions available:', orderer_keys);
+
+						if (orderer_keys.length === 0) {
+							logger.error('[fab upgrade] unable to find available orderer versions for auto upgrade.', orderer_keys);
+							t.lock_lib.release(ev.STR.FAB_UP_LOCK_NAME);
+							return cb();
+						} else {
+
+							// get the orderer docs
+							get_orderers((errors, orderer_docs) => {
+								auto_fabric_upgrade(orderer_keys, orderer_docs, () => {
+									t.lock_lib.release(ev.STR.FAB_UP_LOCK_NAME);
+									return cb();
+								});
+							});
+						}
+					});
 				}
-				return cb_dep(null, conformed_deployer_data ? conformed_deployer_data.tls_cert : null);		// only need the cert
 			});
 		}
-	}
+
+		// get the fabric versions from deployer
+		function get_available_fabric_versions(dep_cb) {
+			const fake_req = {
+				query: {},
+				headers: {},
+				_skip_cache: true,
+			};
+			t.deployer.get_fabric_versions(fake_req, (err, resp) => {
+				return dep_cb(err, resp);
+			});
+		}
+
+		// get all orderers
+		function get_orderers(get_cb) {
+			const opts = {
+				db_name: ev.DB_COMPONENTS,
+				_id: '_design/athena-v1',
+				view: '_doc_types',
+				SKIP_CACHE: true,
+				query: t.misc.formatObjAsQueryParams({ include_docs: true, keys: [ev.STR.ORDERER] }),
+			};
+
+			t.otcc.getDesignDocView(opts, (err, resp) => {
+				if (err) {
+					logger.error('[fab upgrade] error getting orderers:', err);
+					return get_cb(err, []);					// always emit array
+				} else {
+					const docs = [];
+					if (resp) {
+						for (let i in resp.rows) {
+							if (resp.rows[i] && resp.rows[i].doc) {
+								let component_doc = resp.rows[i].doc;
+
+								// only include deployed orderers
+								if (component_doc && component_doc.location === ev.STR.LOCATION_IBP_SAAS) {
+									docs.push(component_doc);
+								}
+							}
+						}
+					}
+
+					logger.debug('[fab upgrade] found all deployed orderers:', docs.length);
+					return get_cb(null, docs);
+				}
+			});
+		}
+
+		// send upgrade fabric calls (it checks the version && cert expirations first)
+		function auto_fabric_upgrade(available_orderer_versions, orderer_docs, up_cb) {
+			t.async.eachLimit(orderer_docs, 1, (comp_doc, async_cb) => {
+				const upgrade_to_version = find_version_to_use(available_orderer_versions, comp_doc.version);
+				if (!upgrade_to_version) {
+					// already logged, skip this component & continue
+					return async_cb();
+				}
+
+				should_upgrade(upgrade_to_version, comp_doc, (_, should_do_upgrade) => {
+					if (!should_do_upgrade) {
+						logger.debug('[fab upgrade] will not upgrade comp:', comp_doc._id, 'version:', comp_doc.version);
+						return async_cb();
+					} else {
+						logger.debug('[fab upgrade] upgrading comp:', comp_doc._id, 'version:', comp_doc.version, 'to version:', upgrade_to_version);
+
+						const fake_req = {
+							params: {
+								athena_component_id: comp_doc._id
+							},
+							headers: {},
+							session: {},
+							body: {
+								version: upgrade_to_version				// this is the version we will upgrade to
+							}
+						};
+						t.deployer.update_component(fake_req, (err_resp, resp) => {
+							if (err_resp) {
+								logger.error('[fab upgrade] failed to upgrade component. dep error.', comp_doc._id, err_resp);
+								return async_cb(err_resp, resp);
+							} else {
+								logger.debug('[fab upgrade] successfully upgraded component:', comp_doc._id, err_resp);
+								wait_for_start(comp_doc, (start_err) => {
+									if (start_err) {
+										logger.error('[fab upgrade] failed to start comp after update. all stop.', start_err);
+										return async_cb(start_err, resp);
+									} else {
+										logger.debug('[fab upgrade] component has started:', comp_doc._id);
+										return async_cb(null, resp);
+									}
+								});
+							}
+						});
+					}
+				});
+			}, (auto_error) => {
+				if (auto_error) {
+					logger.error('[fab upgrade] blocking error occurred during auto fabric update. stopping auto fab updates.');
+				}
+				return up_cb();
+			});
+		}
+
+		// find the highest version we can use to upgrade this orderer.
+		// do not move up major versions, only minor, patch, and pre-releases.
+		function find_version_to_use(available_versions, at_version) {
+			const at_major_ver = get_major(at_version);
+			const possible_arr = [];							// should hold the versions at the same major version
+			for (let i in available_versions) {
+				if (get_major(available_versions[i]) === at_major_ver) {
+					possible_arr.push(available_versions[i]);
+				}
+			}
+
+			if (possible_arr.length === 0) {
+				logger.error('[fab upgrade] there are no non-major version upgrades to use... @version', at_version, 'available:', available_versions);
+				return null;
+			} else {
+				return t.misc.get_highest_version(possible_arr);
+			}
+
+			// get the first digit off the version, the major digit
+			function get_major(version) {
+				const parts = (version && typeof version === 'string') ? version.split('.') : [];
+				return parts.length > 0 ? parts[0] : null;
+			}
+		}
+
+		// based on the component doc version && cert expirations, should we upgrade this component
+		function should_upgrade(upgrade_to_version, comp_doc, cb) {
+			if (!comp_doc || !comp_doc.version) {
+				logger.warn('[fab upgrade] unexpected error, missing comp doc or "version" field');
+				return cb(null, false);
+			} else {
+				// the version in upgrade_to_version is okay, any lower is not
+				if (!t.misc.is_version_b_greater_than_a(comp_doc.version, upgrade_to_version)) {
+					logger.debug('[fab upgrade] version good. comp:', comp_doc._id, 'version:', comp_doc.version);
+					return cb(null, false);
+				} else {
+					tls_certs_near_expiration(comp_doc, (errors, is_near_expiration) => {
+						if (is_near_expiration) {
+							logger.warn('[fab upgrade] tls cert for comp IS near expiration. comp:', comp_doc._id);
+						} else {
+							logger.debug('[fab upgrade] tls cert for comp is not near expiration. comp:', comp_doc._id);
+						}
+						return cb(null, is_near_expiration);
+					});
+				}
+			}
+
+			// check if the tls certs are near expiration
+			function tls_certs_near_expiration(component_doc, cert_cb) {
+				// get the cert from deployer's api response
+				get_comps_tls_cert_from_deployer(component_doc, (_, tls_cert) => {
+					if (!tls_cert) {
+						logger.error('[fab upgrade] unable to get tls cert for auto fab upgrade check, skipping component');
+						return cert_cb(null, false);
+					} else {
+						const too_close_to_expiration_ms = ev.AUTO_FAB_UP_EXP_TOO_CLOSE_DAYS * 24 * 60 * 60 * 1000;
+						if (t.misc.cert_is_near_expiration(tls_cert, too_close_to_expiration_ms, component_doc._id)) {
+							return cert_cb(null, true);
+						} else {
+							return cert_cb(null, false);
+						}
+					}
+				});
+			}
+		}
+
+		// wait for the orderer to start up
+		function wait_for_start(comp_doc, started_cb) {
+			const athena_component_id = comp_doc._id;
+			logger.debug('[fab upgrade] waiting for comp to start...', athena_component_id);
+
+			clearInterval(wait_interval);
+			wait_interval = setInterval(() => {
+				logger.debug('[fab upgrade] waiting for comp to start...', athena_component_id);
+			}, 4000);
+
+			// delay the startup check to allow the upgrade to get started....
+			setTimeout(() => {
+				const opts = {
+					comp_doc: comp_doc,
+					desired_max_ms: 5 * 60 * 1000,					// timeout for all retries of the status api check
+				};
+				t.ot_misc.wait_for_component(opts, (errors) => {
+					clearInterval(wait_interval);
+					return started_cb(errors); //{ error: 'did not start in time' });
+				});
+			}, 10000);
+		}
+	};
 
 	return patch;
 };

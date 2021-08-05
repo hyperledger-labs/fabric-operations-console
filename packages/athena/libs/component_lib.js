@@ -1511,6 +1511,7 @@ module.exports = function (logger, ev, t) {
 		opts: {
 			timeout_ms: 0,		// [optional] http timeout for asking the component
 			skip_cache: true	// [optional] if we should **not** use the in-memory cache
+			_max_attempts: 2	// [optional] max number of http reqs to send including orig and retries
 		}
 	*/
 	exports.get_status = (comp_doc, opts, cb) => {
@@ -1522,8 +1523,8 @@ module.exports = function (logger, ev, t) {
 			headers: { 'Accept': 'application/json' },
 			timeout: !isNaN(opts.timeout_ms) ? Number(opts.timeout_ms) : ev.HTTP_STATUS_TIMEOUT, // give up quickly b/c we don't want status api to hang
 			rejectUnauthorized: false,									// self signed certs are okay
-			_name: 'bulk_status',
-			_max_attempts: 2,
+			_name: 'status_req',
+			_max_attempts: opts._max_attempts || 2,
 			_retry_codes: {												// list of codes we will retry
 				'429': '429 rate limit exceeded aka too many reqs',
 				//'408': '408 timeout',									// status calls should not retry a timeout, takes too long
