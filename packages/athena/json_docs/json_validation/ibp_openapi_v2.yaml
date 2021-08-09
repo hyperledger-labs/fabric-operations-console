@@ -299,6 +299,7 @@ paths:
 
   /ak/api/v2/kubernetes/components/{id}:
     delete:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Delete component
@@ -384,6 +385,7 @@ paths:
 
   /ak/api/v2/kubernetes/components/fabric-ca:
     post:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Create a CA
@@ -508,6 +510,7 @@ paths:
 
   /ak/api/v2/components/fabric-ca:
     post:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Import a CA
@@ -598,6 +601,7 @@ paths:
 
   /ak/api/v2/kubernetes/components/fabric-ca/{id}:
     put:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Update a CA
@@ -711,6 +715,7 @@ paths:
 
   /ak/api/v2/components/fabric-ca/{id}:
     put:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Edit data about a CA
@@ -807,6 +812,7 @@ paths:
 
   /ak/api/v2/kubernetes/components/fabric-peer:
     post:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Create a peer
@@ -1140,6 +1146,7 @@ paths:
 
   /ak/api/v2/kubernetes/components/fabric-peer/{id}:
     put:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Update a peer
@@ -1250,6 +1257,7 @@ paths:
 
   /ak/api/v2/kubernetes/components/fabric-orderer:
     post:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Create an ordering service
@@ -1565,6 +1573,7 @@ paths:
 
   /ak/api/v2/kubernetes/components/fabric-orderer/{id}:
     put:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Update an orderer node
@@ -1675,6 +1684,7 @@ paths:
 
   /ak/api/v2/kubernetes/components/{id}/config:
     put:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Submit config block to orderer
@@ -2185,6 +2195,7 @@ paths:
 
   /ak/api/v2/kubernetes/fabric/versions:
     get:
+      deprecated: true # not available in opensource console
       tags:
         - Administer the IBP console
       summary: Get supported Fabric versions
@@ -3063,6 +3074,7 @@ paths:
 
   /ak/api/v2/kubernetes/components/tags/{tag}:
     delete:
+      deprecated: true # not available in opensource console
       tags:
         - Manage multiple components
       summary: Delete components with tag
@@ -3135,6 +3147,7 @@ paths:
 
   /ak/api/v2/kubernetes/components/purge:
     delete:
+      deprecated: true # not available in opensource console
       tags:
         - Manage multiple components
       summary: Delete all components
@@ -3540,6 +3553,7 @@ paths:
 
   /ak/api/v2/kubernetes/components/{id}/certs:
     put:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Edit admin certs on a component

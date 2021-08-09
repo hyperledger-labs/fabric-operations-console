@@ -282,7 +282,7 @@ paths:
                       try:
                         response = client.get_component(id='{Component-ID}')
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -522,7 +522,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -545,7 +545,7 @@ paths:
                       try:
                         response = client.remove_component(id='{Component-ID}')
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -581,6 +581,7 @@ paths:
 
   /ak/api/v3/kubernetes/components/{id}:
     delete:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Delete component
@@ -694,7 +695,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -717,7 +718,7 @@ paths:
                       try:
                         response = client.delete_component(id='{Component-ID}')
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -759,6 +760,7 @@ paths:
 
   /ak/api/v3/kubernetes/components/fabric-ca:
     post:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Create a CA
@@ -954,7 +956,7 @@ paths:
                               Exception wrappedError = new Exception(e.getDebuggingInfo().toString());
                               wrappedError.initCause(e);
                               throw wrappedError;
-                      }                
+                      }
           python:
             - name: Example request
               example:
@@ -1006,7 +1008,7 @@ paths:
                       try:
                         response = client.create_ca(**opts)
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -1275,7 +1277,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -1317,7 +1319,7 @@ paths:
                       try:
                         response = client.import_ca(**opts)
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -1399,6 +1401,7 @@ paths:
 
   /ak/api/v3/kubernetes/components/fabric-ca/{id}:
     put:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Update a CA
@@ -1549,7 +1552,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -1585,7 +1588,7 @@ paths:
                       try:
                         response = client.update_ca(**opts)
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -1673,6 +1676,7 @@ paths:
 
   /ak/api/v3/components/fabric-ca/{id}:
     put:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Edit data about a CA
@@ -1795,7 +1799,7 @@ paths:
                         Response<CaResponse> response = call.execute();
                         if (response.getStatusCode() != 200) {
                             throw new RuntimeException("Error code "+response.getStatusCode()+" : "+response.getStatusMessage());
-                        }                       
+                        }
 
                         CaResponse ca = response.getResult();
 
@@ -1804,7 +1808,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -1839,7 +1843,7 @@ paths:
                       try:
                         response = client.edit_ca(**opts)
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -1927,6 +1931,7 @@ paths:
 
   /ak/api/v3/kubernetes/components/fabric-ca/{id}/actions:
     post:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Submit action to a CA
@@ -2053,7 +2058,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -2079,7 +2084,7 @@ paths:
                           'restart'=True
                         )
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -2115,6 +2120,7 @@ paths:
 
   /ak/api/v3/kubernetes/components/fabric-peer:
     post:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Create a peer
@@ -2328,7 +2334,7 @@ paths:
                           RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                           wrappedError.initCause(e);
                           throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -2388,7 +2394,7 @@ paths:
                       try:
                         response = client.create_peer(**opts)
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -2704,7 +2710,7 @@ paths:
                                         .operationsUrl("https://n3a3ec3-mypeer.ibp.us-south.containers.appdomain.cloud:9443")
                                         .grpcwpUrl("https://n3a3ec3-mypeer-proxy.ibp.us-south.containers.appdomain.cloud:8084")
                                         .msp(msp).build();
-                        
+
                         ServiceCall<PeerResponse> call = bc.importPeer(importPeerOptions);
                         Response<PeerResponse> response = call.execute();
                         if (response.getStatusCode() != 200) {
@@ -2712,14 +2718,14 @@ paths:
                         }
 
                         PeerResponse peerResponse = response.getResult();
-                      
+
                         importedPeerId = peerResponse.getId();
                       } catch (ServiceResponseException e) {
                          // essential to catch and get the debugging information
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -2771,7 +2777,7 @@ paths:
                       try:
                         response = client.import_peer(**opts)
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -3013,7 +3019,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -3048,7 +3054,7 @@ paths:
                       try:
                         response = client.edit_peer(**opts)
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -3160,6 +3166,7 @@ paths:
 
   /ak/api/v3/kubernetes/components/fabric-peer/{id}/actions:
     post:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Submit action to a peer
@@ -3288,7 +3295,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -3314,7 +3321,7 @@ paths:
                           restart=True
                         )
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -3350,6 +3357,7 @@ paths:
 
   /ak/api/v3/kubernetes/components/fabric-peer/{id}:
     put:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Update a peer
@@ -3502,7 +3510,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -3538,7 +3546,7 @@ paths:
                       try:
                         response = client.peer_action(**opts)
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -3650,6 +3658,7 @@ paths:
 
   /ak/api/v3/kubernetes/components/fabric-orderer:
     post:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Create an ordering service
@@ -3820,9 +3829,9 @@ paths:
                         'msp_id': 'orderermsp',
                         'crypto': [
                           cryptoDict-Node-1,  # see doc details to build this dictionary
-                          cryptoDict-Node-2, 
-                          cryptoDict-Node-3, 
-                          cryptoDict-Node-4, 
+                          cryptoDict-Node-2,
+                          cryptoDict-Node-3,
+                          cryptoDict-Node-4,
                           cryptoDict-Node-5
                         ],
                         'cluster_name': 'My three Node Raft',
@@ -3833,7 +3842,7 @@ paths:
                       try:
                         response = client.create_orderer(**opts)
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -4159,10 +4168,10 @@ paths:
                         ServiceCall<OrdererResponse> call = service.importOrderer(options);
                         Response<OrdererResponse> response = call.execute();
                         response = call.execute();
-        
+
                         assertThat(response).isNotNull();
                         assertThat(response.getResult()).isEqualTo(200);
-                        OrdererResponse peerResponse = response.getResult(); 
+                        OrdererResponse peerResponse = response.getResult();
                         if (response.getStatusCode() != 200) {
                             throw new RuntimeException("Error code "+response.getStatusCode()+" : "+response.getStatusMessage());
                         }
@@ -4172,7 +4181,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -4226,7 +4235,7 @@ paths:
                       try:
                         response = client.import_orderer(**opts)
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -4442,8 +4451,8 @@ paths:
 
                         ServiceCall<OrdererResponse> call = bc.editOrderer(options);
                         Response<OrdererResponse> response = call.execute();
-                      
-                        OrdererResponse ordererResponse = response.getResult();               
+
+                        OrdererResponse ordererResponse = response.getResult();
 
                         if (response.getStatusCode() != 200) {
                             throw new RuntimeException("Error code "+response.getStatusCode()+" : "+response.getStatusMessage());
@@ -4453,7 +4462,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -4484,7 +4493,7 @@ paths:
                       try:
                         response = client.edit_orderer(**opts)
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -4588,6 +4597,7 @@ paths:
 
   /ak/api/v3/kubernetes/components/fabric-orderer/{id}/actions:
     post:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Submit action to an orderer
@@ -4716,7 +4726,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -4742,7 +4752,7 @@ paths:
                           restart=True
                         )
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -4778,6 +4788,7 @@ paths:
 
   /ak/api/v3/kubernetes/components/fabric-orderer/{id}:
     put:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Update an orderer node
@@ -4919,7 +4930,7 @@ paths:
                         ServiceCall<OrdererResponse> call = bc.updateOrderer(options);
                         Response<OrdererResponse> response = call.execute();
                         response = call.execute();
-                     
+
                         if (response.getStatusCode() != 200) {
                             throw new RuntimeException("Error code "+response.getStatusCode()+" : "+response.getStatusMessage());
                         }
@@ -4930,7 +4941,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -4966,7 +4977,7 @@ paths:
                       try:
                         response = client.update_orderer(**opts)
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -5070,6 +5081,7 @@ paths:
 
   /ak/api/v3/kubernetes/components/{id}/config:
     put:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Submit config block to orderer
@@ -5206,7 +5218,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -5232,7 +5244,7 @@ paths:
                           b64_block='bWFzc2l2ZSBiaW5hcnkgb2YgYSBjb25maWcgYmxvY2sgd291bGQgYmUgaGVyZSBpZiB0aGlzIHdhcyByZWFsLCBwbGVhc2UgZG9udCBzZW5kIHRoaXM='
                         )
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -5504,7 +5516,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -5542,7 +5554,7 @@ paths:
                       try:
                         response = client.import_msp(**opts)
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -5710,7 +5722,7 @@ paths:
                                         .build();
                         ServiceCall<MspResponse> call = bc.editMsp(options);
 
-                        Response<MspResponse> response = call.execute();         
+                        Response<MspResponse> response = call.execute();
                         if (response.getStatusCode() != 200) {
                             throw new RuntimeException("Error code "+response.getStatusCode()+" : "+response.getStatusMessage());
                         }
@@ -5722,7 +5734,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -5748,7 +5760,7 @@ paths:
                           display_name='My Other Org',
                         )
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -5925,7 +5937,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -5950,7 +5962,7 @@ paths:
                           msp_id='{Component-ID}',
                         )
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -6096,7 +6108,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -6119,7 +6131,7 @@ paths:
                       try:
                         response = client.get_settings()
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -6382,7 +6394,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -6423,7 +6435,7 @@ paths:
                       try:
                         response = client.edit_settings(**opts)
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -6530,6 +6542,7 @@ paths:
 
   /ak/api/v3/kubernetes/fabric/versions:
     get:
+      deprecated: true # not available in opensource console
       tags:
         - Administer the IBP console
       summary: Get supported Fabric versions
@@ -6623,7 +6636,7 @@ paths:
                         if (response.getStatusCode() != 200) {
                             throw new RuntimeException("Error code "+response.getStatusCode()+" : "+response.getStatusMessage());
                         }
-                       
+
                         GetFabricVersionsResponse fabricVersions = response.getResult();
                         GetFabricVersionsResponseVersions versions = fabricVersions.getVersions();
                         FabricVersionDictionary peers = versions.getPeer();
@@ -6633,7 +6646,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -6656,7 +6669,7 @@ paths:
                       try:
                         response = client.get_fab_versions()
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -6817,7 +6830,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -6840,7 +6853,7 @@ paths:
                       try:
                         response = client.get_health()
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -7044,7 +7057,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -7067,7 +7080,7 @@ paths:
                       try:
                         response = client.list_notifications()
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -7643,7 +7656,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -7668,7 +7681,7 @@ paths:
                           id='{Transaction-ID}',
                         )
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -7827,7 +7840,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -7859,7 +7872,7 @@ paths:
                       try:
                         response = client.archive_notifications(**opts)
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -8001,7 +8014,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -8024,7 +8037,7 @@ paths:
                       try:
                         response = client.list_components()
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -8263,7 +8276,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -8288,7 +8301,7 @@ paths:
                           type='{Type}'
                         )
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -8525,7 +8538,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -8550,7 +8563,7 @@ paths:
                           tag='{Tag}'
                         )
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -8785,7 +8798,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                     
+                      }
           python:
             - name: Example request
               example:
@@ -8810,7 +8823,7 @@ paths:
                           tag='{Tag}'
                         )
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -8847,6 +8860,7 @@ paths:
 
   /ak/api/v3/kubernetes/components/tags/{tag}:
     delete:
+      deprecated: true # not available in opensource console
       tags:
         - Manage multiple components
       summary: Delete components with tag
@@ -8957,7 +8971,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                     
+                      }
           python:
             - name: Example request
               example:
@@ -8982,7 +8996,7 @@ paths:
                           tag='{Tag}'
                         )
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -9019,6 +9033,7 @@ paths:
 
   /ak/api/v3/kubernetes/components/purge:
     delete:
+      deprecated: true # not available in opensource console
       tags:
         - Manage multiple components
       summary: Delete all components
@@ -9117,7 +9132,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -9140,7 +9155,7 @@ paths:
                       try:
                         response = client.delete_all_components()
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -9276,7 +9291,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -9299,7 +9314,7 @@ paths:
                       try:
                         response = client.restart()
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -9512,7 +9527,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                             
+                      }
           python:
             - name: Example request
               example:
@@ -9535,7 +9550,7 @@ paths:
                       try:
                         response = client.delete_all_sessions()
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -9667,7 +9682,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -9690,7 +9705,7 @@ paths:
                       try:
                         response = client.delete_all_notifications()
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -9811,7 +9826,7 @@ paths:
                         bc.setServiceUrl("https://{API-Endpoint}");
 
                         ServiceCall<CacheFlushResponse> call = service.clearCaches();
-                        Response<CacheFlushResponse> response = call.execute();    
+                        Response<CacheFlushResponse> response = call.execute();
                         if (response.getStatusCode() != 200) {
                             throw new RuntimeException("Error code "+response.getStatusCode()+" : "+response.getStatusMessage());
                         }
@@ -9820,7 +9835,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -9843,7 +9858,7 @@ paths:
                       try:
                         response = client.clear_caches()
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -9878,6 +9893,7 @@ paths:
 
   /ak/api/v3/kubernetes/components/{id}/certs:
     put:
+      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Edit admin certs on a component
@@ -10020,7 +10036,7 @@ paths:
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -10052,7 +10068,7 @@ paths:
                       try:
                         response = client.edit_admin_certs(**opts)
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -10223,13 +10239,13 @@ paths:
                         if (response.getStatusCode() != 200) {
                             throw new RuntimeException("Error code "+response.getStatusCode()+" : "+response.getStatusMessage());
                         }
-                        
+
                       } catch (ServiceResponseException e) {
                          // essential to catch and get the debugging information
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -10258,7 +10274,7 @@ paths:
                       try:
                         response = client.get_postman(**opts)
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -10381,13 +10397,13 @@ paths:
                             throw new RuntimeException("Error code "+response.getStatusCode()+" : "+response.getStatusMessage());
                         }
                         String swagger = response.getResult();
-                      
+
                       } catch (ServiceResponseException e) {
                          // essential to catch and get the debugging information
                         RuntimeException wrappedError = new RuntimeException(e.getDebuggingInfo().toString());
                         wrappedError.initCause(e);
                         throw wrappedError;
-                      }                      
+                      }
           python:
             - name: Example request
               example:
@@ -10410,7 +10426,7 @@ paths:
                       try:
                         response = client.get_swagger()
                         print(f'response: {response.result}')
-                        # handle good response here 
+                        # handle good response here
                       except ApiException as e:
                         print(f'error response: {e.message}')
                         # handle error here
@@ -10765,15 +10781,15 @@ paths:
       description: |
         This api will create a link to a cluster. Once the link is made an IBP console will be deployed into the cluster.
 
-        **This API requires unique authorization headers.** 
+        **This API requires unique authorization headers.**
         In addition to the normal `Authorization` header the `x-refresh-token` must be set. Header details:
 
         - **Authorization** - This header must be a **user's** bearer IAM token in the form `Bearer access-token-here`. The access token can be found in the `access_token` field of your IAM response during the apikey exchange. More details below.
         - **x-refresh-token** - This header must be a refresh IAM token. The refresh token can be found in the `refresh_token` field of your IAM response during the apikey exchange. More details below.
 
         **User Apikey Exchange**
-        
-        Unlike the other APIs this API requires a **user** level apikey. 
+
+        Unlike the other APIs this API requires a **user** level apikey.
         Follow these [directions](https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key) to create the user level key.
         (dsh todo check if this works for the refresh_token...)
         Once a user level apikey is created exchange it for the IAM token via these [directions](https://cloud.ibm.com/docs/account?topic=account-iamtoken_from_apikey).
