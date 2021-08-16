@@ -3,7 +3,7 @@ layout: default
 title: Advanced channel deployment and management
 parent: Advanced deployment options
 nav_order: 2
-description: "Advanced channel deployment and management in Fabric Operations Console"
+description: "Importing nodes, MSPs, and identities in Fabric Operations Console"
 keywords: import nodes, import CA, Certificate Authorities, import orderer, import MSP, import peer
 ---
 

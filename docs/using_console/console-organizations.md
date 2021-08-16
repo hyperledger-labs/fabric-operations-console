@@ -2,7 +2,7 @@
 layout: default
 title: Managing organizations
 parent: Advanced deployment options
-nav_order: 6
+nav_order: 4
 description: "Managing organizations in Fabric Operations Console"
 keywords: organizations, MSPs, create an MSP, MSP JSON file, consortium, system channel, remove an organization
 ---
