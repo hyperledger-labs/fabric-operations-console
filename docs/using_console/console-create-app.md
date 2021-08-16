@@ -2,7 +2,7 @@
 layout: default
 title: Creating applications
 parent: Advanced deployment options
-nav_order: 7
+nav_order: 5
 description: "Creating applications in Fabric Operations Console"
 keywords: client application, Commercial Paper, SDK, wallet, generate a certificate, generate a private key, fabric gateway, APIs, smart contract
 ---

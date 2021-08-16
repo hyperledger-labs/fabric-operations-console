@@ -28,6 +28,7 @@ ENV SERVER_BIND_ADDRESS "0.0.0.0"
 ENV SERVER_HTTP_DEBUG_PORT "8080"
 ENV SERVER_HTTP_TLS_PORT "8443"
 ENV BACKEND_TLS "true"
+ENV RUN_TLS_SERVER "true"
 ENV SERVER_HTTP_MAX_WRITE_TIMEOUT "5m"
 ENV SERVER_HTTP_MAX_READ_TIMEOUT "5m"
 ENV USE_WEBSOCKETS "true"
@@ -50,6 +51,7 @@ CMD ["sh", "-c", "/usr/bin/grpcwebproxy \
 --server_http_debug_port=\"${SERVER_HTTP_DEBUG_PORT}\" \
 --server_http_tls_port=\"${SERVER_HTTP_TLS_PORT}\" \
 --backend_tls=\"${BACKEND_TLS}\" \
+--run_tls_server=\"${RUN_TLS_SERVER}\" \
 --server_http_max_write_timeout=\"${SERVER_HTTP_MAX_WRITE_TIMEOUT}\" \
 --server_http_max_read_timeout=\"${SERVER_HTTP_MAX_READ_TIMEOUT}\" \
 --use_websockets=\"${USE_WEBSOCKETS}\" \

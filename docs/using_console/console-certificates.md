@@ -2,7 +2,7 @@
 layout: default
 title: Managing organizations
 parent: Advanced deployment options
-nav_order: 4
+nav_order: 6
 description: "Managing organizations in Fabric Operations Console"
 keywords: admin certificate, Node OU, admin identity, expiration
 ---
