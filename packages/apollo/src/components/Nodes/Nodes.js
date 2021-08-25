@@ -40,6 +40,19 @@ class Nodes extends Component {
 			.catch(error => {
 				Log.error(error);
 			});
+
+		this.props.updateState(SCOPE, {
+			showCertNotice: false,
+			createdArr: null,
+		});
+	}
+
+	triggerCertNotice = (createdArr) => {
+		console.log('createdArr', createdArr);
+		this.props.updateState(SCOPE, {
+			showCertNotice: true,
+			createdArr: createdArr
+		});
 	}
 
 	redirect = () => {
@@ -53,13 +66,18 @@ class Nodes extends Component {
 					<div className="bx--col-lg-13">
 						<WelcomeMessage />
 						<PageHeader headerName="nodes"
+							showCertNotice={this.props.showCertNotice}
+							createdArr={this.props.createdArr}
 							staticHeader
 						/>
 						<div className="ibp-nodes-section">
 							<PeersComponent history={this.props.history} />
 						</div>
 						<div className="ibp-nodes-section">
-							<CertificateAuthority history={this.props.history} />
+							<CertificateAuthority
+								history={this.props.history}
+								onCreate={this.triggerCertNotice}
+							/>
 						</div>
 						<div className="ibp-nodes-section">
 							<OrderersComponent history={this.props.history} />
@@ -71,7 +89,10 @@ class Nodes extends Component {
 	}
 }
 
-const dataProps = {};
+const dataProps = {
+	showCertNotice: PropTypes.bool,
+	createdArr: PropTypes.object,
+};
 
 Nodes.propTypes = {
 	...dataProps,

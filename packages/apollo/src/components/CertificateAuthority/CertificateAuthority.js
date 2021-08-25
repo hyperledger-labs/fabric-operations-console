@@ -91,6 +91,11 @@ export class CertificateAuthority extends Component {
 		this.props.history.push('/ca/' + encodeURIComponent(ca.id) + window.location.search);
 	};
 
+	handleComplete = (newCAs) => {
+		this.showNewCAs(newCAs);
+		this.props.onCreate(newCAs);
+	}
+
 	showNewCAs = newCAs => {
 		const cas = newCAs.map(ca => ca.name);
 		this.props.showSuccess(
@@ -176,7 +181,7 @@ export class CertificateAuthority extends Component {
 		return (
 			<div>
 				<div>{this.props.showImportCA && <ImportCAModal onClose={this.closeImportCAModal}
-					onComplete={this.showNewCAs}
+					onComplete={this.handleComplete}
 					parentScope={SCOPE}
 				/>}</div>
 				<div id="cas-container"
@@ -256,6 +261,7 @@ CertificateAuthority.propTypes = {
 	showSuccess: PropTypes.func,
 	clearNotifications: PropTypes.func,
 	translate: PropTypes.func, // Provided by withLocalize
+	onCreate: PropTypes.func,
 };
 
 export default connect(
