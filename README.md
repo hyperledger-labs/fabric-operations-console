@@ -16,6 +16,9 @@ The console relies on [GRPC web](https://grpc.io/docs/platforms/web/) to allow G
 
 For more Information see the [documentation for the current IBM production offerings](https://cloud.ibm.com/docs/blockchain-sw-252?topic=blockchain-sw-252-ibp-console-govern) which are driven by the code in this Lab proposal.
 
+# High level architecture
+![High level architecture](/docs/images/architecture_hl.png)
+
 # Running Fabric Operations Console
 
 You can use the following steps to provision a network using Fabric test-network, add grpc-web proxy on that of that and import components into Console so that you can manage the test network.
