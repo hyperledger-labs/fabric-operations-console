@@ -1,20 +1,53 @@
-FROM node:14-alpine as client
+FROM registry.access.redhat.com/ubi8/nodejs-12 as client
+ENV STITCH_DIR=/home/stitch
+ENV APOLLO_DIR=/home/apollo
 
-WORKDIR /home/stitch
+# look at the users/groups in the image...
+USER 0
+RUN less /etc/passwd
+RUN less /etc/group
 
-COPY ./stitch .
 
+
+# ---------------------
+# --- Build Stitch ---
+# ---------------------
+USER 1001
+WORKDIR $STITCH_DIR
+RUN pwd
+COPY --chown=1001:0 ./stitch .
 RUN npm ci && npm run build_all
 
-WORKDIR /home/apollo
+# look at stitch output...
+RUN ls -l $STITCH_DIR/dist
 
-# Bundle app source
-COPY ./apollo .
-RUN npm ci && npm run cp
-RUN npm run build
 
-FROM node:14-alpine as server
+# ---------------------
+# --- Build Apollo ---
+# ---------------------
+# we need to add python for apollo's npm install when using redhat's node 12 image
+USER 0
+RUN dnf install python2 -y \
+	&& export PATH="$PATH:/usr/bin/python2"
 
+USER 1001
+WORKDIR $APOLLO_DIR
+COPY --chown=1001:0 ./apollo .
+RUN ls -ld ../apollo
+RUN cp $STITCH_DIR/dist/* $APOLLO_DIR/public/
+RUN npm ci && npm run build
+
+# look at apollo output...
+RUN ls -l $APOLLO_DIR/build
+
+
+# ----------------------------
+# ------- Server Setup -------
+# ----------------------------
+FROM registry.access.redhat.com/ubi8/nodejs-12 as server
+ENV STITCH_DIR=/home/stitch
+ENV APOLLO_DIR=/home/apollo
+ENV SERVER_HOME=/home/athena
 ARG CONSOLE_TAG
 ARG BUILD_ID
 ARG BUILD_DATE
@@ -29,28 +62,36 @@ LABEL name="Fabric Operations Console" \
 	build-date=$BUILD_DATE \
 	io.openshift.tags="blockchain"
 
-ENV STITCH_DIR=/home/stitch
-ENV APOLLO_DIR=/home/apollo
-ENV SERVER_HOME=/home/athena
 
-EXPOSE 3000
-
-COPY --chown=1000:0 ./athena $SERVER_HOME
+# ---------------------
+# --- Build Athena ----
+# ---------------------
 WORKDIR $SERVER_HOME
+COPY --chown=1001:0 ./athena $SERVER_HOME
 
 USER 0
-RUN npm ci \
+RUN (dnf update || true)\
+	&& npm install --production --no-save \
 	# Make sure we can see what packages are getting installed
-	&& npm ls --production > npm_ls_prod.txt
-
-# Copy Apollo and Stitch builds
-COPY --chown=1000:0 --from=client $APOLLO_DIR/build $APOLLO_DIR/build
-COPY --chown=1000:0 --from=client $STITCH_DIR/dist $STITCH_DIR/dist
-
-ADD ./athena/licenses/*.tar /licenses
-RUN chown -R 1000:0 /home /licenses
-USER 1000
-
+	&& npm ls --production > npm_ls_prod.txt \
+	&& (dnf clean all || true)
 RUN chmod -R 777 ./logs
 
+
+# -------------------------------------------------
+# ------ Copy what we need from client layer ------
+# -------------------------------------------------
+COPY --chown=1001:0 --from=client $APOLLO_DIR/build $APOLLO_DIR/build
+COPY --chown=1001:0 --from=client $STITCH_DIR/dist $STITCH_DIR/dist
+ADD ./athena/licenses/*.tar /licenses
+RUN chown -R 1001:0 /home /licenses
+
+# double check...
+RUN ls -l $APOLLO_DIR/build
+RUN ls -l $STITCH_DIR/dist
+RUN ls -l $SERVER_HOME
+
+# Fin
+EXPOSE 3000
+USER 1001
 CMD [ "npm", "start" ]
