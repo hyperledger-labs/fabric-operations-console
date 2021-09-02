@@ -437,7 +437,7 @@ module.exports = function (logger, ev, t) {
 	// format body for deployer - translates the athena spec to the deployer spec
 	// check deployer's wiki: https://github.ibm.com/IBM-Blockchain/blockchain-deployer/blob/master/docs/ibp2.0_apis.md#add-component
 	// ------------------------------------------
-	exports.fmt_body_athena_to_dep = function (incoming_req, taken_ids) {
+	exports.fmt_body_athena_to_dep = function (incoming_req, taken_ids, available_vers_by_type) {
 		const incoming_body = incoming_req ? incoming_req.body : null;
 
 		if (!incoming_body) {
@@ -468,7 +468,7 @@ module.exports = function (logger, ev, t) {
 			if (comp_id) { ret.dep_component_id = comp_id; }			// only add it if we built one
 
 			// merge default and desired resource/storage values
-			const merged = exports.fill_in_default_resources(incoming_body);
+			const merged = exports.fill_in_default_resources(incoming_body, available_vers_by_type);
 			ret.resources = merged ? merged.resources : null;			// (optional) add if found
 			ret.storage = merged ? merged.storage : null;				// (optional) add if found
 			for (let sub_component in ret.resources) {					// copy "requests" to "limits" - the UI does not let users customize each
@@ -767,11 +767,11 @@ module.exports = function (logger, ev, t) {
 	// ------------------------------------------
 	// build default resource values for components if input does not have a desired value
 	// ------------------------------------------
-	exports.fill_in_default_resources = (orig) => {
+	exports.fill_in_default_resources = (orig, available_vers_by_type) => {
 		const type_to_bundle_map = {
 			'fabric-ca': ['ca'],
 			'fabric-orderer': ['orderer', ev.STR.C_PROXY],
-			'fabric-peer': ['peer', ev.STR.C_PROXY, /*'couchdb', 'leveldb', 'dind', 'chaincodelauncher'*/ ev.STR.C_FLUENTD]	// couch or level gets added lower
+			'fabric-peer': ['peer', ev.STR.C_PROXY] /*'couchdb', 'leveldb', 'dind', 'chaincodelauncher', 'fluentd' */	// couch or level gets added lower
 		};
 
 		const lc_type = (orig && orig.type) ? orig.type.toLowerCase() : '?';
@@ -788,10 +788,24 @@ module.exports = function (logger, ev, t) {
 				} else {
 					type_to_bundle_map['fabric-peer'].push(ev.STR.COUCH_DB);
 				}
-				if (t.ot_misc.is_fabric_v2(orig)) {													// add cc launcher if its fabric v2 or higher
+
+				// init version to the one in body
+				// if version dne, use the default version in the available versions from deployer
+				let version_to_use = t.misc.safe_dot_nav(incoming_body, ['orig.version']);
+				if (!version_to_use) {
+					version_to_use = t.ot_misc.find_default_version(available_vers_by_type, lc_type);
+					if (version_to_use) {
+						logger.debug('[defaults] using default fabric version for creation:', version_to_use, lc_type);
+					}
+				}
+
+				if (t.ot_misc.is_fabric_v2({ version: version_to_use })) {							// add cc launcher if its fabric v2 or higher
+					logger.debug('[defaults] detecting v2 fabric comp, adding defaults');
 					type_to_bundle_map['fabric-peer'].push(ev.STR.C_CC_LAUNCHER);
 				} else {
+					logger.debug('[defaults] detecting v1 fabric comp, adding defaults');
 					type_to_bundle_map['fabric-peer'].push(ev.STR.C_DIND);
+					type_to_bundle_map['fabric-peer'].push(ev.STR.C_FLUENTD);
 				}
 
 				// resources
@@ -811,7 +825,7 @@ module.exports = function (logger, ev, t) {
 				const comp_abr = type_to_bundle_map[lc_type][i];									// get the abbreviation of the component
 
 				if (!ev.THE_DEFAULT_RESOURCES_MAP[comp_abr]) {
-					logger.error('[deployer] woa this should not happen. field in default resources dne:', comp_abr);
+					logger.error('[defaults] woa this should not happen. field in default resources dne:', comp_abr);
 					continue;
 				}
 
