@@ -325,14 +325,32 @@ module.exports = function (logger, ev, t) {
 				t.component_lib.getAllIds((_, taken_ids) => {										// get all component ids so we can make a unique id
 					join(null, taken_ids);
 				});
+			},
+
+			// ---- Get available fabric versions ---- //
+			(join) => {
+				exports.get_fabric_versions(req, (err, resp) => {
+					if (err) {
+						join(null, null);
+					} else {
+						const formatted = {};
+						if (resp && resp.versions) {
+							formatted[ev.STR.CA] = resp.versions.ca;
+							formatted[ev.STR.PEER] = resp.versions.peer;
+							formatted[ev.STR.ORDERER] = resp.versions.orderer;
+						}
+						join(null, formatted);
+					}
+				});
 			}
 
 		], (_, results) => {
 			const tls_ca_root_cert = results[0];
 			const taken_ids = results[1];
+			const available_vers_by_type = results[2];
 			req._tls_ca_root_cert = tls_ca_root_cert;														// store here, used later during onboard
 			const existing_cluster_ids = taken_ids.cluster_ids;										// rename
-			const fmt_body = t.comp_fmt.fmt_body_athena_to_dep(req, taken_ids);						// translate athena spec to deployer here
+			const fmt_body = t.comp_fmt.fmt_body_athena_to_dep(req, taken_ids, available_vers_by_type);	// translate athena spec to deployer here
 			const is_appending = is_appending_a_raft_orderer(fmt_body, existing_cluster_ids);
 			req._dep_component_id = fmt_body ? fmt_body.dep_component_id : null;					// store id we are using for cleanup incase provision fails
 			req._component_display_name = (fmt_body && fmt_body.parameters) ? fmt_body.parameters.display_name : null;	// store name for activity tracker

@@ -650,6 +650,20 @@ module.exports = function (logger, t) {
 	};
 
 	//--------------------------------------------------
+	// Return the default fabric version from deployer api response
+	//--------------------------------------------------
+	exports.find_default_version = (available_versions, lc_type) => {
+		if (available_versions && available_versions[lc_type]) {
+			for (let version in available_versions[lc_type]) {
+				if (available_versions[lc_type][version].default === true) {
+					return version;
+				}
+			}
+		}
+		return null;
+	};
+
+	//--------------------------------------------------
 	// Parse the version.txt file and return as json
 	//--------------------------------------------------
 	exports.parse_versions = () => {
