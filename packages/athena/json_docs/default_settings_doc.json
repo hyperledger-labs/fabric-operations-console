@@ -61,7 +61,7 @@
 	"default_user_password_initial": "ohnoididnotchangethepassword",
 	"deployer_timeout": 105000,
 	"deployer_url": "http://example.com:80",
-	"disabled_compaction": false,
+	"disabled_compaction": true,
 	"disable_auto_fab_up": true,
 	"dynamic_config": true,
 	"dynamic_tls": true,
