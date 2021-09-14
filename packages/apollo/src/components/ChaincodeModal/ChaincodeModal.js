@@ -526,6 +526,13 @@ export class ChaincodeModal extends React.Component {
 		}
 		const all = [];
 		let package_id = this.props.upload_pkg ? null : _.get(this.props, 'pkg.packageId');
+		let calc_pkg_id = null;
+		try {
+			const hash = await Helper.calculateFileHash(cc_pkg);
+			calc_pkg_id = `${this.props.pkg_id}:${hash}`;
+		} catch (error) {
+			console.error('unable to calculate package id (hash)', error);
+		}
 		this.props.selected_peers.forEach(peer => {
 			if (!this.isAlreadyInstalledOnPeer(peer)) {
 				all.push(PeerRestApi.installChaincode(peer.id, cc_pkg, true));
@@ -535,6 +542,10 @@ export class ChaincodeModal extends React.Component {
 			const resp = await Promise.all(all);
 			package_id = resp[0].packageId;
 		}
+		// if we don't get the package id from the new install, calculate the package id.
+		// calc_pkg_id is when the peer has the smart contract already installed (and installing again would result in error)
+		// TODO: use calculated package id to decide whether or not to install on the peer
+		if (!package_id) package_id = calc_pkg_id;
 		return package_id;
 	}
 
@@ -679,6 +690,9 @@ export class ChaincodeModal extends React.Component {
 	async parsePackage(pkg) {
 		const data = await Helper.readLocalChaincodePackageFile(pkg);
 		this.pkg_uint8 = data ? data.uint8 : null;
+		this.props.updateState(SCOPE, {
+			pkg_id: data.pkg_id,
+		});
 	}
 
 	renderUploadPackage() {
