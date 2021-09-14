@@ -141,7 +141,7 @@ describe('Login component', () => {
 				.find('p')
 				.at(0)
 				.text()
-				.should.deep.equal('login_to_console');
+				.should.deep.equal('product_label_login');
 			component
 				.find('div')
 				.at(2)
@@ -247,7 +247,7 @@ describe('Login component', () => {
 				.find('p')
 				.at(0)
 				.text()
-				.should.deep.equal('login_to_console');
+				.should.deep.equal('product_label_login');
 			component
 				.find('div')
 				.at(2)

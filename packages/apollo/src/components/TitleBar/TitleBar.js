@@ -28,6 +28,7 @@ import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { updateState } from '../../redux/commonActions';
+import SettingsApi from '../../rest/SettingsApi';
 import Helper from '../../utils/helper';
 import { removeFromStorage } from '../../utils/localStorage';
 import ChaincodeModal from '../ChaincodeModal/ChaincodeModal';
@@ -46,6 +47,7 @@ class TitleBar extends Component {
 			showWelcomeBanner: false,
 			closeWelcome: false,
 		});
+		this.getSettings();
 	}
 
 	componentDidUpdate(prevProps) {
@@ -55,6 +57,16 @@ class TitleBar extends Component {
 				skipToContentElement.tabIndex = 0;
 			}
 		}
+	}
+
+	getSettings() {
+		SettingsApi.getSettings()
+			.then(settings => {
+				this.props.updateState(SCOPE, {
+					productLabel: settings.PRODUCT_LABEL_KEY,
+				});
+			})
+			.catch(error => { });
 	}
 
 	openSignatureCollections = () => {
@@ -177,15 +189,16 @@ class TitleBar extends Component {
 		const translate = this.props.translate;
 		const { needsAttention } = this.props;
 		const needsAttentionStrLength = needsAttention ? needsAttention.toString().length : 0;
+		const productLabel = this.props.productLabel || 'product_label';		// may or may not contain "IBM"
 
 		return (
 			<div
 				role="banner"
 				id="title_bar"
 				className={`ibp-title-bar ${showHeaderButtons ? 'ibp-user-logged-in' : 'ibp-user-logged-out'}`}
-				aria-label={translate('open_source_product_label')}
+				aria-label={translate(productLabel)}
 			>
-				<Header aria-label={translate('open_source_product_label')}>
+				<Header aria-label={translate(productLabel)}>
 					<SkipToContent />
 					<HeaderName prefix=""
 						onClick={this.goHome}
@@ -193,7 +206,7 @@ class TitleBar extends Component {
 						className="ibp-carbon-product-name"
 						tabIndex="0"
 					>
-						{translate('open_source_product_label')}
+						{translate(productLabel)}
 					</HeaderName>
 					{this.props.logged && showHeaderButtons && (
 						<HeaderNavigation aria-label={translate('ga_product_label')}>
@@ -329,6 +342,7 @@ const dataProps = {
 	showSignatureCollection: PropTypes.bool,
 	closeWelcome: PropTypes.bool,
 	details: PropTypes.object,
+	productLabel: 'product_label',
 };
 
 TitleBar.propTypes = {

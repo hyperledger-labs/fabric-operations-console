@@ -193,6 +193,13 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 				settings.DISABLED_COMPACTION = athena.disabled_compaction;
 				settings.DISABLE_AUTO_FAB_UP = athena.disable_auto_fab_up;
 
+				// product name fields (the value of these vars can be found in the translation JSON files)
+				// apollo uses these to name the product in our UI
+				settings.PRODUCT_LABEL_KEY = athena.product_label_key || 'product_label';
+				settings.PRODUCT_LABEL_VER_KEY = athena.product_label_ver_key || 'product_label_version';
+				settings.PRODUCT_LABEL_NOTES_KEY = athena.product_label_notes_key || 'product_label_notes';
+				settings.PRODUCT_LABEL_LOGIN_KEY = athena.product_label_login_key || 'product_label_login';
+
 				// each key in this object is a version that is okay.
 				// any less will be auto upgraded to the highest minor version for that component that deployer has available.
 				settings.AUTO_FAB_UP_VERSIONS = athena.auto_fab_up_versions;

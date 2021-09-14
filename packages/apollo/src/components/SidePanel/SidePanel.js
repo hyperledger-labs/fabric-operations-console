@@ -177,7 +177,7 @@ export class SidePanel extends React.Component {
 							id={this.props.id}
 							className={className}
 							role="dialog"
-							aria-label={`${translate('ibm')} ${translate('ga_product_label')} ${translate('panel')}`}
+							aria-label={`${translate('product_label')} ${translate('panel')}`}
 						>
 							<div
 								className="ibp-panel--container"
