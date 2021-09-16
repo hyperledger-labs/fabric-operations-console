@@ -28,9 +28,9 @@
 		"async": "2.6.*",
 		"bn.js": "5.1.*",
 		"chai": "^4.2.0",
-		"fs-extra": "^10.0.0",
 		"google-protobuf": "3.6.*",
-		"karma": "5.0.*",
+		"husky": "^4.2.5",
+		"karma": "6.3.*",
 		"karma-chai": "^0.1.0",
 		"karma-chrome-launcher": "^2.2.0",
 		"karma-coverage": "^2.0.2",
@@ -40,8 +40,8 @@
 		"safer-buffer": "2.1.*",
 		"ts-loader": "5.0.0",
 		"tslint": "^6.1.0",
-		"typescript": "3.9.9",
-		"webpack": "^4.43.0",
+		"typescript": "3.0.3",
+		"webpack": "^4.45.0",
 		"webpack-cli": "^3.3.11"
 	}
 }
