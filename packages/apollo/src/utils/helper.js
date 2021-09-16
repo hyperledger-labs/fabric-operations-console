@@ -1292,6 +1292,13 @@ const Helper = {
 		});
 	},
 
+	async calculateFileHash(fileBuffer) {
+		const hashBuffer = await crypto.subtle.digest('SHA-256', fileBuffer);
+		const hashArray = Array.from(new Uint8Array(hashBuffer));
+		const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+		return hashHex;
+	},
+
 	async readLocalChaincodePackageFile(file) {
 		const buffer = await Helper.readLocalBinaryFile(file, CHAINCODE_LIMIT);
 		const uint8 = new Uint8Array(buffer);
