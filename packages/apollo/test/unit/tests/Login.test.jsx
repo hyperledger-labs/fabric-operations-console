@@ -103,6 +103,7 @@ describe('Login component', () => {
 			confirmPassword: undefined,
 			translate: translateStub,
 			updateState: updateStateStub,
+			productLabelLogin: 'Login'
 		};
 	});
 
@@ -141,7 +142,7 @@ describe('Login component', () => {
 				.find('p')
 				.at(0)
 				.text()
-				.should.deep.equal('product_label_login');
+				.should.deep.equal('Login');
 			component
 				.find('div')
 				.at(2)
@@ -247,7 +248,7 @@ describe('Login component', () => {
 				.find('p')
 				.at(0)
 				.text()
-				.should.deep.equal('product_label_login');
+				.should.deep.equal('Login');
 			component
 				.find('div')
 				.at(2)
