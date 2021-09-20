@@ -27,7 +27,7 @@ const ReleaseNotes = props => {
 				<h2 id="Release Notes"
 					className="settings-label ibp-note-header"
 				>
-					{translate('release_notes')}
+					{translate(props.productLabelNotes || 'product_label_notes')}
 				</h2>
 				<div className="ipb-note-current">
 					{loading && (
@@ -91,6 +91,7 @@ ReleaseNotes.propTypes = {
 	loading: PropTypes.bool,
 	releaseNotes: PropTypes.object,
 	translate: PropTypes.func, // Provided by withLocalize
+	productLabelNotes: PropTypes.string,
 };
 
 export default withLocalize(ReleaseNotes);

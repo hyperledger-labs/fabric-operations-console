@@ -120,7 +120,9 @@ export class Login extends Component {
 					<TitleBar hideButtons />
 					<div className="ibp-login-main">
 						<div className={`ibp-login-content ${this.props.changePassword ? 'ibp-change-password' : 'ibp-user-login'} `}>
-							<p className="ibp-login-content-title ibm-type-light">{translate(this.props.changePassword ? 'change_your_password' : 'login_to_console')}</p>
+							<p className="ibp-login-content-title ibm-type-light">
+								{translate(this.props.changePassword ? 'change_your_password' : this.props.productLabelLogin)}
+							</p>
 							<form
 								onSubmit={e => {
 									e.preventDefault();
@@ -218,6 +220,7 @@ const dataProps = {
 	currentPasswordError: PropTypes.string,
 	newPasswordError: PropTypes.string,
 	confirmPasswordError: PropTypes.string,
+	productLabelLogin: PropTypes.string,
 };
 
 Login.propTypes = {

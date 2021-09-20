@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { Button, SkeletonText } from 'carbon-components-react';
+import { Button } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withLocalize } from 'react-localize-redux';
@@ -70,6 +70,8 @@ class Support extends Component {
 					settings,
 					hide_transaction_input,
 					hide_transaction_output,
+					productLabelVersion: settings.PRODUCT_LABEL_VER_KEY,
+					productLabelNotes: settings.PRODUCT_LABEL_NOTES_KEY,
 				});
 			})
 			.catch(error => {
@@ -97,7 +99,7 @@ class Support extends Component {
 		return (
 			<div>
 				{translate('product_version')}
-				{this.props.loading && <SkeletonText />}
+				{translate(this.props.productLabelVersion || 'product_label_version')}
 				<div id="version_id"
 					className="support-versions-section"
 				>
@@ -156,6 +158,7 @@ class Support extends Component {
 					<div className="bx--col-lg-12">
 						<ReleaseNotes loading={this.props.loading}
 							releaseNotes={this.props.releaseNotes}
+							productLabelNotes={this.props.productLabelNotes}
 						/>
 					</div>
 				</div>
@@ -172,6 +175,8 @@ const dataProps = {
 	hide_transaction_output: PropTypes.bool,
 	settings: PropTypes.object,
 	userInfo: PropTypes.object,
+	productLabelVersion: PropTypes.string,
+	productLabelNotes: PropTypes.string,
 };
 
 Support.propTypes = {

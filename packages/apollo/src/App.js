@@ -49,6 +49,7 @@ class App extends Component {
 
 		this.state = {
 			authScheme: null,
+			productLabelLogin: 'product_label_login',		// default translation key
 		};
 	}
 
@@ -254,6 +255,13 @@ class App extends Component {
 			features.feature_flags.hsm_enabled = false;
 			this.props.updateState('settings', features);
 		}
+
+		if (settings.PRODUCT_LABEL_LOGIN_KEY) {
+			this.setState({
+				productLabelLogin: settings.PRODUCT_LABEL_LOGIN_KEY,
+			});
+		}
+
 		return settings;
 	}
 
@@ -376,12 +384,16 @@ class App extends Component {
 
 		Log.debug('Current auth scheme and user info:', this.state.authScheme.type, this.props.userInfo);
 		if (this.state.authScheme.type === 'couchdb' && this.props.userInfo && !this.props.userInfo.logged) {
-			return <Login hostUrl={this.state.authScheme.host_url} />;
+			return <Login
+				hostUrl={this.state.authScheme.host_url}
+				productLabelLogin={this.state.productLabelLogin}
+			/>;
 		}
 
 		if (this.state.authScheme.type === 'couchdb' && this.props.userInfo && this.props.userInfo.logged && this.props.userInfo.password_type === 'default') {
 			return <Login hostUrl={this.state.authScheme.host_url}
 				changePassword={true}
+				productLabelLogin={this.state.productLabelLogin}
 			/>;
 		}
 
