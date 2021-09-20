@@ -233,7 +233,8 @@ describe('Http Metrics Lib', () => {
 							expectBlock: (done) => {
 								http_metrics.clear_aggregated_metrics();
 								http_metrics.append_aggregated_metrics(metric_objects.append_data);
-								const data = http_metrics.get_aggregated_metrics(365);
+								const data = http_metrics.get_aggregated_metrics(Number.MAX_SAFE_INTEGER);
+								metric_objects.response.last_x_days_metrics._days = Number.MAX_SAFE_INTEGER;
 								expect(data).to.deep.equal(metric_objects.response);
 								done();
 							}
