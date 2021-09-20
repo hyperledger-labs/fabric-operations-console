@@ -9,6 +9,7 @@
 		"detect-secrets": "detect-secrets-hook --baseline .secrets.baseline -v",
 		"detect-secrets-create": "detect-secrets scan --update .secrets.baseline",
 		"test": "npm run build:stitch && node ./node_modules/nyc/bin/nyc.js --reporter=html --reporter=text --report-dir=./coverage ./node_modules/mocha/bin/mocha --timeout 6000 --exit test/test-suites/*/*.test.js",
+		"test:local": "node ./node_modules/nyc/bin/nyc.js --reporter=html --reporter=text --report-dir=./coverage ./node_modules/mocha/bin/mocha --timeout 6000 --exit test/test-suites/*/*.test.js",
 		"test:simple": "node ./node_modules/nyc/bin/nyc.js --reporter=html --reporter=text --report-dir=./coverage ./node_modules/mocha/bin/mocha --timeout 6000 --exit test/test-suites/*/*.test.js ",
 		"test:all": "npm run build:stitch && node ./node_modules/nyc/bin/nyc.js --reporter=html --reporter=text --report-dir=./coverage ./node_modules/mocha/bin/mocha --exit test/test-suites/external/*/*.test.js test/test-suites/*/*.test.js --reporter tap-file",
 		"test:server": "npm run build:stitch && mocha --exit test/test-suites/*/*.test.js",

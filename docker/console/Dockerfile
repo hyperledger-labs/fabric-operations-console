@@ -16,6 +16,13 @@ USER 1001
 WORKDIR $STITCH_DIR
 RUN pwd
 COPY --chown=1001:0 ./stitch .
+
+# change owner of repo root before npm install
+# else perm errors can happen on node_modules folder depending on src perms
+USER 0
+RUN chown -R 1001:0 .
+RUN ls -ld .
+USER 1001
 RUN npm ci && npm run build_all
 
 # look at stitch output...
@@ -33,7 +40,13 @@ RUN dnf install python2 -y \
 USER 1001
 WORKDIR $APOLLO_DIR
 COPY --chown=1001:0 ./apollo .
-RUN ls -ld ../apollo
+
+# change owner of repo root before npm install
+# else perm errors can happen on node_modules folder depending on src perms
+USER 0
+RUN chown -R 1001:0 .
+RUN ls -ld .
+USER 1001
 RUN cp $STITCH_DIR/dist/* $APOLLO_DIR/public/
 RUN npm ci && npm run build
 
@@ -81,6 +94,7 @@ RUN chmod -R 777 ./logs
 # -------------------------------------------------
 # ------ Copy what we need from client layer ------
 # -------------------------------------------------
+USER 0
 COPY --chown=1001:0 --from=client $APOLLO_DIR/build $APOLLO_DIR/build
 COPY --chown=1001:0 --from=client $STITCH_DIR/dist $STITCH_DIR/dist
 ADD ./athena/licenses/*.tar /licenses

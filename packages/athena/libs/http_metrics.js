@@ -354,7 +354,7 @@ module.exports = function (logger, t, opts) {
 			routes: {},
 			methods: {},
 			user_agents: {},
-			_days: isNaN(days_summary) ? 7 : Math.min(Number(days_summary), 365)	// defaults to 7 days, 1 year upper limit for sanity
+			_days: isNaN(days_summary) ? 7 : Number(days_summary),	// defaults to 7 days
 		};
 
 		for (let i in data.http_access) {
