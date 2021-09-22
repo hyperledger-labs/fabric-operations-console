@@ -223,6 +223,7 @@ class App extends Component {
 			transaction_visibility: settings.TRANSACTION_VISIBILITY,
 			capabilities: settings.FABRIC_CAPABILITIES,
 			platform: settings.INFRASTRUCTURE,
+			default_consortium: settings.DEFAULT_CONSORTIUM,
 			hsm: settings.HSM,
 		};
 		this.props.updateState('settings', features);

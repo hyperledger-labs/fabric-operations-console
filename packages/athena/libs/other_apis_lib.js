@@ -60,6 +60,7 @@ module.exports = function (logger, ev, t) {
 				}
 			},
 			FEATURE_FLAGS: ev.FEATURE_FLAGS || {},
+			DEFAULT_CONSORTIUM: ev.DEFAULT_CONSORTIUM || {},
 			PROXY_TLS_HTTP_URL: ev.PROXY_TLS_HTTP_URL,
 			PROXY_TLS_WS_URL: ev.PROXY_TLS_WS_URL || '?',
 			PROXY_TLS_FABRIC_REQS: ev.PROXY_TLS_FABRIC_REQS,	// false is valid, don't make this a question mark
