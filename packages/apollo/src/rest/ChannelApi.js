@@ -271,7 +271,7 @@ class ChannelApi {
 		const write_set = config_update.write_set;
 		const read_set = config_update.read_set;
 
-		console.log(" *** here ***" + options.consortium_id);
+		Log.info('Check consortium', options.consortium_id);
 		read_set.values.Consortium.value.name = options.consortium_id;
 		write_set.values.Consortium.value.name =options.consortium_id;
 		if (!write_set.groups.Application.values) {
