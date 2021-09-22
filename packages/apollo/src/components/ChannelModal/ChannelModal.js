@@ -1475,6 +1475,7 @@ class ChannelModal extends Component {
 		}
 		let options = {
 			channel_id: this.props.channelName,
+			consortium_id: this.props.default_consortium,
 			org_msp_id: this.props.selectedChannelCreator.msp_id,
 			application_msps: organizations,
 			orderer_url: this.props.selectedOrderer.url2use,
@@ -2018,6 +2019,7 @@ export default connect(
 	state => {
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['configtxlator_url'] = _.get(state, 'settings.configtxlator_url');
+		newProps['default_consortium'] = _.get(state, 'settings.default_consortium');
 		newProps['CRN'] = _.get(state, 'settings.CRN');
 		newProps['userInfo'] = _.get(state, 'userInfo.loggedInAs');
 		newProps['capabilitiesEnabled'] = _.get(state, 'settings.feature_flags.capabilities_enabled');

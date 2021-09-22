@@ -151,6 +151,7 @@ class App extends Component {
 			});
 		}
 		this.props.updateState('settings', {
+			default_consortium: resp.default_consortium,
 			configtxlator_url: resp.configtxlator_url,
 			authScheme: l_authScheme,
 		});

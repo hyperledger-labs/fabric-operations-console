@@ -260,7 +260,7 @@ class ChannelApi {
 	*/
 	static async createAppChannel(options) {
 		// 1. build channel update json
-		options.consortium_id = 'SampleConsortium';
+		// options.consortium_id = 'SampleConsortium';
 		options.fabric_version = '1.1'; // todo VR: do we need to expose this?
 		options.application_msp_ids = Object.keys(options.application_msps);
 		const configBlock = _.cloneDeep(channel_template);
@@ -270,6 +270,10 @@ class ChannelApi {
 
 		const write_set = config_update.write_set;
 		const read_set = config_update.read_set;
+
+		console.log(" *** here ***" + options.consortium_id);
+		read_set.values.Consortium.value.name = options.consortium_id;
+		write_set.values.Consortium.value.name =options.consortium_id;
 		if (!write_set.groups.Application.values) {
 			write_set.groups.Application.values = {};
 		}
