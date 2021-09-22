@@ -27,6 +27,7 @@ import { MspRestApi } from '../../rest/MspRestApi';
 import { NodeRestApi } from '../../rest/NodeRestApi';
 import { OrdererRestApi } from '../../rest/OrdererRestApi';
 import ActionsHelper from '../../utils/actionsHelper';
+import ChannelUtils from '../../utils/channel';
 import Clipboard from '../../utils/clipboard';
 import * as constants from '../../utils/constants';
 import Helper from '../../utils/helper';
@@ -321,7 +322,7 @@ class OrdererDetails extends Component {
 		OrdererRestApi.getSystemChannelConfig(this.props.match.params.ordererId, this.props.configtxlator_url)
 			.then(resp => {
 				// we usually pick "SampleConsortium" but if that is missing, grab the first one. we don't support multiple atm.
-				const first_consortium = getSampleConsortiumOrFirstKey(resp.channel_group.groups.Consortiums.groups);
+				const first_consortium = ChannelUtils.getSampleConsortiumOrFirstKey(resp.channel_group.groups.Consortiums.groups);
 				if (!first_consortium) {
 					throw Error('zero consortiums were found in block data. thus cannot grab consortium member data.');
 				}
@@ -371,20 +372,6 @@ class OrdererDetails extends Component {
 					}
 				}
 			});
-
-		// return SampleConsortium if applicable or return the first key in the "groups" object
-		function getSampleConsortiumOrFirstKey(obj) {
-			if (obj && typeof obj === 'object') {
-				if (obj.SampleConsortium) {
-					return obj.SampleConsortium;
-				} else {
-					for (let key in obj) {
-						return obj[key]; // return the first one, good enough for me
-					}
-				}
-			}
-			return null;
-		}
 	}
 
 	openOrdererSettings = type => {
