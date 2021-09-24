@@ -222,6 +222,7 @@
 	"support_key": null,
 	"support_password": null,
 	"system_channel_id": "testchainid",
+	"default_consortium": "SampleConsortium",
 	"trust_proxy": "loopback, linklocal, uniquelocal",
 	"the_default_resources_map": {
 		"ca": {

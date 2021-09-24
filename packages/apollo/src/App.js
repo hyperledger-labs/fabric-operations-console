@@ -151,6 +151,7 @@ class App extends Component {
 			});
 		}
 		this.props.updateState('settings', {
+			default_consortium: resp.default_consortium,
 			configtxlator_url: resp.configtxlator_url,
 			authScheme: l_authScheme,
 		});
@@ -222,6 +223,7 @@ class App extends Component {
 			transaction_visibility: settings.TRANSACTION_VISIBILITY,
 			capabilities: settings.FABRIC_CAPABILITIES,
 			platform: settings.INFRASTRUCTURE,
+			default_consortium: settings.DEFAULT_CONSORTIUM,
 			hsm: settings.HSM,
 		};
 		this.props.updateState('settings', features);

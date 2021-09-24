@@ -15,6 +15,7 @@ import async from 'async';
 import _ from 'lodash';
 import { promisify } from 'util';
 import Logger from '../components/Log/Logger';
+import ChannelUtils from '../utils/channel';
 import * as constants from '../utils/constants';
 import Helper from '../utils/helper';
 import ChannelApi from './ChannelApi';
@@ -583,6 +584,7 @@ class OrdererRestApi {
 			...template_msp.values.MSP.value.config,
 			...msp_definition,
 		};
+		const first_consortium = ChannelUtils.getSampleConsortiumOrFirstKey(updated_json.channel_group.groups.Consortiums.groups);
 
 		if (options.type === 'ordererAdmin') {
 			let orderer = updated_json.channel_group.groups.Orderer;
@@ -591,11 +593,10 @@ class OrdererRestApi {
 			}
 			updated_json.channel_group.groups.Orderer.groups[options.payload.msp_id] = template_msp;
 		} else {
-			let consortium = updated_json.channel_group.groups.Consortiums.groups.SampleConsortium;
-			if (consortium && !consortium.groups) {
-				consortium.groups = {};
+			if (first_consortium && !first_consortium.groups) {
+				first_consortium.groups = {};
 			}
-			updated_json.channel_group.groups.Consortiums.groups.SampleConsortium.groups[options.payload.msp_id] = template_msp;
+			first_consortium.groups[options.payload.msp_id] = template_msp;
 		}
 
 		const orderer = await OrdererRestApi.getOrdererDetails(options.ordererId, true);
@@ -767,12 +768,13 @@ class OrdererRestApi {
 		const channel_config = await OrdererRestApi.getSystemChannelConfig(options.ordererId, options.configtxlator_url);
 		let original_json = channel_config;
 		let updated_json = JSON.parse(JSON.stringify(channel_config));
+		const first_consortium = ChannelUtils.getSampleConsortiumOrFirstKey(updated_json.channel_group.groups.Consortiums.groups);
 
 		if (options.type === 'ordererAdmin') {
 			let i_orderer_groups = updated_json.channel_group.groups.Orderer.groups;
 			delete i_orderer_groups[options.payload.msp_id];
 		} else {
-			let i_consort_groups = updated_json.channel_group.groups.Consortiums.groups.SampleConsortium.groups;
+			let i_consort_groups = first_consortium.groups;
 			delete i_consort_groups[options.payload.msp_id];
 		}
 
