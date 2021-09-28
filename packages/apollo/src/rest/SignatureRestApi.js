@@ -332,7 +332,7 @@ class SignatureRestApi {
 				const peers = [];
 				if (data.installed_peers && org.msp_id === data.originator.msp_id) {
 					data.installed_peers.forEach(peer => {
-						peers.push(peer.grpcwp_url);			// do NOT use "url2use", might result in CORS issues
+						peers.push(peer.grpcwp_url); // do NOT use "url2use", might result in CORS issues
 					});
 				}
 				request.orgs2sign.push({

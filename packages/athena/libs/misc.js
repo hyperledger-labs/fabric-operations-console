@@ -110,6 +110,23 @@ module.exports = function (logger, t) {
 	};
 
 	//------------------------------------------------------------
+	// format a large number to x.xx FRIENDLY_UNITS. ex: 1234567 -> '1.23m' (negative values become 0)
+	//------------------------------------------------------------
+	exports.friendly_number = function (num, dec) {
+		let ret = '';
+		dec = !isNaN(dec) ? dec : 2;
+		num = Number(num);
+		if (isNaN(num)) { ret = '?'; }
+		else if (num <= 0) { ret = '0'; }
+		else if (num > 1000 * 1000 * 1000 * 1000) { ret = (num / 1000 / 1000 / 1000 / 1000).toFixed(dec) + 'T'; }	// format for trillions
+		else if (num > 1000 * 1000 * 1000) { ret = (num / 1000 / 1000 / 1000).toFixed(dec) + 'B'; }					// format for billions
+		else if (num > 1000 * 1000) { ret = (num / 1000 / 1000).toFixed(dec) + 'M'; }								// format for millions
+		else if (num > 1000) { ret = (num / 1000).toFixed(dec) + 'K'; }												// format for thousands
+		else { ret = num.toFixed(dec); }																			// format to base
+		return ret;
+	};
+
+	//------------------------------------------------------------
 	// base64 encode a string
 	//------------------------------------------------------------
 	exports.b64 = function (str) {

@@ -19,7 +19,7 @@ IMAGE_BUILD_NAME = apollo-test:latest
 COMMIT ?= $(shell git rev-parse --short HEAD)
 GIT_TAG ?= $(shell git describe | grep -v -)
 ARCH ?= amd64
-NODE_VER ?= 8.17.0-fips
+NODE_VER ?= 12.18.3
 BUILD_DATE = $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 LICENSE_HARDCODE ?= 'false'
 

@@ -174,8 +174,7 @@ export class Organizations extends Component {
 											{
 												name: 'selectedOrg',
 												type: 'dropdown',
-												options: msps
-													? msps.filter(x => !orgs.find(y => y.msp === x.msp_id && _.intersection(x.root_certs, y.root_certs).length >= 1)) : [],
+												options: msps ? msps.filter(x => !orgs.find(y => y.msp === x.msp_id && _.intersection(x.root_certs, y.root_certs).length >= 1)) : [],
 												default: 'select_msp_id',
 											},
 										]}

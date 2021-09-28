@@ -11,6 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
+
 /* eslint-disable new-cap */
 /* eslint-disable quotes */
 const { Given } = require('cucumber');
@@ -41,7 +42,11 @@ Given(/^I selected (?:'|")(.*?)(?:'|") from the (?:'|")(.*?)(?:'|") dropdown$/, 
 	try {
 		await selectDropdownOption(element, selector);
 	} catch (e) {
-		await selectDropdownOption(element, selector);
+		try {
+			await selectDropdownOption(element, selector);
+		} catch (e) {
+			//
+		}
 	}
 });
 

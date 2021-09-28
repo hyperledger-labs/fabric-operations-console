@@ -11,6 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
+
 //------------------------------------------------------------
 // comp_formatting_lib.js - Library functions for component formatting related tasks
 //------------------------------------------------------------

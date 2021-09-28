@@ -18,7 +18,7 @@ import ComponentApi from '../rest/ComponentApi';
 import { NodeRestApi } from '../rest/NodeRestApi';
 import { RestApi } from '../rest/RestApi';
 
-const RETRY_LIMIT = 25;
+const RETRY_LIMIT = 15; // takes 4 minutes to give up
 const RETRY_FREQUENCY = 5000;
 const SCOPE = 'node_status';
 
@@ -167,19 +167,35 @@ const NodeStatus = {
 		return res;
 	},
 
+	calcRetryDelay(lastRetryDelay, attempt) {
+		// wait 15% more each time
+		return Math.floor(lastRetryDelay * 1.15);
+	},
+
+	// make wrapper around old getStatus interface
 	getStatus(data, scope, prop, callback, retryLimit, retryFreq) {
+		// call the new interface
+		this.getStatusInternal(data, scope, prop, retryLimit, retryFreq, 1, (err, resp) => {
+			if (callback) {
+				return callback(err, resp);
+			}
+		});
+	},
+
+	getStatusInternal(data, scope, prop, retryLimit, lastRetryDelay, attempt, callback) {
 		if (!data) {
 			return;
 		}
 		if (!_.isArray(data)) {
-			return this.getStatus([data], scope, prop, callback, retryLimit, retryFreq);
+			return this.getStatus([data], scope, prop, callback, retryLimit, lastRetryDelay);
 		}
 		if (!retryLimit) {
 			retryLimit = RETRY_LIMIT;
 		}
-		if (!retryFreq) {
-			retryFreq = RETRY_FREQUENCY;
+		if (!lastRetryDelay) {
+			lastRetryDelay = RETRY_FREQUENCY;
 		}
+
 		const components = {};
 		const complete = {};
 		let count = 0;
@@ -232,6 +248,7 @@ const NodeStatus = {
 		// create a unique id based on the current time (in milliseconds) for this request
 		const id = new Date().getTime().toString();
 		this.in_progress[id] = true;
+
 		RestApi.post('/api/v2/components/status', { components })
 			.then(results => {
 				if (this.in_progress[id]) {
@@ -239,22 +256,19 @@ const NodeStatus = {
 					Object.keys(results).forEach(id => {
 						const node = this.findNode(id, data);
 						if (node) {
-							if (results[id].status === 'ok') {
+							const resp_status = results && results[id] ? results[id].status : null;
+							let status = null;
+
+							if (typeof resp_status === 'string') {
+								// if no status, fall through to retry logic
+								status = resp_status.toLowerCase() === 'ok' ? 'running' : null;
 								// all good, so return status
-								let status = 'running';
-								if (node.type === 'fabric-peer' || node.type === 'fabric-orderer' || node.type === 'peer' || node.type === 'orderer') {
-									if (_.get(results[id], 'status_resp.status')) {
-										status = _.get(results[id], 'status_resp.status') === 'OK' ? 'running' : 'stopped';
-									} else {
-										// if no status, fall through to retry logic
-										status = null;
-									}
-								}
-								if (status) {
-									this.updateStatus(id, status, scope, prop, callback);
-									complete[id] = true;
-								}
 							}
+							if (status) {
+								this.updateStatus(id, status, scope, prop, callback);
+								complete[id] = true;
+							}
+
 							if (!complete[id]) {
 								// if we can't get the status for a saas node, then
 								// check for resource issues or precreate state
@@ -309,19 +323,20 @@ const NodeStatus = {
 								}
 							});
 							if (retry.length > 0) {
-								if (retryLimit > 1) {
+								if (retryLimit - attempt > 1) {
 									if (!window.statusApiRetries) {
 										window.statusApiRetries = {};
 									}
 
 									// store the timeouts where we can clear them after a logout
 									// helps avoid the a api lockout
+									const thisDelayMs = this.calcRetryDelay(lastRetryDelay, attempt);
 									window.statusApiRetries[scope] = window.setTimeout(() => {
 										if (this.in_progress[id]) {
-											this.getStatus(retry, scope, prop, callback, retryLimit - 1, retryFreq);
+											this.getStatusInternal(retry, scope, prop, retryLimit, thisDelayMs, ++attempt, callback);
 											delete this.in_progress[id];
 										}
-									}, retryFreq);
+									}, thisDelayMs);
 								} else {
 									retry.forEach(failed => {
 										this.updateStatus(failed.id, 'unknown', scope, prop, callback);

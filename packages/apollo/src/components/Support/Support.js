@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { Button } from 'carbon-components-react';
+import { Button, SkeletonText } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withLocalize } from 'react-localize-redux';
@@ -20,6 +20,7 @@ import { clearNotifications, showBreadcrumb, showError, updateState } from '../.
 import SettingsApi from '../../rest/SettingsApi';
 import Helper from '../../utils/helper';
 import Logger from '../Log/Logger';
+import Mustgather from '../Mustgather/Mustgather';
 import PageContainer from '../PageContainer/PageContainer';
 import PageHeader from '../PageHeader/PageHeader';
 import ReleaseNotes from '../ReleaseNotes/ReleaseNotes';
@@ -65,11 +66,13 @@ class Support extends Component {
 			.then(settings => {
 				const hide_transaction_input = settings.FEATURE_FLAGS.hide_transaction_input;
 				const hide_transaction_output = settings.FEATURE_FLAGS.hide_transaction_output;
+				const mustgather_enabled = settings.FEATURE_FLAGS.mustgather_enabled;
 				this.props.updateState(SCOPE, {
 					loading: false,
 					settings,
 					hide_transaction_input,
 					hide_transaction_output,
+					mustgather_enabled,
 					productLabelVersion: settings.PRODUCT_LABEL_VER_KEY,
 					productLabelNotes: settings.PRODUCT_LABEL_NOTES_KEY,
 				});
@@ -98,8 +101,8 @@ class Support extends Component {
 		}
 		return (
 			<div>
-				{translate('product_version')}
 				{translate(this.props.productLabelVersion || 'product_label_version')}
+				{this.props.loading && <SkeletonText />}
 				<div id="version_id"
 					className="support-versions-section"
 				>
@@ -153,6 +156,7 @@ class Support extends Component {
 								/>
 							</div>
 							{this.renderSupportSection(translate)}
+							{this.props.mustgather_enabled && <Mustgather />}
 						</div>
 					</div>
 					<div className="bx--col-lg-12">
@@ -173,6 +177,7 @@ const dataProps = {
 	releaseNotes: PropTypes.object,
 	hide_transaction_input: PropTypes.bool,
 	hide_transaction_output: PropTypes.bool,
+	mustgather_enabled: PropTypes.bool,
 	settings: PropTypes.object,
 	userInfo: PropTypes.object,
 	productLabelVersion: PropTypes.string,
