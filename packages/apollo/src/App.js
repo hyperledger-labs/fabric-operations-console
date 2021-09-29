@@ -49,7 +49,7 @@ class App extends Component {
 
 		this.state = {
 			authScheme: null,
-			productLabelLogin: 'product_label_login',		// default translation key
+			productLabelLogin: 'product_label_login', // default translation key
 		};
 	}
 

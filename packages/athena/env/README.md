@@ -385,6 +385,10 @@ __default_settings_doc.json:__
 // deployer url. including basic auth
 "deployer_url": "http://username:password@localhost:3000",
 
+// if true athena will not ask couchdb to perform db compaction
+// defaults false
+"disabled_compaction": false,
+
 // if true the tls cert file will be watched and if touched will restart the server
 // changes to this field require a restart.
 // defaults true
@@ -894,14 +898,16 @@ See the [_permissions doc](../docs/_permissions.md) for role/action details.
 - a `auth_scheme` value of `couchdb` will use the same CouchDB for optools data as your user data. the settings doc in the system db will contain your valid users. this is the "poor man's" solution and should only be used if you cannot use another scheme.
 - required setting fields: (find field in default_settings_doc above for details)
 	- `auth_scheme` (string)
+	- `initial_admin` (string)
+	- `default_user_password_initial` (string)
 
-### 6. AppID (discontinued
+### 6. AppID (discontinued)
 - a `auth_scheme` value of `appid` will use the IBM Cloud service [App ID](https://console.bluemix.net/catalog/services/app-id). which is a service that can integrate with many SSO providers or implement a custom email/pass store. no longer supported, **do not use**.
 - required setting fields: (find field in default_settings_doc above for details)
 	- `auth_scheme` (string)
 	- `app_id` (object)
 
-### 7. IBM ID (legacy)
-- a `auth_scheme` value of `ibmid` will use the **legacy** IAM for logging in users with IBM IDs. this is currently only used for **dev IBP** on IBM Cloud. **do not use**. this is an OAuth 2 based scheme.
+### 7. IBM ID (discontinued)
+- a `auth_scheme` value of `ibmid` will use the **legacy** IAM for logging in users with IBM IDs. this is currently only used for **dev IBP** on IBM Cloud. this is an OAuth 2 based scheme. no longer supported, **do not use**.
 	- `auth_scheme` (string)
 	- `ibmid` (object)

@@ -66,7 +66,7 @@ class TitleBar extends Component {
 					productLabel: settings.PRODUCT_LABEL_KEY,
 				});
 			})
-			.catch(error => { });
+			.catch(error => {});
 	}
 
 	openSignatureCollections = () => {
@@ -189,8 +189,7 @@ class TitleBar extends Component {
 		const translate = this.props.translate;
 		const { needsAttention } = this.props;
 		const needsAttentionStrLength = needsAttention ? needsAttention.toString().length : 0;
-		const productLabel = this.props.productLabel || 'product_label';		// may or may not contain "IBM"
-
+		const productLabel = this.props.productLabel || 'product_label'; // may or may not contain "IBM"
 		return (
 			<div
 				role="banner"
@@ -209,7 +208,7 @@ class TitleBar extends Component {
 						{translate(productLabel)}
 					</HeaderName>
 					{this.props.logged && showHeaderButtons && (
-						<HeaderNavigation aria-label={translate('ga_product_label')}>
+						<HeaderNavigation aria-label={translate(productLabel)}>
 							<HeaderMenuItem
 								onKeyPress={event => this.onKeyPressGetStarted(event, this.props.showWelcomeBanner)}
 								onClick={this.props.showWelcomeBanner ? this.closeWelcomeBanner : this.showWelcomeBanner}

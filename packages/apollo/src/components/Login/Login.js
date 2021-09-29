@@ -233,13 +233,13 @@ const dataProps = {
 	currentPasswordError: PropTypes.string,
 	newPasswordError: PropTypes.string,
 	confirmPasswordError: PropTypes.string,
-	productLabelLogin: PropTypes.string,
 };
 
 Login.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
 	translate: PropTypes.func, // Provided by withLocalize
+	productLabelLogin: PropTypes.string,
 };
 
 export default connect(

@@ -11,7 +11,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*///=======================================================================================================
+*/
+//=======================================================================================================
 // Track api auth failures and lockout client if too many occur - uses a rolling window
 //=======================================================================================================
 module.exports = function (logger, ev, t) {

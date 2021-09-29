@@ -1,0 +1,63 @@
+.mustgather-container {
+	p {
+		padding: 1rem;
+		padding-bottom: 0px;
+		font-size: 0.875rem;
+		font-weight: 400;
+		line-height: 1.125rem;
+		letter-spacing: 0.16px;
+		font-weight: 400;
+	}
+
+	.mustgather-text {
+		&:first-of-type {
+			border-top: 40px solid #121619;
+		}
+
+		&:last-of-type {
+			padding-bottom: 3rem;
+		}
+	}
+
+	.mustgather-error {
+		color: $support-01;
+		padding-bottom: 3rem;
+	}
+
+	.mustgather-timeout {
+		padding-top: 3rem;
+		padding-bottom: 1rem;
+	}
+}
+
+.mustgather-buttons {
+	.bx--btn--secondary.ibp__add--item--button-with-text {
+		width: 100%;
+		max-width: 100%;
+	}
+	.bx--btn--secondary.ibp__add--item--button-with-text.support-button-label {
+		height: 100%;
+		padding-top: 1rem;
+		padding-bottom: 1rem;
+		text-align: left;
+		white-space: normal;
+		width: 100%;
+	}
+	.bx--btn--tertiary.ibp__add--item--button-with-text {
+		width: 100%;
+		max-width: 100%;
+	}
+	.bx--btn--danger {
+		width: 100%;
+		max-width: 100%;
+	}
+}
+
+.mustgather-button-loading-spinner {
+	position: absolute;
+	top: 0.75rem;
+	right: 1rem;
+	svg {
+		fill: none !important;
+	}
+}

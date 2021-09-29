@@ -129,11 +129,7 @@ class CertificateAuthorityRestApi {
 			for (let csr of csr_array) {
 				csr = csr.trim();
 				//check for ip
-				if (
-					ipRegex.test(
-						csr
-					)
-				) {
+				if (ipRegex.test(csr)) {
 					subjectAltName.push({ ip: csr });
 				} else {
 					subjectAltName.push({ dns: csr });

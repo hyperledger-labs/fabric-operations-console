@@ -27,14 +27,23 @@ import NodeStatus from '../../utils/status';
 import emptyCAImage from '../../assets/images/empty_nodes.svg';
 import ItemTileLabels from '../ItemContainerTile/ItemTileLabels/ItemTileLabels';
 import { triggerSurvey, triggers } from '../../utils/medallia';
+import * as constants from '../../utils/constants';
 
 const SCOPE = 'cas';
 const Log = new Logger(SCOPE);
 const naturalSort = require('javascript-natural-sort');
+let secondaryCaStatusCheck = null;
+let tooLongTimer = null;
 
 export class CertificateAuthority extends Component {
 	componentDidMount() {
 		this.getCAs();
+
+		// after x hours stop the secondary status checker
+		clearTimeout(tooLongTimer);
+		tooLongTimer = setTimeout(() => {
+			clearInterval(secondaryCaStatusCheck);
+		}, constants.SECONDARY_STATUS_TIMEOUT);
 	}
 
 	componentDidUpdate(prevProps) {
@@ -54,6 +63,12 @@ export class CertificateAuthority extends Component {
 		this.props.updateState(SCOPE, { loading: true });
 		CertificateAuthorityRestApi.getCAs()
 			.then(caList => {
+				// loop slowly on peer status forever to keep status icon up to date...
+				clearInterval(secondaryCaStatusCheck);
+				secondaryCaStatusCheck = setInterval(() => {
+					NodeStatus.getStatus(caList, SCOPE, 'caList', null, 1);
+				}, constants.SECONDARY_STATUS_PERIOD); // very slow
+
 				caList.forEach(ca => {
 					ca.certificateWarning = Helper.getLongestExpiry([_.get(ca, '.msp.component.tls_cert')]);
 				});
@@ -91,10 +106,10 @@ export class CertificateAuthority extends Component {
 		this.props.history.push('/ca/' + encodeURIComponent(ca.id) + window.location.search);
 	};
 
-	handleComplete = (newCAs) => {
+	handleComplete = newCAs => {
 		this.showNewCAs(newCAs);
 		this.props.onCreate(newCAs);
-	}
+	};
 
 	showNewCAs = newCAs => {
 		const cas = newCAs.map(ca => ca.name);

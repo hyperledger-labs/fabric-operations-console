@@ -11,6 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
+
 //------------------------------------------------------------
 // activity_tracker_lib.js - Library functions for generating Activity Tracker events
 // IBM Cloud doc: https://test.cloud.ibm.com/docs/service-framework?topic=service-framework-architecture-arch-

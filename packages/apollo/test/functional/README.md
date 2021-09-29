@@ -13,7 +13,7 @@ Then general flow of what happens in Travis is the following:
 4. The OpenShift CLI & ibmcloud CLI are installed.
 
 5. An OpenShift project is created with the name `<COMMIT_HASH>-<TRAVIS_BUILD_NUMBER>-amd64`.
-For example, `3f892dc8-36613587-amd64`.
+   For example, `3f892dc8-36613587-amd64`.
 
 6. Ansible playbooks are created for the IBM Blockchain Platform collection for Ansible - [documentation can be found here](https://ibm-blockchain.github.io/ansible-collection/index.html).
 
@@ -25,20 +25,22 @@ For example, `3f892dc8-36613587-amd64`.
 
 10. The console is brought down and destroyed and the OpenShift project is also deleted.
 
-
 ## My tests failed in Travis, what should I do?
 
 If the Travis job made it to building the Athena + Apollo project successfully, it's possible to run stand up a console for the pull request and run the tests locally.
 
 First, find the line in the Travis job which looks like:
+
 ```
 docker tag apollo-test:latest us.icr.io/op-tools/apollo-dev:3f892dc8-36613600-amd64
 ```
+
 Make a note of the `3f892dc8-36613600-amd64` part! This will be different for every pull request.
 
 Next, go to the `create_playbooks.sh` script and copy the contents that it used for creating the `start_console.yml` playbook.
 
 E.g.
+
 ```
 ---
 - name: Deploy IBM Blockchain Platform console
@@ -68,7 +70,6 @@ You will need to replace the following variables:
 You can now build the IBM Blockchain Platform Collection for Ansible image and run the playbook to stand up the console - see `start_console.sh` for more details.
 
 Once the console has been stood up, you are able to run the UI functional tests with `npm run functional`
-
 
 ## Additional Notes
 

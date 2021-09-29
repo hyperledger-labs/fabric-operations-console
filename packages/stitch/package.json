@@ -1,6 +1,6 @@
 {
 	"name": "stitch",
-	"version": "1.1.19",
+	"version": "1.1.20",
 	"license": "see license in \"LICENSE\" file",
 	"scripts": {
 		"build": "npm run copy_protobufs && webpack --config-name development --display-modules --watch",

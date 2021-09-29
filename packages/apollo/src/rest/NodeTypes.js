@@ -11,6 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
+
 /**
  * A component record.  These fields are common to all components.
  * @typedef {object} Component
