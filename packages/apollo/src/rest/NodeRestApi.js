@@ -656,22 +656,26 @@ class NodeRestApi {
 						let versions = resp.versions[key];
 						if (versions) {
 							versions = Object.values(versions) || [];
-							versions = versions.sort((a, b) => {
-								let result = 0;
-								try {
-									const a_ver = semver.coerce(a.version);
-									const b_ver = semver.coerce(b.version);
-									if (semver.lt(a_ver, b_ver)) {
-										result = 1;
-									}
-									if (semver.gt(a_ver, b_ver)) {
-										result = -1;
-									}
-								} catch (error) {
-									console.error(error);
-								}
-								return result;
-							});
+							try {
+  							versions = versions.sort((a, b) => {
+  								let result = 0;
+  								try {
+  									const a_ver = semver.coerce(a.version);
+  									const b_ver = semver.coerce(b.version);
+  									if (semver.lt(a_ver, b_ver)) {
+  										result = 1;
+  									}
+  									if (semver.gt(a_ver, b_ver)) {
+  										result = -1;
+  									}
+  								} catch (error) {
+  									console.error(error);
+  								}
+  								return result;
+  							});
+							} catch (e) {
+								//
+							}
 						}
 						resp.versions[key] = versions;
 					});

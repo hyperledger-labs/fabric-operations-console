@@ -445,12 +445,21 @@ const Helper = {
 		let snake = [];
 		for (let collection of camel) {
 			collection.required_peer_count = Object.prototype.hasOwnProperty.call(collection, 'required_peer_count')
-				? collection.required_peer_count : collection.requiredPeerCount;
-			collection.maximum_peer_count = Object.prototype.hasOwnProperty.call(collection, 'maximum_peer_count') ? collection.maximum_peer_count : collection.maxPeerCount;
+				? collection.required_peer_count
+				: collection.requiredPeerCount;
+			collection.maximum_peer_count = Object.prototype.hasOwnProperty.call(collection, 'maximum_peer_count')
+				? collection.maximum_peer_count
+				: collection.maxPeerCount;
 			collection.block_to_live = Object.prototype.hasOwnProperty.call(collection, 'block_to_live') ? collection.block_to_live : collection.blockToLive;
-			collection.member_only_read = Object.prototype.hasOwnProperty.call(collection, 'member_only_read') ? collection.member_only_read : collection.memberOnlyRead;
-			collection.member_only_write = Object.prototype.hasOwnProperty.call(collection, 'member_only_write') ? collection.member_only_write : collection.memberOnlyWrite;
-			collection.member_orgs_policy = Object.prototype.hasOwnProperty.call(collection, 'member_orgs_policy') ? collection.member_orgs_policy : collection.policy;
+			collection.member_only_read = Object.prototype.hasOwnProperty.call(collection, 'member_only_read')
+				? collection.member_only_read
+				: collection.memberOnlyRead;
+			collection.member_only_write = Object.prototype.hasOwnProperty.call(collection, 'member_only_write')
+				? collection.member_only_write
+				: collection.memberOnlyWrite;
+			collection.member_orgs_policy = Object.prototype.hasOwnProperty.call(collection, 'member_orgs_policy')
+				? collection.member_orgs_policy
+				: collection.policy;
 			let signature_policy = _.get(collection, 'endorsement_policy') || _.get(collection, 'endorsementPolicy.signaturePolicy');
 			if (signature_policy) {
 				_.set(collection, 'endorsement_policy', signature_policy);

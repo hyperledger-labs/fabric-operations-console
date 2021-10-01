@@ -23,6 +23,7 @@ import { OrdererRestApi } from '../../rest/OrdererRestApi';
 import Helper from '../../utils/helper';
 import ImportMspModal from '../ImportMspModal/ImportMspModal';
 import ItemContainer from '../ItemContainer/ItemContainer';
+import ItemTileLabels from '../ItemContainerTile/ItemTileLabels/ItemTileLabels';
 import MspDeleteModal from '../MspDeleteModal/MspDeleteModal';
 import SVGs from '../Svgs/Svgs';
 import UpdateChannelMspModal from '../UpdateChannelMspModal/UpdateChannelMspModal';
@@ -39,14 +40,17 @@ class OrdererAdmins extends Component {
 	}
 
 	buildCustomTile(admin) {
-		const translate = this.props.translate;
 		const node_ou = _.get(admin, 'fabric_node_ous.enable') ? 'enabled' : 'disabled';
+		const certificateWarning = node_ou === 'enabled' ? false : Helper.getLongestExpiry(admin.admins);
+
 		return (
 			<div className="ibp-orderer-admin-custom-tile">
 				<p className="ibp-node-msp-tile-name-sub">{admin.msp_id}</p>
 				{!this.props.loading && (
 					<>
-						<div className="ibp-orderer-admin-ou">{translate('node_ou_param', { state: translate(node_ou) })}</div>
+						<ItemTileLabels certificateWarning={certificateWarning}
+							nodeOU={node_ou}
+						/>
 						<button
 							className={`ibp-orderer-admin-update ${this.props.admins.length === 1 ? 'ibp-orderer-admin-single' : ''}`}
 							onClick={() => this.updateMSPAdminModal(admin)}
