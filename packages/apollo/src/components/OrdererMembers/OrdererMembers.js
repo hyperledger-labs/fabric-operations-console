@@ -22,6 +22,7 @@ import { showError, updateState } from '../../redux/commonActions';
 import Helper from '../../utils/helper';
 import ImportMspModal from '../ImportMspModal/ImportMspModal';
 import ItemContainer from '../ItemContainer/ItemContainer';
+import ItemTileLabels from '../ItemContainerTile/ItemTileLabels/ItemTileLabels';
 import MspDeleteModal from '../MspDeleteModal/MspDeleteModal';
 import SVGs from '../Svgs/Svgs';
 
@@ -36,14 +37,17 @@ class OrdererMembers extends Component {
 	}
 
 	buildCustomTile(member) {
-		const translate = this.props.translate;
 		const node_ou = _.get(member, 'fabric_node_ous.enable') ? 'enabled' : 'disabled';
+		const certificateWarning = node_ou === 'enabled' ? false : Helper.getLongestExpiry(member.admins);
+
 		return (
 			<div>
 				<p className="ibp-node-msp-tile-name-sub">{member.msp_id}</p>
 				{!this.props.loading && this.props.members && this.props.members.length > 0 && (
 					<>
-						<div className="ibp-orderer-member-ou">{translate('node_ou_param', { state: translate(node_ou) })}</div>
+						<ItemTileLabels certificateWarning={certificateWarning}
+							nodeOU={node_ou}
+						/>
 						<button
 							className={`ibp-orderer-member-download ${this.props.members.length === 0 ? 'ibp-orderer-member-singe' : ''}`}
 							onClick={() => this.downloadMsp(member)}

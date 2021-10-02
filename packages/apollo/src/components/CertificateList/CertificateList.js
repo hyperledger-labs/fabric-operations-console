@@ -10,7 +10,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/import { WarningFilled16 } from '@carbon/icons-react/es';
+*/
+import { WarningFilled16 } from '@carbon/icons-react/es';
 import PropTypes from 'prop-types';
 import React from 'react';
 import StitchApi from '../../rest/StitchApi';

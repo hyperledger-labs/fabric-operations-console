@@ -459,5 +459,21 @@ module.exports = function (logger, ev, t) {
 		}
 	}
 
+	//-----------------------------------------------------------------------------
+	// Manually run the orderer auto upgrade fabric auto check
+	//-----------------------------------------------------------------------------
+	app.post('/api/v[3]/components/manual/auto-upgrade-check', t.middleware.verify_settings_action_session, (req, res, next) => {
+		return run_upgrade_check(res, req, next);
+	});
+	app.post('/ak/api/v[3]/components/manual/auto-upgrade-check', t.middleware.verify_settings_action_ak, (req, res, next) => {
+		return run_upgrade_check(res, req, next);
+	});
+
+	// start a fabric upgrade check
+	function run_upgrade_check(res, req) {
+		t.patch_lib.auto_upgrade_orderers();
+		return res.status(200).json({ message: 'ok', details: 'started' });
+	}
+
 	return app;
 };
