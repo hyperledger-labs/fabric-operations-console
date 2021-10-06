@@ -42,14 +42,6 @@ class Msps extends Component {
 		this.getMsps();
 	}
 
-	componentDidUpdate(prevProps) {
-		if (prevProps !== this.props && this.props.feature_flags && this.props.feature_flags.templates_enabled) {
-			if (prevProps.templateComplete !== this.props.templateComplete) {
-				this.getMsps();
-			}
-		}
-	}
-
 	componentWillUnmount() {
 		this.props.clearNotifications(SCOPE);
 	}
@@ -232,7 +224,6 @@ export default connect(
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;
 		newProps['userInfo'] = state['userInfo'] ? state['userInfo'] : null;
-		newProps['templateComplete'] = state['templateWrapper'] ? state['templateWrapper']['templateComplete'] : null;
 		return newProps;
 	},
 	{

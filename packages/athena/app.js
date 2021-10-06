@@ -400,7 +400,6 @@ function setup_routes_and_start() {
 	tools.deployer = require('./libs/deployer_lib.js')(logger, ev, tools);
 	tools.comp_fmt = require('./libs/comp_formatting_lib.js')(logger, ev, tools);
 	tools.webhook = require('./libs/webhook_lib.js')(logger, ev, tools);
-	tools.template = require('./libs/template_lib.js')(logger, ev, tools);
 	tools.user_preferences = require('./libs/user_preferences_lib.js')(logger, ev, tools);
 	tools.auth_scheme = require('./libs/auth_scheme_lib.js')(logger, ev, tools);
 	tools.keys_lib = require('./libs/keys_lib.js')(logger, ev, tools);
@@ -467,7 +466,6 @@ function setup_routes_and_start() {
 	ev.HEALTHCHECK_ROUTE = healthcheck_route;		// pass route to lib
 	app.use('/', require('./routes/authentication.js')(logger, ev, tools, passport));
 	app.use('/', require('./routes/auth_scheme_apis.js')(logger, ev, tools));
-	app.use('/', require('./routes/template_apis.js')(logger, ev, tools));
 	app.use('/', require('./routes/ca_apis.js')(logger, ev, tools));
 	app.use('/', require('./routes/user_preferences_apis.js')(logger, ev, tools));
 	app.use('/', require('./routes/keys_apis.js')(logger, ev, tools));

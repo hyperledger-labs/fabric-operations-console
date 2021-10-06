@@ -43,7 +43,6 @@ import PeerDetails from '../PeerDetails/PeerDetails';
 import ScrollToTop from '../ScrollToTop/ScrollToTop';
 import Settings from '../Settings/Settings';
 import Support from '../Support/Support';
-import TemplateWrapper from '../TemplateWrapper/TemplateWrapper';
 import TitleBar from '../TitleBar/TitleBar';
 
 const SCOPE = 'main';
@@ -232,17 +231,6 @@ class Main extends Component {
 						</div>
 					</div>
 					<Notifications />
-					<TemplateWrapper
-						onClose={this.closeDiagramModal}
-						onComplete={this.closeDiagramModal}
-						showTemplatePage={this.props.showTemplatePage}
-						activeTemplateUrl={this.props.activeTemplateUrl ? this.props.activeTemplateUrl : ''}
-						templateName={this.props.templateName}
-						currentDeploymentStep={this.props.currentDeploymentStep}
-						totalDeploymentSteps={this.props.totalDeploymentSteps}
-						clearProgress={this.clearTemplateProgressBar}
-						templateComplete={this.props.templateComplete}
-					/>
 
 					{this.props.inactivity_timeouts_enabled && (
 						<div>
@@ -310,13 +298,7 @@ class Main extends Component {
 }
 
 const dataProps = {
-	showTemplatePage: PropTypes.bool,
 	session_timed_out: PropTypes.bool,
-	currentDeploymentStep: PropTypes.number,
-	totalDeploymentSteps: PropTypes.number,
-	templateIsDeploying: PropTypes.bool,
-	templateComplete: PropTypes.bool,
-	templateName: PropTypes.string,
 	consoleIdentities: PropTypes.array,
 	session_times_out_soon: PropTypes.bool,
 	idle_time_remaining: PropTypes.number,
@@ -336,15 +318,6 @@ export default connect(
 	state => {
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['docPrefix'] = state['settings'] ? state['settings']['docPrefix'] : null;
-		newProps['templateIsDeploying'] = state['gettingStartedModal'] ? state['gettingStartedModal']['templateIsDeploying'] : null;
-		newProps['templateComplete'] = state['gettingStartedModal'] ? state['gettingStartedModal']['templateComplete'] : null;
-		newProps['templateResponse'] = state['gettingStartedModal'] ? state['gettingStartedModal']['templateResponse'] : null;
-		newProps['activeTemplateUrl'] = state['gettingStartedModal'] ? state['gettingStartedModal']['activeTemplateUrl'] : null;
-		newProps['templatePanelClosed'] = state['gettingStartedModal'] ? state['gettingStartedModal']['templatePanelClosed'] : null;
-		newProps['templateName'] = state['gettingStartedModal'] ? state['gettingStartedModal']['templateName'] : null;
-		newProps['currentDeploymentStep'] = state['gettingStartedModal'] ? state['gettingStartedModal']['currentDeploymentStep'] : null;
-		newProps['totalDeploymentSteps'] = state['gettingStartedModal'] ? state['gettingStartedModal']['totalDeploymentSteps'] : null;
-		newProps['deployingTemplateData'] = state['gettingStartedModal'] ? state['gettingStartedModal']['deployingTemplateData'] : null;
 		newProps['consoleIdentities'] = state['gettingStartedModal'] ? state['gettingStartedModal']['consoleIdentities'] : null;
 		return newProps;
 	},

@@ -44,14 +44,6 @@ class Identities extends Component {
 		await this.getIdentities();
 	}
 
-	componentDidUpdate(prevProps) {
-		if (prevProps !== this.props && this.props.feature_flags && this.props.feature_flags.templates_enabled) {
-			if (prevProps.templateComplete !== this.props.templateComplete) {
-				this.getIdentities();
-			}
-		}
-	}
-
 	componentWillUnmount() {
 		this.props.clearNotifications(SCOPE);
 	}
@@ -295,7 +287,6 @@ export default connect(
 	state => {
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;
-		newProps['templateComplete'] = state['templateWrapper'] ? state['templateWrapper']['templateComplete'] : null;
 		return newProps;
 	},
 	{
