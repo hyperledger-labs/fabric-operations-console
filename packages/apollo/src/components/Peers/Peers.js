@@ -51,14 +51,6 @@ class Peers extends Component {
 		}, constants.SECONDARY_STATUS_TIMEOUT);
 	}
 
-	componentDidUpdate(prevProps) {
-		if (prevProps !== this.props && this.props.feature_flags && this.props.feature_flags.templates_enabled) {
-			if (prevProps.templateComplete !== this.props.templateComplete) {
-				this.getPeers();
-			}
-		}
-	}
-
 	componentWillUnmount() {
 		this.props.clearNotifications(SCOPE);
 		this.props.clearNotifications(SCOPE + '_HELP');
@@ -369,7 +361,6 @@ export default connect(
 	state => {
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['userInfo'] = state['userInfo'] ? state['userInfo'] : null;
-		newProps['templateComplete'] = state['templateWrapper'] ? state['templateWrapper']['templateComplete'] : null;
 		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;
 		return newProps;
 	},
