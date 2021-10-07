@@ -26,7 +26,6 @@ import growResourcesIcon from '../../assets/images/getting_started_growresources
 import monitorIcon from '../../assets/images/getting_started_monitor.svg';
 import joinIcon from '../../assets/images/joinIcon.svg';
 import { updateState } from '../../redux/commonActions';
-import ActionsHelper from '../../utils/actionsHelper';
 import Helper from '../../utils/helper';
 import { setInStorage } from '../../utils/localStorage';
 import SVGs from '../Svgs/Svgs';
