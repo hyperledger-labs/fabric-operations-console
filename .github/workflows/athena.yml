@@ -61,7 +61,7 @@ jobs:
         with:
           node-version: 14.x
       - run: npm config set registry https://registry.npmjs.org/
-      - run: npm install -g ibm-openapi-validator
+      - run: npm install -g ibm-openapi-validator@0.51.1
       - run: npm run validate
 
   lint:
