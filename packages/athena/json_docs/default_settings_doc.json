@@ -103,7 +103,7 @@
 		"templates_enabled": false,
 		"scale_raft_nodes_enabled": false,
 		"hsm_enabled": false,
-		"enable_ou_identifier": false,
+		"enable_ou_identifier": true,
 		"patch_1_4to2_x_enabled": true,
 		"lifecycle2_0_enabled": true,
 		"import_only_enabled": true,
