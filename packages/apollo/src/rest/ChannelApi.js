@@ -113,7 +113,7 @@ class ChannelApi {
 								}
 
 								let config_envelop = channel_resp.data.block.data.data_list[0].envelope.payload.data;
-								const l_orderers = _.get(config_envelop.config, 'channel_group.values_map.OrdererAddresses.value.addresses_list');
+								const l_orderers = this.getOrdererAddresses(config_envelop.config);
 								let orderers = [];
 								l_orderers.forEach(orderer => {
 									nodes.forEach(node => {
@@ -552,6 +552,18 @@ class ChannelApi {
 		node.policies[policy].policy.value = {};
 		node.policies[policy].policy.value.identities = identities;
 		node.policies[policy].policy.value.rule = this.getOneOfPolicy(n, members.length);
+	}
+	static getOrdererAddresses(config) {
+		let addresses = [];
+		const orderer_grp = _.get(config, 'channel_group.groups_map.Orderer.groups_map');
+		for (let ordererMSP in orderer_grp) {
+			addresses.push(...orderer_grp[ordererMSP].values_map.Endpoints.value.addresses);
+		}
+		if (addresses.length === 0) {
+			const l_orderers = _.get(config, 'channel_group.values_map.OrdererAddresses.value.addresses_list');
+			addresses.push(...l_orderers);
+		}
+		return addresses;
 	}
 
 	static setBlockParameters(block_params, updated_json) {

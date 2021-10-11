@@ -360,7 +360,7 @@ class ChannelDetails extends Component {
 					return config;
 				})
 				.then(config => {
-					const l_orderers = _.get(config, 'channel_group.values_map.OrdererAddresses.value.addresses_list');
+					const l_orderers = ChannelApi.getOrdererAddresses(config);
 					const l_consenters = _.get(config, 'channel_group.groups_map.Orderer.values_map.ConsensusType.value.metadata.consenters', []);
 					OrdererRestApi.getOrderers(true)
 						.then(orderers => {
