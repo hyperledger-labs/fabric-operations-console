@@ -16,6 +16,7 @@ import _ from 'lodash';
 import { promisify } from 'util';
 import Logger from '../components/Log/Logger';
 import Helper from '../utils/helper';
+import ChannelApi from './ChannelApi';
 import { NodeRestApi } from './NodeRestApi';
 import StitchApi from './StitchApi';
 
@@ -158,7 +159,7 @@ class PeerRestApi {
 						return;
 					}
 					let config_envelop = resp3.data.block.data.data_list[0].envelope.payload.data;
-					const l_orderers = _.get(config_envelop.config, 'channel_group.values_map.OrdererAddresses.value.addresses_list');
+					const l_orderers = ChannelApi.getOrdererAddresses(config_envelop.config);
 					let orderers = [];
 					l_orderers.forEach(orderer => {
 						nodes.forEach(node => {
