@@ -263,7 +263,7 @@ export class PageHeader extends Component {
 
 		// sort by expiring first
 		if (parsed_certs.length > 0) {
-			parsed_certs.sort(function(a, b) {
+			parsed_certs.sort(function (a, b) {
 				return a.not_after_ts - b.not_after_ts;
 			});
 		}
@@ -322,7 +322,7 @@ export class PageHeader extends Component {
 						}}
 					/>
 				)}
-				{this.props.showCertNotice && (
+				{this.props.showCertNotice && created_parsed_certs.length > 0(
 					<InlineNotification
 						kind="warning"
 						title={translate('cert_warning')}
