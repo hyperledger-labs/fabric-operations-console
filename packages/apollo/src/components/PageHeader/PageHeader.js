@@ -322,7 +322,7 @@ export class PageHeader extends Component {
 						}}
 					/>
 				)}
-				{this.props.showCertNotice && (
+				{this.props.showCertNotice && created_parsed_certs.length > 0(
 					<InlineNotification
 						kind="warning"
 						title={translate('cert_warning')}
