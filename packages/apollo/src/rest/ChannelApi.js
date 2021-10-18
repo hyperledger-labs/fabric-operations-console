@@ -555,10 +555,10 @@ class ChannelApi {
 	}
 	static getOrdererAddresses(config) {
 		let addresses = [];
-		const orderer_grp = _.get(config, 'channel_group.groups_map.Orderer.groups_map');
 		const l_orderers = _.get(config, 'channel_group.values_map.OrdererAddresses.value.addresses_list');
 		addresses.push(...l_orderers);
 		if (addresses.length === 0) {
+			const orderer_grp = _.get(config, 'channel_group.groups_map.Orderer.groups_map');
 			for (let ordererMSP in orderer_grp) {
 				addresses.push(...orderer_grp[ordererMSP].values_map.Endpoints.value.addresses);
 			}
