@@ -5,7 +5,7 @@ SRC_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )" # Wh
 function networkUp() {
 	networkDown
 	cd $SRC_DIR/..
-	curl -sSL https://bit.ly/2ysbOFE | bash -s -- 2.2.3 1.5.0
+	curl -sSL https://bit.ly/2ysbOFE | bash -s -- 2.2.3 1.4.9
 	cd fabric-samples
 	git checkout release-2.2
 	cd test-network
