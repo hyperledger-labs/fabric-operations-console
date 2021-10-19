@@ -162,7 +162,7 @@ lerna ...
 
 Builds Apollo and starts the file watcher for Athena.
 
-Before running, ensure that you have the necessary local env files in the `packages/athena/env` directory. See the [athena readme](https://github.com/IBM-Blockchain/console/tree/main/packages/athena#acquiring-a-deployer-backend) for all the details on what these files should contain.
+Before running, ensure that you have the necessary local env files in the `packages/athena/env` directory. See the [athena readme](https://github.com/hyperledger-labs/fabric-operations-console/tree/main/packages/athena#acquiring-a-deployer-backend) for all the details on what these files should contain.
 
 ```sh
 lerna run dev:athena
