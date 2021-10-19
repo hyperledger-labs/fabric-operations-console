@@ -376,8 +376,11 @@ We're just going to stand up a docker container based on the publicly available 
 Of course, you can use whatever CouchDB service you want, as long as you update the `DB_CONNECTION_STRING` in `dev.json`.
 
 ```
-> docker run -d -p 5984:5984 -v $PWD/couchdb:/opt/couchdb/data couchdb
+> docker run -d -e COUCHDB_USER=myemail@us.ibm.com -e COUCHDB_PASSWORD=password -p 5984:5984 -v $PWD/couchdb:/opt/couchdb/data couchdb
 ```
+> The `-e COUCHDB_USER=myemail@us.ibm.com -e COUCHDB_PASSWORD=password` flags are used to set up the initial admin account, 
+you can choose your own username and password but you would need to update your `my_config.yaml`
+
 > The `-p 5984:5984` flag is what allows the Athena instance on your laptop to connect to the CouchDB service inside the
 container by hitting `localhost:5984`
 
