@@ -82,11 +82,12 @@ class Orderers extends Component {
 		this.props.updateState(SCOPE, { loading: true });
 		OrdererRestApi.getOrderers()
 			.then(ordererList => {
-				// loop slowly on peer status forever to keep status icon up to date...
+
+
+				// loop slowly on orderer status forever to keep status icon up to date...
 				clearInterval(secondaryOsStatusCheck);
 				secondaryOsStatusCheck = setInterval(() => {
-					NodeStatus.getStatus(ordererList, SCOPE, 'ordererList', null, 1);
-					this.props.updateState(SCOPE, { ordererList }); // ?
+					NodeStatus.getStatus(this.props.ordererList, SCOPE, 'ordererList', null, 1);
 				}, constants.SECONDARY_STATUS_PERIOD); // very slow
 
 				ordererList.forEach(orderer => {

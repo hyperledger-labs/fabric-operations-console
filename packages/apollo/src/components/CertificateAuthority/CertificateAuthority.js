@@ -55,15 +55,17 @@ export class CertificateAuthority extends Component {
 		this.props.updateState(SCOPE, { loading: true });
 		CertificateAuthorityRestApi.getCAs()
 			.then(caList => {
-				// loop slowly on peer status forever to keep status icon up to date...
+
+				// loop slowly on ca status forever to keep status icon up to date...
 				clearInterval(secondaryCaStatusCheck);
 				secondaryCaStatusCheck = setInterval(() => {
-					NodeStatus.getStatus(caList, SCOPE, 'caList', null, 1);
+					NodeStatus.getStatus(this.props.caList, SCOPE, 'caList', null, 1);
 				}, constants.SECONDARY_STATUS_PERIOD); // very slow
 
 				caList.forEach(ca => {
 					ca.certificateWarning = Helper.getLongestExpiry([_.get(ca, '.msp.component.tls_cert')]);
 				});
+
 				this.props.updateState(SCOPE, {
 					caList,
 					loading: false,
