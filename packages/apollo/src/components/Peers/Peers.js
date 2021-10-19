@@ -65,10 +65,11 @@ class Peers extends Component {
 		this.props.updateState(SCOPE, { loading: true });
 		PeerRestApi.getPeers()
 			.then(peerList => {
+
 				// loop slowly on peer status forever to keep status icon up to date...
 				clearInterval(secondaryPeerStatusCheck);
 				secondaryPeerStatusCheck = setInterval(() => {
-					NodeStatus.getStatus(peerList, SCOPE, 'peerList', null, 1);
+					NodeStatus.getStatus(this.props.peerList, SCOPE, 'peerList', null, 1);
 				}, constants.SECONDARY_STATUS_PERIOD); // very slow
 
 				peerList.forEach(peer => {
