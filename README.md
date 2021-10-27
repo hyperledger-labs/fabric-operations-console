@@ -19,6 +19,11 @@ For more Information see the [documentation for the current IBM production offer
 # High level architecture
 ![High level architecture](/docs/images/architecture_hl.png)
 
+# Meetup Recordings
+[Console Overview](https://youtu.be/ndrWBoBlTDM)
+
+[AMA](https://youtu.be/HGThtz5A6S8)
+
 # Running Fabric Operations Console
 
 You can use the following steps to provision a network using Fabric test-network, add grpc-web proxy on that of that and import components into Console so that you can manage the test network.
