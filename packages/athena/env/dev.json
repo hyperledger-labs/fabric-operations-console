@@ -1,0 +1,5 @@
+{
+    "DB_CONNECTION_STRING": "http://localhost:5984",
+    "DB_SYSTEM": "athena_system",
+    "CONFIGURE_FILE": "./env/my_config.yaml"
+}

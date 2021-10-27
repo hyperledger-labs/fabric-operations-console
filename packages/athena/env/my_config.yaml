@@ -1,9 +1,8 @@
 ---
 version: v1.0
+app_port: 4000
 auth_scheme: couchdb
 initial_admin: admin
 configtxlator_url_original: http://localhost:7059
-enforce_backend_ssl: false
 host_url: http://localhost:4002
-region: local
-system_channel_id: testchainid
+default_user_password_initial: password
