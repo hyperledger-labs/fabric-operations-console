@@ -6,3 +6,4 @@ initial_admin: admin
 configtxlator_url_original: http://localhost:7059
 host_url: http://localhost:4002
 default_user_password_initial: password
+cookie_name: com.ibm.cloud.console.blockchain.optools.dev
