@@ -100,6 +100,7 @@ describe('Deployer APIs', () => {
 		myutils.restoreStubs(tools.stubs);
 	});
 
+	// create component tests
 	const provision_tests = () => {
 		return [
 			{
@@ -337,7 +338,59 @@ describe('Deployer APIs', () => {
 					expect(res.status).to.equal(500);
 					expect(JSON.stringify(res.body)).to.equal(JSON.stringify({ statusCode: 500, msg: { message: 'there was an issue' } }));
 				}
-			}
+			},
+			{
+				itStatement: 'should return 200 - id has underscores - test_id=oslucl',
+				callFunction: (routeInfo) => {
+					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+					const route_parts = routeInfo.route.split('/');
+					routeInfo.type = route_parts[route_parts.length - 1];
+					const body_name = `${routeInfo.type}_body`;
+					deployer_apis.str_raft = common.ev.STR.RAFT;
+					routeInfo.body = JSON.parse(JSON.stringify(deployer_objects[body_name]));
+					routeInfo.body.id = 'test_with_underscores';
+					deployer_apis.conserve_CRN = common.ev.CRN;
+					common.ev.CRN = { instance_id: 123 };
+					tools.stubs.retry_req.callsArgWith(1, null, {
+						statusCode: 200,
+						body: JSON.stringify(component_objects.single_node_response)
+					});
+					tools.stubs.safe_dot_nav.returns({});
+					tools.stubs.record_deployer_operation.callsArgWith(4, null, component_objects.single_node_response);
+				},
+				expectBlock: (res, routeInfo) => {
+					expect(res.status).to.equal(200);
+					common.ev.CRN = deployer_apis.conserve_CRN;
+					delete deployer_apis.conserve_CRN;
+					tools.stubs.safe_dot_nav.reset();
+				}
+			},
+			{
+				itStatement: 'should return 200 - id has dashes - test_id=nsxhqk',
+				callFunction: (routeInfo) => {
+					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+					const route_parts = routeInfo.route.split('/');
+					routeInfo.type = route_parts[route_parts.length - 1];
+					const body_name = `${routeInfo.type}_body`;
+					deployer_apis.str_raft = common.ev.STR.RAFT;
+					routeInfo.body = JSON.parse(JSON.stringify(deployer_objects[body_name]));
+					routeInfo.body.id = 'test-with-dashes';
+					deployer_apis.conserve_CRN = common.ev.CRN;
+					common.ev.CRN = { instance_id: 123 };
+					tools.stubs.retry_req.callsArgWith(1, null, {
+						statusCode: 200,
+						body: JSON.stringify(component_objects.single_node_response)
+					});
+					tools.stubs.safe_dot_nav.returns({});
+					tools.stubs.record_deployer_operation.callsArgWith(4, null, component_objects.single_node_response);
+				},
+				expectBlock: (res, routeInfo) => {
+					expect(res.status).to.equal(200);
+					common.ev.CRN = deployer_apis.conserve_CRN;
+					delete deployer_apis.conserve_CRN;
+					tools.stubs.safe_dot_nav.reset();
+				}
+			},
 		];
 	};
 

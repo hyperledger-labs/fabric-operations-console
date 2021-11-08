@@ -644,11 +644,11 @@ module.exports = function (logger, ev, t) {
 
 		// make a subdomain that deployer can use (it will form part of the hostname for the component) - do not pad it
 		function make_subdomain(display_name, id) {
-			if (id) {
-				return id;											// do not edit or generate the id if provided - ansible needs this, UI won't use it
+			const regex_dep_id = new RegExp(/[^a-zA-Z0-9]/g);		// deployer cannot handle underscores or dashes
+			if (typeof id === 'string') {
+				return id.toLowerCase().replace(regex_dep_id, '');	// do not edit or generate the id if provided - ansible needs this, UI won't use it
 			}
 
-			const regex_dep_id = new RegExp(/[^a-zA-Z0-9]/g);		// deployer cannot handle underscores or dashes
 			let combined_taken_ids = (taken_ids && Array.isArray(taken_ids.deployer_ids)) ? taken_ids.deployer_ids : [];
 			if (taken_ids && Array.isArray(taken_ids.doc_ids)) {
 				combined_taken_ids = combined_taken_ids.concat(taken_ids.doc_ids);

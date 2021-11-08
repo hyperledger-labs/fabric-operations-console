@@ -99,7 +99,7 @@ x-validate_error_messages:
   regex_invalid_enroll_chars: The field '$PROPERTY_NAME' cannot contain white space or these characters :\<>#{}%`[]\^~|"
   regex_fail_host_and_port: The field '$PROPERTY_NAME' must be a url including the hostname/ip and port. Do not include the protocol.
   regex_fail_start_non_letter: The field '$PROPERTY_NAME' must start with a letter.
-  regex_fail_valid_id: The field '$PROPERTY_NAME' must start with a letter, be lowercase and only contain letters and numbers.
+  regex_fail_valid_id: The field '$PROPERTY_NAME' must start with a letter, be lowercase and only contain letters, numbers, dashes or underscores.
 
   # fall back regular expression failure (when the desired regex error message is not found, like I forgot to write one)
   regex_generic_error: "Parameter '$PROPERTY_NAME' is malformed."
