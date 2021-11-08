@@ -211,9 +211,9 @@
 			"flags": ""
 		},
 		"is_valid_id": {
-			"source": "^[a-z][a-z0-9]+$",
+			"source": "^[a-z][a-z0-9_-]+$",
 			"flags": "",
-			"notes": "couchdb needs it to start with a letter, deployer can't do underscores or dashes, must be lower case, can contain numbers"
+			"notes": "couchdb needs it to start with a letter, must be lower case, can contain numbers (deployer restrictions n/a)"
 		}
 	},
 	"region": "local",
