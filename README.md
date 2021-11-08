@@ -205,3 +205,6 @@ If you do not have enough memory allocated to docker, the following command will
 ```bash
 npm run install-detect-secrets
 ```
+
+## FAQ / Need Help?
+Check out known error messages and fixes in our [FAQ](./FAQ.md).
