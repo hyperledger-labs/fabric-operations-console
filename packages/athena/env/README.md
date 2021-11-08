@@ -656,14 +656,6 @@ __default_settings_doc.json:__
 // defaults true
 "proxy_cache_enabled": true,
 
-// IBM's SRE api key
-// used as basic auth for ak apis
-// if null will be generated randomly
-// defaults null
-// (this is not intended for end users)
-"support_key": "ibpsupport",
-"support_password": null,
-
 // http rate limit for the webserver on general apis. xxx requests per minute
 // if exceeded a 429 code will be returned.
 // the limit for GET requests will be higher. 16x this value.

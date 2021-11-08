@@ -302,13 +302,13 @@ const options = {
 	// defaults 3 min
 	fabric_lc_install_cc_timeout_ms: 180000
 
-	// change the default timeout for all other fabric requests not described above
-	// defaults 10 sec
-	fabric_general_timeout_ms: 10000
-
 	// change the default timeout for a get chaincode package fabric request (Fabric 2.x)
 	// defaults 3 min
 	fabric_lc_get_cc_timeout_ms: 180000
+
+	// change the default timeout for all other fabric requests not described above
+	// defaults 10 sec
+	fabric_general_timeout_ms: 10000
 };
 const timeouts = stitch.setTimeouts(options);
 ```
