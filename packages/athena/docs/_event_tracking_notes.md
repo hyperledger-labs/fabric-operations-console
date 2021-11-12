@@ -3,7 +3,7 @@
 We have 3 types of things tracking events.
 - [Notifications](#notice) - generates couch db files per event. useful for end users to debug/audit major events.
 - [Segment](#seg) - metrics are sent to segment per event. useful for internal ibmers.
-- [Activity Tracker](#at) - events are logged to a file. useful for end users to audit all activity.
+- [Audit Logs](#al) - events are logged to a file. useful for end users to audit most activity.
 
 
 <a name="notice"></a>
@@ -117,25 +117,25 @@ Nothing good (example below is incomplete):
 
 Must be an ibmer, get access from our blockchain metrics team.
 
-<a name="at"></a>
+<a name="al"></a>
 
-## Activity Tracker
+## Audit Logs
 
-Activity Tracker will be used to log events for the end user.
-Events are http requests to the IBP console (certain ones).
-The events are written to the file `activity.log` at the path specified by system setting `activity_tracker_path`.
+Events are http requests to the Console (certain ones).
+The events are written to the file `audit.log` at the path specified by system setting `activity_tracker_path`.
 See the [configuration options](../env/README.md#default) readme for more setting details.
-The activity tracker file is rotated by athena's winston lib once it reaches 1MB.
-LogDNA should pick up the file and make it available to the end user (somehow, details unclear to me).
+The audit file is rotated by athena's winston lib once it reaches 2MB, up to 5 files.
 
 **What is tracked:**
 
-We have the ability to generate events for ALL http requests, but that seems excessive.
-Only "important" events were chosen.
-It doesn't matter if the api was successful or a failure, it will be tracked.
+Only "important" events are logged.
+It doesn't matter if the api was successful or a failure, it will be logged.
 - All http requests that start with `/ak/api/` will generate an event. (thus all user apis)
-- IBP console login and logout requests
-- All IBP console requests for POST/PUT/PATCH/DELETE methods will generate an event except the ones hard coded in the `ignore_routes` variable (in `activity_tracker.js`). Which atm is these ones:
+- Console login and logout requests
+- Component creation/deletion/updates requests
+- Accessing the logs
+- Some fabric operations like creating channels, joining channels, install/instantiate chaincode
+- In general all console requests with POST/PUT/PATCH/DELETE methods will generate an event except the ones hard coded in the `ignore_routes` variable (in `activity_tracker.js`). Which atm is these ones:
 	- `'/api/v[123]/proxy'` - (general proxy route) too noisy
 	- `'/grpcwp/*'` - (grpc web proxy route) too noisy
 	- `'/configtxlator/*'` - the configtxlator proxy route is not very interesting
@@ -144,74 +144,73 @@ It doesn't matter if the api was successful or a failure, it will be tracked.
 
 **How to track a new event:**
 
-All http requests that fit the criteria above are automatically tracked.
+All http requests that fit the criteria above are automatically logged.
 A dev does not need to do anything.
-The tracking lib is in our authentication scheme middleware (even for public/unprotected apis).
+The logic for this is in our authentication scheme middleware (even for public/unprotected apis).
 
 **What is in an event:**
 
-The Activity Tracker structure is fixed, and pretty terrible.
-There are a lot of fields in an event... and many contain duplicate information.
-- [Activity Tracker Doc Spec](https://test.cloud.ibm.com/docs/services/Activity-Tracker-with-LogDNA?topic=logdnaat-ibm_event_fields)
+Below is an example, note that white space has been added here to make it easier to read.
+The real logs will have each event on 1 line.
+
 ```js
-// a single example
+// a single event - example
 {
-	"action": "blockchain.notifications.delete",
-	"correlationId": "?:UbrRh",
-	"dataEvent": true,
-	"id": "?:UbrRh",
-	"initiator": {
-		"id": "ibm@us.ibm.com",
-		"name": "ibm@us.ibm.com",
-		"typeURI": "service/security/account/user",
-		"credential": {
-			"type": "apikey"
-		},
-		"host": {
-			"address": "169.1.1.1"
-		}
+	// date/time of the event
+	"eventTime": "2021-11-12T19:31:38.56+0000",
+
+	// the iam action that was validated for this request
+	"action": "console.general.read",
+
+	// a random id for the tx, same id appears in the server logs
+	"id": "FQcZ:jIGUB",
+
+	// minimal auth data
+	"creds": {
+
+		// the uuid of the identity that sent the req
+		"uuid": "36150104-69d8-448d-a2e5-229311e427de",
+
+		// the identity's username
+		"name": "dshuffma",
+
+		// type of auth that was provided in the req. options:
+		// token - bearer token
+		// apikey - api key
+		// basic - basic auth username/password
+		// user - cookie auth (session)
+		"type": "user"
 	},
-	"logSourceCRN": "crn:v1:bluemix:public:blockchain:us-south:a/e08f36b38fb6b618b48345054033eb22:dc6004c2-caf1-480b-a397-8ff3403e2eb4:undefined:0",
-	"message": "blockchain: delete notifications",
-	"requestData": {
-		"originalUrl": "/ak/api/v2/notifications/purge"
+
+	// origin of the request, usually an ip
+	"address": "localhost",
+
+	// minimal details of the request
+	"req": {
+		"method": "GET",
+		"path": "/api/v1/logs/audit.log"
 	},
-	"responseData": {
-		"notifications": [
-			{
-				"message": "deleting all notifications",
-				"by": "i**@us.ibm.com",
-				"tx_id": "?:UbrRh",
-				"api": "DELETE:/ak/api/v2/notifications/purge",
-				"code": 200,
-				"status": "success",
-				"elapsed_ms": 468
-			}
-		]
+
+	// minimal details of response
+	"res": {
+		"statusCode": 200
 	},
-	"observer": {
-		"name": "ActivityTracker"
-	},
+
+	// says "success" if the http status code indicates a success (codes 0-399)
+	// else "failure" (codes 400+)
 	"outcome": "success",
-	"reason": {
-		"reasonCode": 200,
-		"reasonType": "OK"
-	},
-	"saveServiceCopy": true,
-	"severity": "normal",
-	"target": {
-		"id": "crn:v1:bluemix:public:blockchain:us-south:a/e08f36b38fb6b618b48345054033eb22:dc6004c2-caf1-480b-a397-8ff3403e2eb4:bulk:",
-		"name": "-",
-		"typeURI": "blockchain/notifications"
-	},
-	"eventTime": "2020-05-08T19:57:35.97+0000",
-	"level": "info"
+
+	// all events are at "debug"
+	"level": "debug",
+
+	// empty for now
+	"message": ""
 }
 ```
 
 **How to view events:**
 
-Unknown atm.
+Open the browser to `/api/v3/logs` and click the `audit.log` link.
 
 **Client Side Events:**
 
