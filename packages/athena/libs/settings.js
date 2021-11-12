@@ -335,6 +335,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 					EVENT_COMP_ADD: 'component_onboard',				// use onboard event for k8s create and local import creation
 					EVENT_COMP_EDT: 'component_edit',					// local edit event
 					SERVICE_NAME: 'blockchain',							// service name defined in IBM cloud catalog
+					ALT_PRODUCT_NAME: 'console',
 					TX_CCD: 'ccd',										// chaincode definition
 					TX_CHANNEL: 'channel',								// channel policy update
 					C_CC_LAUNCHER: 'chaincodelauncher',

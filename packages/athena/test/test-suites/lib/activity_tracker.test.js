@@ -65,14 +65,7 @@ describe('Fabric Utils', () => {
 								const event = tools.activity_tracker.track_api(req, res, response);
 								expect(event).to.not.equal(null);
 								expect(event.outcome).to.equal('success');
-								expect(event.action).to.equal(common.ev.STR.SERVICE_NAME + '.components.create');
-								expect(event.reason.reasonCode).to.equal(res.statusCode);
-								expect(event.reason.reasonType).to.equal('OK');
-								expect(event.target.id).to.equal('crn:v1:bluemix:public:blockchain:us-south:null:null:' +
-									common.ev.STR.PEER + ':' + component_id.toLowerCase());
-								expect(event.target.name).to.equal(component_id);
-								expect(event.target.typeURI).to.equal(common.ev.STR.SERVICE_NAME + '/components');
-								expect(event.observer.name).to.equal('ActivityTracker');
+								expect(event.action).to.equal(common.ev.STR.ALT_PRODUCT_NAME + '.components.create');
 								done();
 							}
 						},
@@ -95,14 +88,7 @@ describe('Fabric Utils', () => {
 								const event = tools.activity_tracker.track_api(req, res, response);
 								expect(event).to.not.equal(null);
 								expect(event.outcome).to.equal('failure');
-								expect(event.action).to.equal(common.ev.STR.SERVICE_NAME + '.' + resource + '.create');
-								expect(event.reason.reasonCode).to.equal(res.statusCode);
-								expect(event.reason.reasonType).to.equal('NOT OK');
-								expect(event.target.id).to.equal('crn:v1:bluemix:public:blockchain:us-south:null:null:' + resource + ':');
-								expect(event.target.name).to.equal('users');
-								expect(event.target.typeURI).to.equal(common.ev.STR.SERVICE_NAME + '/' + resource);
-								expect(event.observer.name).to.equal('ActivityTracker');
-								expect(JSON.stringify(event.responseData.response)).to.equal(JSON.stringify(response));
+								expect(event.action).to.equal(common.ev.STR.ALT_PRODUCT_NAME + '.' + resource + '.create');
 								done();
 							}
 						},
@@ -125,13 +111,7 @@ describe('Fabric Utils', () => {
 								const event = tools.activity_tracker.track_api(req, res, response);
 								expect(event).to.not.equal(null);
 								expect(event.outcome).to.equal('success');
-								expect(event.action).to.equal(common.ev.STR.SERVICE_NAME + '.' + resource + '.read');
-								expect(event.reason.reasonCode).to.equal(res.statusCode);
-								expect(event.reason.reasonType).to.equal('OK');
-								expect(event.target.id).to.equal('crn:v1:bluemix:public:blockchain:us-south:null:null:' + resource + ':');
-								expect(event.target.name).to.equal('users');
-								expect(event.target.typeURI).to.equal(common.ev.STR.SERVICE_NAME + '/' + resource);
-								expect(event.observer.name).to.equal('ActivityTracker');
+								expect(event.action).to.equal(common.ev.STR.ALT_PRODUCT_NAME + '.' + resource + '.read');
 								done();
 							}
 						},
@@ -167,18 +147,10 @@ describe('Fabric Utils', () => {
 								const response = {};
 
 								const event = tools.activity_tracker.track_api(req, res, response);
-								console.log('event', event);
 								expect(event).to.not.equal(null);
 								expect(event.outcome).to.equal('success');
-								expect(event.action).to.equal(common.ev.STR.SERVICE_NAME + '.' + resource + '.' + action_verb);
-								expect(event.reason.reasonCode).to.equal(Number(event_code));
-								expect(event.reason.reasonType).to.equal('OK');
-								expect(event.target.id).to.equal('crn:v1:bluemix:public:blockchain:us-south:null:null:' +
-									resource.toLowerCase() + ':' + resource_id.toLocaleLowerCase());
-								expect(event.target.name).to.equal(resource_id);
-								expect(event.target.typeURI).to.equal(common.ev.STR.SERVICE_NAME + '/' + resource);
-								expect(event.observer.name).to.equal('ActivityTracker');
-								expect(JSON.stringify(event.responseData.client_details)).to.equal(JSON.stringify(client_details));
+								expect(event.action).to.equal(common.ev.STR.ALT_PRODUCT_NAME + '.' + resource + '.' + action_verb);
+								expect(JSON.stringify(event.res.clientDetails)).to.equal(JSON.stringify(client_details));
 								done();
 							}
 						},
@@ -209,18 +181,9 @@ describe('Fabric Utils', () => {
 								const response = {};
 
 								const event = tools.activity_tracker.track_api(req, res, response);
-								console.log('event', event);
 								expect(event).to.not.equal(null);
 								expect(event.outcome).to.equal('success');
-								expect(event.action).to.equal(common.ev.STR.SERVICE_NAME + '.components.create');
-								expect(event.reason.reasonCode).to.equal(res.statusCode);
-								expect(event.reason.reasonType).to.equal('OK');
-								expect(event.target.id).to.equal('crn:v1:bluemix:public:blockchain:us-south:' + common.ev.CRN.account_id +
-									':' + common.ev.CRN.instance_id + ':' + common.ev.STR.PEER + ':' + component_id.toLocaleLowerCase());
-								expect(event.target.name).to.equal(component_display_name);
-								expect(event.target.typeURI).to.equal(common.ev.STR.SERVICE_NAME + '/components');
-								expect(event.observer.name).to.equal('ActivityTracker');
-								expect(event.severity).to.equal(severity);
+								expect(event.action).to.equal(common.ev.STR.ALT_PRODUCT_NAME + '.components.create');
 								done();
 							}
 						},
@@ -247,18 +210,9 @@ describe('Fabric Utils', () => {
 								};
 
 								const event = tools.activity_tracker.track_api(req, res, response);
-								console.log('event', event);
 								expect(event).to.not.equal(null);
 								expect(event.outcome).to.equal('failure');
-								expect(event.action).to.equal(common.ev.STR.SERVICE_NAME + '.components.create');
-								expect(event.reason.reasonCode).to.equal(res.statusCode);
-								expect(event.reason.reasonType).to.equal('NOT OK');
-								expect(event.target.id).to.equal('crn:v1:bluemix:public:blockchain:us-south:' + common.ev.CRN.account_id +
-									':' + common.ev.CRN.instance_id + ':components:');
-								expect(event.target.name).to.equal(component_display_name);
-								expect(event.target.typeURI).to.equal(common.ev.STR.SERVICE_NAME + '/components');
-								expect(event.observer.name).to.equal('ActivityTracker');
-								expect(event.severity).to.equal('normal');
+								expect(event.action).to.equal(common.ev.STR.ALT_PRODUCT_NAME + '.components.create');
 								done();
 							}
 						},
@@ -282,18 +236,9 @@ describe('Fabric Utils', () => {
 								};
 
 								const event = tools.activity_tracker.track_api(req, res, response);
-								console.log('event', event);
 								expect(event).to.not.equal(null);
 								expect(event.outcome).to.equal('success');
-								expect(event.action).to.equal(common.ev.STR.SERVICE_NAME + '.signature_collections.create');
-								expect(event.reason.reasonCode).to.equal(res.statusCode);
-								expect(event.reason.reasonType).to.equal('OK');
-								expect(event.target.id).to.equal('crn:v1:bluemix:public:blockchain:us-south:' + common.ev.CRN.account_id +
-									':' + common.ev.CRN.instance_id + ':signature_collections:');
-								expect(event.target.name).to.equal('signature_collections');
-								expect(event.target.typeURI).to.equal(common.ev.STR.SERVICE_NAME + '/signature_collections');
-								expect(event.observer.name).to.equal('ActivityTracker');
-								expect(event.severity).to.equal('normal');
+								expect(event.action).to.equal(common.ev.STR.ALT_PRODUCT_NAME + '.signature_collections.create');
 								done();
 							}
 						},
@@ -317,18 +262,9 @@ describe('Fabric Utils', () => {
 								};
 
 								const event = tools.activity_tracker.track_api(req, res, response);
-								console.log('event', event);
 								expect(event).to.not.equal(null);
 								expect(event.outcome).to.equal('success');
-								expect(event.action).to.equal(common.ev.STR.SERVICE_NAME + '.logs.read');
-								expect(event.reason.reasonCode).to.equal(res.statusCode);
-								expect(event.reason.reasonType).to.equal('OK');
-								expect(event.target.id).to.equal('crn:v1:bluemix:public:blockchain:us-south:' + common.ev.CRN.account_id +
-									':' + common.ev.CRN.instance_id + ':logs:');
-								expect(event.target.name).to.equal('logs');
-								expect(event.target.typeURI).to.equal(common.ev.STR.SERVICE_NAME + '/logs');
-								expect(event.observer.name).to.equal('ActivityTracker');
-								expect(event.severity).to.equal('normal');
+								expect(event.action).to.equal(common.ev.STR.ALT_PRODUCT_NAME + '.logs.read');
 								done();
 							}
 						}
