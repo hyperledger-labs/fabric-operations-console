@@ -358,23 +358,30 @@ __default_settings_doc.json:__
 	}
 },
 
-// the default password for initial user(s) and initial_admin/initial_admin
-// only applies if AUTH_SCHEME is "couchdb"
-// if null this password is useless and users w/o passwords cannot be logged in
-// [!] this field IS NOT intended to be edited by the config file [!]
-// change value via the ui or use "default_user_password_initial" to override.
+// the default password for any new users
+// (this field does nothing if running IBP SaaS)
+//
+// if this is null users w/o passwords cannot be logged in.
+//
+// [!] this field is NOT intended to be edited by the config file [!]
+// *when changing this field you must restart the webserver*
+//
+// change value via the ui or apis
 // defaults: null
 "default_user_password": null,
 
-// this field contains the pre-baked value for the "default_user_password".
+// Preface: since the config file ALWAYS overrides db settings, what happens if the user tries to change
+// the default_user_password in the db.. it would revert on every startup. To prevent that this 2nd var
+// was created. This var SHOULD be set by the config file. When the user edits the default password they
+// will change "default_user_password" and this one will remain as the older password.
+// Thus its the *initial* password...
+
 // [!] this field IS intended to be edited via env var or config file [!]
-// this field allows users to edit the default field via ui AND to set
-// it (initially) via env or config.
-// it only works if "default_user_password" is null.
-// the env variable "DEFAULT_USER_PASSWORD_INITIAL" will override this.
+// *when changing this field you must restart the webserver*
+//
+// - it is overriden by "default_user_password" if "default_user_password" is not null.
+// - the env variable "DEFAULT_USER_PASSWORD_INITIAL" will override "default_user_password_initial"
 // defaults: ohnoididnotchangethepassword
-// note to self:
-// - w/o this field will overwrite default_user_password on restart, loosing UI set value
 "default_user_password_initial": "ohnoididnotchangethepassword",
 
 // maximum time to wait for a deployer request (ms).
