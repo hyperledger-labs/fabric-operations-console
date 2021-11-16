@@ -1,6 +1,34 @@
 [
 	{
-		"version": "1.0.0",
+		"version": "1.0.0-4",
+		"date": "08 Nov 2021",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
+		"version": "1.0.0-3",
+		"date": "19 Oct 2021",
+		"description": [
+			{
+				"title": "Fixed import bug",
+				"details": "Fixed bug that was preventing component importing."
+			},
+			{
+				"title": "Fixed component tile bug",
+				"details": "Fixed issue where new component tiles would temporarily disappear until browser refresh."
+			},
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
+		"version": "1.0.0-1",
 		"date": "05 Oct 2021",
 		"description": [
 			{
