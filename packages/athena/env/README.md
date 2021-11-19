@@ -836,13 +836,11 @@ __default_settings_doc.json:__
 
 # Auth Schemes Explained
 An auth scheme is a scheme that controls how your users will login to the console UI.
-There are a few different versions.
-Choose one option.
 
-All IBM IBP SaaS  services will use `iam`.
-We recommend everyone else to use either `couchdb`.
+All IBM IBP SaaS consoles will use `iam`.
+Everyone else should use `couchdb`.
 
-All schemes have 3 roles to assign varying abilities to users: `manager`, `writer`, `reader`.
+All schemes have 3 roles which assign varying abilities to users: `manager`, `writer`, `reader`.
 See the [_permissions doc](../docs/_permissions.md) for role/action details.
 
 ### 0. Initial
@@ -856,14 +854,8 @@ See the [_permissions doc](../docs/_permissions.md) for role/action details.
 	- `ibmid` (object)
 	- `iam_api_key` (string)
 
-### 2. Generic Oauth
-- a `auth_scheme` value of `oauth` will use a generic passport OAuth 2 strategy for login.
-- required setting fields: (find field in default_settings_doc above for details)
-	- `auth_scheme` (string)
-	- `oauth` (object)
-
-### 3. CouchDB (local)
-- a `auth_scheme` value of `couchdb` will use the same CouchDB for optools data as your user data. the settings doc in the system db will contain your valid users. this is the "poor man's" solution and should only be used if you cannot use another scheme.
+### 2. CouchDB (local)
+- a `auth_scheme` value of `couchdb` will use the same CouchDB for optools data as your user data. the settings doc in the system db will contain your valid users.
 - required setting fields: (find field in default_settings_doc above for details)
 	- `auth_scheme` (string)
 	- `initial_admin` (string)
