@@ -330,7 +330,7 @@ module.exports = function (logger, ev, t) {
 					// starts here
 					logger.debug('[fab upgrade] got lock. looking for old orderers');
 					get_available_fabric_versions((ver_errs, versions) => {
-						const orderer_keys = versions ? Object.keys(versions.orderer) : [];
+						const orderer_keys = (versions && versions.orderer) ? Object.keys(versions.orderer) : [];
 						logger.debug('[fab upgrade] orderer versions available:', orderer_keys);
 
 						if (orderer_keys.length === 0) {

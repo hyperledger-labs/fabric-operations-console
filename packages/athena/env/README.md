@@ -835,14 +835,12 @@ __default_settings_doc.json:__
 ```
 
 # Auth Schemes Explained
-An auth scheme is a scheme that controls how your users will login to the IBP console UI.
-There are a few different versions.
-Choose one option.
+An auth scheme is a scheme that controls how your users will login to the console UI.
 
-All IBM IBP SaaS  services will use `iam`.
-We recommend everyone else to use either `oidc`, or `ldap` or `oauth`, or `couchdb` (and in that order).
+All IBM IBP SaaS consoles will use `iam`.
+Everyone else should use `couchdb`.
 
-All schemes have 3 roles to assign varying abilities to users: `manager`, `writer`, `reader`.
+All schemes have 3 roles which assign varying abilities to users: `manager`, `writer`, `reader`.
 See the [_permissions doc](../docs/_permissions.md) for role/action details.
 
 ### 0. Initial
@@ -856,57 +854,9 @@ See the [_permissions doc](../docs/_permissions.md) for role/action details.
 	- `ibmid` (object)
 	- `iam_api_key` (string)
 
-### 2. OIDC (IBM Bedrock IAM)
-- a `auth_scheme` value of `oidc` (Open ID Connect) will use IBM Bedrock's IAM to login. only available if IBP is deployed on IBM bedrock. this is an OAuth 2 based scheme.
-- required setting fields: (find field in default_settings_doc above for details)
-	- `auth_scheme` (string)
-	- `oidc` (object)
-	- `iam_api_key` (string)
-
-### 3. LDAP
-- a `auth_scheme` value of `ldap` will directly talk to an LDAP server for auth.
-- required setting fields: (find field in default_settings_doc above for details)
-	- `auth_scheme` (string)
-	- `ldap` (object)
-- [optional] assign IBP roles via LDAP groups example:
-	```js
-	// ex: a user that belongs to the ldap group `solidDevs` will get the IBP role "MANAGER"
-	"ldap_group_map": {
-		"MANAGER": ['solidDevs'],
-		"WRITER": ['okDevs'],
-		"READER": ['sketchyDevs'],
-	}
-	```
-- [optional] assign IBP roles via LDAP attributes example example:
-	```js
-	// ex: a user that has the attribute `title` set to `attr2` will get the IBP role "WRITER"
-	"ldap_attribute_map": {
-		"MANAGER": 'title=attr1',
-		"WRITER": 'title=attr2',
-		"READER": 'title=attr3',
-	}
-	```
-
-### 4. Generic Oauth
-- a `auth_scheme` value of `oauth` will use a generic passport OAuth 2 strategy for login.
-- required setting fields: (find field in default_settings_doc above for details)
-	- `auth_scheme` (string)
-	- `oauth` (object)
-
-### 5. CouchDB (local)
-- a `auth_scheme` value of `couchdb` will use the same CouchDB for optools data as your user data. the settings doc in the system db will contain your valid users. this is the "poor man's" solution and should only be used if you cannot use another scheme.
+### 2. CouchDB (local)
+- a `auth_scheme` value of `couchdb` will use the same CouchDB for optools data as your user data. the settings doc in the system db will contain your valid users.
 - required setting fields: (find field in default_settings_doc above for details)
 	- `auth_scheme` (string)
 	- `initial_admin` (string)
 	- `default_user_password_initial` (string)
-
-### 6. AppID (discontinued)
-- a `auth_scheme` value of `appid` will use the IBM Cloud service [App ID](https://console.bluemix.net/catalog/services/app-id). which is a service that can integrate with many SSO providers or implement a custom email/pass store. no longer supported, **do not use**.
-- required setting fields: (find field in default_settings_doc above for details)
-	- `auth_scheme` (string)
-	- `app_id` (object)
-
-### 7. IBM ID (discontinued)
-- a `auth_scheme` value of `ibmid` will use the **legacy** IAM for logging in users with IBM IDs. this is currently only used for **dev IBP** on IBM Cloud. this is an OAuth 2 based scheme. no longer supported, **do not use**.
-	- `auth_scheme` (string)
-	- `ibmid` (object)

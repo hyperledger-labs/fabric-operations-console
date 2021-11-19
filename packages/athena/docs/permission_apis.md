@@ -1,25 +1,23 @@
 # Permissions APIs (API Keys and Users)
 
-## IBP Console Route Differences
+## Console Route Differences
 
-The apis that start with **/api/v[123]/** expect a **login session** to authenticate (regardless of auth scheme).
+The apis that start with **/api/v[123]/** expect a **login session** to authenticate (these APIs are intended for the browser).
 
-The apis that start with **/ak/api/v[123]/** expect **basic auth headers** to authenticate when using an [auth scheme](./README.md#auth-schemes-explained) of `couchdb`. Otherwise they expect a **bearer token** header.
+The apis that start with **/ak/api/v[123]/** expect **basic auth or bearer token headers** to authenticate when using an [auth scheme](../env/README.md#auth-schemes-explained).
 
 - if using **basic auth** and an **api key**: the api `key` is the `username`, and the `secret` is the `password`
-  - this type of `username` is case sensitive
 - if using **basic auth** and your **username**: your `username` is the `username`, and your `password` is the `password`...
-  - this type of `username` is not case sensitive (which is the same behavior seen during login w/this username)
   - it is not recommended to use this method for long. users should use it once to generate an api key and then use the api key from then on. that will limit exposure of your personal credentials.
-  - users cannot use a username with the default password to authenticate on these APIs. change your password via the UI first.
+  - users cannot use a username with the default password to authenticate to most APIs. change your password via the UI first, or make an api key.
 
 ***
 
 ## Automation Help
 
-If you want to automate APIs on a brand new IBP console **software** build you will need to create an IBP API key using the initial user.
+If you want to automate APIs on a brand new console build you will need to create a console API key using the initial user.
 
-- The `initial_admin` and `default_user_password_initial` settings should have been set in the [configuration file](../env/README.md#config) prior to starting IBP console. When IBP console starts for the first time it will create a user where the username is the value of the `initial_admin` setting and a password using the value of the `default_user_password_initial` setting. This user will be created with all roles (`manager`, `writer`, `reader`).
+- The `initial_admin` and `default_user_password_initial` settings should have been set in the [configuration file](../env/README.md#config) prior to starting the console. When the console starts for the first time it will create a user where the username is the value of the `initial_admin` setting and a password using the value of the `default_user_password_initial` setting. This user will be created with all roles (`manager`, `writer`, `reader`).
 - All you have to do is create the key using the create-an-api-key API (#1 below).
 	- Route: `/ak/api/v3/permissions/keys`.
 	- Auth: Set basic auth for `initial_admin` and `default_user_password_initial`
@@ -35,17 +33,18 @@ If you want to automate APIs on a brand new IBP console **software** build you w
 			}
 		```
 	- note that this is the only API that works with the default password (at least thats the intent...).
-- ONce you have an `api_key` and `api_secret` you can authenticate to any `/ak/api/` route using basic auth where the username is the `api_key` and the password is `api_secret`. Congratulations 🎈.
+- Once you have an `api_key` and `api_secret` you can authenticate to any `/ak/api/` route using basic auth where the username is the `api_key` and the password is `api_secret`. Congratulations 🎈.
 
 ***
 
 ## 1. Create an api key
-This API is intended for **software** only (saas must use IAM for api keys).
-It will create a new api key & secret.
-These api keys can be used by end users to perform various athena APIs programmatically.
+This API will create a new api key & secret which can be provided as basic auth on subsequent APIs.
+These api keys can be used by end users to perform various APIs programmatically.
 
 Note that the `api_secret` returned in the response will not be recoverable ever again.
 Thus the end user **must** record it externally.
+
+API keys do not expire.
 - **Method**: POST
 - **Route**: `/api/v[123]/permissions/keys` || `/ak/api/v[123]/permissions/keys`
 - **Auth**: Must have action `blockchain.api_keys.manage`
@@ -70,13 +69,10 @@ Thus the end user **must** record it externally.
 ```
 
 ## 1b. Create a access token (aka bearer token)
-This API is intended for **software** only (saas must use IAM api keys).
-It will create a bearer token from an "api key" which is actually the user's username and password concatenated with a colon.
-These access tokens can be used by end users to perform various athena APIs programmatically.
+This API will create a bearer token from an api key which can be provided as bearer auth on subsequent APIs.
+These access tokens can be used by end users to perform various APIs programmatically.
 
 Note that the `access_token` will expire in 1 hour with the default settings.
-
-This does not currently work with an ldap login (dsh todo).
 - **Method**: POST
 - **Route**: `/api/v3/identity/token` || `/ak/api/v3/identity/token`
 - **Auth**: Must have action `blockchain.api_keys.manage`
@@ -105,6 +101,7 @@ This does not currently work with an ldap login (dsh todo).
 
 // -------------------------------------------
 // [option 2] - form-urlencoded body
+//
 // You can also pass a form-urlencoded body instead of json!
 // (this is identical to the IBM Cloud IAM body)
 // -------------------------------------------
@@ -128,7 +125,6 @@ This does not currently work with an ldap login (dsh todo).
 ```
 
 ## 2. Get all api keys
-This API is intended for **software** only (saas must use IAM for api keys).
 Return all valid api keys and their attribute data.
 The `api_secret` attributes will not/cannot be returned.
 - **Method**: GET
@@ -157,7 +153,6 @@ The `api_secret` attributes will not/cannot be returned.
 ```
 
 ## 3. Delete an api key
-This API is intended for **software** only (saas must use IAM for api keys).
 Invalidate a key by deleting its doc in the db.
 - **Method**: DELETE
 - **Route**: `/api/v[123]/permissions/keys/:api_key` || `/ak/api/v[123]/permissions/keys/:api_key`
@@ -173,7 +168,6 @@ Invalidate a key by deleting its doc in the db.
 ```
 
 ## 4. Delete an access token
-This API is intended for **software** only.
 Invalidate an access token by deleting its doc in the db.
 - **Method**: DELETE
 - **Route**: `/api/v3/identity/token/:id` || `/ak/api/v3/identity/token/:id`
@@ -189,7 +183,6 @@ Invalidate an access token by deleting its doc in the db.
 ```
 
 ## 5. Get access token details
-This API is intended for **software** only.
 Get the details of an access token (like who made it, and how much time is left).
 If the token doc in the db is deleted this will return a 404.
 
@@ -215,7 +208,6 @@ If the token doc in the db is deleted this will return a 404.
 Create a user for the UI.
 The API will register a users by a **username**.
 The username is often an email address but it could be any unique string.
-This API is intended for software only (saas must use IAM).
 
 - Usernames are always brought to lowercase (will not error).
 - All users to add should not already exist (will error and abort the api).
@@ -254,7 +246,6 @@ Else `name` is the first 20 chars.
 ```
 
 ## 5. Delete users
-This API is intended for software only (saas must use IAM).
 Delete users by their **uuid**.
 
 It's recommended to run the "Delete all sessions" api after deleting a user.
@@ -281,7 +272,6 @@ It will kick out logged in users and force everyone to login, which recently rem
 ```
 
 ## 6. Edit users
-This API is intended for software only (saas must use IAM).
 Edit users' roles by providing their **uuid** and their **new set** of roles.
 All users should already exist.
 - **Method**: PUT
@@ -318,7 +308,6 @@ All users should already exist.
 ```
 
 ## 7. List users
-This API is intended for software only (saas must use IAM for api keys).
 List all users, their roles, username and date created.
 - **Method**: GET
 - **Route**: `/api/v[123]/permissions/users` || `/ak/api/v[123]/permissions/users`
@@ -352,7 +341,6 @@ List all users, their roles, username and date created.
 ```
 
 ## 8. Change password
-This API is intended for software only (saas can use IBM ID).
 It only works when auth scheme is set to `couchdb`.
 User must be logged in to edit their password.
 
@@ -383,7 +371,6 @@ Check the [configuration readme](../env/README.md#Default-Settings-File) for def
 ```
 
 ## 9. Login via password
-This API is intended for software only (saas can use IBM ID).
 It only works when auth scheme is set to `couchdb`.
 If a user does not have a password yet, they should enter the value of `default_user_password` setting.
 - **Method**: POST
@@ -417,7 +404,6 @@ If a user does not have a password yet, they should enter the value of `default_
 ```
 
 ## 10. Reset password
-This API is intended for software only (saas can use IBM ID).
 It only works when auth scheme is set to `couchdb`.
 This is intended for a user with the `manager` role to reset **another** user's password.
 It is not for a user to reset their own password.
@@ -449,7 +435,7 @@ The password will reset to the value of the `default_user_password` setting.
 ```
 
 ## 11. Get User Info
-This api returns data about the current user based on his session and a few settings for the IBP console.
+This api returns data about the current user based on his session and a few settings for the console.
 If there is no session, the user related fields will be empty.
 
 dsh todo - we should remove fields common to the GET settings api.
