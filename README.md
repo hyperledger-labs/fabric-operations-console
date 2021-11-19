@@ -208,3 +208,6 @@ npm run install-detect-secrets
 
 ## FAQ / Need Help?
 Check out known error messages and fixes in our [FAQ](./FAQ.md).
+
+## APIs
+Check out our [api doc](./docs/apis.md) for APIs offered by the Console.

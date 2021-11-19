@@ -12,6 +12,9 @@
 1. How to setup self signed TLS.
 	- the webserver will try to load a cert/key based on the env variables `PEM_FILE_PATH` `KEY_FILE_PATH`. If these variables are set but no such file exist, the webserver will create a self signed TLS cert for you on startup. Check out the [env file readme](./packages/athena/env/README.md) for more details on all env variables.
 
+1. What APIs does the console offer?
+	- See our [API page](./docs/apis.md) for details.
+
 ## Error Help:
 
 - Crypto.subtle errors look like:
