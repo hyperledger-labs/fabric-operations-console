@@ -26,14 +26,6 @@ export class NotFound extends Component {
 		window.open(translate('_404DOCLINK', { DOC_PREFIX: this.props.docPrefix }));
 	};
 
-	getSupportURL() {
-		let supportURL = 'https://cloud.ibm.com/unifiedsupport/supportcenter';
-		if (this.props.platform && this.props.platform !== 'ibmcloud') {
-			supportURL = 'https://www.ibm.com/mysupport';
-		}
-		return supportURL;
-	}
-
 	render() {
 		const translate = this.props.translate;
 		return (
@@ -46,20 +38,20 @@ export class NotFound extends Component {
 						<Link to="/nodes"
 							className="ibp-link ibp-404-link"
 						>
-							{translate('nodes')}
+							{translate('view_nodes')}
 						</Link>
-						<button onClick={() => this.openDocs(translate)}
-							className="ibp-link ibp-button-link ibp-404-link"
+
+						<Link to="/channels"
+							className="ibp-link ibp-404-link"
 						>
-							<span>{translate('documentation')}</span>
-						</button>
-						<a className="ibp-link ibp-404-link"
-							href={this.getSupportURL()}
-							rel="noopener noreferrer"
-							target="_blank"
+							{translate('view_channels')}
+						</Link>
+
+						<Link to="/smart-contracts"
+							className="ibp-link ibp-404-link"
 						>
-							<span>{translate('contact_support')}</span>
-						</a>
+							{translate('view_chaincode')}
+						</Link>
 					</div>
 				</div>
 				<div className="ibp-404-illustration-container">
