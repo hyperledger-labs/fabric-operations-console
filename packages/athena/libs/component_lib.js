@@ -291,10 +291,11 @@ module.exports = function (logger, ev, t) {
 		});
 	};
 
-	// count the optool ids
+	// count the optools ids - only count component ids (peer, ca, orderers)
 	function count_ids(obj) {
 		if (obj && Array.isArray(obj.doc_ids)) {
-			return obj.doc_ids.length;
+			const no_sig_collections = obj.doc_ids.filter(id => (id.indexOf('sc_') !== 0 && id.indexOf('00_') !== 0));
+			return no_sig_collections.length;
 		}
 		return 0;
 	}
