@@ -232,6 +232,11 @@ __default_settings_doc.json:__
 // email address on the UI to surface to users for help
 "admin_contact_email": "ibm@us.ibm.com",
 
+// if true users are allowed to keep the default password.
+// if false users will be forced to set a new password after their first login.
+// defaults false
+"allow_default_password": false
+
 // legacy! - ignore me
 // app id settings go here, leave it as is if using ibm id
 // (not used if auth_scheme is not "appid")

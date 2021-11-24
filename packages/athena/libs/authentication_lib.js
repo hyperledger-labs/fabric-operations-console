@@ -123,7 +123,7 @@ module.exports = function (logger, ev, t) {
 			req.session.couchdb_profile = {									// init the session data
 				name: make_name(lc_email),
 				email: lc_email,
-				password_type: 'custom',									// tells us if the login was done using a default password or not
+				password_type: ev.STR.PASS_IS_CUSTOM,						// tells us if the login was done using a default password or not
 			};
 			req.session.couchdb_profile.uuid = t.middleware.getUuid(req);	// must call this after init of couchdb_profile
 
@@ -152,7 +152,7 @@ module.exports = function (logger, ev, t) {
 				let known_hashed_secret = ev.ACCESS_LIST[lc_email].hashed_secret;
 				if (!known_hashed_secret && ev.DEFAULT_USER_PASSWORD) {		// if DEFAULT_USER_PASSWORD is null, don't do use this fallback
 					logger.warn('[auth] no password set for user', t.misc.censorEmail(lc_email), '. will use default password');
-					req.session.couchdb_profile.password_type = 'default';
+					req.session.couchdb_profile.password_type = (ev.ALLOW_DEFAULT_PASSWORD === true) ? ev.STR.PASS_IS_CUSTOM : ev.STR.PASS_IS_DEFAULT;
 					const secret_details = t.misc.salt_secret(ev.DEFAULT_USER_PASSWORD);
 					salt = secret_details.salt;
 					known_hashed_secret = secret_details.hashed_secret;
