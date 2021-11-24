@@ -222,6 +222,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 				settings.ACTIVITY_TRACKER_PATH = athena.activity_tracker_path;
 				settings.MAX_COMPONENTS = !isNaN(athena.max_components) ? Number(athena.max_components) : 250;
 				settings.IMPORT_ONLY = athena.feature_flags ? athena.feature_flags.import_only_enabled : false;
+				settings.ALLOW_DEFAULT_PASSWORD = athena.allow_default_password ? true : false;
 
 				// allow integration test to be ran from the provided UI
 				settings.integration_test_enabled = athena.integration_test_enabled ? athena.integration_test_enabled : false;
@@ -351,6 +352,8 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 					IBP_TOKEN: 'ibp',
 					IAM_TOKEN: 'iam',
 					FAB_UP_LOCK_NAME: 'auto_fabric_upgrade',
+					PASS_IS_CUSTOM: 'custom',
+					PASS_IS_DEFAULT: 'default',
 				};
 
 				// manager - must match what is defined in RMC (this section ONLY applies to stand alone)
