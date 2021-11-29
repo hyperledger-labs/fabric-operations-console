@@ -14,6 +14,7 @@
 
 
 const BN = require('bn.js');								// bn.js === Big Number
+const Buffer = require('safer-buffer').Buffer;
 
 const IV = 'IBP-UzOTAwODAzND';					// semi-secret used for encryption/decryption
 const ECDSA_NAME = 'ECDSA';
