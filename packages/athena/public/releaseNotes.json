@@ -1,5 +1,23 @@
 [
 	{
+		"version": "1.0.0-5",
+		"date": "29 Nov 2021",
+		"description": [
+			{
+				"title": "Default password",
+				"details": "Added a setting to allow users to keep the default password."
+			},
+			{
+				"title": "Fix max component limit",
+				"details": "The max component limit was counting incorrectly."
+			},
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
 		"version": "1.0.0-4",
 		"date": "08 Nov 2021",
 		"description": [
