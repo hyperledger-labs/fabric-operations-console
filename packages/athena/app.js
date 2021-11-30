@@ -72,6 +72,9 @@ const metric_opts = {
 };
 const maxSize = '25mb';
 let load_cache_interval = null;
+let check_tls_interval = null;
+let load_cache_timer = null;
+let compaction_timer = null;
 
 //---------------------
 // Load Config Setup - loads from either local file system or env variables
@@ -274,7 +277,8 @@ function setup_routes_and_start() {
 	if (!ev.DISABLED_COMPACTION) {
 		const comp_delay = Math.round(1000 * DAY_SECS - (1000 * 60 * 60 * Math.random()));
 		logger.debug('[db] compaction will run in', tools.misc.friendly_ms(comp_delay));
-		setTimeout(() => {
+		clearTimeout(compaction_timer);
+		compaction_timer = setTimeout(() => {
 			ev.compact_all_dbs();												// compact dbs after running for 24ish hours (23-24hrs)
 		}, comp_delay);
 	}
@@ -557,7 +561,8 @@ function setup_routes_and_start() {
 	}, 500);
 
 	// on startup get the list of deployer components - this preheats the cache
-	setTimeout(() => {
+	clearTimeout(load_cache_timer);
+	load_cache_timer = setTimeout(() => {
 		load_component_cache();
 	}, 1000 * Math.random() * 60 * 2);								// delay call on start, to scatter calls from multiple athenas starting at once
 
@@ -1259,7 +1264,8 @@ function start_app() {
 	setTimeout(() => { 				// not sure why, but cert file is getting written twice. once AFTER its generated during start up
 		tls_file_watcher(); 		// delay this watch until things settle
 	}, 1000 * 5);
-	setInterval(() => {				// check on our tls cert periodically
+	clearInterval(check_tls_interval);
+	check_tls_interval = setInterval(() => {		// check on our tls cert periodically
 		periodically_check_cert();
 	}, 1000 * 60 * 60 * 24 * 10);	// check slowly to avoid spamming logs, but faster than WHEN_TO_REGENERATE
 	tools.ot_misc.open_server();	// flip the env flag to open to requests
