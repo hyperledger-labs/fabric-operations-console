@@ -27,8 +27,8 @@
 		"async": "2.6.*",
 		"bn.js": "5.1.*",
 		"buffer": "^6.0.3",
-		"google-protobuf": "3.6.*",
-		"protobufjs": "^6.8.8",
+		"google-protobuf": "3.19.*",
+		"protobufjs": "^6.11.*",
 		"safer-buffer": "2.1.*",
 		"webpack": "^5.64.4"
 	},
