@@ -1069,7 +1069,7 @@ export class ChaincodeModal extends React.Component {
 					{Helper.renderFieldSummary(this.props.translate, this.props, 'approve_org', 'selected.msp_id')}
 					{Helper.renderFieldSummary(this.props.translate, this.props, 'approve_identity', 'approve_identity.name')}
 					{Helper.renderFieldSummary(this.props.translate, this.props, 'chaincode_package', 'pkg.name')}
-					{Helper.renderFieldSummary(this.props.translate, this.props.signatureRequest.ccd, 'init_required', 'init_required')}
+					{Helper.renderFieldSummary(this.props.translate, this.props.ccd, 'init_required', 'init_required')}
 					{this.props.pkg &&
 						this.props.pkg.name &&
 						this.props.selected_peers &&
