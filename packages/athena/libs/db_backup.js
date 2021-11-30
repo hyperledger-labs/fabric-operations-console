@@ -18,36 +18,43 @@
 module.exports = function (logger, ev, t) {
 	const dbs = {};
 	const BACKUP_DOC_TYPE = 'athena_backup';
-	const the_backup = {
-		_id: '-',								// populated later
-		backup_version: '1.0.0',
-		ibp_versions: {},						// populated later
-		doc_count: 0,							// populated later
-		dbs: {},								// populated later
-		in_progress: false,
-		type: BACKUP_DOC_TYPE,
-		start_timestamp: 0,						// populated later
-		end_timestamp: 0,						// populated later
-		elapsed: 0,								// populated later
-	};
+	let the_backup = {};
 	let restore_in_progress = false;
 	let restore_successes = 0;
 	const MAX_DOC_ITER = 100;
 	let db_interval = null;
-	let DOC_ID_BASE = '03_ibp_db_backup_';		// prefix for backup doc ids
+	let DOC_ID_BASE = '03_ibp_db_backup_';			// prefix for backup doc ids
+	let auto_timer = null;
 
-	// dsh todo - retry individual docs that fail with w/bulk get
+	//------------------------------------------------------------
+	// init backup obj
+	//------------------------------------------------------------
+	function build_backup_obj() {
+		return {
+			_id: '-',								// populated later
+			backup_version: '1.0.0',
+			ibp_versions: {},						// populated later
+			doc_count: 0,							// populated later
+			dbs: {},								// populated later
+			in_progress: false,
+			type: BACKUP_DOC_TYPE,
+			start_timestamp: 0,						// populated later
+			end_timestamp: 0,						// populated later
+			elapsed: 0,								// populated later
+		};
+	}
 
 	//------------------------------------------------------------
 	// Automatic db backups
 	//------------------------------------------------------------
-	setTimeout(function () {															// next backup should run at 1am utc
+	clearTimeout(auto_timer);															// there should only ever be one of these
+	auto_timer = setTimeout(function () {												// next backup should run at 1am utc
 		run_auto_backup();
 
 		clearInterval(db_interval);
 		db_interval = setInterval(function () {											// each backup (after the first) should run every 24 hours
 			run_auto_backup();
-		}, 1000 * 60 * 60 * 24);
+		}, 1000 * 60 * 60 * 24);														// this interval is constant b/c random delay added to first auto backup
 
 	}, ms_till_1am_utc());
 
@@ -100,7 +107,7 @@ module.exports = function (logger, ev, t) {
 		const timeAt1AmTomorrow = timeAt1Am.getTime() + (1000 * 60 * 60 * 24);			// add 1 day for 1am tomorrow UTC
 		const ret = timeAt1AmTomorrow - Date.now();										// calc time from now till 1am tomorrow
 		logger.debug('[backup] auto db backup will run in', t.misc.friendly_ms(ret));
-		return ret + 30000 * Math.random();												// add some time fuzziness to spread out multiple instance attempts
+		return ret + 10 * 60 * 1000 * Math.random();									// add some time fuzziness to spread out multiple instance attempts
 	}
 
 	//------------------------------------------------------------
@@ -143,11 +150,9 @@ module.exports = function (logger, ev, t) {
 			cb_early({ statusCode: 400, message: 'already_in_progress', id: the_backup._id });
 			return cb_done();
 		} else {													// start the backup
-
+			the_backup = build_backup_obj();						// init
 			the_backup.start_timestamp = Date.now();
 			the_backup._id = DOC_ID_BASE + the_backup.start_timestamp;
-			the_backup.doc_count = 0;								// reset
-			the_backup.dbs = {};									// reset
 			the_backup.in_progress = true;
 			the_backup.ibp_versions = t.ot_misc.parse_versions();
 			logger.info('[backup] starting db backup. ', the_backup._id, 'dbs:', opts.db_names);
@@ -217,7 +222,7 @@ module.exports = function (logger, ev, t) {
 						} else {
 
 							// [3] write/update the backup doc
-							update_backup(resp1.last_sequence, bulk_docs);
+							update_backup_obj(resp1.last_sequence, bulk_docs);
 							update_backup_doc(orig_opts, () => {
 								//logger.debug('[backup] backed up db: "' + db_name + '" with', the_backup.dbs[db_name].docs.length, 'docs');
 
@@ -244,7 +249,7 @@ module.exports = function (logger, ev, t) {
 		}
 
 		// update the backup object
-		function update_backup(last_sequence, docs_arr) {
+		function update_backup_obj(last_sequence, docs_arr) {
 			if (!the_backup.dbs[db_name]) {
 				the_backup.dbs[db_name] = {};							// safe init
 			}
