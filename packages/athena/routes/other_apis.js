@@ -471,7 +471,7 @@ module.exports = function (logger, ev, t) {
 
 	// start a fabric upgrade check
 	function run_upgrade_check(res, req) {
-		t.patch_lib.auto_upgrade_orderers();
+		t.patch_lib.auto_upgrade_orderers({ manual: true });
 		return res.status(200).json({ message: 'ok', details: 'started' });
 	}
 

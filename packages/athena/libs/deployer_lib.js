@@ -2020,12 +2020,14 @@ module.exports = function (logger, ev, t) {
 			};
 			logger.debug('[deployer lib]', parsed.debug_tx_id, ' sending deployer api w/route:', opts.url);
 			/*return lc_cb(null, {
-				orderer: {
-					'2.2.99': {
-						default: true
-					},
-					'1.4.999': {
-						default: true
+				versions: {
+					orderer: {
+						'2.2.99': {
+							default: true
+						},
+						'1.4.999': {
+							default: true
+						}
 					}
 				}
 			});*/
