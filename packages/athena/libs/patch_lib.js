@@ -308,17 +308,25 @@ module.exports = function (logger, ev, t) {
 	// Patch 2 - 03/20/2020
 	// this patch upgrades orderer that are older than < 1.4.9 or < 2.2.1
 	// (the upgrade will NOT upgrade past major version changes)
+	/*
+	opts: {
+		"manual": true || false					// if its manual, we ignore the DISABLE_AUTO_FAB_UP setting
+	}
+	*/
 	// ----------------------------------------------------------------------------------
-	patch.auto_upgrade_orderers = (cb) => {
+	patch.auto_upgrade_orderers = (opts, cb) => {
 		if (!cb) {
 			cb = function () { };
 		}
+		if (!opts) {
+			opts = {};
+		}
 		let wait_interval = null;
 
-		if (ev.DISABLE_AUTO_FAB_UP) {
+		if (ev.DISABLE_AUTO_FAB_UP && !opts.manual) {
 			logger.debug('[fab upgrade] auto fabric upgrade is disabled via setting. skipping.');
 		} else {
-			logger.debug('[fab upgrade] starting auto fabric upgrade check. looking for comps lower than:', ev.AUTO_FAB_UP_VERSIONS);
+			logger.debug('[fab upgrade] starting fabric upgrade check. looking for comps lower than:', ev.AUTO_FAB_UP_VERSIONS);
 
 			// get a lock if we can, prevents multiple athena instances from doing the same logic
 			t.lock_lib.apply({ lock: ev.STR.FAB_UP_LOCK_NAME, max_locked_sec: 5 * 60 }, (lock_err) => {
@@ -334,7 +342,7 @@ module.exports = function (logger, ev, t) {
 						logger.debug('[fab upgrade] orderer versions available:', orderer_keys);
 
 						if (orderer_keys.length === 0) {
-							logger.error('[fab upgrade] unable to find available orderer versions for auto upgrade.', orderer_keys);
+							logger.error('[fab upgrade] unable to find available orderer versions for fab upgrade.', orderer_keys);
 							t.lock_lib.release(ev.STR.FAB_UP_LOCK_NAME);
 							return cb();
 						} else {
@@ -360,7 +368,7 @@ module.exports = function (logger, ev, t) {
 				_skip_cache: true,
 			};
 			t.deployer.get_fabric_versions(fake_req, (err, resp) => {
-				return dep_cb(err, resp);
+				return dep_cb(err, resp ? resp.versions : null);
 			});
 		}
 
