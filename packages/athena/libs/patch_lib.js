@@ -415,6 +415,7 @@ module.exports = function (logger, ev, t) {
 					// already logged, skip this component & continue
 					return async_cb();
 				}
+				logger.debug('[fab upgrade] looking at component:', comp_doc._id, 'with version:', comp_doc.version);
 
 				should_upgrade(upgrade_to_version, comp_doc, (_, should_do_upgrade) => {
 					if (!should_do_upgrade) {
@@ -433,6 +434,7 @@ module.exports = function (logger, ev, t) {
 								version: upgrade_to_version				// this is the version we will upgrade to
 							}
 						};
+						logger.debug('[fab upgrade] sending body for fab upgrade:', JSON.stringify(fake_req.body));
 						t.deployer.update_component(fake_req, (err_resp, resp) => {
 							if (err_resp) {
 								logger.error('[fab upgrade] failed to upgrade component. dep error.', comp_doc._id, err_resp);
