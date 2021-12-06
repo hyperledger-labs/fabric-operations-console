@@ -452,7 +452,12 @@ module.exports = function (logger, ev, t) {
 	//------------------------------------------------------------
 	/*
 	opts: {
-		req: {},
+		req: {
+			query: {
+				skip: ["00_settings_athena"]
+			}
+			...
+		},
 		db_names: [""],							// [required] array of database names to restore
 		backup: {},								// [required] the backup data to use during restore
 		BATCH: 512,								// [optional] max number of full docs to write & read at once (bulk docs), defaults 1000
@@ -506,8 +511,11 @@ module.exports = function (logger, ev, t) {
 				let elapsed = t.misc.friendly_ms(end_timestamp - restore_start_timestamp);
 				logger.info('[restore] completed restore, docs:', restore_successes, elapsed, opts.backup._id);
 
-				t.webhook.edit_webhook(tx_id, { status: 'success' });	// edit webhook doc, update status
-				return cb_done();
+				logger.debug('[restore] updating component white list');
+				t.component_lib.rebuildWhiteList(opts.req, () => {
+					t.webhook.edit_webhook(tx_id, { status: 'success' });	// edit webhook doc, update status
+					return cb_done();
+				});
 			});
 		}
 	};
@@ -556,7 +564,7 @@ module.exports = function (logger, ev, t) {
 			}
 
 			// [1] bulk write a batch of docs
-			const bulk_docs = { docs: docs_arr };										// build format for bulk couchdb operation
+			const bulk_docs = { docs: filter_skip_docs(docs_arr) };						// build format for bulk couchdb operation
 
 			if (bulk_docs.docs.length === 0) {
 				logger.warn('[restore] 0 docs to restore in this iteration', iter);
@@ -601,6 +609,39 @@ module.exports = function (logger, ev, t) {
 						}
 					}
 				});
+			}
+		}
+
+		// remove docs that have ids found in the query parameter
+		function filter_skip_docs(docs_array) {
+			if (db_name === ev.DB_SYSTEM) {					// if we are working the system db, look at the `skip_system` param
+				if (orig_opts && orig_opts.req && orig_opts.req.query.skip_system) {
+					generic_skip(orig_opts.req.query.skip_system);
+				}
+			} else if (db_name === ev.DB_COMPONENTS) {		// if we are working the components db, look at the `skip_components` param
+				if (orig_opts && orig_opts.req && orig_opts.req.query.skip_components) {
+					generic_skip(orig_opts.req.query.skip_components);
+				}
+			}
+			return docs_array;
+
+			// remove docs in list from docs array
+			function generic_skip(skip_list) {
+				if (skip_list) {
+					let skip_docs = [];
+					try {
+						skip_docs = JSON.parse(skip_list);		// pares it, should be an array
+					} catch (e) { }
+
+					if (Array.isArray(skip_docs)) {
+						for (let i in docs_array) {
+							if (docs_array[i]._id && skip_docs.includes(docs_array[i]._id)) {
+								logger.debug('[restore] skipping restore of this doc b/c its in the skip list:', db_name, docs_array[i]._id);
+								docs_array.splice(i, 1);
+							}
+						}
+					}
+				}
 			}
 		}
 
