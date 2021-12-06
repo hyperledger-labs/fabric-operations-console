@@ -178,7 +178,7 @@ module.exports = function (logger, ev, t) {
 			const resp = {
 				statusCode: 503,
 				error: 'api is not available',
-				msg: 'this api is not available to Consoles in read only mode.'
+				msg: 'this api is not available to Consoles in read only mode'
 			};
 			return res.status(503).json(resp);
 		} else {
@@ -195,7 +195,7 @@ module.exports = function (logger, ev, t) {
 			const resp = {
 				statusCode: 503,
 				error: 'api is not available',
-				msg: 'this api is not available to Console\'s without the "deployer" counterpart.'
+				msg: 'this api is not available to Console\'s without the "deployer" counterpart'
 			};
 			return res.status(503).json(resp);
 		} else {
@@ -762,7 +762,7 @@ module.exports = function (logger, ev, t) {
 	// 401 failed to validate the basic auth username/password
 	//--------------------------------------------------
 	exports.unauthorized = (res) => {
-		res.set('WWW-Authenticate', 'Basic realm=IBP' + ev.HOST_URL);			// todo - i've removed the realm header to prevent basic auth dialog boxes in browsers
+		res.set('WWW-Authenticate', 'Basic realm=IBP' + ev.HOST_URL);	// todo - remove the realm header to prevent basic auth dialog boxes in browsers
 		return res.status(401).send('Unauthorized');
 	};
 

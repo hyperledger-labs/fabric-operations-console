@@ -33,7 +33,6 @@ tools.session_store = new CouchdbStore({
 	skip_auto_startup: true,
 });
 let middleware = require('../../../libs/middleware/middleware.js')(common.logger, common.ev, tools);
-const middleware_objects = require('../../docs/middleware.json');
 const httpMocks = require('node-mocks-http');
 const nextSpy = sinon.spy();
 const res = httpMocks.createResponse();
