@@ -222,6 +222,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 				settings.ACTIVITY_TRACKER_PATH = athena.activity_tracker_path;
 				settings.MAX_COMPONENTS = !isNaN(athena.max_components) ? Number(athena.max_components) : 250;
 				settings.IMPORT_ONLY = athena.feature_flags ? athena.feature_flags.import_only_enabled : false;
+				settings.READ_ONLY = athena.feature_flags ? athena.feature_flags.read_only_enabled : false;
 				settings.ALLOW_DEFAULT_PASSWORD = athena.allow_default_password ? true : false;
 
 				// allow integration test to be ran from the provided UI

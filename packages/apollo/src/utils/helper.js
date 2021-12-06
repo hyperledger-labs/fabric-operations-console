@@ -766,6 +766,7 @@ const Helper = {
 
 		let msg = _.get(details, 'response.msg');
 		if (!msg) msg = _.get(details, 'msg');
+
 		// orderer response comes back in an array
 		if (_.isArray(msg)) {
 			if (msg[0].code) {
@@ -774,15 +775,22 @@ const Helper = {
 			let crstatus = _.get(msg[0], 'crstatus.message', '');
 			return crstatus;
 		}
+
 		// peer and CA response
 		if (msg) {
 			if (msg.code) {
 				return msg.code;
 			}
+
+			if (typeof msg === 'string') {
+				return '"' + msg + '"';
+			}
+
 			let message = _.get(msg, 'message');
 			let crstatus = _.get(msg, 'crstatus.message', '');
 			return message || crstatus;
 		}
+
 		// stitch calls return _large_ error objects, so we try to highlight the bits that are important.
 		if (details.stitch_msg) {
 			return details.stitch_msg;
@@ -800,7 +808,6 @@ const Helper = {
 		if (json !== '{}') {
 			return json;
 		}
-
 		// This must be an empty object.  Just don't show details if there's nothing important to show.
 	},
 

@@ -108,7 +108,8 @@
 		"patch_1_4to2_x_enabled": true,
 		"lifecycle2_0_enabled": true,
 		"import_only_enabled": true,
-		"mustgather_enabled": false
+		"mustgather_enabled": false,
+		"read_only_enabled": false
 	},
 	"file_logging": {
 		"client": {

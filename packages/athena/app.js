@@ -578,6 +578,9 @@ function load_component_cache() {
 	if (tools.ot_misc.server_is_closed()) {							// skip performing db operations if the server is closed
 		logger.debug('[components] closed. skipping the cache update.');
 	} else {
+		if (ev.READ_ONLY) {
+			logger.warn('[components] read only mode detected');
+		}
 		if (ev.IMPORT_ONLY) {
 			logger.debug('[components] import only mode detected');
 			logger.debug('[components] loading cache... (no dep)');

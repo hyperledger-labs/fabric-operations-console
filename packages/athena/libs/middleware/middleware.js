@@ -35,26 +35,26 @@ module.exports = function (logger, ev, t) {
 	exports.public = t.event_tracker.trackViaIntercept;
 
 	// create saas components
-	exports.verify_create_action_session = [eTrack, isDeployerConfigured, needCreateAction, checkAuthentication, permitAction];
-	exports.verify_create_action_ak = [eTrack, isDeployerConfigured, needCreateAction, allowAkToDoAction];
+	exports.verify_create_action_session = [eTrack, blockReadOnlyMode, isDeployerConfigured, needCreateAction, checkAuthentication, permitAction];
+	exports.verify_create_action_ak = [eTrack, blockReadOnlyMode, isDeployerConfigured, needCreateAction, allowAkToDoAction];
 
 	// delete saas components
-	exports.verify_delete_action_session = [eTrack, isDeployerConfigured, needDeleteAction, checkAuthentication, permitAction];
-	exports.verify_delete_action_ak = [eTrack, isDeployerConfigured, needDeleteAction, allowAkToDoAction];
+	exports.verify_delete_action_session = [eTrack, blockReadOnlyMode, isDeployerConfigured, needDeleteAction, checkAuthentication, permitAction];
+	exports.verify_delete_action_ak = [eTrack, blockReadOnlyMode, isDeployerConfigured, needDeleteAction, allowAkToDoAction];
 
 	// import component
-	exports.verify_import_action_session = [eTrack, needImportAction, checkAuthentication, permitAction];
-	exports.verify_import_action_ak = [eTrack, needImportAction, allowAkToDoAction];
+	exports.verify_import_action_session = [eTrack, blockReadOnlyMode, needImportAction, checkAuthentication, permitAction];
+	exports.verify_import_action_ak = [eTrack, blockReadOnlyMode, needImportAction, allowAkToDoAction];
 
 	// remove imported component
-	exports.verify_remove_action_session = [eTrack, needRemoveAction, checkAuthentication, permitAction];
-	exports.verify_remove_action_ak = [eTrack, needRemoveAction, allowAkToDoAction];
+	exports.verify_remove_action_session = [eTrack, blockReadOnlyMode, needRemoveAction, checkAuthentication, permitAction];
+	exports.verify_remove_action_ak = [eTrack, blockReadOnlyMode, needRemoveAction, allowAkToDoAction];
 
 	// manage a component
 	exports.verify_manage_action_session = [eTrack, needManageAction, checkAuthentication, permitAction];
 	exports.verify_manage_action_ak = [eTrack, needManageAction, allowAkToDoAction];
-	exports.verify_manage_action_session_dep = [eTrack, isDeployerConfigured, needManageAction, checkAuthentication, permitAction];
-	exports.verify_manage_action_ak_dep = [eTrack, isDeployerConfigured, needManageAction, allowAkToDoAction];
+	exports.verify_manage_action_session_dep = [eTrack, blockReadOnlyMode, isDeployerConfigured, needManageAction, checkAuthentication, permitAction];
+	exports.verify_manage_action_ak_dep = [eTrack, blockReadOnlyMode, isDeployerConfigured, needManageAction, allowAkToDoAction];
 
 	// restart athena
 	exports.verify_restart_action_session = [eTrack, needRestartAction, checkAuthentication, permitAction];
@@ -75,22 +75,22 @@ module.exports = function (logger, ev, t) {
 	exports.verify_settings_action_ak = [eTrack, needSettingsAction, allowAkToDoAction];
 
 	// manage athena users (not valid on SaaS)
-	exports.verify_users_action_session = [eTrack, needUsersAction, checkAuthentication, permitAction];
-	exports.verify_users_action_init_session = [eTrack, needUsersAction, permitActionInit];	// special for 'initial'
-	exports.verify_users_action_ak = [eTrack, needUsersAction, allowAkToDoAction];
-	exports.verify_users_action_init_ak = [eTrack, needUsersAction, allowAkToDoActionInit];		// special for 'initial'
+	exports.verify_users_action_session = [eTrack, blockReadOnlyMode, needUsersAction, checkAuthentication, permitAction];
+	exports.verify_users_action_init_session = [eTrack, blockReadOnlyMode, needUsersAction, permitActionInit];	// special for 'initial'
+	exports.verify_users_action_ak = [eTrack, blockReadOnlyMode, needUsersAction, allowAkToDoAction];
+	exports.verify_users_action_init_ak = [eTrack, blockReadOnlyMode, needUsersAction, allowAkToDoActionInit];		// special for 'initial'
 
 	// manage api keys (not valid on SaaS)
-	exports.verify_apiKey_action_session = [eTrack, needApiKeyAction, checkAuthentication, permitAction];
-	exports.verify_apiKey_action_ak = [eTrack, needApiKeyAction, allowAkToDoAction];
+	exports.verify_apiKey_action_session = [eTrack, blockReadOnlyMode, needApiKeyAction, checkAuthentication, permitAction];
+	exports.verify_apiKey_action_ak = [eTrack, blockReadOnlyMode, needApiKeyAction, allowAkToDoAction];
 
 	// manage notifications
 	exports.verify_notifications_action_session = [eTrack, needNotificationAction, checkAuthentication, permitAction];
 	exports.verify_notifications_action_ak = [eTrack, needNotificationAction, allowAkToDoAction];
 
 	// manage signature collections
-	exports.verify_sigCollections_action_session = [eTrack, needSigCollectionsAction, checkAuthentication, permitAction];
-	exports.verify_sigCollections_action_ak = [eTrack, needSigCollectionsAction, allowAkToDoAction];
+	exports.verify_sigCollections_action_session = [eTrack, blockReadOnlyMode, needSigCollectionsAction, checkAuthentication, permitAction];
+	exports.verify_sigCollections_action_ak = [eTrack, blockReadOnlyMode, needSigCollectionsAction, allowAkToDoAction];
 
 	//--------------------------------------------------
 	// Make a bunch of fake middleware functions to append the needed action
@@ -170,16 +170,34 @@ module.exports = function (logger, ev, t) {
 	//----------------------------------------------------------------------------------------------------------------------
 
 	//--------------------------------------------------
+	// Add this middleware to routes that cannot be used during read-only-mode - (GET routes are still allowed)
+	//--------------------------------------------------
+	function blockReadOnlyMode(req, res, next) {
+		if (ev.READ_ONLY && (req && req.method !== 'GET')) {									// if in read only mode, deny this api
+			logger.debug('[middle] this api is not available when the setting "read_only_enabled" is true');
+			const resp = {
+				statusCode: 503,
+				error: 'api is not available',
+				msg: 'this api is not available to Consoles in read only mode'
+			};
+			return res.status(503).json(resp);
+		} else {
+			return next();
+		}
+	}
+
+	//--------------------------------------------------
 	// Check if deployer setting is set (this disables apis that need deployer)
 	//--------------------------------------------------
 	function isDeployerConfigured(req, res, next) {
 		if (ev.IMPORT_ONLY) {
 			logger.debug('[middle] this api requires deployer, but the "import_only_enabled" setting indicates there is no deployer.');
 			const resp = {
+				statusCode: 503,
 				error: 'api is not available',
-				details: 'this api is not available to Console\'s without the "deployer" counterpart.'
+				msg: 'this api is not available to Console\'s without the "deployer" counterpart'
 			};
-			return res.status(400).json(resp);
+			return res.status(503).json(resp);
 		} else {
 			return next();
 		}
@@ -744,7 +762,7 @@ module.exports = function (logger, ev, t) {
 	// 401 failed to validate the basic auth username/password
 	//--------------------------------------------------
 	exports.unauthorized = (res) => {
-		res.set('WWW-Authenticate', 'Basic realm=IBP' + ev.HOST_URL);			// todo - i've removed the realm header to prevent basic auth dialog boxes in browsers
+		res.set('WWW-Authenticate', 'Basic realm=IBP' + ev.HOST_URL);	// todo - remove the realm header to prevent basic auth dialog boxes in browsers
 		return res.status(401).send('Unauthorized');
 	};
 
