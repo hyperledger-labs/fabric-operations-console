@@ -1,5 +1,27 @@
 [
 	{
+		"version": "1.0.0-7",
+		"date": "06 Dec 2021",
+		"description": [
+			{
+				"title": "Added read-only-mode",
+				"details": "Added a new setting that can be used to put the console in a read-only-mode."
+			},
+			{
+				"title": "Fix auto upgrade fabric",
+				"details": "Fixed the fabric-version response parsing during an auto fabric upgrade."
+			},
+			{
+				"title": "Fix backup api",
+				"details": "Prevented backup api database conflicts."
+			},
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
 		"version": "1.0.0-5",
 		"date": "29 Nov 2021",
 		"description": [
