@@ -464,13 +464,13 @@ module.exports = function (logger, ev, t) {
 		}
 
 		// find the highest version we can use to upgrade this orderer.
-		// do not move up major or minor versions, only patch, and pre-releases.
+		// do not move up major versions, only minor, patch and pre-releases.
 		function highest_version_available(available_versions, at_version) {
 			const at_major_ver = get_major(at_version);
-			const at_minor_ver = get_minor(at_version);
+			//const at_minor_ver = get_minor(at_version);
 			const possible_arr = [];							// should hold the versions at the same major & minor versions
 			for (let i in available_versions) {
-				if (get_major(available_versions[i]) === at_major_ver && get_minor(available_versions[i]) === at_minor_ver) {
+				if (get_major(available_versions[i]) === at_major_ver/* && get_minor(available_versions[i]) === at_minor_ver*/) {
 					possible_arr.push(available_versions[i]);
 				}
 			}
@@ -488,10 +488,10 @@ module.exports = function (logger, ev, t) {
 			}
 
 			// get the second number off the version, the major digits
-			function get_minor(version) {
+			/*function get_minor(version) {
 				const parts = (version && typeof version === 'string') ? version.split('.') : [];
 				return parts.length > 1 ? parts[1] : null;
-			}
+			}*/
 		}
 
 		// based on the component doc version && cert expirations, should we upgrade this component
