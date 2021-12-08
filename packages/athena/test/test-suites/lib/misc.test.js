@@ -11,6 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
+/* eslint-disable max-len */
 //------------------------------------------------------------
 // misc_test.js - test for the misc lib
 //------------------------------------------------------------
@@ -19,7 +20,6 @@ const chai = require('chai');
 const expect = chai.expect;
 const tools = common.tools;
 const misc = require('../../../libs/misc.js')(common.logger, tools);
-const component_properties = require('../../docs/component_properties.json');
 const filename = tools.path.basename(__filename);
 const path_to_current_file = tools.path.join(__dirname + '/' + filename);
 const misc_objects = require('../../docs/misc_objects.json');
@@ -2008,7 +2008,8 @@ describe('Misc', () => {
 						{
 							itStatement: 'should leave jwt alone - test_id=hgvhqi',
 							expectBlock: (done) => {
-								const jwt = 'eyJraWQiOiIyMDIwMDkyMjE4MzMiLCJhbGciOiJSUzI1NiJ9.eyJpYW1faWQiOiJJQk1pZC0yp00iiXX0.P5ale38vMl0ufyZ2iEZZkp-J-jFvLf_jAz2D2_JoUJujDBc38-oRjF7F5UA_BAVUHeExRp-8i8Pb_6TbjFQ_mPBytRj6yO-FZ57';
+								const jwt = 'eyJraWQiOiIyMDIwMDkyMjE4MzMiLCJhbGciOiJSUzI1NiJ9.eyJpYW1faWQiOiJJQk1pZC0yp00iiXX0.' +
+									'P5ale38vMl0ufyZ2iEZZkp-J-jFvLf_jAz2D2_JoUJujDBc38-oRjF7F5UA_BAVUHeExRp-8i8Pb_6TbjFQ_mPBytRj6yO-FZ57';
 								expect(misc.safe_jwt_str(jwt)).to.equal(jwt);
 
 								const jwt2 = 'abcd+/==.something.dahs-dot0123456789_';
