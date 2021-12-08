@@ -49,14 +49,21 @@ Start a restore of **OpTools** databases by providing the data to restore.
 This api will return before the restore is done.
 Use the webhook api to see the status of the restore.
 Note: normally each doc in the backup data appears only once, but if it does appear multiple times the last one in the array will be the winning doc.
+Also note - after a restore the component white list will be rebuilt.
 - **Method**: PUT
 - **Route**: `/api/v[123]/backups` || `/api/v[123]/backups`
 - **Auth**: need `blockchain.optools.settings` action
+- **Query Params**:
+	- `skip_system` - should be an array of doc ids that will NOT be restored to the system db. example: `skip_system=["00_settings_athena"]`
+	- `skip_components` - should be an array of doc ids that will NOT be restored to the components db. example: `skip_components=["abcd"]`
 - **Body**:
 ```js
 {
 	// [optional] the webhook url that will be received a POST when the restore is complete
 	"client_webhook_url": "http://localhost:3000/ak/api/v1/webhooks/txs/nboqur"
+
+	// [required] entire backup data here
+	...
 }
 ```
 - **Response**:
@@ -74,14 +81,21 @@ Note: normally each doc in the backup data appears only once, but if it does app
 Start a restore of **OpTools** databases by providing the id of a backup.
 This api will return before the restore is done.
 Use the webhook api to see the status of the restore.
+Also note - after a restore the component white list will be rebuilt.
 - **Method**: PUT
 - **Route**: `/api/v[123]/backups/:backup_id` || `/api/v[123]/backups/:backup_id`
 - **Auth**: need `blockchain.optools.settings` action
+- **Query Params**:
+	- `skip_system` - should be an array of doc ids that will NOT be restored to the system db. example: `skip_system="['00_settings_athena']"`
+	- `skip_components` - should be an array of doc ids that will NOT be restored to the components db. example: `skip_components="['abcd']"`
 - **Body**:
 ```js
 {
 	// [optional] the webhook url that will be received a POST when the restore is complete
 	"client_webhook_url": "http://localhost:3000/ak/api/v1/webhooks/txs/nboqur"
+
+	// [required] entire backup data here
+	...
 }
 ```
 - **Response**:
