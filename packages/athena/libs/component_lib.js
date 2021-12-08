@@ -216,12 +216,14 @@ module.exports = function (logger, ev, t) {
 		const MAX_ID_LENGTH = Number(opts.limit) || ev.MAX_SHORT_NAME_LENGTH;
 
 		if (!opts.id_str || typeof opts.id_str !== 'string') {
-			opts.id_str = t.misc.simpleRandomString(ev.MIN_SHORT_NAME_LENGTH); 			// init field
+			opts.id_str = 'id1' + t.misc.simpleRandomString(ev.MIN_SHORT_NAME_LENGTH); 			// init field
+			logger.warn('[comp lib] a random id is being created b/c its empty:', opts.id_str);
 		}
 
 		opts.id_str = opts.id_str.replace(regex_id, '').toLowerCase();					// remove invalid characters
 		if (!opts.id_str || opts.id_str.length === 0) {									// check if we removed all characters!
-			opts.id_str = t.misc.simpleRandomString(ev.MIN_SHORT_NAME_LENGTH).toLowerCase(); // re-init
+			opts.id_str = 'id2' + t.misc.simpleRandomString(ev.MIN_SHORT_NAME_LENGTH).toLowerCase(); // re-init
+			logger.warn('[comp lib] a random id is being created b/c its empty:', opts.id_str);
 		}
 		if (!regex_letter.test(opts.id_str[0])) {										// first char must be a letter
 			opts.id_str = prefix + opts.id_str;											// add the safer prefix

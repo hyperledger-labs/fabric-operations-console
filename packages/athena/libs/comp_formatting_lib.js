@@ -669,7 +669,10 @@ module.exports = function (logger, ev, t) {
 			}
 
 			if (!deployer_id) {
-				return t.misc.simpleRandomString(ev.MIN_SHORT_NAME_LENGTH).toLowerCase();	// fail safe, always return some id
+				// dsh todo - try the athena id before this.
+				const random_id = 'id0' + t.misc.simpleRandomString(ev.MIN_SHORT_NAME_LENGTH).toLowerCase();
+				logger.warn('[deployer lib] a random id is being created:', random_id);
+				return random_id;										// fail safe, always return some id
 			} else {
 				return deployer_id;
 			}
