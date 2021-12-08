@@ -1255,6 +1255,10 @@ module.exports = function (logger, t) {
 			return null;
 		}
 
+		// make them the same length, defaults to 0
+		for (; version_parts_a.length < version_parts_b.length;) { version_parts_a.push('0'); }
+		for (; version_parts_b.length < version_parts_a.length;) { version_parts_b.push('0'); }
+
 		for (let i in version_parts_a) {
 			if (version_parts_b[i] > version_parts_a[i]) {
 				return true;
