@@ -2569,7 +2569,7 @@
 	"import_only_ca": "Import Certificate Authority",
 	"import_only_orderer": "Import ordering service",
 	"mustgather_heading": "Mustgather",
-	"mustgather_description": "Use the mustgather tool to collect configuration information and logs from your IBM Blockchain Platform installation.",
+	"mustgather_description": "Use the mustgather tool to collect configuration information and logs from your Fabric Console installation.",
 	"mustgather_description_2": "To start the mustgather process use the buttons below. Once finished the collected information will be available to download.",
 	"mustgather_description_3": "Note that the collected data is not persisted outside the mustgather pod and will not be available when the pod is deleted.",
 	"mustgather_disabled": "The mustgather tool is disabled. See the documentation link above for how to enable this feature.",
