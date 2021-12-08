@@ -1832,6 +1832,19 @@ describe('Misc', () => {
 								done();
 							}
 						},
+
+						{
+							itStatement: 'should show that lower versions are lower with dashes and non dashes test_id=ledwid',
+							expectBlock: (done) => {
+								expect(misc.is_version_b_greater_than_a('1.4.9', '1.4.9-1')).to.equal(true);
+								expect(misc.is_version_b_greater_than_a('1.4.9', '1.4.9-0')).to.equal(false);
+								expect(misc.is_version_b_greater_than_a('1.4.9', '2.4.9-1')).to.equal(true);
+								expect(misc.is_version_b_greater_than_a('1.4.9', '2.4.9-0')).to.equal(true);
+								expect(misc.is_version_b_greater_than_a('1.4.9-1', '1.4.9')).to.equal(false);
+								expect(misc.is_version_b_greater_than_a('1.4.9-0', '1.4.9')).to.equal(false);
+								done();
+							}
+						},
 					]
 				}
 			]
