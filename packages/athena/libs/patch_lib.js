@@ -410,16 +410,17 @@ module.exports = function (logger, ev, t) {
 		// send upgrade fabric calls (it checks the version && cert expirations first)
 		function auto_fabric_upgrade(available_orderer_versions, orderer_docs, up_cb) {
 			t.async.eachLimit(orderer_docs, 1, (comp_doc, async_cb) => {
-				const upgrade_to_version = find_version_to_use(available_orderer_versions, comp_doc.version);
+				const upgrade_to_version = highest_version_available(available_orderer_versions, comp_doc.version);
 				if (!upgrade_to_version) {
-					// already logged, skip this component & continue
+					logger.error('[fab upgrade] there are no non-major version upgrades to use... @version', comp_doc.version,
+						'available:', available_orderer_versions);
 					return async_cb();
 				}
 				logger.debug('[fab upgrade] looking at component:', comp_doc._id, 'with version:', comp_doc.version);
 
 				should_upgrade(upgrade_to_version, comp_doc, (_, should_do_upgrade) => {
 					if (!should_do_upgrade) {
-						logger.debug('[fab upgrade] will not upgrade comp:', comp_doc._id, 'version:', comp_doc.version);
+						logger.debug('[fab upgrade] version okay. will not upgrade comp:', comp_doc._id, 'version:', comp_doc.version);
 						return async_cb();
 					} else {
 						logger.debug('[fab upgrade] upgrading comp:', comp_doc._id, 'version:', comp_doc.version, 'to version:', upgrade_to_version);
@@ -463,28 +464,34 @@ module.exports = function (logger, ev, t) {
 		}
 
 		// find the highest version we can use to upgrade this orderer.
-		// do not move up major versions, only minor, patch, and pre-releases.
-		function find_version_to_use(available_versions, at_version) {
+		// do not move up major versions, only minor, patch and pre-releases.
+		function highest_version_available(available_versions, at_version) {
 			const at_major_ver = get_major(at_version);
-			const possible_arr = [];							// should hold the versions at the same major version
+			//const at_minor_ver = get_minor(at_version);
+			const possible_arr = [];							// should hold the versions at the same major & minor versions
 			for (let i in available_versions) {
-				if (get_major(available_versions[i]) === at_major_ver) {
+				if (get_major(available_versions[i]) === at_major_ver/* && get_minor(available_versions[i]) === at_minor_ver*/) {
 					possible_arr.push(available_versions[i]);
 				}
 			}
 
 			if (possible_arr.length === 0) {
-				logger.error('[fab upgrade] there are no non-major version upgrades to use... @version', at_version, 'available:', available_versions);
 				return null;
 			} else {
 				return t.misc.get_highest_version(possible_arr);
 			}
 
-			// get the first digit off the version, the major digit
+			// get the first number off the version, the major digits
 			function get_major(version) {
 				const parts = (version && typeof version === 'string') ? version.split('.') : [];
 				return parts.length > 0 ? parts[0] : null;
 			}
+
+			// get the second number off the version, the major digits
+			/*function get_minor(version) {
+				const parts = (version && typeof version === 'string') ? version.split('.') : [];
+				return parts.length > 1 ? parts[1] : null;
+			}*/
 		}
 
 		// based on the component doc version && cert expirations, should we upgrade this component
@@ -493,11 +500,33 @@ module.exports = function (logger, ev, t) {
 				logger.warn('[fab upgrade] unexpected error, missing comp doc or "version" field');
 				return cb(null, false);
 			} else {
-				// the version in upgrade_to_version is okay, any lower is not
-				if (!t.misc.is_version_b_greater_than_a(comp_doc.version, upgrade_to_version)) {
-					logger.debug('[fab upgrade] version good. comp:', comp_doc._id, 'version:', comp_doc.version);
+
+				// find the auto upgrade version setting that applies to this component (the one with the same major number)
+				const auto_up_version = highest_version_available(ev.AUTO_FAB_UP_VERSIONS, comp_doc.version);
+
+				// this component is at a version beyond all auto upgrade versions - (this shouldn't happen for decades)
+				// this component should not be upgraded
+				if (!auto_up_version) {
+					logger.debug('[fab upgrade] there are no auto-upgrade version settings that have the same major as comp. version:', comp_doc.version);
 					return cb(null, false);
-				} else {
+				}
+
+				// the version in "auto_up_version" is okay, any lower is not
+				// this component should not be upgraded - comp version is above settings
+				else if (!t.misc.is_version_b_greater_than_a(comp_doc.version, auto_up_version)) {
+					logger.debug('[fab upgrade] fab version is at or above the auto-upgrade setting. comp:', comp_doc._id, 'version:', comp_doc.version);
+					return cb(null, false);
+				}
+
+				// the version in "upgrade_to_version" is okay, any lower is not
+				// this component should not be upgraded - comp version is above all available versions - (not likely to ever happen)
+				else if (!t.misc.is_version_b_greater_than_a(comp_doc.version, upgrade_to_version)) {
+					logger.debug('[fab upgrade] fab version is at or above the max available fab version. comp:', comp_doc._id, 'version:', comp_doc.version);
+					return cb(null, false);
+				}
+
+				// this version should be upgraded if the tls cert is near expiration
+				else {
 					tls_certs_near_expiration(comp_doc, (errors, is_near_expiration) => {
 						if (is_near_expiration) {
 							logger.warn('[fab upgrade] tls cert for comp IS near expiration. comp:', comp_doc._id);

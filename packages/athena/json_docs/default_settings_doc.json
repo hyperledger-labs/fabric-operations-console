@@ -1,8 +1,8 @@
 {
 	"_id": "00_settings_athena",
 	"auto_fab_up_versions": [
-		"1.4.9",
-		"2.2.1"
+		"1.4.9-1",
+		"2.2.1-1"
 	],
 	"auto_fab_up_exp_too_close_days": 5,
 	"access_list": {},
