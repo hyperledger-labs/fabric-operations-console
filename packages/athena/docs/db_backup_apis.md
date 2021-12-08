@@ -54,8 +54,8 @@ Also note - after a restore the component white list will be rebuilt.
 - **Route**: `/api/v[123]/backups` || `/api/v[123]/backups`
 - **Auth**: need `blockchain.optools.settings` action
 - **Query Params**:
-	- `skip_system` - should be an array of doc ids that will NOT be restored to the system db. example: `skip_system="['00_settings_athena']"`
-	- `skip_components` - should be an array of doc ids that will NOT be restored to the components db. example: `skip_components="['abcd']"`
+	- `skip_system` - should be an array of doc ids that will NOT be restored to the system db. example: `skip_system=["00_settings_athena"]`
+	- `skip_components` - should be an array of doc ids that will NOT be restored to the components db. example: `skip_components=["abcd"]`
 - **Body**:
 ```js
 {

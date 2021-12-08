@@ -454,7 +454,8 @@ module.exports = function (logger, ev, t) {
 	opts: {
 		req: {
 			query: {
-				skip: ["00_settings_athena"]
+				skip_system: ["00_settings_athena"],	// [optional] docs that match these ids will not be restored to the system db
+				skip_component: ["abcd"]				// [optional] docs that match these ids will not be restored to the components db
 			}
 			...
 		},
