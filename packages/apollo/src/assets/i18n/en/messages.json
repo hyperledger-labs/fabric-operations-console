@@ -2567,5 +2567,19 @@
 	"alert": "Alert",
 	"import_only_peer": "Import peer",
 	"import_only_ca": "Import Certificate Authority",
-	"import_only_orderer": "Import ordering service"
+	"import_only_orderer": "Import ordering service",
+	"mustgather_heading": "Mustgather",
+	"mustgather_description": "Use the mustgather tool to collect configuration information and logs from your IBM Blockchain Platform installation.",
+	"mustgather_description_2": "To start the mustgather process use the buttons below. Once finished the collected information will be available to download.",
+	"mustgather_description_3": "Note that the collected data is not persisted outside the mustgather pod and will not be available when the pod is deleted.",
+	"mustgather_disabled": "The mustgather tool is disabled. See the documentation link above for how to enable this feature.",
+	"mustgather_enabled": "The mustgather tool is enabled.",
+	"mustgather_button_start": "Start mustgather",
+	"mustgather_button_delete": "Delete mustgather pod and service",
+	"mustgather_button_download": "Download results",
+	"mustgather_button_restart": "Run again",
+	"mustgather_button_retry": "Retry",
+	"mustgather_error": "Error from mustgather:",
+	"mustgather_last_run": "Last run:",
+	"mustgather_timeout": "Mustgather tool has timed out. Please reload the page to retry."
 }
