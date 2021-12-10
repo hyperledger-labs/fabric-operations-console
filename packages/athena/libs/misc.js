@@ -1260,7 +1260,7 @@ module.exports = function (logger, t) {
 		for (; version_parts_b.length < version_parts_a.length;) { version_parts_b.push('0'); }
 
 		for (let i in version_parts_a) {
-			if (version_parts_b[i] > version_parts_a[i]) {
+			if (Number(version_parts_b[i]) > Number(version_parts_a[i])) {
 				return true;
 			} else if (version_parts_b[i] === version_parts_a[i]) {
 				// equal numbers at this level... keep going
