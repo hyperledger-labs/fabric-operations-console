@@ -1845,6 +1845,20 @@ describe('Misc', () => {
 								done();
 							}
 						},
+
+						{
+							itStatement: 'should show that lower versions are lower with double digits test_id=qqhlve',
+							expectBlock: (done) => {
+								expect(misc.is_version_b_greater_than_a('1.4.9', '1.4.12')).to.equal(true);
+								expect(misc.is_version_b_greater_than_a('1.4.9', '1.4.10')).to.equal(true);
+								expect(misc.is_version_b_greater_than_a('1.4.9', '1.4.01')).to.equal(false);
+
+								expect(misc.is_version_b_greater_than_a('1.4.80', '1.4.9')).to.equal(false);
+								expect(misc.is_version_b_greater_than_a('1.4.90', '1.4.8')).to.equal(false);
+								expect(misc.is_version_b_greater_than_a('1.4.90', '1.4.01')).to.equal(false);
+								done();
+							}
+						},
 					]
 				}
 			]
