@@ -44,7 +44,7 @@ export class Settings extends Component {
 	componentDidMount() {
 		this.props.showBreadcrumb('settings', {}, this.props.history.location.pathname, true);
 		this.props.updateState(SCOPE, {
-			showExportModal: false,
+			showExportModal: window.location.pathname === '/export-identities',
 			showImportModal: false,
 			client_log_enabled: false,
 			server_log_enabled: false,
@@ -487,6 +487,7 @@ export class Settings extends Component {
 				</div>
 				{this.props.showExportModal && (
 					<ExportModal
+						history={this.props.history}
 						onComplete={() => {
 							// should we tell user export is complete?
 						}}
