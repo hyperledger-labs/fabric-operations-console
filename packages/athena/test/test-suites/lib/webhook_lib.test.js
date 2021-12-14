@@ -18,7 +18,6 @@ const common = require('../common-test-framework.js');
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
-const component_objects = require('../../docs/component_api_objects.json');
 const tools = common.tools;
 const myutils = require('../../testing-lib/test-middleware');
 const filename = tools.path.basename(__filename);

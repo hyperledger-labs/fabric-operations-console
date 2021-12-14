@@ -11,6 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
+/* eslint-disable max-len */
 //------------------------------------------------------------
 // signature_collection_apis.test.js - Test signature_collection_apis
 //------------------------------------------------------------
@@ -786,7 +787,9 @@ describe('Signature Collection APIs', () => {
 								}];
 								routeInfo.body.distribute = 'none';
 								tools.stubs.X509.returns(x509_override_object);
-								tools.stubs.getDoc.callsArgWith(1, null, JSON.parse(JSON.stringify(signature_collection_objects.single_signature_collection_response)));
+								tools.stubs.getDoc.callsArgWith(1, null, JSON.parse(
+									JSON.stringify(signature_collection_objects.single_signature_collection_response))
+								);
 								tools.signature_collection_lib.getAllPartyData.callsArgWith(0, null, signature_collection_objects.all_party_data);
 								tools.stubs.repeatWriteSafe.callsFake((opts, mod, cb) => {	// use sinon to make a passthrough - stub, pass argument to response
 									return cb(null, opts.doc);

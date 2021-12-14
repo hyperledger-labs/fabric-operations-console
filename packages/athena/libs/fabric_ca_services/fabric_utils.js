@@ -16,7 +16,6 @@
 //------------------------------------------------------------
 module.exports = (logger, ev, t) => {
 	const exports = {};
-	const url = require('url');
 
 	//------------------------------------------------------------------
 	// Create the Fabric CA Client - core object for working with Fabric
