@@ -40,8 +40,12 @@ module.exports = function (logger, ev, t) {
 				delete component_doc.id;
 			} else {
 				// 07/17/2019 - took out ability to build id from "short_name", if backend has full control then apis and ui build comp ids consistently
-				component_doc._id = exports.build_id({ id_str: component_doc.display_name, taken_ids: taken_doc_ids_arr });
+				component_doc._id = exports.build_id({
+					id_str: component_doc.dep_component_id || component_doc.display_name, // prefer deployer component id so that they match
+					taken_ids: taken_doc_ids_arr
+				});
 			}
+			logger.debug('[component lib] settling on athena id for component:', component_doc._id);
 
 			// ---------- other legacy builders ---------- //
 			component_doc.type = exports.get_type_from_doc(component_doc);				// build type from legacy field
@@ -256,10 +260,10 @@ module.exports = function (logger, ev, t) {
 
 				if (last_number === null) {												// no suffix delim... but we found a number, increment last pos by 1
 					options.id_str += '_0';
-					logger.warn('[component lib] id is already taken, appending id suffix', options.id_str);
+					logger.warn('[component lib] id is already taken, appending id suffix:', options.id_str);
 				} else {
 					options.id_str = options.id_str.replace(regex_last_numb, Number(last_number) + 1);
-					logger.warn('[component lib] id is already taken, incrementing id suffix', options.id_str);
+					logger.warn('[component lib] id is already taken, incrementing id suffix:', options.id_str);
 				}
 				return build_unique_id(options);										// repeat, check if its still taken...
 			}
@@ -347,7 +351,7 @@ module.exports = function (logger, ev, t) {
 				});
 			},
 
-			// ---- Get all doc IDs ---- //
+			// ---- Get deployer IDs ---- //
 			(join) => {
 				t.deployer.get_all_components_api(null, (err_dep_docs, dep_docs) => {		// get all ids from deployer so we can make a unique id
 					if (!dep_docs) {
