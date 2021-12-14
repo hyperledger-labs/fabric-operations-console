@@ -223,6 +223,10 @@ class Main extends Component {
 										component={Support}
 										exact
 									/>
+									<Route path="/export-identities"
+										component={Settings}
+										exact
+									/>
 									<Route path="*"
 										component={NotFound}
 									/>

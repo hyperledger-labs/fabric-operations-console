@@ -31,30 +31,40 @@ import WizardStep from '../WizardStep/WizardStep';
 
 const SCOPE = 'exportModal';
 const Log = new Logger(SCOPE);
+const EXPORT_IDS_NOW = 'no-prompt';
 
 class ExportModal extends React.Component {
 	componentDidMount() {
+		// this is used to download identities via a direct href link
+		let exportIdentitiesNow = window.location.pathname === '/export-identities';
+
 		this.props.updateState(SCOPE, {
-			exportCA: true,
-			exportOrderer: true,
-			exportPeer: true,
-			exportMsp: true,
-			exportIdentity: false,
+			exportCA: !exportIdentitiesNow,
+			exportOrderer: !exportIdentitiesNow,
+			exportPeer: !exportIdentitiesNow,
+			exportMsp: !exportIdentitiesNow,
+			exportIdentity: exportIdentitiesNow,
 		});
+
+		// download identities without export prompt if on the export identities route
+		if (exportIdentitiesNow) {
+			// fyi relying on updateState does not work, it does not update in time
+			this.onSubmit(EXPORT_IDS_NOW);
+		}
 	}
 
-	async getMspList() {
+	async getMspList(type) {
 		let list = [];
-		if (this.props.exportMsp) {
+		if (this.props.exportMsp && type !== EXPORT_IDS_NOW) {
 			const msp_list = await MspRestApi.getMsps();
 			list = [...msp_list];
 		}
 		return list;
 	}
 
-	async getPeerList() {
+	async getPeerList(type) {
 		const list = [];
-		if (this.props.exportPeer) {
+		if (this.props.exportPeer && type !== EXPORT_IDS_NOW) {
 			const peer_list = await PeerRestApi.getPeers();
 			for (let i = 0; i < peer_list.length; i++) {
 				const peer = peer_list[i];
@@ -106,9 +116,9 @@ class ExportModal extends React.Component {
 		return list;
 	}
 
-	async getOrdererList() {
+	async getOrdererList(type) {
 		const list = [];
-		if (this.props.exportOrderer) {
+		if (this.props.exportOrderer && type !== EXPORT_IDS_NOW) {
 			const orderer_list = await this.getOrderers();
 			for (let i = 0; i < orderer_list.length; i++) {
 				let orderer = orderer_list[i];
@@ -131,9 +141,9 @@ class ExportModal extends React.Component {
 		return list;
 	}
 
-	async getCAList() {
+	async getCAList(type) {
 		const list = [];
-		if (this.props.exportCA) {
+		if (this.props.exportCA && type !== EXPORT_IDS_NOW) {
 			const ca_list = await CertificateAuthorityRestApi.getCAs();
 			for (let i = 0; i < ca_list.length; i++) {
 				const ca = ca_list[i];
@@ -147,9 +157,9 @@ class ExportModal extends React.Component {
 		return list;
 	}
 
-	async getIdentityList() {
+	async getIdentityList(type) {
 		const list = [];
-		if (this.props.exportIdentity) {
+		if (this.props.exportIdentity || type === EXPORT_IDS_NOW) {	// download identities without prompt
 			const id_list = await IdentityApi.getIdentities();
 			id_list.forEach(id => {
 				list.push({
@@ -161,25 +171,29 @@ class ExportModal extends React.Component {
 		return list;
 	}
 
-	async getExportList() {
-		const identities = await this.getIdentityList();
-		const cas = await this.getCAList();
-		const orderers = await this.getOrdererList();
-		const peers = await this.getPeerList();
-		const msps = await this.getMspList();
+	async getExportList(type) {
+		const identities = await this.getIdentityList(type);
+		const cas = await this.getCAList(type);
+		const orderers = await this.getOrdererList(type);
+		const peers = await this.getPeerList(type);
+		const msps = await this.getMspList(type);
 		return [...identities, ...cas, ...orderers, ...peers, ...msps];
 	}
 
-	onSubmit = () => {
-		Log.trace('onSubmit');
+	onSubmit = (who) => {
+		const submit_type = (who === EXPORT_IDS_NOW) ? EXPORT_IDS_NOW : 'regular';
+		Log.trace('export submit type:', submit_type);
 		return new Promise((resolve, reject) => {
-			this.getExportList()
+			this.getExportList(submit_type)
 				.then(list => {
 					const node = {
 						name: 'data',
 						raft: list,
 					};
 					Helper.exportNodesAsZip(node);
+					if (submit_type === EXPORT_IDS_NOW) {
+						this.props.history.push('/settings');		// move off this route, back to regular settings page
+					}
 					resolve();
 				})
 				.catch(error => {
@@ -274,6 +288,7 @@ const dataProps = {
 	exportPeer: PropTypes.bool,
 	exportMsp: PropTypes.bool,
 	exportIdentity: PropTypes.bool,
+	history: PropTypes.object,
 };
 
 ExportModal.propTypes = {
