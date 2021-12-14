@@ -1219,7 +1219,9 @@ describe('Other APIs', () => {
 						{
 							itStatement: 'should return 200 - delete a database test_id=uzzchq',
 							callFunction: () => {
-								tools.stubs.retry_req.callsArgWith(1, null, { statusCode: 200, body: JSON.stringify({ msg: 'ok', deleted: 'database_to_delete' }) });
+								tools.stubs.retry_req.callsArgWith(1, null, {
+									statusCode: 200, body: JSON.stringify({ msg: 'ok', deleted: 'database_to_delete' })
+								});
 							},
 							expectBlock: (res) => {
 								expect(res.status).to.equal(200);
