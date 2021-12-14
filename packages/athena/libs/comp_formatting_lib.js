@@ -663,7 +663,7 @@ module.exports = function (logger, ev, t) {
 			deployer_id = deployer_id.replace(regex_dep_id, '');	// remove symbols
 			deployer_id = deployer_id.toLowerCase().trim();			// lowercase again incase build_id did something, lc makes a cleaner url
 
-			if (!deployer_id || opts && opts.taken_ids && opts.taken_ids.includes(deployer_id)) {			// if its still taken, try random
+			if (!deployer_id || opts && opts.taken_ids && opts.taken_ids.includes(deployer_id)) {		// if its still taken, try random
 				const random_id = 'id0' + t.misc.simpleRandomString(ev.MIN_SHORT_NAME_LENGTH).toLowerCase();
 				logger.warn('[deployer lib] a random id is being created:', random_id);
 				return random_id;										// fail safe, always return some id
