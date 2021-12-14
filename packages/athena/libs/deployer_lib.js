@@ -2025,7 +2025,7 @@ module.exports = function (logger, ev, t) {
 						'2.2.99': {
 							default: true
 						},
-						'1.4.999': {
+						'1.4.9-5': {
 							default: true
 						}
 					}

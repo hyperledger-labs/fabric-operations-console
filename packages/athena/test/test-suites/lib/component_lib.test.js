@@ -542,7 +542,7 @@ describe('component_lib.js', () => {
 								};
 								const id = component_lib.build_id(opts);
 								expect(id).to.not.equal('我的东西');
-								expect(id.length).to.equal(common.ev.MIN_SHORT_NAME_LENGTH);
+								expect(id.length).to.equal(common.ev.MIN_SHORT_NAME_LENGTH + 3);
 								done();
 							}
 						},

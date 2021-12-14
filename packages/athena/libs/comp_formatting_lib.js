@@ -660,17 +660,15 @@ module.exports = function (logger, ev, t) {
 				limit: 64											// 64 limit is made up, seems like a good idea - dsh
 			};
 			let deployer_id = t.component_lib.build_id(opts);		// build a athena unique id
-			if (!deployer_id) { return null; }						// if there were no valid characters give up and let deployer pick something
 			deployer_id = deployer_id.replace(regex_dep_id, '');	// remove symbols
 			deployer_id = deployer_id.toLowerCase().trim();			// lowercase again incase build_id did something, lc makes a cleaner url
 
-			if (opts && opts.taken_ids && opts.taken_ids.includes(deployer_id)) {			// if its still taken, screw it
-				deployer_id = null;
-			}
-
-			if (!deployer_id) {
-				return t.misc.simpleRandomString(ev.MIN_SHORT_NAME_LENGTH).toLowerCase();	// fail safe, always return some id
+			if (!deployer_id || opts && opts.taken_ids && opts.taken_ids.includes(deployer_id)) {		// if its still taken, try random
+				const random_id = 'id0' + t.misc.simpleRandomString(ev.MIN_SHORT_NAME_LENGTH).toLowerCase();
+				logger.warn('[deployer lib] a random id is being created:', random_id);
+				return random_id;										// fail safe, always return some id
 			} else {
+				logger.debug('[deployer lib] settling on dep id for component:', deployer_id);
 				return deployer_id;
 			}
 		}
