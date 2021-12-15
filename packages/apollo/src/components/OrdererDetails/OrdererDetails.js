@@ -1280,7 +1280,7 @@ class OrdererDetails extends Component {
 											noIdentityAssociation={!!this.props.selectedNode}
 											hideDelete={this.props.selectedNode ? !canDelete : false}
 											refreshCerts={this.refreshCerts}
-											hideRefreshCerts={!this.props.selectedNode || (this.props.details && this.props.details.location !== 'ibm_saas')}
+											hideRefreshCerts={!this.props.selectedNode || (this.props.selectedNode && this.props.selectedNode.location !== 'ibm_saas')}
 										/>
 									</FocusComponent>
 								</div>
@@ -1385,7 +1385,7 @@ class OrdererDetails extends Component {
 																			text: 'add_orderer_node',
 																			fn: this.openAddOrdererNode,
 																		},
-																	  ]
+																	]
 																	: []
 															}
 														/>
@@ -1397,8 +1397,8 @@ class OrdererDetails extends Component {
 													id="ibp-orderer-usage"
 													className={
 														this.props.selectedNode.isUpgradeAvailable &&
-														this.props.selectedNode.location === 'ibm_saas' &&
-														ActionsHelper.canCreateComponent(this.props.userInfo)
+															this.props.selectedNode.location === 'ibm_saas' &&
+															ActionsHelper.canCreateComponent(this.props.userInfo)
 															? 'ibp-patch-available-tab'
 															: ''
 													}
