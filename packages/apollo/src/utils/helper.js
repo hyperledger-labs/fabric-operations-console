@@ -1448,6 +1448,23 @@ const Helper = {
 		}
 		return false;
 	},
+
+	// concat two array fields together
+	safer_concat(array1, array2) {
+		if (typeof array1 === 'string') {
+			array1 = [array1];						// make array of 1 if its just a string
+		}
+		if (typeof array2 === 'string') {
+			array2 = [array2];						// make array of 1 if its just a string
+		}
+		if (!Array.isArray(array1)) {
+			array1 = [];							// init empty array if null/anything else
+		}
+		if (!Array.isArray(array2)) {
+			array2 = [];							// init empty array if null/anything else
+		}
+		return array1.concat(array2);
+	}
 };
 
 export default Helper;

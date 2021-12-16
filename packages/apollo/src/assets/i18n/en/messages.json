@@ -2015,7 +2015,7 @@
 	"join_peer_imp_link": "${DOC_PREFIX}ibp-console-adv-deployment#ibp-console-adv-deployment-level-couch",
 	"_JOIN_CHANNEL_LINK": "${DOC_PREFIX}ibp-console-build-network#ibp-console-build-network-join-peer",
 	"replica_sets_desc": "Replica sets guarantee the availability of the CA by ensuring that multiple replicas of the CA are running.",
-	"no_identities": "There are no identities in the wallet.",
+	"no_identities": "There are no applicable identities in the wallet.",
 	"no_ca_identities": "Please import your CA admin identity into your Wallet on the Wallet page.",
 	"no_peer_identities": "Please import your peer admin identity into your Wallet on the Wallet page.",
 	"no_orderer_identities": "Please import your Ordering service admin identity into your Wallet on the Wallet page.",

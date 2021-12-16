@@ -233,7 +233,13 @@ module.exports = function (logger, ev, t) {
 					tls_cert: doc.tls_cert,
 					ecert: doc.ecert,
 					admin_certs: doc.admin_certs,
-				}
+				},
+				intermediate_ca: {
+					root_certs: doc.intermediate_certs,
+				},
+				intermediate_tlsca: {
+					root_certs: doc.tls_intermediate_certs,
+				},
 			};
 
 			if (doc.tlsca_name) {						// move internal field to v3 location
@@ -250,6 +256,12 @@ module.exports = function (logger, ev, t) {
 			}
 			if (!doc.msp.tlsca.root_certs && !doc.msp.tlsca.name) {
 				delete doc.msp.tlsca;							// remove empty fields
+			}
+			if (!Array.isArray(doc.msp.intermediate_ca.root_certs) || doc.msp.intermediate_ca.root_certs.length === 0) {
+				delete doc.msp.intermediate_ca;					// remove empty fields
+			}
+			if (!Array.isArray(doc.msp.intermediate_tlsca.root_certs) || doc.msp.intermediate_tlsca.root_certs.length === 0) {
+				delete doc.msp.intermediate_tlsca;				// remove empty fields
 			}
 
 			if (t.component_lib.include_parsed_certs(req)) {
@@ -269,6 +281,8 @@ module.exports = function (logger, ev, t) {
 			delete doc.tls_ca_root_certs_parsed;
 			delete doc.admin_certs_parsed;
 			delete doc.tls_cert_parsed;
+			//delete doc.intermediate_certs;		// leave this field, too much code to change
+			//delete doc.tls_intermediate_certs;	// leave this field, too much code to change
 
 			if (doc.type !== ev.STR.PEER && doc.type !== ev.STR.ORDERER) {	// only peers and orderers have an ecert
 				delete doc.msp.component.ecert;

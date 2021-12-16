@@ -220,6 +220,9 @@ This page is a work in progress. Trying to get a better handle on what cert is w
 		"tls_cert": "",    // aka comp's TLS cert
 		"ecert": "",     // aka comp's ecert
 		"admin_certs": [""], // aka comp's admin certs
+
+		"intermediate_certs": [""] // aka intermediate CA root-cert
+		"tls_intermediate_certs": [""] // aka intermediate TLS-CA root-cert
 	}
 	```
 - Athena's **external** (response) structure as of v3:
@@ -239,7 +242,15 @@ This page is a work in progress. Trying to get a better handle on what cert is w
 				"tls_cert": "",    // aka comp's TLS cert
 				"ecert": "",     // aka comp's ecert [NOT available if this comp is a CA]
 				"admin_certs": [""], // aka comp's admin certs [NOT available if this comp is a CA]
-			}
+			},
+
+			// optional
+			"intermediate_ca":{
+				"root_certs": [""],  // aka intermediate CA root-cert
+			},
+			"intermediate_tlsca":{
+				"root_certs": [""],  // aka intermediate TLS-CA root-cert
+			},
 		}
 	}
 
