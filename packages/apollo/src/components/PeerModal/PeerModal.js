@@ -99,6 +99,9 @@ class PeerModal extends React.Component {
 	getIdentities() {
 		let root_certs = _.get(this.props, 'peer.msp.ca.root_certs');
 		let tls_root_certs = _.get(this.props, 'peer.msp.tlsca.root_certs');
+		let tls_root_certs_intermediate = _.get(this.props, 'peer.msp.intermediate_tlsca.root_certs');
+		let root_certs_intermediate = _.get(this.props, 'peer.msp.intermediate_ca.root_certs');
+
 		let matched_identities = [];
 		let matched_tls_identities = [];
 		IdentityApi.getIdentities()
@@ -107,7 +110,7 @@ class PeerModal extends React.Component {
 					for (let l_identity of identities) {
 						let opts = {
 							certificate_b64pem: l_identity.cert,
-							root_certs_b64pems: root_certs,
+							root_certs_b64pems: Helper.safer_concat(root_certs, root_certs_intermediate),
 						};
 						let match = await StitchApi.isIdentityFromRootCert(opts);
 						if (match) {
@@ -116,7 +119,7 @@ class PeerModal extends React.Component {
 
 						let tls_opts = {
 							certificate_b64pem: l_identity.cert,
-							root_certs_b64pems: tls_root_certs,
+							root_certs_b64pems: Helper.safer_concat(tls_root_certs, tls_root_certs_intermediate),
 						};
 						let tls_match = await StitchApi.isIdentityFromRootCert(tls_opts);
 						if (tls_match) {
@@ -610,7 +613,7 @@ class PeerModal extends React.Component {
 										{this.props.peer.display_name}
 									</CodeSnippet>
 								),
-							  })
+							})
 							: translate('remove_peer_desc', {
 								name: (
 									<CodeSnippet
@@ -622,7 +625,7 @@ class PeerModal extends React.Component {
 										{this.props.peer.display_name}
 									</CodeSnippet>
 								),
-							  })}
+							})}
 					</p>
 				</div>
 				<div>
@@ -845,7 +848,7 @@ class PeerModal extends React.Component {
 					placeholder: 'private_key_placeholder',
 					tooltipDirection: 'bottom',
 				},
-			  ]
+			]
 			: [
 				{
 					name: 'saas_ca',
@@ -874,7 +877,7 @@ class PeerModal extends React.Component {
 					label: 'peer_enroll_secret',
 					placeholder: 'peer_enroll_secret_placeholder',
 				},
-			  ];
+			];
 		const show_hsm = this.props.peerModalType === 'enable_hsm' || this.props.peerModalType === 'update_hsm';
 		let valid = this.props.third_party_ca ? this.props.third_party_ca_valid : this.props.saas_ca_valid;
 		if (show_hsm) {
@@ -892,7 +895,7 @@ class PeerModal extends React.Component {
 								action_in_progress: null,
 								peerModalType: this.props.action_in_progress,
 							});
-						  }
+						}
 						: null
 				}
 			>
@@ -913,7 +916,7 @@ class PeerModal extends React.Component {
 										third_party_ca: !this.props.third_party_ca,
 									});
 								}}
-								onChange={() => {}}
+								onChange={() => { }}
 								aria-label={translate('third_party_ca')}
 								labelA={translate('no')}
 								labelB={translate('yes')}

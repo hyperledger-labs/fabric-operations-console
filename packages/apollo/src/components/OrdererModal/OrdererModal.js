@@ -293,15 +293,17 @@ class OrdererModal extends React.Component {
 		let valid_identities = {};
 		const allOrderers = this.props.orderer.raft ? this.props.orderer.raft : this.props.orderer;
 		let msp_root_certs = {};
+		let msp_root_certs_intermediate = {};
 		for (let orderer of allOrderers) {
 			msp_root_certs[orderer.msp_id] = _.get(orderer, 'msp.ca.root_certs');
+			msp_root_certs_intermediate[orderer.msp_id] = _.get(orderer, 'msp.intermediate_ca.root_certs');
 		}
 		for (const msp_id of keys) {
 			let identity4msp = [];
 			for (let l_identity of this.identities) {
 				let opts = {
 					certificate_b64pem: l_identity.cert,
-					root_certs_b64pems: msp_root_certs[msp_id],
+					root_certs_b64pems: Helper.safer_concat(msp_root_certs[msp_id], msp_root_certs_intermediate[msp_id]),
 				};
 				let match = await StitchApi.isIdentityFromRootCert(opts);
 				if (match) {
@@ -1043,7 +1045,7 @@ class OrdererModal extends React.Component {
 										{this.props.orderer.display_name}
 									</CodeSnippet>
 								),
-							  })
+							})
 							: translate('remove_orderer_desc', {
 								name: (
 									<CodeSnippet
@@ -1055,7 +1057,7 @@ class OrdererModal extends React.Component {
 										{this.props.orderer.display_name}
 									</CodeSnippet>
 								),
-							  })}
+							})}
 					</p>
 				</div>
 				<div>
@@ -1616,7 +1618,7 @@ class OrdererModal extends React.Component {
 					placeholder: 'private_key_placeholder',
 					tooltipDirection: 'bottom',
 				},
-			  ]
+			]
 			: [
 				{
 					name: 'saas_ca',
@@ -1645,7 +1647,7 @@ class OrdererModal extends React.Component {
 					label: 'orderer_enroll_secret',
 					placeholder: 'peer_enroll_secret_placeholder',
 				},
-			  ];
+			];
 		const show_hsm = this.props.ordererModalType === 'enable_hsm' || this.props.ordererModalType === 'update_hsm';
 		let valid = this.props.third_party_ca ? this.props.third_party_ca_valid : this.props.saas_ca_valid;
 		if (show_hsm) {
@@ -1663,7 +1665,7 @@ class OrdererModal extends React.Component {
 								action_in_progress: null,
 								ordererModalType: this.props.action_in_progress,
 							});
-						  }
+						}
 						: null
 				}
 			>
@@ -1684,7 +1686,7 @@ class OrdererModal extends React.Component {
 										third_party_ca: !this.props.third_party_ca,
 									});
 								}}
-								onChange={() => {}}
+								onChange={() => { }}
 								aria-label={translate('third_party_ca')}
 								labelA={translate('no')}
 								labelB={translate('yes')}

@@ -86,6 +86,15 @@ module.exports = function (logger, ev, t) {
 					'component_doc.msp.ca.name',											// v3
 					'component_doc.ca_name'													// v2/internal
 				]) || undefined;
+
+				component_doc.intermediate_certs = t.misc.safe_dot_nav(component_doc, [
+					'component_doc.msp.intermediate_ca.root_certs',							// v3
+					'component_doc.intermediate_certs',										// internal
+				]) || undefined;
+				component_doc.tls_intermediate_certs = t.misc.safe_dot_nav(component_doc, [
+					'component_doc.msp.intermediate_tlsca.root_certs',						// v3
+					'component_doc.tls_intermediate_certs',									// internal
+				]) || undefined;
 			}
 
 			component_doc.config_override = component_doc.config_override || component_doc.configoverride;
