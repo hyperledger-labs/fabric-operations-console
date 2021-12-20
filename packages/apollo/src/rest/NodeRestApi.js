@@ -226,18 +226,20 @@ class NodeRestApi {
 			let l_type = node.type === 'fabric-ca' ? 'ca' : node.type === 'fabric-peer' ? 'peer' : 'orderer';
 			let availableVersions = upgradeVersions ? upgradeVersions[l_type] : {};
 			let isUpgradeAvailable = false;
-			if (node.version) {
+			if (node.version && isCreatedComponentLocation(node.location)) {
 				if (node.version === 'unsupported') {
 					node.isUnsupported = true;
 					node.version = '1.4.3';
 				} else {
 					node.isUnsupported = false;
 				}
+				const is14Node = semver.lt(semver.coerce(node.version), semver.coerce('2.0'));
+				const current_version = parse_version(node.version);
+
 				for (let i in availableVersions) {
 					try {
-						const is14Node = semver.lt(semver.coerce(node.version), semver.coerce('2.0'));
 						const isNew20 = semver.gte(semver.coerce(availableVersions[i].version), semver.coerce('2.0'));
-						if (semver.gt(availableVersions[i].version, node.version)) {
+						if (semver.gt(availableVersions[i].version, current_version)) {
 							if ((is14Node && !isNew20) || !is14Node || (is14Node && patch_1_4to2_x_enabled)) {
 								isUpgradeAvailable = true;
 								node.upgradable_versions.push(availableVersions[i].version);
@@ -285,6 +287,36 @@ class NodeRestApi {
 			await NodeRestApi.updateNodeVersion(node);
 		});
 		return newNodes;
+
+		// parse the version to "major.minor.patch" (pre-release digits are kept too if provided)
+		// if it already has a major, minor & patch then leave it as is.
+		//		"v1.4" -> "1.4.0"
+		//		"1.4" -> "1.4.0"
+		//		"1.4.1" -> "1.4.1"
+		//		"1.4.1-2" -> "1.4.1-2"
+		function parse_version(version) {
+			if (version_includes_patch(version)) {
+				return version;
+			} else {
+				const parsed = semver.coerce(version);
+				if (parsed) {
+					return parsed.version;
+				} else {
+					return version;
+				}
+			}
+		}
+
+		// returns true if the version has patch digits
+		function version_includes_patch(version) {
+			if (typeof version === 'string') {
+				const parts = version.split('.');
+				if (parts.length >= 3) {
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 
 	/**
@@ -398,7 +430,7 @@ class NodeRestApi {
 			}
 		});
 		if (!node) {
-			throw new Error('Node not found');
+			Log.error('Node not found. id:', id, node);
 		}
 		return node;
 	}
@@ -559,6 +591,9 @@ class NodeRestApi {
 	 */
 	static async getNodeDetails(id, includePrivateKeyAndCert) {
 		const node = await NodeRestApi.getNodeById(id);
+		if (!node) {
+			return null;
+		}
 		await NodeRestApi.updateNodeVersion(node);
 		if (node.type === 'fabric-orderer') {
 			node.associatedIdentities = [];
@@ -645,7 +680,7 @@ class NodeRestApi {
 			return NodeRestApi.versions.promise;
 		}
 		const promise = new Promise(resolve => {
-			const url = `/deployer/api/v3/instance/${NodeRestApi.siid}/type/all/versions`;
+			const url = '/api/saas/v3/fabric/versions';
 			const headers = {
 				'cache-control': 'no-cache',
 			};
