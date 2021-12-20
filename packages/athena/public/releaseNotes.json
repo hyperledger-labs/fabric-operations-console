@@ -1,5 +1,15 @@
 [
 	{
+		"version": "1.0.0-10",
+		"date": "20 Dec 2021",
+		"description": [
+			{
+				"title": "Bug fixes",
+				"details": "Miscellaneous fixes."
+			}
+		]
+	},
+	{
 		"version": "1.0.0-9",
 		"date": "10 Dec 2021",
 		"description": [
