@@ -660,7 +660,9 @@ module.exports = function (logger, ev, t) {
 		function make_subdomain(display_name, id) {
 			const regex_dep_id = new RegExp(/[^a-zA-Z0-9]/g);		// deployer cannot handle underscores or dashes
 			if (typeof id === 'string') {
-				return id.toLowerCase().replace(regex_dep_id, '');	// do not edit or generate the id if provided - ansible needs this, UI won't use it
+				const ret = id.toLowerCase().replace(regex_dep_id, '');
+				logger.debug('[deployer lib] using id provided in api for the dep id:', ret);
+				return ret;	// do not edit or generate the id if provided - ansible needs this, UI won't use it
 			}
 
 			let combined_taken_ids = (taken_ids && Array.isArray(taken_ids.deployer_ids)) ? taken_ids.deployer_ids : [];
@@ -679,7 +681,7 @@ module.exports = function (logger, ev, t) {
 
 			if (!deployer_id || opts && opts.taken_ids && opts.taken_ids.includes(deployer_id)) {		// if its still taken, try random
 				const random_id = 'id0' + t.misc.simpleRandomString(ev.MIN_SHORT_NAME_LENGTH).toLowerCase();
-				logger.warn('[deployer lib] a random id is being created:', random_id);
+				logger.warn('[deployer lib] a random dep id is being created:', random_id);
 				return random_id;										// fail safe, always return some id
 			} else {
 				logger.debug('[deployer lib] settling on dep id for component:', deployer_id);
