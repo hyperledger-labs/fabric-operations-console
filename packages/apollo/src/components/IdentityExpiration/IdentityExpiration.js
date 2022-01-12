@@ -72,17 +72,24 @@ class IdentityExpiration extends Component {
 
 	async checkAdmin() {
 		const msp = await this.getMsp();
-		if (msp && msp.admins) {
-			const id = await IdentityApi.getIdentity(this.props.identity);
-			let admin = false;
+		const scope = SCOPE + '_' + this.props.identity;
+		let admin = false;
+		let node_ou = _.get(msp, 'fabric_node_ous.enable', false);
+		const id = await IdentityApi.getIdentity(this.props.identity);
+		if (node_ou) {
+			const parsed = id.cert ? window.stitch.parseCertificate(id.cert) : null;
+			if (parsed && parsed.subject.indexOf('/OU=admin/') !== -1) {
+				admin = true;
+			}
+		}
+		if (!admin && msp && msp.admins) {
 			msp.admins.forEach(test => {
 				if (test === id.cert) {
 					admin = true;
 				}
 			});
-			const scope = SCOPE + '_' + this.props.identity;
-			this.props.updateState(scope, { admin });
 		}
+		this.props.updateState(scope, { admin });
 	}
 
 	render() {
