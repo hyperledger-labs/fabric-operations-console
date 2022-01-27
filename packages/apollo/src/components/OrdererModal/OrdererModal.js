@@ -480,7 +480,7 @@ class OrdererModal extends React.Component {
 					message: error.stitch_msg || error,
 				};
 				throw e;
-			} else if(error && error.message && error.message.includes('Missing an argument - client certificate')){
+			} else if (error && error.message && error.message.includes('Missing an argument - client certificate')) {
 				this.props.updateState(SCOPE, { ordererModalType: 'force_delete' });
 				const e = new Error(`Failed to remove nodes from system channel because missing an associated OS identity: ${error && (error.message || error.stitch_msg)}`);
 				e.name = 'SYSTEM_CHANNEL_NODE_REMOVAL_FAILED';
