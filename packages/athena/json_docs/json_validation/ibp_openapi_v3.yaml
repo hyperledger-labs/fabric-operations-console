@@ -13814,6 +13814,8 @@ components:
           $ref: '#/components/schemas/operations_url_orderer'
         grpcwp_url:
           $ref: '#/components/schemas/grpcwp_url_orderer'
+        msp:
+          $ref: '#/components/schemas/msp_crypto_field'
         msp_id:
           $ref: '#/components/schemas/msp_id'
         consenter_proposal_fin:
@@ -13838,6 +13840,8 @@ components:
           $ref: '#/components/schemas/operations_url_peer'
         grpcwp_url:
           $ref: '#/components/schemas/grpcwp_url_peer'
+        msp:
+          $ref: '#/components/schemas/msp_crypto_field'
         msp_id:
           $ref: '#/components/schemas/msp_id'
         location:
