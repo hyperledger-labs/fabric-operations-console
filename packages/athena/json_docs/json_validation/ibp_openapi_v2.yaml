@@ -6935,6 +6935,14 @@ components:
           $ref: '#/components/schemas/system_channel_id'
         tags:
           $ref: '#/components/schemas/tags'
+        tls_cert:
+          $ref: '#/components/schemas/tls_cert_orderer'
+        tls_ca_root_cert:
+          $ref: '#/components/schemas/tls_ca_root_cert'
+        server_tls_cert:
+          $ref: '#/components/schemas/server_tls_cert'
+        client_tls_cert:
+          $ref: '#/components/schemas/client_tls_cert'
 
     EditPeerBody:
       description: Body schema to edit local data on a peer
