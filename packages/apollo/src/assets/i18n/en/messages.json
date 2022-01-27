@@ -2343,6 +2343,7 @@
 	"error_get_orderers_after_removal": "The list of orderers could not be retrieved after removing orderer.",
 	"error_remove_node_from_sys_channel_title": "System channel node remove failed",
 	"error_remove_node_from_sys_channel": "The node could not be removed from the system channel.  Nodes must be removed from the system channel before they can be deleted.",
+	"error_remove_from_sys_channel_os_identity": "The node could not be removed from the system channel.  An associated identity must be given for the ordering service.",
 	"cancel_channel_creation": "Cancel channel creation",
 	"empty_consortium_title": "No consortium members available",
 	"empty_orderer_admins_title": "No ordering service administrators available",
