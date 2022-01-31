@@ -137,7 +137,8 @@ describe('Fabric Utils', () => {
 							itStatement: 'should return a valid response - function given valid arguments  test_id=atjnlp',
 							expectBlock: (done) => {
 								const auth_token = fabric_utils.generateAuthToken({});
-								expect(auth_token).to.equal('LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tY2VydGlmaWNhdGUtLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0t.MEUCIQCvo79r5n893d5rMY1xzazbyYRN00uQaFU0jSYJJtxJcAIgJB4NnK18/+oVsKU95v09pxdos9SySMOEFSdyF4uOe4A=');
+								expect(auth_token).to.equal('LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tY2VydGlmaWNhdGUtLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0t.' +
+									'MEUCIQCvo79r5n893d5rMY1xzazbyYRN00uQaFU0jSYJJtxJcAIgJB4NnK18/+oVsKU95v09pxdos9SySMOEFSdyF4uOe4A=');
 								done();
 							}
 						},
@@ -145,7 +146,8 @@ describe('Fabric Utils', () => {
 							itStatement: 'should return a valid response - no body sent test_id=jkoluf',
 							expectBlock: (done) => {
 								const auth_token = fabric_utils.generateAuthToken();
-								expect(auth_token).to.equal('LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tY2VydGlmaWNhdGUtLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0t.MEUCIQCvo79r5n893d5rMY1xzazbyYRN00uQaFU0jSYJJtxJcAIgJB4NnK18/+oVsKU95v09pxdos9SySMOEFSdyF4uOe4A=');
+								expect(auth_token).to.equal('LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tY2VydGlmaWNhdGUtLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0t.' +
+									'MEUCIQCvo79r5n893d5rMY1xzazbyYRN00uQaFU0jSYJJtxJcAIgJB4NnK18/+oVsKU95v09pxdos9SySMOEFSdyF4uOe4A=');
 								done();
 							}
 						}

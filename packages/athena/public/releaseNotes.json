@@ -1,5 +1,15 @@
 [
 	{
+		"version": "1.0.0-13",
+		"date": "31 Jan 2022",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
 		"version": "1.0.0-12",
 		"date": "20 Dec 2021",
 		"description": [

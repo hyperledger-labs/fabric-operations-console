@@ -44,19 +44,19 @@ module.exports = (logger, ev, t) => {
 			return err;
 		}
 
-		try {
-			const subject = { str: t.asn1.x509.X500Name.ldapToOneline(subjectDN) };
-			const sbjpubkey = exports.getPublicKey(key);
+		//try {
+		const subject = { str: t.asn1.x509.X500Name.ldapToOneline(subjectDN) };
+		const sbjpubkey = exports.getPublicKey(key);
 
-			return t.asn1.csr.CSRUtil.newCSRPEM({
-				subject: subject,
-				sbjpubkey: sbjpubkey,
-				sigalg: 'SHA256withECDSA',
-				sbjprvkey: key
-			});
-		} catch (err) {
-			throw err;
-		}
+		return t.asn1.csr.CSRUtil.newCSRPEM({
+			subject: subject,
+			sbjpubkey: sbjpubkey,
+			sigalg: 'SHA256withECDSA',
+			sbjprvkey: key
+		});
+		//} catch (err) {
+		//	throw err;
+		//}
 	};
 
 	//------------------------------------------------------------------
