@@ -11,6 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
+/* eslint no-prototype-builtins:0 */
 //------------------------------------------------------------
 // test-middleware.js - middleware functions for Mocha testing
 //------------------------------------------------------------

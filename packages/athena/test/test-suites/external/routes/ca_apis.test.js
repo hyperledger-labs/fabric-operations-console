@@ -41,7 +41,8 @@ const path_to_current_file = tools.path.join(__dirname + '/' + filename);
 chai.use(chaiHttp);
 
 const error_msg =
-	'Error: fabric-ca request identities failed with errors code:52message:Failed to add identity: Registration of \'user6\' failed: Identity \'user6\' is already registered';
+	'Error: fabric-ca request identities failed with errors code:52message:' +
+	'Failed to add identity: Registration of \'user6\' failed: Identity \'user6\' is already registered';
 
 describe('CA APIs', function () {
 	this.timeout(17000);
