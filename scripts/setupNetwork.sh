@@ -1,13 +1,17 @@
 #!/bin/bash
 
 SRC_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )" # Where the script lives
+FABRIC_VERSION="2.2.3"
+CA_VERSION="1.5.2"
 
 function networkUp() {
 	networkDown
 	cd $SRC_DIR/..
-	curl -sSL https://bit.ly/2ysbOFE | bash -s -- 2.2.3 1.4.9
+	curl -sSL https://bit.ly/2ysbOFE | bash -s -- ${FABRIC_VERSION} ${CA_VERSION}
 	cd fabric-samples
-	git checkout release-2.2
+	if [ "${FABRIC_VERSION}" == "2.2.3" ]; then
+		git checkout release-2.2
+	fi
 	cd test-network
 	./network.sh up createChannel -ca -c mychannel -s couchdb
 	./network.sh deployCC -ccn fabcar -ccv 1 -cci initLedger -ccl go -ccp ../chaincode/fabcar/go/
@@ -23,6 +27,7 @@ function networkDown() {
 
 function printHelp() {
  echo "./startNetwork up"
+# echo "./startNetwork up -v 2.4.1"
  echo "./startNetwork down"
 }
 ## Parse mode
@@ -33,6 +38,24 @@ else
   MODE=$1
   shift
 fi
+
+while [[ $# -ge 1 ]] ; do
+  key="$1"
+  case $key in
+  -h )
+    printHelp $MODE
+    exit 0
+    ;;
+  -v )
+    FABRIC_VERSION="$2"
+	if [ ! -z "$3" ];then
+	    CA_VERSION="$3"
+	fi
+    shift
+    ;;
+  esac
+  shift
+done
 
 if [ "${MODE}" == "up" ]; then
   networkUp
