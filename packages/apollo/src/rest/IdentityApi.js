@@ -11,6 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
+import _ from 'lodash';
 import StitchApi from './StitchApi';
 import UserSettingsRestApi from './UserSettingsRestApi';
 const naturalSort = require('javascript-natural-sort');
@@ -390,6 +391,20 @@ class IdentityApi {
 			mspIdentities = await IdentityApi.getIdentitiesForCerts(certs);
 		}
 		return mspIdentities;
+	}
+
+	static async getTLSIdentity(node) {
+		const identities = await IdentityApi.getIdentities();
+		for (let i=0;i<identities.length;++i) {
+			const match = await StitchApi.isIdentityFromRootCert({
+				certificate_b64pem: identities[i].cert,
+				root_certs_b64pems: _.get(node, 'msp.tlsca.root_certs'),
+			});
+			if (match) {
+				return identities[i];
+			}
+		}
+		return null;
 	}
 }
 

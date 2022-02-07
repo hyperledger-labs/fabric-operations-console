@@ -770,6 +770,7 @@
 	"tls_identity_not_found": "TLS Identity not found",
 	"peer_tls_identity_not_found": "An identity that is enrolled with the TLS Certificate Authority that was used to create the peer is required to view or modify the log settings.",
 	"orderer_tls_identity_not_found": "An identity that is enrolled with the TLS Certificate Authority that was used to create the ordering node is required to view or modify the log settings.",
+	"orderer_tls_admin_identity_not_found": "An identity that is enrolled with the TLS Certificate Authority that was used to create the ordering node is required to view, delete and join channel with orderer.",
 	"error_get_log_settings": "Unable to retrieve log settings",
 	"peer_error_get_log_settings": "An error occurred while retrieving the current log settings.  Ensure that the peer is running and that the peer operations url is correct. ",
 	"orderer_error_get_log_settings": "An error occurred while retrieving the current log settings.  Ensure that the ordering node is running and that the ordering node operations url is correct. ",

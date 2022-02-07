@@ -49,15 +49,19 @@ import ReallocateModal from '../ReallocateModal/ReallocateModal';
 import SidePanelError from '../SidePanelError/SidePanelError';
 import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import StickySection from '../StickySection/StickySection';
+import ChannelParticipationDetails from './ChannelParticipationDetails';
 import SVGs from '../Svgs/Svgs';
 import TranslateLink from '../TranslateLink/TranslateLink';
+import IdentityApi from '../../rest/IdentityApi';
+import { promisify } from 'util';
+import { ChannelParticipationApi } from '../../rest/ChannelParticipationApi';
 
 const SCOPE = 'ordererDetails';
 const Log = new Logger(SCOPE);
 const semver = require('semver');
 
 class OrdererDetails extends Component {
-	componentDidMount() {
+	async componentDidMount() {
 		this.pathname = this.props.history.location.pathname;
 		this.props.showBreadcrumb(null, null, this.pathname);
 		this.props.updateState(SCOPE, {
@@ -67,6 +71,7 @@ class OrdererDetails extends Component {
 			selected: null,
 			nodes: [],
 			usageModal: false,
+			systemChannel: true,
 			disabled: true,
 			nodeStatus: {},
 			notAvailable: false,
@@ -84,7 +89,7 @@ class OrdererDetails extends Component {
 			setFocus: false,
 			missingEndorsementOrgs: [],
 		});
-		this.refresh();
+		await this.refresh();
 	}
 
 	componentDidUpdate() {
@@ -101,27 +106,52 @@ class OrdererDetails extends Component {
 		});
 	}
 
-	refresh = skipStatusCache => {
+	async refresh(skipStatusCache) {
 		NodeStatus.cancel();
 		this.props.clearNotifications(SCOPE);
 		this.props.updateState(SCOPE, {
 			loading: true,
 			members: [],
 			admins: [],
+			systemChannel: true,
 			capabilities: {},
 			usageInfo: {},
 			consenters: [],
 		});
-		MspRestApi.getAllMsps()
-			.then(nodes => {
-				this.props.updateState(SCOPE, { nodes });
-				this.getDetails(skipStatusCache);
-			})
-			.catch(error => {
-				Log.error(error);
-				this.props.updateState(SCOPE, { loading: false });
-				this.props.showError('error_msps', {}, SCOPE);
-			});
+		let nodes = await MspRestApi.getAllMsps();
+		this.props.updateState(SCOPE, { nodes });
+		await this.getDetails(skipStatusCache);
+		await this.getCPChannelList();
+		this.props.updateState(SCOPE, { loading: false });
+	};
+
+	/* get channel list from channel participation api */
+	async getCPChannelList() {
+		if (this.props.details && !this.props.details.osnadmin_url) return;
+		let systemChannel = true;
+		let channelList = {};
+
+		let orderer_tls_identity = await IdentityApi.getTLSIdentity(this.props.details);
+		if (orderer_tls_identity) {
+			try {
+				let all_identity = await IdentityApi.getIdentities();
+				channelList = await ChannelParticipationApi.getChannels(all_identity, this.props.details);
+				if (_.get(channelList, 'systemChannel.name')) {
+					channelList.systemChannel.type = 'system_channel';
+					channelList.channels.push(channelList.systemChannel);
+				} else {
+					systemChannel = false;
+				}
+			} catch (error) {
+				Log.error('Unable to get channel list:', error);
+			}
+		}
+
+		this.props.updateState(SCOPE, {
+			channelList,
+			systemChannel,
+			orderer_tls_identity,
+		});
 	};
 
 	setFocus = () => {
@@ -132,79 +162,74 @@ class OrdererDetails extends Component {
 		}, 100);
 	};
 
-	getDetails(skipStatusCache) {
-		OrdererRestApi.getOrdererDetails(this.props.match.params.ordererId, false)
-			.then(async orderer => {
-				try {
-					// Get complete config from deployer because the value stored in database stores only the latest config override json
-					const latest_config = await NodeRestApi.getCurrentNodeConfig(orderer);
-					if (!_.isEmpty(latest_config)) {
-						_.set(orderer, 'config_override.General', latest_config.general);
-					}
-				} catch (error) {
-					Log.error(error);
-				}
-				this.props.updateState(SCOPE, { details: orderer });
-				this.props.showBreadcrumb('orderer_details_title', { ordererName: orderer.cluster_name }, this.pathname);
-				this.timestamp = new Date().getTime();
-				setTimeout(() => {
-					// after 30 seconds, if we still do not have a response, show
-					// the not available message
-					if (this.timestamp) {
-						this.props.updateState(SCOPE, { notAvailable: true });
-					}
-				}, 30000);
-				this.checkHealth(orderer, skipStatusCache);
-				if (orderer.raft) {
-					orderer.raft.forEach(node => {
-						ComponentApi.getUsageInformation(node)
-							.then(nodeUsageInfo => {
-								const usageInfo = this.props.usageInfo;
-								usageInfo[node.id] = nodeUsageInfo;
-								this.props.updateState(SCOPE, { usageInfo });
-							})
-							.catch(error => {
-								Log.error(error);
-							});
+	async getDetails(skipStatusCache) {
+		let orderer = await OrdererRestApi.getOrdererDetails(this.props.match.params.ordererId, false);
+		try {
+			// Get complete config from deployer because the value stored in database stores only the latest config override json
+			const latest_config = await NodeRestApi.getCurrentNodeConfig(orderer);
+			if (!_.isEmpty(latest_config)) {
+				_.set(orderer, 'config_override.General', latest_config.general);
+			}
+		} catch (error) {
+			Log.error(error);
+		}
+		this.props.updateState(SCOPE, { details: orderer });
+		this.props.showBreadcrumb('orderer_details_title', { ordererName: orderer.cluster_name }, this.pathname);
+		this.timestamp = new Date().getTime();
+		setTimeout(() => {
+			// after 30 seconds, if we still do not have a response, show
+			// the not available message
+			if (this.timestamp) {
+				this.props.updateState(SCOPE, { notAvailable: true });
+			}
+		}, 30000);
+		this.checkHealth(orderer, skipStatusCache);
+		if (orderer.raft) {
+			orderer.raft.forEach(node => {
+				ComponentApi.getUsageInformation(node)
+					.then(nodeUsageInfo => {
+						const usageInfo = this.props.usageInfo;
+						usageInfo[node.id] = nodeUsageInfo;
+						this.props.updateState(SCOPE, { usageInfo });
+					})
+					.catch(error => {
+						Log.error(error);
 					});
-				}
-				if (orderer.pending) {
-					orderer.pending.forEach(node => {
-						ComponentApi.getUsageInformation(node)
-							.then(nodeUsageInfo => {
-								const usageInfo = this.props.usageInfo;
-								usageInfo[node.id] = nodeUsageInfo;
-								this.props.updateState(SCOPE, { usageInfo });
-							})
-							.catch(error => {
-								Log.error(error);
-							});
-					});
-				}
-
-				if (this.props.match.params.nodeId && orderer.raft) {
-					let nodeToOpen = null;
-					orderer.raft.forEach(node => {
-						if (node.id === this.props.match.params.nodeId) {
-							nodeToOpen = node;
-						}
-					});
-					if (!nodeToOpen && orderer.pending) {
-						orderer.forEach(node => {
-							if (node.id === this.props.match.params.nodeId) {
-								nodeToOpen = node;
-							}
-						});
-					}
-					if (nodeToOpen) {
-						this.openNodeDetails(nodeToOpen);
-					}
-				}
-			})
-			.catch(error => {
-				Log.error(error);
-				this.props.updateState(SCOPE, { loading: false });
 			});
+		}
+		if (orderer.pending) {
+			orderer.pending.forEach(node => {
+				ComponentApi.getUsageInformation(node)
+					.then(nodeUsageInfo => {
+						const usageInfo = this.props.usageInfo;
+						usageInfo[node.id] = nodeUsageInfo;
+						this.props.updateState(SCOPE, { usageInfo });
+					})
+					.catch(error => {
+						Log.error(error);
+					});
+			});
+		}
+
+		if (this.props.match.params.nodeId && orderer.raft) {
+			let nodeToOpen = null;
+			orderer.raft.forEach(node => {
+				if (node.id === this.props.match.params.nodeId) {
+					nodeToOpen = node;
+				}
+			});
+			if (!nodeToOpen && orderer.pending) {
+				orderer.forEach(node => {
+					if (node.id === this.props.match.params.nodeId) {
+						nodeToOpen = node;
+					}
+				});
+			}
+			if (nodeToOpen) {
+				this.openNodeDetails(nodeToOpen);
+			}
+		}
+		this.props.updateState(SCOPE, { loading: false });
 	}
 
 	checkHealth(orderer, skipStatusCache) {
@@ -965,23 +990,24 @@ class OrdererDetails extends Component {
 		return quickAction;
 	};
 
-	debug_openChannelConfig = () => {
+	async getChannelConfig(channelId) {
 		const options = {
 			ordererId: this.props.match.params.ordererId,
 			configtxlator_url: this.props.configtxlator_url,
+			channelId: channelId,
 		};
-		OrdererRestApi.getOrdererDetails(options.ordererId, false)
+		let block = await OrdererRestApi.getChannelConfigBlock(options);
+		const _block_binary2json = promisify(ChannelApi._block_binary2json);
+		const resp = await _block_binary2json(block, options.configtxlator_url);
+		return resp.data.data[0].payload.data;
+	};
+
+	debug_openChannelConfig = () => {
+		OrdererRestApi.getOrdererDetails(this.props.match.params.ordererId, false)
 			.then(orderer => {
-				options.channelId = this.props.match.params.channelId || orderer.system_channel || OrdererRestApi.systemChannel;
-				OrdererRestApi.getChannelConfigBlock(options).then(block => {
-					ChannelApi._block_binary2json(block, options.configtxlator_url, (err, resp) => {
-						if (err || !resp) {
-							Log.error(err);
-						} else {
-							let debug_block = resp.data.data[0].payload.data;
-							Helper.openJSONBlob(debug_block);
-						}
-					});
+				let channelId = this.props.match.params.channelId || orderer.system_channel || OrdererRestApi.systemChannel;
+				this.getChannelConfig(channelId).then(debug_block => {
+					Helper.openJSONBlob(debug_block);
 				});
 			})
 			.catch(error => console.log(error));
@@ -1320,6 +1346,20 @@ class OrdererDetails extends Component {
 												<Tab id="ibp-orderer-details"
 													label={translate('details')}
 												>
+													{this.props.details.osnadmin_url && !this.props.orderer_tls_identity &&
+															<div>
+																<SidePanelWarning title="tls_identity_not_found"
+																	subtitle="orderer_tls_admin_identity_not_found"
+																/>
+															</div>
+													}
+													{this.props.details.osnadmin_url && this.props.orderer_tls_identity &&
+															<ChannelParticipationDetails
+																channelList={this.props.channelList}
+																details={this.props.details}
+																translate={this.props.translate}
+															/>
+													}
 													{this.props.details.associatedIdentities && !this.props.details.associatedIdentities.length && (
 														<div className="ibp-orderer-no-identity">
 															<p>{translate('orderer_no_identity')}</p>
@@ -1330,7 +1370,7 @@ class OrdererDetails extends Component {
 															</Button>
 														</div>
 													)}
-													{this.props.details.associatedIdentities && !!this.props.details.associatedIdentities.length && (
+													{this.props.systemChannel && this.props.details.associatedIdentities && !!this.props.details.associatedIdentities.length && (
 														<div>
 															{this.renderPendingNotice(translate)}
 															{this.renderRunningPartial(translate)}
@@ -1463,6 +1503,9 @@ const dataProps = {
 	match: PropTypes.object,
 	members: PropTypes.array,
 	selected: PropTypes.object,
+	orderer_tls_identity: PropTypes.object,
+	channelList: PropTypes.object,
+	systemChannel: PropTypes.bool,
 	notAvailable: PropTypes.bool,
 	nodes: PropTypes.array,
 	disabled: PropTypes.bool,
