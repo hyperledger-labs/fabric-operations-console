@@ -24,6 +24,7 @@ import { updateState } from '../../redux/commonActions';
 import { CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';
 import ChannelApi from '../../rest/ChannelApi';
 import IdentityApi from '../../rest/IdentityApi';
+import { MspRestApi } from '../../rest/MspRestApi';
 import { NodeRestApi } from '../../rest/NodeRestApi';
 import { OrdererRestApi } from '../../rest/OrdererRestApi';
 import { RestApi } from '../../rest/RestApi';
@@ -296,7 +297,12 @@ class OrdererModal extends React.Component {
 		let msp_root_certs_intermediate = {};
 		for (let orderer of allOrderers) {
 			msp_root_certs[orderer.msp_id] = _.get(orderer, 'msp.ca.root_certs');
-			msp_root_certs_intermediate[orderer.msp_id] = _.get(orderer, 'msp.intermediate_ca.root_certs');
+			let all_msps = await MspRestApi.getAllMsps();
+			all_msps.forEach(msp => {
+				if (orderer.msp_id === msp.msp_id && _.isEqual(msp_root_certs[orderer.msp_id], msp.root_certs)) {
+					msp_root_certs_intermediate[orderer.msp_id] = msp.intermediate_certs;
+				}
+			});
 		}
 		for (const msp_id of keys) {
 			let identity4msp = [];

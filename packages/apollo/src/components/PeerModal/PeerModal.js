@@ -20,6 +20,7 @@ import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import { CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';
 import IdentityApi from '../../rest/IdentityApi';
+import { MspRestApi } from '../../rest/MspRestApi';
 import { NodeRestApi } from '../../rest/NodeRestApi';
 import { PeerRestApi } from '../../rest/PeerRestApi';
 import StitchApi from '../../rest/StitchApi';
@@ -96,11 +97,19 @@ class PeerModal extends React.Component {
 		Log.warn(`${SCOPE} ${this.props.peerModalType}: onComplete() is not set`);
 	}
 
-	getIdentities() {
+	async getIdentities() {
 		let root_certs = _.get(this.props, 'peer.msp.ca.root_certs');
 		let tls_root_certs = _.get(this.props, 'peer.msp.tlsca.root_certs');
-		let tls_root_certs_intermediate = _.get(this.props, 'peer.msp.intermediate_tlsca.root_certs');
-		let root_certs_intermediate = _.get(this.props, 'peer.msp.intermediate_ca.root_certs');
+		let intermediate_certs = [];
+		let tls_intermediate_certs = [];
+		let node_msp = _.get(this.props, 'peer.msp_id');
+		let all_msps = await MspRestApi.getAllMsps();
+		all_msps.forEach(msp => {
+			if (node_msp === msp.msp_id && _.isEqual(root_certs, msp.root_certs)) {
+				intermediate_certs = msp.intermediate_certs;
+				tls_intermediate_certs = msp.tls_intermediate_certs;
+			}
+		});
 
 		let matched_identities = [];
 		let matched_tls_identities = [];
@@ -110,7 +119,7 @@ class PeerModal extends React.Component {
 					for (let l_identity of identities) {
 						let opts = {
 							certificate_b64pem: l_identity.cert,
-							root_certs_b64pems: Helper.safer_concat(root_certs, root_certs_intermediate),
+							root_certs_b64pems: Helper.safer_concat(root_certs, intermediate_certs),
 						};
 						let match = await StitchApi.isIdentityFromRootCert(opts);
 						if (match) {
@@ -119,7 +128,7 @@ class PeerModal extends React.Component {
 
 						let tls_opts = {
 							certificate_b64pem: l_identity.cert,
-							root_certs_b64pems: Helper.safer_concat(tls_root_certs, tls_root_certs_intermediate),
+							root_certs_b64pems: Helper.safer_concat(tls_root_certs, tls_intermediate_certs),
 						};
 						let tls_match = await StitchApi.isIdentityFromRootCert(tls_opts);
 						if (tls_match) {
