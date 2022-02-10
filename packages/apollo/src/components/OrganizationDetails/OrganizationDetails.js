@@ -110,6 +110,9 @@ class OrganizationDetails extends Component {
 				root_certs_b64pems: details.root_certs,
 				debug_tag: 'msp id: '.concat(details.id),
 			};
+			if (peer.msp_id === details.msp_id && _.isEqual(peer.msp.ca.root_certs, details.root_certs)) {
+				opts.root_certs_b64pems = Helper.safer_concat(opts.root_certs_b64pems, details.intermediate_certs);
+			}
 			let isCertAssociated = await StitchApi.isIdentityFromRootCert(opts);
 			isCertAssociated = isCertAssociated && peer.msp_id === details.msp_id;
 			Log.debug('Peer ', peer.id, ' associated with MSP ', details.id, ' ? ', isCertAssociated);
