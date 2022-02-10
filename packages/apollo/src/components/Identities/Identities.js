@@ -98,7 +98,10 @@ class Identities extends Component {
 												};
 												let match = await StitchApi.isIdentityFromRootCert(data);
 												if (match) {
-													id.from_ca = id.from_ca ? id.from_ca.push(ca.name) : [ca.name];
+													if (id.from_ca === undefined) {
+														id.from_ca = [];
+													}
+													id.from_ca.push(ca.name);
 												}
 											}
 											this.resolveConnectedNodes(id, [...peers, ...orderers, ...cas]);
