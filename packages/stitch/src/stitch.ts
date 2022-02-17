@@ -74,6 +74,7 @@ import { lc_installChaincode, lc_getInstalledChaincodeData, lc_getAllInstalledCh
 import { load_pb, uint8ArrayToStr, logger, getLogger, pp, sortObjectOut, uint8ArrayToHexStr, hexStrToUint8Array, utf8StrToUint8Array } from './libs/misc';
 import { GrpcData, fmt_err, fmt_ok, find_alternative_status_message, is_error_code, Fmt, OrderFmt, OrderFmtBlock, fill_in_missing } from './libs/validation';
 import { LifecycleLib } from './libs/proto_handlers/lifecycle_pb_lib';
+import { getOSNChannels, getOSNChannel, joinOSNChannel, unjoinOSNChannel } from './libs/fabric_rest';
 
 switchEncryption();										// covert to new aes encryption. always run first, at some later date we will remove this. dsh todo.
 load_pb(null);											// load the protobuf.js json bundle
@@ -91,7 +92,8 @@ export {
 	scSignPemRaw, scGenEcdsaKeys, utf8StrToUint8Array, subtleVerifySignatureDer, scVerifySignature, validatePrivateKey, validatePublicKey, validateCertificate,
 	lc_installChaincode, lc_getInstalledChaincodeData, lc_getAllInstalledChaincodeData, lc_getInstalledChaincodePackage, UnaryReqResponse, send_proposal_req_timed,
 	LIFECYCLE, _sto, lc_approveChaincodeDefinition, lc_checkChaincodeDefinitionReadiness, lc_commitChaincodeDefinition, lc_getChaincodeDefinitionOnChannel,
-	lc_getAllChaincodeDefinitionsOnChannel, orderTransaction, scDecrypt, scEncrypt, conformPolicySyntax, scGetHashAsHex, mapCertificatesToRoots
+	lc_getAllChaincodeDefinitionsOnChannel, orderTransaction, scDecrypt, scEncrypt, conformPolicySyntax, scGetHashAsHex, mapCertificatesToRoots,
+	getOSNChannels, getOSNChannel, joinOSNChannel, unjoinOSNChannel
 };
 
 // Exported Stitch Functions for testing

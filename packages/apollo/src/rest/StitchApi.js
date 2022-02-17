@@ -181,6 +181,46 @@ class StitchApi {
 		const lc_getAllChaincodeDefinitionsOnChannel = promisify(window.stitch.lc_getAllChaincodeDefinitionsOnChannel);
 		return lc_getAllChaincodeDefinitionsOnChannel(opts);
 	}
+
+	static async getOSNChannels(opts) {
+		const getOSNChannels = promisify(window.stitch.getOSNChannels);
+		try {
+			let resp = await getOSNChannels(opts);
+			return resp ? resp.data : resp;
+		} catch (error) {
+			return (error && error.http_resp) ? error.http_resp : error;
+		}
+	}
+
+	static async getOSNChannel(opts) {
+		const getOSNChannel = promisify(window.stitch.getOSNChannel);
+		try {
+			let resp = await getOSNChannel(opts);
+			return resp ? resp.data : resp;
+		} catch (error) {
+			return (error && error.http_resp) ? error.http_resp : error;
+		}
+	}
+
+	static async joinOSNChannel(opts) {
+		const joinOSNChannel = promisify(window.stitch.joinOSNChannel);
+		try {
+			let resp = await joinOSNChannel(opts);
+			return resp ? resp.data : resp;
+		} catch (error) {
+			return (error && error.http_resp) ? error.http_resp : error;
+		}
+	}
+
+	static async unjoinOSNChannel(opts) {
+		const unjoinOSNChannel = promisify(window.stitch.unjoinOSNChannel);
+		try {
+			let resp = await unjoinOSNChannel(opts);
+			return resp ? resp.data : resp;
+		} catch (error) {
+			return (error && error.http_resp) ? error.http_resp : error;
+		}
+	}
 }
 
 export default StitchApi;

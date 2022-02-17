@@ -109,6 +109,12 @@ stitch.someStitchFunction(options, callback(error_object, response_object)=> {
 21. [policyIsMet()](#policyIsMet)
 22. [decodeBlockV2()](#decodeBlockV2)
 
+### G - Fabric Ordering Service Node Admin Methods - aka osnadmin
+1. [getOSNChannels()](#getOSNChannels)
+2. [getOSNChannel()](#getOSNChannel)
+3. [joinOSNChannel()](#joinOSNChannel)
+4. [unjoinOSNChannel()](#unjoinOSNChannel)
+
 ### Common Flows
 1. [Create a channel](#createChannel)
 2. [Add orderer consenter](https://github.ibm.com/IBM-Blockchain/athena/blob/master/docs/raft_append_notes.md)
@@ -3589,6 +3595,204 @@ const block_json = camelCase_2_underscores(decodeBlockV2(b_payload), null));
 		"header": {},
 		"metadata": {}
 	}
+}
+```
+
+<a name="getOSNChannels"></a>
+
+### G1. getOSNChannels()
+Get list of channels from a OSN using the Fabric's osnadmin http request.
+Uses the athena proxy route to handle mutual tls.
+Requires fabric 2.4.1+.
+
+**Syntax**:
+```js
+const opts = {
+
+	// *https* osnadmin url to the orderer. include proto & port
+	host: "https://osn_url.com:7053",
+
+	// the identity's certificate & private key, base 64 encoded PEM
+	// used for mutual tls as the client's auth
+	certificate_b64pem: my_identity_cert,
+	private_key_base64_pem: my_identityprivate_key,
+
+	//root certificates, each are base 64 encoded PEM
+	// dsh todo not used atm
+	root_cert_b64pem: my_ca_root_cert1,
+
+	// timeout for this request (the proxy route will use this to time request to node)
+	// dsh todo
+	timeout_ms: 10000
+};
+
+stitch.getOSNChannels(opts, (err, data) => {
+	// your callback code here - see format of "err" & "resp" below
+});
+```
+
+**Response/Error Format**:
+```js
+{
+	error: false,	    // true if the call encountered an error, else false
+	proxy_url: "http://peer_url.com:8080/participation/v1/channels", // the final destination url used for this call
+	data: {	            // the response, not available if "error" is true
+		channels: [
+			name: "mychannel", // channel name
+			url: "/participation/v1/channels/mychannel",
+		],
+		systemChannel: {   // is null if no systemChannel
+			name: "system", // the system hannel name
+			url: "/participation/v1/channels/mychannel",
+		}
+	},
+	stitch_msg: "ok"       // error/success message for your req
+}
+```
+
+### G2. getOSNChannel()
+Get channel details from a OSN using the Fabric's osnadmin http request.
+Uses the athena proxy route to handle mutual tls.
+Requires fabric 2.4.1+.
+
+**Syntax**:
+```js
+const opts = {
+
+	// the channel name to look up
+	channel: "mychannel",
+
+	// *https* osnadmin url to the orderer. include proto & port
+	host: "https://osn_url.com:7053",
+
+	// the identity's certificate & private key, base 64 encoded PEM
+	// used for mutual tls as the client's auth
+	certificate_b64pem: my_identity_cert,
+	private_key_base64_pem: my_identityprivate_key,
+
+	//root certificates, each are base 64 encoded PEM
+	// dsh todo not used atm
+	root_cert_b64pem: my_ca_root_cert1,
+
+	// timeout for this request (the proxy route will use this to time request to node)
+	// dsh todo
+	timeout_ms: 10000
+};
+
+stitch.getOSNChannel(opts, (err, data) => {
+	// your callback code here - see format of "err" & "resp" below
+});
+```
+
+**Response/Error Format**:
+```js
+{
+	error: false,	    // true if the call encountered an error, else false
+	proxy_url: "http://peer_url.com:8080/participation/v1/channels", // the final destination url used for this call
+	data: {	            // the response, not available if "error" is true
+		name: "mychannel", // channel name
+		url: "/participation/v1/channels/mychannel",
+		status: "active", // "active" or "inactive" or "onboarding" or "failed"
+		consensusRelation: "consenter" // "consenter" or "follower" or "config-tracker" or "other"
+		height: 0,  // block height of the channel
+	},
+	stitch_msg: "ok"       // error/success message for your req
+}
+// see https://github.com/hyperledger/fabric/blob/main/orderer/common/types/channelinfo.go
+```
+
+### G3. joinOSNChannel()
+Join a OSN using the Fabric's osnadmin http request.
+Uses the athena proxy route to handle mutual tls.
+Requires fabric 2.4.1+.
+
+**Syntax**:
+```js
+const opts = {
+
+	// binary data of genesis block for the channel
+	// <Uint8Array>
+	b_config_block: bin,
+
+	// *https* osnadmin url to the orderer. include proto & port
+	host: "https://osn_url.com:7053",
+
+	// the identity's certificate & private key, base 64 encoded PEM
+	// used for mutual tls as the client's auth
+	certificate_b64pem: my_identity_cert,
+	private_key_base64_pem: my_identityprivate_key,
+
+	//root certificates, each are base 64 encoded PEM
+	// dsh todo not used atm
+	root_cert_b64pem: my_ca_root_cert1,
+
+	// timeout for this request (the proxy route will use this to time request to node)
+	// dsh todo
+	timeout_ms: 10000
+};
+
+stitch.joinOSNChannel(opts, (err, data) => {
+	// your callback code here - see format of "err" & "resp" below
+});
+```
+
+**Response/Error Format**:
+```js
+{
+	error: false,	    // true if the call encountered an error, else false
+	proxy_url: "http://peer_url.com:8080/participation/v1/channels", // the final destination url used for this call
+	data: {	            // the response, not available if "error" is true
+		name: "mychannel", // channel name
+		url: "/participation/v1/channels/mychannel",
+		status: "active", // "active" or "inactive" or "onboarding" or "failed"
+		consensusRelation: "consenter" // "consenter" or "follower" or "config-tracker" or "other"
+		height: 0,  // block height of the channel
+	},
+	stitch_msg: "ok"       // error/success message for your req
+}
+```
+
+### G3. unjoinOSNChannel()
+Remove a OSN using the Fabric's osnadmin http request.
+Uses the athena proxy route to handle mutual tls.
+Requires fabric 2.4.1+.
+
+**Syntax**:
+```js
+const opts = {
+
+	// the channel name to leave
+	channel: "mychannel",
+
+	// *https* osnadmin url to the orderer. include proto & port
+	host: "https://osn_url.com:7053",
+
+	// the identity's certificate & private key, base 64 encoded PEM
+	// used for mutual tls as the client's auth
+	certificate_b64pem: my_identity_cert,
+	private_key_base64_pem: my_identityprivate_key,
+
+	//root certificates, each are base 64 encoded PEM
+	// dsh todo not used atm
+	root_cert_b64pem: my_ca_root_cert1,
+
+	// timeout for this request (the proxy route will use this to time request to node)
+	// dsh todo
+	timeout_ms: 10000
+};
+
+stitch.unjoinOSNChannel(opts, (err, data) => {
+	// your callback code here - see format of "err" & "resp" below
+});
+```
+
+**Response/Error Format**:
+```js
+{
+	error: false,	    // true if the call encountered an error, else false
+	proxy_url: "http://peer_url.com:8080/participation/v1/channels", // the final destination url used for this call
+	data: {},  // no data is passed...
+	stitch_msg: "ok"       // error/success message for your req
 }
 ```
 

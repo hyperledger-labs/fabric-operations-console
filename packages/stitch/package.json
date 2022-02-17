@@ -3,7 +3,7 @@
 	"version": "1.1.21",
 	"license": "see license in \"LICENSE\" file",
 	"scripts": {
-		"build": "npm run copy_protobufs && webpack --config-name development --display-modules --watch",
+		"build": "npm run copy_protobufs && webpack --config-name development --watch",
 		"build_breakdown": "npm run copy_protobufs && webpack --config-name development --display-modules",
 		"build_deps": "npm run copy_protobufs && node ./ext_libs/_concat.js",
 		"build_all": "npm run copy_protobufs && node ./ext_libs/_concat.js && webpack",
