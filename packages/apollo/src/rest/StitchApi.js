@@ -182,6 +182,11 @@ class StitchApi {
 		return lc_getAllChaincodeDefinitionsOnChannel(opts);
 	}
 
+	static async configUpdateJsonToBinary(opts) {
+		const configUpdateJsonToBinary = promisify(window.stitch.configUpdateJsonToBinary);
+		return configUpdateJsonToBinary(opts);
+	}
+
 	static async getOSNChannels(opts) {
 		const getOSNChannels = promisify(window.stitch.getOSNChannels);
 		try {

@@ -79,6 +79,22 @@ module.exports = (logger, ev, t) => {
 	});
 
 	//--------------------------------------------------
+	// General Proxy (cors && self sign cert work around)
+	//--------------------------------------------------
+	app.all('/proxy/*', t.middleware.verify_view_action_session, (req, res) => {
+		t.proxy_lib.proxy_call(req, (ret) => {
+			if (ret.headers) {
+				res.set(ret.headers);
+			}
+			if (!ret.response) {
+				res.status(ret.statusCode).send();
+			} else {
+				res.status(ret.statusCode).send(ret.response);
+			}
+		});
+	});
+
+	//--------------------------------------------------
 	// Proxy Route for Configtxlator Requests (https vs http work around)
 	//--------------------------------------------------
 	app.all('/configtxlator/?*', t.middleware.verify_view_action_session, (req, res) => {

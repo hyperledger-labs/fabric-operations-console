@@ -128,7 +128,9 @@ app.use(bodyParser.text({ type: 'text/html', limit: maxSize }));
 app.use(['/api/', '/ak/'], bodyParser.text({ type: 'text/plain', limit: maxSize }));
 app.use(bodyParser.json({ limit: maxSize }));
 app.use(bodyParser.urlencoded({ extended: true, limit: maxSize }));
-app.use(bodyParser.raw({ type: 'application/grpc-web+proto', limit: maxSize }));
+app.use(bodyParser.raw({ type: 'application/grpc-web+proto', limit: maxSize }));	// leave as buffer (w/o this line req.body is empty)
+app.use(bodyParser.raw({ type: 'multipart/form-data', limit: maxSize }));			// leave as buffer (w/o this line req.body is empty)
+
 app.use(compression());
 look_for_couchdb(() => {
 	get_db_settings(() => {

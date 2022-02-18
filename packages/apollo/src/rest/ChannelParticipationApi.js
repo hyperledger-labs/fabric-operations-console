@@ -62,7 +62,7 @@ export class ChannelParticipationApi {
 				const opts = {
 					host: osn.osnadmin_url || osn.operations_url,		// dsh todo - remove operations_url
 					certificate_b64pem: identity4tls.cert,
-					private_key_base64_pem: identity4tls.private_key,
+					private_key_b64pem: identity4tls.private_key,
 					root_cert_b64pem: _.get(osn, 'msp.tlsca.root_certs[0]'),
 					skip_cache: true,
 				};
@@ -93,7 +93,7 @@ export class ChannelParticipationApi {
 					channel: channel,
 					host: osn.osnadmin_url || osn.operations_url,		// dsh todo - remove operations_url
 					certificate_b64pem: identity4tls.cert,
-					private_key_base64_pem: identity4tls.private_key,
+					private_key_b64pem: identity4tls.private_key,
 					root_cert_b64pem: _.get(osn, 'msp.tlsca.root_certs[0]'),
 					skip_cache: true,
 				};
@@ -112,7 +112,7 @@ export class ChannelParticipationApi {
 	// identities - list of possible identities for auth - array of identity objects
 	// osn - the ordering service node to use - a optools node object
 	// channel - the name of the channel - string
-	static async joinOSNChannel(identities, osn, b_config_block) {
+	static async joinChannel(identities, osn, b_config_block) {
 		const identity4tls = await ChannelParticipationApi.findMatchingIdentity({
 			identities: identities,
 			root_certs_b64pems: _.get(osn, 'msp.tlsca.root_certs')
@@ -123,7 +123,7 @@ export class ChannelParticipationApi {
 				const opts = {
 					host: osn.osnadmin_url || osn.operations_url,		// dsh todo - remove operations_url
 					certificate_b64pem: identity4tls.cert,
-					private_key_base64_pem: identity4tls.private_key,
+					private_key_b64pem: identity4tls.private_key,
 					root_cert_b64pem: _.get(osn, 'msp.tlsca.root_certs[0]'),
 					b_config_block: b_config_block,
 					skip_cache: true,
@@ -143,7 +143,7 @@ export class ChannelParticipationApi {
 	// identities - list of possible identities for auth - array of identity objects
 	// osn - the ordering service node to use - a optools node object
 	// channel - the name of the channel - string
-	static async unjoinOSNChannel(identities, osn, channel) {
+	static async unjoinChannel(identities, osn, channel) {
 		const identity4tls = await ChannelParticipationApi.findMatchingIdentity({
 			identities: identities,
 			root_certs_b64pems: _.get(osn, 'msp.tlsca.root_certs')
@@ -155,7 +155,7 @@ export class ChannelParticipationApi {
 					channel: channel,
 					host: osn.osnadmin_url || osn.operations_url,		// dsh todo - remove operations_url
 					certificate_b64pem: identity4tls.cert,
-					private_key_base64_pem: identity4tls.private_key,
+					private_key_b64pem: identity4tls.private_key,
 					root_cert_b64pem: _.get(osn, 'msp.tlsca.root_certs[0]'),
 					skip_cache: true,
 				};
@@ -196,10 +196,7 @@ export class ChannelParticipationApi {
 
 			// iter on each osn in input
 			for (let i in osns) {
-				//console.log('dsh4 on osn', i);
-
 				const resp = await ChannelParticipationApi.getChannels(identities, osns[i]);
-				//console.log('dsh4 all channels resp', i, resp);
 				if (resp && resp.systemChannel) {
 					last_ch_list_resp = resp;							// remember this, used below for system
 					last_osn = osns[i];
@@ -210,7 +207,6 @@ export class ChannelParticipationApi {
 					// iter on each channel in channel list
 					for (let z in resp.channels) {
 						const ch = resp.channels[z];
-						//console.log('dsh4 on channel', i, z, ch.name);
 						if (!mapped_channel_names.includes(ch.name)) {
 							mapped_channel_names.push(ch.name);
 							ret.channels.push(await ChannelParticipationApi.map1Channel(identities, osns, ch.name));
@@ -268,23 +264,7 @@ export class ChannelParticipationApi {
 				nodes: {},								// populated below
 			};
 
-			// iter on each osn in input
-			/*for (let i in osns) {
-				const ch_details = await ChannelParticipationApi.get1Channel(identities, osns[i], channel);
-				//console.log('dsh5 on ch_details', i, channel, ch_details);
-				const node = JSON.parse(JSON.stringify(osns[i]));
-				node._channel_resp = ch_details;
-				details.nodes[node.id] = node;
-
-				if (ch_details && !isNaN(ch_details.height)) {
-					details.height = ch_details.height;
-					details.status = ch_details.status;
-				}
-			}*/
-
-			//console.log('?? dsh start');
 			let reqs = osns.map(async osn => {
-				//console.log('?? dsh osn', osn, channel);
 				const ch_resp = await ChannelParticipationApi.get1Channel(identities, osn, channel);
 				const node = JSON.parse(JSON.stringify(osn));
 				node._channel_resp = ch_resp;									// store full response under the optools node obj
@@ -304,7 +284,6 @@ export class ChannelParticipationApi {
 				await Promise.all(reqs.splice(0, 2).map(f => f()));		// send 4 reqs at a time
 			}*/
 			await Promise.all(reqs);		// dsh todo - limit number of requests at a time
-			//console.log('dsh ?? all done', details);
 
 			// done
 			return details;
