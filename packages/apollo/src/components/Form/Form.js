@@ -929,6 +929,14 @@ class Form extends Component {
 		);
 	}
 
+	renderComponent(field, value, translate) {
+		return (
+			<div id={field}>
+				{value}
+			</div>
+		);
+	}
+
 	validatePEMField(field, value, checkOnly) {
 		let error = null;
 		let valid = true;
@@ -1402,6 +1410,8 @@ class Form extends Component {
 				return this.renderHostnamesInput(field, value, translate);
 			case 'slider':
 				return this.renderSlider(field, value, translate);
+			case 'component':
+				return this.renderComponent(field, value, translate);
 			default:
 				return this.renderTextInput(field, value, translate);
 		}
