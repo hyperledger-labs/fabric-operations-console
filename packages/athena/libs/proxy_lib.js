@@ -28,25 +28,26 @@ module.exports = function (logger, ev, t) {
 	});
 
 	//--------------------------------------------------
-	// Generic Proxy - this proxy code kind of sucks, it requires the url & data in the body
+	// Generic Proxy - this proxy code kind of sucks, it requires the url & data in the body - do not use
 	//--------------------------------------------------
 	exports.generic_proxy_call = (req, cb) => {
 		const parts = t.misc.break_up_url(req.body.url);				// break up hostname and path
 		if (!parts) {
-			logger.error('[proxy] unable to parse url. will not send request to url:', encodeURI(req.body.url));
+			logger.error('[old proxy] unable to parse url. will not send request to url:', encodeURI(req.body.url));
 			return cb({ statusCode: 400, response: 'invalid url' });
 		}
 
 		const base_url = parts.protocol + '//' + parts.hostname + ':' + parts.port;
 		const valid_url = t.ot_misc.validateUrl(base_url, ev.HOST_WHITE_LIST);	// see if its in our whitelist or not
 		if (!valid_url) {
-			logger.error('[proxy] - unsafe url. will not send request to url:', encodeURI(base_url));
+			logger.error('[old proxy] - unsafe url. will not send request to url:', encodeURI(base_url));
 			return cb({ statusCode: 400, response: 'unsafe url. will not send request' });
 		} else {
 
 			const opts = {
 				method: req.body.method,
 				baseUrl: base_url,														// url to proxy
+				//baseUrl: 'https://orderer.example.com:7053',
 				url: parts.path + (req.body.query ? ('?' + req.body.query) : ''),
 				body: sanitize_object(req.body.body),									// body for proxy (plain text)
 				headers: exports.copy_headers(req.headers),
@@ -62,6 +63,7 @@ module.exports = function (logger, ev, t) {
 				opts.key = t.misc.decodeb64(req.body.key);								// base 64 decode the *client* key PEM before sending on
 				opts.ca = t.misc.decodeb64(req.body.ca);								// base 64 decode the server TLS PEM before sending on
 			}
+
 			if (opts.url.includes('healthz') || opts.url.includes('cainfo')) {
 				opts.timeout = ev.HTTP_STATUS_TIMEOUT;
 				opts._retry_codes = {						// list of codes we will retry
@@ -76,11 +78,11 @@ module.exports = function (logger, ev, t) {
 				let headers;
 
 				if (!t.ot_misc.is_error_code(code)) {									// errors are logged in retry req()
-					logger.info('[proxy] - successful proxy response', code);
+					logger.info('[old proxy] - successful proxy response', code);
 				}
 
 				if (resp && resp.headers) {
-					headers = exports.copy_headers(resp.headers, true);							// copy headers for our response
+					headers = exports.copy_headers(resp.headers, true);					// copy headers for our response
 				}
 				if (!response) {
 					return cb({ headers: headers, statusCode: code });
@@ -185,7 +187,7 @@ module.exports = function (logger, ev, t) {
 				method: req.method,
 				baseUrl: parsed.base2use,												// url to proxy
 				url: t.misc.safe_url(parsed.path2use),
-				body: (req.method === 'POST') ? sanitize_object(req.body) : null,		// body for proxy (send plain text)
+				body: (req.method === 'POST' || req.method === 'PUT') ? sanitize_object(req.body) : null,		// body for proxy (send plain text)
 				headers: exports.copy_headers(req.headers),
 				timeout: ev.CA_PROXY_TIMEOUT,
 				json: false,
@@ -215,6 +217,65 @@ module.exports = function (logger, ev, t) {
 
 				if (resp && resp.headers) {
 					headers = exports.copy_headers(resp.headers, true);							// copy headers for our response
+				}
+				if (!response) {
+					return cb({ headers: headers, statusCode: code });
+				} else {
+					return cb({ headers: headers, statusCode: code, response: response });
+				}
+			});
+		}
+	};
+
+	//--------------------------------------------------
+	// Proxy a request to athena to anything
+	//--------------------------------------------------
+	exports.proxy_call = (req, cb) => {
+		const parsed = t.ot_misc.parseProxyUrl(req.originalUrl, { default_proto: 'https', prefix: '/proxy/' });
+		const valid_url = t.ot_misc.validateUrl(parsed.base2use, ev.HOST_WHITE_LIST);	// see if its in our whitelist or not
+		if (!valid_url) {
+			logger.error('[general proxy] - unsafe url. will not send request to url:', parsed.base2use);
+			return cb({ statusCode: 400, response: 'unsafe url. will not send request' });
+		} else {
+			const opts = {
+				method: req.method,
+				baseUrl: parsed.base2use,												// url to proxy
+				//baseUrl: 'https://orderer.example.com:7053',
+				url: t.misc.safe_url(parsed.path2use),
+
+				body: (req.method === 'POST' || req.method === 'PUT' || req.method === 'PATCH') ?
+					sanitize_object(req.body) : null,		// body for proxy (send plain text)
+
+				headers: exports.copy_headers(req.headers),
+				timeout: ev.CA_PROXY_TIMEOUT,				// dsh todo change
+				json: false,
+				encoding: null,
+				rejectUnauthorized: false,												// the whole point of this api is to not verify self signed certs
+				requestCert: true,
+				_name: 'general proxy',
+				_max_attempts: 1,
+			};
+			if (req.headers && req.headers['x-certificate-b64pem'] && req.headers['x-private-key-b64pem']) {	// add mutual TLS parameters
+				opts.cert = t.misc.decodeb64(req.headers['x-certificate-b64pem']);	// base 64 decode the *client* cert PEM before sending on
+				opts.key = t.misc.decodeb64(req.headers['x-private-key-b64pem']);	// base 64 decode the *client* key PEM before sending on
+				if (req.headers['x-root-cert-b64pem']) {
+					opts.ca = t.misc.decodeb64(req.headers['x-root-cert-b64pem']);	// base 64 decode the server TLS PEM before sending on
+					opts.rejectUnauthorized = true;
+				}
+			}
+			t.misc.retry_req(opts, (err, resp) => {
+				let response = resp ? resp.body : null;
+				let code = t.ot_misc.get_code(resp);
+				let headers;
+
+				console.log('resp', resp.body ? resp.body.toString() : '-');
+
+				if (!t.ot_misc.is_error_code(code)) {									// errors are logged in retry req()
+					logger.info('[general proxy] - successful proxy response', code);
+				}
+
+				if (resp && resp.headers) {
+					headers = exports.copy_headers(resp.headers, true);					// copy headers for our response
 				}
 				if (!response) {
 					return cb({ headers: headers, statusCode: code });

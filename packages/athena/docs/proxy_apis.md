@@ -109,6 +109,32 @@ The server will accept self-signed certs.
 - **Body**: any
 - **Response**: route dependent
 
+## 7. Improved General Proxy API
+This is a CORS + self-signed cert + mutual tls workaround for anything.
+The browser can send a proxy request to OpTools who will call the remote host.
+This bypasses CORS and the server will accept the self-signed cert if applicable.
+
+This is api replaces the bad proxy api #1.
+It also supports mutual tls. Pass the client cert details via headers.
+
+Possible proxy destinations urls are white list protected.
+White list is built from onboarded components.
+
+- **Method**: Any (GET/POST/HEAD/DELETE/PUT/PATCH/OPTIONS)
+- **Route**: `/proxy/*`
+- **Auth**: Must have action `blockchain.optools.view` in session
+- **Headers**:
+	```js
+	// if mutual tls is required pass these headers:
+	'x-certificate-b64pem': opts.certificate_b64pem,  // client's cert
+	'x-private-key-b64pem': opts.private_key_b64pem,  // client's private key
+	'x-root-cert-b64pem': opts.root_cert_b64pem,    // root tls cert to verify server
+	```
+
+- **Body**: JSON
+- **Response**: route dependent
+- **Example**: a `POST` request to `http://<athenas_url>/proxy/https://169.46.208.195:317266/api/v1/identities` will send a `POST` to `https://169.46.208.195:317266/api/v1/identities`. Body and headers are copied.
+
 # Free vs Paid Diagrams
 These diagrams are showing how some routes use the proxy routes documented on this page.
 

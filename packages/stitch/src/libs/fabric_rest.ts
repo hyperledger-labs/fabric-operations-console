@@ -42,7 +42,7 @@ function proxy_fetch_get_json(opts: IntOsn) {
 			method: 'GET',
 			url: opts.url,
 			cert: opts.certificate_b64pem,
-			key: opts.private_key_base64_pem,
+			key: opts.private_key_b64pem,
 			ca: opts.root_cert_b64pem,
 			timeout_ms: opts.timeout_ms,
 		}), // body data type must match 'Content-Type' header
@@ -69,30 +69,24 @@ function proxy_fetch_get_json(opts: IntOsn) {
 		body_obj: {}
 	}
 */
-// dsh to do - this does not work yet!! 2022/02/17
-function proxy_fetch_post_json(opts: IntOsn2) {
+function proxy_fetch_post_form(opts: IntOsn2) {
 	let formData = new FormData();
-	formData.append('configBlock', opts.b_config_block);
-	return fetch('/api/v2/proxy/', {		// Default options are marked with *
+	const blob = new Blob([opts.b_config_block], { type: 'application/octet-stream' });
+	formData.append('config-block', blob, 'blah');	// 3rd param is the filename, fabric doesn't care
+	return fetch('/proxy/' + opts.url, {	// Default options are marked with *
 		method: 'POST',
 		mode: 'cors', 						// cors, *same-origin
 		cache: 'no-cache', 					// *default, no-cache, reload, force-cache, only-if-cached
 		credentials: 'same-origin', 		// include, same-origin, *omit
 		headers: {
-			'Content-Type': 'application/x-www-form-urlencoded',
-			// ??? json to proxy, form data to orderer
+			//'Content-Type': 'multipart/form-data',	// don't set, fetch will add it and add the boundary
+			'x-certificate-b64pem': opts.certificate_b64pem,
+			'x-private-key-b64pem': opts.private_key_b64pem,
+			'x-root-cert-b64pem': opts.root_cert_b64pem,
 		},
 		redirect: 'follow', 				// manual, *follow, error
 		referrer: 'no-referrer', 			// no-referrer, *client
-		body: JSON.stringify({				// the proxy route on athena uses these fields
-			method: 'POST',
-			url: opts.url,
-			cert: opts.certificate_b64pem,
-			key: opts.private_key_base64_pem,
-			ca: opts.root_cert_b64pem,
-			timeout_ms: opts.timeout_ms,
-			body: formData.toString(),		// ???
-		}), // body data type must match 'Content-Type' header
+		body: formData,						// body data type must match 'Content-Type' header
 	}).then(response => {					// try to parse the response
 		if (!response.ok) {
 			throw response;					// whoops something broke
@@ -130,7 +124,7 @@ function proxy_fetch_delete_json(opts: IntOsn) {
 			method: 'DELETE',
 			url: opts.url,
 			cert: opts.certificate_b64pem,
-			key: opts.private_key_base64_pem,
+			key: opts.private_key_b64pem,
 			ca: opts.root_cert_b64pem,
 			timeout_ms: opts.timeout_ms,
 		}), // body data type must match 'Content-Type' header
@@ -221,7 +215,7 @@ function getOSNChannels(opts: ExtOsn, cb: Function) {
 		url: opts.host + '/participation/v1/channels',
 		timeout_ms: (opts.timeout_ms && !isNaN(opts.timeout_ms)) ? Number(opts.timeout_ms) : _sto.fabric_general_timeout_ms,	// default timeout
 		certificate_b64pem: opts.certificate_b64pem,
-		private_key_base64_pem: opts.private_key_base64_pem,
+		private_key_b64pem: opts.private_key_b64pem,
 		root_cert_b64pem: opts.root_cert_b64pem,
 		funk: 'getOSNChannels',						// this field is not used in athena
 	};
@@ -253,7 +247,7 @@ function getOSNChannel(opts: ExtOsn2, cb: Function) {
 		url: opts.host + '/participation/v1/channels/' + opts.channel,
 		timeout_ms: (opts.timeout_ms && !isNaN(opts.timeout_ms)) ? Number(opts.timeout_ms) : _sto.fabric_general_timeout_ms,	// default timeout
 		certificate_b64pem: opts.certificate_b64pem,
-		private_key_base64_pem: opts.private_key_base64_pem,
+		private_key_b64pem: opts.private_key_b64pem,
 		root_cert_b64pem: opts.root_cert_b64pem,
 		funk: 'getOSNChannel',						// this field is not used in athena
 	};
@@ -276,7 +270,7 @@ function getOSNChannel(opts: ExtOsn2, cb: Function) {
 }
 
 // ------------------------------------------
-// Fabric's osnadmin join-channel request by using the athena proxy route
+// Fabric's osnadmin join-channel request by using the athena proxy route (aka create channel)
 // ------------------------------------------
 function joinOSNChannel(opts: ExtOsn3, cb: Function) {
 	let called_cb = false;
@@ -285,12 +279,12 @@ function joinOSNChannel(opts: ExtOsn3, cb: Function) {
 		url: opts.host + '/participation/v1/channels',
 		timeout_ms: (opts.timeout_ms && !isNaN(opts.timeout_ms)) ? Number(opts.timeout_ms) : _sto.fabric_general_timeout_ms,	// default timeout
 		certificate_b64pem: opts.certificate_b64pem,
-		private_key_base64_pem: opts.private_key_base64_pem,
+		private_key_b64pem: opts.private_key_b64pem,
 		root_cert_b64pem: opts.root_cert_b64pem,
 		b_config_block: opts.b_config_block,
 		funk: 'joinOSNChannel',						// this field is not used in athena
 	};
-	proxy_fetch_post_json(fetch_options).then(response => {
+	proxy_fetch_post_form(fetch_options).then(response => {
 		called_cb = true;
 		if (!response || !response.name) {			// errors get sent in a `errors` array
 			return cb(fmt_err(fetch_options, response, 'Failed to get join channel'), response);
@@ -318,7 +312,7 @@ function unjoinOSNChannel(opts: ExtOsn2, cb: Function) {
 		url: opts.host + '/participation/v1/channels/' + opts.channel,
 		timeout_ms: (opts.timeout_ms && !isNaN(opts.timeout_ms)) ? Number(opts.timeout_ms) : _sto.fabric_general_timeout_ms,	// default timeout
 		certificate_b64pem: opts.certificate_b64pem,
-		private_key_base64_pem: opts.private_key_base64_pem,
+		private_key_b64pem: opts.private_key_b64pem,
 		root_cert_b64pem: opts.root_cert_b64pem,
 		funk: 'unjoinOSNChannel',						// this field is not used in athena
 	};
@@ -345,7 +339,7 @@ function unjoinOSNChannel(opts: ExtOsn2, cb: Function) {
 // ------------------------------------------
 interface OsnBase {
 	certificate_b64pem: string;
-	private_key_base64_pem: string;
+	private_key_b64pem: string;
 	root_cert_b64pem: string;
 
 	timeout_ms: number | null;
@@ -364,10 +358,10 @@ interface ExtOsn2 extends ExtOsn {
 }
 
 interface ExtOsn3 extends ExtOsn {
-	b_config_block: string;
+	b_config_block: any;
 }
 
 interface IntOsn2 extends OsnBase {
 	url: string;
-	b_config_block: string;				// dsh todo - aaaaaaah
+	b_config_block: any;
 }
