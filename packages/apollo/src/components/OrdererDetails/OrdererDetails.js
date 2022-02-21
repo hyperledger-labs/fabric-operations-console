@@ -128,14 +128,15 @@ class OrdererDetails extends Component {
 	/* get channel list from channel participation api */
 	async getCPChannelList() {
 		if (this.props.details && !this.props.details.osnadmin_url) return;
+		let node = this.props.selectedNode || this.props.details;
 		let systemChannel = true;
 		let channelList = {};
 
-		let orderer_tls_identity = await IdentityApi.getTLSIdentity(this.props.details);
+		let orderer_tls_identity = await IdentityApi.getTLSIdentity(node);
 		if (orderer_tls_identity) {
 			try {
 				let all_identity = await IdentityApi.getIdentities();
-				channelList = await ChannelParticipationApi.getChannels(all_identity, this.props.details);
+				channelList = await ChannelParticipationApi.getChannels(all_identity, node);
 				if (_.get(channelList, 'systemChannel.name')) {
 					channelList.systemChannel.type = 'system_channel';
 					channelList.channels.push(channelList.systemChannel);
@@ -1356,6 +1357,7 @@ class OrdererDetails extends Component {
 													}
 													{this.props.details.osnadmin_url && this.props.orderer_tls_identity &&
 															<ChannelParticipationDetails
+																selectedNode={this.props.selectedNode}
 																channelList={this.props.channelList}
 																details={this.props.details}
 																translate={this.props.translate}
@@ -1462,6 +1464,19 @@ class OrdererDetails extends Component {
 												>
 													<NodeDetails node={this.props.selectedNode} />
 													{this.renderUsage(translate)}
+												</Tab>
+											)}
+											{this.props.selectedNode && this.props.selectedNode.osnadmin_url && (
+												<Tab
+													id="ibp-orderer-channels"
+													label={translate('channels')}
+												>
+													<ChannelParticipationDetails
+														selectedNode={this.props.selectedNode}
+														channelList={this.props.channelList}
+														details={this.props.details}
+														translate={this.props.translate}
+													/>
 												</Tab>
 											)}
 										</Tabs>

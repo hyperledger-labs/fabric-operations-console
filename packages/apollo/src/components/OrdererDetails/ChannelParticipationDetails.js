@@ -50,13 +50,15 @@ class ChannelParticipationDetails extends Component {
 
 	async loadChannelData(channelId) {
 		if (this.props.details && !this.props.details.osnadmin_url) return;
+		let node = this.props.selectedNode || this.props.details;
+		let nodes = this.props.selectedNode ? [this.props.selectedNode]:this.props.details.raft;
 		let systemChannel = true;
 		let channelInfo = {};
-		let orderer_tls_identity = await IdentityApi.getTLSIdentity(this.props.details);
+		let orderer_tls_identity = await IdentityApi.getTLSIdentity(node);
 		if (orderer_tls_identity) {
 			try {
 				let all_identity = await IdentityApi.getIdentities();
-				channelInfo = await ChannelParticipationApi.map1Channel(all_identity, this.props.details.raft, channelId);
+				channelInfo = await ChannelParticipationApi.map1Channel(all_identity, nodes, channelId);
 			} catch (error) {
 				Log.error('Unable to get channel list:', error);
 			}
@@ -119,6 +121,7 @@ class ChannelParticipationDetails extends Component {
 const dataProps = {
 	channelList: PropTypes.object,
 	channelInfo: PropTypes.object,
+	selectedNode: PropTypes.object,
 	showCPDetailsModal:  PropTypes.bool,
 };
 
