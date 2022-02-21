@@ -54,7 +54,7 @@ class ChannelParticipationDetails extends Component {
 		let nodes = this.props.selectedNode ? [this.props.selectedNode]:this.props.details.raft;
 		let systemChannel = true;
 		let channelInfo = {};
-		let orderer_tls_identity = await IdentityApi.getTLSIdentity(this.props.details);
+		let orderer_tls_identity = await IdentityApi.getTLSIdentity(node);
 		if (orderer_tls_identity) {
 			try {
 				let all_identity = await IdentityApi.getIdentities();
