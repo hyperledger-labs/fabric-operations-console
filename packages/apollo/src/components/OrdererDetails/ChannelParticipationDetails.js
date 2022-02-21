@@ -80,10 +80,10 @@ class ChannelParticipationDetails extends Component {
 			<div>
 				{this.props.channelList &&
 					(<ItemContainer
-						containerTitle="Channels"
-						containerTooltip="Channels tooltip"
-						emptyTitle="Empty tile"
-						emptyMessage="Empty Message"
+						containerTitle="channels"
+						containerTooltip="cp_channels_tooltip"
+						emptyTitle="empty_cp_channels_title"
+						emptyMessage="empty_cp_channels_text"
 						itemId="channel-list"
 						id="channel-list-tile"
 						items={this.props.channelList.channels}

@@ -71,7 +71,7 @@ class OrdererDetails extends Component {
 			selected: null,
 			nodes: [],
 			usageModal: false,
-			systemChannel: true,
+			systemChannel: false,
 			disabled: true,
 			nodeStatus: {},
 			notAvailable: false,
@@ -173,7 +173,7 @@ class OrdererDetails extends Component {
 		} catch (error) {
 			Log.error(error);
 		}
-		this.props.updateState(SCOPE, { details: orderer });
+		this.props.updateState(SCOPE, { details: orderer, systemChannel: orderer.osnadmin_url ? false: true });
 		this.props.showBreadcrumb('orderer_details_title', { ordererName: orderer.cluster_name }, this.pathname);
 		this.timestamp = new Date().getTime();
 		setTimeout(() => {
@@ -344,6 +344,7 @@ class OrdererDetails extends Component {
 	}
 
 	getSystemChannelConfig() {
+		if (this.props.details.osnadmin_url && !this.props.systemChannel) return;
 		OrdererRestApi.getSystemChannelConfig(this.props.match.params.ordererId, this.props.configtxlator_url)
 			.then(resp => {
 				// we usually pick "SampleConsortium" but if that is missing, grab the first one. we don't support multiple atm.
