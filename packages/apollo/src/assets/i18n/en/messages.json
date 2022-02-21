@@ -1654,6 +1654,8 @@
 	"get_started": "Get started",
 	"build_network": "Build a network",
 	"build_network_desc": "Deploy Hyperledger Fabric components",
+	"unjoin_channel": "Unjoin",
+	"unjoin_orderer": "Select the orderer nodes to unjoin the channel",
 	"join_network": "Join a network",
 	"join_network_desc": "Join an existing Fabric Operations Console network",
 	"develop_sm": "Develop smart contracts",

@@ -17,13 +17,15 @@ import React, { Component } from 'react';
 import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
+import { ChannelParticipationApi } from '../../rest/ChannelParticipationApi';
 import IdentityApi from '../../rest/IdentityApi';
 import Helper from '../../utils/helper';
 import ItemContainer from '../ItemContainer/ItemContainer';
 import ItemTileLabels from '../ItemContainerTile/ItemTileLabels/ItemTileLabels';
-import { ChannelParticipationModal } from './ChannelParticipationModal';
 import Logger from '../Log/Logger';
-import { ChannelParticipationApi } from '../../rest/ChannelParticipationApi';
+import SVGs from '../Svgs/Svgs';
+import ChannelParticipationModal from './ChannelParticipationModal';
+import ChannelParticipationUnjoinModal from './ChannelParticipationUnjoinModal';
 
 const SCOPE = 'ChannelParticipationDetails';
 const Log = new Logger(SCOPE);
@@ -32,6 +34,7 @@ class ChannelParticipationDetails extends Component {
 	componentDidMount() {
 		this.props.updateState(SCOPE, {
 			showCPDetailsModal: false,
+			showCPUnjoinModal: false,
 		});
 	}
 
@@ -41,24 +44,37 @@ class ChannelParticipationDetails extends Component {
 		});
 	};
 
-	openCPDetailsModal = (channel) => {
-		this.loadChannelData(channel.name);
+	openCPDetailsModal = async(channel) => {
+		await this.loadChannelData(channel.name);
 		this.props.updateState(SCOPE, {
 			showCPDetailsModal: true,
 		});
 	};
 
-	async loadChannelData(channelId) {
+	closeCPUnjoinModal = () => {
+		this.props.updateState(SCOPE, {
+			showCPUnjoinModal: false,
+		});
+	};
+
+	openCPUnjoinModal = async(channel) => {
+		await this.loadChannelData(channel.name);
+		this.props.updateState(SCOPE, {
+			showCPUnjoinModal: true,
+		});
+	};
+
+	loadChannelData = async(channelId) => {
 		if (this.props.details && !this.props.details.osnadmin_url) return;
 		let node = this.props.selectedNode || this.props.details;
-		let nodes = this.props.selectedNode ? [this.props.selectedNode]:this.props.details.raft;
+		let nodes = this.props.selectedNode ? [this.props.selectedNode] : this.props.details.raft;
 		let systemChannel = true;
 		let channelInfo = {};
 		let orderer_tls_identity = await IdentityApi.getTLSIdentity(node);
 		if (orderer_tls_identity) {
 			try {
-				let all_identity = await IdentityApi.getIdentities();
-				channelInfo = await ChannelParticipationApi.map1Channel(all_identity, nodes, channelId);
+				let all_identities = await IdentityApi.getIdentities();
+				channelInfo = await ChannelParticipationApi.map1Channel(all_identities, nodes, channelId);
 			} catch (error) {
 				Log.error('Unable to get channel list:', error);
 			}
@@ -69,11 +85,22 @@ class ChannelParticipationDetails extends Component {
 		});
 	};
 
-	buildCustomTile(channel) {
-		if (channel.nodes === undefined) return;
+	buildCustomTile = (channel) => {
 		return (
 			<div>
-				<ItemTileLabels custom={`Nodes: ${channel.nodes.join(',')}`}/>
+				{channel.nodes && channel.nodes.length > 1 && (
+					<ItemTileLabels custom={`Nodes: ${channel.nodes.join(',')}`}/>
+				)}
+				<button className="ibp-orderer-channel-info"
+					onClick={async() => await this.openCPDetailsModal(channel)}
+				>
+					<SVGs type="settings" />
+				</button>
+				<button className="ibp-orderer-channel-unjoin"
+					onClick={async() => await this.openCPUnjoinModal(channel)}
+				>
+					<SVGs type="trash" />
+				</button>
 			</div>
 		);
 	}
@@ -89,7 +116,6 @@ class ChannelParticipationDetails extends Component {
 						itemId="channel-list"
 						id="channel-list-tile"
 						items={this.props.channelList.channels}
-						select={this.openCPDetailsModal}
 						listMapping={[
 							{
 								header: 'channel',
@@ -105,12 +131,19 @@ class ChannelParticipationDetails extends Component {
 						widerTiles
 					/>)
 				}
-				{this.props.showCPDetailsModal && this.props.details && (
+				{this.props.showCPDetailsModal && (
 					<ChannelParticipationModal
 						channelInfo= {this.props.channelInfo}
 						details={this.props.details}
 						onClose={this.closeCPDetailsModal}
-						translate={this.props.translate}
+					/>
+				)}
+				{this.props.showCPUnjoinModal && (
+					<ChannelParticipationUnjoinModal
+						channelInfo= {this.props.channelInfo}
+						details={this.props.details}
+						onComplete={this.props.unJoinComplete}
+						onClose={this.closeCPUnjoinModal}
 					/>
 				)}
 			</div>
@@ -123,11 +156,13 @@ const dataProps = {
 	channelInfo: PropTypes.object,
 	selectedNode: PropTypes.object,
 	showCPDetailsModal:  PropTypes.bool,
+	showCPUnjoinModal:  PropTypes.bool,
 };
 
 ChannelParticipationDetails.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
+	unJoinComplete: PropTypes.func,
 	translate: PropTypes.func, // Provided by withLocalize
 };
 
