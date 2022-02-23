@@ -100,9 +100,9 @@ export { conformPolicySyntax };
 // -------------------------------------------------
 function conformPolicySyntax(input: string | MixedPolicySyntax) {
 	const policy_obj: { version: number, identities: any, rule: any } = {
-		version: 0,
 		identities: [],
-		rule: {}
+		rule: {},
+		version: 0,
 	};
 	const identityPositionMap: any = {};
 	const break_words_regexp = new RegExp(/'|,|\(|\)|[a-zA-Z\d-.]+/, 'g');			// breaks up signature policy string into single words
@@ -114,11 +114,11 @@ function conformPolicySyntax(input: string | MixedPolicySyntax) {
 		logger.debug('[stitch] detected peer cli syntax - found msps in policy:', msps, identityPositionMap);
 		for (let i in msps) {
 			policy_obj.identities.push({											// first build the identities list
-				principalClassification: 0,											// use principal_classification of 0, b/c atm we only use "ROLE" classification
 				principal: {
 					mspIdentifier: msps[i].mspId,
 					role: msps[i].role.toUpperCase()
-				}
+				},
+				principalClassification: 'ROLE',							// use principal_classification of 0="ROLE", b/c atm we only use "ROLE" classification
 			});
 		}
 		policy_obj.rule = wrap_build_rules_from_cli();								// second build the rule list
@@ -380,11 +380,11 @@ function conformPolicySyntax(input: string | MixedPolicySyntax) {
 				break;
 			} else {
 				ret.push({
-					principalClassification: 0,				// use principal_classification of 0, b/c atm we only use "ROLE" classification
 					principal: {
 						mspIdentifier: identities[i].role.mspId,
 						role: identities[i].role.name.toUpperCase()
-					}
+					},
+					principalClassification: 'ROLE',				// use principal_classification of 0="ROLE", b/c atm we only use "ROLE" classification
 				});
 			}
 		}
