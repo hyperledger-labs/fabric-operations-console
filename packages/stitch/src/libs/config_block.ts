@@ -229,7 +229,7 @@ const template = {
 																"fabric_node_ous": null,
 																"intermediate_certs": [],
 
-																// replace below with org's MSP id
+																// field replace below with org's MSP id
 																"name": "Org1MSP",
 
 																"organizational_unit_identifiers": [],
@@ -316,7 +316,7 @@ const template = {
 												"value": {
 													"capabilities": {
 
-														// application capabilities
+														// capabilities key is replaced with application_capabilities from input
 														"V2_0": {}
 													}
 												},
@@ -339,7 +339,7 @@ const template = {
 														"policy": {
 															"type": 1,
 
-															// must be replaced with signature based policy
+															// must be replaced with signature based policy from input
 															"value": {}
 														},
 														"version": "0"
@@ -349,7 +349,7 @@ const template = {
 														"policy": {
 															"type": 1,
 
-															// must be replaced with signature based policy
+															// must be replaced with signature based policy from input
 															"value": {}
 														},
 														"version": "0"
@@ -359,7 +359,7 @@ const template = {
 														"policy": {
 															"type": 1,
 
-															// must be replaced with signature based policy
+															// must be replaced with signature based policy from input
 															"value": {}
 														},
 														"version": "0"
@@ -371,7 +371,7 @@ const template = {
 														"mod_policy": "Admins",
 														"value": {
 
-															// replaced below with orderer_msps.OrdererOrg.addresses input
+															// whole array replaced below with orderer_msps.OrdererOrg.addresses from input
 															"addresses": [
 																"orderer.example.com:7050"
 															]
@@ -390,7 +390,7 @@ const template = {
 																"fabric_node_ous": null,
 																"intermediate_certs": [],
 
-																// replace below with orderer org's MSP id
+																// field replace below with orderer_msps.OrdererOrg.MSP.name from input
 																"name": "OrdererMSP",
 
 																"organizational_unit_identifiers": [],
@@ -469,8 +469,14 @@ const template = {
 											"BatchSize": {
 												"mod_policy": "Admins",
 												"value": {
+
+													// field replaced below with batch_size.absolute_max_bytes from input
 													"absolute_max_bytes": 103809024,
+
+													// field replaced below with batch_size.max_message_count from input
 													"max_message_count": 10,
+
+													// field replaced below with batch_size.preferred_max_bytes from input
 													"preferred_max_bytes": 524288
 												},
 												"version": "0"
@@ -478,6 +484,8 @@ const template = {
 											"BatchTimeout": {
 												"mod_policy": "Admins",
 												"value": {
+
+													// field replaced below with batch_timeout.timeout from input
 													"timeout": "2s"
 												},
 												"version": "0"
@@ -487,7 +495,7 @@ const template = {
 												"value": {
 													"capabilities": {
 
-														// orderer capabilities
+														// capabilities key is replaced with orderer_capabilities from input
 														"V2_0": {}
 													}
 												},
@@ -495,13 +503,18 @@ const template = {
 											},
 											"ChannelRestrictions": {
 												"mod_policy": "Admins",
+
+												// whole obj replaced below with channel_restrictions.value from input
 												"value": null,
+
 												"version": "0"
 											},
 											"ConsensusType": {
 												"mod_policy": "Admins",
 												"value": {
 													"metadata": {
+
+														// whole array replaced below with consensus_type.consenters from input
 														"consenters": [
 															{
 																"client_tls_cert": "",
@@ -510,6 +523,8 @@ const template = {
 																"server_tls_cert": ""
 															}
 														],
+
+														// whole obj replaced below with consensus_type.options from input
 														"options": {
 															"election_tick": 10,
 															"heartbeat_tick": 1,
@@ -575,9 +590,9 @@ const template = {
 									"Capabilities": {
 										"mod_policy": "Admins",
 										"value": {
-
-											// channel capabilities
 											"capabilities": {
+
+												// capabilities key is replaced with channel_capabilities from input
 												"V2_0": {}
 											}
 										},
@@ -594,10 +609,8 @@ const template = {
 										"mod_policy": "/Channel/Orderer/Admins",
 										"value": {
 
-											// replace this - dsh todo
-											"addresses": [
-												"orderer.example.com:7050"
-											]
+											// we are leaving this blank so that fabric uses the addresses defined in each org's section
+											"addresses": []
 										},
 										"version": "0"
 									}
@@ -757,100 +770,37 @@ function buildTemplateConfigBlock(opts: ExtTemp) {
 		ret.data.data[0].payload.data.config.channel_group.values.Capabilities.value.capabilities = ch_caps;
 	}
 
+	// ---------------------------------------------------------------------------------
+	// Application.groups Section
+	// ---------------------------------------------------------------------------------
+
 	// set groups.Application.groups
 	const defaults = ret.data.data[0].payload.data.config.channel_group.groups.Application.groups.Org1MSP;		// remember defaults
 	ret.data.data[0].payload.data.config.channel_group.groups.Application.groups = {};							// clear it out
 	for (let msp_id in opts.application_msps) {
-		ret.data.data[0].payload.data.config.channel_group.groups.Application.groups[msp_id] = buildGroup(defaults, opts.application_msps[msp_id], msp_id);
+		ret.data.data[0].payload.data.config.channel_group.groups.Application.groups[msp_id] = buildAppGroupObj(defaults, opts.application_msps[msp_id], msp_id);
 	}
-
-	// set groups.Application.groups[msp_id].values.MSP
-	for (let msp_id in opts.application_msps) {
-		if (opts.application_msps[msp_id].MSP) {
-
-			// set fabric_node_ous
-			if (opts.application_msps[msp_id].MSP.fabric_node_ous) {
-				ret.data.data[0].payload.data.config.channel_group.groups.Application.groups[msp_id].values.MSP.value.config.fabric_node_ous = opts.application_msps[msp_id].MSP.fabric_node_ous;
-			} else {
-				delete ret.data.data[0].payload.data.config.channel_group.groups.Application.groups[msp_id].values.MSP.value.config.fabric_node_ous;
-			}
-
-			// the each certificate array field
-			const fields = ['intermediate_certs', 'organizational_unit_identifiers', 'revocation_list', 'root_certs', 'tls_intermediate_certs', 'tls_root_certs'];
-			for (let i in fields) {
-				const field = fields[i];
-				if (Array.isArray(opts.application_msps[msp_id].MSP[field])) {
-					ret.data.data[0].payload.data.config.channel_group.groups.Application.groups[msp_id].values.MSP.value.config[field] = opts.application_msps[msp_id].MSP[field];
-				}
-			}
-
-			// set signing_identity
-			if (opts.application_msps[msp_id].MSP.signing_identity) {
-				ret.data.data[0].payload.data.config.channel_group.groups.Application.groups[msp_id].values.MSP.value.config.signing_identity = opts.application_msps[msp_id].MSP.signing_identity;
-			}
-
-			// set name
-			ret.data.data[0].payload.data.config.channel_group.groups.Application.groups[msp_id].values.MSP.value.config.name = msp_id;
-		}
-	}
-
-
 
 	// ---------------------------------------------------------------------------------
-	// Orderer Section
+	// Orderer.groups Section
 	// ---------------------------------------------------------------------------------
 
 	// set OrdererOrg policies
-	if (!opts.orderer_msps || !opts.orderer_msps.OrdererOrg) {
-		logger.error('[config] cannot build genesis block, missing OrdererOrg from input');
+	if (!opts.orderer_msps && Object.keys(opts.orderer_msps).length === 0) {
+		logger.error('[config] cannot build genesis block, missing Orderer MSP data from input');
 		return null;
-	} else {
-		const policy_names = ['Admins', 'Readers', 'Writers'];
-		for (let i in policy_names) {
-			const policyName = policy_names[i];
-			ret.data.data[0].payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.policies[policyName].policy.value =
-				camelCase_2_underscores(conformPolicySyntax(opts.orderer_msps.OrdererOrg[policyName]), 0);
-		}
 	}
 
-	// set OrdererOrg endpoint addresses
-	if (!opts.orderer_msps || !opts.orderer_msps.OrdererOrg || !opts.orderer_msps.OrdererOrg.addresses) {
-		logger.error('[config] cannot build genesis block, missing OrdererOrg addresses from input');
-		return null;
-	} else {
-		ret.data.data[0].payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.Endpoints.value.addresses = opts.orderer_msps.OrdererOrg.addresses;
+	// set groups.Orderer.groups
+	const o_defaults = ret.data.data[0].payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg;		// remember defaults
+	ret.data.data[0].payload.data.config.channel_group.groups.Orderer.groups = {};								// clear it out
+	for (let msp_id in opts.orderer_msps) {
+		ret.data.data[0].payload.data.config.channel_group.groups.Orderer.groups[msp_id] = buildOrdererGroupObj(o_defaults, opts.orderer_msps[msp_id], msp_id);
 	}
 
-	// set groups.Application.groups[msp_id].values.MSP
-	if (!opts.orderer_msps || !opts.orderer_msps.OrdererOrg || !opts.orderer_msps.OrdererOrg.MSP) {
-		logger.error('[config] cannot build genesis block, missing OrdererOrg MSP info from input');
-		return null;
-	} else {
-
-		// set OrdererOrg fabric_node_ous
-		if (opts.orderer_msps.OrdererOrg.MSP.fabric_node_ous) {
-			ret.data.data[0].payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.MSP.value.config.fabric_node_ous = opts.orderer_msps.OrdererOrg.MSP.fabric_node_ous;
-		} else {
-			delete ret.data.data[0].payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.MSP.value.config.fabric_node_ous;
-		}
-
-		// the each OrdererOrg certificate array field
-		const fields = ['intermediate_certs', 'organizational_unit_identifiers', 'revocation_list', 'root_certs', 'tls_intermediate_certs', 'tls_root_certs'];
-		for (let i in fields) {
-			const field = fields[i];
-			if (Array.isArray(opts.orderer_msps.OrdererOrg.MSP[field])) {
-				ret.data.data[0].payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.MSP.value.config[field] = opts.orderer_msps.OrdererOrg.MSP[field];
-			}
-		}
-
-		// set OrdererOrg signing_identity
-		if (opts.orderer_msps.OrdererOrg.MSP.signing_identity) {
-			ret.data.data[0].payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.MSP.value.config.signing_identity = opts.orderer_msps.OrdererOrg.MSP.signing_identity;
-		}
-
-		// set OrdererOrg name
-		ret.data.data[0].payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg.values.MSP.value.config.name = opts.orderer_msps.OrdererOrg.MSP.name;
-	}
+	// ---------------------------------------------------------------------------------
+	// Orderer.values Section
+	// ---------------------------------------------------------------------------------
 
 	// set Orderer.values settings
 	if (opts.batch_size && opts.batch_size.absolute_max_bytes && !isNaN(opts.batch_size.absolute_max_bytes)) {
@@ -875,20 +825,19 @@ function buildTemplateConfigBlock(opts: ExtTemp) {
 		ret.data.data[0].payload.data.config.channel_group.groups.Orderer.values.ConsensusType.value.metadata.options = opts.consensus_type.options;
 	}
 
-
 	// whew... all done
 	return ret;
 }
 
-// build the data.data[0].payload.data.config.channel_group.groups.Application.groups object up
-function buildGroup(defaults: any, msp_data: any, msp_id: string) {
-	const ret = JSON.parse(JSON.stringify(defaults));
+// build 1 data.data[0].payload.data.config.channel_group.groups.Application.groups object up
+function buildAppGroupObj(defaults: any, msp_data: any, msp_id: string) {
+	const grpObj = JSON.parse(JSON.stringify(defaults));
 	const policy_names = ['Admins', 'Endorsement', 'Readers', 'Writers'];
 	for (let z in policy_names) {
 		const policyName = policy_names[z];
 		if (!msp_data[policyName] || msp_data[policyName] === 'default') {
-			for (let i in ret.policies[policyName].policy.value.identities) {			// 'Readers' has a few entries, iter on each
-				ret.policies[policyName].policy.value.identities[i].principal.msp_identifier = msp_id;
+			for (let i in grpObj.policies[policyName].policy.value.identities) {			// 'Readers' has a few entries, iter on each
+				grpObj.policies[policyName].policy.value.identities[i].principal.msp_identifier = msp_id;
 			}
 		} else {
 			logger.error('[config] cannot build config block for msp, only the default groups policy is supported atm. msp_id:', msp_id);
@@ -896,7 +845,100 @@ function buildGroup(defaults: any, msp_data: any, msp_id: string) {
 		}
 	}
 
-	return ret;
+	// set groups.Application.groups[msp_id].values.MSP
+	if (msp_data.MSP) {
+
+		// set fabric_node_ous
+		if (msp_data.MSP.fabric_node_ous) {
+			grpObj.values.MSP.value.config.fabric_node_ous = msp_data.MSP.fabric_node_ous;
+		} else {
+			delete grpObj.values.MSP.value.config.fabric_node_ous;
+		}
+
+		// the each certificate array field
+		const fields = ['intermediate_certs', 'organizational_unit_identifiers', 'revocation_list', 'root_certs', 'tls_intermediate_certs', 'tls_root_certs'];
+		for (let i in fields) {
+			const field = fields[i];
+			if (Array.isArray(msp_data.MSP[field])) {
+				grpObj.values.MSP.value.config[field] = msp_data.MSP[field];
+			}
+		}
+
+		// set signing_identity
+		if (msp_data.MSP.signing_identity) {
+			grpObj.values.MSP.value.config.signing_identity = msp_data.MSP.signing_identity;
+		}
+
+		// set name
+		grpObj.values.MSP.value.config.name = msp_id;
+	}
+
+	return grpObj;
+}
+
+// build 1 ret.data.data[0].payload.data.config.channel_group.groups.Orderer.groups object up
+function buildOrdererGroupObj(defaults: any, msp_data: any, msp_id: string) {
+	const grpObj = JSON.parse(JSON.stringify(defaults));
+	const policy_names = ['Admins', 'Readers', 'Writers'];
+
+	// validate
+	if (!msp_data) {
+		logger.error('[config] cannot build genesis block, missing ALL orderer org msp data from input:', msp_id);
+		return null;
+	}
+
+	// set each policy in groups.Orderer.groups[msp_id].policies
+	for (let i in policy_names) {
+		const policyName = policy_names[i];
+		if (!msp_data[policyName]) {
+			logger.error('[config] cannot build genesis block, missing orderer org\'s msp policy from input:', msp_id, policyName);
+			return null;
+		} else {
+			grpObj.policies[policyName].policy.value =
+				camelCase_2_underscores(conformPolicySyntax(msp_data[policyName]), 0);
+		}
+	}
+
+	// set OrdererOrg endpoint addresses
+	if (!msp_data.addresses) {
+		logger.error('[config] cannot build genesis block, missing orderer org\'s addresses from input:', msp_id);
+		return null;
+	} else {
+		grpObj.values.Endpoints.value.addresses = msp_data.addresses;
+	}
+
+	// set groups.Orderer.groups[msp_id].values.MSP
+	if (!msp_data.MSP) {
+		logger.error('[config] cannot build genesis block, missing orderer org\'s MSP info from input:', msp_id);
+		return null;
+	} else {
+
+		// set OrdererOrg fabric_node_ous
+		if (msp_data.MSP.fabric_node_ous) {
+			grpObj.values.MSP.value.config.fabric_node_ous = msp_data.MSP.fabric_node_ous;
+		} else {
+			delete grpObj.values.MSP.value.config.fabric_node_ous;
+		}
+
+		// the each OrdererOrg certificate array field
+		const fields = ['intermediate_certs', 'organizational_unit_identifiers', 'revocation_list', 'root_certs', 'tls_intermediate_certs', 'tls_root_certs'];
+		for (let i in fields) {
+			const field = fields[i];
+			if (Array.isArray(msp_data.MSP[field])) {
+				grpObj.values.MSP.value.config[field] = msp_data.MSP[field];
+			}
+		}
+
+		// set OrdererOrg signing_identity
+		if (msp_data.MSP.signing_identity) {
+			grpObj.values.MSP.value.config.signing_identity = msp_data.MSP.signing_identity;
+		}
+
+		// set OrdererOrg name
+		grpObj.values.MSP.value.config.name = msp_id;
+	}
+
+	return grpObj;
 }
 
 /*
@@ -917,17 +959,7 @@ interface ExtTemp {
 	orderer_capabilities: string | null;
 	channel_capabilities: string | null;
 	application_msps: StringObj2;
-	orderer_msps: {
-		OrdererOrg: any;
-		/*{
-			Admins: string;
-			Readers: string;
-			Writers: string;
-			addresses: string[],		// required, string of addresses including port
-			//MSP: any,
-			MSP: MspObj
-		}*/
-	},
+	orderer_msps: StringObj2;
 	batch_size: {
 		absolute_max_bytes: number | null,
 		max_message_count: number | null,
