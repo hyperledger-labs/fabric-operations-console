@@ -14,7 +14,7 @@
 
 // Libs built by us
 import { logger, camelCase_2_underscores } from './misc';
-import { conformPolicySyntax } from './sig_policy_syntax_lib';
+import { conformPolicySyntax, detectImplicitPolicy, buildImplicitPolicySyntax, detectSignaturePolicy } from './sig_policy_syntax_lib';
 
 export { buildTemplateConfigBlock };
 
@@ -249,12 +249,15 @@ const template = {
 										}, // end of "groups" key
 
 
+										// still in "Application" key
+
 										"mod_policy": "Admins",
 
-										// dsh todo allow setting policies here
 										"policies": {
 											"Admins": {
 												"mod_policy": "Admins",
+
+												// set with field "application_policies.Admins"
 												"policy": {
 													"type": 3,
 													"value": {
@@ -266,6 +269,8 @@ const template = {
 											},
 											"Endorsement": {
 												"mod_policy": "Admins",
+
+												// set with field "application_policies.Endorsement"
 												"policy": {
 													"type": 3,
 													"value": {
@@ -277,8 +282,11 @@ const template = {
 											},
 											"LifecycleEndorsement": {
 												"mod_policy": "Admins",
+
+												// set with field "application_policies.LifecycleEndorsement"
 												"policy": {
 													"type": 3,
+
 													"value": {
 														"rule": "MAJORITY",
 														"sub_policy": "Endorsement"
@@ -288,6 +296,8 @@ const template = {
 											},
 											"Readers": {
 												"mod_policy": "Admins",
+
+												// set with field "application_policies.Readers"
 												"policy": {
 													"type": 3,
 													"value": {
@@ -299,6 +309,8 @@ const template = {
 											},
 											"Writers": {
 												"mod_policy": "Admins",
+
+												// set with field "application_policies.Writers"
 												"policy": {
 													"type": 3,
 													"value": {
@@ -472,12 +484,14 @@ const template = {
 											} // end of "OrdererMSP" key
 										}, // end of "groups" key
 
+										// still in "Orderer" key
+
 										"mod_policy": "Admins",
 										"policies": {
-
-											// dsh todo allow setting this
 											"Admins": {
 												"mod_policy": "Admins",
+
+												// set with field "orderer_policies.Admins"
 												"policy": {
 													"type": 3,
 													"value": {
@@ -487,10 +501,10 @@ const template = {
 												},
 												"version": "0"
 											},
-
-											// dsh todo allow setting this
 											"BlockValidation": {
 												"mod_policy": "Admins",
+
+												// set with field "orderer_policies.BlockValidation"
 												"policy": {
 													"type": 3,
 													"value": {
@@ -500,10 +514,10 @@ const template = {
 												},
 												"version": "0"
 											},
-
-											// dsh todo allow setting this
 											"Readers": {
 												"mod_policy": "Admins",
+
+												// set with field "orderer_policies.Readers"
 												"policy": {
 													"type": 3,
 													"value": {
@@ -514,9 +528,10 @@ const template = {
 												"version": "0"
 											},
 
-											// dsh todo allow setting this
 											"Writers": {
 												"mod_policy": "Admins",
+
+												// set with field "orderer_policies.Writers"
 												"policy": {
 													"type": 3,
 													"value": {
@@ -738,7 +753,7 @@ const template = {
 
 
 // -------------------------------------------------------------
-// tweak the template config block with the given options - dsh todo, lots of things to set!
+// tweak the template config block with the given options
 // -------------------------------------------------------------
 /*
 	opts: {
@@ -747,8 +762,8 @@ const template = {
 		orderer_capabilities: 'V2_0',
 		channel_capabilities: 'V2_0',
 		application_msps: {
-			Org1MSP: {
-				Admins: null,									// can be null
+			Org1MSP: {											// create 1 key for each msp id
+				Admins: null,									// can be null, or signature policy string, or implicit policy string
 				Endorsement: null,								// can be null
 				Readers: null,									// can be null
 				Writers: null,									// can be null
@@ -763,6 +778,13 @@ const template = {
 					tls_root_certs: [],							// required - base 64 encoded pems
 				},
 			}
+		},
+		application_policies: {
+			Admins: 'MAJORITY Admins',							// can be null, or signature policy string, or implicit policy string
+			Endorsement: 'MAJORITY Endorsement',				// can be null
+			LifecycleEndorsement: 'MAJORITY Endorsement',		// can be null
+			Readers: 'ANY Readers',								// can be null
+			Writers: 'ANY Writers',								// can be null
 		},
 		orderer_msps: {
 			OrdererMSP: {
@@ -782,6 +804,12 @@ const template = {
 					name: 'OrdererMSP',							// required - msp id
 				},
 			}
+		},
+		orderer_policies: {
+			Admins: 'MAJORITY Admins',							// can be null, or signature policy string, or implicit policy string
+			BlockValidation: 'ANY Writers',						// can be null
+			Readers: 'ANY Readers',								// can be null
+			Writers: 'ANY Writers',								// can be null
 		},
 		batch_size: {
 			absolute_max_bytes: 0,
@@ -844,11 +872,29 @@ function buildTemplateConfigBlock(opts: ExtTemp) {
 		ret.data.data[0].payload.data.config.channel_group.groups.Application.groups[msp_id] = buildAppGroupObj(defaults, opts.application_msps[msp_id], msp_id);
 	}
 
+	// set application policies
+	const policy_names = ['Admins', 'Endorsement', 'LifecycleEndorsement', 'Readers', 'Writers'];
+	for (let i in policy_names) {
+		const policyName = policy_names[i];
+		if (detectImplicitPolicy(opts.application_policies[policyName])) {
+			ret.data.data[0].payload.data.config.channel_group.groups.Application.policies[policyName].policy = buildImplicitPolicySyntax(opts.application_policies[policyName]);
+		} else if (detectSignaturePolicy(opts.application_policies[policyName])) {
+			// theses policies default to implicit type && conformPolicySyntax() doesn't build the policy wrapper
+			// so if its a sig type we need to change the "type" field too
+			ret.data.data[0].payload.data.config.channel_group.groups.Application.policies[policyName].policy = {
+				type: 1,
+				value: camelCase_2_underscores(conformPolicySyntax(opts.application_policies[policyName]), 0)
+			}
+		} else {
+			// uses default policy
+		}
+	}
+
 	// ---------------------------------------------------------------------------------
 	// Orderer.groups Section
 	// ---------------------------------------------------------------------------------
 
-	// set OrdererMSP policies
+	// validate
 	if (!opts.orderer_msps && Object.keys(opts.orderer_msps).length === 0) {
 		logger.error('[config] cannot build genesis block, missing Orderer MSP data from input');
 		return null;
@@ -859,6 +905,24 @@ function buildTemplateConfigBlock(opts: ExtTemp) {
 	ret.data.data[0].payload.data.config.channel_group.groups.Orderer.groups = {};								// clear it out
 	for (let msp_id in opts.orderer_msps) {
 		ret.data.data[0].payload.data.config.channel_group.groups.Orderer.groups[msp_id] = buildOrdererGroupObj(o_defaults, opts.orderer_msps[msp_id], msp_id);
+	}
+
+	// set orderer policies
+	const orderer_policy_names = ['Admins', 'BlockValidation', 'Readers', 'Writers'];
+	for (let i in orderer_policy_names) {
+		const policyName = orderer_policy_names[i];
+		if (detectImplicitPolicy(opts.orderer_policies[policyName])) {
+			ret.data.data[0].payload.data.config.channel_group.groups.Orderer.policies[policyName].policy = buildImplicitPolicySyntax(opts.orderer_policies[policyName]);
+		} else if (detectSignaturePolicy(opts.orderer_policies[policyName])) {
+			// theses policies default to implicit type && conformPolicySyntax() doesn't build the policy wrapper
+			// so if its a sig type we need to change the "type" field too
+			ret.data.data[0].payload.data.config.channel_group.groups.Orderer.policies[policyName].policy = {
+				type: 1,
+				value: camelCase_2_underscores(conformPolicySyntax(opts.orderer_policies[policyName]), 0)
+			}
+		} else {
+			// uses default policy
+		}
 	}
 
 	// ---------------------------------------------------------------------------------
@@ -898,15 +962,17 @@ function buildAppGroupObj(defaults: any, msp_data: any, msp_id: string) {
 	const policy_names = ['Admins', 'Endorsement', 'Readers', 'Writers'];
 	for (let i in policy_names) {
 		const policyName = policy_names[i];
-		if (!msp_data[policyName]) {														// use default policy, but edit it for this msp id
+		if (detectImplicitPolicy(msp_data[policyName])) {
+			grpObj.policies[policyName].policy = buildImplicitPolicySyntax(msp_data[policyName]);
+		} else if (detectSignaturePolicy(msp_data[policyName])) {
+			grpObj.policies[policyName].policy.value =
+				camelCase_2_underscores(conformPolicySyntax(msp_data[policyName]), 0);
+			// dsh todo test if change to conformPolicySyntax is okay!
+		} else {
+			// use default policy, but edit it for this msp id
 			for (let i in grpObj.policies[policyName].policy.value.identities) {			// 'Readers' has a few entries, iter on each
 				grpObj.policies[policyName].policy.value.identities[i].principal.msp_identifier = msp_id;
 			}
-		} else {
-			grpObj.policies[policyName].policy.value =
-				camelCase_2_underscores(conformPolicySyntax(msp_data[policyName]), 0);
-
-				// dsh todo test if change to conformPolicySyntax is okay!
 		}
 	}
 
@@ -959,11 +1025,12 @@ function buildOrdererGroupObj(defaults: any, msp_data: any, msp_id: string) {
 			for (let i in grpObj.policies[policyName].policy.value.identities) {			// 'Readers' has a few entries, iter on each
 				grpObj.policies[policyName].policy.value.identities[i].principal.msp_identifier = msp_id;
 			}
+		} else if (detectImplicitPolicy(msp_data[policyName])) {
+			grpObj.policies[policyName].policy = buildImplicitPolicySyntax(msp_data[policyName]);
 		} else {
 			grpObj.policies[policyName].policy.value =
 				camelCase_2_underscores(conformPolicySyntax(msp_data[policyName]), 0);
-
-				// dsh todo test if change to conformPolicySyntax is okay!
+			// dsh todo test if change to conformPolicySyntax is okay!
 		}
 	}
 
@@ -1027,6 +1094,8 @@ interface ExtTemp {
 	orderer_capabilities: string | null;
 	channel_capabilities: string | null;
 	application_msps: StringObj2;
+	application_policies: StringObj3;
+	orderer_policies: StringObj3;
 	orderer_msps: StringObj2;
 	batch_size: {
 		absolute_max_bytes: number | null,
@@ -1054,4 +1123,8 @@ interface StringObj2 {
 		MSP: any,
 		//MSP: MspObj
 	};
+}
+
+interface StringObj3 {
+	[index: string]: string;
 }

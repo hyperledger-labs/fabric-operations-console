@@ -17,7 +17,7 @@ import { logger, underscores_2_camelCase } from './misc';
 import { MixedPolicySyntax } from './proto_handlers/collection_pb_lib';
 
 // exports
-export { conformPolicySyntax };
+export { conformPolicySyntax, detectImplicitPolicy, buildImplicitPolicySyntax, detectSignaturePolicy };
 
 // -------------------------------------------------
 // build Fabric's signature policy structure from some other syntax - returns object
@@ -429,4 +429,84 @@ function conformPolicySyntax(input: string | MixedPolicySyntax) {
 			};
 		}
 	}
+}
+
+// -------------------------------------------------
+// see if the policy is a signature policy (any syntax)
+// -------------------------------------------------
+function detectSignaturePolicy(policy: string | { identities: [], rule: object, policy: object }) {
+
+	// ---- Peer CLI Syntax ----- //
+	if (typeof policy === 'string') {
+		const fmt = policy.trim().toUpperCase();				// clean up
+		if (fmt.indexOf('AND') === 0) {
+			return true;
+		}
+		if (fmt.indexOf('OR') === 0) {
+			return true;
+		}
+		if (fmt.indexOf('OUTOF') === 0) {
+			return true;
+		}
+	}
+
+	if (policy && typeof policy === 'object') {
+		// ---- Fabric Syntax ----- //
+		if (Array.isArray(policy.identities) && policy.rule && typeof policy.rule === 'object') {
+			return true;
+		}
+
+		// ---- Fabric SDK Syntax ----- //
+		if (Array.isArray(policy.identities) && policy.policy && typeof policy.policy === 'object') {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+// -------------------------------------------------
+// see if the policy is a implicit policy
+// -------------------------------------------------
+function detectImplicitPolicy(policy: string) {
+	if (typeof policy === 'string') {
+		const fmt = policy.trim();						// clean up
+		if (fmt.indexOf('ANY') === 0) {
+			return true;
+		}
+		if (fmt.indexOf('MAJORITY') === 0) {
+			return true;
+		}
+		if (fmt.indexOf('ANY') === 0) {
+			return true;
+		}
+	}
+	return false;
+}
+
+// -------------------------------------------------
+// build a implicit policy
+// -------------------------------------------------
+// There are two types of policies.
+//  - Type 2 - ImplicitMetaPolicy - has 3 sub types: (these types are defined by pb "ImplicitMetaPolicy")
+//    - Rule 0 means ANY signature will pas
+//    - Rule 1 means ALL signatures needed to pass
+//    - Rule 2 means MAJORITY of signatures need to pass
+function buildImplicitPolicySyntax(policy: string) {
+	let ret = {
+		type: 3,
+		value: {
+			rule: 'MAJORITY',
+			sub_policy: 'Admins'
+		}
+	};
+	if (typeof policy === 'string') {
+		policy = policy.trim();						// clean up
+		const parts = policy.split(' ');
+		if (parts.length >= 2) {
+			ret.value.rule = parts[0];
+			ret.value.sub_policy = parts[1];
+		}
+	}
+	return ret;
 }
