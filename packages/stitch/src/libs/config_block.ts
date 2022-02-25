@@ -329,7 +329,7 @@ const template = {
 
 									"Orderer": {
 										"groups": {
-											"OrdererOrg": {
+											"OrdererMSP": {
 												"groups": {},
 												"mod_policy": "Admins",
 												"policies": {
@@ -338,9 +338,30 @@ const template = {
 														"mod_policy": "Admins",
 														"policy": {
 															"type": 1,
+															"value": {
+																"identities": [
+																	{
+																		"principal": {
 
-															// must be replaced with signature based policy from input
-															"value": {}
+																			// replace below with org's MSP id
+																			"msp_identifier": "OrdererMSP",
+																			"role": "ADMIN"
+																		},
+																		"principal_classification": "ROLE"
+																	}
+																],
+																"rule": {
+																	"n_out_of": {
+																		"n": 1,
+																		"rules": [
+																			{
+																				"signed_by": 0
+																			}
+																		]
+																	}
+																},
+																"version": 0
+															}
 														},
 														"version": "0"
 													},
@@ -348,9 +369,30 @@ const template = {
 														"mod_policy": "Admins",
 														"policy": {
 															"type": 1,
+															"value": {
+																"identities": [
+																	{
+																		"principal": {
 
-															// must be replaced with signature based policy from input
-															"value": {}
+																			// replace below with org's MSP id
+																			"msp_identifier": "OrdererMSP",
+																			"role": "MEMBER"
+																		},
+																		"principal_classification": "ROLE"
+																	}
+																],
+																"rule": {
+																	"n_out_of": {
+																		"n": 1,
+																		"rules": [
+																			{
+																				"signed_by": 0
+																			}
+																		]
+																	}
+																},
+																"version": 0
+															}
 														},
 														"version": "0"
 													},
@@ -358,9 +400,30 @@ const template = {
 														"mod_policy": "Admins",
 														"policy": {
 															"type": 1,
+															"value": {
+																"identities": [
+																	{
+																		"principal": {
 
-															// must be replaced with signature based policy from input
-															"value": {}
+																			// replace below with org's MSP id
+																			"msp_identifier": "OrdererMSP",
+																			"role": "MEMBER"
+																		},
+																		"principal_classification": "ROLE"
+																	}
+																],
+																"rule": {
+																	"n_out_of": {
+																		"n": 1,
+																		"rules": [
+																			{
+																				"signed_by": 0
+																			}
+																		]
+																	}
+																},
+																"version": 0
+															}
 														},
 														"version": "0"
 													}
@@ -371,7 +434,7 @@ const template = {
 														"mod_policy": "Admins",
 														"value": {
 
-															// whole array replaced below with orderer_msps.OrdererOrg.addresses from input
+															// whole array replaced below with orderer_msps.OrdererMSP.addresses from input
 															"addresses": [
 																"orderer.example.com:7050"
 															]
@@ -390,7 +453,7 @@ const template = {
 																"fabric_node_ous": null,
 																"intermediate_certs": [],
 
-																// field replace below with orderer_msps.OrdererOrg.MSP.name from input
+																// field replace below with orderer_msps.OrdererMSP.MSP.name from input
 																"name": "OrdererMSP",
 
 																"organizational_unit_identifiers": [],
@@ -406,7 +469,7 @@ const template = {
 													}
 												},
 												"version": "0"
-											} // end of "OrdererOrg" key
+											} // end of "OrdererMSP" key
 										}, // end of "groups" key
 
 										"mod_policy": "Admins",
@@ -685,10 +748,10 @@ const template = {
 		channel_capabilities: 'V2_0',
 		application_msps: {
 			Org1MSP: {
-				Admins: 'default',								// can be null or 'default'
-				Endorsement: 'default',							// can be null or 'default'
-				Readers: 'default',								// can be null or 'default'
-				Writers: 'default',								// can be null or 'default'
+				Admins: null,									// can be null
+				Endorsement: null,								// can be null
+				Readers: null,									// can be null
+				Writers: null,									// can be null
 				MSP: {
 					fabric_node_ous: {}, 						// set whole object, there are no defaults inside
 					intermediate_certs: [],
@@ -702,7 +765,7 @@ const template = {
 			}
 		},
 		orderer_msps: {
-			OrdererOrg: {
+			OrdererMSP: {
 				Admins: 'OutOf(1, "OrdererMSP.ADMIN")',			// required - signing policy
 				Readers: 'OutOf(1, "OrdererMSP.MEMBER")',		// required - signing policy
 				Writers: 'OutOf(1, "OrdererMSP.MEMBER")',		// required - signing policy
@@ -785,14 +848,14 @@ function buildTemplateConfigBlock(opts: ExtTemp) {
 	// Orderer.groups Section
 	// ---------------------------------------------------------------------------------
 
-	// set OrdererOrg policies
+	// set OrdererMSP policies
 	if (!opts.orderer_msps && Object.keys(opts.orderer_msps).length === 0) {
 		logger.error('[config] cannot build genesis block, missing Orderer MSP data from input');
 		return null;
 	}
 
 	// set groups.Orderer.groups
-	const o_defaults = ret.data.data[0].payload.data.config.channel_group.groups.Orderer.groups.OrdererOrg;		// remember defaults
+	const o_defaults = ret.data.data[0].payload.data.config.channel_group.groups.Orderer.groups.OrdererMSP;		// remember defaults
 	ret.data.data[0].payload.data.config.channel_group.groups.Orderer.groups = {};								// clear it out
 	for (let msp_id in opts.orderer_msps) {
 		ret.data.data[0].payload.data.config.channel_group.groups.Orderer.groups[msp_id] = buildOrdererGroupObj(o_defaults, opts.orderer_msps[msp_id], msp_id);
@@ -833,15 +896,17 @@ function buildTemplateConfigBlock(opts: ExtTemp) {
 function buildAppGroupObj(defaults: any, msp_data: any, msp_id: string) {
 	const grpObj = JSON.parse(JSON.stringify(defaults));
 	const policy_names = ['Admins', 'Endorsement', 'Readers', 'Writers'];
-	for (let z in policy_names) {
-		const policyName = policy_names[z];
-		if (!msp_data[policyName] || msp_data[policyName] === 'default') {
+	for (let i in policy_names) {
+		const policyName = policy_names[i];
+		if (!msp_data[policyName]) {														// use default policy, but edit it for this msp id
 			for (let i in grpObj.policies[policyName].policy.value.identities) {			// 'Readers' has a few entries, iter on each
 				grpObj.policies[policyName].policy.value.identities[i].principal.msp_identifier = msp_id;
 			}
 		} else {
-			logger.error('[config] cannot build config block for msp, only the default groups policy is supported atm. msp_id:', msp_id);
-			return null;
+			grpObj.policies[policyName].policy.value =
+				camelCase_2_underscores(conformPolicySyntax(msp_data[policyName]), 0);
+
+				// dsh todo test if change to conformPolicySyntax is okay!
 		}
 	}
 
@@ -890,16 +955,19 @@ function buildOrdererGroupObj(defaults: any, msp_data: any, msp_id: string) {
 	// set each policy in groups.Orderer.groups[msp_id].policies
 	for (let i in policy_names) {
 		const policyName = policy_names[i];
-		if (!msp_data[policyName]) {
-			logger.error('[config] cannot build genesis block, missing orderer org\'s msp policy from input:', msp_id, policyName);
-			return null;
+		if (!msp_data[policyName]) {														// use default policy, but edit it for this msp id
+			for (let i in grpObj.policies[policyName].policy.value.identities) {			// 'Readers' has a few entries, iter on each
+				grpObj.policies[policyName].policy.value.identities[i].principal.msp_identifier = msp_id;
+			}
 		} else {
 			grpObj.policies[policyName].policy.value =
 				camelCase_2_underscores(conformPolicySyntax(msp_data[policyName]), 0);
+
+				// dsh todo test if change to conformPolicySyntax is okay!
 		}
 	}
 
-	// set OrdererOrg endpoint addresses
+	// set OrdererMSP endpoint addresses
 	if (!msp_data.addresses) {
 		logger.error('[config] cannot build genesis block, missing orderer org\'s addresses from input:', msp_id);
 		return null;
@@ -913,14 +981,14 @@ function buildOrdererGroupObj(defaults: any, msp_data: any, msp_id: string) {
 		return null;
 	} else {
 
-		// set OrdererOrg fabric_node_ous
+		// set OrdererMSP fabric_node_ous
 		if (msp_data.MSP.fabric_node_ous) {
 			grpObj.values.MSP.value.config.fabric_node_ous = msp_data.MSP.fabric_node_ous;
 		} else {
 			delete grpObj.values.MSP.value.config.fabric_node_ous;
 		}
 
-		// the each OrdererOrg certificate array field
+		// the each OrdererMSP certificate array field
 		const fields = ['intermediate_certs', 'organizational_unit_identifiers', 'revocation_list', 'root_certs', 'tls_intermediate_certs', 'tls_root_certs'];
 		for (let i in fields) {
 			const field = fields[i];
@@ -929,12 +997,12 @@ function buildOrdererGroupObj(defaults: any, msp_data: any, msp_id: string) {
 			}
 		}
 
-		// set OrdererOrg signing_identity
+		// set OrdererMSP signing_identity
 		if (msp_data.MSP.signing_identity) {
 			grpObj.values.MSP.value.config.signing_identity = msp_data.MSP.signing_identity;
 		}
 
-		// set OrdererOrg name
+		// set OrdererMSP name
 		grpObj.values.MSP.value.config.name = msp_id;
 	}
 
