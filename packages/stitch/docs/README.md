@@ -3359,14 +3359,14 @@ policy = {
 	},
 	'identities': [
 		{
-			'principalClassification': 0,
+			'principalClassification': 'ROLE'
 			'principal': {
 				'mspIdentifier': 'Org1',
 				'role': 'ADMIN'
 			}
 		},
 		{
-			'principalClassification': 0,
+			'principalClassification': 'ROLE'
 			'principal': {
 				'mspIdentifier': 'Org2',
 				'role': 'MEMBER'
@@ -3417,28 +3417,28 @@ const policy = {
 	},
 	'identities': [
 		{
-			'principalClassification': 0,
+			'principalClassification': 'ROLE'
 			'principal': {
 				'mspIdentifier': 'Org1',
 				'role': 'ADMIN'
 			}
 		},
 		{
-			'principalClassification': 0,
+			'principalClassification': 'ROLE'
 			'principal': {
 				'mspIdentifier': 'Org2',
 				'role': 'MEMBER'
 			}
 		},
 		{
-			'principalClassification': 0,
+			'principalClassification': 'ROLE'
 			'principal': {
 				'mspIdentifier': 'Org1',
 				'role': 'MEMBER'
 			}
 		},
 		{
-			'principalClassification': 0,
+			'principalClassification': 'ROLE'
 			'principal': {
 				'mspIdentifier': 'Org3',
 				'role': 'MEMBER'
@@ -3505,28 +3505,28 @@ const policy = {
 	},
 	'identities': [
 		{
-			'principalClassification': 0,
+			'principalClassification': 'ROLE'
 			'principal': {
 				'mspIdentifier': 'Org1',
 				'role': 'PEER'
 			}
 		},
 		{
-			'principalClassification': 0,
+			'principalClassification': 'ROLE'
 			'principal': {
 				'mspIdentifier': 'Org2',
 				'role': 'PEER'
 			}
 		},
 		{
-			'principalClassification': 0,
+			'principalClassification': 'ROLE'
 			'principal': {
 				'mspIdentifier': 'Org3',
 				'role': 'PEER'
 			}
 		},
 		{
-			'principalClassification': 0,
+			'principalClassification': 'ROLE'
 			'principal': {
 				'mspIdentifier': 'Org4',
 				'role': 'PEER'

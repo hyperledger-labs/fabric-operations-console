@@ -765,54 +765,56 @@ const template = {
 		orderer_capabilities: 'V2_0',
 		channel_capabilities: 'V2_0',
 		application_msps: {
-			Org1MSP: {											// create 1 key for each msp id
-				Admins: null,									// can be null, or signature policy string, or implicit policy string
-				Endorsement: null,								// can be null
-				Readers: null,									// can be null
-				Writers: null,									// can be null
+																// create 1 key for each msp id
+			Org1MSP: {
+				Admins: null,									// can be null or absent, or a signature policy string, or a implicit policy string
+				Endorsement: null,								// can be null or absent, or a signature policy string, or a implicit policy string
+				Readers: null,									// can be null or absent, or a signature policy string, or a implicit policy string
+				Writers: null,									// can be null or absent, or a signature policy string, or a implicit policy string
 				MSP: {
-					fabric_node_ous: {}, 						// set whole object, there are no defaults inside
+					fabric_node_ous: {}, 						// set whole object, there are no defaults inside (see template block for values)
 					intermediate_certs: [],
 					organizational_unit_identifiers: [],
 					revocation_list: [],
-					root_certs: [],								// required - base 64 encoded pems
+					root_certs: [],								// [required] - base 64 encoded pems
 					signing_identity: null,
 					tls_intermediate_certs: [],
-					tls_root_certs: [],							// required - base 64 encoded pems
+					tls_root_certs: [],							// [required] - base 64 encoded pems
 				},
 			}
 		},
 		application_policies: {
-			Admins: 'MAJORITY Admins',							// can be null, or signature policy string, or implicit policy string
-			Endorsement: 'MAJORITY Endorsement',				// can be null
-			LifecycleEndorsement: 'MAJORITY Endorsement',		// can be null
-			Readers: 'ANY Readers',								// can be null
-			Writers: 'ANY Writers',								// can be null
+			Admins: 'MAJORITY Admins',							// can be null or absent, or a signature policy string, or a implicit policy string
+			Endorsement: 'MAJORITY Endorsement',				// can be null or absent, or a signature policy string, or a implicit policy string
+			LifecycleEndorsement: 'MAJORITY Endorsement',		// can be null or absent, or a signature policy string, or a implicit policy string
+			Readers: 'ANY Readers',								// can be null or absent, or a signature policy string, or a implicit policy string
+			Writers: 'ANY Writers',								// can be null or absent, or a signature policy string, or a implicit policy string
 		},
 		orderer_msps: {
+																// create 1 key for each msp id
 			OrdererMSP: {
-				Admins: 'OutOf(1, "OrdererMSP.ADMIN")',			// required - signing policy
-				Readers: 'OutOf(1, "OrdererMSP.MEMBER")',		// required - signing policy
-				Writers: 'OutOf(1, "OrdererMSP.MEMBER")',		// required - signing policy
-				addresses: ['orderer.example.com:7050'],		// required, string of addresses including port
+				Admins: 'OutOf(1, "OrdererMSP.ADMIN")',			// can be null or absent, or a signature policy string, or a implicit policy string
+				Readers: 'OutOf(1, "OrdererMSP.MEMBER")',		// can be null or absent, or a signature policy string, or a implicit policy string
+				Writers: 'OutOf(1, "OrdererMSP.MEMBER")',		// can be null or absent, or a signature policy string, or a implicit policy string
+				addresses: ['orderer.example.com:7050'],		// [required] string of addresses including port
 				MSP: {
-					fabric_node_ous: {}, 						// set whole object, there are no defaults inside
+					fabric_node_ous: {}, 						// [note] set whole object, there are no defaults inside (see template block for values)
 					intermediate_certs: [],
 					organizational_unit_identifiers: [],
 					revocation_list: [],
-					root_certs: [],								// required - base 64 encoded pems
+					root_certs: [],								// [required] - base 64 encoded pems
 					signing_identity: null,
 					tls_intermediate_certs: [],
-					tls_root_certs: [],							// required - base 64 encoded pems
-					name: 'OrdererMSP',							// required - msp id
+					tls_root_certs: [],							// [required] - base 64 encoded pems
+					name: 'OrdererMSP',							// [required] - msp id
 				},
 			}
 		},
 		orderer_policies: {
-			Admins: 'MAJORITY Admins',							// can be null, or signature policy string, or implicit policy string
-			BlockValidation: 'ANY Writers',						// can be null
-			Readers: 'ANY Readers',								// can be null
-			Writers: 'ANY Writers',								// can be null
+			Admins: 'MAJORITY Admins',							// can be null or absent, or a signature policy string, or a implicit policy string
+			BlockValidation: 'ANY Writers',						// can be null or absent, or a signature policy string, or a implicit policy string
+			Readers: 'ANY Readers',								// can be null or absent, or a signature policy string, or a implicit policy string
+			Writers: 'ANY Writers',								// can be null or absent, or a signature policy string, or a implicit policy string
 		},
 		batch_size: {
 			absolute_max_bytes: 0,
@@ -826,8 +828,8 @@ const template = {
 			value: {}
 		},
 		consensus_type: {
-			consenters: [{}],									// required - object
-			options: {},										// set whole object, there are no defaults inside
+			consenters: [{}]									// [required] set whole array, there are no defaults inside (see template block for values)
+			options: {},										// [note] set whole object, there are no defaults inside (see template block for values)
 		}
 	}
 */
@@ -842,9 +844,6 @@ function buildTemplateConfigBlock(opts: ExtTemp) {
 	// set date
 	const d = new Date();
 	ret.data.data[0].payload.header.channel_header.timestamp = d.toISOString();
-
-	// set tx id
-	//ret.data.data[0].payload.header.channel_header.tx_id = d.toISOString();
 
 	// set application capabilities
 	if (opts.application_capabilities) {
@@ -870,11 +869,10 @@ function buildTemplateConfigBlock(opts: ExtTemp) {
 		const LEN = 32;
 		const nonce = window.crypto.getRandomValues(new Uint8Array(LEN - b_channel.length));
 		let id_bytes = new Uint8Array(LEN);
-		id_bytes.set(nonce);								// add the nonce bytes first
+		id_bytes.set(nonce);														// add the nonce bytes first
 		id_bytes.set(b_channel, nonce.length);
 		const tx_id = uint8ArrayToHexStr(id_bytes, true).toLowerCase();
 		ret.data.data[0].payload.header.channel_header.tx_id = tx_id;
-		console.log('dsh99 built tx_id', tx_id);
 	}
 
 	// clear things that seem unused
@@ -968,7 +966,7 @@ function buildTemplateConfigBlock(opts: ExtTemp) {
 	if (opts.consensus_type && Array.isArray(opts.consensus_type.consenters)) {
 		ret.data.data[0].payload.data.config.channel_group.groups.Orderer.values.ConsensusType.value.metadata.consenters = opts.consensus_type.consenters;
 	}
-	if (opts.consensus_type && opts.consensus_type.options) {
+	if (opts.consensus_type && typeof opts.consensus_type.options === 'object') {
 		ret.data.data[0].payload.data.config.channel_group.groups.Orderer.values.ConsensusType.value.metadata.options = opts.consensus_type.options;
 	}
 
@@ -1104,18 +1102,6 @@ function buildOrdererGroupObj(defaults: any, msp_data: any, msp_id: string) {
 
 	return grpObj;
 }
-
-/*
-interface MspObj {
-	fabric_node_ous: any;
-	intermediate_certs: string[];
-	organizational_unit_identifiers: string[];
-	revocation_list: string[];
-	root_certs: string[];
-	signing_identity: null,
-	tls_intermediate_certs: string[];
-	tls_root_certs: string[];
-}*/
 
 interface ExtTemp {
 	channel: string,

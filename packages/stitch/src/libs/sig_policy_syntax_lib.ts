@@ -72,13 +72,13 @@ export { conformPolicySyntax, detectImplicitPolicy, buildImplicitPolicySyntax, d
 	input = {
 			version: 0,										// [optional] - defaults 0
 			identities: [{
-				principalClassification: 0,
+				principalClassification: 'ROLE'
 				principal: {
 					mspIdentifier: 'PeerOrg1',
 					role: 'MEMBER'							// not case sensitive
 				},
 			},{
-				principalClassification: 0,
+				principalClassification: 'ROLE'
 				principal: {
 					mspIdentifier: 'PeerOrg2',
 					role: 'MEMBER'							// not case sensitive
@@ -118,7 +118,7 @@ function conformPolicySyntax(input: string | MixedPolicySyntax) {
 					mspIdentifier: msps[i].mspId,
 					role: msps[i].role.toUpperCase()
 				},
-				principalClassification: 'ROLE',							// use principal_classification of 0="ROLE", b/c atm we only use "ROLE" classification
+				principalClassification: 'ROLE',									// use principal_classification of 0="ROLE", b/c atm we only use "ROLE" classification
 			});
 		}
 		policy_obj.rule = wrap_build_rules_from_cli();								// second build the rule list

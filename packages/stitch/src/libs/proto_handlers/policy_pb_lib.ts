@@ -328,7 +328,7 @@ export class PolicyLib {
 	json: {
 		version: 0,
 		identities: [{
-			principalClassification: 0,
+			principalClassification: 'ROLE'
 			principal: {
 				mspIdentifier: 'PeerOrg1',
 				role: 'ADMIN'

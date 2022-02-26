@@ -60,8 +60,8 @@ let signature_policy = {
 	// array - put all identities that will have the ability to sign here, 1 for each
 	identities: [{
 
-		// [optional] always use 0 here (or omit the field completely)
-		principalClassification: 0,
+		// [optional] always use 0 aka 'ROLE' here (or omit the field completely)
+		principalClassification: 'ROLE'
 
 		// object
 		principal: {
@@ -74,7 +74,7 @@ let signature_policy = {
 			role: 'PEER'
 		},
 	},{
-		principalClassification: 0,
+		principalClassification: 'ROLE'
 		principal: {
 			mspIdentifier: 'Org2',
 			role: 'PEER'
@@ -108,13 +108,13 @@ let signature_policy = {
 let signature_policy = {
 	version: 0,
 	identities: [{
-		principalClassification: 0,
+		principalClassification: 'ROLE'
 		principal: {
 			mspIdentifier: 'Org1',
 			role: 'PEER'
 		},
 	},{
-		principalClassification: 0,
+		principalClassification: 'ROLE'
 		principal: {
 			mspIdentifier: 'Org2',
 			role: 'PEER'
@@ -135,19 +135,19 @@ let signature_policy = {
 let signature_policy = {
 	version: 0,
 	identities: [{
-		principalClassification: 0,
+		principalClassification: 'ROLE'
 		principal: {
 			mspIdentifier: 'Org1',
 			role: 'PEER'
 		},
 	},{
-		principalClassification: 0,
+		principalClassification: 'ROLE'
 		principal: {
 			mspIdentifier: 'Org2',
 			role: 'PEER'
 		}
 	},{
-		principalClassification: 0,
+		principalClassification: 'ROLE'
 		principal: {
 			mspIdentifier: 'Org3',
 			role: 'PEER'
@@ -169,19 +169,19 @@ let signature_policy = {
 let signature_policy = {
 	version: 0,
 	identities: [{
-		principalClassification: 0,
+		principalClassification: 'ROLE'
 		principal: {
 			mspIdentifier: 'Org1',
 			role: 'PEER'
 		},
 	},{
-		principalClassification: 0,
+		principalClassification: 'ROLE'
 		principal: {
 			mspIdentifier: 'Org2',
 			role: 'PEER'
 		}
 	},{
-		principalClassification: 0,
+		principalClassification: 'ROLE'
 		principal: {
 			mspIdentifier: 'Org3',
 			role: 'PEER'
