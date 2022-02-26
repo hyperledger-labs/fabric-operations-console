@@ -13,7 +13,7 @@
 */
 
 // Libs built by us
-import { logger, camelCase_2_underscores } from './misc';
+import { logger, camelCase_2_underscores, uint8ArrayToHexStr, utf8StrToUint8Array } from './misc';
 import { conformPolicySyntax, detectImplicitPolicy, buildImplicitPolicySyntax, detectSignaturePolicy } from './sig_policy_syntax_lib';
 
 export { buildTemplateConfigBlock };
@@ -707,7 +707,6 @@ const template = {
 							// replaced below
 							"channel_id": "mychannel",
 
-
 							"epoch": "0",
 
 							"extension": null,
@@ -717,7 +716,7 @@ const template = {
 
 							"tls_cert_hash": null,
 
-							// replace this - dsh todo
+							// replaced below with mostly random bytes
 							"tx_id": "f3483b0ad4060b5eaac082e41e8bfd7a3ecdff4553b54338f4f12999024b411b",
 
 							// types are defined in common.proto HeaderType (0 - 7), always 1 for this use
@@ -742,7 +741,11 @@ const template = {
 	},
 	"metadata": {
 		"metadata": [
+
+			// I believe "CgIKAA==" decodes out to `{'value': {'index': 0}}` zero being the block height,
+			// which it should be for a genesis block, not sure why configtxlator doesn't decode this fully
 			"CgIKAA==",
+
 			"",
 			"",
 			"",
@@ -861,6 +864,23 @@ function buildTemplateConfigBlock(opts: ExtTemp) {
 		ret.data.data[0].payload.data.config.channel_group.values.Capabilities.value.capabilities = ch_caps;
 	}
 
+	// set transaction id
+	if (typeof opts.channel === 'string') {
+		const b_channel = utf8StrToUint8Array(opts.channel.substring(0, 8));		// only use a few bytes of the channel name to avoid a duplicate tx id
+		const LEN = 32;
+		const nonce = window.crypto.getRandomValues(new Uint8Array(LEN - b_channel.length));
+		let id_bytes = new Uint8Array(LEN);
+		id_bytes.set(nonce);								// add the nonce bytes first
+		id_bytes.set(b_channel, nonce.length);
+		const tx_id = uint8ArrayToHexStr(id_bytes, true).toLowerCase();
+		ret.data.data[0].payload.header.channel_header.tx_id = tx_id;
+		console.log('dsh99 built tx_id', tx_id);
+	}
+
+	// clear things that seem unused
+	ret.data.data[0].payload.header.signature_header.nonce = '';
+	ret.header.data_hash = '';
+
 	// ---------------------------------------------------------------------------------
 	// Application.groups Section
 	// ---------------------------------------------------------------------------------
@@ -960,6 +980,14 @@ function buildTemplateConfigBlock(opts: ExtTemp) {
 function buildAppGroupObj(defaults: any, msp_data: any, msp_id: string) {
 	const grpObj = JSON.parse(JSON.stringify(defaults));
 	const policy_names = ['Admins', 'Endorsement', 'Readers', 'Writers'];
+
+	// validate
+	if (!msp_data) {
+		logger.error('[config] cannot build genesis block, missing ALL application org msp data from input:', msp_id);
+		return null;
+	}
+
+	// set each policy in groups.Application.groups[msp_id].policies
 	for (let i in policy_names) {
 		const policyName = policy_names[i];
 		if (detectImplicitPolicy(msp_data[policyName])) {
@@ -1021,16 +1049,17 @@ function buildOrdererGroupObj(defaults: any, msp_data: any, msp_id: string) {
 	// set each policy in groups.Orderer.groups[msp_id].policies
 	for (let i in policy_names) {
 		const policyName = policy_names[i];
-		if (!msp_data[policyName]) {														// use default policy, but edit it for this msp id
-			for (let i in grpObj.policies[policyName].policy.value.identities) {			// 'Readers' has a few entries, iter on each
-				grpObj.policies[policyName].policy.value.identities[i].principal.msp_identifier = msp_id;
-			}
-		} else if (detectImplicitPolicy(msp_data[policyName])) {
+		if (detectImplicitPolicy(msp_data[policyName])) {
 			grpObj.policies[policyName].policy = buildImplicitPolicySyntax(msp_data[policyName]);
-		} else {
+		} else if (detectSignaturePolicy(msp_data[policyName])) {
 			grpObj.policies[policyName].policy.value =
 				camelCase_2_underscores(conformPolicySyntax(msp_data[policyName]), 0);
 			// dsh todo test if change to conformPolicySyntax is okay!
+		} else {
+			// use default policy, but edit it for this msp id
+			for (let i in grpObj.policies[policyName].policy.value.identities) {			// 'Readers' has a few entries, iter on each
+				grpObj.policies[policyName].policy.value.identities[i].principal.msp_identifier = msp_id;
+			}
 		}
 	}
 
