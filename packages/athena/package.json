@@ -1,7 +1,7 @@
 {
 	"name": "athena",
 	"version": "2.5.2-99",
-	"license": "SEE LICENSE IN athena_license.txt",
+	"license": "Apache-2.0",
 	"scripts": {
 		"start": "node server_watcher.js",
 		"lint": "./node_modules/.bin/eslint --no-eslintrc -c ./.eslintrc.json .",
