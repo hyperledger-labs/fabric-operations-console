@@ -1,7 +1,7 @@
 {
 	"name": "apollo",
 	"version": "0.1.1",
-	"private": true,
+	"license": "Apache-2.0",
 	"dependencies": {
 		"@carbon/elements": "^10.12.0",
 		"@carbon/icons": "^10.11.0",
@@ -100,7 +100,6 @@
 		"not ie <= 11",
 		"not op_mini all"
 	],
-	"license": "SEE LICENSE IN LICENSE.txt",
 	"lint-staged": {
 		"*.{js,jsx}": [
 			"pretty-quick --staged",
