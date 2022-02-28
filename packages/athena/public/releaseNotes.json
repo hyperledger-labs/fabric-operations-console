@@ -9,7 +9,7 @@
 			},
 			{
 				"title": "Prep work for OSNAdmin",
-				"details": "Some code for the OSN admin endpoint has been added, nothing related to osnadmin is useable."
+				"details": "Partial code for the OSN admin endpoint has been added, nothing related to osnadmin is useable."
 			}
 		]
 	},
