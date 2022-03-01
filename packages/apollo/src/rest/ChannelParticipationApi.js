@@ -60,7 +60,7 @@ export class ChannelParticipationApi {
 		if (identity4tls !== null) {
 			try {
 				const opts = {
-					host: osn.osnadmin_url || osn.operations_url,		// dsh todo - remove operations_url
+					host: osn.osnadmin_url,
 					certificate_b64pem: identity4tls.cert,
 					private_key_b64pem: identity4tls.private_key,
 					root_cert_b64pem: _.get(osn, 'msp.tlsca.root_certs[0]'),
@@ -91,7 +91,7 @@ export class ChannelParticipationApi {
 			try {
 				const opts = {
 					channel: channel,
-					host: osn.osnadmin_url || osn.operations_url,		// dsh todo - remove operations_url
+					host: osn.osnadmin_url,
 					certificate_b64pem: identity4tls.cert,
 					private_key_b64pem: identity4tls.private_key,
 					root_cert_b64pem: _.get(osn, 'msp.tlsca.root_certs[0]'),
@@ -121,7 +121,7 @@ export class ChannelParticipationApi {
 		if (identity4tls !== null) {
 			try {
 				const opts = {
-					host: osn.osnadmin_url || osn.operations_url,		// dsh todo - remove operations_url
+					host: osn.osnadmin_url,
 					certificate_b64pem: identity4tls.cert,
 					private_key_b64pem: identity4tls.private_key,
 					root_cert_b64pem: _.get(osn, 'msp.tlsca.root_certs[0]'),
@@ -153,7 +153,7 @@ export class ChannelParticipationApi {
 			try {
 				const opts = {
 					channel: channel,
-					host: osn.osnadmin_url || osn.operations_url,		// dsh todo - remove operations_url
+					host: osn.osnadmin_url,
 					certificate_b64pem: identity4tls.cert,
 					private_key_b64pem: identity4tls.private_key,
 					root_cert_b64pem: _.get(osn, 'msp.tlsca.root_certs[0]'),

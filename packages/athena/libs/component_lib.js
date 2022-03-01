@@ -151,6 +151,7 @@ module.exports = function (logger, ev, t) {
 			if (component_doc.api_url) { component_doc.api_url = t.misc.safe_url(component_doc.api_url); }
 			if (component_doc.operations_url) { component_doc.operations_url = t.misc.safe_url(component_doc.operations_url); }
 			if (component_doc.grpcwp_url) { component_doc.grpcwp_url = t.misc.safe_url(component_doc.grpcwp_url); }
+			if (component_doc.osnadmin_url) { component_doc.osnadmin_url = t.misc.safe_url(component_doc.osnadmin_url); }
 
 			delete component_doc.url;			// remove legacy field from db doc, less confusing, i hope
 			delete component_doc.ca_url;		// remove legacy field from db doc, less confusing, i hope
@@ -1069,6 +1070,9 @@ module.exports = function (logger, ev, t) {
 				}
 				if (comp_doc.operations_url) {
 					urls2add[t.misc.get_host(comp_doc.operations_url)] = true;
+				}
+				if (comp_doc.osnadmin_url) {
+					urls2add[t.misc.get_host(comp_doc.osnadmin_url)] = true;
 				}
 			}
 
