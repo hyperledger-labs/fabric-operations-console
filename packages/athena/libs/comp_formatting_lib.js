@@ -342,9 +342,10 @@ module.exports = function (logger, ev, t) {
 			display_name: req2dep.body.parameters ? req2dep.body.parameters.display_name : null,
 			location: ev.STR.LOCATION_IBP_SAAS,
 			msp_id: req2dep.body.orgname,
-			api_url: conformed_dep_resp.api_url,									// the real url to interact w/the component
-			operations_url: conformed_dep_resp.operations_url,						// fabric's ops url
+			api_url: conformed_dep_resp.api_url,									// fabric's grpc url to interact w/the component
+			operations_url: conformed_dep_resp.operations_url,						// fabric's http ops url
 			grpcwp_url: conformed_dep_resp.grpcwp_url,								// grpc web proxy url
+			osnadmin_url: conformed_dep_resp.osnadmin_url,							// fabric's http url for the osnadmin feature
 			dep_component_id: conformed_dep_resp.dep_component_id,					// need this when we delete the component
 			admin_certs: conformed_dep_resp.admin_certs,
 			resources: conformed_dep_resp.resources,
@@ -967,6 +968,8 @@ module.exports = function (logger, ev, t) {
 			const dep_api_url = t.misc.safe_dot_nav(dep_data, ['dep_data.endpoints.api']);
 			const dep_grpcwp_url = t.misc.safe_dot_nav(dep_data, ['dep_data.endpoints.grpcweb']);
 			const dep_operations_url = t.misc.safe_dot_nav(dep_data, ['dep_data.endpoints.operations']);
+			const dep_osnadmin_url = t.misc.safe_dot_nav(dep_data, ['dep_data.endpoints.admin']);
+
 			const dep_tls_ca_root_certs = t.misc.safe_dot_nav(dep_data, ['dep_data.msp.tls.cacerts']);		// array
 			const dep_ca_root_certs = t.misc.safe_dot_nav(dep_data, ['dep_data.msp.component.cacerts']);	// array
 			const dep_admin_certs = t.misc.safe_dot_nav(dep_data, ['dep_data.msp.component.admincerts', 'dep_data.admincerts']);
@@ -1015,6 +1018,7 @@ module.exports = function (logger, ev, t) {
 			if (dep_api_url) { ret.api_url = dep_api_url; }
 			if (dep_grpcwp_url) { ret.grpcwp_url = dep_grpcwp_url; }
 			if (dep_operations_url) { ret.operations_url = dep_operations_url; }
+			if (dep_osnadmin_url) { ret.osnadmin_url = dep_osnadmin_url; }
 			if (dep_tls_cert) { ret.tls_cert = dep_tls_cert; }
 		}
 
