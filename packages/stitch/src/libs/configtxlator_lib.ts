@@ -51,8 +51,11 @@ function pbToJson(opts: Cds, cb: Function) {
 		stitch_msg: '',
 	};
 
-	const options = opts;
-	options.url = opts.cfxl_host + '/protolator/decode/common.' + opts.message_type;	// decoding takes pb -> json
+	// decoding takes pb -> json
+	const options: In_Cds = {
+		...opts,
+		url: opts.cfxl_host + '/protolator/decode/common.' + opts.message_type
+	};
 	postBlob(options).then(response => {
 		if (typeof response === 'string') {								// if its not json its an error
 			err_obj.error = true;
@@ -86,8 +89,10 @@ function jsonToPb(opts: Cds, cb: Function) {
 	if (!opts.message_type) { logger.warn('[stitch] missing required parameter "message_type"'); }
 	if (opts.message_type && v_types.indexOf(opts.message_type) === -1) { logger.warn('[stitch] parameter "message_type" is not a valid type. try:', v_types); }
 
-	const options = opts;
-	options.url = opts.cfxl_host + '/protolator/encode/common.' + opts.message_type;	// encoding takes json -> pb
+	const options: In_Cds = {
+		...opts,
+		url: opts.cfxl_host + '/protolator/encode/common.' + opts.message_type
+	};
 	postJSON(options).then(blob => {
 		if (blob.type === 'text/plain') {								// error response
 			const reader = new FileReader();
@@ -276,7 +281,10 @@ interface Cds {
 	data: Uint8Array;
 	cfxl_host: string;
 	message_type: string;
-	url: string | null;		// this field gets built, set as null
+}
+
+interface In_Cds extends Cds {
+	url: string;		// this field gets built, set as null
 }
 
 interface Dds {
