@@ -3275,34 +3275,34 @@ yJMfGXHykKD1d2F+B58=
 			});
 		});
 
-		it(getId() + 'should return formatted policy - cli syntax [v9 - complex]', (done) => {
+		it(getId() + 'should return formatted policy - cli syntax [v9a - complex]', (done) => {
 			let policy = stitch.conformPolicySyntax(`OR('Org1.admin', AND('Org2.member', 'Org3.member'), OutOf(2, 'Org1.member','Org2.member', 'Org3.member'))`);	// eslint-disable-line max-len, quotes
 			const expected = {
 				'version': 0,
 				'identities': [
 					{
-						'principalClassification': 0,
+						'principalClassification': 'ROLE',
 						'principal': {
 							'mspIdentifier': 'Org1',
 							'role': 'ADMIN'
 						}
 					},
 					{
-						'principalClassification': 0,
+						'principalClassification': 'ROLE',
 						'principal': {
 							'mspIdentifier': 'Org2',
 							'role': 'MEMBER'
 						}
 					},
 					{
-						'principalClassification': 0,
+						'principalClassification': 'ROLE',
 						'principal': {
 							'mspIdentifier': 'Org3',
 							'role': 'MEMBER'
 						}
 					},
 					{
-						'principalClassification': 0,
+						'principalClassification': 'ROLE',
 						'principal': {
 							'mspIdentifier': 'Org1',
 							'role': 'MEMBER'
@@ -3349,7 +3349,7 @@ yJMfGXHykKD1d2F+B58=
 					}
 				}
 			};
-			expect(JSON.stringify(policy)).to.equal(JSON.stringify(expected));
+			expect(policy).to.deep.equal(expected);
 			done();
 		});
 
@@ -3780,33 +3780,33 @@ yJMfGXHykKD1d2F+B58=
 			done();
 		});
 
-		it(getId() + 'should return peer cli syntax [v9 - complex]', (done) => {
+		it(getId() + 'should return peer cli syntax [v9b - complex]', (done) => {
 			const opts = {
 				'version': 0,
 				'identities': [
 					{
-						'principalClassification': 0,
+						'principalClassification': 'ROLE',
 						'principal': {
 							'mspIdentifier': 'Org1',
 							'role': 'ADMIN'
 						}
 					},
 					{
-						'principalClassification': 0,
+						'principalClassification': 'ROLE',
 						'principal': {
 							'mspIdentifier': 'Org2',
 							'role': 'MEMBER'
 						}
 					},
 					{
-						'principalClassification': 0,
+						'principalClassification': 'ROLE',
 						'principal': {
 							'mspIdentifier': 'Org3',
 							'role': 'MEMBER'
 						}
 					},
 					{
-						'principalClassification': 0,
+						'principalClassification': 'ROLE',
 						'principal': {
 							'mspIdentifier': 'Org1',
 							'role': 'MEMBER'

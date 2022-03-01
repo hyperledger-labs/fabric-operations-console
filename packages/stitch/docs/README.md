@@ -117,7 +117,8 @@ stitch.someStitchFunction(options, callback(error_object, response_object)=> {
 
 ### Common Flows
 1. [Create a channel](#createChannel)
-2. [Add orderer consenter](https://github.ibm.com/IBM-Blockchain/athena/blob/master/docs/raft_append_notes.md)
+2. [Create a channel w/osnadmin](#createChannelOSN)
+3. [Add orderer consenter](https://github.ibm.com/IBM-Blockchain/athena/blob/master/docs/raft_append_notes.md)
 
 
 ***
@@ -891,9 +892,9 @@ Validates a private key PEM string by parsing its DER data.
 **Syntax**:
 ```js
 /*
-	private_key_base64_pem = "<PEM or Base 64 encoded PEM>"
+	private_key_b64pem = "<PEM or Base 64 encoded PEM>"
 */
-const valid = stitch.validatePrivateKey(private_key_base64_pem);
+const valid = stitch.validatePrivateKey(private_key_b64pem);
 ```
 
 **Returns**:
@@ -2972,7 +2973,7 @@ const opts = {
   cfxl_host: 'https://configtxlator.com:8122',
 
   // protobuf - <Uint8Array>
-  data: pb
+  data: pb,
 
   // name of protobuf to transform. should match msg found in fabric's common.proto
   message_type: 'Block' || 'Config' || 'Envelope' // etc..
@@ -3358,14 +3359,14 @@ policy = {
 	},
 	'identities': [
 		{
-			'principalClassification': 0,
+			'principalClassification': 'ROLE'
 			'principal': {
 				'mspIdentifier': 'Org1',
 				'role': 'ADMIN'
 			}
 		},
 		{
-			'principalClassification': 0,
+			'principalClassification': 'ROLE'
 			'principal': {
 				'mspIdentifier': 'Org2',
 				'role': 'MEMBER'
@@ -3416,28 +3417,28 @@ const policy = {
 	},
 	'identities': [
 		{
-			'principalClassification': 0,
+			'principalClassification': 'ROLE'
 			'principal': {
 				'mspIdentifier': 'Org1',
 				'role': 'ADMIN'
 			}
 		},
 		{
-			'principalClassification': 0,
+			'principalClassification': 'ROLE'
 			'principal': {
 				'mspIdentifier': 'Org2',
 				'role': 'MEMBER'
 			}
 		},
 		{
-			'principalClassification': 0,
+			'principalClassification': 'ROLE'
 			'principal': {
 				'mspIdentifier': 'Org1',
 				'role': 'MEMBER'
 			}
 		},
 		{
-			'principalClassification': 0,
+			'principalClassification': 'ROLE'
 			'principal': {
 				'mspIdentifier': 'Org3',
 				'role': 'MEMBER'
@@ -3504,28 +3505,28 @@ const policy = {
 	},
 	'identities': [
 		{
-			'principalClassification': 0,
+			'principalClassification': 'ROLE'
 			'principal': {
 				'mspIdentifier': 'Org1',
 				'role': 'PEER'
 			}
 		},
 		{
-			'principalClassification': 0,
+			'principalClassification': 'ROLE'
 			'principal': {
 				'mspIdentifier': 'Org2',
 				'role': 'PEER'
 			}
 		},
 		{
-			'principalClassification': 0,
+			'principalClassification': 'ROLE'
 			'principal': {
 				'mspIdentifier': 'Org3',
 				'role': 'PEER'
 			}
 		},
 		{
-			'principalClassification': 0,
+			'principalClassification': 'ROLE'
 			'principal': {
 				'mspIdentifier': 'Org4',
 				'role': 'PEER'
@@ -3615,7 +3616,7 @@ const opts = {
 	// the identity's certificate & private key, base 64 encoded PEM
 	// used for mutual tls as the client's auth
 	certificate_b64pem: my_identity_cert,
-	private_key_base64_pem: my_identityprivate_key,
+	private_key_b64pem: my_identityprivate_key,
 
 	//root certificates, each are base 64 encoded PEM
 	// dsh todo not used atm
@@ -3650,6 +3651,8 @@ stitch.getOSNChannels(opts, (err, data) => {
 }
 ```
 
+<a name="getOSNChannel"></a>
+
 ### G2. getOSNChannel()
 Get channel details from a OSN using the Fabric's osnadmin http request.
 Uses the athena proxy route to handle mutual tls.
@@ -3668,7 +3671,7 @@ const opts = {
 	// the identity's certificate & private key, base 64 encoded PEM
 	// used for mutual tls as the client's auth
 	certificate_b64pem: my_identity_cert,
-	private_key_base64_pem: my_identityprivate_key,
+	private_key_b64pem: my_identityprivate_key,
 
 	//root certificates, each are base 64 encoded PEM
 	// dsh todo not used atm
@@ -3701,6 +3704,8 @@ stitch.getOSNChannel(opts, (err, data) => {
 // see https://github.com/hyperledger/fabric/blob/main/orderer/common/types/channelinfo.go
 ```
 
+<a name="joinOSNChannel"></a>
+
 ### G3. joinOSNChannel()
 Join a OSN using the Fabric's osnadmin http request.
 Uses the athena proxy route to handle mutual tls.
@@ -3720,7 +3725,7 @@ const opts = {
 	// the identity's certificate & private key, base 64 encoded PEM
 	// used for mutual tls as the client's auth
 	certificate_b64pem: my_identity_cert,
-	private_key_base64_pem: my_identityprivate_key,
+	private_key_b64pem: my_identityprivate_key,
 
 	//root certificates, each are base 64 encoded PEM
 	// dsh todo not used atm
@@ -3752,7 +3757,9 @@ stitch.joinOSNChannel(opts, (err, data) => {
 }
 ```
 
-### G3. unjoinOSNChannel()
+<a name="unjoinOSNChannel"></a>
+
+### G4. unjoinOSNChannel()
 Remove a OSN using the Fabric's osnadmin http request.
 Uses the athena proxy route to handle mutual tls.
 Requires fabric 2.4.1+.
@@ -3770,7 +3777,7 @@ const opts = {
 	// the identity's certificate & private key, base 64 encoded PEM
 	// used for mutual tls as the client's auth
 	certificate_b64pem: my_identity_cert,
-	private_key_base64_pem: my_identityprivate_key,
+	private_key_b64pem: my_identityprivate_key,
 
 	//root certificates, each are base 64 encoded PEM
 	// dsh todo not used atm
@@ -3804,7 +3811,7 @@ stitch.unjoinOSNChannel(opts, (err, data) => {
 <a name="createChannel"></a>
 
 ### 1. Create a channel
-Creating a new channel is 5 steps.
+Creating a new application channel is 5 steps.
 1. Create your config update json (this contains your policies/ACLs/capabilities/block cutting params/etc)
 2. Convert your config update json to a protobuf (binary/Uint8Array)
 3. _[Optional]_ Convert the config update protobuf to a base 64 string. _(Do this step if you need to save the config update as text, ie to some database.)_
@@ -3882,5 +3889,76 @@ stitch.configUpdateJsonToBinary(config_update, (err, bin) => {
 			}
 		});
 	});
+});
+```
+
+<a name="createChannelOSN"></a>
+
+### 2. Create a channel w/OSNadmin
+Creating a new application channel on with the osnadmin feature is 3 steps.
+1. Create a config block
+2. Convert your config block json to a protobuf (binary/Uint8Array)
+3. Submit the config block to the join channel api on the OSN
+
+DSH this does not work yet 2022-02-18 - dsh todo
+
+**Syntax**:
+```js
+// 1. build channel update json
+const opts = {
+	// fabric channel ids can only contain lower case alphanumeric characters + dots and dashes
+	channel_id: 'first',
+	consortium_id: 'SampleConsortium',
+	application_msp_ids: ['PeerOrg1'],
+	fabric_version: '2.0',		// channel capabilities - dsh todo rename
+};
+const config_update = stitch.buildConfigUpdateTemplateNewChannel(opts);
+
+// add a custom SignaturePolicy (this is an example)
+config_update.writeSet.groups.Application.policies.Admins.policy = {
+	type: 1, // 1 for SignaturePolicy, 3 for ImplicitMetaPolicy
+	value: {
+		identities: [{
+			principal: {
+				mspIdentifier: 'Org1MSP',
+				role: 'ADMIN'
+			}
+		}],
+		rule: {
+			nOutOf: {
+				n: 1,
+				rules: [{
+					signedBy: 0
+				}]
+			}
+		}
+	}
+};
+
+// the format of the config update JSON is the same as Fabric
+
+// 2. convert channel update json to protobuf
+stitch.configUpdateJsonToBinary(config_update, (err, bin) => {
+
+	// 3. submit join channel api (aka create channel)
+	const c_opts = {
+		host: orderer_url,
+		certificate_b64pem: identity_cert,
+		private_key_b64pem: identity_private_key,
+		root_cert_b64pem: tls_root_cert,
+		b_config_block: bin,
+	};
+	stitch.joinOSNChannel(c_opts, (err, resp) => {
+		if (err || !resp || !resp.data) {
+
+			// error
+			console.error(err, resp);
+		} else {
+
+			// success
+			console.log('new channel resp:', resp, JSON.stringify(resp.data, null, 2));
+		}
+	});
+
 });
 ```
