@@ -75,6 +75,7 @@ import { load_pb, uint8ArrayToStr, logger, getLogger, pp, sortObjectOut, uint8Ar
 import { GrpcData, fmt_err, fmt_ok, find_alternative_status_message, is_error_code, Fmt, OrderFmt, OrderFmtBlock, fill_in_missing } from './libs/validation';
 import { LifecycleLib } from './libs/proto_handlers/lifecycle_pb_lib';
 import { getOSNChannels, getOSNChannel, joinOSNChannel, unjoinOSNChannel } from './libs/fabric_rest';
+import { buildTemplateConfigBlock } from './libs/config_block';
 
 switchEncryption();										// covert to new aes encryption. always run first, at some later date we will remove this. dsh todo.
 load_pb(null);											// load the protobuf.js json bundle
@@ -93,7 +94,7 @@ export {
 	lc_installChaincode, lc_getInstalledChaincodeData, lc_getAllInstalledChaincodeData, lc_getInstalledChaincodePackage, UnaryReqResponse, send_proposal_req_timed,
 	LIFECYCLE, _sto, lc_approveChaincodeDefinition, lc_checkChaincodeDefinitionReadiness, lc_commitChaincodeDefinition, lc_getChaincodeDefinitionOnChannel,
 	lc_getAllChaincodeDefinitionsOnChannel, orderTransaction, scDecrypt, scEncrypt, conformPolicySyntax, scGetHashAsHex, mapCertificatesToRoots,
-	getOSNChannels, getOSNChannel, joinOSNChannel, unjoinOSNChannel
+	getOSNChannels, getOSNChannel, joinOSNChannel, unjoinOSNChannel, buildTemplateConfigBlock
 };
 
 // Exported Stitch Functions for testing
