@@ -22,20 +22,12 @@ import SidePanel from '../SidePanel/SidePanel';
 
 const SCOPE = 'ChannelParticipationModal';
 
-export class ChannelParticipationModal extends Component {
+class ChannelParticipationModal extends Component {
 
-	renderCPDetails() {
+	renderCPDetails = () => {
 		let nodesArray = [];
-		if (this.props.channelInfo.nodes !== undefined) {
+		if (this.props.channelInfo.nodes !== undefined)
 			nodesArray = Object.values(this.props.channelInfo.nodes);
-		} else {
-			nodesArray = [
-				{
-					name:'current node',
-					consensusRelation: this.props.channelInfo.consensusRelation,
-				}
-			];
-		}
 		const fields = [
 			{
 				name: 'nodes',

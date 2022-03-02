@@ -18,11 +18,14 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
+import { promisify } from 'util';
 import requiresAttentionImage from '../../assets/images/requires_attention.svg';
 import requiresAttentionImage2 from '../../assets/images/requires_attention_2.svg';
 import { clearNotifications, showBreadcrumb, showError, showSuccess, showWarning, updateBreadcrumb, updateState } from '../../redux/commonActions';
 import ChannelApi from '../../rest/ChannelApi';
+import { ChannelParticipationApi } from '../../rest/ChannelParticipationApi';
 import ComponentApi from '../../rest/ComponentApi';
+import IdentityApi from '../../rest/IdentityApi';
 import { MspRestApi } from '../../rest/MspRestApi';
 import { NodeRestApi } from '../../rest/NodeRestApi';
 import { OrdererRestApi } from '../../rest/OrdererRestApi';
@@ -49,12 +52,9 @@ import ReallocateModal from '../ReallocateModal/ReallocateModal';
 import SidePanelError from '../SidePanelError/SidePanelError';
 import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import StickySection from '../StickySection/StickySection';
-import ChannelParticipationDetails from './ChannelParticipationDetails';
 import SVGs from '../Svgs/Svgs';
 import TranslateLink from '../TranslateLink/TranslateLink';
-import IdentityApi from '../../rest/IdentityApi';
-import { promisify } from 'util';
-import { ChannelParticipationApi } from '../../rest/ChannelParticipationApi';
+import ChannelParticipationDetails from './ChannelParticipationDetails';
 
 const SCOPE = 'ordererDetails';
 const Log = new Logger(SCOPE);
@@ -126,7 +126,7 @@ class OrdererDetails extends Component {
 	};
 
 	/* get channel list from channel participation api */
-	async getCPChannelList() {
+	getCPChannelList = async() => {
 		if (this.props.details && !this.props.details.osnadmin_url) return;
 		let node = this.props.selectedNode || this.props.details;
 		let systemChannel = true;
@@ -137,14 +137,26 @@ class OrdererDetails extends Component {
 			try {
 				let all_identity = await IdentityApi.getIdentities();
 				channelList = await ChannelParticipationApi.getChannels(all_identity, node);
+				// TODO: consolidate error handling
+				if (_.get(channelList, 'code') === 'ECONNREFUSED') {
+					this.props.showError('orderer_not_available_title', SCOPE);
+				}
+				if (_.get(channelList, 'code') === 'ECONNRESET') {
+					this.props.showError('orderer_not_available_title', SCOPE);
+				}
 				if (_.get(channelList, 'systemChannel.name')) {
+					await this.getSystemChannelConfig();
 					channelList.systemChannel.type = 'system_channel';
+					if (channelList.channels === null) {
+						channelList.channels = [];
+					}
 					channelList.channels.push(channelList.systemChannel);
 				} else {
 					systemChannel = false;
 				}
 			} catch (error) {
 				Log.error('Unable to get channel list:', error);
+				this.props.showError('orderer_not_available_title', SCOPE);
 			}
 		}
 
@@ -248,7 +260,9 @@ class OrdererDetails extends Component {
 				if (this.timestamp) {
 					this.timestamp = 0;
 					this.props.updateState(SCOPE, { notAvailable: false });
-					this.getSystemChannelConfig();
+					if (!this.props.details.osnadmin_url) {
+						this.getSystemChannelConfig();
+					}
 				}
 			}
 		);
@@ -345,7 +359,6 @@ class OrdererDetails extends Component {
 	}
 
 	getSystemChannelConfig() {
-		if (this.props.details.osnadmin_url && !this.props.systemChannel) return;
 		OrdererRestApi.getSystemChannelConfig(this.props.match.params.ordererId, this.props.configtxlator_url)
 			.then(resp => {
 				// we usually pick "SampleConsortium" but if that is missing, grab the first one. we don't support multiple atm.
@@ -1360,7 +1373,7 @@ class OrdererDetails extends Component {
 																selectedNode={this.props.selectedNode}
 																channelList={this.props.channelList}
 																details={this.props.details}
-																translate={this.props.translate}
+																unJoinComplete={this.getCPChannelList}
 															/>
 													}
 													{this.props.details.associatedIdentities && !this.props.details.associatedIdentities.length && (

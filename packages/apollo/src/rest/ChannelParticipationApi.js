@@ -13,7 +13,7 @@
 */
 import _ from 'lodash';
 import StitchApi from './StitchApi';
-const Log = new Logger('NodeRestApi');
+const Log = new Logger('ChannelParticipationApi');
 import Logger from '../components/Log/Logger';
 
 export class ChannelParticipationApi {
