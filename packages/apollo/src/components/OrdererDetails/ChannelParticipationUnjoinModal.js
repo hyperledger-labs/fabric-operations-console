@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { SkeletonPlaceholder } from 'carbon-components-react';
+import { CodeSnippet, SkeletonPlaceholder } from 'carbon-components-react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -23,6 +23,7 @@ import IdentityApi from '../../rest/IdentityApi';
 import Helper from '../../utils/helper';
 import Form from '../Form/Form';
 import SidePanel from '../SidePanel/SidePanel';
+import Clipboard from '../../utils/clipboard';
 
 
 const SCOPE = 'ChannelParticipationDetails';
@@ -35,7 +36,8 @@ class ChannelParticipationUnjoinModal extends Component {
 			this.props.updateState(SCOPE, {
 				myNodeList: nodesArray,
 				error: '',
-				disabled: false
+				nodeNotSelected: false,
+				noConfirmMatch: true
 			});
 		}
 	}
@@ -46,7 +48,9 @@ class ChannelParticipationUnjoinModal extends Component {
 				let all_identities = await IdentityApi.getIdentities();
 				let unjoinResp = await ChannelParticipationApi.unjoinChannel(all_identities, osn, this.props.channelInfo.name);
 				// TODO: consolidate error handling
-				if (_.get(unjoinResp, 'error') === 'cannot remove: channel does not exist') {
+				// cannot remove: system channel exists
+				// cannot remove: channel does not exist
+				if (_.get(unjoinResp, 'error') !== undefined) {
 					this.props.updateState(SCOPE, { error: unjoinResp.error });
 				} else {
 					this.props.onComplete();
@@ -60,10 +64,9 @@ class ChannelParticipationUnjoinModal extends Component {
 	}
 
 	onChannelChange = (change, valid) => {
-
 		this.props.updateState(SCOPE, {
 			myNodeList: change.nodeList,
-			disabled: change.nodeList.length === 0
+			nodeNotSelected: change.nodeList.length === 0
 		});
 	};
 
@@ -86,23 +89,56 @@ class ChannelParticipationUnjoinModal extends Component {
 					<div>
 						<div className="ibp-modal-title">
 							<h1 className="ibm-light">{this.props.channelInfo.name}</h1>
+							<div className="ibp-remove-orderer-confirm">
+								{translate('remove_orderer_channel_desc', {
+									name: (
+										<CodeSnippet
+											type="inline"
+											ariaLabel={translate('copy_text', { copyText: this.props.channelInfo.name })}
+											light={false}
+											onClick={() => Clipboard.copyToClipboard(this.props.channelInfo.name)}
+										>
+											{this.props.channelInfo.name}
+										</CodeSnippet>
+									),
+								})}
+							</div>
+							<Form
+								scope={SCOPE}
+								id={SCOPE + '-channel'}
+								fields={[
+									{
+										name: 'nodeList',
+										type: 'multiselect',
+										options: nodesArray,
+										default: nodesArray,
+										// disabledIds: nodesArray.map(x => x.id),
+										label: 'unjoin_orderer',
+										required: false,
+									},
+								]}
+								onChange={this.onChannelChange}
+							/>
+							<div className="ibp-remove-orderer-confirm">
+								{translate('remove_orderer_channel_confirm')}
+							</div>
+							<Form
+								scope={SCOPE}
+								id={SCOPE + '-remove'}
+								fields={[
+									{
+										name: 'confirm_orderer_channel_name',
+										tooltip: 'confirm_orderer_channel_tooltip',
+										label: 'confirm_orderer_channel_name',
+									},
+								]}
+								onChange={data => {
+									this.props.updateState(SCOPE, {
+										noConfirmMatch: data.confirm_orderer_channel_name !== this.props.channelInfo.name,
+									});
+								}}
+							/>
 						</div>
-						<Form
-							scope={SCOPE}
-							id={SCOPE + '-channel'}
-							fields={[
-								{
-									name: 'nodeList',
-									type: 'multiselect',
-									options: nodesArray,
-									default: nodesArray,
-									// disabledIds: nodesArray.map(x => x.id),
-									label: 'unjoin_orderer',
-									required: false,
-								},
-							]}
-							onChange={this.onChannelChange}
-						/>
 					</div>
 				)}
 			</div>
@@ -126,7 +162,7 @@ class ChannelParticipationUnjoinModal extends Component {
 							id: 'unjoin',
 							text: translate('unjoin_channel'),
 							onClick: this.onUnjoin,
-							disabled: this.props.disabled,
+							disabled: this.props.nodeNotSelected || this.props.noConfirmMatch,
 						}
 					]}
 					error={this.props.error}
@@ -143,7 +179,8 @@ const dataProps = {
 	myNodeList: PropTypes.object,
 	channelInfo: PropTypes.object,
 	error: PropTypes.string,
-	disabled: PropTypes.bool,
+	nodeNotSelected: PropTypes.bool,
+	noConfirmMatch: PropTypes.bool,
 };
 
 ChannelParticipationUnjoinModal.propTypes = {
