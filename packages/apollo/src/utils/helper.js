@@ -153,6 +153,7 @@ const Helper = {
 				grpcwp_url: node.grpcwp_url,
 				api_url: node.api_url,
 				operations_url: node.operations_url,
+				osnadmin_url: node.osnadmin_url,
 				type: node.type,
 				msp_id: node.msp_id,
 				system_channel_id: node.system_channel_id,

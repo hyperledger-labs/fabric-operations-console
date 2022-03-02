@@ -105,6 +105,7 @@ class OrdererRestApi {
 					display_name: node.display_name,
 					api_url: node.api_url,
 					operations_url: node.operations_url,
+					osnadmin_url: node.osnadmin_url,
 					location: node.location,
 					grpcwp_url: Helper.normalizeHttpURL(node.grpcwp_url),
 					msp_id: node.msp_id,
