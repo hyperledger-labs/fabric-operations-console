@@ -1474,28 +1474,31 @@ class OrdererModal extends React.Component {
 			<WizardStep
 				type="WizardStep"
 				title="system_channel_maintenance"
+				disableSubmit={this.props.advanced_loading}
 				onCancel={() => {
 					this.props.updateState(SCOPE, { ordererModalType: 'settings' });
 				}}
 			>
 				<p className="ibp-modal-desc">{translate('channel_maintenance_desc1')}</p>
 				<div>
-					<div className="ibp-channel-section-desc-with-link">
-						<label>{translate('maintenance_mode')}</label>
-					</div>
-					<Toggle
-						id="maintenance_toggle"
-						toggled={this.props.maintenance_mode}
-						onToggle={() => {
-							this.props.updateState(SCOPE, {
-								maintenance_mode: !this.props.maintenance_mode,
-							});
-						}}
-						onChange={() => {}}
-						aria-label={translate('maintenance_mode')}
-						labelA={translate('no')}
-						labelB={translate('yes')}
-					/>
+					{!this.props.advanced_loading &&
+						<div className="ibp-channel-section-desc-with-link">
+							<label>{translate('maintenance_mode')}</label>
+							<Toggle
+								id="maintenance_toggle"
+								toggled={this.props.maintenance_mode}
+								onToggle={() => {
+									this.props.updateState(SCOPE, {
+										maintenance_mode: !this.props.maintenance_mode,
+									});
+								}}
+								onChange={() => {}}
+								aria-label={translate('maintenance_mode')}
+								labelA={translate('no')}
+								labelB={translate('yes')}
+							/>
+						</div>
+					}
 					{this.props.maintenance_mode && (
 						<div className="ibp-error-panel">
 							<SidePanelWarning title=""
@@ -1504,6 +1507,7 @@ class OrdererModal extends React.Component {
 						</div>
 					)}
 				</div>
+				{this.props.advanced_loading && <Loading withOverlay={false} />}
 			</WizardStep>
 		);
 	}
