@@ -11425,6 +11425,12 @@ components:
       example: https://n3a3ec3-myorderer-proxy.ibp.us-south.containers.appdomain.cloud:443
       x-validate_regex_must_pass: is_http_url
       x-validate_regex_error_msg: regex_fail_full_url
+    osnadmin_url_orderer:
+      type: string
+      description: The HTTP URL for the "osnadmin" Fabric feature. Found on orderers w/ Fabric v2.4+. Include the protocol, hostname/ip and port.
+      example: https://n3a3ec3-myorderer.ibp.us-south.containers.appdomain.cloud:7072
+      x-validate_regex_must_pass: is_http_url
+      x-validate_regex_error_msg: regex_fail_full_url
     grpcwp_url_peer:
       type: string
       description: The gRPC web proxy URL in front of the peer. Include the protocol, hostname/ip and port.
@@ -13814,6 +13820,8 @@ components:
           $ref: '#/components/schemas/operations_url_orderer'
         grpcwp_url:
           $ref: '#/components/schemas/grpcwp_url_orderer'
+        osnadmin_url:
+          $ref: '#/components/schemas/osnadmin_url_orderer'
         msp:
           $ref: '#/components/schemas/msp_crypto_field'
         msp_id:
@@ -14457,6 +14465,8 @@ components:
           $ref: '#/components/schemas/cluster_name_orderer'
         grpcwp_url:
           $ref: '#/components/schemas/grpcwp_url_orderer'
+        osnadmin_url:
+          $ref: '#/components/schemas/osnadmin_url_orderer'
         location:
           $ref: '#/components/schemas/location_saas'
         operations_url:
@@ -14899,6 +14909,8 @@ components:
           $ref: '#/components/schemas/display_name_orderer'
         grpcwp_url:
           $ref: '#/components/schemas/grpcwp_url_orderer'
+        osnadmin_url:
+          $ref: '#/components/schemas/osnadmin_url_orderer'
         location:
           $ref: '#/components/schemas/location_saas'
         msp:
