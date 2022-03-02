@@ -277,6 +277,9 @@ class ImportModal extends React.Component {
 		if (!Helper.isURL(orderer.operations_url)) {
 			return 'error_url';
 		}
+		if (!Helper.isURL(orderer.osnadmin_url)) {
+			return 'error_url';
+		}
 		return null;
 	}
 
