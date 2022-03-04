@@ -1,7 +1,25 @@
 [
 	{
+		"version": "1.0.0-19",
+		"date": "04 March 2022",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			},
+			{
+				"title": "Fix MSP Role Builder",
+				"details": "Fixes the 'MSPRole' field building inside a chaincode definition 'validationParameter' field when a value other than 'MEMBER' is set."
+			},
+			{
+				"title": "Fix Endorsement Policy Builder",
+				"details": "Fixes the 'endorsementPolicy' field building inside a chaincode definition 'StaticCollectionConfig' field when an endorsement policy was not set."
+			}
+		]
+	},
+	{
 		"version": "1.0.0-17",
-		"date": "02 Feb 2022",
+		"date": "28 Feb 2022",
 		"description": [
 			{
 				"title": "Bug & security fixes",
