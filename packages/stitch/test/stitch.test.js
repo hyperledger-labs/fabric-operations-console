@@ -967,7 +967,7 @@ describe('testing', function () {
 					'\b\u0000\u0012\b\u0012\u0006\b\u0001\u0012\u0002\b\u0000\u001a\u0010\b\u0000\u0012\f\n\bPeerOrg1\u0010\u0001',
 					'',
 					'',
-					'\n:\n8\n\bmyPolicy\u0012 \n\u001e\b\u0000\u0012\b\u0012\u0006\b\u0001\u0012\u0002\b\u0000\u001a\u0010\b\u0000\u0012\f\n\bPeerOrg1\u0010\u0001\u0018\u0002 \u0004(\u00000\u00008\u0000B\u0000'	// eslint-disable-line max-len
+					'\n8\n6\n\bmyPolicy\u0012 \n\u001e\b\u0000\u0012\b\u0012\u0006\b\u0001\u0012\u0002\b\u0000\u001a\u0010\b\u0000\u0012\f\n\bPeerOrg1\u0010\u0001\u0018\u0002 \u0004(\u00000\u00008\u0000'	// eslint-disable-line max-len
 				],
 				'transientMap': null
 			};
@@ -1041,7 +1041,7 @@ describe('testing', function () {
 					'\b\u0000\u0012\f\u0012\n\b\u0001\u0012\u0002\b\u0000\u0012\u0002\b\u0001\u001a\u0010\b\u0000\u0012\f\n\bPeerOrg1\u0010\u0000',
 					'',
 					'',
-					'\n:\n8\n\bmyPolicy\u0012 \n\u001e\b\u0000\u0012\b\u0012\u0006\b\u0001\u0012\u0002\b\u0000\u001a\u0010\b\u0000\u0012\f\n\bPeerOrg1\u0010\u0000\u0018\u0002 \u0004(\u00000\u00008\u0000B\u0000'	// eslint-disable-line max-len
+					'\n8\n6\n\bmyPolicy\u0012 \n\u001e\b\u0000\u0012\b\u0012\u0006\b\u0001\u0012\u0002\b\u0000\u001a\u0010\b\u0000\u0012\f\n\bPeerOrg1\u0010\u0000\u0018\u0002 \u0004(\u00000\u00008\u0000'
 				],
 				'transientMap': null
 			};
@@ -1115,7 +1115,7 @@ describe('testing', function () {
 					'\b\u0000\u0012\f\u0012\n\b\u0001\u0012\u0002\b\u0000\u0012\u0002\b\u0001\u001a\u0010\b\u0000\u0012\f\n\bPeerOrg1\u0010\u0000',
 					'',
 					'',
-					'\n:\n8\n\bmyPolicy\u0012 \n\u001e\b\u0000\u0012\b\u0012\u0006\b\u0001\u0012\u0002\b\u0000\u001a\u0010\b\u0000\u0012\f\n\bPeerOrg1\u0010\u0000\u0018\u0002 \u0004(\u00000\u00008\u0000B\u0000'	// eslint-disable-line max-len
+					'\n8\n6\n\bmyPolicy\u0012 \n\u001e\b\u0000\u0012\b\u0012\u0006\b\u0001\u0012\u0002\b\u0000\u001a\u0010\b\u0000\u0012\f\n\bPeerOrg1\u0010\u0000\u0018\u0002 \u0004(\u00000\u00008\u0000'
 				],
 				'transientMap': null
 			};
@@ -1231,7 +1231,7 @@ describe('testing', function () {
 					'\b\u0000\u0012\f\u0012\n\b\u0001\u0012\u0002\b\u0000\u0012\u0002\b\u0001\u001a\u0010\b\u0000\u0012\f\n\bPeerOrg1\u0010\u0000',
 					'',
 					'',
-					'\n:\n8\n\bmyPolicy\u0012 \n\u001e\b\u0000\u0012\b\u0012\u0006\b\u0001\u0012\u0002\b\u0000\u001a\u0010\b\u0000\u0012\f\n\bPeerOrg1\u0010\u0000\u0018\u0002 \u0004(\u00000\u00008\u0000B\u0000',	// eslint-disable-line max-len
+					'\n8\n6\n\bmyPolicy\u0012 \n\u001e\b\u0000\u0012\b\u0012\u0006\b\u0001\u0012\u0002\b\u0000\u001a\u0010\b\u0000\u0012\f\n\bPeerOrg1\u0010\u0000\u0018\u0002 \u0004(\u00000\u00008\u0000'
 				],
 				'transientMap': null
 			};
@@ -2521,7 +2521,7 @@ yJMfGXHykKD1d2F+B58=
 								'blockToLive': opts.block_to_live,
 								'memberOnlyRead': opts.member_only_read,
 								'memberOnlyWrite': opts.member_only_write,
-								'endorsementPolicy': {}
+								'endorsementPolicy': null
 							}
 						}
 					]
@@ -2591,7 +2591,7 @@ yJMfGXHykKD1d2F+B58=
 								'blockToLive': opts.block_to_live,
 								'memberOnlyRead': opts.member_only_read,
 								'memberOnlyWrite': opts.member_only_write,
-								'endorsementPolicy': {}
+								'endorsementPolicy': null
 							}
 						}
 					]
@@ -2671,7 +2671,7 @@ yJMfGXHykKD1d2F+B58=
 								'blockToLive': opts.block_to_live,
 								'memberOnlyRead': opts.member_only_read,
 								'memberOnlyWrite': opts.member_only_write,
-								'endorsementPolicy': {}
+								'endorsementPolicy': null
 							}
 						}
 					]
@@ -2779,7 +2779,7 @@ yJMfGXHykKD1d2F+B58=
 								'blockToLive': opts.block_to_live,
 								'memberOnlyRead': opts.member_only_read,
 								'memberOnlyWrite': opts.member_only_write,
-								'endorsementPolicy': {}
+								'endorsementPolicy': null
 							}
 						}
 					]
@@ -3166,7 +3166,7 @@ yJMfGXHykKD1d2F+B58=
 								'blockToLive': opts.block_to_live,
 								'memberOnlyRead': opts.member_only_read,
 								'memberOnlyWrite': opts.member_only_write,
-								'endorsementPolicy': {}
+								'endorsementPolicy': null
 							}
 						}
 					]
@@ -3265,7 +3265,7 @@ yJMfGXHykKD1d2F+B58=
 								'blockToLive': opts.block_to_live,
 								'memberOnlyRead': opts.member_only_read,
 								'memberOnlyWrite': opts.member_only_write,
-								'endorsementPolicy': {}
+								'endorsementPolicy': null
 							}
 						}
 					]
@@ -4093,6 +4093,68 @@ yJMfGXHykKD1d2F+B58=
 			const url2 = '/something/here';
 			expect(stitch.url_join(url1, url2)).to.equal(url1 + url2);
 			done();
+		});
+	});
+
+	describe('MSP Role', () => {
+		it(getId() + 'should return MSP role with the correct ROLE enum string - PEER', (done) => {
+			stitch.load_pb((__pb_root) => {
+				const MSPRole = __pb_root.lookupType('common.MSPRole');
+				let msp_opts = {
+					mspIdentifier: 'msp1',
+					role: 'PEER',
+				};
+				const b_mspRole = stitch.policyLib.__b_build_msp_role(msp_opts);
+				let msg2 = MSPRole.decode(b_mspRole);
+				let obj = MSPRole.toObject(msg2, { defaults: false });
+				expect(obj).to.deep.equal({ mspIdentifier: 'msp1', role: 3 });
+				done();
+			});
+		});
+
+		it(getId() + 'should return MSP role with the correct ROLE enum string - ADMIN', (done) => {
+			stitch.load_pb((__pb_root) => {
+				const MSPRole = __pb_root.lookupType('common.MSPRole');
+				let msp_opts = {
+					mspIdentifier: 'msp2',
+					role: 'ADMIN',
+				};
+				const b_mspRole = stitch.policyLib.__b_build_msp_role(msp_opts);
+				let msg2 = MSPRole.decode(b_mspRole);
+				let obj = MSPRole.toObject(msg2, { defaults: false });
+				expect(obj).to.deep.equal({ mspIdentifier: 'msp2', role: 1 });
+				done();
+			});
+		});
+
+		it(getId() + 'should return MSP role with the correct ROLE enum string - lc admin', (done) => {
+			stitch.load_pb((__pb_root) => {
+				const MSPRole = __pb_root.lookupType('common.MSPRole');
+				let msp_opts = {
+					mspIdentifier: 'msp3',
+					role: 'admin',
+				};
+				const b_mspRole = stitch.policyLib.__b_build_msp_role(msp_opts);
+				let msg2 = MSPRole.decode(b_mspRole);
+				let obj = MSPRole.toObject(msg2, { defaults: false });
+				expect(obj).to.deep.equal({ mspIdentifier: 'msp3', role: 1 });
+				done();
+			});
+		});
+
+		it(getId() + 'should return MSP role with the correct ROLE enum string - MEMBER', (done) => {
+			stitch.load_pb((__pb_root) => {
+				const MSPRole = __pb_root.lookupType('common.MSPRole');
+				let msp_opts = {
+					mspIdentifier: 'msp3',
+					role: 'MEMBER',
+				};
+				const b_mspRole = stitch.policyLib.__b_build_msp_role(msp_opts);
+				let msg2 = MSPRole.decode(b_mspRole);
+				let obj = MSPRole.toObject(msg2, { defaults: false });
+				expect(obj).to.deep.equal({ mspIdentifier: 'msp3', role: 0 });
+				done();
+			});
 		});
 	});
 

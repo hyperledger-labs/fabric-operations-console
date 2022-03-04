@@ -15,8 +15,10 @@
 // Libs built by us
 import { __pb_root, logger, base64ToUint8Array, camelCase_2_underscores } from '../misc';
 import { conformPolicySyntax } from '../sig_policy_syntax_lib';
+import { MixedPolicySyntax } from '../proto_handlers/collection_pb_lib';
 import { convertPolicy2PeerCliSyntax } from '../sig_policy_syntax_reverse_lib';
 import { CollectionLib, Scc } from './collection_pb_lib';
+import { PolicyLib } from './policy_pb_lib';
 
 // notes:
 // - the double underscore before functions indicates that load_pb() should be called before calling said function.
@@ -24,6 +26,9 @@ import { CollectionLib, Scc } from './collection_pb_lib';
 // - TIL protobufjs prefers create() over fromObject()
 
 export { HiLvl };
+
+const policyLib = new PolicyLib;
+
 export class LifecycleLib {
 
 	// -------------------------------------------------
@@ -334,7 +339,7 @@ function __b_build_application_policy(opts: HiLvl) {
 	if (!opts.validation_parameter) {												// use default
 		logger.debug('[stitch] ccd - using the default channel policy reference for the endorsement policy');
 		delete app_policy_opts.signaturePolicy;										// delete the other option, only 1 should be set
-	} else if (opts.validation_parameter[0] === '/') {
+	} else if (typeof opts.validation_parameter === 'string' && opts.validation_parameter[0] === '/') {
 		logger.debug('[stitch] ccd - using the provided channel policy reference for the endorsement policy');
 		app_policy_opts.channelConfigPolicyReference = opts.validation_parameter;	// set provided channel policy name
 		delete app_policy_opts.signaturePolicy;
@@ -356,13 +361,10 @@ function __b_build_application_policy(opts: HiLvl) {
 
 // convert each principal field of an identity to binary
 function __build_MSPPrincipal_bin_inside(obj: any) {
-	const MSPRole = __pb_root.lookupType('common.MSPRole');
 	if (obj) {
 		for (let i in obj.identities) {
 			if (obj.identities[i].principal) {
-				const message = MSPRole.create(obj.identities[i].principal);
-				const b_MSPRole = <Uint8Array>MSPRole.encode(message).finish();
-				obj.identities[i].principal = b_MSPRole;							// overwrite with binary representation
+				obj.identities[i].principal = policyLib.__b_build_msp_role(obj.identities[i].principal);
 			}
 		}
 	}
@@ -376,7 +378,7 @@ function __decode_MSPPrincipal_bin_inside(obj: { identities: { principal: string
 		for (let i in obj.identities) {
 			if (typeof obj.identities[i].principal === 'string') {		// only decode if its base64 encoded
 				const p_message = MSPRole.decode(base64ToUint8Array(obj.identities[i].principal));
-				const msp_role = MSPRole.create(p_message, { defaults: true, bytes: String, enums: String });
+				const msp_role = MSPRole.toObject(p_message, { defaults: true, bytes: String, enums: String });
 				obj.identities[i].principal = msp_role;
 			}
 		}
@@ -437,7 +439,7 @@ interface HiLvl {
 	chaincode_version: string;
 	endorsement_plugin: string;
 	validation_plugin: string;
-	validation_parameter: string;										// regular string, like "/Channel/Application/Endorsement"
+	validation_parameter: string | MixedPolicySyntax;					// string like "/Channel/Application/Endorsement", or peer cli, or sdk policy syntax
 	collections_obj: Scc[] | null;										// becomes protos.CollectionConfigPackage
 	init_required: boolean;
 	package_id: string;

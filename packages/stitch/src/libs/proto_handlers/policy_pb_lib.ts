@@ -170,7 +170,7 @@ export class PolicyLib {
 			principalClassification: opts.principal_classification,			// remember this protobufjs expects camelCase keys
 			principal: opts.b_principal
 		};
-		let message = MSPPrincipal.create(p_opts);
+		let message = MSPPrincipal.fromObject(p_opts);
 		return message;
 	}
 
