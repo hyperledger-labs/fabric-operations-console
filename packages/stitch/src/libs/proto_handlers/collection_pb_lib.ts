@@ -104,7 +104,7 @@ export class CollectionLib {
 			const endorsement_spe = endorsement_fmt ? this.policyLib.__build_signature_policy_envelope_alt(endorsement_fmt) : null;
 
 			const StaticCollectionConfig = __pb_root.lookupType('protos.StaticCollectionConfig');
-			const opts = {																	// remember protobufjs expects camelCase keys
+			const opts: any = {																	// remember protobufjs expects camelCase keys
 				name: config.name,
 				memberOrgsPolicy: this.__build_collection_policy_config(private_data_spe),	// build message for field
 				requiredPeerCount: config.required_peer_count,
@@ -112,11 +112,14 @@ export class CollectionLib {
 				blockToLive: config.block_to_live,
 				memberOnlyRead: config.member_only_read,
 				memberOnlyWrite: config.member_only_write,
-				endorsementPolicy: this.policyLib.__build_application_policy(				// build message for field
-					endorsement_spe,
-					config.endorsement_policy ? config.endorsement_policy.channel_config_policy_reference : null
-				),
+				//endorsementPolicy: null									// don't set endorsementPolicy unless given
 			};
+			if (endorsement_spe || (config.endorsement_policy && config.endorsement_policy.channel_config_policy_reference)) {
+				opts.endorsementPolicy = this.policyLib.__build_application_policy(
+					endorsement_spe,										// only one of these should be set
+					config.endorsement_policy ? config.endorsement_policy.channel_config_policy_reference : null
+				);
+			}
 			let message = StaticCollectionConfig.create(opts);
 			return StaticCollectionConfig.toObject(message, { defaults: true });
 		}
