@@ -1109,6 +1109,11 @@ class ImportOrdererModal extends React.Component {
 											required: false,
 										},
 										{
+											name: 'osnadmin_url',
+											type: 'url',
+											required: false,
+										},
+										{
 											name: 'cluster_id',
 											required: false,
 											validate: value => {
