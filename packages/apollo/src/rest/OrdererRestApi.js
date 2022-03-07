@@ -685,6 +685,12 @@ class OrdererRestApi {
 			this.setCapability(updated_json.channel_group.groups.Orderer, options.capabilities.orderer);
 		}
 
+		if (options.maintenance_mode) {
+			updated_json.channel_group.groups.Orderer.values.ConsensusType.value.state = 'STATE_MAINTENANCE';
+		} else {
+			updated_json.channel_group.groups.Orderer.values.ConsensusType.value.state = 'STATE_NORMAL';
+		}
+
 		Log.debug('Updated orderer block parameters: ', updated_json);
 		Log.debug('Updating orderer config to: ', options);
 

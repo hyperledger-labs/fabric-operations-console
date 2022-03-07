@@ -19,6 +19,7 @@ module.exports = app => {
 		changeOrigin: true,
 	};
 	app.use(proxy(['/api'], options));
+	app.use(proxy(['/proxy'], options));
 	app.use(proxy(['/auth'], options));
 	app.use(proxy(['/caproxy'], options));
 	app.use(proxy(['/grpcwp'], options));

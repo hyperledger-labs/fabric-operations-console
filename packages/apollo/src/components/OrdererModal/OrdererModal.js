@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { Button, CodeSnippet, Loading, SkeletonText, ToggleSmall } from 'carbon-components-react';
+import { Button, CodeSnippet, Loading, SkeletonText, Toggle, ToggleSmall } from 'carbon-components-react';
 import _ from 'lodash';
 import parse from 'parse-duration';
 import PropTypes from 'prop-types';
@@ -67,6 +67,7 @@ class OrdererModal extends React.Component {
 			safeChannelsWithNode: [],
 			submitting: false,
 			channel_warning_20: false,
+			maintenance_mode: false,
 			disableRemove: true,
 			disableUpgrade: true,
 			availableChannelCapabilities: [],
@@ -430,6 +431,25 @@ class OrdererModal extends React.Component {
 			});
 	}
 
+	populateMaintenanceMode() {
+		this.props.updateState(SCOPE, { advanced_loading: true });
+		OrdererRestApi.getSystemChannelConfig(this.props.ordererId, this.props.configtxlator_url)
+			.then(resp => {
+				let channel_state = _.get(resp, 'channel_group.groups.Orderer.values.ConsensusType.value.state');
+				let maintenance_mode = (channel_state === 'STATE_MAINTENANCE');
+				this.props.updateState(SCOPE, {
+					maintenance_mode,
+					advanced_loading: false,
+				});
+			})
+			.catch(error => {
+				Log.error(error);
+				this.props.updateState(SCOPE, {
+					error,
+				});
+			});
+	}
+
 	updateOrderer = (resolve, reject) => {
 		const orderer = {
 			id: this.props.orderer.id,
@@ -778,6 +798,17 @@ class OrdererModal extends React.Component {
 									{translate('channel_capabilities')}
 								</Button>
 							)}
+							<Button
+								id="channel_maintenance"
+								kind="secondary"
+								className="ibp-orderer-action"
+								onClick={() => {
+									this.populateMaintenanceMode();
+									this.showAction('channel_maintenance');
+								}}
+							>
+								{translate('advanced_channel_maintenance')}
+							</Button>
 						</div>
 					</div>
 				)}
@@ -918,6 +949,33 @@ class OrdererModal extends React.Component {
 				channel:
 					this.props.selectedChannelCapability && typeof this.props.selectedChannelCapability === 'object' ? [this.props.selectedChannelCapability.id] : null,
 			},
+		};
+
+		OrdererRestApi.updateAdvancedConfig(payload)
+			.then(resp => {
+				this.props.onComplete();
+				resolve();
+			})
+			.catch(error => {
+				Log.error(error);
+				let title = 'error_updating_channel_capabilities';
+				let details = error;
+				if (_.includes(error, 'no differences detected between original and updated config')) {
+					title = 'no_capability_changes';
+				}
+				reject({
+					title,
+					details,
+				});
+			});
+	};
+
+
+	updateChannelMaintenance = (resolve, reject) => {
+		const payload = {
+			ordererId: this.props.ordererId,
+			configtxlator_url: this.props.configtxlator_url,
+			maintenance_mode: this.props.maintenance_mode,
 		};
 
 		OrdererRestApi.updateAdvancedConfig(payload)
@@ -1411,6 +1469,49 @@ class OrdererModal extends React.Component {
 		);
 	}
 
+	renderMaintenance(translate) {
+		return (
+			<WizardStep
+				type="WizardStep"
+				title="system_channel_maintenance"
+				disableSubmit={this.props.advanced_loading}
+				onCancel={() => {
+					this.props.updateState(SCOPE, { ordererModalType: 'settings' });
+				}}
+			>
+				<p className="ibp-modal-desc">{translate('channel_maintenance_desc1')}</p>
+				<div>
+					{!this.props.advanced_loading &&
+						<div className="ibp-channel-section-desc-with-link">
+							<label>{translate('maintenance_mode')}</label>
+							<Toggle
+								id="maintenance_toggle"
+								toggled={this.props.maintenance_mode}
+								onToggle={() => {
+									this.props.updateState(SCOPE, {
+										maintenance_mode: !this.props.maintenance_mode,
+									});
+								}}
+								onChange={() => {}}
+								aria-label={translate('maintenance_mode')}
+								labelA={translate('no')}
+								labelB={translate('yes')}
+							/>
+						</div>
+					}
+					{this.props.maintenance_mode && (
+						<div className="ibp-error-panel">
+							<SidePanelWarning title=""
+								subtitle={translate('system_channel_maintenance_warning')}
+							/>
+						</div>
+					)}
+				</div>
+				{this.props.advanced_loading && <Loading withOverlay={false} />}
+			</WizardStep>
+		);
+	}
+
 	renderUpgrade(translate) {
 		let versionLabel = this.props.orderer.version ? this.props.orderer.version : translate('version_not_found');
 		if (this.props.orderer && this.props.orderer.isUnsupported) {
@@ -1814,6 +1915,9 @@ class OrdererModal extends React.Component {
 					break;
 				case 'capabilities':
 					await new Promise((resolve, reject) => this.updateCapabilities(resolve, reject));
+					break;
+				case 'channel_maintenance':
+					await new Promise((resolve, reject) => this.updateChannelMaintenance(resolve, reject));
 					break;
 				case 'config_override':
 					await new Promise((resolve, reject) => this.updateConfigOverride(resolve, reject));
@@ -2232,6 +2336,8 @@ class OrdererModal extends React.Component {
 				return [this.renderAdvanced(translate), this.renderAdvancedEtc(translate)];
 			case 'capabilities':
 				return this.renderCapabilities(translate);
+			case 'channel_maintenance':
+				return this.renderMaintenance(translate);
 			case 'config_override':
 				return this.renderConfigOverride(translate);
 			case 'restart':
@@ -2269,6 +2375,8 @@ const dataProps = {
 	tls_ca_root_certs: PropTypes.array,
 	error: PropTypes.string,
 	loading: PropTypes.bool,
+	maintenance_mode: PropTypes.bool,
+	channel_state: PropTypes.string,
 	channel_loading: PropTypes.bool,
 	submitting: PropTypes.bool,
 	channelsWithNode: PropTypes.array,
