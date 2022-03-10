@@ -328,12 +328,25 @@ const template = {
 												"value": {
 													"capabilities": {
 
-														// capabilities key is replaced with application_capabilities from input
+														// capabilities key is replaced with "application_capabilities" from input
 														"V2_0": {}
 													}
 												},
 												"version": "0"
-											}
+											},
+
+											// ACLs would go here if sent via field "application_acls" from input
+											// there are no default ACLs, the whole block would be omitted if no acls
+											/*ACLs: {
+												"modPolicy": "Admins",
+												"value": {
+													"acls": {
+														"lscc/ChaincodeExists": {
+															"policy_ref": "/Channel/Application/Admins"
+														}
+													}
+												}
+											}*/
 										},
 										"version": "0"
 									}, // end of "Application" key
@@ -342,7 +355,7 @@ const template = {
 									"Orderer": {
 										"groups": {
 											"OrdererMSP": {
-												"groups": {},
+												"groups": {},				// this stays empty
 												"mod_policy": "Admins",
 												"policies": {
 
@@ -592,7 +605,7 @@ const template = {
 												"value": {
 													"metadata": {
 
-														// whole array replaced below with consensus_type.consenters from input
+														// whole array replaced below with "consensus_type.consenters" from input
 														"consenters": [
 															{
 																"client_tls_cert": "",
@@ -602,7 +615,8 @@ const template = {
 															}
 														],
 
-														// whole obj replaced below with consensus_type.options from input
+														// incomplete object can be passed, any unset fields will use the defaults below
+														// use input field "consensus_type.options", pass null to use all defaults
 														"options": {
 															"election_tick": 10,
 															"heartbeat_tick": 1,
@@ -621,6 +635,7 @@ const template = {
 									} // end of "Orderer"
 								}, // end of outer "groups"
 
+								// inside "channel_group"
 								"mod_policy": "Admins",
 								"policies": {
 									"Admins": {
@@ -696,7 +711,7 @@ const template = {
 								"version": "0"
 							},
 							"sequence": "0"
-						},
+						}, // end of "config"
 
 						// genesis blocks have no last update (unlike config blocks)
 						"last_update": null
@@ -761,9 +776,9 @@ const template = {
 /*
 	opts: {
 		channel: 'my_first_channel',
-		application_capabilities: 'V2_0',
-		orderer_capabilities: 'V2_0',
-		channel_capabilities: 'V2_0',
+		application_capabilities: ['V2_0'],
+		orderer_capabilities: ['V2_0'],
+		channel_capabilities: ['V2_0'],
 		application_msps: {
 																// create 1 key for each msp id
 			Org1MSP: {
@@ -790,8 +805,10 @@ const template = {
 			Readers: 'ANY Readers',								// can be null or absent, or a signature policy string, or a implicit policy string
 			Writers: 'ANY Writers',								// can be null or absent, or a signature policy string, or a implicit policy string
 		},
-		orderer_msps: {
-																// create 1 key for each msp id
+		application_acls: {										// can be null or absent
+			<acl-name> : <acl-value>
+		},
+		orderer_msps: {											// create 1 key for each msp id
 			OrdererMSP: {
 				Admins: 'OutOf(1, "OrdererMSP.ADMIN")',			// can be null or absent, or a signature policy string, or a implicit policy string
 				Readers: 'OutOf(1, "OrdererMSP.MEMBER")',		// can be null or absent, or a signature policy string, or a implicit policy string
@@ -822,19 +839,27 @@ const template = {
 			preferred_max_bytes: 0,
 		},
 		batch_timeout: {
-			timeout: 0
+			timeout: '2s'
 		},
 		channel_restrictions:{
-			value: {}
+			value: {}											// set whole object, there are no defaults inside (see template block for values)
 		},
 		consensus_type: {
-			consenters: [{}]									// [required] set whole array, there are no defaults inside (see template block for values)
-			options: {},										// [note] set whole object, there are no defaults inside (see template block for values)
+			consenters: [{}],									// [required] set whole array, there are no defaults inside (see template block for values)
+			options: {
+				election_tick: 0,
+				heartbeat_tick: 0,
+				max_inflight_blocks: 0,
+				snapshot_interval_size: 0,
+				tick_interval: ""
+			}
 		}
 	}
 */
 function buildTemplateConfigBlock(opts: ExtTemp) {
 	let app_caps: StringObj = {}, ord_caps: StringObj = {}, ch_caps: StringObj = {};
+
+	console.log('dsh99 rec opts', JSON.stringify(opts, null, 2));
 
 	const ret = JSON.parse(JSON.stringify(template));
 
@@ -846,20 +871,29 @@ function buildTemplateConfigBlock(opts: ExtTemp) {
 	ret.data.data[0].payload.header.channel_header.timestamp = d.toISOString();
 
 	// set application capabilities
-	if (opts.application_capabilities) {
-		app_caps[opts.application_capabilities] = {};
+	if (Array.isArray(opts.application_capabilities)) {
+		for (let i in opts.application_capabilities) {
+			const cap = opts.application_capabilities[i];
+			app_caps[cap] = {};
+		}
 		ret.data.data[0].payload.data.config.channel_group.groups.Application.values.Capabilities.value.capabilities = app_caps;
 	}
 
 	// set orderer capabilities
-	if (opts.orderer_capabilities) {
-		ord_caps[opts.orderer_capabilities] = {};
+	if (Array.isArray(opts.orderer_capabilities)) {
+		for (let i in opts.orderer_capabilities) {
+			const cap = opts.orderer_capabilities[i];
+			ord_caps[cap] = {};
+		}
 		ret.data.data[0].payload.data.config.channel_group.groups.Orderer.values.Capabilities.value.capabilities = ord_caps;
 	}
 
 	// set channel capabilities
-	if (opts.channel_capabilities) {
-		ch_caps[opts.channel_capabilities] = {};
+	if (Array.isArray(opts.channel_capabilities)) {
+		for (let i in opts.channel_capabilities) {
+			const cap = opts.channel_capabilities[i];
+			ch_caps[cap] = {};
+		}
 		ret.data.data[0].payload.data.config.channel_group.values.Capabilities.value.capabilities = ch_caps;
 	}
 
@@ -894,9 +928,9 @@ function buildTemplateConfigBlock(opts: ExtTemp) {
 	const policy_names = ['Admins', 'Endorsement', 'LifecycleEndorsement', 'Readers', 'Writers'];
 	for (let i in policy_names) {
 		const policyName = policy_names[i];
-		if (detectImplicitPolicy(opts.application_policies[policyName])) {
+		if (opts.application_policies && detectImplicitPolicy(opts.application_policies[policyName])) {
 			ret.data.data[0].payload.data.config.channel_group.groups.Application.policies[policyName].policy = buildImplicitPolicySyntax(opts.application_policies[policyName]);
-		} else if (detectSignaturePolicy(opts.application_policies[policyName])) {
+		} else if (opts.application_policies && detectSignaturePolicy(opts.application_policies[policyName])) {
 			// theses policies default to implicit type && conformPolicySyntax() doesn't build the policy wrapper
 			// so if its a sig type we need to change the "type" field too
 			ret.data.data[0].payload.data.config.channel_group.groups.Application.policies[policyName].policy = {
@@ -906,6 +940,19 @@ function buildTemplateConfigBlock(opts: ExtTemp) {
 		} else {
 			// uses default policy
 		}
+	}
+
+	// set application acls
+	for (let acl_name in opts.application_acls) {
+		if (!ret.data.data[0].payload.data.config.channel_group.groups.Application.values.ACLs) {
+			ret.data.data[0].payload.data.config.channel_group.groups.Application.values.ACLs = {				// init
+				modPolicy: 'Admins',
+				value: {
+					acls: {}
+				}
+			};
+		}
+		ret.data.data[0].payload.data.config.channel_group.groups.Application.values.ACLs.value.acls[acl_name] = { policy_ref: opts.application_acls[acl_name] }
 	}
 
 	// ---------------------------------------------------------------------------------
@@ -929,9 +976,9 @@ function buildTemplateConfigBlock(opts: ExtTemp) {
 	const orderer_policy_names = ['Admins', 'BlockValidation', 'Readers', 'Writers'];
 	for (let i in orderer_policy_names) {
 		const policyName = orderer_policy_names[i];
-		if (detectImplicitPolicy(opts.orderer_policies[policyName])) {
+		if (opts.orderer_policies && detectImplicitPolicy(opts.orderer_policies[policyName])) {
 			ret.data.data[0].payload.data.config.channel_group.groups.Orderer.policies[policyName].policy = buildImplicitPolicySyntax(opts.orderer_policies[policyName]);
-		} else if (detectSignaturePolicy(opts.orderer_policies[policyName])) {
+		} else if (opts.orderer_policies && detectSignaturePolicy(opts.orderer_policies[policyName])) {
 			// theses policies default to implicit type && conformPolicySyntax() doesn't build the policy wrapper
 			// so if its a sig type we need to change the "type" field too
 			ret.data.data[0].payload.data.config.channel_group.groups.Orderer.policies[policyName].policy = {
@@ -957,8 +1004,8 @@ function buildTemplateConfigBlock(opts: ExtTemp) {
 	if (opts.batch_size && opts.batch_size.preferred_max_bytes && !isNaN(opts.batch_size.preferred_max_bytes)) {
 		ret.data.data[0].payload.data.config.channel_group.groups.Orderer.values.BatchSize.value.preferred_max_bytes = Number(opts.batch_size.preferred_max_bytes);
 	}
-	if (opts.batch_timeout && !isNaN(opts.batch_timeout.timeout)) {
-		ret.data.data[0].payload.data.config.channel_group.groups.Orderer.values.BatchTimeout.value.timeout = Number(opts.batch_timeout.timeout);
+	if (opts.batch_timeout && typeof opts.batch_timeout.timeout === 'string') {
+		ret.data.data[0].payload.data.config.channel_group.groups.Orderer.values.BatchTimeout.value.timeout = opts.batch_timeout.timeout;
 	}
 	if (opts.channel_restrictions && opts.channel_restrictions.value) {
 		ret.data.data[0].payload.data.config.channel_group.groups.Orderer.values.ChannelRestrictions.value.timeout = opts.channel_restrictions.value;
@@ -966,11 +1013,28 @@ function buildTemplateConfigBlock(opts: ExtTemp) {
 	if (opts.consensus_type && Array.isArray(opts.consensus_type.consenters)) {
 		ret.data.data[0].payload.data.config.channel_group.groups.Orderer.values.ConsensusType.value.metadata.consenters = opts.consensus_type.consenters;
 	}
-	if (opts.consensus_type && typeof opts.consensus_type.options === 'object') {
-		ret.data.data[0].payload.data.config.channel_group.groups.Orderer.values.ConsensusType.value.metadata.options = opts.consensus_type.options;
+
+	// set Orderer.values.ConsensusType.value.metadata.options
+	if (opts.consensus_type && typeof opts.consensus_type.options === 'object' && opts.consensus_type.options) {
+		if (!isNaN(opts.consensus_type.options.election_tick)) {
+			ret.data.data[0].payload.data.config.channel_group.groups.Orderer.values.ConsensusType.value.metadata.options.election_tick = opts.consensus_type.options.election_tick;
+		}
+		if (!isNaN(opts.consensus_type.options.heartbeat_tick)) {
+			ret.data.data[0].payload.data.config.channel_group.groups.Orderer.values.ConsensusType.value.metadata.options.heartbeat_tick = opts.consensus_type.options.heartbeat_tick;
+		}
+		if (!isNaN(opts.consensus_type.options.max_inflight_blocks)) {
+			ret.data.data[0].payload.data.config.channel_group.groups.Orderer.values.ConsensusType.value.metadata.options.max_inflight_blocks = opts.consensus_type.options.max_inflight_blocks;
+		}
+		if (!isNaN(opts.consensus_type.options.snapshot_interval_size)) {
+			ret.data.data[0].payload.data.config.channel_group.groups.Orderer.values.ConsensusType.value.metadata.options.snapshot_interval_size = opts.consensus_type.options.snapshot_interval_size;
+		}
+		if (typeof opts.consensus_type.options.tick_interval === 'string') {
+			ret.data.data[0].payload.data.config.channel_group.groups.Orderer.values.ConsensusType.value.metadata.options.tick_interval = opts.consensus_type.options.tick_interval;
+		}
 	}
 
 	// whew... all done
+	console.log('dsh99 built new block', JSON.stringify(ret, null, 2));
 	return ret;
 }
 
@@ -993,7 +1057,6 @@ function buildAppGroupObj(defaults: any, msp_data: any, msp_id: string) {
 		} else if (detectSignaturePolicy(msp_data[policyName])) {
 			grpObj.policies[policyName].policy.value =
 				camelCase_2_underscores(conformPolicySyntax(msp_data[policyName]), 0);
-			// dsh todo test if change to conformPolicySyntax is okay!
 		} else {
 			// use default policy, but edit it for this msp id
 			for (let i in grpObj.policies[policyName].policy.value.identities) {			// 'Readers' has a few entries, iter on each
@@ -1052,7 +1115,6 @@ function buildOrdererGroupObj(defaults: any, msp_data: any, msp_id: string) {
 		} else if (detectSignaturePolicy(msp_data[policyName])) {
 			grpObj.policies[policyName].policy.value =
 				camelCase_2_underscores(conformPolicySyntax(msp_data[policyName]), 0);
-			// dsh todo test if change to conformPolicySyntax is okay!
 		} else {
 			// use default policy, but edit it for this msp id
 			for (let i in grpObj.policies[policyName].policy.value.identities) {			// 'Readers' has a few entries, iter on each
@@ -1105,11 +1167,12 @@ function buildOrdererGroupObj(defaults: any, msp_data: any, msp_id: string) {
 
 interface ExtTemp {
 	channel: string,
-	application_capabilities: string | null;
-	orderer_capabilities: string | null;
-	channel_capabilities: string | null;
+	application_capabilities: StringObj3 | null;
+	orderer_capabilities: StringObj3 | null;
+	channel_capabilities: StringObj3 | null;
 	application_msps: StringObj2;
 	application_policies: StringObj3;
+	application_acls: StringObj3;
 	orderer_policies: StringObj3;
 	orderer_msps: StringObj2;
 	batch_size: {
@@ -1118,14 +1181,20 @@ interface ExtTemp {
 		preferred_max_bytes: number | null,
 	} | null,
 	batch_timeout: {
-		timeout: number
+		timeout: string
 	} | null,
 	channel_restrictions: {
 		value: object
 	} | null,
 	consensus_type: {
 		consenters: object[],
-		options: object | null,
+		options: {
+			election_tick: number,
+			heartbeat_tick: number,
+			max_inflight_blocks: number,
+			snapshot_interval_size: number,
+			tick_interval: string,
+		} | null,
 	}
 }
 

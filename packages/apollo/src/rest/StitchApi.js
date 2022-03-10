@@ -226,6 +226,193 @@ class StitchApi {
 			return (error && error.http_resp) ? error.http_resp : error;
 		}
 	}
+
+	// this function conforms formats from the apollo create-channel wizard to the stitch config-block-generator
+	// and returns a genesis block aka config block 0
+	static buildGenesisBlockOSNadmin(opts) {
+		// dsh look for inputs i'm not using and figure out if i need to add them
+
+		const config_block_opts = {
+			channel: opts.channel_id,
+			application_capabilities: opts.application_capabilities,
+			orderer_capabilities: opts.orderer_capabilities,
+			channel_capabilities: opts.channel_capabilities,
+			application_msps: build_app_msps(),
+			orderer_msps: build_orderer_msps(),
+			application_acls: opts.acls,
+			application_policies: {
+
+				// these policies be null to use the default policy,
+				Admins: build_policy_from_wizard2('admin', 'ADMIN'),
+				Readers: build_policy_from_wizard2('reader', 'MEMBER'),
+				Writers: build_policy_from_wizard2('writer', 'MEMBER'),
+
+				// these policies be null to use the default policy, or set an explicit policy in CLI format, or implicit policy as string
+				Endorsement: build_policy_from_wizard(opts.endorsement_policy, 'Endorsement', 'PEER'),
+				LifecycleEndorsement: build_policy_from_wizard(opts.lifecycle_policy, 'Endorsement', 'PEER'),
+			},
+
+			// we don't currently support customizing these values in apollo
+			/*orderer_policies: {
+				Admins: 'MAJORITY Admins',							// use null for default policy
+				BlockValidation: 'ANY Writers',						// use null for default policy
+				Readers: 'ANY Readers',								// use null for default policy
+				Writers: 'ANY Writers',								// use null for default policy
+			},*/
+
+			batch_size: {
+				absolute_max_bytes: opts.block_params ? opts.block_params.absolute_max_bytes : null,
+				max_message_count: opts.block_params ? opts.block_params.max_message_count : null,
+				preferred_max_bytes: opts.block_params ? opts.block_params.preferred_max_bytes : null,
+			},
+			batch_timeout: opts.block_params ? opts.block_params.timeout : null,
+			channel_restrictions: null,
+			consensus_type: {
+				consenters: opts.consenters,
+				options: opts.raft_params							// use null for defaults
+			}
+		};
+		return window.stitch.buildTemplateConfigBlock(config_block_opts);
+
+		// build application msp input data format from the wizard data
+		function build_app_msps() {
+			const ret = {};
+			for (let msp_id in opts.application_msps) {
+				ret[msp_id] = {
+					'Admins': null,			// use null for default policy (apollo doesn't let us set these atm)
+					'Endorsement': null,	// use null for default policy (apollo doesn't let us set these atm)
+					'Readers': null,		// use null for default policy (apollo doesn't let us set these atm)
+					'Writers': null,		// use null for default policy (apollo doesn't let us set these atm)
+
+					'MSP': {				// dsh todo this is very incomplete
+
+						// dsh todo get this data in here
+						fabric_node_ous: {
+							admin_ou_identifier: {
+								certificate: '',
+								organizational_unit_identifier: 'admin'
+							},
+							client_ou_identifier: {
+								certificate: '',
+								organizational_unit_identifier: 'client'
+							},
+							enable: true,
+							orderer_ou_identifier: {
+								certificate: '',
+								organizational_unit_identifier: 'orderer'
+							},
+							peer_ou_identifier: {
+								certificate: '',
+								organizational_unit_identifier: 'peer'
+							}
+						},
+						root_certs: [''],
+						tls_root_certs: [''],
+					},
+				};
+			}
+			return ret;
+		}
+
+		// build the orderer msp input data format from the wizard data
+		function build_orderer_msps() {
+			const ret = {};
+			for (let i in opts.orderer_msps) {
+				let msp_id = opts.orderer_msps[i].msp_id;
+				ret[msp_id] = {
+					'Admins': null,										// use null for default policy
+					'Readers': null,									// use null for default policy
+					'Writers': null,									// use null for default policy
+
+					// dsh todo get consenters populated
+					addresses: build_addresses(),						// required, string of addresses including port
+					'MSP': {											// dsh todo this is very incomplete
+						fabric_node_ous: {
+							admin_ou_identifier: {
+								certificate: '',
+								organizational_unit_identifier: 'admin'
+							},
+							client_ou_identifier: {
+								certificate: '',
+								organizational_unit_identifier: 'client'
+							},
+							enable: true,
+							orderer_ou_identifier: {
+								certificate: '',
+								organizational_unit_identifier: 'orderer'
+							},
+							peer_ou_identifier: {
+								certificate: '',
+								organizational_unit_identifier: 'peer'
+							}
+						},
+						root_certs: [''],
+						tls_root_certs: [''],
+					},
+				};
+			}
+			return ret;
+
+			// dsh todo
+			function build_addresses() {
+				const consenters = [];
+
+				return consenters;
+			}
+		}
+
+		// take apollo's weird policy format and make a implicit or explicit cli formatted policy
+		function build_policy_from_wizard(weird_policy_fmt, sub_policy, role) {
+			if (weird_policy_fmt) {
+
+				// ---------------------------
+				// Implicit Policies - builds something like: 'ANY Writers'
+				// ---------------------------
+				if (weird_policy_fmt.type === 'MAJORITY') {
+					return 'MAJORITY ' + sub_policy;
+				} else if (weird_policy_fmt.type === 'ANY') {
+					return 'ANY ' + sub_policy;
+				} else if (weird_policy_fmt.type === 'ALL') {
+					return 'ALL ' + sub_policy;
+				}
+
+				// ---------------------------
+				// Explicit Policies - builds something like: 'OutOf(1, "OrdererMSP.ADMIN")'
+				// ---------------------------
+				else {
+					let member_txt = '';						// build the members string as "MEMBER1.ROLE, MEMBER2.ROLE"
+					for (let i in weird_policy_fmt.members) {
+						const org = weird_policy_fmt.members[i];
+						member_txt += `"${org}.${role}", `;
+					}
+					if (member_txt.length > 2) {
+						member_txt = member_txt.substring(0, member_txt.length - 2);		// remove last space & comma
+						return `OutOf(${weird_policy_fmt.n}, ${member_txt})`;
+					}
+				}
+			}
+			return null;
+		}
+
+		// take apollo's application msp data and make an explicit cli formatted policy
+		function build_policy_from_wizard2(perm_name, fabric_role) {
+			let member_txt = '';						// build the members string as "MEMBER1.ROLE, MEMBER2.ROLE"
+			const lc_perm = perm_name.toLowerCase();
+
+			for (let org in opts.application_msps) {
+				if (Array.isArray(opts.application_msps[org].roles) && opts.application_msps[org].roles.includes(lc_perm)) {
+					member_txt += `"${org}.${fabric_role}", `;
+				}
+			}
+
+			if (member_txt.length > 2) {
+				member_txt = member_txt.substring(0, member_txt.length - 2);		// remove last space & comma
+				return `OutOf(1, ${member_txt})`;									// we always set out-of 1
+			}
+
+			return null;
+		}
+	}
 }
 
 export default StitchApi;
