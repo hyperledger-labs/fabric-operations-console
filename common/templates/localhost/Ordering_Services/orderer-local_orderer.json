@@ -1,0 +1,31 @@
+{
+    "display_name": "ordering node - local",
+    "grpcwp_url": "https://localhost:7445",
+    "api_url": "grpcs://orderer.example.com:7050",
+    "operations_url": "http://localhost:9443",
+    "osnadmin_url": "https://localhost:7053",
+    "type": "fabric-orderer",
+    "msp_id": "OrdererMSP",
+    "system_channel_id": "system-channel",
+    "cluster_id": "kcfhqzuxci",
+    "cluster_name": "orderer_local",
+    "name": "ordering node - local",
+    "msp": {
+        "component": {
+            "tls_cert": "<CERT>"
+        },
+        "ca": {
+            "root_certs": [
+                "<CERT>"
+            ]
+        },
+        "tlsca": {
+            "root_certs": [
+                "<CERT>"
+            ]
+        }
+    },
+    "pem": "<CERT>",
+    "tls_cert": "<CERT>",
+    "tls_ca_root_cert": "<CERT>"
+}

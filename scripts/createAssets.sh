@@ -10,7 +10,12 @@ mkdir -p ${WORK_AREA}/assets/Peers
 mkdir -p ${WORK_AREA}/assets/Organizations
 
 ASSETS_ROOT=${SRC_DIR}/../workarea/assets
-TEMPLATE_ROOT=${SRC_DIR}/../common/templates
+
+TEMPLATE_ROOT=${SRC_DIR}/../common/templates/docker
+
+if [[ $# -eq 1 ]] ; then
+	TEMPLATE_ROOT=${SRC_DIR}/../common/templates/localhost
+fi
 
 ORG1_CAINFO=${WORK_AREA}/org1_ca.json
 ORG2_CAINFO=${WORK_AREA}/org2_ca.json
@@ -25,6 +30,7 @@ ORG2_ROOT_CERT=`jq .result.CAChain ${ORG2_CAINFO} -r`
 curl -k https://localhost:9054/cainfo > ${ORDERER_CAINFO}
 ORDERER_ROOT_CERT=`jq .result.CAChain ${ORDERER_CAINFO} -r`
 
+ORDERER_ADMIN_URL="https://localhost:7053"
 
 # Create CA Imports
 jq --arg ORG1_ROOT_CERT "$ORG1_ROOT_CERT" '.tls_cert = $ORG1_ROOT_CERT' ${TEMPLATE_ROOT}/Certificate_Authorities/org1ca-local_ca.json > ${ASSETS_ROOT}/Certificate_Authorities/org1ca-local_ca.json

@@ -1,0 +1,11 @@
+{
+    "display_name": "org2ca - local",
+    "api_url": "https://localhost:8054",
+    "operations_url": "http://localhost:18054",
+    "name": "org2ca - local",
+    "ca_url": "https://localhost:8054",
+    "type": "fabric-ca",
+    "ca_name": "ca-org2",
+    "tlsca_name": "ca-org2",
+    "tls_cert": "<TLS_CERT>"
+}

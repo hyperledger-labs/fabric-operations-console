@@ -1,0 +1,28 @@
+{
+    "display_name": "org1_peer1 - local",
+    "grpcwp_url": "https://localhost:7443",
+    "api_url": "grpcs://peer0.org1.example.com:7051",
+    "operations_url": "http://localhost:9444",
+    "msp_id": "Org1MSP",
+    "name": "org1_peer1 - local",
+    "type": "fabric-peer",
+    "msp": {
+        "component": {
+            "admin_certs": [],
+            "tls_cert": "<CERT>"
+        },
+        "ca": {
+            "root_certs": [
+                "<CERT>"
+            ]
+        },
+        "tlsca": {
+            "root_certs": [
+                "<CERT>"
+            ]
+        }
+    },
+    "pem": "<CERT>",
+    "tls_cert": "<CERT>",
+    "tls_ca_root_cert": "<CERT>"
+}
