@@ -83,7 +83,7 @@ class ChannelParticipationDetails extends Component {
 				let nodesArray = Object.values(channelInfo.nodes);
 				channelInfo.nodes = nodesArray.sort((a, b) => {
 					return naturalSort(a.name, b.name);
-				});		
+				});
 			}
 		}
 		this.props.updateState(SCOPE, {
