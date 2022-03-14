@@ -24,13 +24,35 @@ import Helper from '../../utils/helper';
 import Form from '../Form/Form';
 import SidePanel from '../SidePanel/SidePanel';
 import Clipboard from '../../utils/clipboard';
-
+import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
+import { OrdererRestApi } from '../../rest/OrdererRestApi';
+import ImportantBox from '../ImportantBox/ImportantBox';
 
 const SCOPE = 'ChannelParticipationDetails';
 
 class ChannelParticipationUnjoinModal extends Component {
 
 	componentDidMount() {
+		if (this.props.channelInfo.systemChannel) {
+			this.props.updateState(SCOPE, {
+				loading: true,
+			});
+			OrdererRestApi.getSystemChannelConfig(this.props.details.cluster_id, this.props.configtxlator_url)
+				.then(resp => {
+					let channel_state = _.get(resp, 'channel_group.groups.Orderer.values.ConsensusType.value.state');
+					this.props.updateState(SCOPE, {
+						channel_state
+					});
+				})
+				.catch(error => {
+					this.props.updateState(SCOPE, {
+						error,
+					});
+				});
+			this.props.updateState(SCOPE, {
+				loading: false,
+			});
+		}
 		if (this.props.channelInfo.nodes !== undefined) {
 			let nodesArray = Object.values(this.props.channelInfo.nodes);
 			this.props.updateState(SCOPE, {
@@ -76,7 +98,7 @@ class ChannelParticipationUnjoinModal extends Component {
 			nodesArray = Object.values(this.props.channelInfo.nodes);
 
 		return (
-			<div className="ibp-ca-no-identity">
+			<div>
 				{this.props.loading ? (
 					<SkeletonPlaceholder
 						style={{
@@ -112,7 +134,6 @@ class ChannelParticipationUnjoinModal extends Component {
 										type: 'multiselect',
 										options: nodesArray,
 										default: nodesArray,
-										// disabledIds: nodesArray.map(x => x.id),
 										label: 'unjoin_orderer',
 										required: false,
 									},
@@ -121,23 +142,34 @@ class ChannelParticipationUnjoinModal extends Component {
 							/>
 							<div className="ibp-remove-orderer-confirm">
 								{translate('remove_orderer_channel_confirm')}
+								<Form
+									scope={SCOPE}
+									id={SCOPE + '-remove'}
+									fields={[
+										{
+											name: 'confirm_orderer_channel_name',
+											tooltip: 'confirm_orderer_channel_tooltip',
+											label: 'confirm_orderer_channel_name',
+										},
+									]}
+									onChange={data => {
+										this.props.updateState(SCOPE, {
+											noConfirmMatch: data.confirm_orderer_channel_name !== this.props.channelInfo.name,
+										});
+									}}
+								/>
+								{this.props.channelInfo.systemChannel && (
+									<ImportantBox kind="informational"
+										text="remove_system_channel_1_text"
+										link="remove_system_channel_important_link"
+									/>
+								)}
+								{this.props.channelInfo.systemChannel && this.props.channel_state === 'STATE_NORMAL' && (
+									<SidePanelWarning title="remove_system_channel_2_title"
+										subtitle="remove_system_channel_2_text"
+									/>
+								)}
 							</div>
-							<Form
-								scope={SCOPE}
-								id={SCOPE + '-remove'}
-								fields={[
-									{
-										name: 'confirm_orderer_channel_name',
-										tooltip: 'confirm_orderer_channel_tooltip',
-										label: 'confirm_orderer_channel_name',
-									},
-								]}
-								onChange={data => {
-									this.props.updateState(SCOPE, {
-										noConfirmMatch: data.confirm_orderer_channel_name !== this.props.channelInfo.name,
-									});
-								}}
-							/>
 						</div>
 					</div>
 				)}
@@ -175,9 +207,11 @@ class ChannelParticipationUnjoinModal extends Component {
 }
 
 const dataProps = {
+	loading: PropTypes.bool,
 	details: PropTypes.object,
 	myNodeList: PropTypes.object,
 	channelInfo: PropTypes.object,
+	channel_state: PropTypes.string,
 	error: PropTypes.string,
 	nodeNotSelected: PropTypes.bool,
 	noConfirmMatch: PropTypes.bool,
@@ -192,7 +226,9 @@ ChannelParticipationUnjoinModal.propTypes = {
 
 export default connect(
 	state => {
-		return Helper.mapStateToProps(state[SCOPE], dataProps);
+		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
+		newProps['configtxlator_url'] = state['settings']['configtxlator_url'];
+		return newProps;
 	},
 	{
 		updateState,
