@@ -27,6 +27,7 @@ import SVGs from '../Svgs/Svgs';
 import ChannelParticipationModal from './ChannelParticipationModal';
 import ChannelParticipationUnjoinModal from './ChannelParticipationUnjoinModal';
 
+const naturalSort = require('javascript-natural-sort');
 const SCOPE = 'ChannelParticipationDetails';
 const Log = new Logger(SCOPE);
 
@@ -77,6 +78,12 @@ class ChannelParticipationDetails extends Component {
 				channelInfo = await ChannelParticipationApi.map1Channel(all_identities, nodes, channelId);
 			} catch (error) {
 				Log.error('Unable to get channel list:', error);
+			}
+			if (channelInfo.nodes !== undefined) {
+				let nodesArray = Object.values(channelInfo.nodes);
+				channelInfo.nodes = nodesArray.sort((a, b) => {
+					return naturalSort(a.name, b.name);
+				});
 			}
 		}
 		this.props.updateState(SCOPE, {
