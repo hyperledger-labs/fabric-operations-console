@@ -91,6 +91,17 @@ class NodeRestApi {
 		}
 	}
 
+	// get all components by its type tag (fabric-peer, fabric-ca, fabric-orderer)
+	static async getComponentsByTag(tag) {
+		const skip_cache = NodeRestApi.skip_cache;
+		let url = '/api/v3/components/tags/' + tag + '?deployment_attrs=included';
+		if (skip_cache) {
+			url = url + '&skip_cache=yes';
+			NodeRestApi.skip_cache = false;
+		}
+		return await RestApi.get(url);
+	}
+
 	/**
 	 * Get a sorted list of all the components in the system
 	 * @param {boolean} skip_cache True if we need to force a new REST call

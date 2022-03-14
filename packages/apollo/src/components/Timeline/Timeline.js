@@ -29,9 +29,8 @@ const Timeline = ({ steps, onClose, selectedTimelineStep, header, estTime, progr
 						<div key={index}>
 							{currentStep.groupTitle && <p className="ibp-timeline-group-label">{translate(currentStep.groupTitle)}</p>}
 							<div
-								className={`ibp-timeline-step-container ${currentStep.groupSteps.length === 1 ? 'ibp-timeline-step-container-short' : ''} ${
-									!progressWithChecks ? 'ibp-timeline-step-container-without-checks' : ''
-								}`}
+								className={`ibp-timeline-step-container ${currentStep.groupSteps.length === 1 ? 'ibp-timeline-step-container-short' : ''} ${!progressWithChecks ? 'ibp-timeline-step-container-without-checks' : ''
+									}`}
 								key={currentStep.groupTitle}
 							>
 								{currentStep.groupSteps.map((groupStep, groupStepIndex) => {
@@ -59,7 +58,7 @@ const Timeline = ({ steps, onClose, selectedTimelineStep, header, estTime, progr
 												>
 													{translate(groupStep.label)}
 												</button>
-											) : (
+											) : groupStep.hidden === true ? <span></span> : (
 												<span
 													className={`ibp-timeline-label-only ${currentStep.type === 'intro' ? 'ibp-timeline-intro-step' : ''} ${
 														groupStep.disabled ? 'ibp-timeline-disabled-step' : ''

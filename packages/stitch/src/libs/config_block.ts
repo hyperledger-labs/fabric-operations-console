@@ -703,6 +703,7 @@ const template = {
 										"value": {
 
 											// we are leaving this blank so that fabric uses the addresses defined in each org's section
+											// include port, no protocol
 											"addresses": []
 										},
 										"version": "0"
@@ -845,7 +846,12 @@ const template = {
 			value: {}											// set whole object, there are no defaults inside (see template block for values)
 		},
 		consensus_type: {
-			consenters: [{}],									// [required] set whole array, there are no defaults inside (see template block for values)
+			consenters: [{										// [required] set the whole array and all fields. there are no defaults inside
+				"host": "orderer.example.com",					// [required]
+				"port": 7050,									// [required]
+				"server_tls_cert": "",							// [required]
+				"client_tls_cert": "",							// [required]
+			}],
 			options: {
 				election_tick: 0,
 				heartbeat_tick: 0,
@@ -943,16 +949,18 @@ function buildTemplateConfigBlock(opts: ExtTemp) {
 	}
 
 	// set application acls
-	for (let acl_name in opts.application_acls) {
-		if (!ret.data.data[0].payload.data.config.channel_group.groups.Application.values.ACLs) {
-			ret.data.data[0].payload.data.config.channel_group.groups.Application.values.ACLs = {				// init
-				modPolicy: 'Admins',
-				value: {
-					acls: {}
-				}
-			};
+	if (opts.application_acls) {
+		for (let acl_name in opts.application_acls) {
+			if (!ret.data.data[0].payload.data.config.channel_group.groups.Application.values.ACLs) {
+				ret.data.data[0].payload.data.config.channel_group.groups.Application.values.ACLs = {				// init
+					modPolicy: 'Admins',
+					value: {
+						acls: {}
+					}
+				};
+			}
+			ret.data.data[0].payload.data.config.channel_group.groups.Application.values.ACLs.value.acls[acl_name] = { policy_ref: opts.application_acls[acl_name] }
 		}
-		ret.data.data[0].payload.data.config.channel_group.groups.Application.values.ACLs.value.acls[acl_name] = { policy_ref: opts.application_acls[acl_name] }
 	}
 
 	// ---------------------------------------------------------------------------------
@@ -1167,13 +1175,13 @@ function buildOrdererGroupObj(defaults: any, msp_data: any, msp_id: string) {
 
 interface ExtTemp {
 	channel: string,
-	application_capabilities: StringObj3 | null;
-	orderer_capabilities: StringObj3 | null;
-	channel_capabilities: StringObj3 | null;
+	application_capabilities: string[] | null;
+	orderer_capabilities: string[] | null;
+	channel_capabilities: string[] | null;
 	application_msps: StringObj2;
-	application_policies: StringObj3;
-	application_acls: StringObj3;
-	orderer_policies: StringObj3;
+	application_policies: StringObjStr;
+	application_acls: StringObjStr | null;
+	orderer_policies: StringObjStr;
 	orderer_msps: StringObj2;
 	batch_size: {
 		absolute_max_bytes: number | null,
@@ -1209,6 +1217,6 @@ interface StringObj2 {
 	};
 }
 
-interface StringObj3 {
+interface StringObjStr {
 	[index: string]: string;
 }

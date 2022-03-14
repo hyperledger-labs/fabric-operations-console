@@ -27,6 +27,7 @@ import TranslateLink from '../../../TranslateLink/TranslateLink';
 
 const SCOPE = 'channelModal';
 
+// this panel allow selecting the **order orgs** for a channel
 class Admins extends Component {
 	onAddAdmin = option => {
 		const orderer_orgs = _.isEmpty(this.props.orderer_orgs) ? [this.props.selectedAdmin] : [...this.props.orderer_orgs, this.props.selectedAdmin];
@@ -75,7 +76,7 @@ class Admins extends Component {
 	}
 
 	render() {
-		const { availableAdmins, invalid_consenter, orderer_orgs, isAdminsModified, selectedAdmin, translate } = this.props;
+		const { availableAdmins, invalid_consenter, orderer_orgs, isAdminsModified, selectedAdmin, translate, use_osnadmin } = this.props;
 		let options = [];
 		if (availableAdmins) {
 			availableAdmins.forEach(admin => {
@@ -98,7 +99,7 @@ class Admins extends Component {
 		return (
 			<div className="ibp-channel-admins">
 				<p className="ibp-channel-section-title">{translate('orderer_admin_set')}</p>
-				<TranslateLink text="update_channel_admin_set_desc"
+				<TranslateLink text={translate(use_osnadmin ? 'update_channel_admin_set_desc2' : 'update_channel_admin_set_desc')}
 					className="ibp-channel-section-desc-with-link"
 				/>
 				<div className="ibp-add-admins">
@@ -208,6 +209,7 @@ const dataProps = {
 	consenters: PropTypes.array,
 	raftNodes: PropTypes.object,
 	invalid_consenter: PropTypes.bool,
+	use_osnadmin: PropTypes.bool,
 };
 
 Admins.propTypes = {

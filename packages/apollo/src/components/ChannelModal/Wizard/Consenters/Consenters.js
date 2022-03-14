@@ -68,7 +68,7 @@ class Consenters extends Component {
 
 	checkForInvalidConsenter(consenters) {
 		const { orderer_orgs, raftNodes } = this.props;
-		// check if there are any consenters that are now invalid
+		// check if there are any consenters that are not from the list of orderer orgs
 		let allowed_raftNodes = raftNodes;
 		if (orderer_orgs) {
 			allowed_raftNodes = raftNodes.filter(x => {
@@ -95,7 +95,7 @@ class Consenters extends Component {
 	render() {
 		const {
 			consenterUpdateCount,
-			raftNodes,
+			raftNodes,						// contains all known orderer nodes
 			consenters,
 			updateOrdererDefError,
 			selectedConsenter,
@@ -107,9 +107,13 @@ class Consenters extends Component {
 			snapshot_interval_size,
 			translate,
 			use_default_consenters,
+			use_osnadmin,
 		} = this.props;
 		let availableConsenters = [];
 		let allowed_raftNodes = raftNodes;
+
+		// filter nodes out of "raftNodes" that do NOT have msp ids found in "orderer_orgs"
+		// NOTE! when using osnadmin this requirement is technically not needed, but i'm going to keep it b/c it feels weird otherwise
 		if (this.props.orderer_orgs) {
 			allowed_raftNodes = raftNodes.filter(x => {
 				let find = this.props.orderer_orgs.find(y => x.msp_id === y.msp_id);
@@ -117,19 +121,20 @@ class Consenters extends Component {
 			});
 		}
 
-		// only nodes that are from the orderer admin msp on application channel are allowed
+		// remove consenter options that have already been selected, match on host + port
 		if (allowed_raftNodes) {
 			if (consenters) {
-				availableConsenters = allowed_raftNodes.filter(x => !consenters.find(y => y.client_tls_cert === x.client_tls_cert && y.host === x.host));
+				availableConsenters = allowed_raftNodes.filter(x => !consenters.find(y => y.port === x.port && y.host === x.host));
 			} else {
 				availableConsenters = allowed_raftNodes;
 			}
 		}
+
 		return (
 			<div className="ibp-channel-consenters">
 				<p className="ibp-channel-section-title">{translate('consenter_set')}</p>
 				<TranslateLink
-					text={isChannelUpdate ? 'update_channel_consenter_set_desc' : 'create_channel_consenter_set_desc'}
+					text={use_osnadmin ? 'create_channel_consenter_set_desc2' : (isChannelUpdate ? 'update_channel_consenter_set_desc' : 'create_channel_consenter_set_desc')}
 					className="ibp-channel-section-desc-with-link"
 				/>
 				{allowed_raftNodes.length >= 1 && (
@@ -139,7 +144,7 @@ class Consenters extends Component {
 								{!isChannelUpdate && (
 									<>
 										<div className="ibp-channel-section-desc-with-link">
-											<label>{translate('use_default_consenters')}</label>
+											<label>{translate(use_osnadmin ? 'use_default_consenters2' : 'use_default_consenters')}</label>
 										</div>
 										<Toggle
 											id="use_default_consenters_toggle"
@@ -149,8 +154,8 @@ class Consenters extends Component {
 													use_default_consenters: !use_default_consenters,
 												});
 											}}
-											onChange={() => {}}
-											aria-label={translate('use_default_consenters')}
+											onChange={() => { }}
+											aria-label={translate(use_osnadmin ? 'use_default_consenters2' : 'use_default_consenters')}
 											labelA={translate('no')}
 											labelB={translate('yes')}
 										/>
@@ -397,6 +402,7 @@ const dataProps = {
 	overrideRaftDefaults: PropTypes.bool,
 	invalid_consenter: PropTypes.bool,
 	use_default_consenters: PropTypes.bool,
+	use_osnadmin: PropTypes.bool,
 };
 
 Consenters.propTypes = {

@@ -230,8 +230,6 @@ class StitchApi {
 	// this function conforms formats from the apollo create-channel wizard to the stitch config-block-generator
 	// and returns a genesis block aka config block 0
 	static buildGenesisBlockOSNadmin(opts) {
-		// dsh look for inputs i'm not using and figure out if i need to add them
-
 		const config_block_opts = {
 			channel: opts.channel_id,
 			application_capabilities: opts.application_capabilities,
@@ -268,7 +266,7 @@ class StitchApi {
 			batch_timeout: opts.block_params ? opts.block_params.timeout : null,
 			channel_restrictions: null,
 			consensus_type: {
-				consenters: opts.consenters,
+				consenters: filter_consenters('consenters'),
 				options: opts.raft_params							// use null for defaults
 			}
 		};
@@ -324,8 +322,8 @@ class StitchApi {
 					'Readers': null,									// use null for default policy
 					'Writers': null,									// use null for default policy
 
-					// dsh todo get consenters populated
-					addresses: build_addresses(),						// required, string of addresses including port
+					addresses: build_addresses(msp_id),					// required, string of addresses including port, no host
+
 					'MSP': {											// dsh todo this is very incomplete
 						fabric_node_ous: {
 							admin_ou_identifier: {
@@ -353,12 +351,39 @@ class StitchApi {
 			}
 			return ret;
 
-			// dsh todo
-			function build_addresses() {
-				const consenters = [];
-
-				return consenters;
+			// build address list for this msp
+			function build_addresses(mspId) {
+				const addresses = [];
+				if (opts.consensus_type && Array.isArray(opts.consenter_type.consenters)) {
+					for (let i in opts.consensus_type.consenters) {
+						const node = opts.consensus_type.consenters[i];
+						if (node && node.msp_id === mspId) {							// filter on this msp id
+							if (node.host && node.port) {								// required fields
+								addresses.push(node.host + ':' + node.port);
+							}
+						}
+					}
+				}
+				return addresses;
 			}
+		}
+
+		// only add consenters, remove followers
+		function filter_consenters(type) {
+			const ret = [];
+			for (let i in opts.consensus_type.consenters) {
+				const node = opts.consensus_type.consenters[i];
+				if (type === 'consenters') {
+					if (node && node._consenter === true) {
+						ret.push(opts.consensus_type.consenters[i]);
+					}
+				} else {
+					if (node && node._consenter !== true) {
+						ret.push(opts.consensus_type.consenters[i]);
+					}
+				}
+			}
+			return ret;
 		}
 
 		// take apollo's weird policy format and make a implicit or explicit cli formatted policy
