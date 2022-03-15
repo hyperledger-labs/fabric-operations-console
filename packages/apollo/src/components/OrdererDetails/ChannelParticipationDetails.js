@@ -21,7 +21,6 @@ import { ChannelParticipationApi } from '../../rest/ChannelParticipationApi';
 import IdentityApi from '../../rest/IdentityApi';
 import Helper from '../../utils/helper';
 import ItemContainer from '../ItemContainer/ItemContainer';
-import ItemTileLabels from '../ItemContainerTile/ItemTileLabels/ItemTileLabels';
 import Logger from '../Log/Logger';
 import SVGs from '../Svgs/Svgs';
 import ChannelParticipationModal from './ChannelParticipationModal';
@@ -96,8 +95,8 @@ class ChannelParticipationDetails extends Component {
 	buildCustomTile = (channel) => {
 		return (
 			<div>
-				{channel.nodes && channel.nodes.length > 1 && (
-					<ItemTileLabels custom={`Nodes: ${channel.nodes.join(',')}`}/>
+				{channel.type === 'system_channel' && (
+					<p className='ibp-orderer-channel-sub'>System Channel</p>
 				)}
 				<button className="ibp-orderer-channel-info"
 					onClick={async() => await this.openCPDetailsModal(channel)}

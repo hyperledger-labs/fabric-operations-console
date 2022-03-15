@@ -226,3 +226,8 @@
 .ibp-remove-orderer-confirm {
 	margin-bottom: 1rem;
 }
+
+.ibp-orderer-channel-sub {
+	@include carbon--font-weight('regular');
+	color: $carbon--cool-gray-30;
+}
