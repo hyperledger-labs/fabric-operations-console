@@ -466,6 +466,8 @@ const template = {
 														},
 														"version": "0"
 													},
+
+													// we are still in the "OrdererMSP" key
 													"MSP": {
 														"mod_policy": "Admins",
 														"value": {
@@ -788,6 +790,7 @@ const template = {
 				Readers: null,									// can be null or absent, or a signature policy string, or a implicit policy string
 				Writers: null,									// can be null or absent, or a signature policy string, or a implicit policy string
 				MSP: {
+					admins: [],
 					fabric_node_ous: {}, 						// set whole object, there are no defaults inside (see template block for values)
 					intermediate_certs: [],
 					organizational_unit_identifiers: [],
@@ -816,6 +819,7 @@ const template = {
 				Writers: 'OutOf(1, "OrdererMSP.MEMBER")',		// can be null or absent, or a signature policy string, or a implicit policy string
 				addresses: ['orderer.example.com:7050'],		// [required] string of addresses including port
 				MSP: {
+					admins: [],
 					fabric_node_ous: {}, 						// [note] set whole object, there are no defaults inside (see template block for values)
 					intermediate_certs: [],
 					organizational_unit_identifiers: [],
@@ -1083,11 +1087,11 @@ function buildAppGroupObj(defaults: any, msp_data: any, msp_id: string) {
 			delete grpObj.values.MSP.value.config.fabric_node_ous;
 		}
 
-		// the each certificate array field
-		const fields = ['intermediate_certs', 'organizational_unit_identifiers', 'revocation_list', 'root_certs', 'tls_intermediate_certs', 'tls_root_certs'];
+		// set each certificate array field
+		const fields = ['admins', 'intermediate_certs', 'organizational_unit_identifiers', 'revocation_list', 'root_certs', 'tls_intermediate_certs', 'tls_root_certs'];
 		for (let i in fields) {
 			const field = fields[i];
-			if (Array.isArray(msp_data.MSP[field])) {
+			if (Array.isArray(msp_data.MSP[field]) && msp_data.MSP[field].length > 0) {
 				grpObj.values.MSP.value.config[field] = msp_data.MSP[field];
 			}
 		}
@@ -1152,11 +1156,11 @@ function buildOrdererGroupObj(defaults: any, msp_data: any, msp_id: string) {
 			delete grpObj.values.MSP.value.config.fabric_node_ous;
 		}
 
-		// the each OrdererMSP certificate array field
-		const fields = ['intermediate_certs', 'organizational_unit_identifiers', 'revocation_list', 'root_certs', 'tls_intermediate_certs', 'tls_root_certs'];
+		// set each OrdererMSP certificate array field
+		const fields = ['admins', 'intermediate_certs', 'organizational_unit_identifiers', 'revocation_list', 'root_certs', 'tls_intermediate_certs', 'tls_root_certs'];
 		for (let i in fields) {
 			const field = fields[i];
-			if (Array.isArray(msp_data.MSP[field])) {
+			if (Array.isArray(msp_data.MSP[field]) && msp_data.MSP[field].length > 0) {
 				grpObj.values.MSP.value.config[field] = msp_data.MSP[field];
 			}
 		}

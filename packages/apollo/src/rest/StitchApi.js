@@ -229,6 +229,8 @@ class StitchApi {
 
 	// this function conforms formats from the apollo create-channel wizard to the stitch config-block-generator
 	// and returns a genesis block aka config block 0
+
+	// dsh todo - fix text on all panels, switch ordering service to orderer group
 	static buildGenesisBlockOSNadmin(opts) {
 		const config_block_opts = {
 			channel: opts.channel_id,
@@ -240,12 +242,12 @@ class StitchApi {
 			application_acls: opts.acls,
 			application_policies: {
 
-				// these policies be null to use the default policy,
+				// these policies can be null to use the default policy,
 				Admins: build_policy_from_wizard2('admin', 'ADMIN'),
 				Readers: build_policy_from_wizard2('reader', 'MEMBER'),
 				Writers: build_policy_from_wizard2('writer', 'MEMBER'),
 
-				// these policies be null to use the default policy, or set an explicit policy in CLI format, or implicit policy as string
+				// these policies can be null to use the default policy, or set an explicit policy in CLI format, or implicit policy as string
 				Endorsement: build_policy_from_wizard(opts.endorsement_policy, 'Endorsement', 'PEER'),
 				LifecycleEndorsement: build_policy_from_wizard(opts.lifecycle_policy, 'Endorsement', 'PEER'),
 			},
@@ -282,37 +284,19 @@ class StitchApi {
 					'Readers': null,		// use null for default policy (apollo doesn't let us set these atm)
 					'Writers': null,		// use null for default policy (apollo doesn't let us set these atm)
 
-					'MSP': {				// dsh todo this is very incomplete
-
-						// dsh todo get this data in here
-						fabric_node_ous: {
-							admin_ou_identifier: {
-								certificate: '',
-								organizational_unit_identifier: 'admin'
-							},
-							client_ou_identifier: {
-								certificate: '',
-								organizational_unit_identifier: 'client'
-							},
-							enable: true,
-							orderer_ou_identifier: {
-								certificate: '',
-								organizational_unit_identifier: 'orderer'
-							},
-							peer_ou_identifier: {
-								certificate: '',
-								organizational_unit_identifier: 'peer'
-							}
-						},
-						root_certs: [''],
-						tls_root_certs: [''],
+					'MSP': {
+						...opts.application_msps[msp_id]
 					},
 				};
 			}
 			return ret;
 		}
 
+		// dsh todo orderer admin choice is not being forced, can be unselected
+
 		// build the orderer msp input data format from the wizard data
+		// dsh todo, decide if using the existing admin panel is good or if we need a new one
+		// - should we be able to select non-admin orderer msps to add?
 		function build_orderer_msps() {
 			const ret = {};
 			for (let i in opts.orderer_msps) {
@@ -324,28 +308,8 @@ class StitchApi {
 
 					addresses: build_addresses(msp_id),					// required, string of addresses including port, no host
 
-					'MSP': {											// dsh todo this is very incomplete
-						fabric_node_ous: {
-							admin_ou_identifier: {
-								certificate: '',
-								organizational_unit_identifier: 'admin'
-							},
-							client_ou_identifier: {
-								certificate: '',
-								organizational_unit_identifier: 'client'
-							},
-							enable: true,
-							orderer_ou_identifier: {
-								certificate: '',
-								organizational_unit_identifier: 'orderer'
-							},
-							peer_ou_identifier: {
-								certificate: '',
-								organizational_unit_identifier: 'peer'
-							}
-						},
-						root_certs: [''],
-						tls_root_certs: [''],
+					'MSP': {
+						... opts.orderer_msps[i]
 					},
 				};
 			}
@@ -354,9 +318,9 @@ class StitchApi {
 			// build address list for this msp
 			function build_addresses(mspId) {
 				const addresses = [];
-				if (opts.consensus_type && Array.isArray(opts.consenter_type.consenters)) {
-					for (let i in opts.consensus_type.consenters) {
-						const node = opts.consensus_type.consenters[i];
+				if (Array.isArray(opts.consenters)) {
+					for (let i in opts.consenters) {
+						const node = opts.consenters[i];
 						if (node && node.msp_id === mspId) {							// filter on this msp id
 							if (node.host && node.port) {								// required fields
 								addresses.push(node.host + ':' + node.port);
@@ -371,15 +335,17 @@ class StitchApi {
 		// only add consenters, remove followers
 		function filter_consenters(type) {
 			const ret = [];
-			for (let i in opts.consensus_type.consenters) {
-				const node = opts.consensus_type.consenters[i];
-				if (type === 'consenters') {
-					if (node && node._consenter === true) {
-						ret.push(opts.consensus_type.consenters[i]);
-					}
-				} else {
-					if (node && node._consenter !== true) {
-						ret.push(opts.consensus_type.consenters[i]);
+			if (Array.isArray(opts.consenters)) {
+				for (let i in opts.consenters) {
+					const node = opts.consenters[i];
+					if (type === 'consenters') {
+						if (node && node._consenter === true) {
+							ret.push(opts.consenters[i]);
+						}
+					} else {
+						if (node && node._consenter !== true) {
+							ret.push(opts.consenters[i]);
+						}
 					}
 				}
 			}

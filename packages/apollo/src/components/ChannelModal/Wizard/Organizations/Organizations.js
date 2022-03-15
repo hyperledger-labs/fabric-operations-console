@@ -60,6 +60,10 @@ export class Organizations extends Component {
 			host_url: msp.host_url,
 			root_certs: msp.root_certs,
 			node_ou: msp.fabric_node_ous && msp.fabric_node_ous.enable,
+			fabric_node_ous: msp.fabric_node_ous,
+			tls_root_certs: msp.tls_root_certs,
+			intermediate_certs: msp.tls_intermediate_certs,
+			tls_intermediate_certs: msp.tls_intermediate_certs,
 		};
 		let updated_orgs = orgs ? [...orgs, new_org] : [new_org];
 		this.checkDuplicateMSP(new_org, updated_orgs);

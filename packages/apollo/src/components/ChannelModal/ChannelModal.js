@@ -44,10 +44,12 @@ import SidePanel from '../SidePanel/SidePanel';
 import Timeline from '../Timeline/Timeline';
 import ChaincodePolicy from './Wizard/ChaincodePolicy/ChaincodePolicy';
 import { triggers, triggerSurvey } from '../../utils/medallia';
+import StitchApi from '../../rest/StitchApi';
 
 const acl_resources = require('../../utils/acl/resources.json');
 const bytes = require('bytes');
 const semver = require('semver');
+const url = require('url');
 
 const SCOPE = 'channelModal';
 const Log = new Logger(SCOPE);
@@ -130,6 +132,7 @@ class ChannelModal extends Component {
 			availableAdmins: [],
 			invalid_consenter: false,
 			use_default_consenters: !isChannelUpdate,
+			use_osnadmin: false,				// true if ordering node has the osnadmin endpoint
 			lifecycle_policy: {
 				type: 'MAJORITY',
 				members: [],
@@ -203,6 +206,7 @@ class ChannelModal extends Component {
 
 	buildCreateChannelTimeline = () => {
 		this.timelineSteps = [
+			// CREATE STEPS - GROUP = 0
 			[
 				{
 					type: 'intro',
@@ -210,12 +214,15 @@ class ChannelModal extends Component {
 						{
 							label: 'prerequisites',
 							onClick: () => this.showStep('prerequisites', 0, 0),
-							isLink: true,
-							disabled: false,
+							isLink: true,					// "isLink" controls if the step is clickable
+							disabled: false,				// "disabled" controls the step's text opacity...
+							hidden: false,					// "hidden" controls if the step is displayed or not
 						},
 					],
 				},
 			],
+
+			// CREATE STEPS - GROUP = 1
 			[
 				{
 					groupTitle: 'required_step',
@@ -225,28 +232,34 @@ class ChannelModal extends Component {
 							onClick: () => this.showStep('channel_details', 1, 0),
 							isLink: false,
 							disabled: false,
+							hidden: false,
 						},
 						{
 							label: 'channel_organizations',
 							onClick: () => this.showStep('channel_organizations', 1, 1),
 							isLink: false,
 							disabled: false,
+							hidden: false,
 						},
 						{
 							label: 'channel_update_policy',
 							onClick: () => this.showStep('channel_update_policy', 1, 2),
 							isLink: false,
 							disabled: false,
+							hidden: false,
 						},
 						{
 							label: 'organization_creating_channel',
 							onClick: () => this.showStep('organization_creating_channel', 1, 3),
 							isLink: false,
 							disabled: false,
+							hidden: false,
 						},
 					],
 				},
 			],
+
+			// CREATE STEPS - GROUP = 2
 			[
 				{
 					groupTitle: 'advanced_configuration',
@@ -256,46 +269,55 @@ class ChannelModal extends Component {
 							onClick: () => this.showStep('capabilities', 2, 0),
 							isLink: false,
 							disabled: true,
+							hidden: false,
 						},
 						{
 							label: 'channel_lifecycle_policy',
 							onClick: () => this.showStep('lifecycle_policy', 2, 1),
 							isLink: false,
 							disabled: true,
+							hidden: false,
 						},
 						{
 							label: 'channel_endorsement_policy',
 							onClick: () => this.showStep('endorsement_policy', 2, 2),
 							isLink: false,
 							disabled: true,
+							hidden: false,
 						},
 						{
 							label: 'block_cutting_params',
 							onClick: () => this.showStep('block_cutting_params', 2, 3),
 							isLink: false,
 							disabled: true,
+							hidden: false,
 						},
 						{
 							label: 'consenter_set',
 							onClick: () => this.showStep('consenter_set', 2, 4),
 							isLink: false,
 							disabled: true,
+							hidden: false,
 						},
 						{
 							label: 'ordering_service_organization',
 							onClick: () => this.showStep('ordering_service_organization', 2, 5),
 							isLink: false,
 							disabled: true,
+							hidden: false,
 						},
 						{
 							label: 'channel_acls',
 							onClick: () => this.showStep('channel_acls', 2, 6),
 							isLink: false,
 							disabled: true,
+							hidden: false,
 						},
 					],
 				},
 			],
+
+			// CREATE STEPS - GROUP = 3
 			[
 				{
 					groupTitle: 'review',
@@ -305,6 +327,7 @@ class ChannelModal extends Component {
 							onClick: () => this.showStep('review_channel_info', 3, 0),
 							isLink: false,
 							disabled: false,
+							hidden: false,
 						},
 					],
 				},
@@ -314,6 +337,7 @@ class ChannelModal extends Component {
 
 	buildUpdateChannelTimeline = () => {
 		this.timelineSteps = [
+			// UPDATE STEPS - GROUP = 0
 			[
 				{
 					type: 'intro',
@@ -327,6 +351,8 @@ class ChannelModal extends Component {
 					],
 				},
 			],
+
+			// UPDATE STEPS - GROUP = 1
 			[
 				{
 					groupTitle: 'channel_configuration',
@@ -346,6 +372,8 @@ class ChannelModal extends Component {
 					],
 				},
 			],
+
+			// UPDATE STEPS - GROUP = 2
 			[
 				{
 					groupTitle: 'advanced_configuration',
@@ -401,6 +429,8 @@ class ChannelModal extends Component {
 					],
 				},
 			],
+
+			// UPDATE STEPS - GROUP = 3
 			[
 				{
 					groupTitle: 'review_channel_info',
@@ -435,12 +465,7 @@ class ChannelModal extends Component {
 
 	enableNavigationLinks = (name, group, step) => {
 		const { isChannelUpdate, selectedChannelCreator, selectedIdentity, selectedOrdererMsp } = this.props;
-		let isCapabilityModified = this.isAnyCapabilityModified();
-		let isBlockParamModified = this.isAnyBlockParamModified();
-		let isConsenterSetModified = this.isConsenterSetModified();
-		let isAdminsModified = this.isAdminsModified();
-		let isRaftParamModified = this.isAnyRaftParamModified();
-		let isOrdererSignatureNeeded = isCapabilityModified || isBlockParamModified || isConsenterSetModified || isAdminsModified || isRaftParamModified;
+		let isOrdererSignatureNeeded = this.calcIfOrdererSignatureNeeded();
 		if (isChannelUpdate) {
 			if (
 				selectedIdentity &&
@@ -462,22 +487,27 @@ class ChannelModal extends Component {
 		}
 	};
 
-	updateTimelineSteps = (enable, all, currentGroup, currentStep) => {
+	// change the step navigation data - this controls the left pane in the wizard
+	updateTimelineSteps = (enable, all, currentGroup, currentStep, hidden) => {
 		let updatedSteps = [];
 		this.props.timelineSteps.forEach((group, index) => {
 			group.forEach(subGroup => {
 				if (all) {
 					subGroup.groupSteps.forEach(step => {
 						step.isLink = enable;
+						setHidden(step);
 					});
 				} else {
 					subGroup.groupSteps.forEach((step, stepIndex) => {
 						if (index < currentGroup || (index === currentGroup && stepIndex <= currentStep)) {
 							step.isLink = enable;
+							setHidden(step);
 						} else if (this.completedSteps.includes(step.label)) {
 							step.isLink = enable;
+							setHidden(step);
 						} else {
 							step.isLink = false;
+							setHidden(step);
 						}
 					});
 				}
@@ -487,6 +517,13 @@ class ChannelModal extends Component {
 		this.props.updateState(SCOPE, {
 			timelineSteps: updatedSteps,
 		});
+
+		// only change the "hidden" field if true/false was provided
+		function setHidden(step) {
+			if (typeof hidden === 'boolean') {
+				step.hidden = hidden;
+			}
+		}
 	};
 
 	isStepCompleted(step) {
@@ -618,16 +655,11 @@ class ChannelModal extends Component {
 	}
 
 	getButtons(translate) {
-		const { viewing, advanced, submitting, isChannelUpdate } = this.props;
+		const { viewing, advanced, submitting, isChannelUpdate, use_osnadmin } = this.props;
 		const isHigherCapabilityAvailable = this.isAnyHigherCapabilityAvailable();
 		const isChannel2_0 = this.isChannel2_0();
 		const canModifyConsenters = this.canModifyConsenters();
-		let isOrdererSignatureNeeded =
-			this.isAnyCapabilityModified() ||
-			this.isAnyBlockParamModified() ||
-			this.isConsenterSetModified() ||
-			this.isAdminsModified() ||
-			this.isAnyRaftParamModified();
+		let isOrdererSignatureNeeded = this.calcIfOrdererSignatureNeeded();
 		let buttons = [];
 		let back, next;
 		let isComplete;
@@ -818,7 +850,7 @@ class ChannelModal extends Component {
 								: this.showStep('organization_creating_channel', group_prerequisites, step_org_signature);
 				next = () => {
 					if (canModifyConsenters) {
-						isChannelUpdate
+						(isChannelUpdate || use_osnadmin)
 							? this.showStep('orderer_admin_set', group_advanced, step_orderer_admin_set)
 							: this.showStep('consenter_set', group_advanced, step_consenters);
 					} else {
@@ -828,11 +860,16 @@ class ChannelModal extends Component {
 					}
 				};
 				break;
+
+			// panel allows setting the orderer orgs, which would be referenced in future "Orderer" group fabric config-block changes
 			case 'orderer_admin_set':
 				isComplete = this.isStepCompleted('orderer_admin_set');
 				back = () => this.showStep('block_cutting_params', group_advanced, step_block_parameters);
 				next = () => this.showStep('consenter_set', group_advanced, step_consenters);
 				break;
+
+			// panel allow setting which orderers should be consenters on this channel
+			// it also allows the raft params to be edited
 			case 'consenter_set':
 				isComplete = this.isStepCompleted('consenter_set');
 				back = () =>
@@ -847,6 +884,8 @@ class ChannelModal extends Component {
 					}
 				};
 				break;
+
+			// this panel allow selecting what org to use for the orderer signature
 			case 'ordering_service_organization':
 				isComplete = this.isStepCompleted('ordering_service_organization');
 				back = () => {
@@ -862,6 +901,8 @@ class ChannelModal extends Component {
 					}
 				};
 				break;
+
+			// panel allows setting the application channel ACL rules
 			case 'channel_acls':
 				isComplete = this.isStepCompleted('channel_acls');
 				back = () =>
@@ -876,6 +917,8 @@ class ChannelModal extends Component {
 					}
 				};
 				break;
+
+			// panel shows summary of selected settings
 			case 'review_channel_info':
 				isComplete = this.isStepCompleted('review_channel_info');
 				back = advanced
@@ -929,18 +972,17 @@ class ChannelModal extends Component {
 		}
 	};
 
+	// this hides the step from the left navigation pane
 	removeStepsFromTimeline = removeSteps => {
 		let updatedSteps = [];
 		this.timelineSteps.forEach(group => {
 			group.forEach(subGroup => {
 				if (subGroup.groupTitle === 'advanced_configuration') {
-					let steps = [];
 					subGroup.groupSteps.forEach(step => {
-						if (!removeSteps.includes(step.label)) {
-							steps.push(step);
+						if (removeSteps.includes(step.label)) {
+							step.hidden = true;								// step won't show up if "hidden" is true
 						}
 					});
-					subGroup.groupSteps = steps;
 				}
 			});
 			updatedSteps.push(group);
@@ -994,7 +1036,9 @@ class ChannelModal extends Component {
 	populateChannelOrgs = () => {
 		let existingOrgs = [];
 		let missingDefinitions = [];
+		console.log('dsh99 existingOrgs', this.props.existingOrgs);
 		this.props.existingOrgs.forEach(member => {
+			console.log('dsh99 existingOrgs member', member);
 			let msp_definition = this.props.msps.find(msp => msp.msp_id === member.id);
 			let org = {
 				msp: member.id,
@@ -1012,6 +1056,7 @@ class ChannelModal extends Component {
 			}
 		});
 		let all_orgs = this.props.orgs ? [...this.props.orgs, ...existingOrgs] : [...existingOrgs];
+		console.log('dsh99 setting all orgs', all_orgs);
 		this.props.updateState(SCOPE, {
 			orgs: all_orgs,
 			original_orgs: JSON.parse(JSON.stringify(all_orgs)),
@@ -1060,7 +1105,7 @@ class ChannelModal extends Component {
 					total: this.props.nOutOf.outOf,
 				}),
 				id: this.props.nOutOf.n,
-			  }
+			}
 			: {};
 		this.props.updateState(SCOPE, {
 			memberCounts: specificPolicyDropdown,
@@ -1147,15 +1192,19 @@ class ChannelModal extends Component {
 				type,
 				members: type === 'SPECIFIC' ? [] : members,
 				n: type === 'SPECIFIC' ? '' : n,
-			},
+			}
 		});
 	};
 
 	getOrderingServiceDetails = data => {
 		const selectedOrderer = data ? data : this.props.selectedOrderer;
 		if (!_.has(selectedOrderer, 'id')) return;
+		console.log('dsh99 selected os', selectedOrderer.id);
+
 		OrdererRestApi.getOrdererDetails(selectedOrderer.id, true).then(orderer => {
 			let getCertsFromDeployer = false;
+			console.log('dsh99 got orderer details:', orderer);
+
 			if (orderer && orderer.raft) {
 				this.props.updateState(SCOPE, { loadingConsenters: true });
 				const consenters = orderer.raft.map(node => {
@@ -1174,50 +1223,104 @@ class ChannelModal extends Component {
 						msp_id: node.msp_id,
 					};
 				});
+				console.log('dsh99 consenters 1:', consenters);
+				orderer.osnadmin_url = 'dsh todo';								// remove this
 
-				if (getCertsFromDeployer) {
-					NodeRestApi.getTLSSignedCertFromDeployer(orderer.raft)
-						.then(nodesWithCerts => {
-							Log.debug('Signed certs for raft nodes from deployer', nodesWithCerts);
-							nodesWithCerts.forEach(nodeFromFromDeployer => {
-								let consenter = consenters.find(x => x.name === nodeFromFromDeployer.display_name);
-								if (consenter && nodeFromFromDeployer.client_tls_cert) {
-									consenter.client_tls_cert = nodeFromFromDeployer.client_tls_cert;
-									consenter.server_tls_cert = nodeFromFromDeployer.server_tls_cert;
-								}
-								if (consenter && !nodeFromFromDeployer.server_tls_cert) {
-									// remove nodes without TLS certs - we cant add them to consenter set
-									_.remove(consenters, c => {
-										const addr = `${c.host}:${c.port}`;
-										return addr === nodeFromFromDeployer.backend_addr;
-									});
-									this.props.updateState(SCOPE, { isTLSUnavailable: true });
-								}
+				// [PATH 1] - using OSN Admin create channel wizard
+				if (orderer && orderer.osnadmin_url) {
+					this.props.updateState(SCOPE, { use_osnadmin: true });		// change the menu options
+					this.updateTimelineSteps(true, true, 2, 0, false);
+					console.log('dsh99 new steps^^');
+
+					// get all ordering groups
+					this.getAllOrderers().then(possible_consenters => {
+						console.log('dsh99 possible_consenters 1:', possible_consenters);
+						this.props.updateState(SCOPE, { raftNodes: possible_consenters, loadingConsenters: false, loading: false });
+					});
+				}
+
+				// [PATH 2] - using legacy create channel wizard
+				else {
+					if (getCertsFromDeployer) {
+						NodeRestApi.getTLSSignedCertFromDeployer(orderer.raft)
+							.then(nodesWithCerts => {
+								Log.debug('Signed certs for raft nodes from deployer', nodesWithCerts);
+								nodesWithCerts.forEach(nodeFromFromDeployer => {
+									let consenter = consenters.find(x => x.name === nodeFromFromDeployer.display_name);
+									if (consenter && nodeFromFromDeployer.client_tls_cert) {
+										consenter.client_tls_cert = nodeFromFromDeployer.client_tls_cert;
+										consenter.server_tls_cert = nodeFromFromDeployer.server_tls_cert;
+									}
+									if (consenter && !nodeFromFromDeployer.server_tls_cert) {
+										// remove nodes without TLS certs - we cant add them to consenter set
+										_.remove(consenters, c => {
+											const addr = `${c.host}:${c.port}`;
+											return addr === nodeFromFromDeployer.backend_addr;
+										});
+										this.props.updateState(SCOPE, { isTLSUnavailable: true });
+									}
+								});
+								this.props.updateState(SCOPE, { raftNodes: consenters, loadingConsenters: false, loading: false });
+							})
+							.catch(error => {
+								Log.info('An error occurred when getting signed certs from deployer', error);
+								this.props.updateState(SCOPE, { raftNodes: [], isTLSUnavailable: true, loadingConsenters: false, loading: false });
 							});
-							this.props.updateState(SCOPE, { raftNodes: consenters, loadingConsenters: false, loading: false });
-						})
-						.catch(error => {
-							Log.info('An error occurred when getting signed certs from deployer', error);
-							this.props.updateState(SCOPE, { raftNodes: [], isTLSUnavailable: true, loadingConsenters: false, loading: false });
-						});
-				} else {
-					this.props.updateState(SCOPE, { raftNodes: consenters, loadingConsenters: false, loading: false });
+					} else {
+						console.log('dsh99 possible_consenters 2:', consenters);
+						this.props.updateState(SCOPE, { raftNodes: consenters, loadingConsenters: false, loading: false });
+					}
 				}
 			}
 		});
 	};
 
+	// get all known orderers and filter them to down to ones that can be a consenter
+	async getAllOrderers() {
+		let orderers = null;
+		let possible_consenters = [];
+
+		try {
+			const resp = await NodeRestApi.getComponentsByTag('fabric-orderer');
+			orderers = resp ? resp.components : null;
+		} catch (e) {
+			Log.error(e);
+		}
+		console.log('dsh99 getAllOrderers:', orderers);
+
+		for (let i in orderers) {
+			const node = orderers[i];
+			let urlObj = (typeof node.backend_addr === 'string') ? url.parse(node.backend_addr.toLowerCase()) : null;
+			const tls_cert = _.get(node, 'msp.component.tls_cert');
+
+			// consenters must have a tls certificate and host/port data
+			if (urlObj && urlObj.hostname && urlObj.port && tls_cert) {
+				possible_consenters.push({			// leading underscores denote field is not used by fabric
+					name: node.display_name,
+					msp_id: node.msp_id,
+					_consenter: true,				// dsh todo allow this to be selectable
+					host: urlObj.hostname,
+					port: urlObj.port,
+					client_tls_cert: tls_cert,
+					server_tls_cert: tls_cert,
+				});
+			}
+		}
+		return possible_consenters;
+	}
+
 	checkHealth = orderer => {
-		this.props.updateState(SCOPE, { isOrdererUnavailable: false, checkingOrdererStatus: true });
-		OrdererRestApi.checkHealth(orderer)
-			.then(resp => {
-				Log.info('Orderer health:', resp);
-				this.props.updateState(SCOPE, { isOrdererUnavailable: false, checkingOrdererStatus: false });
-			})
-			.catch(error => {
-				Log.error('Orderer status unavailable:', error);
-				this.props.updateState(SCOPE, { isOrdererUnavailable: true, checkingOrdererStatus: false });
-			});
+		// dsh todo uncomment all
+		//this.props.updateState(SCOPE, { isOrdererUnavailable: false, checkingOrdererStatus: true });
+		//OrdererRestApi.checkHealth(orderer)
+		//.then(resp => {
+		//Log.info('Orderer health:', resp);
+		this.props.updateState(SCOPE, { isOrdererUnavailable: false, checkingOrdererStatus: false });
+		//})
+		//.catch(error => {
+		//Log.error('Orderer status unavailable:', error);
+		//this.props.updateState(SCOPE, { isOrdererUnavailable: true, checkingOrdererStatus: false });
+		//});
 	};
 
 	getAvailableCapabilities = isChannelUpdate => {
@@ -1276,7 +1379,10 @@ class ChannelModal extends Component {
 	};
 
 	canModifyConsenters = () => {
-		const { existingCapabilities, scaleRaftNodesEnabled, isChannelUpdate } = this.props;
+		const { existingCapabilities, scaleRaftNodesEnabled, isChannelUpdate, use_osnadmin } = this.props;
+		if (use_osnadmin) {				// whenever we are using the osnadmin feature the consenter set can be changed
+			return true;
+		}
 		const ordererCapability =
 			existingCapabilities && existingCapabilities.orderer ? semver.coerce(existingCapabilities.orderer.replace(/_/g, '.')).version : '0.0.0';
 		if (!isChannelUpdate) return scaleRaftNodesEnabled;
@@ -1405,10 +1511,8 @@ class ChannelModal extends Component {
 			.filter(org => org.msp !== '')
 			.forEach(org => {
 				organizations[org.msp] = {
+					...org,
 					msp_id: org.msp,
-					roles: org.roles,
-					host_url: org.host_url,
-					admins: org.admins,
 				};
 			});
 		let acls = {};
@@ -1416,12 +1520,10 @@ class ChannelModal extends Component {
 			acls[acl.resource] = acl.definition;
 		});
 		let orderer_msps = [];
+
+		// dsh todo you can only select 1 orderer msp?
 		if (this.props.selectedOrdererMsp && this.props.selectedOrdererMsp.host_url) {
-			orderer_msps.push({
-				msp_id: this.props.selectedOrdererMsp.msp_id,
-				admins: this.props.selectedOrdererMsp.admins,
-				host_url: this.props.selectedOrdererMsp.host_url,
-			});
+			orderer_msps.push({ ...this.props.selectedOrdererMsp });
 		}
 		let block_params;
 		if (this.isAnyBlockParamModified()) {
@@ -1444,20 +1546,20 @@ class ChannelModal extends Component {
 		}
 		let selectedOrdererCapability =
 			this.props.selectedOrdererCapability &&
-			typeof this.props.selectedOrdererCapability === 'object' &&
-			this.props.selectedOrdererCapability.id !== 'use_default'
+				typeof this.props.selectedOrdererCapability === 'object' &&
+				this.props.selectedOrdererCapability.id !== 'use_default'
 				? this.props.selectedOrdererCapability.id
 				: null;
 		let selectedChannelCapability =
 			this.props.selectedChannelCapability &&
-			typeof this.props.selectedChannelCapability === 'object' &&
-			this.props.selectedChannelCapability.id !== 'use_default'
+				typeof this.props.selectedChannelCapability === 'object' &&
+				this.props.selectedChannelCapability.id !== 'use_default'
 				? this.props.selectedChannelCapability.id
 				: null;
 		let selectedApplicationCapability =
 			this.props.selectedApplicationCapability &&
-			typeof this.props.selectedApplicationCapability === 'object' &&
-			this.props.selectedApplicationCapability.id !== 'use_default'
+				typeof this.props.selectedApplicationCapability === 'object' &&
+				this.props.selectedApplicationCapability.id !== 'use_default'
 				? this.props.selectedApplicationCapability.id
 				: constants.DEFAULT_APPLICATION_CAPABILITY;
 		let orderer_urls = [];
@@ -1473,6 +1575,13 @@ class ChannelModal extends Component {
 		} else {
 			orderer_urls.push(this.props.selectedOrderer.backend_addr);
 		}
+
+
+		// dsh start here
+
+
+
+
 		let options = {
 			channel_id: this.props.channelName,
 			consortium_id: this.props.default_consortium,
@@ -1489,7 +1598,7 @@ class ChannelModal extends Component {
 			orderer_msps: orderer_msps,
 			block_params: block_params,
 			raft_params: raft_params,
-			consenters: this.props.use_default_consenters ? [] : this.props.consenters,
+			consenters: this.decideConsenters(),
 		};
 		if (selectedApplicationCapability) {
 			options.application_capabilities = [selectedApplicationCapability];
@@ -1501,10 +1610,17 @@ class ChannelModal extends Component {
 			options.orderer_capabilities = [selectedOrdererCapability];
 		}
 		if (selectedApplicationCapability && selectedApplicationCapability.indexOf('V2_0') !== -1) {
+			console.log('dsh99 before: ', JSON.stringify(this.props.lifecycle_policy, null, 2));
 			this.buildChaincodePolicyOptions(options, 'lifecycle_policy');
 			this.buildChaincodePolicyOptions(options, 'endorsement_policy');
+			console.log('dsh99 after: ', JSON.stringify(options.lifecycle_policy, null, 2));
 		}
 		Log.debug('Sending request to create new channel: ', options);
+		console.log('dsh99 options: ', options);
+
+		const my_block = StitchApi.buildGenesisBlockOSNadmin(options);
+		console.log('dsh99 new block: ', my_block);
+
 
 		this.props.updateState(SCOPE, {
 			submitting: true,
@@ -1512,6 +1628,9 @@ class ChannelModal extends Component {
 		});
 		ChannelApi.createAppChannel(options)
 			.then(resp => {
+
+				console.log('dsh99 ???: ', resp);
+				/* dsh todo remove comment
 				Log.debug('Channel was created successfully: ', resp);
 				if (window.trackEvent) {
 					window.trackEvent('Created Object', {
@@ -1529,9 +1648,11 @@ class ChannelModal extends Component {
 				});
 				this.sidePanel.closeSidePanel();
 				this.props.onComplete(this.props.channelName, resp ? resp.isOrdererSignatureNeeded : null);
-				triggerSurvey(triggers.CREATE_CHANNEL);
+				triggerSurvey(triggers.CREATE_CHANNEL);*/
 			})
 			.catch(error => {
+				console.error(error);
+				/* dsh todo remove comment
 				Log.error(error);
 				let error_msg = 'error_create_channel';
 				if (error && error.grpc_resp && error.grpc_resp.statusMessage) {
@@ -1556,7 +1677,7 @@ class ChannelModal extends Component {
 						title: error_msg,
 						details: error,
 					},
-				});
+				});*/
 			});
 	};
 
@@ -1639,20 +1760,20 @@ class ChannelModal extends Component {
 		}
 		let selectedOrdererCapability =
 			this.props.selectedOrdererCapability &&
-			typeof this.props.selectedOrdererCapability === 'object' &&
-			this.props.selectedOrdererCapability.id !== 'use_default'
+				typeof this.props.selectedOrdererCapability === 'object' &&
+				this.props.selectedOrdererCapability.id !== 'use_default'
 				? this.props.selectedOrdererCapability.id
 				: null;
 		let selectedChannelCapability =
 			this.props.selectedChannelCapability &&
-			typeof this.props.selectedChannelCapability === 'object' &&
-			this.props.selectedChannelCapability.id !== 'use_default'
+				typeof this.props.selectedChannelCapability === 'object' &&
+				this.props.selectedChannelCapability.id !== 'use_default'
 				? this.props.selectedChannelCapability.id
 				: null;
 		let selectedApplicationCapability =
 			this.props.selectedApplicationCapability &&
-			typeof this.props.selectedApplicationCapability === 'object' &&
-			this.props.selectedApplicationCapability.id !== 'use_default'
+				typeof this.props.selectedApplicationCapability === 'object' &&
+				this.props.selectedApplicationCapability.id !== 'use_default'
 				? this.props.selectedApplicationCapability.id
 				: null;
 		let isAdmin = false;
@@ -1749,6 +1870,25 @@ class ChannelModal extends Component {
 			});
 	};
 
+	// pick the consenter array. selected consenters, empty array, or default consenters
+	decideConsenters = () => {
+		if (!this.props.use_osnadmin) {
+			return this.props.use_default_consenters ? [] : this.props.consenters;
+		} else {
+			if (!this.props.use_default_consenters || this.props.consenters.length > 0) {
+				// use the selected consenters if they are any, when using osnadmin
+				return this.props.consenters;
+			} else {
+				// select all orderers that are owned by any orderer org, when using osnadmin
+				const defaults = this.props.raftNodes.filter(x => {
+					let find = this.props.orderer_orgs.find(y => x.msp_id === y.msp_id);
+					return find ? true : false;
+				});
+				return defaults;
+			}
+		}
+	}
+
 	buildChaincodePolicyOptions = (options, policy) => {
 		let type = this.props[policy].type;
 		let members = type === 'SPECIFIC' && this.props[policy].members;
@@ -1763,27 +1903,25 @@ class ChannelModal extends Component {
 		};
 	};
 
+	// render the step navigation in the left pane
 	renderChannelTimeline(translate) {
-		const { onClose, timelineSteps, timelineLoading, selectedTimelineStep, isChannelUpdate, advanced } = this.props;
-		if (!timelineSteps || timelineLoading) return;
-		let isOrdererSignatureNeeded =
-			this.isAnyCapabilityModified() ||
-			this.isAnyBlockParamModified() ||
-			this.isConsenterSetModified() ||
-			this.isAdminsModified() ||
-			this.isAnyRaftParamModified();
+		const { onClose, selectedTimelineStep, isChannelUpdate } = this.props;
+		const { timelineSteps, timelineLoading, advanced } = this.props;
 		let updatedSteps = [];
-		const isChannel2_0 = this.isChannel2_0();
+
+		if (!timelineSteps || timelineLoading) return;
+
+		// last minute edit of the steps if the advanced option was picked
 		if (advanced) {
 			timelineSteps.forEach(group => {
 				group.forEach(subGroup => {
 					if (subGroup.groupTitle === 'advanced_configuration') {
 						subGroup.groupSteps.forEach(step => {
 							if (step.label === 'ordering_service_organization') {
-								step.disabled = !isOrdererSignatureNeeded;
+								step.disabled = !this.calcIfOrdererSignatureNeeded();
 							}
 							if (step.label === 'channel_lifecycle_policy' || step.label === 'channel_endorsement_policy') {
-								step.disabled = !isChannel2_0;
+								step.disabled = !this.isChannel2_0();
 							}
 						});
 					}
@@ -1793,6 +1931,7 @@ class ChannelModal extends Component {
 		} else {
 			updatedSteps = timelineSteps;
 		}
+
 		return (
 			<Timeline
 				steps={updatedSteps}
@@ -1805,15 +1944,24 @@ class ChannelModal extends Component {
 		);
 	}
 
+	// are we going to sign this tx with an orderer org signature?
+	calcIfOrdererSignatureNeeded = (useOSNAdmin) => {
+		return this.isAnyCapabilityModified() ||
+			this.isAnyBlockParamModified() ||
+			this.isConsenterSetModified() ||
+			this.isAdminsModified() ||
+			this.isAnyRaftParamModified() ||
+			this.props.use_osnadmin ||
+			useOSNAdmin;
+	};
+
+	// render this step's content (only 1 step)
 	renderSection = (translate, section) => {
 		const { viewing, existingConsenters, existingOrdererOrgs, channelOrderer, existingCapabilities, existingBlockParams } = this.props;
 		let isCapabilityModified = this.isAnyCapabilityModified();
-		let isBlockParamModified = this.isAnyBlockParamModified();
-		let isConsenterSetModified = this.isConsenterSetModified();
 		let isAdminsModified = this.isAdminsModified();
 		let isChannel2_0 = this.isChannel2_0();
-		let isRaftParamModified = this.isAnyRaftParamModified();
-		let isOrdererSignatureNeeded = isCapabilityModified || isBlockParamModified || isConsenterSetModified || isAdminsModified || isRaftParamModified;
+		let isOrdererSignatureNeeded = this.calcIfOrdererSignatureNeeded();
 		const canModifyConsenters = this.canModifyConsenters();
 		const consenterUpdateCount = this.consenterUpdateCount();
 		if (viewing !== section) return;
@@ -1887,10 +2035,13 @@ class ChannelModal extends Component {
 		);
 	};
 
+	// render all the step components
 	render() {
 		const isHigherCapabilityAvailable = this.isAnyHigherCapabilityAvailable();
-		const canModifyConsenters = this.canModifyConsenters();
 		const { isChannelUpdate, translate } = this.props;
+
+		// dsh todo i don't like any control here, all sections should render w/o control logic, seems confusing
+		// though, by having logic here we can not-load components that will make api calls that we don't care about... hmmmm tbd
 		return (
 			<SidePanel
 				id="ibp--template-full-page-side-panel"
@@ -1915,8 +2066,8 @@ class ChannelModal extends Component {
 						{this.renderSection(translate, 'lifecycle_policy')}
 						{this.renderSection(translate, 'endorsement_policy')}
 						{this.renderSection(translate, 'block_cutting_params')}
-						{isChannelUpdate && canModifyConsenters && this.renderSection(translate, 'orderer_admin_set')}
-						{canModifyConsenters && this.renderSection(translate, 'consenter_set')}
+						{this.renderSection(translate, 'orderer_admin_set')}
+						{this.renderSection(translate, 'consenter_set')}
 						{this.renderSection(translate, 'ordering_service_organization')}
 						{this.renderSection(translate, 'channel_acls')}
 						{this.renderSection(translate, 'review_channel_info')}
@@ -2000,6 +2151,7 @@ const dataProps = {
 	invalid_consenter: PropTypes.bool,
 	original_orgs: PropTypes.array,
 	use_default_consenters: PropTypes.bool,
+	use_osnadmin: PropTypes.bool,
 	channel_warning_20: PropTypes.bool,
 	channel_warning_20_details: PropTypes.array,
 	nodeou_warning: PropTypes.bool,
