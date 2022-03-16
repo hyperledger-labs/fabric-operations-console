@@ -52,13 +52,18 @@ const Timeline = ({ steps, onClose, selectedTimelineStep, header, estTime, progr
 											{!progressWithChecks &&
 												selectedTimelineStep.currentStepInsideOfGroupIndex === groupStepIndex &&
 												selectedTimelineStep.currentStepIndex === index && <span className="ibp-timeline-current-step-indicator" />}
-											{groupStep.isLink && !groupStep.disabled ? (
+											{groupStep.isLink && !groupStep.disabled && groupStep.hidden !== true ? (
+
+												// create a clickable step
 												<button className="ibp-template-timeline-label"
 													onClick={groupStep.onClick}
 												>
 													{translate(groupStep.label)}
 												</button>
+
 											) : groupStep.hidden === true ? <span></span> : (
+
+												// create a non-clickable step
 												<span
 													className={`ibp-timeline-label-only ${currentStep.type === 'intro' ? 'ibp-timeline-intro-step' : ''} ${
 														groupStep.disabled ? 'ibp-timeline-disabled-step' : ''
@@ -66,6 +71,7 @@ const Timeline = ({ steps, onClose, selectedTimelineStep, header, estTime, progr
 												>
 													{translate(groupStep.label)}
 												</span>
+
 											)}
 										</div>
 									);

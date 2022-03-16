@@ -34,6 +34,7 @@ import Consenters from '../ChannelModal/Wizard/Consenters/Consenters';
 import Details from '../ChannelModal/Wizard/Details/Details';
 import OrdererSignature from '../ChannelModal/Wizard/OrdererSignature/OrdererSignature';
 import Organizations from '../ChannelModal/Wizard/Organizations/Organizations';
+import OrdererOrganizations from '../ChannelModal/Wizard/OrdererOrganizations/OrdererOrganizations';
 import OrgSignature from '../ChannelModal/Wizard/OrgSignature/OrgSignature';
 import Policy from '../ChannelModal/Wizard/Policy/Policy';
 import Prerequisites from '../ChannelModal/Wizard/Prerequisites/Prerequisites';
@@ -92,7 +93,8 @@ class ChannelModal extends Component {
 			selectedOrderer: _.size(this.props.channelOrderer) === 1 ? this.props.channelOrderer[0] : null,
 			orgs: [],
 			original_orgs: [],
-			orderer_orgs: this.props.existingOrdererOrgs,
+			ordering_orgs: [],									// osnadmin step - holds all orderer orgs
+			orderer_orgs: this.props.existingOrdererOrgs,		// legacy step - holds only administrator orderer orgs
 			msps: [],
 			selectedOrg: null,
 			memberCounts: [],
@@ -167,6 +169,7 @@ class ChannelModal extends Component {
 			submitting: false,
 			identities: null,
 			orgs: [],
+			ordering_orgs: [],
 			original_orgs: [],
 			orderer_orgs: [],
 			acls: [],
@@ -177,6 +180,7 @@ class ChannelModal extends Component {
 			selectedOrg: null,
 			channelNameError: '',
 			noOperatorError: '',
+			noAdminError: '',
 			duplicateMSPError: '',
 			createChannelError: '',
 			missingDefinitionError: '',
@@ -249,8 +253,15 @@ class ChannelModal extends Component {
 							hidden: false,
 						},
 						{
+							label: 'channel_orderer_organizations',
+							onClick: () => this.showStep('channel_orderer_organizations', 1, 3),
+							isLink: false,
+							disabled: false,
+							hidden: true,
+						},
+						{
 							label: 'organization_creating_channel',
-							onClick: () => this.showStep('organization_creating_channel', 1, 3),
+							onClick: () => this.showStep('organization_creating_channel', 1, 4),
 							isLink: false,
 							disabled: false,
 							hidden: false,
@@ -536,9 +547,11 @@ class ChannelModal extends Component {
 			isOrdererUnavailable,
 			checkingOrdererStatus,
 			noOperatorError,
+			noAdminError,
 			duplicateMSPError,
 			missingDefinitionError,
 			orgs,
+			ordering_orgs,
 			orderer_orgs,
 			customPolicy,
 			selectedIdentity,
@@ -590,12 +603,7 @@ class ChannelModal extends Component {
 			}
 		}
 		if (step === 'ordering_service_organization') {
-			let isCapabilityModified = this.isAnyCapabilityModified();
-			let isBlockParamModified = this.isAnyBlockParamModified();
-			let isConsenterSetModified = this.isConsenterSetModified();
-			let isRaftParamModified = this.isAnyRaftParamModified();
-			let isAdminsModified = this.isAdminsModified();
-			let isOrdererSignatureNeeded = isCapabilityModified || isBlockParamModified || isConsenterSetModified || isAdminsModified || isRaftParamModified;
+			let isOrdererSignatureNeeded = this.calcIfOrdererSignatureNeeded();
 			complete = isOrdererSignatureNeeded ? selectedOrdererMsp && selectedOrdererMsp !== 'selectedChannelCreator' : true;
 		}
 		if (step === 'channel_acls') {
@@ -608,12 +616,7 @@ class ChannelModal extends Component {
 			complete = endorsement_policy.type !== 'SPECIFIC' || (_.size(endorsement_policy.members) > 0 && endorsement_policy.n > 0);
 		}
 		if (step === 'review_channel_info') {
-			let isCapabilityModified = this.isAnyCapabilityModified();
-			let isBlockParamModified = this.isAnyBlockParamModified();
-			let isConsenterSetModified = this.isConsenterSetModified();
-			let isRaftParamModified = this.isAnyRaftParamModified();
-			let isAdminsModified = this.isAdminsModified();
-			let isOrdererSignatureNeeded = isCapabilityModified || isBlockParamModified || isConsenterSetModified || isAdminsModified || isRaftParamModified;
+			let isOrdererSignatureNeeded = this.calcIfOrdererSignatureNeeded();
 			complete =
 				channelName &&
 				!channelNameError &&
@@ -622,6 +625,7 @@ class ChannelModal extends Component {
 				selectedOrderer &&
 				selectedOrderer !== 'select_orderer' &&
 				!noOperatorError &&
+				!noAdminError &&
 				!duplicateMSPError &&
 				!missingDefinitionError &&
 				orgs &&
@@ -644,6 +648,12 @@ class ChannelModal extends Component {
 						selectedApplicationCapability &&
 						selectedApplicationCapability !== 'use_default'));
 		}
+
+		// dsh todo test if we are blocking the normal flow!
+		if (step === 'channel_orderer_organizations') {
+			complete = !noAdminError && !duplicateMSPError && !missingDefinitionError && ordering_orgs && !ordering_orgs.find(org => org.msp === '');
+		}
+
 		if (complete && !this.completedSteps.includes(step)) {
 			this.completedSteps.push(step);
 		} else if (!complete && this.completedSteps.includes(step)) {
@@ -672,7 +682,8 @@ class ChannelModal extends Component {
 		let index = isChannelUpdate ? 0 : 1;
 		const step_organizations = index++;
 		const step_policy = index++;
-		const step_org_signature = 3;
+		const step_org_signature = 4;
+		const step_orderer_org_select = 3;
 		const step_capabilities = 0;
 		index = isHigherCapabilityAvailable ? 1 : 0;
 		const step_lifecycle_policy = index++;
@@ -725,12 +736,26 @@ class ChannelModal extends Component {
 					if (isComplete) {
 						if (isChannelUpdate) {
 							this.showStep('capabilities', group_advanced, step_capabilities);
+						} else if (use_osnadmin) {
+							this.showStep('channel_orderer_organizations', group_required, step_orderer_org_select);
 						} else {
 							this.showStep('organization_creating_channel', group_required, step_org_signature);
 						}
 					}
 				};
 				break;
+
+			// this panel allows setting the orderer orgs in the config-block
+			case 'channel_orderer_organizations':
+				isComplete = this.isStepCompleted('channel_orderer_organizations');
+				back = () => this.showStep('channel_update_policy', group_required, step_policy);
+				next = () => {
+					if (isComplete) {
+						this.showStep('organization_creating_channel', group_required, step_org_signature);
+					}
+				};
+				break;
+
 			case 'organization_creating_channel':
 				isComplete = this.isStepCompleted('organization_creating_channel');
 				back = () => this.showStep('channel_update_policy', group_required, step_policy);
@@ -850,7 +875,7 @@ class ChannelModal extends Component {
 								: this.showStep('organization_creating_channel', group_prerequisites, step_org_signature);
 				next = () => {
 					if (canModifyConsenters) {
-						(isChannelUpdate || use_osnadmin)
+						(isChannelUpdate && !use_osnadmin)
 							? this.showStep('orderer_admin_set', group_advanced, step_orderer_admin_set)
 							: this.showStep('consenter_set', group_advanced, step_consenters);
 					} else {
@@ -861,7 +886,7 @@ class ChannelModal extends Component {
 				};
 				break;
 
-			// panel allows setting the orderer orgs, which would be referenced in future "Orderer" group fabric config-block changes
+			// this panel allows setting the admin role on orderer orgs, which would be referenced in future "Orderer" group fabric config-block changes
 			case 'orderer_admin_set':
 				isComplete = this.isStepCompleted('orderer_admin_set');
 				back = () => this.showStep('block_cutting_params', group_advanced, step_block_parameters);
@@ -878,9 +903,10 @@ class ChannelModal extends Component {
 						: this.showStep('block_cutting_params', group_advanced, step_block_parameters);
 				next = () => {
 					if (isComplete) {
-						isOrdererSignatureNeeded
+						isOrdererSignatureNeeded && !use_osnadmin		// dsh todo simplify this, remove 2nd condition
 							? this.showStep('ordering_service_organization', group_advanced, step_orderer_signature)
 							: this.showStep('channel_acls', group_advanced, step_acl);
+
 					}
 				};
 				break;
@@ -956,6 +982,7 @@ class ChannelModal extends Component {
 		let removeSteps = [];
 		if (!this.canModifyConsenters()) {
 			removeSteps.push('consenter_set');
+			removeSteps.push('channel_orderer_organizations');
 		}
 		if (!this.canModifyConsenters() || !isChannelUpdate) {
 			removeSteps.push('orderer_admin_set');
@@ -981,6 +1008,7 @@ class ChannelModal extends Component {
 					subGroup.groupSteps.forEach(step => {
 						if (removeSteps.includes(step.label)) {
 							step.hidden = true;								// step won't show up if "hidden" is true
+							console.log('dsh99 hid step', step.label);
 						}
 					});
 				}
@@ -992,6 +1020,29 @@ class ChannelModal extends Component {
 			timelineLoading: false,
 		});
 	};
+
+	// this shows the step from the left navigation pane
+	// dsh todo use this instead of show all steps for osnadmin
+	/*showStepsFromTimeline = showSteps => {
+		let updatedSteps = [];
+		console.log('dsh99 showing steps', showSteps);
+		this.timelineSteps.forEach(group => {
+			group.forEach(subGroup => {
+				subGroup.groupSteps.forEach(step => {
+					if (showSteps.includes(step.label)) {
+						step.hidden = false;								// step won't show up if "hidden" is true
+						step.enabled = true;
+						console.log('dsh99 step visible', step.label);
+					}
+				});
+			});
+			updatedSteps.push(group);
+		});
+		this.props.updateState(SCOPE, {
+			timelineSteps: updatedSteps,
+			timelineLoading: false,
+		});
+	};*/
 
 	getMsps = () => {
 		let msps = [];
@@ -1059,6 +1110,7 @@ class ChannelModal extends Component {
 		console.log('dsh99 setting all orgs', all_orgs);
 		this.props.updateState(SCOPE, {
 			orgs: all_orgs,
+			//ordering_orgs: all_orgs,		// dsh what does this do
 			original_orgs: JSON.parse(JSON.stringify(all_orgs)),
 			missingDefinitionError:
 				missingDefinitions.length > 0 ? this.props.translate('missing_msp_definition', { list_of_msps: _.join(missingDefinitions, ',') }) : null,
@@ -1229,7 +1281,8 @@ class ChannelModal extends Component {
 				// [PATH 1] - using OSN Admin create channel wizard
 				if (orderer && orderer.osnadmin_url) {
 					this.props.updateState(SCOPE, { use_osnadmin: true });		// change the menu options
-					this.updateTimelineSteps(true, true, 2, 0, false);
+					this.updateTimelineSteps(true, true, 2, 0, false);					// show all steps
+					this.removeStepsFromTimeline(['ordering_service_organization']);	// but hide this one
 					console.log('dsh99 new steps^^');
 
 					// get all ordering groups
@@ -1519,12 +1572,14 @@ class ChannelModal extends Component {
 		this.props.acls.forEach(acl => {
 			acls[acl.resource] = acl.definition;
 		});
-		let orderer_msps = [];
 
-		// dsh todo you can only select 1 orderer msp?
-		if (this.props.selectedOrdererMsp && this.props.selectedOrdererMsp.host_url) {
+		let orderer_msps = [];
+		if (this.props.use_osnadmin) {
+			orderer_msps = this.props.ordering_orgs;
+		} else if (this.props.selectedOrdererMsp && this.props.selectedOrdererMsp.host_url) {
 			orderer_msps.push({ ...this.props.selectedOrdererMsp });
 		}
+
 		let block_params;
 		if (this.isAnyBlockParamModified()) {
 			block_params = {
@@ -1681,7 +1736,7 @@ class ChannelModal extends Component {
 			});
 	};
 
-	updateChannel = async() => {
+	updateChannel = async () => {
 		let existing_msps = {};
 		this.props.existingOrgs.forEach(org => {
 			const msp = this.props.msps.find(x => x.msp_id === org.id && _.intersection(x.root_certs, org.root_certs).length >= 1);
@@ -1881,7 +1936,7 @@ class ChannelModal extends Component {
 			} else {
 				// select all orderers that are owned by any orderer org, when using osnadmin
 				const defaults = this.props.raftNodes.filter(x => {
-					let find = this.props.orderer_orgs.find(y => x.msp_id === y.msp_id);
+					let find = this.props.ordering_orgs.find(y => x.msp_id === y.msp_id);
 					return find ? true : false;
 				});
 				return defaults;
@@ -1945,14 +2000,14 @@ class ChannelModal extends Component {
 	}
 
 	// are we going to sign this tx with an orderer org signature?
-	calcIfOrdererSignatureNeeded = (useOSNAdmin) => {
-		return this.isAnyCapabilityModified() ||
+	calcIfOrdererSignatureNeeded = () => {
+		return (
+			this.isAnyCapabilityModified() ||
 			this.isAnyBlockParamModified() ||
 			this.isConsenterSetModified() ||
 			this.isAdminsModified() ||
-			this.isAnyRaftParamModified() ||
-			this.props.use_osnadmin ||
-			useOSNAdmin;
+			this.isAnyRaftParamModified()
+		) && !this.props.use_osnadmin;		// when using the osnadmin endpoints we don't need a classical orderer signature
 	};
 
 	// render this step's content (only 1 step)
@@ -1986,6 +2041,11 @@ class ChannelModal extends Component {
 					/>
 				)}
 				{viewing === 'channel_update_policy' && <Policy />}
+				{viewing === 'channel_orderer_organizations' && (
+					<OrdererOrganizations updatePolicyDropdown={this.updatePolicyDropdown}
+						verifyACLPolicyValidity={this.verifyACLPolicyValidity}
+					/>
+				)}
 				{(viewing === 'organization_creating_channel' || viewing === 'organization_updating_channel') && <OrgSignature editLoading={this.props.editLoading} />}
 				{viewing === 'capabilities' && <Capabilities existingCapabilities={existingCapabilities}
 					channelPeers={this.props.channelPeers}
@@ -2060,6 +2120,7 @@ class ChannelModal extends Component {
 						{!isChannelUpdate && this.renderSection(translate, 'channel_details')}
 						{this.renderSection(translate, 'channel_organizations')}
 						{this.renderSection(translate, 'channel_update_policy')}
+						{this.renderSection(translate, 'channel_orderer_organizations')}
 						{!isChannelUpdate && this.renderSection(translate, 'organization_creating_channel')}
 						{isChannelUpdate && this.renderSection(translate, 'organization_updating_channel')}
 						{isHigherCapabilityAvailable && this.renderSection(translate, 'capabilities')}
@@ -2094,6 +2155,7 @@ const dataProps = {
 	selectedChannelCreator: PropTypes.any,
 	msps: PropTypes.array,
 	orgs: PropTypes.array,
+	ordering_orgs: PropTypes.array,
 	orderer_orgs: PropTypes.array,
 	loading: PropTypes.bool,
 	submitting: PropTypes.bool,
@@ -2102,6 +2164,7 @@ const dataProps = {
 	identities: PropTypes.array,
 	channelNameError: PropTypes.string,
 	noOperatorError: PropTypes.string,
+	noAdminError: PropTypes.string,
 	duplicateMSPError: PropTypes.string,
 	isOrdererUnavailable: PropTypes.bool,
 	isTLSUnavailable: PropTypes.bool,

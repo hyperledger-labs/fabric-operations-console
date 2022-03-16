@@ -252,13 +252,15 @@ class StitchApi {
 				LifecycleEndorsement: build_policy_from_wizard(opts.lifecycle_policy, 'Endorsement', 'PEER'),
 			},
 
-			// we don't currently support customizing these values in apollo
-			/*orderer_policies: {
-				Admins: 'MAJORITY Admins',							// use null for default policy
-				BlockValidation: 'ANY Writers',						// use null for default policy
-				Readers: 'ANY Readers',								// use null for default policy
-				Writers: 'ANY Writers',								// use null for default policy
-			},*/
+			// these policies can be null to use the default policy
+			orderer_policies: {
+				Admins: build_orderer_policy_from_wizard2('admin', 'ADMIN'),
+
+				// we don't currently support customizing these values in apollo
+				//BlockValidation: 'ANY Writers',						// use null for default policy
+				//Readers: 'ANY Readers',								// use null for default policy
+				//Writers: 'ANY Writers',								// use null for default policy
+			},
 
 			batch_size: {
 				absolute_max_bytes: opts.block_params ? opts.block_params.absolute_max_bytes : null,
@@ -309,7 +311,7 @@ class StitchApi {
 					addresses: build_addresses(msp_id),					// required, string of addresses including port, no host
 
 					'MSP': {
-						... opts.orderer_msps[i]
+						...opts.orderer_msps[i]
 					},
 				};
 			}
@@ -386,19 +388,49 @@ class StitchApi {
 		}
 
 		// take apollo's application msp data and make an explicit cli formatted policy
-		function build_policy_from_wizard2(perm_name, fabric_role) {
+		// note this sets "n" to 1 aka ANY org
+		function build_policy_from_wizard2(apollo_perm_name, fabric_role) {
 			let member_txt = '';						// build the members string as "MEMBER1.ROLE, MEMBER2.ROLE"
-			const lc_perm = perm_name.toLowerCase();
+			const lc_perm = apollo_perm_name.toLowerCase();
+			let count = 0;
 
 			for (let org in opts.application_msps) {
 				if (Array.isArray(opts.application_msps[org].roles) && opts.application_msps[org].roles.includes(lc_perm)) {
 					member_txt += `"${org}.${fabric_role}", `;
+					count++;
 				}
 			}
 
-			if (member_txt.length > 2) {
+			if (count > 0) {
 				member_txt = member_txt.substring(0, member_txt.length - 2);		// remove last space & comma
 				return `OutOf(1, ${member_txt})`;									// we always set out-of 1
+			}
+
+			return null;
+		}
+
+		// take apollo's orderer msp data and make an explicit cli formatted policy
+		// note this sets "n" to be equal to the MAJORITY of orgs
+		// dsh todo ask varad if this is right (i don't see the ability to change the policy in the existing wizard)
+		function build_orderer_policy_from_wizard2(apollo_perm_name, fabric_role) {
+			let member_txt = '';						// build the members string as "MEMBER1.ROLE, MEMBER2.ROLE"
+			const lc_perm = apollo_perm_name.toLowerCase();
+			let count = 0;
+
+			for (let i in opts.orderer_msps) {
+				let org = opts.orderer_msps[i].msp_id;
+				if (Array.isArray(opts.orderer_msps[i].roles) && opts.orderer_msps[i].roles.includes(lc_perm)) {
+					member_txt += `"${org}.${fabric_role}", `;
+					count++;
+				}
+			}
+
+			// calc how many is a majority
+			const n = Math.ceil(count / 2);
+
+			if (count > 0) {
+				member_txt = member_txt.substring(0, member_txt.length - 2);		// remove last space & comma
+				return `OutOf(${n}, ${member_txt})`;									// we always set out-of 1
 			}
 
 			return null;
