@@ -21,11 +21,11 @@ import { ChannelParticipationApi } from '../../rest/ChannelParticipationApi';
 import IdentityApi from '../../rest/IdentityApi';
 import Helper from '../../utils/helper';
 import ItemContainer from '../ItemContainer/ItemContainer';
-import ItemTileLabels from '../ItemContainerTile/ItemTileLabels/ItemTileLabels';
 import Logger from '../Log/Logger';
 import SVGs from '../Svgs/Svgs';
 import ChannelParticipationModal from './ChannelParticipationModal';
 import ChannelParticipationUnjoinModal from './ChannelParticipationUnjoinModal';
+import _ from 'lodash';
 
 const naturalSort = require('javascript-natural-sort');
 const SCOPE = 'ChannelParticipationDetails';
@@ -69,13 +69,13 @@ class ChannelParticipationDetails extends Component {
 		if (this.props.details && !this.props.details.osnadmin_url) return;
 		let node = this.props.selectedNode || this.props.details;
 		let nodes = this.props.selectedNode ? [this.props.selectedNode] : this.props.details.raft;
-		let systemChannel = true;
 		let channelInfo = {};
 		let orderer_tls_identity = await IdentityApi.getTLSIdentity(node);
 		if (orderer_tls_identity) {
 			try {
 				let all_identities = await IdentityApi.getIdentities();
 				channelInfo = await ChannelParticipationApi.map1Channel(all_identities, nodes, channelId);
+				channelInfo.systemChannel = _.get(this.props.channelList, 'systemChannel.name') === channelId;
 			} catch (error) {
 				Log.error('Unable to get channel list:', error);
 			}
@@ -86,17 +86,17 @@ class ChannelParticipationDetails extends Component {
 				});
 			}
 		}
+
 		this.props.updateState(SCOPE, {
 			channelInfo,
-			systemChannel,
 		});
 	};
 
 	buildCustomTile = (channel) => {
 		return (
 			<div>
-				{channel.nodes && channel.nodes.length > 1 && (
-					<ItemTileLabels custom={`Nodes: ${channel.nodes.join(',')}`}/>
+				{channel.type === 'system_channel' && (
+					<p className='ibp-orderer-channel-sub'>System Channel</p>
 				)}
 				<button className="ibp-orderer-channel-info"
 					onClick={async() => await this.openCPDetailsModal(channel)}
@@ -147,7 +147,7 @@ class ChannelParticipationDetails extends Component {
 				)}
 				{this.props.showCPUnjoinModal && (
 					<ChannelParticipationUnjoinModal
-						channelInfo= {this.props.channelInfo}
+						channelInfo={this.props.channelInfo}
 						details={this.props.details}
 						onComplete={this.props.unJoinComplete}
 						onClose={this.closeCPUnjoinModal}
