@@ -649,7 +649,6 @@ class ChannelModal extends Component {
 						selectedApplicationCapability !== 'use_default'));
 		}
 
-		// dsh todo test if we are blocking the normal flow!
 		if (step === 'channel_orderer_organizations') {
 			complete = !noAdminError && !duplicateMSPError && !missingDefinitionError && ordering_orgs && !ordering_orgs.find(org => org.msp === '');
 		}
@@ -893,7 +892,7 @@ class ChannelModal extends Component {
 				next = () => this.showStep('consenter_set', group_advanced, step_consenters);
 				break;
 
-			// panel allow setting which orderers should be consenters on this channel
+			// panel allows setting which orderers should be consenters on this channel
 			// it also allows the raft params to be edited
 			case 'consenter_set':
 				isComplete = this.isStepCompleted('consenter_set');
@@ -1008,7 +1007,6 @@ class ChannelModal extends Component {
 					subGroup.groupSteps.forEach(step => {
 						if (removeSteps.includes(step.label)) {
 							step.hidden = true;								// step won't show up if "hidden" is true
-							console.log('dsh99 hid step', step.label);
 						}
 					});
 				}
@@ -1025,14 +1023,12 @@ class ChannelModal extends Component {
 	// dsh todo use this instead of show all steps for osnadmin
 	/*showStepsFromTimeline = showSteps => {
 		let updatedSteps = [];
-		console.log('dsh99 showing steps', showSteps);
 		this.timelineSteps.forEach(group => {
 			group.forEach(subGroup => {
 				subGroup.groupSteps.forEach(step => {
 					if (showSteps.includes(step.label)) {
 						step.hidden = false;								// step won't show up if "hidden" is true
 						step.enabled = true;
-						console.log('dsh99 step visible', step.label);
 					}
 				});
 			});
@@ -1087,9 +1083,7 @@ class ChannelModal extends Component {
 	populateChannelOrgs = () => {
 		let existingOrgs = [];
 		let missingDefinitions = [];
-		console.log('dsh99 existingOrgs', this.props.existingOrgs);
 		this.props.existingOrgs.forEach(member => {
-			console.log('dsh99 existingOrgs member', member);
 			let msp_definition = this.props.msps.find(msp => msp.msp_id === member.id);
 			let org = {
 				msp: member.id,
@@ -1107,7 +1101,6 @@ class ChannelModal extends Component {
 			}
 		});
 		let all_orgs = this.props.orgs ? [...this.props.orgs, ...existingOrgs] : [...existingOrgs];
-		console.log('dsh99 setting all orgs', all_orgs);
 		this.props.updateState(SCOPE, {
 			orgs: all_orgs,
 			//ordering_orgs: all_orgs,		// dsh what does this do
@@ -1251,11 +1244,9 @@ class ChannelModal extends Component {
 	getOrderingServiceDetails = data => {
 		const selectedOrderer = data ? data : this.props.selectedOrderer;
 		if (!_.has(selectedOrderer, 'id')) return;
-		console.log('dsh99 selected os', selectedOrderer.id);
 
 		OrdererRestApi.getOrdererDetails(selectedOrderer.id, true).then(orderer => {
 			let getCertsFromDeployer = false;
-			console.log('dsh99 got orderer details:', orderer);
 
 			if (orderer && orderer.raft) {
 				this.props.updateState(SCOPE, { loadingConsenters: true });
@@ -1276,11 +1267,11 @@ class ChannelModal extends Component {
 					};
 				});
 				console.log('dsh99 consenters 1:', consenters);
-				orderer.osnadmin_url = 'dsh todo';								// remove this
+				orderer.osnadmin_url = 'dsh todo';										// remove this
 
 				// [PATH 1] - using OSN Admin create channel wizard
 				if (orderer && orderer.osnadmin_url) {
-					this.props.updateState(SCOPE, { use_osnadmin: true });		// change the menu options
+					this.props.updateState(SCOPE, { use_osnadmin: true });				// change the menu options
 					this.updateTimelineSteps(true, true, 2, 0, false);					// show all steps
 					this.removeStepsFromTimeline(['ordering_service_organization']);	// but hide this one
 					console.log('dsh99 new steps^^');
@@ -1289,6 +1280,7 @@ class ChannelModal extends Component {
 					this.getAllOrderers().then(possible_consenters => {
 						console.log('dsh99 possible_consenters 1:', possible_consenters);
 						this.props.updateState(SCOPE, { raftNodes: possible_consenters, loadingConsenters: false, loading: false });
+						console.log('dsh99 use_osnadmin', this.props.use_osnadmin);
 					});
 				}
 
@@ -1558,6 +1550,20 @@ class ChannelModal extends Component {
 		}
 	};
 
+	// get the default fabric capability string
+	getDefaultCap = (type) => {
+		if (type === 'application') {
+			return this.props.use_osnadmin ? constants.DEFAULT_APPLICATION_CAPABILITY_OSNADMIN : constants.DEFAULT_APPLICATION_CAPABILITY;
+		}
+		if (type === 'orderer') {
+			return this.props.use_osnadmin ? constants.DEFAULT_ORDERER_CAPABILITY_OSNADMIN : constants.DEFAULT_ORDERER_CAPABILITY;
+		}
+		if (type === 'channel') {
+			return this.props.use_osnadmin ? constants.DEFAULT_CHANNEL_CAPABILITY_OSNADMIN : constants.DEFAULT_CHANNEL_CAPABILITY;
+		}
+		return null;
+	}
+
 	createChannel = () => {
 		let organizations = {};
 		this.props.orgs
@@ -1589,6 +1595,9 @@ class ChannelModal extends Component {
 				timeout: this.props.timeout,
 			};
 		}
+
+		// dsh todo make panel to select which orderers to join after submit
+
 		let raft_params;
 		if (this.isAnyRaftParamModified()) {
 			raft_params = {
@@ -1600,23 +1609,16 @@ class ChannelModal extends Component {
 			};
 		}
 		let selectedOrdererCapability =
-			this.props.selectedOrdererCapability &&
-				typeof this.props.selectedOrdererCapability === 'object' &&
-				this.props.selectedOrdererCapability.id !== 'use_default'
-				? this.props.selectedOrdererCapability.id
-				: null;
+			(this.props.selectedOrdererCapability && typeof this.props.selectedOrdererCapability === 'object' && this.props.selectedOrdererCapability.id !== 'use_default') ?
+				this.props.selectedOrdererCapability.id : this.getDefaultCap('orderer');
 		let selectedChannelCapability =
-			this.props.selectedChannelCapability &&
-				typeof this.props.selectedChannelCapability === 'object' &&
-				this.props.selectedChannelCapability.id !== 'use_default'
-				? this.props.selectedChannelCapability.id
-				: null;
+			(this.props.selectedChannelCapability && typeof this.props.selectedChannelCapability === 'object' && this.props.selectedChannelCapability.id !== 'use_default') ?
+				this.props.selectedChannelCapability.id : this.getDefaultCap('channel');;
 		let selectedApplicationCapability =
-			this.props.selectedApplicationCapability &&
-				typeof this.props.selectedApplicationCapability === 'object' &&
-				this.props.selectedApplicationCapability.id !== 'use_default'
-				? this.props.selectedApplicationCapability.id
-				: constants.DEFAULT_APPLICATION_CAPABILITY;
+			(this.props.selectedApplicationCapability && typeof this.props.selectedApplicationCapability === 'object' && this.props.selectedApplicationCapability.id !== 'use_default') ?
+				this.props.selectedApplicationCapability.id : this.getDefaultCap('application');
+		console.log('dsh99 setting app caps', selectedApplicationCapability);
+		console.log('dsh99 setting use_osn', this.props.use_osnadmin);
 		let orderer_urls = [];
 		if (this.isConsenterSetModified() && _.has(this.props.selectedOrderer, 'raft')) {
 			this.props.selectedOrderer.raft.forEach(node => {
@@ -1631,12 +1633,7 @@ class ChannelModal extends Component {
 			orderer_urls.push(this.props.selectedOrderer.backend_addr);
 		}
 
-
-		// dsh start here
-
-
-
-
+		// arguments for the create channel work
 		let options = {
 			channel_id: this.props.channelName,
 			consortium_id: this.props.default_consortium,
@@ -1665,76 +1662,96 @@ class ChannelModal extends Component {
 			options.orderer_capabilities = [selectedOrdererCapability];
 		}
 		if (selectedApplicationCapability && selectedApplicationCapability.indexOf('V2_0') !== -1) {
-			console.log('dsh99 before: ', JSON.stringify(this.props.lifecycle_policy, null, 2));
 			this.buildChaincodePolicyOptions(options, 'lifecycle_policy');
 			this.buildChaincodePolicyOptions(options, 'endorsement_policy');
-			console.log('dsh99 after: ', JSON.stringify(options.lifecycle_policy, null, 2));
 		}
 		Log.debug('Sending request to create new channel: ', options);
-		console.log('dsh99 options: ', options);
-
-		const my_block = StitchApi.buildGenesisBlockOSNadmin(options);
-		console.log('dsh99 new block: ', my_block);
-
 
 		this.props.updateState(SCOPE, {
 			submitting: true,
 			createChannelError: null,
 		});
-		ChannelApi.createAppChannel(options)
-			.then(resp => {
 
-				console.log('dsh99 ???: ', resp);
-				/* dsh todo remove comment
-				Log.debug('Channel was created successfully: ', resp);
-				if (window.trackEvent) {
-					window.trackEvent('Created Object', {
-						objectType: 'Channel',
-						object: options.channel_id,
-						tenantId: this.props.CRN.instance_id,
-						accountGuid: this.props.CRN.account_id,
-						milestoneName: 'Create a channel',
-						url: options.orderer_url,
-						'user.email': this.props.userInfo.email,
+		if (this.props.use_osnadmin) {
+			console.log('dsh99 options: ', options);
+			const my_block = StitchApi.buildGenesisBlockOSNadmin(options);
+			console.log('dsh99 new block: ', my_block);
+			osnadmin_create_channel(my_block);
+		} else {
+			legacy_create_channel();
+		}
+
+		function legacy_create_channel() {
+			ChannelApi.createAppChannel(options)
+				.then(resp => {
+					handle_success(resp);
+				})
+				.catch(error => {
+					Log.error(error);
+					let error_msg = 'error_create_channel';
+					if (error && error.grpc_resp && error.grpc_resp.statusMessage) {
+						if (
+							error.grpc_resp.statusMessage.indexOf('but got version') !== -1 ||
+							error.grpc_resp.statusMessage.indexOf('be at version 0, but it is currently at version 1') !== -1
+						) {
+							error_msg = 'channel_error_exists';
+						}
+						if (
+							error.grpc_resp.statusMessage.indexOf('existing config does not contain element for') !== -1 ||
+							error.grpc_resp.statusMessage.indexOf('Attempted to include a member which is not in the consortium') !== -1
+						) {
+							error_msg = 'channel_error_nomember';
+						}
+					} else if (error.message_key) {
+						error_msg = error.message_key;
+					}
+					this.props.updateState(SCOPE, {
+						submitting: false,
+						createChannelError: {
+							title: error_msg,
+							details: error,
+						},
 					});
-				}
-				this.props.updateState(SCOPE, {
-					submitting: false,
 				});
-				this.sidePanel.closeSidePanel();
-				this.props.onComplete(this.props.channelName, resp ? resp.isOrdererSignatureNeeded : null);
-				triggerSurvey(triggers.CREATE_CHANNEL);*/
-			})
-			.catch(error => {
-				console.error(error);
-				/* dsh todo remove comment
-				Log.error(error);
-				let error_msg = 'error_create_channel';
-				if (error && error.grpc_resp && error.grpc_resp.statusMessage) {
-					if (
-						error.grpc_resp.statusMessage.indexOf('but got version') !== -1 ||
-						error.grpc_resp.statusMessage.indexOf('be at version 0, but it is currently at version 1') !== -1
-					) {
-						error_msg = 'channel_error_exists';
-					}
-					if (
-						error.grpc_resp.statusMessage.indexOf('existing config does not contain element for') !== -1 ||
-						error.grpc_resp.statusMessage.indexOf('Attempted to include a member which is not in the consortium') !== -1
-					) {
-						error_msg = 'channel_error_nomember';
-					}
-				} else if (error.message_key) {
-					error_msg = error.message_key;
-				}
-				this.props.updateState(SCOPE, {
-					submitting: false,
-					createChannelError: {
-						title: error_msg,
-						details: error,
-					},
-				});*/
+		}
+
+		// handles success from the legacy create and the osnadmin create channel flow
+		function handle_success(resp) {
+			Log.debug('Channel was created successfully: ', resp);
+			if (window.trackEvent) {
+				window.trackEvent('Created Object', {
+					objectType: 'Channel',
+					object: options.channel_id,
+					tenantId: this.props.CRN.instance_id,
+					accountGuid: this.props.CRN.account_id,
+					milestoneName: 'Create a channel',
+					url: options.orderer_url,
+					'user.email': this.props.userInfo.email,
+				});
+			}
+			this.props.updateState(SCOPE, {
+				submitting: false,
 			});
+			this.sidePanel.closeSidePanel();
+			this.props.onComplete(this.props.channelName, resp ? resp.isOrdererSignatureNeeded : null);
+			triggerSurvey(triggers.CREATE_CHANNEL);
+		}
+
+		// perform the osnadmin join-channel apis on a new channel (config block is a genesis block)
+		function osnadmin_create_channel(genesis_block_obj) {
+			const resp = { isOrdererSignatureNeeded: false };
+			if (resp) {
+				handle_success(resp);
+				console.log('dsh99 fin.');
+			} else {
+				console.log('dsh99 fin.');
+			}
+		}
 	};
+
+	// dsh todo what happens when you exit the wizard half way and restart it, does it start good
+	// dsh todo what happens if you enter the create channel wizard from another place
+	// dsh todo how does updateChannel work with osnadmin....??
 
 	updateChannel = async () => {
 		let existing_msps = {};
@@ -2089,6 +2106,7 @@ class ChannelModal extends Component {
 						isOrdererSignatureNeeded={isOrdererSignatureNeeded}
 						consenterUpdateCount={this.consenterUpdateCount}
 						canModifyConsenters={canModifyConsenters}
+						getDefaultCap={this.getDefaultCap}
 					/>
 				)}
 			</FocusComponent>

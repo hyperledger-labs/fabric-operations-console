@@ -28,6 +28,9 @@ import SidePanelWarning from '../../../SidePanelWarning/SidePanelWarning';
 const SCOPE = 'channelModal';
 const Log = new Logger(SCOPE);
 
+// This is step "orderer_admin_set"
+//
+// this panel allows setting the admin role on orderer orgs, which would be referenced in future "Orderer" group fabric config-block changes
 export class OrdererOrganizations extends Component {
 	checkAdminCount() {
 		let hasAdmin = false;
@@ -55,7 +58,6 @@ export class OrdererOrganizations extends Component {
 		let msp = selectedOrg;
 		let selected_orgs = Array.isArray(ordering_orgs) ? JSON.parse(JSON.stringify(ordering_orgs)) : [];
 		let new_org = {
-			msp: msp.msp_id,						// dsh todo why do we have this one?
 			msp_id: msp.msp_id,
 			roles: ['writer', 'reader'],			// defaults
 			admins: msp.admins,
@@ -69,7 +71,6 @@ export class OrdererOrganizations extends Component {
 		};
 		if (!Array.isArray(selected_orgs)) { selected_orgs = []; }
 		selected_orgs.push(new_org);
-		//let updated_orgs = ordering_orgs ? [...ordering_orgs, new_org] : [new_org];
 		this.checkDuplicateMSP(new_org, selected_orgs);
 		this.checkNodeOUWarning(selected_orgs);
 		updatePolicyDropdown(selected_orgs, false);

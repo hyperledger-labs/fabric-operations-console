@@ -271,7 +271,7 @@ class StitchApi {
 			channel_restrictions: null,
 			consensus_type: {
 				consenters: filter_consenters('consenters'),
-				options: opts.raft_params							// use null for defaults
+				options: opts.raft_params								// use null for defaults
 			}
 		};
 		return window.stitch.buildTemplateConfigBlock(config_block_opts);
@@ -294,11 +294,7 @@ class StitchApi {
 			return ret;
 		}
 
-		// dsh todo orderer admin choice is not being forced, can be unselected
-
 		// build the orderer msp input data format from the wizard data
-		// dsh todo, decide if using the existing admin panel is good or if we need a new one
-		// - should we be able to select non-admin orderer msps to add?
 		function build_orderer_msps() {
 			const ret = {};
 			for (let i in opts.orderer_msps) {
@@ -410,8 +406,7 @@ class StitchApi {
 		}
 
 		// take apollo's orderer msp data and make an explicit cli formatted policy
-		// note this sets "n" to be equal to the MAJORITY of orgs
-		// dsh todo ask varad if this is right (i don't see the ability to change the policy in the existing wizard)
+		// note this sets "n" to be 1 (aka a ANY rule)
 		function build_orderer_policy_from_wizard2(apollo_perm_name, fabric_role) {
 			let member_txt = '';						// build the members string as "MEMBER1.ROLE, MEMBER2.ROLE"
 			const lc_perm = apollo_perm_name.toLowerCase();
@@ -425,12 +420,9 @@ class StitchApi {
 				}
 			}
 
-			// calc how many is a majority
-			const n = Math.ceil(count / 2);
-
 			if (count > 0) {
 				member_txt = member_txt.substring(0, member_txt.length - 2);		// remove last space & comma
-				return `OutOf(${n}, ${member_txt})`;									// we always set out-of 1
+				return `OutOf(1, ${member_txt})`;									// we always set out-of 1
 			}
 
 			return null;

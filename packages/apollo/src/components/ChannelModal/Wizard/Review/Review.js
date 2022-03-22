@@ -19,10 +19,13 @@ import Helper from '../../../../utils/helper';
 import { updateState } from '../../../../redux/commonActions';
 import { withLocalize } from 'react-localize-redux';
 import _ from 'lodash';
-import * as constants from '../../../../utils/constants';
 
 const SCOPE = 'channelModal';
 
+// This is step "review_channel_info"
+//
+// panel shows summary of the selected settings during a channel-create OR channel-update
+// edit review to show selected orderer orgs
 class Review extends Component {
 	render() {
 		const {
@@ -63,11 +66,15 @@ class Review extends Component {
 			use_default_consenters,
 			lifecycle_policy,
 			endorsement_policy,
+			getDefaultCap,
+			use_osnadmin,
+			ordering_orgs,
 		} = this.props;
-		const showBlockParamSummary = isChannelUpdate || overrideDefaults;
-		const showRaftParamSummary = isChannelUpdate || overrideRaftDefaults;
+
+		const showBlockParamSummary = isChannelUpdate || overrideDefaults || use_osnadmin;
+		const showRaftParamSummary = isChannelUpdate || overrideRaftDefaults || use_osnadmin;
 		const absolute_max_bytes_mb = absolute_max_bytes ? Math.floor(absolute_max_bytes / (1024 * 1024)) : '';
-		const applicationCapability = _.has(selectedApplicationCapability, 'name') ? selectedApplicationCapability.value : selectedApplicationCapability;
+		const selectedAppCapability = _.has(selectedApplicationCapability, 'name') ? selectedApplicationCapability.value : selectedApplicationCapability;
 		const ordererCapability = _.has(selectedOrdererCapability, 'name') ? selectedOrdererCapability.value : selectedOrdererCapability;
 		const channelCapability = _.has(selectedChannelCapability, 'name') ? selectedChannelCapability.value : selectedChannelCapability;
 		const lifecyclePolicy =
@@ -78,6 +85,16 @@ class Review extends Component {
 			endorsement_policy.type === 'SPECIFIC'
 				? translate('chaincode_specific_policy', { n: endorsement_policy.n, members: endorsement_policy.members })
 				: endorsement_policy.type || 'MAJORITY';
+
+		const selected_ordering_orgs = (ordering_orgs && typeof ordering_orgs === 'object') ? Object.keys(ordering_orgs) : null;
+		const using_default_app_cap = !selectedAppCapability || selectedAppCapability === 'use_default';
+		const using_default_ord_cap = !ordererCapability || ordererCapability === 'use_default';
+		const using_default_ch_cap = !channelCapability || channelCapability === 'use_default';
+		const using_app_cap = Helper.prettyPrintPolicy(using_default_app_cap ? getDefaultCap('application') : selectedAppCapability);
+		const using_2_plus_app_cap = typeof using_app_cap === 'string' && conform_cap(using_app_cap).startsWith('2.');
+
+		const using_ord_cap = Helper.prettyPrintPolicy(using_default_ord_cap ? getDefaultCap('orderer') : ordererCapability);
+		const using_ch_cap = Helper.prettyPrintPolicy(using_default_ch_cap ? getDefaultCap('channel') : channelCapability);
 
 		const nameError = !channelName || channelNameError ? 'review_channel_name_error' : null;
 		const ordererError = !_.has(selectedOrderer, 'name') || isOrdererUnavailable || checkingOrdererStatus ? 'review_orderer_error' : null;
@@ -90,18 +107,39 @@ class Review extends Component {
 		const ordererOrgsError = isChannelUpdate && _.size(orderer_orgs) < 1 ? 'review_orderer_admin_error' : null;
 		const aclError = _.size(aclErrors) > 0 ? 'review_acl_error' : null;
 		const missingOrdererMspError = isOrdererSignatureNeeded && !_.has(selectedOrdererMsp, 'name') ? 'review_orderer_msp_error' : null;
-		const missingApplicationCapabilityError =
-			isChannelUpdate && (!applicationCapability || applicationCapability === 'use_default') ? 'review_application_capability_error' : null;
-		const missingOrdererCapabilityError =
-			isChannelUpdate && (!ordererCapability || ordererCapability === 'use_default') ? 'review_orderer_capability_error' : null;
-		const missingChannelCapabilityError =
-			isChannelUpdate && (!channelCapability || channelCapability === 'use_default') ? 'review_channel_capability_error' : null;
+		const missingApplicationCapabilityError = isChannelUpdate && (using_default_app_cap ? 'review_application_capability_error' : null);
+		const missingOrdererCapabilityError = isChannelUpdate && (using_default_ord_cap ? 'review_orderer_capability_error' : null);
+		const missingChannelCapabilityError = isChannelUpdate && (using_default_ch_cap ? 'review_channel_capability_error' : null);
 		const missingLifecycleSpecificPolicyError =
 			lifecycle_policy.type === 'SPECIFIC' && !(_.size(lifecycle_policy.members) > 0 && lifecycle_policy.n > 0) ? 'review_lifecycle_policy_error' : null;
 		const missingEndorsementSpecificPolicyError =
 			endorsement_policy.type === 'SPECIFIC' && !(_.size(endorsement_policy.members) > 0 && endorsement_policy.n > 0)
 				? 'review_endorsement_policy_error'
 				: null;
+
+
+		// dsh todo test selecting v2.0...
+		// dsh todo if you don't select 2.0.0 and use defaults it does't prompt for lifecycle and smart contract policies....
+
+		console.log('dsh99 selected_ordering_orgs', selected_ordering_orgs);
+		console.log('dsh99 advanced?', advanced);
+		console.log('dsh99 using_app_cap?', using_app_cap);
+		console.log('dsh99 using_2_plus_app_cap?', using_2_plus_app_cap);
+		console.log('dsh99 using_default_app_cap?', using_default_app_cap);
+		console.log('dsh99 use_osnadmin 1?', use_osnadmin);
+		console.log('dsh99 using_ord_cap', using_ord_cap);
+		console.log('dsh99 using_ch_cap', using_ch_cap);
+
+		// add 'V' to the capability string
+		function conform_cap(str) {
+			if (typeof str === 'string') {
+				str = str.toUpperCase().trim();
+				if (str[0] !== 'V'); {
+					return 'V' + str;
+				}
+			}
+			return str;
+		}
 
 		return (
 			<div className="ibp-channel-review">
@@ -117,11 +155,13 @@ class Review extends Component {
 						_.size(orgs) > 0
 							? orgs.map(org => {
 								return { value: org.msp };
-							  })
+							})
 							: [],
 						organizationError
 					)}
 					{this.renderSection(translate, 'policy', customPolicy ? customPolicy.name : null, policyError)}
+					{(Array.isArray(selected_ordering_orgs) && selected_ordering_orgs.length > 0) &&
+						this.renderSection(translate, 'review_orderers', selected_ordering_orgs.join(','))}
 					{this.renderSection(
 						translate,
 						isChannelUpdate ? 'organization_updating_channel' : 'organization_creating_channel',
@@ -134,8 +174,8 @@ class Review extends Component {
 						selectedIdentity ? selectedIdentity.name : null,
 						missingOrgIdentityError
 					)}
-					{(!applicationCapability || applicationCapability === 'use_default') &&
-						this.renderSection(translate, 'application_channel_capability_version', constants.DEFAULT_APPLICATION_CAPABILITY)}
+					{!(isChannelUpdate || use_osnadmin || !using_default_app_cap) &&
+						this.renderSection(translate, 'application_channel_capability_version', using_app_cap)}
 				</div>
 
 				{advanced && (
@@ -144,18 +184,14 @@ class Review extends Component {
 							<hr />
 						</div>
 						<div className="ibp-summary-details">
-							{(isChannelUpdate || (applicationCapability && applicationCapability !== 'use_default')) &&
-								this.renderSection(translate, 'application_channel_capability_version', applicationCapability, missingApplicationCapabilityError)}
-							{(isChannelUpdate || (ordererCapability && ordererCapability !== 'use_default')) &&
-								this.renderSection(translate, 'orderer_channel_capability_version', ordererCapability, missingOrdererCapabilityError)}
-							{(isChannelUpdate || (channelCapability && channelCapability !== 'use_default')) &&
-								this.renderSection(translate, 'channel_capability_version', channelCapability, missingChannelCapabilityError)}
-							{applicationCapability &&
-								applicationCapability.startsWith('2.') &&
-								this.renderSection(translate, 'channel_lifecycle_policy', lifecyclePolicy, missingLifecycleSpecificPolicyError)}
-							{applicationCapability &&
-								applicationCapability.startsWith('2.') &&
-								this.renderSection(translate, 'channel_endorsement_policy', endorsementPolicy, missingEndorsementSpecificPolicyError)}
+							{(isChannelUpdate || use_osnadmin || !using_default_app_cap) &&
+								this.renderSection(translate, 'application_channel_capability_version', using_app_cap, missingApplicationCapabilityError)}
+							{(isChannelUpdate || use_osnadmin || !using_default_ord_cap) &&
+								this.renderSection(translate, 'orderer_channel_capability_version', using_ord_cap, missingOrdererCapabilityError)}
+							{(isChannelUpdate || use_osnadmin || !using_default_ch_cap) &&
+								this.renderSection(translate, 'channel_capability_version', using_ch_cap, missingChannelCapabilityError)}
+							{using_2_plus_app_cap && this.renderSection(translate, 'channel_lifecycle_policy', lifecyclePolicy, missingLifecycleSpecificPolicyError)}
+							{using_2_plus_app_cap && this.renderSection(translate, 'channel_endorsement_policy', endorsementPolicy, missingEndorsementSpecificPolicyError)}
 							{showBlockParamSummary &&
 								absolute_max_bytes_mb &&
 								this.renderSection(translate, 'absolute_max_bytes', absolute_max_bytes_mb + ' ' + translate('megabyte'))}
@@ -184,10 +220,10 @@ class Review extends Component {
 									translate,
 									'consenter_set',
 									use_default_consenters
-										? translate('use_default_consenters')
+										? translate(use_osnadmin ? 'use_default_consenters2' : 'use_default_consenters')
 										: consenters.map(consenter => {
 											return { value: consenter.name };
-										  }),
+										}),
 									consenterError
 								)}
 
@@ -277,6 +313,7 @@ const dataProps = {
 	use_default_consenters: PropTypes.bool,
 	lifecycle_policy: PropTypes.string,
 	endorsement_policy: PropTypes.string,
+	use_osnadmin: PropTypes.bool,
 };
 
 Review.propTypes = {

@@ -28,6 +28,10 @@ import TranslateLink from '../../../TranslateLink/TranslateLink';
 const SCOPE = 'channelModal';
 const bytes = require('bytes');
 
+// This is step "consenter_set"
+//
+// panel allows setting which orderers should be consenters on this channel
+// it also allows the raft params to be edited
 class Consenters extends Component {
 	onAddConsenter = option => {
 		const updatedConsenterSet = _.isEmpty(this.props.consenters) ? [this.props.selectedConsenter] : [...this.props.consenters, this.props.selectedConsenter];

@@ -1284,6 +1284,26 @@ const Helper = {
 		return formattedCapabilities;
 	},
 
+	// dsh todo test this
+	prettyPrintPolicy(str) {
+		if (typeof str === 'string') {
+			str = str.trim();
+			if (str[0].toUpperCase() === 'V') {
+				str = str.substring(1);			// cut off the 'V'
+			}
+			if (str.includes('_')) {
+				const parts = str.split('_');
+				while (parts.length < 3) {
+					parts.push('0');
+				}
+				const ret = parts.join('.');
+				return ret;
+			}
+		}
+		return str;
+	},
+
+
 	readLocalBinaryFile(file, limit) {
 		return new Promise((resolve, reject) => {
 			let reader = new FileReader();

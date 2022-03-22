@@ -2516,7 +2516,7 @@
 	"cert_update_expire_warn": "The TLS certificate of a component was recently updated. Remember to also update your admin and enrollment certificates before they expire. <br/><br/> Certificates: <br/> ${upCompList}",
 	"certs_expire_details": "Remember the admin and enrollment certificates in your new component have expirations. You must plan to update them before they expire. <br/><br/> Certificates: <br/> ${details}",
 	"use_default_consenters": "Include all ordering nodes from the system channel consenter set",
-	"use_default_consenters2": "Include all ordering nodes from the ordering orgs",
+	"use_default_consenters2": "Include all ordering nodes from the selected ordering orgs",
 	"chaincode_policy": "Chaincode policy",
 	"channel_lifecycle_policy": "Lifecycle endorsement policy",
 	"channel_endorsement_policy": "Smart contract endorsement policy",
@@ -2606,5 +2606,6 @@
 	"mustgather_button_retry": "Retry",
 	"mustgather_error": "Error from mustgather:",
 	"mustgather_last_run": "Last run:",
-	"mustgather_timeout": "Mustgather tool has timed out. Please reload the page to retry."
+	"mustgather_timeout": "Mustgather tool has timed out. Please reload the page to retry.",
+	"review_orderers": "Orderer Orgs"
 }

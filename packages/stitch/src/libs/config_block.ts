@@ -226,7 +226,7 @@ const template = {
 																	"identity_identifier_hash_function": "SHA256",
 																	"signature_hash_family": "SHA2"
 																},
-																"fabric_node_ous": null,
+																"fabric_node_ous": undefined,
 																"intermediate_certs": [],
 
 																// field replace below with org's MSP id
@@ -477,7 +477,7 @@ const template = {
 																	"identity_identifier_hash_function": "SHA256",
 																	"signature_hash_family": "SHA2"
 																},
-																"fabric_node_ous": null,
+																"fabric_node_ous": undefined,
 																"intermediate_certs": [],
 
 																// field replace below with orderer_msps.OrdererMSP.MSP.name from input
