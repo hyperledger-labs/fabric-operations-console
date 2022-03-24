@@ -34,6 +34,10 @@ const bytes = require('bytes');
 // it also allows the raft params to be edited
 class Consenters extends Component {
 	onAddConsenter = option => {
+		// dsh todo allow _consenter to be selectable ??? tbd
+		if (typeof this.props.selectedConsenter === 'object') {
+			this.props.selectedConsenter._consenter = true;					// flip to true
+		}
 		const updatedConsenterSet = _.isEmpty(this.props.consenters) ? [this.props.selectedConsenter] : [...this.props.consenters, this.props.selectedConsenter];
 		this.props.updateState(SCOPE, {
 			consenters: updatedConsenterSet,

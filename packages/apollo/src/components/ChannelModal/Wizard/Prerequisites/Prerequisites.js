@@ -94,7 +94,6 @@ class Prerequisites extends Component {
 					aria-labelledby="prerequisites_para2"
 				>
 					{this.renderBullet(translate, 'prerequisites_bullet1')}
-					{this.renderBullet(translate, 'prerequisites_bullet2')}
 				</ul>
 				<div className="ibp-prerequisites-impbox">
 					<ImportantBox kind="informational"

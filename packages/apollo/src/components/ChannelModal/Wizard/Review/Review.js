@@ -91,7 +91,7 @@ class Review extends Component {
 		const using_default_ord_cap = !ordererCapability || ordererCapability === 'use_default';
 		const using_default_ch_cap = !channelCapability || channelCapability === 'use_default';
 		const using_app_cap = Helper.prettyPrintPolicy(using_default_app_cap ? getDefaultCap('application') : selectedAppCapability);
-		const using_2_plus_app_cap = typeof using_app_cap === 'string' && conform_cap(using_app_cap).startsWith('2.');
+		const using_2_plus_app_cap = typeof using_app_cap === 'string' && using_app_cap.startsWith('v2.');
 
 		const using_ord_cap = Helper.prettyPrintPolicy(using_default_ord_cap ? getDefaultCap('orderer') : ordererCapability);
 		const using_ch_cap = Helper.prettyPrintPolicy(using_default_ch_cap ? getDefaultCap('channel') : channelCapability);
@@ -116,30 +116,6 @@ class Review extends Component {
 			endorsement_policy.type === 'SPECIFIC' && !(_.size(endorsement_policy.members) > 0 && endorsement_policy.n > 0)
 				? 'review_endorsement_policy_error'
 				: null;
-
-
-		// dsh todo test selecting v2.0...
-		// dsh todo if you don't select 2.0.0 and use defaults it does't prompt for lifecycle and smart contract policies....
-
-		console.log('dsh99 selected_ordering_orgs', selected_ordering_orgs);
-		console.log('dsh99 advanced?', advanced);
-		console.log('dsh99 using_app_cap?', using_app_cap);
-		console.log('dsh99 using_2_plus_app_cap?', using_2_plus_app_cap);
-		console.log('dsh99 using_default_app_cap?', using_default_app_cap);
-		console.log('dsh99 use_osnadmin 1?', use_osnadmin);
-		console.log('dsh99 using_ord_cap', using_ord_cap);
-		console.log('dsh99 using_ch_cap', using_ch_cap);
-
-		// add 'V' to the capability string
-		function conform_cap(str) {
-			if (typeof str === 'string') {
-				str = str.toUpperCase().trim();
-				if (str[0] !== 'V'); {
-					return 'V' + str;
-				}
-			}
-			return str;
-		}
 
 		return (
 			<div className="ibp-channel-review">

@@ -1284,21 +1284,23 @@ const Helper = {
 		return formattedCapabilities;
 	},
 
-	// dsh todo test this
+	// turn fabric config-block keys for capabilities into a 3 part version string
+	// these strings match formats seen in fabric docs:
+	//  https://hyperledger-fabric.readthedocs.io/en/release-2.2/capabilities_concept.html#node-versions-and-capability-versions
+	// 'V2_0' -> 'v2.0.0'
+	// '2.0.0' -> 'v2.0.0'
+	// 'V1_4_2' -> 'v1.4.2'
 	prettyPrintPolicy(str) {
 		if (typeof str === 'string') {
 			str = str.trim();
 			if (str[0].toUpperCase() === 'V') {
 				str = str.substring(1);			// cut off the 'V'
 			}
-			if (str.includes('_')) {
-				const parts = str.split('_');
-				while (parts.length < 3) {
-					parts.push('0');
-				}
-				const ret = parts.join('.');
-				return ret;
+			const parts = str.includes('_') ? str.split('_') : str.split('.');
+			while (parts.length < 3) {
+				parts.push('0');
 			}
+			return 'v' + parts.join('.');
 		}
 		return str;
 	},

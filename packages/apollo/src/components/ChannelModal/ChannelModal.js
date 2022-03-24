@@ -35,6 +35,7 @@ import Details from '../ChannelModal/Wizard/Details/Details';
 import OrdererSignature from '../ChannelModal/Wizard/OrdererSignature/OrdererSignature';
 import Organizations from '../ChannelModal/Wizard/Organizations/Organizations';
 import OrdererOrganizations from '../ChannelModal/Wizard/OrdererOrganizations/OrdererOrganizations';
+import OSNJoin from '../ChannelModal/Wizard/OSNJoin/OSNJoin';
 import OrgSignature from '../ChannelModal/Wizard/OrgSignature/OrgSignature';
 import Policy from '../ChannelModal/Wizard/Policy/Policy';
 import Prerequisites from '../ChannelModal/Wizard/Prerequisites/Prerequisites';
@@ -208,9 +209,10 @@ class ChannelModal extends Component {
 		});
 	};
 
+	// this data populates the left pane in the wizard (the step labels) - [for create channel]
 	buildCreateChannelTimeline = () => {
 		this.timelineSteps = [
-			// CREATE STEPS - GROUP = 0
+			// CREATE CHANNEL STEPS - GROUP = 0
 			[
 				{
 					type: 'intro',
@@ -220,13 +222,13 @@ class ChannelModal extends Component {
 							onClick: () => this.showStep('prerequisites', 0, 0),
 							isLink: true,					// "isLink" controls if the step is clickable
 							disabled: false,				// "disabled" controls the step's text opacity...
-							hidden: false,					// "hidden" controls if the step is displayed or not
+							hidden: false,					// "hidden" controls if the step is displayed or not (use removeStepsFromTimeline() to hide steps)
 						},
 					],
 				},
 			],
 
-			// CREATE STEPS - GROUP = 1
+			// CREATE CHANNEL STEPS - GROUP = 1
 			[
 				{
 					groupTitle: 'required_step',
@@ -270,7 +272,7 @@ class ChannelModal extends Component {
 				},
 			],
 
-			// CREATE STEPS - GROUP = 2
+			// CREATE CHANNEL STEPS - GROUP = 2
 			[
 				{
 					groupTitle: 'advanced_configuration',
@@ -328,17 +330,26 @@ class ChannelModal extends Component {
 				},
 			],
 
-			// CREATE STEPS - GROUP = 3
+			// CREATE CHANNEL STEPS - GROUP = 3
 			[
 				{
 					groupTitle: 'review',
 					groupSteps: [
 						{
 							label: 'review_channel_info',
-							onClick: () => this.showStep('review_channel_info', 3, 0),
+							onClick: () => {
+								console.log('dsh99 review_channel_info 0');
+								this.showStep('review_channel_info', 3, 0);
+							},
 							isLink: false,
 							disabled: false,
 							hidden: false,
+						},
+						{
+							label: 'osn_join_channel',
+							onClick: () => this.showStep('osn_join_channel', 3, 1),
+							isLink: false,
+							disabled: true,
 						},
 					],
 				},
@@ -346,9 +357,10 @@ class ChannelModal extends Component {
 		];
 	};
 
+	// this data populates the left pane in the wizard (the step labels) - [for update channel]
 	buildUpdateChannelTimeline = () => {
 		this.timelineSteps = [
-			// UPDATE STEPS - GROUP = 0
+			// UPDATE CHANNEL STEPS - GROUP = 0
 			[
 				{
 					type: 'intro',
@@ -363,7 +375,7 @@ class ChannelModal extends Component {
 				},
 			],
 
-			// UPDATE STEPS - GROUP = 1
+			// UPDATE CHANNEL STEPS - GROUP = 1
 			[
 				{
 					groupTitle: 'channel_configuration',
@@ -384,7 +396,7 @@ class ChannelModal extends Component {
 				},
 			],
 
-			// UPDATE STEPS - GROUP = 2
+			// UPDATE CHANNEL STEPS - GROUP = 2
 			[
 				{
 					groupTitle: 'advanced_configuration',
@@ -441,14 +453,16 @@ class ChannelModal extends Component {
 				},
 			],
 
-			// UPDATE STEPS - GROUP = 3
+			// UPDATE CHANNEL STEPS - GROUP = 3
 			[
 				{
 					groupTitle: 'review_channel_info',
 					groupSteps: [
 						{
 							label: 'review_channel_info',
-							onClick: () => this.showStep('review_channel_info', 3, 0),
+							onClick: () => {
+								this.showStep('review_channel_info', 3, 0);
+							},
 							isLink: false,
 							disabled: false,
 						},
@@ -459,6 +473,7 @@ class ChannelModal extends Component {
 	};
 
 	showStep = (name, group, step) => {
+		console.log('dsh99 showing step', name, group, step);
 		this.props.updateState(SCOPE, {
 			viewing: name,
 			selectedTimelineStep: {
@@ -653,6 +668,11 @@ class ChannelModal extends Component {
 			complete = !noAdminError && !duplicateMSPError && !missingDefinitionError && ordering_orgs && !ordering_orgs.find(org => org.msp === '');
 		}
 
+		// dsh todo make complete checks
+		if (step === 'osn_join_channel') {
+			complete = true;
+		}
+
 		if (complete && !this.completedSteps.includes(step)) {
 			this.completedSteps.push(step);
 		} else if (!complete && this.completedSteps.includes(step)) {
@@ -699,6 +719,9 @@ class ChannelModal extends Component {
 		const step_orderer_signature = index++;
 		const step_acl = index++;
 		const step_review = 0;
+		const osnadmin_join_channel = 1;
+		let type = '';
+
 		switch (viewing) {
 			case 'prerequisites':
 				isComplete = true;
@@ -902,7 +925,7 @@ class ChannelModal extends Component {
 						: this.showStep('block_cutting_params', group_advanced, step_block_parameters);
 				next = () => {
 					if (isComplete) {
-						isOrdererSignatureNeeded && !use_osnadmin		// dsh todo simplify this, remove 2nd condition
+						isOrdererSignatureNeeded
 							? this.showStep('ordering_service_organization', group_advanced, step_orderer_signature)
 							: this.showStep('channel_acls', group_advanced, step_acl);
 
@@ -911,6 +934,7 @@ class ChannelModal extends Component {
 				break;
 
 			// this panel allow selecting what org to use for the orderer signature
+			// dsh todo - unlink this panel from osnadmin flow and allow user to select identity on each org in the new org join panel
 			case 'ordering_service_organization':
 				isComplete = this.isStepCompleted('ordering_service_organization');
 				back = () => {
@@ -953,10 +977,31 @@ class ChannelModal extends Component {
 						: () => this.showStep('organization_creating_channel', group_prerequisites, step_org_signature);
 				next = () => {
 					if (isComplete) {
-						this.onSubmit();
+						console.log('dsh99 review - use_osnadmin', use_osnadmin);
+						use_osnadmin
+							? this.showStep('osn_join_channel', group_review, osnadmin_join_channel)
+							: (this.props.isChannelUpdate ? this.updateChannel : this.createChannel);
+					}
+				};
+				type = use_osnadmin ? '' : 'submit';
+				break;
+
+			// panel has join osn to channel buttons and status of the join
+			case 'osn_join_channel':
+				isComplete = this.isStepCompleted('osn_join_channel');
+				back = null;
+				/*() => {
+					console.log('dsh99 triggered back??');
+					this.showStep('consenter_set', group_advanced, step_consenters); // this.showStep('review_channel_info', group_review, step_review);
+				},*/
+				next = () => {
+					if (isComplete) {
+						//this.onSubmit();
+						this.createChannel;
 					}
 				};
 				break;
+
 			default:
 				back = () => this.showStep('prerequisites', group_prerequisites, step_prerequisite);
 				next = () => this.showStep('prerequisites', group_prerequisites, step_prerequisite);
@@ -966,12 +1011,14 @@ class ChannelModal extends Component {
 			{
 				text: translate('back'),
 				onClick: back,
+				disabled: back === null,
 			},
 			{
+				// dsh todo change this to a var set above
 				text: viewing === 'review_channel_info' ? (this.props.isChannelUpdate ? translate('update_channel') : translate('create_channel')) : translate('next'),
-				onClick: viewing === 'review_channel_info' ? (this.props.isChannelUpdate ? this.updateChannel : this.createChannel) : next,
+				onClick: /*viewing === 'review_channel_info' ? (this.props.isChannelUpdate ? this.updateChannel : this.createChannel) :*/ next,
 				disabled: !isComplete || submitting,
-				type: viewing === 'review_channel_info' ? 'submit' : '',
+				type: type, //viewing === 'review_channel_info' ? 'submit' : '',
 			}
 		);
 		return buttons;
@@ -982,6 +1029,7 @@ class ChannelModal extends Component {
 		if (!this.canModifyConsenters()) {
 			removeSteps.push('consenter_set');
 			removeSteps.push('channel_orderer_organizations');
+			removeSteps.push('osn_join_channel');
 		}
 		if (!this.canModifyConsenters() || !isChannelUpdate) {
 			removeSteps.push('orderer_admin_set');
@@ -998,37 +1046,14 @@ class ChannelModal extends Component {
 		}
 	};
 
-	// this hides the step from the left navigation pane
+	// this hides the step in the left navigation pane
 	removeStepsFromTimeline = removeSteps => {
 		let updatedSteps = [];
 		this.timelineSteps.forEach(group => {
 			group.forEach(subGroup => {
-				if (subGroup.groupTitle === 'advanced_configuration') {
-					subGroup.groupSteps.forEach(step => {
-						if (removeSteps.includes(step.label)) {
-							step.hidden = true;								// step won't show up if "hidden" is true
-						}
-					});
-				}
-			});
-			updatedSteps.push(group);
-		});
-		this.props.updateState(SCOPE, {
-			timelineSteps: updatedSteps,
-			timelineLoading: false,
-		});
-	};
-
-	// this shows the step from the left navigation pane
-	// dsh todo use this instead of show all steps for osnadmin
-	/*showStepsFromTimeline = showSteps => {
-		let updatedSteps = [];
-		this.timelineSteps.forEach(group => {
-			group.forEach(subGroup => {
 				subGroup.groupSteps.forEach(step => {
-					if (showSteps.includes(step.label)) {
-						step.hidden = false;								// step won't show up if "hidden" is true
-						step.enabled = true;
+					if (removeSteps.includes(step.label)) {
+						step.hidden = true;									// step won't show up if "hidden" is true
 					}
 				});
 			});
@@ -1038,7 +1063,31 @@ class ChannelModal extends Component {
 			timelineSteps: updatedSteps,
 			timelineLoading: false,
 		});
-	};*/
+	};
+
+	// this shows the step in the left navigation pane
+	// dsh todo use this instead of show all steps for osnadmin
+	showStepsFromTimeline = (showSteps, enable) => {
+		let updatedSteps = [];
+		this.timelineSteps.forEach(group => {
+			group.forEach(subGroup => {
+				subGroup.groupSteps.forEach(step => {
+					if (showSteps.includes(step.label)) {
+						step.hidden = false;								// step won't show up if "hidden" is true
+						if (typeof enabled === 'boolean') {
+							step.enabled = true;
+						}
+					}
+				});
+			});
+			updatedSteps.push(group);
+		});
+		console.log('dsh99 steps', updatedSteps);
+		this.props.updateState(SCOPE, {
+			timelineSteps: updatedSteps,
+			timelineLoading: false,
+		});
+	};
 
 	getMsps = () => {
 		let msps = [];
@@ -1273,6 +1322,8 @@ class ChannelModal extends Component {
 				if (orderer && orderer.osnadmin_url) {
 					this.props.updateState(SCOPE, { use_osnadmin: true });				// change the menu options
 					this.updateTimelineSteps(true, true, 2, 0, false);					// show all steps
+					this.showStepsFromTimeline(['osn_join_channel']);
+
 					this.removeStepsFromTimeline(['ordering_service_organization']);	// but hide this one
 					console.log('dsh99 new steps^^');
 
@@ -1343,7 +1394,7 @@ class ChannelModal extends Component {
 				possible_consenters.push({			// leading underscores denote field is not used by fabric
 					name: node.display_name,
 					msp_id: node.msp_id,
-					_consenter: true,				// dsh todo allow this to be selectable
+					_consenter: false,				// defaults false, flips to true once selected
 					host: urlObj.hostname,
 					port: urlObj.port,
 					client_tls_cert: tls_cert,
@@ -1411,15 +1462,18 @@ class ChannelModal extends Component {
 		);
 	};
 
+	// is the application capability selected @ 2.0+
 	isChannel2_0 = () => {
 		if (this.props.isChannelUpdate) {
 			let capability = this.props.existingCapabilities.application || null;
 			return capability && capability.indexOf('V2.0') !== -1;
 		} else {
 			const { selectedApplicationCapability } = this.props;
-			const capability =
-				selectedApplicationCapability && typeof selectedApplicationCapability === 'object' ? selectedApplicationCapability.id : selectedApplicationCapability;
-			return capability && capability.indexOf('V2_0') !== -1;
+			const selectedAppCapability = _.has(selectedApplicationCapability, 'name') ? selectedApplicationCapability.value : selectedApplicationCapability;
+			const using_default_app_cap = !selectedAppCapability || selectedAppCapability === 'use_default';
+			const using_app_cap = Helper.prettyPrintPolicy(using_default_app_cap ? this.getDefaultCap('application') : selectedAppCapability);
+			const using_2_plus_app_cap = typeof using_app_cap === 'string' && using_app_cap.startsWith('v2.');
+			return using_2_plus_app_cap;
 		}
 	};
 
@@ -1564,7 +1618,9 @@ class ChannelModal extends Component {
 		return null;
 	}
 
-	createChannel = () => {
+	// format input data for the create-channel api
+	// (general format, works on osnadmin and legacy create channel)
+	buildCreateChannelOpts = () => {
 		let organizations = {};
 		this.props.orgs
 			.filter(org => org.msp !== '')
@@ -1596,7 +1652,7 @@ class ChannelModal extends Component {
 			};
 		}
 
-		// dsh todo make panel to select which orderers to join after submit
+		// dsh todo make panel to select which orderers to join after submit !!!
 
 		let raft_params;
 		if (this.isAnyRaftParamModified()) {
@@ -1665,13 +1721,21 @@ class ChannelModal extends Component {
 			this.buildChaincodePolicyOptions(options, 'lifecycle_policy');
 			this.buildChaincodePolicyOptions(options, 'endorsement_policy');
 		}
+		return options;
+	}
+
+	// runs the legacy create channel api
+	createChannel = () => {
+		const options = this.buildCreateChannelOpts();
 		Log.debug('Sending request to create new channel: ', options);
 
 		this.props.updateState(SCOPE, {
 			submitting: true,
 			createChannelError: null,
+			consenters: options.consenters,			// propagate field here so osn-join panel can see the same data
 		});
 
+		// dsh todo remove osnadmin flow from this part
 		if (this.props.use_osnadmin) {
 			console.log('dsh99 options: ', options);
 			const my_block = StitchApi.buildGenesisBlockOSNadmin(options);
@@ -1956,7 +2020,12 @@ class ChannelModal extends Component {
 					let find = this.props.ordering_orgs.find(y => x.msp_id === y.msp_id);
 					return find ? true : false;
 				});
-				return defaults;
+				const default_arr = [];
+				for (const msp_id in defaults) {
+					defaults[msp_id]._consenter = true;				// all default nodes are consenters
+					default_arr.push(defaults[msp_id]);
+				}
+				return default_arr;
 			}
 		}
 	}
@@ -2109,6 +2178,9 @@ class ChannelModal extends Component {
 						getDefaultCap={this.getDefaultCap}
 					/>
 				)}
+				{viewing === 'osn_join_channel' && (
+					<OSNJoin buildCreateChannelOpts={this.buildCreateChannelOpts} />
+				)}
 			</FocusComponent>
 		);
 	};
@@ -2150,6 +2222,7 @@ class ChannelModal extends Component {
 						{this.renderSection(translate, 'ordering_service_organization')}
 						{this.renderSection(translate, 'channel_acls')}
 						{this.renderSection(translate, 'review_channel_info')}
+						{this.renderSection(translate, 'osn_join_channel')}
 					</div>
 				</div>
 			</SidePanel>

@@ -28,16 +28,17 @@ import SidePanelWarning from '../../../SidePanelWarning/SidePanelWarning';
 const SCOPE = 'channelModal';
 const Log = new Logger(SCOPE);
 
-// This is step "orderer_admin_set"
+// This is step "ordering_service_organization"
 //
-// this panel allows setting the admin role on orderer orgs, which would be referenced in future "Orderer" group fabric config-block changes
+// this panel allows selecting the orderer orgs in the config-block and which one's get the admin role
+// (only used for osn admin nodes)
 export class OrdererOrganizations extends Component {
 	checkAdminCount() {
 		let hasAdmin = false;
 		const { ordering_orgs } = this.props;
 		if (ordering_orgs) {
 			ordering_orgs.forEach(org => {
-				if (org.msp !== '' && org.roles.includes('admin')) {
+				if (org.msp_id !== '' && org.roles.includes('admin')) {
 					hasAdmin = true;
 				}
 			});
@@ -107,7 +108,7 @@ export class OrdererOrganizations extends Component {
 	checkDuplicateMSP = (new_org, added_orgs) => {
 		let count = 0;
 		added_orgs.forEach(org => {
-			if (new_org.msp === org.msp) {
+			if (new_org.msp_id === org.msp_id) {
 				count++;
 			}
 		});
@@ -183,7 +184,7 @@ export class OrdererOrganizations extends Component {
 												type: 'dropdown',
 
 												// hide orgs that are already selected
-												options: msps ? msps.filter(x => !ordering_orgs.find(y => y.msp === x.msp_id && _.intersection(x.root_certs, y.root_certs).length >= 1)) : [],
+												options: msps ? msps.filter(x => !ordering_orgs.find(y => y.msp_id === x.msp_id && _.intersection(x.root_certs, y.root_certs).length >= 1)) : [],
 
 												default: 'select_msp_id',
 											},
@@ -221,19 +222,19 @@ export class OrdererOrganizations extends Component {
 											id={`ibp-add-orgs-msp-${i}`}
 											fields={[
 												{
-													name: `organization-${org.msp}`,
+													name: `organization-${org.msp_id}`,
 													required: true,
 													disabled: true,
 													hideLabel: true,
-													default: ordering_orgs[i].msp,
+													default: ordering_orgs[i].msp_id,
 												},
 											]}
 										/>
 									</div>
 									<div className="ibp-add-orgs-role">
 										<Checkbox
-											id={`ibp-add-orgs-msp-${org.msp}-role-admin`}
-											key={`ibp-add-orgs-msp-${org.msp}-role-admin`}
+											id={`ibp-add-orgs-msp-${org.msp_id}-role-admin`}
+											key={`ibp-add-orgs-msp-${org.msp_id}-role-admin`}
 											labelText={translate('administrator')}
 											checked={ordering_orgs[i].roles.includes('admin')}
 											onClick={event => {
@@ -253,7 +254,7 @@ export class OrdererOrganizations extends Component {
 										className="ibp-add-orgs-remove"
 										size="default"
 										onClick={() => {
-											this.onDeleteOrg(i, org.msp);
+											this.onDeleteOrg(i, org.msp_id);
 										}}
 									/>
 								</div>
