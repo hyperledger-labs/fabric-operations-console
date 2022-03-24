@@ -421,7 +421,7 @@ describe('Login component', () => {
 		});
 	});
 
-	describe('Login - onPasswordChangeFormChange()', () => {
+	describe('Login - onPasswordChangeFormChangeDebounced()', () => {
 		beforeEach(async() => {
 			validateConfirmPasswordStub = mySandBox.stub(Login.prototype, 'validateConfirmPassword').returns();
 			renderStub = mySandBox.stub(Login.prototype, 'render').returns();
@@ -431,7 +431,7 @@ describe('Login component', () => {
 			const component = shallow(<Login {...props} />);
 			updateStateStub.resetHistory();
 			const value = 'some value';
-			await component.instance().onPasswordChangeFormChange(value);
+			await component.instance().onPasswordChangeFormChangeDebounced(value);
 
 			updateStateStub.should.have.not.been.called;
 			validateConfirmPasswordStub.should.have.not.been.called;
@@ -446,7 +446,7 @@ describe('Login component', () => {
 			props.currentPasswordError = 'some old current password error';
 			component.setProps(props);
 
-			await component.instance().onPasswordChangeFormChange(value);
+			await component.instance().onPasswordChangeFormChangeDebounced(value);
 
 			updateStateStub.should.have.been.called;
 			validateConfirmPasswordStub.should.have.not.been.called;
@@ -460,7 +460,7 @@ describe('Login component', () => {
 				confirmPassword: 'confirmPassword',
 			};
 
-			await component.instance().onPasswordChangeFormChange(value);
+			await component.instance().onPasswordChangeFormChangeDebounced(value);
 
 			updateStateStub.should.have.not.been.called;
 			validateConfirmPasswordStub.should.have.been.calledWithExactly(null, value.confirmPassword);
