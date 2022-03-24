@@ -224,7 +224,14 @@ module.exports = function (logger, ev, t) {
 	//--------------------------------------------------
 	// Can replace a single property in the settings doc - no input validation
 	//--------------------------------------------------
-	app.put(['/api/v[123]/authscheme/key', '/api/v1/settings/key'], t.middleware.verify_settings_action_session, (req, res) => {
+	app.put(['/api/v[123]/authscheme/key', '/api/v[123]/settings/key'], t.middleware.verify_settings_action_session, (req, res) => {
+		edit_a_setting(req, res);
+	});
+	app.put(['/ak/api/v[123]/settings/key'], t.middleware.verify_settings_action_ak, (req, res) => {
+		edit_a_setting(req, res);
+	});
+
+	function edit_a_setting(req, res) {
 		t.other_apis_lib.edit_single_property_from_doc(req, (err, ret) => {
 			if (err) {
 				return res.status(t.ot_misc.get_code(err)).json(err);
@@ -232,7 +239,7 @@ module.exports = function (logger, ev, t) {
 				return res.status(200).json(ret);
 			}
 		});
-	});
+	}
 
 	//--------------------------------------------------
 	// Edit settings in the UI Settings panel - has input validation

@@ -198,6 +198,20 @@ module.exports = function (logger, ev, t) {
 	});
 
 	//--------------------------------------------------
+	// Test/Validate a password
+	//--------------------------------------------------
+	app.post('/api/v[123]/permissions/users/password', t.middleware.checkAuthentication, (req, res) => {
+		req._dry_run = true;
+		t.permissions_lib.change_password(req, (err, ret) => {
+			if (err) {
+				return res.status(t.ot_misc.get_code(err)).json(err);
+			} else {
+				return res.status(200).json(ret);
+			}
+		});
+	});
+
+	//--------------------------------------------------
 	// Reset password
 	//--------------------------------------------------
 	app.put('/api/v[123]/permissions/users/password/reset', t.middleware.verify_users_action_session, (req, res) => {
