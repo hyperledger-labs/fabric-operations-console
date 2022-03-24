@@ -15471,14 +15471,14 @@ components:
           example: 100m
           x-validate_cpu: true
           x-minimum: 0.01
-          x-maximum: 1000
+          x-maximum: 100
           description: Desired CPU for subcomponent. [Resource details](/docs/blockchain?topic=blockchain-ibp-console-govern-components#ibp-console-govern-components-allocate-resources)
         memory:
           type: string
           example: 256MiB
           x-validate_memory: true
           x-minimum: 1
-          x-maximum: 1099511627776
+          x-maximum: 107374182400
           description: Desired memory for subcomponent. [Resource details](/docs/blockchain?topic=blockchain-ibp-console-govern-components#ibp-console-govern-components-allocate-resources)
 
     ResourceLimits:
@@ -15489,14 +15489,14 @@ components:
           example: 100m
           x-validate_cpu: true
           x-minimum: 0.01
-          x-maximum: 1000
+          x-maximum: 100
           description: Maximum CPU for subcomponent. Must be >= "requests.cpu". Defaults to the same value in "requests.cpu". [Resource details](/docs/blockchain?topic=blockchain-ibp-console-govern-components#ibp-console-govern-components-allocate-resources)
         memory:
           type: string
           example: 256MiB
           x-validate_memory: true
           x-minimum: 1
-          x-maximum: 1099511627776
+          x-maximum: 107374182400
           description: Maximum memory for subcomponent. Must be >= "requests.memory". Defaults to the same value in "requests.memory". [Resource details](/docs/blockchain?topic=blockchain-ibp-console-govern-components#ibp-console-govern-components-allocate-resources)
 
     StorageObject:
@@ -15506,7 +15506,7 @@ components:
           type: string
           example: 4GiB
           x-minimum: 1
-          x-maximum: 1125899906842624
+          x-maximum: 10995116277760
           x-validate_storage: true
           description: Maximum disk space for subcomponent. [Resource details](/docs/blockchain?topic=blockchain-ibp-console-govern-components#ibp-console-govern-components-allocate-resources)
         class:
