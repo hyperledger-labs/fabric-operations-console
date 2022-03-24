@@ -130,7 +130,7 @@ app.use(bodyParser.json({ limit: maxSize }));
 app.use(bodyParser.urlencoded({ extended: true, limit: maxSize }));
 app.use(bodyParser.raw({ type: 'application/grpc-web+proto', limit: maxSize }));	// leave as buffer (w/o this line req.body is empty)
 app.use('/proxy/', bodyParser.raw({ type: 'multipart/form-data', limit: maxSize }));// leave as buffer (w/o this line req.body is empty)
-
+app.set('env', 'production');
 app.use(compression());
 look_for_couchdb(() => {
 	get_db_settings(() => {
