@@ -170,6 +170,26 @@ class LoginApi {
 	}
 
 	/**
+	 * Test if the new password is strong enough/valid
+	 * @param {string} newPassword The desired password for the logged in user.
+	 * @return {Promise<object, ChangePasswordError>} The positive response from the server, or a error.
+	 */
+	static async testPasswordStr(newPassword) {
+		const prefix = 'changePassword:';
+		try {
+			Log.info(`${prefix} Attempting to test password`);
+			const response = await RestApi.post('/api/v2/permissions/users/password', {
+				desired_pass: newPassword,
+			});
+			Log.info(`${prefix} Password test succeeded:`, response);
+			return response;
+		} catch (e) {
+			Log.error(`${prefix} Password not valid: ${e}`);
+			throw e.response;
+		}
+	}
+
+	/**
 	 * Resets the given user's password.
 	 * @param {string} uuid The users's ID.
 	 * @return {Promise<object, TranslatedError>} The response from the server or a {@see TranslatedError} explaining what went wrong.

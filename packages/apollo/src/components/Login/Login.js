@@ -28,6 +28,8 @@ const SCOPE = 'login';
 const Log = new Logger(SCOPE);
 
 export class Login extends Component {
+	debounce = null;
+
 	componentDidMount() {
 		this.props.updateState(SCOPE, {
 			email: '',
@@ -41,7 +43,7 @@ export class Login extends Component {
 		});
 	}
 
-	componentWillUnmount() {}
+	componentWillUnmount() { }
 
 	async onLogin(e) {
 		try {
@@ -84,13 +86,32 @@ export class Login extends Component {
 		}
 	}
 
+	// debounce the new-password input field as it is entered
 	onPasswordChangeFormChange(value) {
+		clearTimeout(this.debounce);
+		this.debounce = setTimeout(() => {
+			this.onPasswordChangeFormChangeDebounced(value);
+		}, 300);
+	}
+
+	// test new password's strength as it is entered
+	async onPasswordChangeFormChangeDebounced(value) {
 		if (value.currentPassword) {
 			this.props.updateState(SCOPE, {
 				currentPasswordError: '',
 			});
 		} else if (value.newPassword) {
-			this.validateNewPassword(value.newPassword);
+			try {
+				await LoginApi.testPasswordStr(value.newPassword);
+				this.props.updateState(SCOPE, {
+					newPasswordError: '',
+				});
+			} catch (e) {
+				const msg = e ? e.msg : 'Password was not updated';
+				this.props.updateState(SCOPE, {
+					newPasswordError: (Array.isArray(msg) && typeof msg[0] === 'string') ? msg.join('<br/>') : msg,
+				});
+			}
 		} else if (value.confirmPassword) {
 			this.validateConfirmPassword(null, value.confirmPassword);
 		}
@@ -103,14 +124,6 @@ export class Login extends Component {
 		this.props.updateState(SCOPE, {
 			confirmPasswordError: !isSame ? 'passwords_do_not_match' : '',
 		});
-	}
-
-	validateNewPassword(newPassword) {
-		let isLengthOk = newPassword && newPassword.length >= 8;
-		this.props.updateState(SCOPE, {
-			newPasswordError: !isLengthOk ? 'password_character_limit_error_message' : '',
-		});
-		this.validateConfirmPassword(newPassword, null);
 	}
 
 	render() {

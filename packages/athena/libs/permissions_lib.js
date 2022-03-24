@@ -17,6 +17,14 @@
 //------------------------------------------------------------
 module.exports = function (logger, ev, t) {
 	const exports = {};
+	const owasp = require('owasp-password-strength-test');
+	owasp.config({
+		allowPassphrases: true,
+		maxLength: ev.MAX_PASSWORD_LEN,
+		minLength: ev.MIN_PASSWORD_LEN,
+		minPhraseLength: ev.MIN_PASSPHRASE_LEN,
+		minOptionalTestsToPass: 4,
+	});
 
 	//--------------------------------------------------
 	// Get users
@@ -437,14 +445,14 @@ module.exports = function (logger, ev, t) {
 	//--------------------------------------------------
 	exports.change_password = (req, cb) => {
 		if (ev.AUTH_SCHEME !== 'couchdb') {
-			logger.error('cannot edit passwords when auth scheme is ', ev.AUTH_SCHEME);
+			logger.error('[pass] cannot edit passwords when auth scheme is ', ev.AUTH_SCHEME);
 			return cb({ statusCode: 400, msg: 'cannot edit passwords when auth scheme is ' + ev.AUTH_SCHEME });
 		} else {
 
 			// get the Athena settings doc first
 			t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, (err, settings_doc) => {
 				if (err || !settings_doc) {
-					logger.error('could not get settings doc to edit users', err);
+					logger.error('[pass] could not get settings doc to edit users', err);
 					return cb(err);
 				} else {
 					let input_errors = [];
@@ -452,77 +460,86 @@ module.exports = function (logger, ev, t) {
 						settings_doc.access_list = {};									// init
 					}
 
-					// validate the input
+					// validate the new password
 					const uuid = t.middleware.getUuid(req);
 					const email = find_users_email(uuid, settings_doc);
 					if (!email) {
 						input_errors.push('user by uuid does not exist: ' + encodeURI(uuid));
 					} else {
 						req.body.desired_pass = typeof req.body.desired_pass === 'string' ? req.body.desired_pass.trim() : '';	// protect user from whitespace
-						if (req.body.desired_pass.length < ev.MIN_PASSWORD_LEN) {
-							input_errors.push('password is not at least ' + ev.MIN_PASSWORD_LEN + ' characters');
-						} else if (req.body.desired_pass.length > ev.MAX_PASSWORD_LEN) {
-							input_errors.push('password cannot be greater than ' + ev.MAX_PASSWORD_LEN + ' characters');
-						} else if (req.body.desired_pass === ev.DEFAULT_USER_PASSWORD) {
-							input_errors.push('password cannot be the same as the default password');
-						} else {
 
-							// check the current password
-							let salt = ev.ACCESS_LIST[email].salt;
-							let known_hashed_secret = ev.ACCESS_LIST[email].hashed_secret;
-							if (!known_hashed_secret && ev.DEFAULT_USER_PASSWORD) {			// if DEFAULT_USER_PASSWORD is null, don't do use this fallback
-								logger.warn('[auth] no password set for user', t.misc.censorEmail(email), '. will use default password');
-								const secret_details = t.misc.salt_secret(ev.DEFAULT_USER_PASSWORD);
-								salt = secret_details.salt;
-								known_hashed_secret = secret_details.hashed_secret;
-							}
-
-							const valid_password = t.misc.verify_secret(req.body.pass, salt, known_hashed_secret);	// check if input is correct
-							if (!valid_password) {
-								input_errors.push('old password is invalid');
-							} else {
-
-								// update with the new password
-								const secret_details = t.misc.salt_secret(req.body.desired_pass);
-								settings_doc.access_list[email].salt = secret_details.salt;
-								settings_doc.access_list[email].hashed_secret = secret_details.hashed_secret;
-								settings_doc.access_list[email].ts_changed_password = Date.now();
-							}
+						const result = owasp.test(req.body.desired_pass);
+						if (result && Array.isArray(result.errors) && result.errors.length > 0) {
+							input_errors = input_errors.concat(result.errors);
 						}
 					}
 
+					// check results of the password
 					if (input_errors.length >= 1) {
-						logger.error('cannot change password. bad input:', input_errors);
+						logger.error('[pass] cannot change password. input errors:', input_errors);
 						cb({ statusCode: 400, msg: input_errors, }, null);
-					} else {
+					} else if (req._dry_run === true) {
+						logger.info('[pass] detected dry-run password change. password would be valid.');	// dry run doesn't edit the pass or check existing
+						cb(null, { message: 'ok', details: 'password would be valid' });
+					}
 
-						// update the settings doc
-						const wr_opts = {
-							db_name: ev.DB_SYSTEM,
-							doc: settings_doc
-						};
-						t.otcc.repeatWriteSafe(wr_opts, (doc) => {
-							doc.access_list = settings_doc.access_list;
-							return { doc: doc };
-						}, (err_writeDoc) => {
-							if (err_writeDoc) {
-								logger.error('cannot edit settings doc to change password:', err_writeDoc);
-								cb({ statusCode: 500, msg: 'could not update settings doc', details: err_writeDoc }, null);
-							} else {
-								logger.info('[permissions] changing password - success');
+					// check if the current password was entered correctly
+					else {
+						let salt = ev.ACCESS_LIST[email].salt;
+						let known_hashed_secret = ev.ACCESS_LIST[email].hashed_secret;
+						if (!known_hashed_secret && ev.DEFAULT_USER_PASSWORD) {			// if DEFAULT_USER_PASSWORD is null, don't do use this fallback
+							logger.warn('[pass] no password set for user', t.misc.censorEmail(email), '. will use default password');
+							const secret_details = t.misc.salt_secret(ev.DEFAULT_USER_PASSWORD);
+							salt = secret_details.salt;
+							known_hashed_secret = secret_details.hashed_secret;
+						}
 
-								ev.update(null, err => {												// reload ev settings
-									if (err) {
-										logger.error('error updating config settings', err);
-										return cb({ statusCode: 500, msg: 'could not update config settings' }, null);
-									} else {
-										req.session.destroy(() => {			// important to call destroy so express ask for new sid
-											cb(null, { message: 'ok', details: 'password updated' });	// all good
-										});
-									}
-								});
-							}
-						});
+						const valid_password = t.misc.verify_secret(req.body.pass, salt, known_hashed_secret);	// check if input is correct
+						if (!valid_password) {
+							input_errors.push('old password is invalid');
+						} else {
+
+							// update with the new password
+							const secret_details = t.misc.salt_secret(req.body.desired_pass);
+							settings_doc.access_list[email].salt = secret_details.salt;
+							settings_doc.access_list[email].hashed_secret = secret_details.hashed_secret;
+							settings_doc.access_list[email].ts_changed_password = Date.now();
+						}
+
+						// last minute escape
+						if (input_errors.length >= 1) {
+							logger.error('[pass] cannot change password. old password was wrong:', input_errors);
+							cb({ statusCode: 400, msg: input_errors, }, null);
+						} else {
+
+							// update the settings doc user password
+							const wr_opts = {
+								db_name: ev.DB_SYSTEM,
+								doc: settings_doc
+							};
+							t.otcc.repeatWriteSafe(wr_opts, (doc) => {
+								doc.access_list = settings_doc.access_list;
+								return { doc: doc };
+							}, (err_writeDoc) => {
+								if (err_writeDoc) {
+									logger.error('[pass] cannot edit settings doc to change password:', err_writeDoc);
+									cb({ statusCode: 500, msg: 'could not update settings doc', details: err_writeDoc }, null);
+								} else {
+									logger.info('[pass] changing password - success');
+
+									ev.update(null, err => {												// reload ev settings
+										if (err) {
+											logger.error('error updating config settings', err);
+											return cb({ statusCode: 500, msg: 'could not update config settings' }, null);
+										} else {
+											req.session.destroy(() => {			// important to call destroy so express ask for new sid
+												cb(null, { message: 'ok', details: 'password updated' });	// all good
+											});
+										}
+									});
+								}
+							});
+						}
 					}
 				}
 			});

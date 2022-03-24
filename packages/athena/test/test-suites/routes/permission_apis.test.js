@@ -713,15 +713,38 @@ describe('Permission APIs', () => {
 	const change_password = () => {
 		return [
 			{
-				itStatement: 'should return a 200 and the correct message - all stubs and params pass test_id=ixxnfq',
+				itStatement: 'should return a 200 - good *passphrase* test_id=ixxnfq',
 				callFunction: (routeInfo) => {
 					routeInfo.body = {
-						desired_pass: '12345678'
+						desired_pass: 'iwenttothestoretobuymilk'		// dummy password please ignore
 					};
 					common.ev.AUTH_SCHEME = 'couchdb';
 					const doc = {};
 					doc.access_list = { 'someone_else@us.ibm.com': { uuid: 'adasdfsf-1c57-42bd-9b05-33a858a4ff2e' } };
-					doc.desired_pass = '12345678';
+					doc.desired_pass = 'iwenttothestoretobuymilk';		// dummy password please ignore
+					tools.stubs.getDoc.callsArgWith(1, null, doc);
+					tools.stubs.getUuid = sinon.stub(tools.middleware, 'getUuid').returns('adasdfsf-1c57-42bd-9b05-33a858a4ff2e');
+					tools.stubs.verify_secret = sinon.stub(tools.misc, 'verify_secret').returns(true);
+					tools.stubs.repeatWriteSafe.callsArgWith(2, null);
+					tools.stubs.update.callsArgWith(1, null);
+				},
+				expectBlock: (res) => {
+					expect(res.status).to.equal(200);
+					expect(JSON.stringify(res.body)).to.equal(JSON.stringify({ 'message': 'ok', 'details': 'password updated' }));
+					tools.stubs.getUuid.restore();
+					tools.stubs.verify_secret.restore();
+				}
+			},
+			{
+				itStatement: 'should return a 200 - good password - test_id=ocjafz',
+				callFunction: (routeInfo) => {
+					routeInfo.body = {
+						desired_pass: 'HiThere123!'					// dummy password please ignore
+					};
+					common.ev.AUTH_SCHEME = 'couchdb';
+					const doc = {};
+					doc.access_list = { 'someone_else@us.ibm.com': { uuid: 'adasdfsf-1c57-42bd-9b05-33a858a4ff2e' } };
+					doc.desired_pass = 'iwenttothestoretobuymilk';	// dummy password please ignore
 					tools.stubs.getDoc.callsArgWith(1, null, doc);
 					tools.stubs.getUuid = sinon.stub(tools.middleware, 'getUuid').returns('adasdfsf-1c57-42bd-9b05-33a858a4ff2e');
 					tools.stubs.verify_secret = sinon.stub(tools.misc, 'verify_secret').returns(true);
@@ -778,7 +801,7 @@ describe('Permission APIs', () => {
 				itStatement: 'should return an error and message - password is not long enough test_id=wsefxc',
 				callFunction: (routeInfo) => {
 					routeInfo.body = {
-						desired_pass: '1234567'
+						desired_pass: 'hiThere!0'					// dummy password please ignore
 					};
 					common.ev.AUTH_SCHEME = 'couchdb';
 					const doc = {};
@@ -788,7 +811,31 @@ describe('Permission APIs', () => {
 				},
 				expectBlock: (res) => {
 					expect(res.status).to.equal(400);
-					expect(JSON.stringify(res.body)).to.equal(JSON.stringify({ 'statusCode': 400, 'msg': ['password is not at least 8 characters'] }));
+					expect(res.body).to.deep.equal({ 'statusCode': 400, 'msg': ['The password must be at least 10 characters long.'] });
+					tools.stubs.getUuid.restore();
+				}
+			},
+			{
+				itStatement: 'should return an error and message - password is not complex long enough test_id=ngcwaz',
+				callFunction: (routeInfo) => {
+					routeInfo.body = {
+						desired_pass: 'iwenttothestore'					// dummy password please ignore
+					};
+					common.ev.AUTH_SCHEME = 'couchdb';
+					const doc = {};
+					doc.access_list = { 'someone_else@us.ibm.com': { uuid: 'adasdfsf-1c57-42bd-9b05-33a858a4ff2e' } };
+					tools.stubs.getDoc.callsArgWith(1, null, doc);
+					tools.stubs.getUuid = sinon.stub(tools.middleware, 'getUuid').returns('adasdfsf-1c57-42bd-9b05-33a858a4ff2e');
+				},
+				expectBlock: (res) => {
+					expect(res.status).to.equal(400);
+					expect(res.body).to.deep.equal({
+						'statusCode': 400, 'msg': [
+							'The password must contain at least one uppercase letter.',
+							'The password must contain at least one number.',
+							'The password must contain at least one special character.'
+						]
+					});
 					tools.stubs.getUuid.restore();
 				}
 			},
@@ -796,13 +843,13 @@ describe('Permission APIs', () => {
 				itStatement: 'should return a 200 and the correct message - exercises default password code test_id=kfcggj',
 				callFunction: (routeInfo) => {
 					routeInfo.body = {
-						desired_pass: '12345678'
+						desired_pass: 'iwenttothestoretobuymilk'			// dummy password please ignore
 					};
 					common.ev.AUTH_SCHEME = 'couchdb';
 					common.ev.DEFAULT_USER_PASSWORD = 'default_password';
 					const doc = {};
 					doc.access_list = { 'someone_else@us.ibm.com': { uuid: 'adasdfsf-1c57-42bd-9b05-33a858a4ff2e' } };
-					doc.desired_pass = '12345678';
+					doc.desired_pass = 'iwenttothestoretobuymilk';			// dummy password please ignore
 					tools.stubs.getDoc.callsArgWith(1, null, doc);
 					tools.stubs.getUuid = sinon.stub(tools.middleware, 'getUuid').returns('adasdfsf-1c57-42bd-9b05-33a858a4ff2e');
 					tools.stubs.verify_secret = sinon.stub(tools.misc, 'verify_secret').returns(true);
@@ -820,7 +867,7 @@ describe('Permission APIs', () => {
 				itStatement: 'should return an error and message - allowing the old password check to fail test_id=ajsske',
 				callFunction: (routeInfo) => {
 					routeInfo.body = {
-						desired_pass: '12345678'
+						desired_pass: 'iwenttothestoretobuymilk'			// dummy password please ignore
 					};
 					common.ev.AUTH_SCHEME = 'couchdb';
 					const doc = {};
@@ -838,12 +885,12 @@ describe('Permission APIs', () => {
 				itStatement: 'should return an error and message - error sent to "repeatWriteSafe" stub test_id=zqisvr',
 				callFunction: (routeInfo) => {
 					routeInfo.body = {
-						desired_pass: '12345678'
+						desired_pass: 'iwenttothestoretobuymilk'			// dummy password please ignore
 					};
 					common.ev.AUTH_SCHEME = 'couchdb';
 					const doc = {};
 					doc.access_list = { 'someone_else@us.ibm.com': { uuid: 'adasdfsf-1c57-42bd-9b05-33a858a4ff2e' } };
-					doc.desired_pass = '12345678';
+					doc.desired_pass = 'iwenttothestoretobuymilk';			// dummy password please ignore
 					tools.stubs.getDoc.callsArgWith(1, null, doc);
 					tools.stubs.getUuid = sinon.stub(tools.middleware, 'getUuid').returns('adasdfsf-1c57-42bd-9b05-33a858a4ff2e');
 					tools.stubs.verify_secret = sinon.stub(tools.misc, 'verify_secret').returns(true);
@@ -866,12 +913,12 @@ describe('Permission APIs', () => {
 				itStatement: 'should return an error and message - error sent to update stub test_id=ecrxrk',
 				callFunction: (routeInfo) => {
 					routeInfo.body = {
-						desired_pass: '12345678'
+						desired_pass: 'iwenttothestoretobuymilk'			// dummy password please ignore
 					};
 					common.ev.AUTH_SCHEME = 'couchdb';
 					const doc = {};
 					doc.access_list = { 'someone_else@us.ibm.com': { uuid: 'adasdfsf-1c57-42bd-9b05-33a858a4ff2e' } };
-					doc.desired_pass = '12345678';
+					doc.desired_pass = 'iwenttothestoretobuymilk';			// dummy password please ignore
 					tools.stubs.getDoc.callsArgWith(1, null, doc);
 					tools.stubs.getUuid = sinon.stub(tools.middleware, 'getUuid').returns('adasdfsf-1c57-42bd-9b05-33a858a4ff2e');
 					tools.stubs.verify_secret = sinon.stub(tools.misc, 'verify_secret').returns(true);
@@ -899,7 +946,7 @@ describe('Permission APIs', () => {
 					};
 					const doc = {};
 					doc.access_list = { 'someone_else@us.ibm.com': { uuid: 'adasdfsf-1c57-42bd-9b05-33a858a4ff2e' } };
-					doc.desired_pass = '12345678';
+					doc.desired_pass = 'iwenttothestoretobuymilk';		// dummy password please ignore
 					tools.stubs.getDoc.callsArgWith(1, null, doc);
 					tools.stubs.repeatWriteSafe.callsArgWith(2, null);
 					tools.stubs.update.callsArgWith(1, null);
@@ -957,7 +1004,7 @@ describe('Permission APIs', () => {
 					};
 					const doc = {};
 					doc.access_list = { 'someone_else@us.ibm.com': { uuid: 'adasdfsf-1c57-42bd-9b05-33a858a4ff2e' } };
-					doc.desired_pass = '12345678';
+					doc.desired_pass = 'iwenttothestoretobuymilk';				// dummy password please ignore
 					tools.stubs.getDoc.callsArgWith(1, null, doc);
 					tools.stubs.repeatWriteSafe.callsArgWith(2, null);
 					tools.stubs.update.callsArgWith(1, null);
@@ -978,7 +1025,7 @@ describe('Permission APIs', () => {
 					};
 					const doc = {};
 					doc.access_list = { 'someone_else@us.ibm.com': { uuid: 'adasdfsf-1c57-42bd-9b05-33a858a4ff2e' } };
-					doc.desired_pass = '12345678';
+					doc.desired_pass = 'iwenttothestoretobuymilk';				// dummy password please ignore
 					tools.stubs.getDoc.callsArgWith(1, null, doc);
 					tools.stubs.repeatWriteSafe.callsArgWith(2, { statusCode: 500, msg: 'problem resetting password' });
 				},
@@ -1002,7 +1049,7 @@ describe('Permission APIs', () => {
 					};
 					const doc = {};
 					doc.access_list = { 'someone_else@us.ibm.com': { uuid: 'adasdfsf-1c57-42bd-9b05-33a858a4ff2e' } };
-					doc.desired_pass = '12345678';
+					doc.desired_pass = 'iwenttothestoretobuymilk';			// dummy password please ignore
 					tools.stubs.getDoc.callsArgWith(1, null, doc);
 					tools.stubs.repeatWriteSafe.callsArgWith(2, null);
 					tools.stubs.update.callsArgWith(1, { statusCode: 500, msg: 'problem updating' });

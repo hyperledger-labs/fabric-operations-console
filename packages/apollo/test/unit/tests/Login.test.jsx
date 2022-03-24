@@ -48,7 +48,6 @@ describe('Login component', () => {
 	let translateStub;
 	let updateStateStub;
 	let validateConfirmPasswordStub;
-	let validateNewPasswordStub;
 	let renderStub;
 	let props;
 	let loginStub;
@@ -422,10 +421,9 @@ describe('Login component', () => {
 		});
 	});
 
-	describe('Login - onPasswordChangeFormChange()', () => {
+	describe('Login - onPasswordChangeFormChangeDebounced()', () => {
 		beforeEach(async() => {
 			validateConfirmPasswordStub = mySandBox.stub(Login.prototype, 'validateConfirmPassword').returns();
-			validateNewPasswordStub = mySandBox.stub(Login.prototype, 'validateNewPassword').returns();
 			renderStub = mySandBox.stub(Login.prototype, 'render').returns();
 		});
 
@@ -433,10 +431,9 @@ describe('Login component', () => {
 			const component = shallow(<Login {...props} />);
 			updateStateStub.resetHistory();
 			const value = 'some value';
-			await component.instance().onPasswordChangeFormChange(value);
+			await component.instance().onPasswordChangeFormChangeDebounced(value);
 
 			updateStateStub.should.have.not.been.called;
-			validateNewPasswordStub.should.have.not.been.called;
 			validateConfirmPasswordStub.should.have.not.been.called;
 		});
 
@@ -449,26 +446,11 @@ describe('Login component', () => {
 			props.currentPasswordError = 'some old current password error';
 			component.setProps(props);
 
-			await component.instance().onPasswordChangeFormChange(value);
+			await component.instance().onPasswordChangeFormChangeDebounced(value);
 
 			updateStateStub.should.have.been.called;
-			validateNewPasswordStub.should.have.not.been.called;
 			validateConfirmPasswordStub.should.have.not.been.called;
 			props.currentPasswordError.should.deep.equal('');
-		});
-
-		it('should validateNewPassword if value.newPassword set', async() => {
-			const component = shallow(<Login {...props} />);
-			updateStateStub.resetHistory();
-			const value = {
-				newPassword: 'newPassword',
-			};
-
-			await component.instance().onPasswordChangeFormChange(value);
-
-			updateStateStub.should.have.not.been.called;
-			validateNewPasswordStub.should.have.been.calledWithExactly(value.newPassword);
-			validateConfirmPasswordStub.should.have.not.been.called;
 		});
 
 		it('should validateConfirmPassword if value.confirmPassword set', async() => {
@@ -478,10 +460,9 @@ describe('Login component', () => {
 				confirmPassword: 'confirmPassword',
 			};
 
-			await component.instance().onPasswordChangeFormChange(value);
+			await component.instance().onPasswordChangeFormChangeDebounced(value);
 
 			updateStateStub.should.have.not.been.called;
-			validateNewPasswordStub.should.have.not.been.called;
 			validateConfirmPasswordStub.should.have.been.calledWithExactly(null, value.confirmPassword);
 		});
 	});
@@ -534,41 +515,6 @@ describe('Login component', () => {
 
 			updateStateStub.should.have.been.called;
 			props.confirmPasswordError.should.deep.equal('passwords_do_not_match');
-		});
-	});
-
-	describe('Login - validateNewPassword()', () => {
-		beforeEach(async() => {
-			validateConfirmPasswordStub = mySandBox.stub(Login.prototype, 'validateConfirmPassword').returns();
-			renderStub = mySandBox.stub(Login.prototype, 'render').returns();
-		});
-
-		it('should reset error if passwords length is 8 or more characters', async() => {
-			const component = shallow(<Login {...props} />);
-			updateStateStub.resetHistory();
-			props.newPasswordError = 'some old error';
-			component.setProps(props);
-			const newPassword = 'long_password';
-
-			await component.instance().validateNewPassword(newPassword);
-
-			updateStateStub.should.have.been.called;
-			props.newPasswordError.should.deep.equal('');
-			validateConfirmPasswordStub.should.have.been.calledWithExactly(newPassword, null);
-		});
-
-		it('should update error if passwords less than 8 characters long', async() => {
-			const component = shallow(<Login {...props} />);
-			updateStateStub.resetHistory();
-			props.newPasswordError = 'some old error';
-			component.setProps(props);
-			const newPassword = 'short';
-
-			await component.instance().validateNewPassword(newPassword);
-
-			updateStateStub.should.have.been.called;
-			props.newPasswordError.should.deep.equal('password_character_limit_error_message');
-			validateConfirmPasswordStub.should.have.been.calledWithExactly(newPassword, null);
 		});
 	});
 });
