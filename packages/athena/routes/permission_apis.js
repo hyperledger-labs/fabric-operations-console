@@ -198,7 +198,7 @@ module.exports = function (logger, ev, t) {
 	});
 
 	//--------------------------------------------------
-	// Test/Validate a password
+	// Test/Validate a password (in terms of strength)
 	//--------------------------------------------------
 	app.post('/api/v[123]/permissions/users/password', t.middleware.checkAuthentication, (req, res) => {
 		req._dry_run = true;
