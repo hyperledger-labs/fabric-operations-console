@@ -56,7 +56,7 @@ describe('component_lib.js', () => {
 						{
 							itStatement: 'should pass with no errors - fabric-ca: complete and correct node object sent test_id=kszcym',
 							callFunction: () => {
-								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 							},
 							expectBlock: (done) => {
 								component_lib.buildDoc(JSON.parse(JSON.stringify(component_properties_to_test.fabric_ca_node_obj)), (err) => {
@@ -68,7 +68,7 @@ describe('component_lib.js', () => {
 						{
 							itStatement: 'should pass with no errors - node object sent:  is fabric-orderer test_id=clrnxy',
 							callFunction: () => {
-								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 							},
 							expectBlock: (done) => {
 								const obj = JSON.parse(JSON.stringify(component_properties_to_test.fabric_orderer_node_obj));
@@ -81,7 +81,7 @@ describe('component_lib.js', () => {
 						{
 							itStatement: 'should return an error - fabric-ca: no properties object was passed test_id=aztuub',
 							callFunction: () => {
-								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 							},
 							expectBlock: (done) => {
 								component_lib.buildDoc({}, (error) => {
@@ -94,7 +94,7 @@ describe('component_lib.js', () => {
 						{
 							itStatement: 'should pass with no errors - fabric-peer: complete and correct node object sent test_id=rgimjs',
 							callFunction: () => {
-								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 							},
 							expectBlock: (done) => {
 								component_lib.buildDoc(component_properties_to_test.fabric_peer_node_obj, (err) => {
@@ -106,7 +106,7 @@ describe('component_lib.js', () => {
 						{
 							itStatement: 'should return an error - fabric-peer: no properties object was passed test_id=rkvumw',
 							callFunction: () => {
-								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 							},
 							expectBlock: (done) => {
 								component_lib.buildDoc({}, (error) => {
@@ -119,7 +119,7 @@ describe('component_lib.js', () => {
 						{
 							itStatement: 'should pass with no errors - fabric-orderer: complete and correct node object sent test_id=bkwvrp',
 							callFunction: () => {
-								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 							},
 							expectBlock: (done) => {
 								component_lib.buildDoc(component_properties_to_test.fabric_orderer_node_obj, (err) => {
@@ -131,7 +131,7 @@ describe('component_lib.js', () => {
 						{
 							itStatement: 'should return an error - fabric-orderer: no properties object was passed test_id=ghaiyc',
 							callFunction: () => {
-								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 							},
 							expectBlock: (done) => {
 								component_lib.buildDoc({}, (error) => {
@@ -144,7 +144,7 @@ describe('component_lib.js', () => {
 						{
 							itStatement: 'should pass with no errors - fabric-orderer: complete and correct node object sent test_id=chpucz',
 							callFunction: () => {
-								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 							},
 							expectBlock: (done) => {
 								component_lib.buildDoc(component_properties_to_test.msp_definition_request_body, (err) => {
@@ -157,7 +157,7 @@ describe('component_lib.js', () => {
 						{
 							itStatement: 'should give back _id with no value - test_id=afwws',
 							callFunction: () => {
-								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 							},
 							expectBlock: (done) => {
 								const data = JSON.parse(JSON.stringify(component_properties_to_test.fabric_ca_node_obj));
@@ -173,7 +173,7 @@ describe('component_lib.js', () => {
 						{
 							itStatement: 'should give back _id with no spaces - test_id=afwws2',
 							callFunction: () => {
-								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 							},
 							expectBlock: (done) => {
 								const data = JSON.parse(JSON.stringify(component_properties_to_test.fabric_ca_node_obj));
@@ -189,7 +189,7 @@ describe('component_lib.js', () => {
 						{
 							itStatement: 'should give back _id with random characters - test_id=afwws3',
 							callFunction: () => {
-								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 							},
 							expectBlock: (done) => {
 								const data = JSON.parse(JSON.stringify(component_properties_to_test.fabric_ca_node_obj));
@@ -205,7 +205,7 @@ describe('component_lib.js', () => {
 						{
 							itStatement: 'should give back _id starting with letter c - test_id=eegds',
 							callFunction: () => {
-								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 							},
 							expectBlock: (done) => {
 								const data = JSON.parse(JSON.stringify(component_properties_to_test.fabric_ca_node_obj));
@@ -221,7 +221,7 @@ describe('component_lib.js', () => {
 						{
 							itStatement: 'should give back _id starting with letter c -  test_id=mdrcgb',
 							callFunction: () => {
-								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 							},
 							expectBlock: (done) => {
 								const data = JSON.parse(JSON.stringify(component_properties_to_test.fabric_ca_node_obj));
@@ -237,7 +237,7 @@ describe('component_lib.js', () => {
 						{
 							itStatement: 'should make display name from display name - test_id=cftwap',
 							callFunction: () => {
-								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 							},
 							expectBlock: (done) => {
 								const data = JSON.parse(JSON.stringify(component_properties_to_test.fabric_ca_node_obj));
@@ -257,7 +257,7 @@ describe('component_lib.js', () => {
 						{
 							itStatement: 'should make display name from name name - test_id=nyrsmd',
 							callFunction: () => {
-								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 							},
 							expectBlock: (done) => {
 								const data = JSON.parse(JSON.stringify(component_properties_to_test.fabric_ca_node_obj));
@@ -277,7 +277,7 @@ describe('component_lib.js', () => {
 						{
 							itStatement: 'should give make display name from short name - test_id=jluwws',
 							callFunction: () => {
-								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 							},
 							expectBlock: (done) => {
 								const data = JSON.parse(JSON.stringify(component_properties_to_test.fabric_ca_node_obj));
@@ -297,7 +297,7 @@ describe('component_lib.js', () => {
 						{
 							itStatement: 'should set display name w/chinese characters - test_id=raoopy',
 							callFunction: () => {
-								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 							},
 							expectBlock: (done) => {
 								const data = JSON.parse(JSON.stringify(component_properties_to_test.fabric_ca_node_obj));
@@ -315,7 +315,7 @@ describe('component_lib.js', () => {
 						{
 							itStatement: 'should append letter "c" to id when given str that starts with a number - test_id=yosota',
 							callFunction: () => {
-								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 							},
 							expectBlock: (done) => {
 								const data = JSON.parse(JSON.stringify(component_properties_to_test.fabric_ca_node_obj));
@@ -332,7 +332,7 @@ describe('component_lib.js', () => {
 						{
 							itStatement: 'should not pass - msp id has underscores test_id=subgyi',
 							callFunction: () => {
-								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+								tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 							},
 							expectBlock: (done) => {
 								const data = JSON.parse(JSON.stringify(component_properties_to_test.fabric_ca_node_obj));
@@ -362,7 +362,8 @@ describe('component_lib.js', () => {
 								common.ev.MAX_COMPONENTS = 9;
 								tools.stubs.getAllIds.callsArgWith(0, null, {
 									cluster_ids: [],
-									doc_ids: ['myca1', 'myca2', 'myca3', 'myca4', 'myca5', 'myca6', 'myca7', 'myca8', 'myca9', 'myca10']
+									doc_ids: [],
+									comp_ids: ['myca1', 'myca2', 'myca3', 'myca4', 'myca5', 'myca6', 'myca7', 'myca8', 'myca9', 'myca10'],
 								});
 							},
 							expectBlock: (done) => {
@@ -381,7 +382,8 @@ describe('component_lib.js', () => {
 								common.ev.MAX_COMPONENTS = 9;
 								tools.stubs.getAllIds.callsArgWith(0, null, {
 									cluster_ids: [],
-									doc_ids: {}			// should be an array, test as is
+									doc_ids: {},			// should be an array, test as is
+									comp_ids: [],
 								});
 							},
 							expectBlock: (done) => {
@@ -614,6 +616,7 @@ describe('component_lib.js', () => {
 								tools.stubs.getAllIds.restore();
 								component_lib.getAllIds((err, resp) => {
 									expect(err).to.equal(null);
+									delete resp.comp_ids;
 									expect(resp).to.deep.equal({ cluster_ids: ['123'], doc_ids: ['abc', 'def'], deployer_ids: ['myca', 'my-peer', 'my-os'] });
 								});
 								tools.stubs.getAllIds = sinon.stub(component_lib, 'getAllIds');
@@ -647,6 +650,7 @@ describe('component_lib.js', () => {
 								tools.stubs.getAllIds.restore();
 								component_lib.getAllIds((err, resp) => {
 									expect(err).to.equal(null);
+									delete resp.comp_ids;
 									expect(resp).to.deep.equal({ cluster_ids: ['123'], doc_ids: ['abc', 'def'], deployer_ids: ['myca', 'my-peer', 'my-os'] });
 								});
 								tools.stubs.getAllIds = sinon.stub(component_lib, 'getAllIds');

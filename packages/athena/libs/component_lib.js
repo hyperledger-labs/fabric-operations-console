@@ -289,8 +289,8 @@ module.exports = function (logger, ev, t) {
 		let fmt_component_obj = null;
 
 		exports.getAllIds((_, taken_ids) => {
-			if (count_ids(taken_ids) > ev.MAX_COMPONENTS) {
-				logger.error('[component lib] component limit reached. the component count is too damn high', taken_ids.length);
+			if (taken_ids.comp_ids.length > ev.MAX_COMPONENTS) {
+				logger.error('[component lib] component limit reached. the component count is too damn high', taken_ids.comp_ids.length);
 				return cb({ statusCode: 400, msg: ['total component limit reached. delete a component to make space for this one.'] }, null);
 			}
 
@@ -306,15 +306,6 @@ module.exports = function (logger, ev, t) {
 			}
 		});
 	};
-
-	// count the optools ids - only count component ids (peer, ca, orderers)
-	function count_ids(obj) {
-		if (obj && Array.isArray(obj.doc_ids)) {
-			const no_sig_collections = obj.doc_ids.filter(id => (id.indexOf('sc_') !== 0 && id.indexOf('00_') !== 0));
-			return no_sig_collections.length;
-		}
-		return 0;
-	}
 
 	// validate other fields in the body - ones we can't perform with validate properties()
 	exports.other_validation = (errorObj, fmt_body) => {
@@ -384,10 +375,39 @@ module.exports = function (logger, ev, t) {
 				});
 			},
 
+			// ---- Get athena *component* ids ---- // (no msps, no cluster ids, no sig collections)
+			(join) => {
+				const opts = {
+					db_name: ev.DB_COMPONENTS,		// db for peers/cas/orderers/msps/etc docs
+					_id: '_design/athena-v1',		// name of design doc
+					view: '_doc_types',
+					SKIP_CACHE: true,
+					query: t.misc.formatObjAsQueryParams({ keys: [ev.STR.CA, ev.STR.ORDERER, ev.STR.PEER] }),
+				};
+
+				t.otcc.getDesignDocView(opts, (err, resp) => {
+					if (err) {
+						logger.error('[component lib] error getting all deployed components:', err);
+						join(null, []);
+					} else {
+						const ids = [];
+						if (resp && resp.rows) {
+							for (let i in resp.rows) {
+								if (resp.rows[i] && resp.rows[i].key) {
+									ids.push(resp.rows[i].key);
+								}
+							}
+						}
+						join(null, ids);
+					}
+				});
+			},
+
 		], (_, results) => {
-			const ret = { cluster_ids: [], doc_ids: [], deployer_ids: [] };
+			const ret = { cluster_ids: [], doc_ids: [], deployer_ids: [], comp_ids: [] };
 			const athena_resp = results[0];
 			const deployer_resp = results[1];
+			const athena_comp_ids = results[2];
 			if (athena_resp && athena_resp.rows) {
 				for (let i in athena_resp.rows) {
 					if (athena_resp.rows[i] && athena_resp.rows[i].key) {
@@ -407,6 +427,9 @@ module.exports = function (logger, ev, t) {
 					}
 				}
 			}
+
+			ret.comp_ids = athena_comp_ids;		// only includes cas, peers, orderers (excludes msps, OS clusters)
+
 			return cb(null, ret);
 		});
 	};

@@ -121,7 +121,7 @@ describe('Component APIs', () => {
 				callFunction: () => {
 					const fullResponse = JSON.parse(JSON.stringify(node_api_objects.get_nodes_full_response));
 					tools.stubs.getDesignDocView.callsArgWith(1, fullResponse, null);
-					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 					tools.stubs.createNewDoc.callsArgWith(2, null, node_api_objects.write_node_response);
 					tools.stubs.rebuildWhiteList.callsArgWith(1, null);
 					tools.stubs.buildDoc.restore();
@@ -144,7 +144,7 @@ describe('Component APIs', () => {
 					const full_response = JSON.parse(JSON.stringify(node_api_objects.get_nodes_full_response));
 					const write_response = JSON.parse(JSON.stringify(node_api_objects.write_node_response));
 					tools.stubs.getDesignDocView.callsArgWith(1, full_response, null);
-					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 					tools.stubs.createNewDoc.callsArgWith(2, null, write_response);
 					tools.stubs.rebuildWhiteList.callsArgWith(1, null);
 					tools.stubs.buildDoc.restore();
@@ -182,7 +182,7 @@ describe('Component APIs', () => {
 				username: 'admin',
 				password: 'random',
 				callFunction: () => {
-					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 					tools.stubs.rebuildWhiteList.callsArgWith(1, null);
 					delete node_api_objects.fabric_ca_node_body_with_enroll_info.enroll_id;
 					delete node_api_objects.fabric_ca_node_body_with_enroll_info.enroll_secret;
@@ -208,7 +208,7 @@ describe('Component APIs', () => {
 				username: 'admin',
 				password: 'random',
 				callFunction: () => {
-					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 					tools.stubs.rebuildWhiteList.callsArgWith(1, null);
 					delete node_api_objects.fabric_ca_node_body_with_enroll_info.enroll_id;
 					delete node_api_objects.fabric_ca_node_body_with_enroll_info.enroll_secret;
@@ -232,7 +232,7 @@ describe('Component APIs', () => {
 				callFunction: () => {
 					const fullResponse = JSON.parse(JSON.stringify(node_api_objects.get_nodes_full_response));
 					tools.stubs.getDesignDocView.callsArgWith(1, fullResponse, null);
-					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 					tools.stubs.createNewDoc.callsArgWith(2, null, node_api_objects.write_node_response);
 					tools.stubs.getEnrollIdFromCert.returns('enroll id');
 					tools.stubs.rebuildWhiteList.callsArgWith(1, null);
@@ -272,7 +272,7 @@ describe('Component APIs', () => {
 					const err = {};
 					err.statusCode = 500;
 					err.msg = 'problem building doc';
-					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 					tools.stubs.createNewDoc.callsArgWith(2, err);
 					tools.stubs.buildDoc.restore();
 				},
