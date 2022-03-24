@@ -121,7 +121,7 @@ describe('Component APIs', () => {
 				callFunction: () => {
 					const fullResponse = JSON.parse(JSON.stringify(node_api_objects.get_nodes_full_response));
 					tools.stubs.getDesignDocView.callsArgWith(1, fullResponse, null);
-					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 					tools.stubs.createNewDoc.callsArgWith(2, null, node_api_objects.write_node_response);
 					tools.stubs.rebuildWhiteList.callsArgWith(1, null);
 					tools.stubs.buildDoc.restore();
@@ -142,7 +142,7 @@ describe('Component APIs', () => {
 				callFunction: () => {
 					const fullResponse = JSON.parse(JSON.stringify(node_api_objects.get_nodes_full_response));
 					tools.stubs.getDesignDocView.callsArgWith(1, fullResponse, null);
-					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 					tools.stubs.createNewDoc.callsArgWith(2, null, node_api_objects.write_node_response);
 					tools.stubs.rebuildWhiteList.callsArgWith(1, null);
 					tools.stubs.buildDoc.restore();
@@ -167,7 +167,7 @@ describe('Component APIs', () => {
 					const full_response = JSON.parse(JSON.stringify(node_api_objects.get_nodes_full_response));
 					const write_response = JSON.parse(JSON.stringify(node_api_objects.write_node_response));
 					tools.stubs.getDesignDocView.callsArgWith(1, full_response, null);
-					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 					tools.stubs.createNewDoc.callsArgWith(2, null, write_response);
 					tools.stubs.rebuildWhiteList.callsArgWith(1, null);
 					tools.stubs.buildDoc.restore();
@@ -198,7 +198,7 @@ describe('Component APIs', () => {
 					const err = {};
 					err.statusCode = 500;
 					err.msg = 'problem creating the node';
-					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 					tools.stubs.createNewDoc.callsArgWith(2, err);
 					tools.stubs.buildDoc.restore();
 				},
@@ -215,7 +215,7 @@ describe('Component APIs', () => {
 				password: 'random',
 				callFunction: (routeInfo) => {
 					routeInfo.body.api_url = null;
-					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 					tools.stubs.buildDoc.restore();
 				},
 				expectBlock: (res) => {
@@ -722,7 +722,7 @@ describe('Component APIs', () => {
 				callFunction: () => {
 					const fullResponse = JSON.parse(JSON.stringify(node_api_objects.get_nodes_full_response));
 					tools.stubs.getDesignDocView.callsArgWith(1, fullResponse, null);
-					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 					tools.stubs.createNewDoc.callsArgWith(2, null, node_api_objects.write_node_response);
 					tools.stubs.rebuildWhiteList.callsArgWith(1, null);
 					tools.stubs.buildDoc.restore();
@@ -748,7 +748,7 @@ describe('Component APIs', () => {
 					const err = {};
 					err.statusCode = 500;
 					err.msg = 'problem creating the node';
-					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [] });
+					tools.stubs.getAllIds.callsArgWith(0, null, { cluster_ids: [], doc_ids: [], comp_ids: [] });
 					tools.stubs.createNewDoc.callsArgWith(2, err);
 					tools.stubs.buildDoc.restore();
 				},

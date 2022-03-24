@@ -162,7 +162,7 @@
 	"max_password_len": 128,
 	"min_username_len": 6,
 	"max_username_len": 64,
-	"max_components": 250,
+	"max_components": 75,
 	"memory_cache_enabled": true,
 	"message_type": "settings_doc_update",
 	"proxy_tls_fabric_reqs": "always",
