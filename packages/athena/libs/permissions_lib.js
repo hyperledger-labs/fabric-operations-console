@@ -460,7 +460,7 @@ module.exports = function (logger, ev, t) {
 						settings_doc.access_list = {};									// init
 					}
 
-					// validate the input
+					// validate the new password
 					const uuid = t.middleware.getUuid(req);
 					const email = find_users_email(uuid, settings_doc);
 					if (!email) {
