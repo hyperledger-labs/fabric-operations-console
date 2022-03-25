@@ -14,9 +14,6 @@
 		"detect-secrets": "detect-secrets-hook --baseline .secrets.baseline -v",
 		"detect-secrets-create": "detect-secrets scan --update .secrets.baseline"
 	},
-	"engines": {
-		"node": "^12.10.0"
-	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.ibm.com/IBM-Blockchain/stitch.git"

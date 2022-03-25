@@ -39,9 +39,6 @@
 		"uuid": "^3.3.3",
 		"validator": "^13.7.0"
 	},
-	"engines": {
-		"node": "^8.16.0"
-	},
 	"scripts": {
 		"functional": "protractor test/functional/protractor.conf.js",
 		"prefunctional": "webdriver-manager update",

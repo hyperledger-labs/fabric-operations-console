@@ -19,9 +19,6 @@
 		"build:apollo": "npm run --prefix ../apollo build",
 		"build:stitch": "npm run --prefix ../stitch build_all"
 	},
-	"engines": {
-		"node": "^12.22.1"
-	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.ibm.com/IBM-Blockchain/athena.git"
