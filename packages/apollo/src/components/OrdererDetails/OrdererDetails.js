@@ -121,13 +121,20 @@ class OrdererDetails extends Component {
 		let nodes = await MspRestApi.getAllMsps();
 		this.props.updateState(SCOPE, { nodes });
 		await this.getDetails(skipStatusCache);
-		await this.getCPChannelList();
+		if (this.channelParticipationEnabled(this.props.details)) {
+			await this.getCPChannelList();
+		};
 		this.props.updateState(SCOPE, { loading: false });
 	};
 
+	// detect if channel participation features should be shown, based on osnadmin_url availability and a feature flag
+	channelParticipationEnabled(obj) {
+		const has_osnadmin_url = (obj && typeof obj.osnadmin_url === 'string') ? true : false;
+		return this.props.feature_flags && (this.props.feature_flags.osnadmin_feats_enabled === true) && has_osnadmin_url;
+	}
+
 	/* get channel list from channel participation api */
 	getCPChannelList = async() => {
-		if (this.props.details && !this.props.details.osnadmin_url) return;
 		let node = this.props.selectedNode || this.props.details;
 		let systemChannel = true;
 		let channelList = {};
@@ -186,7 +193,7 @@ class OrdererDetails extends Component {
 		} catch (error) {
 			Log.error(error);
 		}
-		this.props.updateState(SCOPE, { details: orderer, systemChannel: orderer.osnadmin_url ? false: true });
+		this.props.updateState(SCOPE, { details: orderer });
 		this.props.showBreadcrumb('orderer_details_title', { ordererName: orderer.cluster_name }, this.pathname);
 		this.timestamp = new Date().getTime();
 		setTimeout(() => {
@@ -260,7 +267,7 @@ class OrdererDetails extends Component {
 				if (this.timestamp) {
 					this.timestamp = 0;
 					this.props.updateState(SCOPE, { notAvailable: false });
-					if (!this.props.details.osnadmin_url) {
+					if (!this.channelParticipationEnabled(this.props.details)) {
 						this.getSystemChannelConfig();
 					}
 				}
@@ -1361,20 +1368,20 @@ class OrdererDetails extends Component {
 												<Tab id="ibp-orderer-details"
 													label={translate('details')}
 												>
-													{this.props.details.osnadmin_url && !this.props.orderer_tls_identity &&
-															<div>
-																<SidePanelWarning title="tls_identity_not_found"
-																	subtitle="orderer_tls_admin_identity_not_found"
-																/>
-															</div>
-													}
-													{this.props.details.osnadmin_url && this.props.orderer_tls_identity &&
-															<ChannelParticipationDetails
-																selectedNode={this.props.selectedNode}
-																channelList={this.props.channelList}
-																details={this.props.details}
-																unJoinComplete={this.getCPChannelList}
+													{this.channelParticipationEnabled(this.props.details) && !this.props.orderer_tls_identity &&
+														<div>
+															<SidePanelWarning title="tls_identity_not_found"
+																subtitle="orderer_tls_admin_identity_not_found"
 															/>
+														</div>
+													}
+													{this.channelParticipationEnabled(this.props.details) && this.props.orderer_tls_identity &&
+														<ChannelParticipationDetails
+															selectedNode={this.props.selectedNode}
+															channelList={this.props.channelList}
+															details={this.props.details}
+															unJoinComplete={this.getCPChannelList}
+														/>
 													}
 													{this.props.details.associatedIdentities && !this.props.details.associatedIdentities.length && (
 														<div className="ibp-orderer-no-identity">
@@ -1479,7 +1486,7 @@ class OrdererDetails extends Component {
 													{this.renderUsage(translate)}
 												</Tab>
 											)}
-											{this.props.selectedNode && this.props.selectedNode.osnadmin_url && (
+											{this.channelParticipationEnabled(this.props.selectedNode) && (
 												<Tab
 													id="ibp-orderer-channels"
 													label={translate('channels')}
