@@ -109,7 +109,8 @@
 		"lifecycle2_0_enabled": true,
 		"import_only_enabled": true,
 		"mustgather_enabled": false,
-		"read_only_enabled": false
+		"read_only_enabled": false,
+		"osnadmin_feats_enabled": false
 	},
 	"file_logging": {
 		"client": {

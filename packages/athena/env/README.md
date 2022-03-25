@@ -466,17 +466,65 @@ __default_settings_doc.json:__
 
 // feature flags for the UI. do not modify unless you know the impact.
 "feature_flags": {
+  // if true channel/orderer/application capabilities can be selected during channel creation
+  // defaults true
   "capabilities_enabled": true,
+
+  // if true the channel creation wizard is available
+  // defaults true
   "create_channel_enabled": true,
+
+  // if true "fabric_node_ous" will be configured during MSP generation
+  // defaults true
   "enable_ou_identifier": true,
+
+  // if true the high availability CA settings are configurable
+  // defaults false
   "high_availability": true,
+
+  // if true the hsm config panel will appear
+  // defaults false
   "hsm_enabled": true,
+
+  // if true the Fabric 2.0 chaincode lifecycle wizard elements will appear
+  // defaults true
   "lifecycle2_0_enabled": true,
+
+  // if true the UI will allow upgrading a Fabric v1.4.x peer or orderer to 2.x.x
+  // defaults true
   "patch_1_4to2_x_enabled": true,
+
+  // tbd - unused
+  // defaults true
   "remote_peer_config_enabled": true,
+
+  // if true new deployed components will set a "location" of "ibm_saas"
+  // defaults true
   "saas_enabled": true,
+
+  // if true the OrderingService content will allow new orderers to be appended
+  // defaults false
   "scale_raft_nodes_enabled": true,
-  "templates_enabled": false
+
+  // defunct/legacy template engine
+  // defaults false
+  "templates_enabled": false,
+
+  // if true the UI will not show content that helps deploy a component/ k8s deployment
+  // defaults true
+  "import_only_enabled": false,
+
+  // if true the mustgather-support section is displayed under the Support panel
+  // defaults false
+  "mustgather_enabled": false,
+
+  // if true the backend only allows http requests using a "GET" method
+  // defaults false
+  "read_only_enabled": false,
+
+  // if true the osnadmin/channel-participation features in Fabric v2.4+ will be enabled
+  // defaults false
+  "osnadmin_feats_enabled": false
 },
 
 // file logging settings
@@ -663,7 +711,7 @@ __default_settings_doc.json:__
 // a value of -1 will disable this feature
 "lockout_limit" 4
 
-// if true, GET request such as node status calls (via proxy route) and a few
+// if true GET request such as node status calls (via proxy route) and a few
 // GET deployer calls (via deployer proxy route) will be cached
 // defaults true
 "proxy_cache_enabled": true,

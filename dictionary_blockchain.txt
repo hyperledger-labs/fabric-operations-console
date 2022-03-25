@@ -326,3 +326,5 @@ mvpc
 siids
 viewstates
 resourceid
+mustgather
+osnadmin
