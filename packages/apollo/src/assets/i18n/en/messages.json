@@ -1659,7 +1659,7 @@
 	"reset_password": "Reset password",
 	"reset_email": "Email",
 	"reset_email_placeholder": "Enter email of the user",
-	"reset_password_successful": "Password for ${user} was successfully reset to ${password}.",
+	"reset_password_successful": "Password for ${user} was reset to the default password.",
 	"reset_password_failed": "Password reset failed.",
 	"change_password": "Change password",
 	"change_password_successful": "Password changed successfully.",
