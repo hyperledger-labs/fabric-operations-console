@@ -69,7 +69,7 @@ const ReleaseNotes = props => {
 														{' '}
 														<div className="ibp-note-bullet-point">-</div>
 														<div className="ibp-note-bullet-text">
-															<strong>{desc.title} </strong>
+															<strong>{desc.title}: </strong>
 															<span>{desc.details}</span>
 														</div>
 													</li>
