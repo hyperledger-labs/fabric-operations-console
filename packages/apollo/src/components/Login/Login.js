@@ -131,7 +131,7 @@ export class Login extends Component {
 
 		// changing the password
 		if (this.props.changePassword) {
-			if (!this.props.currentPassword || !this.props.confirmPassword) {	// passwords must be set
+			if (!this.props.currentPassword || !this.props.newPassword || !this.props.confirmPassword) {	// passwords must be set
 				disableSubmit = true;
 			}
 			if (this.props.newPassword !== this.props.confirmPassword) {		// must match
