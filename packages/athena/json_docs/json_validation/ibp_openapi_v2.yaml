@@ -132,6 +132,10 @@ x-validate_error_messages:
 
   # it is invalid to set this field if using a free k8s plan - doesn't apply to IBP software
   invalid_key_on_free_plan: "A *free* IBM Cloud Kubernetes cluster cannot use the parameter '$PROPERTY_NAME'."
+
+  # this value must be a known hostname, typically from an imported or deployed CA
+  unknown_enroll_host: "The parameter '$PROPERTY_NAME' was not found in the list of known hostnames. Import the CA using this hostname or use a hostname that is already known."
+
 #
 #
 #
@@ -4710,8 +4714,9 @@ components:
     cahost:
       type: string
       example: n3a3ec3-myca.ibp.us-south.containers.appdomain.cloud
-      description: The CA's hostname. Do not include protocol or port.
+      description: The CA's hostname. Do not include protocol or port. Must be a hostname from a known CA.
       maxLength: 1024 # spam prevention limit
+      x-validate_known_hostname: true
     caport:
       type: number
       example: 7054
