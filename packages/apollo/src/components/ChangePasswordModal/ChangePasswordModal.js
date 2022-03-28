@@ -115,7 +115,8 @@ class ChangePasswordModal extends Component {
 			!this.props.newPassword ||
 			!this.props.confirmPassword ||
 			this.props.newPassword !== this.props.confirmPassword ||
-			this.props.newPassword.length < 8;
+			this.props.newPasswordError !== '';
+
 		const translate = this.props.translate;
 		return (
 			<div>

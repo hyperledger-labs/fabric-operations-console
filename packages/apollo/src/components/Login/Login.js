@@ -128,17 +128,27 @@ export class Login extends Component {
 
 	render() {
 		let disableSubmit = false;
-		if (
-			(this.props.changePassword &&
-				(!this.props.currentPassword ||
-					!this.props.newPassword ||
-					!this.props.confirmPassword ||
-					this.props.newPassword !== this.props.confirmPassword ||
-					this.props.newPassword.length < 8)) ||
-			(!this.props.changePassword && (!this.props.email || !this.props.login_password))
-		) {
-			disableSubmit = true;
+
+		// changing the password
+		if (this.props.changePassword) {
+			if (!this.props.currentPassword || !this.props.newPassword || !this.props.confirmPassword) {	// passwords must be set
+				disableSubmit = true;
+			}
+			if (this.props.newPassword !== this.props.confirmPassword) {		// must match
+				disableSubmit = true;
+			}
+			if (this.props.newPasswordError !== '') {							// can't have new pass errors
+				disableSubmit = true;
+			}
 		}
+
+		// normal login
+		else {
+			if (!this.props.email || !this.props.login_password) {
+				disableSubmit = true;
+			}
+		}
+
 		const translate = this.props.translate;
 		return (
 			<Router>

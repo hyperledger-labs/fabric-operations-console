@@ -1,5 +1,27 @@
 [
 	{
+		"version": "1.0.0-21",
+		"date": "25 March 2022",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			},
+			{
+				"title": "New Password Rules",
+				"details": "New login passwords must pass OWASP strength tests. [Passwords <= 9 char] not allowed. [Passwords >= 10 && < 20 char] - must have lowercase & uppercase & special characters. [Passwords >= 20 char] - no extra rules."
+			},
+			{
+				"title": "Lower Component Limit",
+				"details": "The maximum component limit has been lowered from 250 components to 75. This restriction applies to the total number of peers + orderers + CAs on 1 console."
+			},
+			{
+				"title": "Lower Resource Limits",
+				"details": "The maximum CPU, memory and storage resource limits *per* component has been lowered. New limits: CPU - 100, Memory - 100GB, Storage - 10TB."
+			}
+		]
+	},
+	{
 		"version": "1.0.0-19",
 		"date": "04 March 2022",
 		"description": [

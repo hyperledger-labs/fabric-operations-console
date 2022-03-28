@@ -287,7 +287,7 @@ export class Members extends Component {
 								user={this.props.user}
 								onClose={this.closeResetPasswordModal}
 								onComplete={response => {
-									this.props.showSuccess('reset_password_successful', { user: response.user, password: response.password }, SCOPE);
+									this.props.showSuccess('reset_password_successful', { user: response.user }, SCOPE);
 								}}
 							/>
 						)}
