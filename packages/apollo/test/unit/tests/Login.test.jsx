@@ -177,8 +177,8 @@ describe('Login component', () => {
 		it('should render for changing password', () => {
 			props.changePassword = true;
 			props.currentPassword = 'password';
-			props.newPassword = 'password';
-			props.confirmPassword = 'password';
+			props.newPassword = 'iwenttothestoretobuymilk';		// dummy password please ignore
+			props.confirmPassword = 'iwenttothestoretobuymilk';	// dummy password please ignore
 
 			const component = mount(<Login {...props} />);
 			component
