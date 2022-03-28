@@ -94,6 +94,9 @@
 		- string -> "ak" or "all". applies to keys in an object type. this means to only allow 1 root field in the object.
 		- a value of "ak" means this restriction only applies to api key routes (/ak/ routes).
 		- a value of "all" means this restriction applies to /ak/ and internal (apollo) routes.
+	x-validate_known_hostname:
+		- string. applies to enrollment "host" fields when deploying components
+		- will generate an error if this hostname is not in the whitelist
 */
 module.exports = (logger, ev, t, opts) => {
 	const validate = {};
@@ -741,6 +744,16 @@ module.exports = (logger, ev, t, opts) => {
 			if (typeof input === 'object' && Object.keys(input).length > 1) {
 				const symbols = {};
 				errors.push({ key: 'too_many_keys', symbols: symbols });
+			}
+		}
+
+		// check if the hostname is in our whitelist or not
+		if (body_spec['x-validate_known_hostname'] === true) {
+			if (!t.ot_misc.validateUrl(input, ev.HOST_WHITE_LIST)) {
+				const symbols = {
+					'$PROPERTY_NAME': path2field.join('.'),
+				};
+				errors.push({ key: 'unknown_enroll_host', symbols: symbols });
 			}
 		}
 

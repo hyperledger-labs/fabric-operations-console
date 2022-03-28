@@ -140,6 +140,10 @@ x-validate_error_messages:
 
   # it is invalid to set more than 1 key in this body
   too_many_keys: "Too many fields in body. This API only supports 1 field in the body. Use multiple apis to update multiple fields."
+
+  # this value must be a known hostname, typically from an imported or deployed CA
+  unknown_enroll_host: "The parameter '$PROPERTY_NAME' was not found in the list of known hostnames. Import the CA using this hostname or use a hostname that is already known."
+
 #
 #
 #
@@ -11440,8 +11444,9 @@ components:
     cahost:
       type: string
       example: n3a3ec3-myca.ibp.us-south.containers.appdomain.cloud
-      description: The CA's hostname. Do not include protocol or port.
+      description: The CA's hostname. Do not include protocol or port. Must be a hostname from a known CA.
       maxLength: 1024 # spam prevention limit
+      x-validate_known_hostname: true
     caport:
       type: number
       example: 7054
