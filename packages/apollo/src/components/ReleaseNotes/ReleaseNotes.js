@@ -52,7 +52,7 @@ const ReleaseNotes = props => {
 								<div className="ibp-note-date">
 									<p className="ibp-note-version">
 										{loading && <SkeletonText />}
-										{!loading && <div>{i !== 0 ? note.version : translate('current')}</div>}
+										{!loading && <div>{note.version}</div>}
 									</p>
 									{loading && <SkeletonText />}
 									{!loading && <p className="ibp-note-date">{note.date}</p>}
