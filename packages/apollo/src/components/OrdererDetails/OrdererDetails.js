@@ -92,9 +92,12 @@ class OrdererDetails extends Component {
 		await this.refresh();
 	}
 
-	componentDidUpdate() {
+	async componentDidUpdate(prevProps) {
 		if (this.props.selectedNode && !this.props.match.params.nodeId) {
 			this.closeNodeDetails();
+		}
+		if (prevProps.match.params.nodeId !== this.props.match.params.nodeId) {
+			await this.refresh();
 		}
 	}
 
@@ -1495,7 +1498,7 @@ class OrdererDetails extends Component {
 														selectedNode={this.props.selectedNode}
 														channelList={this.props.channelList}
 														details={this.props.details}
-														translate={this.props.translate}
+														unJoinComplete={this.getCPChannelList}
 													/>
 												</Tab>
 											)}
