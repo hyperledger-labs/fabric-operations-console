@@ -721,6 +721,7 @@ class ChannelModal extends Component {
 		const step_review = 0;
 		const osnadmin_join_channel = 1;
 		let type = '';
+		let nextButtonText = 'next';
 
 		switch (viewing) {
 			case 'prerequisites':
@@ -778,6 +779,7 @@ class ChannelModal extends Component {
 				};
 				break;
 
+			// this panel allows setting the application org signature
 			case 'organization_creating_channel':
 				isComplete = this.isStepCompleted('organization_creating_channel');
 				back = () => this.showStep('channel_update_policy', group_required, step_policy);
@@ -933,7 +935,7 @@ class ChannelModal extends Component {
 				};
 				break;
 
-			// this panel allow selecting what org to use for the orderer signature
+			// this panel allow selecting what org to use for the *orderer* signature
 			// dsh todo - unlink this panel from osnadmin flow and allow user to select identity on each org in the new org join panel
 			case 'ordering_service_organization':
 				isComplete = this.isStepCompleted('ordering_service_organization');
@@ -984,6 +986,7 @@ class ChannelModal extends Component {
 					}
 				};
 				type = use_osnadmin ? '' : 'submit';
+				nextButtonText = this.props.isChannelUpdate ? 'update_channel' : 'create_channel';
 				break;
 
 			// panel has join osn to channel buttons and status of the join
@@ -1000,6 +1003,7 @@ class ChannelModal extends Component {
 						this.createChannel;
 					}
 				};
+				nextButtonText = 'join';
 				break;
 
 			default:
@@ -1014,11 +1018,10 @@ class ChannelModal extends Component {
 				disabled: back === null,
 			},
 			{
-				// dsh todo change this to a var set above
-				text: viewing === 'review_channel_info' ? (this.props.isChannelUpdate ? translate('update_channel') : translate('create_channel')) : translate('next'),
-				onClick: /*viewing === 'review_channel_info' ? (this.props.isChannelUpdate ? this.updateChannel : this.createChannel) :*/ next,
+				text: translate(nextButtonText),
+				onClick: next,
 				disabled: !isComplete || submitting,
-				type: type, //viewing === 'review_channel_info' ? 'submit' : '',
+				type: type,
 			}
 		);
 		return buttons;

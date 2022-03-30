@@ -324,5 +324,7 @@ healthcheck
 onecloud
 mvpc
 siids
+osns
+osnadmin
 viewstates
 resourceid

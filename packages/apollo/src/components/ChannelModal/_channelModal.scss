@@ -667,7 +667,7 @@
 }
 
 .ibp-join-osn-wrap{
-	margin-top: 3rem;
+	margin-bottom: 2rem;
 }
 .ibp-join-osn-desc{
 	font-size: .875rem;
@@ -676,6 +676,7 @@
 .ibp-join-osn-org-check{
 	vertical-align: top;
 	margin-top: 3rem;
+	cursor: pointer;
 }
 
 .ibp-join-osn-checkmark{
@@ -735,6 +736,13 @@
 	line-height: 1rem;
 	margin-right: 0.5rem;
 }
+.ibp-osn-join-icon-consenter{
+	color: #0043ce;
+}
+.ibp-osn-join-icon-follower{
+	color: #6f7172;
+}
+
 .ibp-join-osn-node-details{
 	display: inline-block;
 }
@@ -756,4 +764,14 @@
 
 .ibp-join-unselected-org{
 	opacity: 0.2;
+}
+
+.ibp-join-osn-msp-wrap{
+	max-height: 18rem;
+	overflow-y: scroll;
+	margin-top: 3rem;
+}
+.ibp-join-osn-count{
+	font-size: 1.25rem;
+	margin-left: 1rem;
 }

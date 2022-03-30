@@ -25,7 +25,7 @@ const SCOPE = 'channelModal';
 
 // This is step "ordering_service_organization"
 //
-// this panel allow selecting what org to use for the orderer signature
+// this panel allow selecting what org to use for the *orderer* signature
 class OrdererSignature extends Component {
 	render() {
 		const { isOrdererSignatureNeeded, msps, selectedOrdererMsp, selectedOrderer, isCapabilityModified, translate } = this.props;
