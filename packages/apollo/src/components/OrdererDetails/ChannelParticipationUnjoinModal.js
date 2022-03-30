@@ -28,7 +28,7 @@ import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import { OrdererRestApi } from '../../rest/OrdererRestApi';
 import ImportantBox from '../ImportantBox/ImportantBox';
 
-const SCOPE = 'ChannelParticipationDetails';
+const SCOPE = 'ChannelParticipationUnjoinModal';
 
 class ChannelParticipationUnjoinModal extends Component {
 
@@ -95,7 +95,7 @@ class ChannelParticipationUnjoinModal extends Component {
 	renderUnjoin = (translate) => {
 		let nodesArray = [];
 		if (this.props.channelInfo.nodes !== undefined)
-			nodesArray = Object.values(this.props.channelInfo.nodes);
+			nodesArray = Object.values(this.props.channelInfo.nodes).filter(node => node._channel_resp.consensusRelation !== undefined);;
 
 		return (
 			<div>
