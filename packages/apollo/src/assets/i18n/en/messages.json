@@ -1589,7 +1589,8 @@
 	"new_channel_pending_request_desc": "<strong>${org}</strong> submitted request to create a new channel: <strong>${channel}</strong> and is waiting for the orderer signature.",
 	"signature_for_msp": "Signature for ${msp}:",
 	"signature_for_msp_placeholder": "Select identity to sign with",
-	"signature_for_join_msp_placeholder": "Select identity to sign join transaction",
+	"signature_for_join_placeholder": "Select identity to sign join transaction",
+	"signature_for_join_placeholder_no_options": "No identities belong to the MSP for this cluster.",
 	"msps_to_sign": "Approval signatures",
 	"msps_to_sign_desc": "Select identities to sign the request",
 	"orderer_msps_to_sign": "Ordering service approval signatures",
@@ -2048,7 +2049,7 @@
 	"consenter_empty_error": "At least one consenter is required",
 	"create_channel_consenter_set_desc": "The ordering nodes that form the ordering service of a channel is known as the consenter set of that channel. While the consenter set can be comprised of all of the nodes in the ordering service, it is possible to select a subset of these nodes to form the consenter set.",
 	"create_channel_consenter_set_desc2": "The ordering nodes that manage a channel are known as the consenter set of that channel. While the consenter set can be comprised of all of the nodes, it is possible to select a subset of these nodes to form the consenter set.",
-	"osn-join-desc": "Next select the ordering MSPs that you want to join right now. All orderer nodes from the selected MSPs will be joined to this channel. <br/><br/>Any MSPs that are not selected can still join at a later date.",
+	"osn-join-desc": "Next select the ordering clusters that you want to join right now. All orderer nodes from the selected clusters will be joined to this channel. <br/><br/>Any nodes that are not selected can still join at a later date.",
 	"update_channel_consenter_set_desc": "The ordering nodes that form the ordering service of a channel is known as the consenter set of that channel. While the consenter set can be comprised of all of the nodes available in the ordering service, it is possible to add nodes that are a part of the ordering service to the consenter set. Before adding a node to the consenter set, make sure the organization that owns the node has been added as an administrator of the ordering service of this channel.",
 	"_CHANNEL_CONSENTER_SET_LINK01": "https://hyperledger-fabric.readthedocs.io/en/release-1.4/access_control.html",
 	"select_consenter": "Select consenter",
@@ -2614,5 +2615,7 @@
 	"review_orderers": "Orderer Orgs",
 	"transaction_identity": "Transaction Identiy",
 	"join": "Join",
+	"cluster": "Cluster",
+	"skip": "Skip",
 	"download_gen": "Download Genesis"
 }

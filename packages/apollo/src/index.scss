@@ -606,7 +606,8 @@ small {
 .bx--list-box--disabled .bx--list-box__label,
 .bx--list-box--disabled.bx--list-box--inline .bx--list-box__label,
 .bx--radio-button:disabled + .bx--radio-button__label {
-	color: $carbon--cool-gray-50;
+	//color: $carbon--cool-gray-50;
+	opacity: 0.3;
 }
 
 .bx--content-switcher-btn.bx--content-switcher--selected {

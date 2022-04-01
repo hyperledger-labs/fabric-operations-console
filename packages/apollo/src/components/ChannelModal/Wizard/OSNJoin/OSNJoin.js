@@ -37,7 +37,7 @@ class OSNJoin extends Component {
 			use_osnadmin,
 			buildCreateChannelOpts,
 		} = this.props;
-		let nodeMap = {};
+		let joinOsnMap = {};
 
 		console.log('dsh99 rendering the osn join step',);
 		const options = buildCreateChannelOpts();						// get all the input data together
@@ -47,20 +47,23 @@ class OSNJoin extends Component {
 		if (use_osnadmin) {
 			const my_block = StitchApi.buildGenesisBlockOSNadmin(options);
 			console.log('dsh99 new block: ', my_block);
-			nodeMap = await this.organize_osns(options);
-			console.log('dsh99 nodeMap:', nodeMap);
+			joinOsnMap = await this.organize_osns(options);
+			console.log('dsh99 joinOsnMap:', joinOsnMap);
 			this.setupDownloadGenesisLink(my_block, options.channel_id);
 			this.props.updateState(SCOPE, {
 				config_block_options: options,
-				nodeMap: nodeMap,	// dsh todo rename this
-				count: this.countOrgs(nodeMap),
+				joinOsnMap: joinOsnMap,	// dsh todo rename this
+				count: this.countOrgs(joinOsnMap),
 				genesis_block: my_block,
 			});
 		}
+		// dsh todo store the genesis block and send to other consoles if needed...
 		// dsh todo, the initial order should show selectable orgs first
 	}
 
-	// organize all nodes by msp id
+	// dsh todo dropdown to add followers
+
+	// organize all nodes by their orderer cluster aka ordering service
 	// dsh todo the nodes_arr var is only consenters right now, it should be all nodes!
 	async organize_osns(wiz_opts) {
 		const ret = {};
@@ -69,52 +72,63 @@ class OSNJoin extends Component {
 
 
 		// dsh todo remove this test
-		const testId = 'testingOrg';
-		ret[testId] = {
+		const testClusterId = 'testingCluster';
+		const testMspId = 'testingOrg';
+		ret[testClusterId] = {
 			nodes: [],
-			msp_id: testId,
+			msp_id: testMspId,
+			cluster_name: 'My Test Cluster',
+			cluster_id: testClusterId,
 			selected_identity: null,
-			identities: await IdentityApi.getIdentitiesForMsp(findMsp(testId)),
+			identities: await IdentityApi.getIdentitiesForMsp(findMsp(testMspId)),
 			selected: true,
 		};
-		const zero_identities = !Array.isArray(ret[testId].identities) || ret[testId].identities.length === 0;
+		const zero_identities = !Array.isArray(ret[testClusterId].identities) || ret[testClusterId].identities.length === 0;
 		if (zero_identities) {
-			ret[testId].selected = false;
+			ret[testClusterId].selected = false;
 		}
 		// ^^ dsh todo remove this test
 
 
 		for (let i in nodes_arr) {
 			const node = nodes_arr[i];
-			const msp_id = nodes_arr[i].msp_id;
-			if (!ret[msp_id]) {
-				ret[msp_id] = {
+			const cluster_id = nodes_arr[i]._cluster_id;
+			if (!ret[cluster_id]) {
+				ret[cluster_id] = {
 					nodes: [],
-					msp_id: msp_id,
+					msp_id: nodes_arr[i].msp_id,
+					cluster_name: nodes_arr[i]._cluster_name,
+					cluster_id: nodes_arr[i]._cluster_id,
 					selected_identity: null,
-					identities: await IdentityApi.getIdentitiesForMsp(findMsp(msp_id)),
+					identities: await IdentityApi.getIdentitiesForMsp(findMsp(nodes_arr[i].msp_id)),
 					selected: true,
 				};
 
 				//dsh todo if there are zero identities add some text why in the disabled dropdown box
 				//dsh todo auto select one of the identities
-				const zero_identities = !Array.isArray(ret[msp_id].identities) || ret[msp_id].identities.length === 0;
+				const zero_identities = !Array.isArray(ret[cluster_id].identities) || ret[cluster_id].identities.length === 0;
 				if (zero_identities) {
-					ret[msp_id].selected = false;
+					ret[cluster_id].selected = false;
 				}
-				for (let z in ret[msp_id].identities) {
-					ret[msp_id].identities[z]._msp_id = msp_id;		// store msp id here so we can link it back up
+				for (let z in ret[cluster_id].identities) {
+					ret[cluster_id].identities[z]._cluster_id = cluster_id;		// store id here so we can link it back up
 				}
 			}
 			const clone = JSON.parse(JSON.stringify(node));
 			clone._status = '';				// either empty, or "pending", or "failed", or "success"
-			ret[msp_id].nodes.push(clone);
+			ret[cluster_id].nodes.push(clone);
 
 			// dsh todo remove this testing stuff
 			const clone2 = JSON.parse(JSON.stringify(clone));
 			clone2._consenter = false;
-			ret[testId].nodes.push(clone2);
-			ret[testId].nodes.push(clone2);
+			ret[testClusterId].nodes.push(clone2);
+		}
+
+		// remove msps with no nodes (b/c there is nothing to join)
+		for (let mspId in ret) {
+			if (!Array.isArray(ret[mspId].nodes) || ret[mspId].nodes.length === 0) {
+				delete ret[mspId];
+			}
 		}
 
 		return ret;
@@ -136,14 +150,14 @@ class OSNJoin extends Component {
 		}
 	}
 
-	// select or unselect the org
-	toggleOrg = (msp_id, evt) => {
-		console.log('dsh99 clicked toggleOrg', msp_id, evt);
-		let { nodeMap } = this.props;
-		if (nodeMap && nodeMap[msp_id]) {
-			nodeMap[msp_id].selected = !nodeMap[msp_id].selected;
+	// select or unselect the cluster
+	toggleCluster = (cluster_id, evt) => {
+		console.log('dsh99 clicked toggleCluster', cluster_id, evt);
+		let { joinOsnMap } = this.props;
+		if (joinOsnMap && joinOsnMap[cluster_id]) {
+			joinOsnMap[cluster_id].selected = !joinOsnMap[cluster_id].selected;
 			this.props.updateState(SCOPE, {
-				nodeMap: nodeMap,
+				joinOsnMap: joinOsnMap,
 				count: this.countOrgs(),
 			});
 			this.forceUpdate();						// dsh todo see if we can remove this, test if it re-renders nodes if you cannot select any orgs...
@@ -152,9 +166,9 @@ class OSNJoin extends Component {
 
 	// count the selected orderers
 	countOrgs(prefNodeMap) {
-		let { nodeMap } = this.props;
+		let { joinOsnMap } = this.props;
 		let updateCount = 0;
-		let useMap = prefNodeMap || nodeMap;		// use provided map if it exists
+		let useMap = prefNodeMap || joinOsnMap;		// use provided map if it exists
 
 		for (let id in useMap) {
 			if (useMap[id].selected === true) {
@@ -166,15 +180,20 @@ class OSNJoin extends Component {
 
 	// selected identity in dropdown was changed
 	changeIdentity = (evt) => {
-		let { nodeMap } = this.props;
-		const msp_id = (evt && evt.selectedId) ? evt.selectedId._msp_id : null;
-		if (msp_id) {
-			if (nodeMap && nodeMap[msp_id]) {
-				nodeMap[msp_id].selected_identity = evt.selectedId;
+		let { joinOsnMap, joinOsnWarning } = this.props;
+		console.log('dsh99 changeIdentity fired', evt);
+		const keys = Object.keys(evt);
+		const fieldName = keys ? keys[0] : null;			// the first key is the dropdown's unique id/name
+
+		const cluster_id = (fieldName && evt && evt[fieldName]) ? evt[fieldName]._cluster_id : null;
+		if (cluster_id) {
+			if (joinOsnMap && joinOsnMap[cluster_id]) {
+				joinOsnMap[cluster_id].selected_identity = evt[fieldName];
 				this.props.updateState(SCOPE, {
-					nodeMap: nodeMap,
+					joinOsnMap: joinOsnMap,
+					joinOsnWarning: !joinOsnWarning,
 				});
-				console.log('dsh99 changeIdentity nodeMap', nodeMap);
+				console.log('dsh99 changeIdentity joinOsnMap', joinOsnMap);
 			}
 		}
 	}
@@ -197,11 +216,11 @@ class OSNJoin extends Component {
 	render() {
 		const {
 			translate,
-			nodeMap,
+			joinOsnMap,
 			config_block_options,
 			count,
 		} = this.props;
-		console.log('dsh99 OSNJoin rendering', nodeMap, config_block_options);
+		console.log('dsh99 OSNJoin rendering', joinOsnMap, config_block_options);
 
 		return (
 			<div className="ibp-channel-osn-join">
@@ -226,62 +245,61 @@ class OSNJoin extends Component {
 				</p>
 
 				<div className="ibp-join-osn-msp-wrap">
-					{nodeMap && !_.isEmpty(Object.keys(nodeMap)) &&
-						Object.values(nodeMap).map((org, i) => {
-							console.log('dsh99 rendering org: ', i, org);
-							return (this.renderOrgSection(org));
+					{joinOsnMap && !_.isEmpty(Object.keys(joinOsnMap)) &&
+						Object.values(joinOsnMap).map((cluster, i) => {
+							console.log('dsh99 rendering cluster: ', i, cluster);
+							return (this.renderClusterSection(cluster));
 						})}
 				</div>
 			</div>
 		);
 	}
 
-	// create the org section (this contains each node)
-	renderOrgSection(org) {
+	// create the cluster section (this contains each node)
+	renderClusterSection(cluster) {
 		const { translate } = this.props;
-		const unselectedClass = (org.selected === true) ? '' : 'ibp-join-unselected-org';
-		const zero_identities = !Array.isArray(org.identities) || org.identities.length === 0;
+		const unselectedClass = (cluster.selected === true) ? '' : 'ibp-join-unselected-cluster';		// dsh todo remove me if it looks okay
+		const zero_identities = !Array.isArray(cluster.identities) || cluster.identities.length === 0;
 		return (
-			<div key={'org_' + org.msp_id}
-				className={unselectedClass + ' ibp-join-osn-wrap'}
+			<div key={'cluster_' + cluster.cluster_id}
+				className="ibp-join-osn-wrap"
 			>
 				<div>
 					<input type="checkbox"
-						className="ibp-join-osn-org-check"
-						checked={org.selected === true}
-						name={'joinOrg' + org.msp_id}
-						id={'joinOrg' + org.msp_id}
+						className="ibp-join-osn-cluster-check"
+						checked={cluster.selected === true}
+						name={'joinCluster' + cluster.cluster_id}
+						id={'joinCluster' + cluster.cluster_id}
 						onChange={event => {
-							this.toggleOrg(org.msp_id, event);
+							this.toggleCluster(cluster.cluster_id, event);
 						}}
 						disabled={zero_identities}
 					/>
 
-					<label name={'joinOrg' + org.msp_id}
-						className="ibp-join-osn-mspid-wrap"
+					<label name={'joinCluster' + cluster.cluster_id}
+						className={'ibp-join-osn-mspid-wrap ' + unselectedClass}
 					>
-						<div className="ibp-join-osn-label">{translate('msp_id')}</div>
-						<div className="ibp-join-osn-mspid">{org.msp_id}</div>
+						<div className="ibp-join-osn-label">{translate('cluster')}</div>
+						<div className="ibp-join-osn-mspid">{cluster.cluster_name}</div>
 					</label>
 					<Form
 						scope={SCOPE}
-						id={SCOPE + '-join-org-' + org.msp_id}
+						id={SCOPE + '-join-cluster-' + cluster.cluster_id}
 						className="ibp-join-osn-identity-wrap"
 						fields={[
 							{
-								name: 'selectedId',
+								name: 'selectedId-' + cluster.cluster_id,
 								label: 'transaction_identity',
-								required: true,
 								type: 'dropdown',
-								options: org.identities,
-								default: 'signature_for_join_msp_placeholder',
-								disabled: org.selected !== true || zero_identities
+								options: cluster.identities,
+								default: zero_identities ? 'signature_for_join_placeholder_no_options' : 'signature_for_join_placeholder',
+								disabled: cluster.selected !== true || zero_identities
 							},
 						]}
 						onChange={this.changeIdentity}
 					/>
 				</div>
-				<div>{org.selected === true && this.renderNodesSection(org.nodes)}</div>
+				<div>{cluster.selected === true && this.renderNodesSection(cluster.nodes)}</div>
 			</div>
 		);
 	}
@@ -363,7 +381,9 @@ class OSNJoin extends Component {
 const dataProps = {
 	consenters: PropTypes.array,
 	use_osnadmin: PropTypes.bool,
-	nodeMap: PropTypes.Object,
+	osnadmin_feats_enabled: PropTypes.bool,
+	joinOsnMap: PropTypes.Object,
+	joinOsnWarning: PropTypes.bool,
 	config_block_options: PropTypes.Object,
 	count: PropTypes.number,
 };

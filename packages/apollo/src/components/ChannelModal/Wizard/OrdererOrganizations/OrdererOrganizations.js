@@ -28,7 +28,7 @@ import SidePanelWarning from '../../../SidePanelWarning/SidePanelWarning';
 const SCOPE = 'channelModal';
 const Log = new Logger(SCOPE);
 
-// This is step "ordering_service_organization"
+// This is step "channel_orderer_organizations"
 //
 // this panel allows selecting the orderer orgs in the config-block and which one's get the admin role
 // (only used for osn admin nodes)
