@@ -59,6 +59,11 @@ class OSNJoin extends Component {
 		}
 		// dsh todo store the genesis block and send to other consoles if needed...
 		// dsh todo, the initial order should show selectable orgs first
+
+		// dsh todo is this doing anything?
+		this.props.updateState(SCOPE, {
+			joinOsnWarning: !this.props.joinOsnWarning,
+		});
 	}
 
 	// dsh todo dropdown to add followers
@@ -80,10 +85,16 @@ class OSNJoin extends Component {
 			cluster_name: 'My Test Cluster',
 			cluster_id: testClusterId,
 			selected_identity: null,
+			default_identity: null,
 			identities: await IdentityApi.getIdentitiesForMsp(findMsp(testMspId)),
+			associated_identities: await IdentityApi.getAssociatedOrdererIdentities({
+				cluster_id: testClusterId,
+				msp_id: testMspId,
+			}),
 			selected: true,
 		};
-		const zero_identities = !Array.isArray(ret[testClusterId].identities) || ret[testClusterId].identities.length === 0;
+		ret[testClusterId].default_identity = this.pickDefaultIdentity(ret[testClusterId]);
+		const zero_identities = (ret[testClusterId].default_identity === null);
 		if (zero_identities) {
 			ret[testClusterId].selected = false;
 		}
@@ -99,14 +110,32 @@ class OSNJoin extends Component {
 					msp_id: nodes_arr[i].msp_id,
 					cluster_name: nodes_arr[i]._cluster_name,
 					cluster_id: nodes_arr[i]._cluster_id,
+
+					// currently selected identity
 					selected_identity: null,
+
+					// the identity we think they should use - populated next
+					default_identity: null,
+
+					// all identities from msp
 					identities: await IdentityApi.getIdentitiesForMsp(findMsp(nodes_arr[i].msp_id)),
+
+					// identities associated with this orderer cluster
+					associated_identities: await IdentityApi.getAssociatedOrdererIdentities({
+						cluster_id: cluster_id,
+						msp_id: nodes_arr[i].msp_id,
+					}),
+
+					// if this cluster or orderer nodes is selected to join the channel - defaults true
 					selected: true,
 				};
 
 				//dsh todo if there are zero identities add some text why in the disabled dropdown box
 				//dsh todo auto select one of the identities
-				const zero_identities = !Array.isArray(ret[cluster_id].identities) || ret[cluster_id].identities.length === 0;
+				ret[cluster_id].default_identity = this.pickDefaultIdentity(ret[cluster_id]);
+				ret[cluster_id].selected_identity = ret[cluster_id].default_identity ? JSON.parse(JSON.stringify(ret[cluster_id].default_identity)) : null;
+
+				const zero_identities = (ret[cluster_id].default_identity === null);
 				if (zero_identities) {
 					ret[cluster_id].selected = false;
 				}
@@ -114,8 +143,11 @@ class OSNJoin extends Component {
 					ret[cluster_id].identities[z]._cluster_id = cluster_id;		// store id here so we can link it back up
 				}
 			}
+
+			// add some fields to each node entry, but don't propagate those fields
 			const clone = JSON.parse(JSON.stringify(node));
 			clone._status = '';				// either empty, or "pending", or "failed", or "success"
+			clone._error = '';				// either empty or a error message (string)
 			ret[cluster_id].nodes.push(clone);
 
 			// dsh todo remove this testing stuff
@@ -201,7 +233,7 @@ class OSNJoin extends Component {
 	// download genesis block as JSON - for debug and what not
 	setupDownloadGenesisLink = (block, channel_name) => {
 		let link = document.getElementById('ibp-download-genesis-link');
-		if (link.download !== undefined) {
+		if (link && link.download !== undefined) {
 			const d = new Date();
 			const dateStr = d.toLocaleDateString().split('/').join('-') + '-' + d.toLocaleTimeString().replace(/[:\s]/g, '');
 			let name = 'IBP_' + channel_name + '_genesis_' + dateStr + '.json';
@@ -219,14 +251,14 @@ class OSNJoin extends Component {
 			joinOsnMap,
 			config_block_options,
 			count,
+			test_hook,
 		} = this.props;
 		console.log('dsh99 OSNJoin rendering', joinOsnMap, config_block_options);
-
 		return (
 			<div className="ibp-channel-osn-join">
 				<p className="ibp-join-osn-section-title">
 					{translate('osn_join_channel')}
-					<span className="ibp-join-osn-count">({count || '0'} {translate('nodes_lc')})</span>
+					<span className="ibp-join-osn-count">({count || '0'} {translate('nodes_lc')}) {test_hook}</span>
 				</p>
 				<br />
 				<p className="ibp-join-osn-genesis ibp-channel-section-desc">
@@ -259,7 +291,8 @@ class OSNJoin extends Component {
 	renderClusterSection(cluster) {
 		const { translate } = this.props;
 		const unselectedClass = (cluster.selected === true) ? '' : 'ibp-join-unselected-cluster';		// dsh todo remove me if it looks okay
-		const zero_identities = !Array.isArray(cluster.identities) || cluster.identities.length === 0;
+		const zero_identities = (cluster.default_identity === null);
+		console.log('dsh99 rendering cluster', cluster.cluster_id, cluster.default_identity, cluster.identities);
 		return (
 			<div key={'cluster_' + cluster.cluster_id}
 				className="ibp-join-osn-wrap"
@@ -277,10 +310,10 @@ class OSNJoin extends Component {
 					/>
 
 					<label name={'joinCluster' + cluster.cluster_id}
-						className={'ibp-join-osn-mspid-wrap ' + unselectedClass}
+						className="ibp-join-osn-cluster-wrap"
 					>
 						<div className="ibp-join-osn-label">{translate('cluster')}</div>
-						<div className="ibp-join-osn-mspid">{cluster.cluster_name}</div>
+						<div className={'ibp-join-osn-clusterid ' + unselectedClass}>{cluster.cluster_name}</div>
 					</label>
 					<Form
 						scope={SCOPE}
@@ -292,15 +325,15 @@ class OSNJoin extends Component {
 								label: 'transaction_identity',
 								type: 'dropdown',
 								options: cluster.identities,
-								default: zero_identities ? 'signature_for_join_placeholder_no_options' : 'signature_for_join_placeholder',
+								default: zero_identities ? 'signature_for_join_placeholder_no_options' : cluster.default_identity,
 								disabled: cluster.selected !== true || zero_identities
 							},
 						]}
 						onChange={this.changeIdentity}
 					/>
-				</div>
+				</div >
 				<div>{cluster.selected === true && this.renderNodesSection(cluster.nodes)}</div>
-			</div>
+			</div >
 		);
 	}
 
@@ -310,17 +343,20 @@ class OSNJoin extends Component {
 		if (Array.isArray(nodes)) {
 			return (nodes.map((node, i) => {
 				return (
-					<div className="ibp-join-osn-node-wrap"
+					<div className="ibp-join-osn-node-wrap-wrap"
 						key={'node-wrap-' + i}
 					>
-						{this.renderConsenterIcon(node._consenter)}
-						<span className="ibp-join-osn-node-details">
-							<div className="ibp-join-osn-name">{node.name}</div>
-							<div className="ibp-join-osn-host">{node.host}:{node.port}</div>
-						</span>
-						<span className="ibp-join-osn-status">
-							{this.renderStatusIcon(node._status)}
-						</span>
+						<div className="ibp-join-osn-node-wrap">
+							{this.renderConsenterIcon(node._consenter)}
+							<span className="ibp-join-osn-node-details">
+								<div className="ibp-join-osn-name">{node.name}</div>
+								<div className="ibp-join-osn-host">{node.host}:{node.port}</div>
+							</span>
+							<span className="ibp-join-osn-status">
+								{this.renderStatusIcon(node._status)}
+							</span>
+						</div>
+						<div className="ibp-join-osn-error">{node._error}</div>
 					</div>
 				);
 			}));
@@ -376,6 +412,22 @@ class OSNJoin extends Component {
 				{icon}
 			</span>);
 	}
+
+	// get the default identity for the dropdown
+	pickDefaultIdentity(cluster_obj) {
+		if (cluster_obj) {
+			// return first associated id if possible
+			if (Array.isArray(cluster_obj.associated_identities) && cluster_obj.associated_identities.length > 0) {
+				return cluster_obj.associated_identities[0];
+			}
+
+			// return first identity from this msp
+			if (Array.isArray(cluster_obj.identities) && cluster_obj.identities.length > 0) {
+				cluster_obj.identities[1];
+			}
+		}
+		return null;
+	}
 }
 
 const dataProps = {
@@ -386,6 +438,7 @@ const dataProps = {
 	joinOsnWarning: PropTypes.bool,
 	config_block_options: PropTypes.Object,
 	count: PropTypes.number,
+	test_hook: PropTypes.string,
 };
 
 OSNJoin.propTypes = {

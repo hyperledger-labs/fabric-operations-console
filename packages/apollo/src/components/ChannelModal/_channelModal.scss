@@ -695,7 +695,7 @@
 	width: 28rem;
 }
 
-.ibp-join-osn-mspid-wrap{
+.ibp-join-osn-cluster-wrap{
 	font-size: 1.1rem;
 	margin: 0 1rem;
 	display: inline-block;
@@ -703,12 +703,15 @@
 	margin-top: 0.6rem;
 }
 
-.ibp-join-osn-node-wrap{
+.ibp-join-osn-node-wrap-wrap{
 	margin-left: 2.3rem;
 	margin-bottom: 0.5rem;
+	width: 64%;
+	max-width: 43rem;
+}
+
+.ibp-join-osn-node-wrap{
 	border: 1px solid #2f3235;
-	width: 50%;
-	max-width: 35rem;
 	padding: 0.5rem;
 	position: relative;
 }
@@ -771,7 +774,15 @@
 	overflow-y: scroll;
 	margin-top: 3rem;
 }
+.ibp-join-osn-clusterid{
+	min-width: 14rem;
+}
 .ibp-join-osn-count{
 	font-size: 1.25rem;
 	margin-left: 1rem;
+}
+
+.ibp-join-osn-error{
+	font-size: 0.75rem;
+	color: #fb4b53;
 }

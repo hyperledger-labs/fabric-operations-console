@@ -153,6 +153,7 @@ class ChannelModal extends Component {
 			osnadmin_feats_enabled: true,
 			joinOsnMap: {},
 			joinOsnWarning: false,
+			testing: 'hi there',		// dsh todo remove hook
 		});
 		this.getAvailableCapabilities(isChannelUpdate);
 		if (!this.props.editLoading) {
@@ -678,21 +679,21 @@ class ChannelModal extends Component {
 		// dsh todo make complete checks
 		if (step === 'osn_join_channel') {
 			complete = false;
-			console.log('dsh99 checking osn_join_channel joinOsnMap', JSON.stringify(joinOsnMap, null, 2));
+			console.log('dsh99 checking osn_join_channel joinOsnMap');
 
 			for (let clusterId in joinOsnMap) {
 				// must have a msp selected && that msp has nodes && an identity selected for that msp
-				console.log('dsh99 checking selected', clusterId, joinOsnMap[clusterId].selected, 'nodes', joinOsnMap[clusterId].nodes.length, 'identity', joinOsnMap[clusterId].selected_identity);
+				//console.log('dsh99 checking selected', clusterId, joinOsnMap[clusterId].selected, 'nodes', joinOsnMap[clusterId].nodes.length, 'identity', joinOsnMap[clusterId].selected_identity);
 				if (joinOsnMap[clusterId].selected === true && joinOsnMap[clusterId].nodes.length > 0 && joinOsnMap[clusterId].selected_identity) {
 					complete = true;
-					console.log('dsh99 checking osn_join_channel is complete');
+					//console.log('dsh99 checking osn_join_channel is complete');
 					break;
 				}
 			}
 
 			// dsh todo see if i can remove this hook
 			if (joinOsnWarning) {
-				console.log('dsh99 testing hook', joinOsnWarning);
+				//console.log('dsh99 testing hook', joinOsnWarning);
 				complete = true;
 			}
 			console.log('dsh99 checking osn_join_channel complete?', complete);
@@ -1818,7 +1819,8 @@ class ChannelModal extends Component {
 
 	// perform the osnadmin join-channel apis on a new channel (config block is a genesis block)
 	async createChannelAsOsnAdmin(cb) {
-		console.log('dsh99 got joinOsnMap for create', this.props.joinOsnMap);
+		const joinOsnMap = this.props.joinOsnMap;
+		console.log('dsh99 got joinOsnMap for create', joinOsnMap);
 
 		// dsh todo get the genesis block from the osnjoin panel instead of rebuilding it...
 		const options = this.buildCreateChannelOpts();
@@ -1827,27 +1829,35 @@ class ChannelModal extends Component {
 		this.props.updateState(SCOPE, {
 			submitting: true,
 			createChannelError: null,
+			joinOsnMap: reset(joinOsnMap),
 		});
 
 		console.log('dsh99 wiz options: ', options);
 		const my_block = StitchApi.buildGenesisBlockOSNadmin(options);
 		console.log('dsh99 new block: ', my_block);
-		const self = this;
 
 		// dsh todo - finish this
 		// iter over the selected clusters
-		async.eachLimit(this.props.joinOsnMap, 1, (cluster, cluster_cb) => {
+		async.eachLimit(joinOsnMap, 1, (cluster, cluster_cb) => {
 			if (!cluster.selected || !cluster.selected_identity) {
-				console.log('dsh99 skipping cluster', cluster);
+				console.log('dsh99 skipping cluster', cluster.cluster_id);
 				return cluster_cb();
 			}
 			console.log('dsh99 working cluster', cluster);
 
 			// iter over the selected nodes in the selected cluster
-			async.eachOfLimit(cluster.nodes, 2, (node, i, node_cb) => {
+			async.eachOfLimit(cluster.nodes, 1, (node, i, node_cb) => {
 				console.log('dsh99 working node.', cluster, i, node);
 				perform_join(cluster, node, i, () => {
-					return node_cb();
+					console.log('dsh99 updating map state');
+					// joinOsnMap was changed, now reflect the change
+					this.props.updateState(SCOPE, {
+						joinOsnMap: joinOsnMap,
+						testing: 'hey buddy',			// dsh todo test removing this
+					});
+					setTimeout(() => {
+						return node_cb();
+					}, 500 + Math.random() * 1000);		// slow down
 				});
 			}, () => {
 				console.log('dsh99 done nodes.');
@@ -1855,6 +1865,13 @@ class ChannelModal extends Component {
 			});
 		}, () => {
 			console.log('dsh99 done clusters');
+			// dsh todo pipe errors back into panel
+			// dsh todo allow retry
+			this.props.updateState(SCOPE, {
+				submitting: false,
+			});
+
+			// this.sidePanel.closeSidePanel();
 		});
 
 		// convert json to pb && then send joinOSNChannel call && reflect the status in the UI
@@ -1865,8 +1882,10 @@ class ChannelModal extends Component {
 				message_type: 'Block'
 			};
 			window.stitch.jsonToPb(c_opts2, async (err, b_config_block) => {
-				if (b_config_block) {
-					handle_join_outcome(cluster, node, i, 'failed');
+				if (err) {
+					console.log('dsh99 json2pb failure', err);
+					const msg = 'Could not convert genesis-block to protobuf.';
+					handle_join_outcome(cluster, i, 'failed', msg);
 					return cb();
 				} else {
 					const j_opts = {
@@ -1879,24 +1898,32 @@ class ChannelModal extends Component {
 					};
 					console.log('dsh99 join opts', j_opts);
 					//await StitchApi.joinOSNChannel();
-					handle_join_outcome(cluster, node, i, 'success');
+					handle_join_outcome(cluster, i, 'success');
 					return cb();
 				}
 			});
 		}
 
-		function handle_join_outcome(cluster, node, index, outcome) {
-			const joinOsnMap = self.props.joinOsnMap;
+		// update the state of the node
+		function handle_join_outcome(cluster, index, outcome, error) {
+			console.log('dsh99 handle_join_outcome', outcome, cluster.cluster_id, index, joinOsnMap);
 			if (joinOsnMap[cluster.cluster_id]) {
-				if (Number(index) && joinOsnMap[cluster.cluster_id].nodes && joinOsnMap[cluster.cluster_id].nodes[index]) {
+				if (Array.isArray(joinOsnMap[cluster.cluster_id].nodes) && joinOsnMap[cluster.cluster_id].nodes[index]) {
 					joinOsnMap[cluster.cluster_id].nodes[index]._status = outcome;
-
-					self.props.updateState(SCOPE, {
-						joinOsnMap: joinOsnMap,
-					});
-					self.forceUpdate();
+					joinOsnMap[cluster.cluster_id].nodes[index]._error = error;
 				}
 			}
+		}
+
+		// clear errors and status of each node
+		function reset(obj) {
+			for (let cluster_id in obj) {
+				for (let i in obj[cluster_id].nodes) {
+					obj[cluster_id].nodes[i]._status = 'pending';
+					obj[cluster_id].nodes[i]._error = '';
+				}
+			}
+			return obj;
 		}
 	}
 
@@ -2185,7 +2212,7 @@ class ChannelModal extends Component {
 
 	// render this step's content (only 1 step)
 	renderSection = (translate, section) => {
-		const { viewing, existingConsenters, existingOrdererOrgs, channelOrderer, existingCapabilities, existingBlockParams } = this.props;
+		const { viewing, existingConsenters, existingOrdererOrgs, channelOrderer, existingCapabilities, existingBlockParams, joinOsnMap, testing } = this.props;
 		let isCapabilityModified = this.isAnyCapabilityModified();
 		let isAdminsModified = this.isAdminsModified();
 		let isChannel2_0 = this.isChannel2_0();
@@ -2266,7 +2293,10 @@ class ChannelModal extends Component {
 					/>
 				)}
 				{viewing === 'osn_join_channel' && (
-					<OSNJoin buildCreateChannelOpts={this.buildCreateChannelOpts} />
+					<OSNJoin buildCreateChannelOpts={this.buildCreateChannelOpts}
+						joinOsnMap={joinOsnMap}
+						test_hook={testing}
+					/>
 				)}
 			</FocusComponent>
 		);
@@ -2394,6 +2424,7 @@ const dataProps = {
 	use_default_consenters: PropTypes.bool,
 	use_osnadmin: PropTypes.bool,
 	joinOsnMap: PropTypes.object,
+	testing: PropTypes.string,
 	osnadmin_feats_enabled: PropTypes.bool,
 	joinOsnWarning: PropTypes.bool,
 	channel_warning_20: PropTypes.bool,

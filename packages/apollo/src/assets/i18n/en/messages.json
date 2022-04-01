@@ -1589,7 +1589,6 @@
 	"new_channel_pending_request_desc": "<strong>${org}</strong> submitted request to create a new channel: <strong>${channel}</strong> and is waiting for the orderer signature.",
 	"signature_for_msp": "Signature for ${msp}:",
 	"signature_for_msp_placeholder": "Select identity to sign with",
-	"signature_for_join_placeholder": "Select identity to sign join transaction",
 	"signature_for_join_placeholder_no_options": "No identities belong to the MSP for this cluster.",
 	"msps_to_sign": "Approval signatures",
 	"msps_to_sign_desc": "Select identities to sign the request",
