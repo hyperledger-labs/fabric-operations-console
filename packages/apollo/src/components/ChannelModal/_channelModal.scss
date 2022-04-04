@@ -668,15 +668,18 @@
 
 .ibp-join-osn-wrap{
 	margin-bottom: 2rem;
+	border-left: 3px #505355 solid;
+	padding-left: 0.25rem;
 }
 .ibp-join-osn-desc{
 	font-size: .875rem;
 	font-weight: 400;
+	line-height: 0.5rem;
 }
 .ibp-join-osn-cluster-check{
 	vertical-align: top;
-	margin-top: 3rem;
 	cursor: pointer;
+	margin-top: 3rem;
 }
 
 .ibp-join-osn-checkmark{
@@ -731,6 +734,7 @@
 	position: absolute;
 	right: 0;
 	top: 0.8rem;
+	color:#0f62fe;
 }
 
 .ibp-join-osn-icon{
@@ -772,7 +776,7 @@
 .ibp-join-osn-msp-wrap{
 	max-height: 18rem;
 	overflow-y: scroll;
-	margin-top: 3rem;
+	margin-top: 2rem;
 }
 .ibp-join-osn-clusterid{
 	min-width: 14rem;
@@ -785,4 +789,23 @@
 .ibp-join-osn-error{
 	font-size: 0.75rem;
 	color: #fb4b53;
+}
+
+.ibp-join-osn-cluster-title{
+	font-size: 1.25rem;
+	margin-top: 2rem;
+}
+
+.ibp-join-osn-identity-wrap > .ibp-form-field{
+	margin-bottom: 0.5rem;
+}
+
+.ibp-join-osn-select-followers{
+	position: absolute;
+	left: 56rem;
+	top: 12.5rem;
+}
+
+.ibp-join-osn-error-wrap{
+	color:#fb4b53;
 }

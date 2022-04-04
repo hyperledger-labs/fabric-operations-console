@@ -227,6 +227,16 @@ class StitchApi {
 		}
 	}
 
+	static async jsonToPb(opts) {
+		const jsonToPb = promisify(window.stitch.jsonToPb);
+		return await jsonToPb(opts);
+	}
+
+	static async pbToJson(opts) {
+		const pbToJson = promisify(window.stitch.pbToJson);
+		return await pbToJson(opts);
+	}
+
 	// this function conforms formats from the apollo create-channel wizard to the stitch config-block-generator
 	// and returns a genesis block aka config block 0
 

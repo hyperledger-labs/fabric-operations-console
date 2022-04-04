@@ -59,3 +59,7 @@ export const CERTIFICATE_WARNING_BANNER_DAYS = 30;
 export const CERTIFICATE_SHOW_YEARS = 5 * 365;
 export const SECONDARY_STATUS_TIMEOUT = 1000 * 60 * 60 * 8; // same as cookie expiration
 export const SECONDARY_STATUS_PERIOD = 1 * 60 * 1000;
+
+export const OSN_JOIN_SUCCESS = 'success';
+export const OSN_JOIN_PENDING = 'pending';
+export const OSN_JOIN_ERROR = 'failed';

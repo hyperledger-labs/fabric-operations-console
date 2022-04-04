@@ -608,6 +608,7 @@ const template = {
 													"metadata": {
 
 														// whole array replaced below with "consensus_type.consenters" from input
+														// (only the fields below will copy, unknown fields are removed b/c configtxlator errors on unknown fields)
 														"consenters": [
 															{
 																"client_tls_cert": "",
@@ -1023,7 +1024,7 @@ function buildTemplateConfigBlock(opts: ExtTemp) {
 		ret.data.data[0].payload.data.config.channel_group.groups.Orderer.values.ChannelRestrictions.value.timeout = opts.channel_restrictions.value;
 	}
 	if (opts.consensus_type && Array.isArray(opts.consensus_type.consenters)) {
-		ret.data.data[0].payload.data.config.channel_group.groups.Orderer.values.ConsensusType.value.metadata.consenters = opts.consensus_type.consenters;
+		ret.data.data[0].payload.data.config.channel_group.groups.Orderer.values.ConsensusType.value.metadata.consenters = sanitizeConsenters(opts.consensus_type.consenters);
 	}
 
 	// set Orderer.values.ConsensusType.value.metadata.options
@@ -1177,6 +1178,22 @@ function buildOrdererGroupObj(defaults: any, msp_data: any, msp_id: string) {
 	return grpObj;
 }
 
+// configtxlator will not let you send unknown fields, so only send the white listed fields
+function sanitizeConsenters(arr: Cons[]) {
+	let ret = [];
+	if (Array.isArray(arr)) {
+		for (let i in arr) {
+			ret.push({
+				host: arr[i].host,
+				port: arr[i].port,
+				server_tls_cert: arr[i].server_tls_cert,
+				client_tls_cert: arr[i].client_tls_cert,
+			});
+		}
+	}
+	return ret;
+}
+
 interface ExtTemp {
 	channel: string,
 	application_capabilities: string[] | null;
@@ -1199,7 +1216,7 @@ interface ExtTemp {
 		value: object
 	} | null,
 	consensus_type: {
-		consenters: object[],
+		consenters: Cons[],
 		options: {
 			election_tick: number,
 			heartbeat_tick: number,
@@ -1208,6 +1225,13 @@ interface ExtTemp {
 			tick_interval: string,
 		} | null,
 	}
+}
+
+interface Cons {
+	host: string;
+	port: string;
+	server_tls_cert: string;
+	client_tls_cert: string;
 }
 
 interface StringObj {

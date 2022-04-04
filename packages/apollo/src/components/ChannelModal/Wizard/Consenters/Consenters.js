@@ -34,7 +34,6 @@ const bytes = require('bytes');
 // it also allows the raft params to be edited
 class Consenters extends Component {
 	onAddConsenter = option => {
-		// dsh todo allow _consenter to be selectable ??? tbd
 		if (typeof this.props.selectedConsenter === 'object') {
 			this.props.selectedConsenter._consenter = true;					// flip to true
 		}
@@ -121,7 +120,6 @@ class Consenters extends Component {
 		let allowed_raftNodes = raftNodes;
 
 		// filter nodes out of "raftNodes" that do NOT have msp ids found in "orderer_orgs"
-		// NOTE! when using osnadmin this requirement is technically not needed, but i'm going to keep it b/c it feels weird otherwise
 		if (this.props.orderer_orgs) {
 			allowed_raftNodes = raftNodes.filter(x => {
 				let find = this.props.orderer_orgs.find(y => x.msp_id === y.msp_id);

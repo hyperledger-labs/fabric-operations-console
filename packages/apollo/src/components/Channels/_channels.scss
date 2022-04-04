@@ -9,7 +9,6 @@
 }
 
 .ibp-channels-orderer {
-	@include carbon--font-weight('semibold');
 	color: white;
 	display: flex;
 	flex-grow: 2;
@@ -50,5 +49,31 @@
 }
 
 .ibp-pending-tile-clock {
-	width: 1.25rem;
+	height: 1rem;
+	vertical-align: bottom;
+}
+
+.ibp__channels--container .ibp-container-tile.ibp-container-tile-pending{
+	background-color: #7b7575;
+}
+.ibp-channels-orderer{
+	white-space: initial;
+	font-size: 0.75rem;
+}
+#channels-container > .ibp-item-container .ibp-container-grid-large .ibp-container-tile{
+	min-height: 9rem;
+}
+.ibp-channels-del-channel{
+	cursor: pointer;
+	padding: 0.5rem;
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+.ibp-item-container{
+	margin-bottom: 1rem;
+}
+
+.ibp-channels-del-channel:hover{
+	background: #0f62fe;
 }
