@@ -21,7 +21,7 @@ Feature: 1.x Smart Contract flow
         And I am on the 'smart_contracts' page
         And I clicked the button with id 'overflow-installed-fabcar_2.1.1'
         And I clicked the button with id 'instantiate_modal'
-        And I selected 'channel1' from the 'div#chaincodeModal-channel-selectedChannel' dropdown
+        And I selected 'channel1' value from the 'div#chaincodeModal-channel-selectedChannel' dropdown
         And I clicked the button with text 'Next'
         And I clicked the button with text 'Next'
         And I clicked the button with text 'Next'

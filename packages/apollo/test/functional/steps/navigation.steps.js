@@ -104,6 +104,7 @@ Given(/^I am on the (?:'|")(.*?)(?:'|") page$/, async page => {
 
 	await browser.wait(ExpectedConditions.elementToBeClickable(navElement), 10000);
 	await navElement.click();
+	await browser.sleep(5000);
 });
 
 Then(/^I should be on the (?:'|")(.*?)(?:'|") page$/, async page => {

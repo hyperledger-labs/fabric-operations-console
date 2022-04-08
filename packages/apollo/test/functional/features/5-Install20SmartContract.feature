@@ -9,8 +9,8 @@ Feature: 2.0 Lifecycle Flow
         And I clicked the tile with title 'channel2'
         Then wait "2" seconds
         And I clicked the button with title 'Propose smart contract definition'
-        And I selected 'Org1 MSP' from the 'div#propose_chaincode-selected_msp' dropdown
-        And I selected 'Org1 MSP Admin' from the 'div#propose_chaincode-selected_identity' dropdown
+        And I selected 'Org1 MSP (org1msp)' value from the 'div#propose_chaincode-selected_msp' dropdown
+        And I selected 'Org1 MSP Admin' value from the 'div#propose_chaincode-selected_identity' dropdown
         And I clicked the button with text 'Next'
         And I upload file '/assets/chaincodes/fabcar_1.0.0.tgz' to 'pkg-file-uploader' input
         And I clicked the button with text 'Next'
@@ -45,7 +45,7 @@ Feature: 2.0 Lifecycle Flow
         And I clicked the tile with title 'channel2'
         And I clicked the tile with title 'fabcar'
         And I clicked the button with text 'Begin commit process'
-        And I selected 'Org1 MSP' from the 'div#commit_chaincode-selected_msp' dropdown
-        And I selected 'Org1 MSP Admin' from the 'div#commit_chaincode-selected_identity' dropdown
+        And I selected 'Org1 MSP (org1msp)' value from the 'div#commit_chaincode-selected_msp' dropdown
+        And I selected 'Org1 MSP Admin' value from the 'div#commit_chaincode-selected_identity' dropdown
         And I clicked the button with text 'Commit smart contract'
         Then the chaincode with name 'fabcar' should have been created in 'Committed' state
