@@ -38,7 +38,9 @@ When(/^the (?:'|")(.*?)(?:'|") user was enrolled with id (?:'|")(.*?)(?:'|") and
 	await enterInput(enrollId, 'Enter an ID');
 	await enterInput(enrollSecret, 'Enter a secret');
 	await selectDropdownOption(type, 'div#addUser-type');
+	await browser.sleep(1000);
 	await clickButton('text', 'Next');
+	await browser.sleep(1000);
 	// await clickButton('title', 'Register user');
 	await clickButton('id', 'submit'); // Register user
 	await browser.sleep(8000);

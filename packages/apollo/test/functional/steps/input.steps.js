@@ -16,7 +16,8 @@
 /* eslint-disable quotes */
 const { Given } = require('cucumber');
 const { enterInput, selectDropdownOption, enterInputById, enterInputByPlaceholder } = require('../helpers/input');
-const { browser } = require('protractor');
+const { browser, by, element } = require('protractor');
+
 Given(/^I provided (?:'|")(.*?)(?:'|") for the (?:'|")(.*?)(?:'|") input$/, async(text, inputTitle) => {
 	await browser.sleep(1000);
 	await enterInput(text, inputTitle);
@@ -45,8 +46,25 @@ Given(/^I selected (?:'|")(.*?)(?:'|") from the (?:'|")(.*?)(?:'|") dropdown$/, 
 		try {
 			await selectDropdownOption(element, selector);
 		} catch (e) {
-			//
+			console.log('Exception thrown while selecting value from dropdown: %s', e);
 		}
+	}
+});
+
+Given(/^I selected (?:'|")(.*?)(?:'|") value from the (?:'|")(.*?)(?:'|") dropdown$/, async(textToselect, dropdownelement) => {
+	await browser.sleep(2000);
+	let dropdown;
+	try {
+		dropdown = element(by.css(dropdownelement));
+		await browser.wait(ExpectedConditions.visibilityOf(dropdown), 10000);
+		await browser.wait(ExpectedConditions.elementToBeClickable(dropdown), 10000);
+		await dropdown.click();
+		await browser.sleep(2000);
+		let chosenOption = element(by.xpath("//div[text()='" + textToselect + "']"));
+		await browser.wait(ExpectedConditions.elementToBeClickable(chosenOption), 10000);
+		await chosenOption.click();
+	} catch (err) {
+		console.log('Exception thrown while selecting value from dropdown: %s', err);
 	}
 });
 
