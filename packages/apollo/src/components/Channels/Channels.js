@@ -58,7 +58,6 @@ class ChannelComponent extends Component {
 		this.getAllPeers();
 		this.getAllOrderers();
 		this.getAllOrdererChannels();
-		console.log('dsh99 feature flags', this.props.feature_flags);
 		this.props.updateState(SCOPE, {
 			channelName: '',
 			loadingPeers: [],
@@ -511,16 +510,10 @@ class ChannelComponent extends Component {
 		});
 	};
 
-	showCreateChannelModal = orderers => {
-		this.props.updateState(SCOPE, {
-			createChannelModal: true,
-			orderers,
-		});
-	};
-
 	hideCreateChannelModal = () => {
 		this.props.updateState(SCOPE, {
 			createChannelModal: false,
+			selectedConfigBlock: null,
 		});
 	};
 
@@ -538,21 +531,12 @@ class ChannelComponent extends Component {
 		});
 	};
 
-	createChannel = () => {		// dsh todo i think you can remove this... you do it again in the modal
-		OrdererRestApi.getOrderers()
-			.then(orderers => {
-				if (!this.mounted) {
-					return;
-				}
-				this.showCreateChannelModal(orderers);
-			})
-			.catch(error => {
-				if (!this.mounted) {
-					return;
-				}
-				Log.error(error);
-				this.props.showError('error_orderers', {}, SCOPE);
-			});
+	createChannel = (selectedConfigBlock) => {
+		console.log('dsh99 selectedConfigBlock?', selectedConfigBlock);
+		this.props.updateState(SCOPE, {
+			selectedConfigBlock: selectedConfigBlock,
+			createChannelModal: true,
+		});
 	};
 
 	joinChannel = () => {
@@ -636,7 +620,9 @@ class ChannelComponent extends Component {
 			items.push({
 				id: 'create_channel',
 				text: 'create_channel',
-				fn: this.createChannel,
+				fn: () => {
+					this.createChannel(null);
+				}
 			});
 		}
 		return items;
@@ -681,7 +667,6 @@ class ChannelComponent extends Component {
 		Log.debug('Create channel feature flag is ', isCreateChannelFeatureAvailable, this.props.feature_flags);
 
 		const osnadminFeatsEnabled = this.props.feature_flags ? this.props.feature_flags.osnadmin_feats_enabled : false;
-
 		return (
 			<PageContainer setFocus={!this.props.loading}>
 				<div className="bx--row">
@@ -729,11 +714,7 @@ class ChannelComponent extends Component {
 									},
 								]}
 								select={(configBlockDoc) => {
-									console.log('dsh99 data?', configBlockDoc);
-									this.props.updateState(SCOPE, {
-										selectedConfigBlock: configBlockDoc,
-									});
-									this.createChannel();
+									this.createChannel(configBlockDoc);
 								}}
 								tileMapping={{
 									title: 'name',
@@ -840,7 +821,6 @@ class ChannelComponent extends Component {
 						)}
 						{this.props.createChannelModal && (
 							<ChannelModal
-								orderers={this.props.orderers /*dsh todo remove this one*/}
 								useConfigBlock={this.props.selectedConfigBlock}
 								onClose={this.hideCreateChannelModal}
 								onComplete={(channelName, isOrdererSignatureNeeded) => {

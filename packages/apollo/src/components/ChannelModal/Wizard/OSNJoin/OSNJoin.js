@@ -33,6 +33,7 @@ const SCOPE = 'channelModal';
 // This is step "osn_join_channel"
 //
 // panel allows the user to fire the join-channel api (which uses the osn admin endpoint on an orderer node)
+// dsh todo send block to other consoles if needed...
 class OSNJoin extends Component {
 	async componentDidMount() {
 		console.log('dsh99 OSNJoin mounted');
@@ -41,36 +42,35 @@ class OSNJoin extends Component {
 			buildCreateChannelOpts,
 			getAllOrderers,
 			configtxlator_url,
-			useConfigBlock,
+			use_config_block,
 			raftNodes,							// contains all console orderer nodes (not to be confused with all selected consenters)
 		} = this.props;
 		let joinOsnMap = {};
 
-		console.log('dsh99 mounted osn-join, config-block?', use_osnadmin, useConfigBlock);
+		console.log('dsh99 mounted osn-join, config-block?', use_osnadmin, use_config_block);
 
 		//const msps = await this.getMsps();
 		//console.log('dsh99 getMsps', msps);
 
 		// [Flow 1] - config block was passed in - load it
-		if (useConfigBlock) {
+		if (use_config_block) {
 			const allOrderers = await getAllOrderers();
 			console.log('dsh99 allOrderers', allOrderers);
 
-			console.log('dsh99 useConfigBlock!');
-			const json_block = await this.parseProto(useConfigBlock.block_b64);
-			console.log('dsh99 useConfigBlock as json', json_block);
-			this.setupDownloadGenesisLink(json_block, useConfigBlock.channel);
+			const json_block = await this.parseProto(use_config_block.block_b64);
+			console.log('dsh99 use_config_block as json', json_block);
+			this.setupDownloadGenesisLink(json_block, use_config_block.channel);
 			const consenters = _.get(json_block, 'data.data[0].payload.data.config.channel_group.groups.Orderer.values.ConsensusType.value.metadata.consenters');
 			console.log('dsh99 consenters from block', consenters);
 			joinOsnMap = await this.organize_osns(consenters, allOrderers, json_block);
 			console.log('dsh99 joinOsnMap:', joinOsnMap);
 
 			this.props.updateState(SCOPE, {
-				channel_id: useConfigBlock.channel,
+				channel_id: use_config_block.channel,
 				joinOsnMap: joinOsnMap,
 				count: this.countOrderers(joinOsnMap),
 				follower_count: this.countFollowers(joinOsnMap),
-				b_genesis_block: window.stitch.base64ToUint8Array(useConfigBlock.block_b64),
+				b_genesis_block: window.stitch.base64ToUint8Array(use_config_block.block_b64),
 				select_followers_toggle: false,
 				block_error: '',
 			});
@@ -87,8 +87,6 @@ class OSNJoin extends Component {
 			const b_block = await this.createProto(my_block);
 			let block_stored = false;
 
-			// dsh todo send block to other consoles if needed...
-			// dsh todo disable other steps once on this page
 			if (b_block) {
 				block_stored = await this.storeGenesisBlock(b_block, options.consenters, my_block);
 			}
@@ -762,7 +760,7 @@ const dataProps = {
 	follower_count: PropTypes.number,
 	configtxlator_url: PropTypes.string,
 	block_error: PropTypes.string,
-	useConfigBlock: PropTypes.object,
+	use_config_block: PropTypes.object,
 	b_genesis_block: PropTypes.blob,
 };
 

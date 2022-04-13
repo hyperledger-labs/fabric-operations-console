@@ -116,7 +116,7 @@ class Review extends Component {
 			endorsement_policy.type === 'SPECIFIC' && !(_.size(endorsement_policy.members) > 0 && endorsement_policy.n > 0)
 				? 'review_endorsement_policy_error'
 				: null;
-
+		// dsh todo add orderer orgs to review panel for osnadmin flow
 		return (
 			<div className="ibp-channel-review">
 				<p className="ibp-channel-section-title">{translate('review_channel_info')}</p>
@@ -138,18 +138,22 @@ class Review extends Component {
 					{this.renderSection(translate, 'policy', customPolicy ? customPolicy.name : null, policyError)}
 					{(Array.isArray(selected_ordering_orgs) && selected_ordering_orgs.length > 0) &&
 						this.renderSection(translate, 'review_orderers', selected_ordering_orgs.join(','))}
-					{this.renderSection(
-						translate,
-						isChannelUpdate ? 'organization_updating_channel' : 'organization_creating_channel',
-						selectedChannelCreator ? selectedChannelCreator.name : null,
-						missingOrgMspError
-					)}
-					{this.renderSection(
-						translate,
-						isChannelUpdate ? 'channel_updator_identity' : 'channel_creator_identity',
-						selectedIdentity ? selectedIdentity.name : null,
-						missingOrgIdentityError
-					)}
+					{!use_osnadmin &&
+						this.renderSection(
+							translate,
+							isChannelUpdate ? 'organization_updating_channel' : 'organization_creating_channel',
+							selectedChannelCreator ? selectedChannelCreator.name : null,
+							missingOrgMspError
+						)
+					}
+					{!use_osnadmin &&
+						this.renderSection(
+							translate,
+							isChannelUpdate ? 'channel_updator_identity' : 'channel_creator_identity',
+							selectedIdentity ? selectedIdentity.name : null,
+							missingOrgIdentityError
+						)
+					}
 					{!(isChannelUpdate || use_osnadmin || !using_default_app_cap) &&
 						this.renderSection(translate, 'application_channel_capability_version', using_app_cap)}
 				</div>
