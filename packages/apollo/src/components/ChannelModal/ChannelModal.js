@@ -48,6 +48,7 @@ import ChaincodePolicy from './Wizard/ChaincodePolicy/ChaincodePolicy';
 import { triggers, triggerSurvey } from '../../utils/medallia';
 import StitchApi from '../../rest/StitchApi';
 import async from 'async';
+import ConfigBlockApi from '../../rest/ConfigBlockApi';
 
 const acl_resources = require('../../utils/acl/resources.json');
 const bytes = require('bytes');
@@ -171,6 +172,8 @@ class ChannelModal extends Component {
 			configtxlator_url: this.props.configtxlator_url,
 			joinOsnMap: {},
 			use_config_block: this.props.useConfigBlock,
+			osnjoinSubmit: false,
+			osnJoinSubmitFin: false,
 		});
 		this.getAvailableCapabilities(isChannelUpdate);
 		if (!this.props.editLoading) {
@@ -739,7 +742,7 @@ class ChannelModal extends Component {
 	}
 
 	getButtons(translate) {
-		const { viewing, advanced, submitting, isChannelUpdate, use_osnadmin, onClose } = this.props;
+		const { viewing, advanced, submitting, isChannelUpdate, use_osnadmin, onClose, osnJoinSubmitFin } = this.props;
 		const isHigherCapabilityAvailable = this.isAnyHigherCapabilityAvailable();
 		const isChannel2_0 = this.isChannel2_0();
 		const canModifyConsenters = this.canModifyConsenters();
@@ -1066,13 +1069,24 @@ class ChannelModal extends Component {
 				isComplete = this.isStepCompleted('osn_join_channel');
 				back = onClose;
 				backButtonText = 'skip';
-				next = () => {
-					console.log('dsh99 fired join-channel button', isComplete);
+				next = async () => {
+					console.log('dsh99 fired join-channel button', isComplete, osnJoinSubmitFin);
 					if (isComplete) {
-						this.createChannelAsOsnAdmin();				// trigger the create channel api
+						if (osnJoinSubmitFin) {
+							this.props.updateState(SCOPE, {
+								submitting: true,
+							});
+							let tx_id = this.props.useConfigBlock ? this.props.useConfigBlock.id : null;
+							tx_id = tx_id || (this.props.block_stored_resp ? this.props.block_stored_resp.id : null);
+							console.log('dsh99 deleting tx', tx_id, this.props.useConfigBlock);
+							await ConfigBlockApi.delete(tx_id);
+							this.sidePanel.closeSidePanel();
+						} else {
+							this.createChannelAsOsnAdmin();				// trigger the create channel api
+						}
 					}
 				};
-				nextButtonText = 'join';
+				nextButtonText = osnJoinSubmitFin ? 'close' : 'join';
 				this.disableAllStepLinksInTimelineExcept(['osn_join_channel', 'review_channel_info']);
 				break;
 
@@ -1930,7 +1944,9 @@ class ChannelModal extends Component {
 		} = this.props;
 		this.props.updateState(SCOPE, {
 			submitting: true,
+			osnjoinSubmit: true,
 			createChannelError: null,
+			osnJoinSubmitFin: false,
 			joinOsnMap: JSON.parse(JSON.stringify(reset(joinOsnMap))),
 		});
 		let join_errors = 0;
@@ -1946,10 +1962,10 @@ class ChannelModal extends Component {
 			// iter over the selected nodes in the selected cluster
 			async.eachOfLimit(cluster.nodes, 1, (node, i, node_cb) => {
 				if (node._status === constants.OSN_JOIN_SUCCESS) {
-					console.log('dsh99 skipping node', cluster.cluster_id, i, node);
+					console.log('dsh99 skipping node', cluster.cluster_id, i, node.host + ':' + node.port);
 					return node_cb();				// node is already done
 				} else {
-					console.log('dsh99 joining node.', cluster.cluster_id, i, node);
+					console.log('dsh99 joining node.', cluster.cluster_id, i, node.host + ':' + node.port);
 					perform_join(cluster, node, i, () => {
 
 						// joinOsnMap was changed, now reflect the change
@@ -1958,7 +1974,7 @@ class ChannelModal extends Component {
 						});
 						setTimeout(() => {
 							return node_cb();
-						}, 200 + Math.random() * 800);		// slow down
+						}, 300 + Math.random() * 2000);		// slow down
 					});
 				}
 			}, () => {
@@ -1966,33 +1982,37 @@ class ChannelModal extends Component {
 				return cluster_cb();
 			});
 		}, () => {
-			console.log('dsh99 done clusters');
-			// dsh todo pipe errors back into panel
-			// dsh todo allow retry
+			console.log('dsh99 done clusters, join_errors', join_errors);
+
+			let osnJoinSubmitFin = false;
+			if (join_errors === 0) {
+				osnJoinSubmitFin = true;
+			}
+			console.log('dsh99 osnJoinSubmitFin', osnJoinSubmitFin);
+
 			// dsh todo create panel to send block to other consoles
 			this.props.updateState(SCOPE, {
 				submitting: false,
+				osnJoinSubmitFin: osnJoinSubmitFin,
 			});
 
-			// dsh todo finish the ending
-			if (join_errors === 0) {
-				this.sidePanel.closeSidePanel();
-			}
 		});
 
 		// convert json to pb && then send joinOSNChannel call && reflect the status in the UI
 		async function perform_join(cluster, node, i, cb) {
 			const j_opts = {
 				host: node.host + ':' + node.port,
-				certificate_b64pem: cluster.selected_identity.cert,
-				private_key_b64pem: cluster.selected_identity.private_key,
-				root_cert_b64pem: cluster.root_certs,			// dsh todo this is not set yet
+				certificate_b64pem: cluster.selected_identity ? cluster.selected_identity.cert : null,
+				private_key_b64pem: cluster.selected_identity ? cluster.selected_identity.private_key : null,
+				root_cert_b64pem: Array.isArray(cluster.tls_root_certs) ? cluster.tls_root_certs[0] : null,			// dsh todo this is not set yet
 				b_config_block: b_genesis_block,
 			};
 			console.log('dsh99 join opts', j_opts);
 			try {
-				await StitchApi.joinOSNChannel(j_opts);
+				const msg = await StitchApi.joinOSNChannel(j_opts);
+				console.log('dsh99 join success msg', msg);
 			} catch (error) {
+				console.log('dsh99 join error', error);
 				const msg = (error && error.http_resp) ? error.http_resp : error;
 				handle_join_outcome(cluster, i, constants.OSN_JOIN_ERROR, msg);
 				return cb();
@@ -2022,7 +2042,9 @@ class ChannelModal extends Component {
 		function reset(obj) {
 			for (let cluster_id in obj) {
 				for (let i in obj[cluster_id].nodes) {
-					obj[cluster_id].nodes[i]._status = constants.OSN_JOIN_PENDING;
+					if (obj[cluster_id].nodes[i]._status === constants.OSN_JOIN_ERROR) {
+						obj[cluster_id].nodes[i]._status = constants.OSN_JOIN_PENDING;
+					}
 					obj[cluster_id].nodes[i]._error = '';
 				}
 			}
@@ -2520,8 +2542,11 @@ const dataProps = {
 	original_orgs: PropTypes.array,
 	use_default_consenters: PropTypes.bool,
 	use_osnadmin: PropTypes.bool,
+	osnjoinSubmit: PropTypes.bool,
+	osnJoinSubmitFin: PropTypes.bool,
 	joinOsnMap: PropTypes.object,
 	b_genesis_block: PropTypes.blob,
+	block_stored_resp: PropTypes.object,
 	osnadmin_feats_enabled: PropTypes.bool,
 	configtxlator_url: PropTypes.string,
 	channel_warning_20: PropTypes.bool,

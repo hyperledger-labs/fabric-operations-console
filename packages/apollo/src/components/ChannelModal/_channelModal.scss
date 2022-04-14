@@ -718,6 +718,12 @@
 	padding: 0.5rem;
 	position: relative;
 }
+.ibp-join-osn-node-wrap-success{
+	border-right: 4px solid #0f62fe;
+}
+.ibp-join-osn-node-wrap-error{
+	border-right: 4px solid #fb4b53;
+}
 
 .ibp-join-osn-name{
 	font-size: 1rem;
@@ -735,6 +741,10 @@
 	right: 0;
 	top: 0.8rem;
 	color:#0f62fe;
+}
+
+.ibp-join-osn-status-error{
+	color: #fb4b53;
 }
 
 .ibp-join-osn-icon{

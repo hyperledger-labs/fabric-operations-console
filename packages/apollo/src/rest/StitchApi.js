@@ -209,12 +209,7 @@ class StitchApi {
 
 	static async joinOSNChannel(opts) {
 		const joinOSNChannel = promisify(window.stitch.joinOSNChannel);
-		try {
-			let resp = await joinOSNChannel(opts);
-			return resp ? resp.data : resp;
-		} catch (error) {
-			return (error && error.http_resp) ? error.http_resp : error;
-		}
+		return await joinOSNChannel(opts);
 	}
 
 	static async unjoinOSNChannel(opts) {

@@ -43,6 +43,7 @@ class OSNJoin extends Component {
 			getAllOrderers,
 			configtxlator_url,
 			use_config_block,
+			osnjoinSubmit,
 			raftNodes,							// contains all console orderer nodes (not to be confused with all selected consenters)
 		} = this.props;
 		let joinOsnMap = {};
@@ -101,6 +102,7 @@ class OSNJoin extends Component {
 					count: this.countOrderers(joinOsnMap),
 					follower_count: this.countFollowers(joinOsnMap),
 					b_genesis_block: b_block,
+					block_stored_resp: block_stored,
 					select_followers_toggle: false,
 					block_error: '',
 				});
@@ -178,10 +180,9 @@ class OSNJoin extends Component {
 						default_identity: null,
 
 						// all identities from msp
-						//identities: await IdentityApi.getIdentitiesForMsp(findMsp(node_data.msp_id)),
 						identities: await IdentityApi.getIdentitiesForMsp({
-							root_certs: msp_data[node_data.msp_id] ? msp_data[node_data.msp_id].root_certs : [],
-							intermediate_certs: msp_data[node_data.msp_id] ? msp_data[node_data.msp_id].intermediate_certs : [],
+							root_certs: (msp_data && msp_data[node_data.msp_id]) ? msp_data[node_data.msp_id].root_certs : [],
+							intermediate_certs: (msp_data && msp_data[node_data.msp_id]) ? msp_data[node_data.msp_id].intermediate_certs : [],
 						}),
 
 						// identities associated with this orderer cluster
@@ -192,6 +193,9 @@ class OSNJoin extends Component {
 
 						// if this cluster of orderer nodes is selected to join the channel - defaults true
 						selected: true,
+
+						// the root certs for the MSP that controls this cluster, used later in the join-channel api
+						tls_root_certs: (msp_data && msp_data[node_data.msp_id]) ? msp_data[node_data.msp_id].tls_root_certs : [],
 					};
 
 					ret[cluster_id].default_identity = this.pickDefaultIdentity(ret[cluster_id]);
@@ -312,7 +316,6 @@ class OSNJoin extends Component {
 
 		// find the console component data using "host" & "port" data from the consenter section of the config-block
 		function find_orderer_data(host, port) {
-			console.log('dsh99 looking for host', host, port, all_orderers);
 			if (host) {
 				for (let i in all_orderers) {
 					if (all_orderers[i].host === host && Number(all_orderers[i].port) === Number(port)) {
@@ -451,6 +454,7 @@ class OSNJoin extends Component {
 			select_followers_toggle,
 			follower_count,
 			block_error,
+			osnjoinSubmit,
 		} = this.props;
 		console.log('dsh99 OSNJoin rendering', joinOsnMap, channel_id);
 		return (
@@ -515,7 +519,13 @@ class OSNJoin extends Component {
 				{joinOsnMap && !_.isEmpty(Object.keys(joinOsnMap)) && (
 					<div className="ibp-join-osn-msp-wrap">
 						{Object.values(joinOsnMap).map((cluster, i) => {
-							return (this.renderClusterSection(cluster));
+							if (osnjoinSubmit) {
+								if (cluster.selected === true) {
+									return (this.renderClusterSection(cluster));
+								}
+							} else {
+								return (this.renderClusterSection(cluster));
+							}
 						})}
 					</div>
 				)}
@@ -528,7 +538,6 @@ class OSNJoin extends Component {
 		const { translate } = this.props;
 		const unselectedClass = (cluster.selected === true) ? '' : 'ibp-join-unselected-cluster';
 		const zero_identities = (cluster.default_identity === null);
-		//console.log('dsh99 rendering cluster', cluster.cluster_id, cluster.default_identity, cluster.identities);
 		return (
 			<div key={'cluster_' + cluster.cluster_id}
 				className="ibp-join-osn-wrap"
@@ -576,26 +585,34 @@ class OSNJoin extends Component {
 	// create the line for an orderer node
 	renderNodesSection(nodes, cluster) {
 		const { translate } = this.props;
-		//console.log('dsh99 rendering nodes: ', nodes);
 		const unselectedClass = (cluster.selected === true) ? '' : 'ibp-join-unselected-cluster';
 		if (Array.isArray(nodes)) {
 			return (nodes.map((node, i) => {
 				const label = '[' + (node._consenter ? ('★ ' + translate('consenter')) : ('☆ ' + translate('follower'))) + ']';
+				let statusClassBorder = '';
+				let statusClassIcon = '';
+				if (node._status === constants.OSN_JOIN_SUCCESS) {
+					statusClassBorder = 'ibp-join-osn-node-wrap-success';
+				}
+				if (node._status === constants.OSN_JOIN_ERROR) {
+					statusClassBorder = 'ibp-join-osn-node-wrap-error';
+					statusClassIcon = 'ibp-join-osn-status-error';
+				}
 
 				return (
 					<div className={'ibp-join-osn-node-wrap-wrap ' + unselectedClass}
 						key={'node-wrap-' + i}
 					>
-						<div className="ibp-join-osn-node-wrap">
+						<div className={'ibp-join-osn-node-wrap ' + statusClassBorder}>
 							<input type="checkbox"
 								className="ibp-join-osn-icon"
-								checked={cluster.selected === true && (node._consenter === true || node._selected === true)}
+								checked={cluster.selected === true && (node._consenter === true || node._selected === true)/* && node._status !== constants.OSN_JOIN_SUCCESS*/}
 								name={'joinNode' + node._id}
 								id={'joinNode' + node._id}
 								onChange={event => {
 									this.toggleNode(node._id, cluster.cluster_id, event);
 								}}
-								disabled={node._consenter === true || !cluster.selected}
+								disabled={node._consenter === true || !cluster.selected || node._status === constants.OSN_JOIN_SUCCESS}
 								title={node._consenter === true ? 'Cannot deselect individual consenters' : 'Node is a follower'}
 							/>
 							<span className="ibp-join-osn-node-details">
@@ -604,7 +621,7 @@ class OSNJoin extends Component {
 									{label} - {node.host}:{node.port}
 								</div>
 							</span>
-							<span className="ibp-join-osn-status">
+							<span className={'ibp-join-osn-status ' + statusClassIcon}>
 								{this.renderStatusIcon(node._status)}
 							</span>
 						</div>
@@ -617,19 +634,19 @@ class OSNJoin extends Component {
 
 	// render the join-status icon for the node
 	renderStatusIcon(status_str) {
-		if (status_str === constants.OSN_JOIN_PENDING) {			// dsh todo animate
+		if (status_str === constants.OSN_JOIN_PENDING) {
 			return (
-				<ProgressBarRound16 />
+				<ProgressBarRound16 title="Node has not joined yet" />
 			);
 		}
 		if (status_str === constants.OSN_JOIN_SUCCESS) {
 			return (
-				<CheckmarkFilled16 />
+				<CheckmarkFilled16 title="Node has joined" />
 			);
 		}
 		if (status_str === constants.OSN_JOIN_ERROR) {
 			return (
-				<WarningFilled16 />
+				<WarningFilled16 title="Node failed to join" />
 			);
 		}
 
@@ -733,6 +750,7 @@ class OSNJoin extends Component {
 				ret[msp_id] = {
 					root_certs: _.get(app_grp[msp_id], 'values.MSP.value.config.root_certs'),
 					intermediate_certs: _.get(app_grp[msp_id], 'values.MSP.value.config.intermediate_certs'),
+					tls_root_certs: _.get(app_grp[msp_id], 'values.MSP.value.config.tls_root_certs'),
 				};
 			}
 		}
@@ -742,6 +760,7 @@ class OSNJoin extends Component {
 				ret[msp_id] = {
 					root_certs: _.get(ord_grp[msp_id], 'values.MSP.value.config.root_certs'),
 					intermediate_certs: _.get(ord_grp[msp_id], 'values.MSP.value.config.intermediate_certs'),
+					tls_root_certs: _.get(ord_grp[msp_id], 'values.MSP.value.config.tls_root_certs'),
 				};
 			}
 		}
@@ -752,6 +771,7 @@ class OSNJoin extends Component {
 const dataProps = {
 	consenters: PropTypes.array,
 	use_osnadmin: PropTypes.bool,
+	osnjoinSubmit: PropTypes.bool,
 	joinOsnMap: PropTypes.Object,
 	channel_id: PropTypes.string,
 	count: PropTypes.number,
@@ -762,6 +782,7 @@ const dataProps = {
 	block_error: PropTypes.string,
 	use_config_block: PropTypes.object,
 	b_genesis_block: PropTypes.blob,
+	block_stored_resp: PropTypes.object,
 };
 
 OSNJoin.propTypes = {

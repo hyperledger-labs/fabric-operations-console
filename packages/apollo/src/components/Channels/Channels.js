@@ -436,14 +436,14 @@ class ChannelComponent extends Component {
 	// build the channel tiles for orderers
 	buildJoinOrdererTile(channel) {
 		const translate = this.props.translate;
-		// dsh todo - don't use extra_consenter_data, pull names from os data we have...
 		const consenterClusterNames = channel.extra_consenter_data ? channel.extra_consenter_data.map(orderer => orderer._cluster_name).join(', ') : '';
 		return (
 			<div className="ibp-channel-tile-stats">
 				<div className="ibp-channels-orderer">
 					<div>{consenterClusterNames}</div>
 					<div className="ibp-channels-del-channel"
-						onClick={() => {
+						onClick={(e) => {
+							e.stopPropagation();
 							this.removeConfigBlock(channel.id);
 							return false;
 						}}
@@ -452,17 +452,8 @@ class ChannelComponent extends Component {
 					</div>
 				</div>
 				<ItemTileLabels
-					certificateWarning={channel.cert_warning}
 					custom={
 						<div>
-							<div className="ibp-channels-blocks">
-								{!channel.pending && (
-									<div className="ibp-channels-block-text">
-										{channel.height ? channel.height : <div className="ibp-channel-loading-item" />}{' '}
-										{channel.height ? (channel.height === 1 ? translate('block') : translate('blocks')) : ''}
-									</div>
-								)}
-							</div>
 							{channel.pending && (
 								<div className="ibp-pending-channel-container">
 									<SVGs type="clock"
@@ -628,7 +619,7 @@ class ChannelComponent extends Component {
 		return items;
 	}
 
-	// get all channels for orderers (which includes joined channels and pending joins)
+	// get all pending channels for orderers
 	getAllOrdererChannels = async () => {
 		this.props.updateState(SCOPE, { orderer_loading: true });
 
@@ -641,7 +632,7 @@ class ChannelComponent extends Component {
 		}
 		console.log('dsh99 getAllOrdererChannels', config_blocks.blocks);
 
-		this.props.updateState(SCOPE, { orderer_loading: false, orderer_channels: config_blocks.blocks });
+		this.props.updateState(SCOPE, { orderer_loading: false, pending_osn_channels: config_blocks.blocks });
 	}
 
 	// remove this pending join by removing the config block
@@ -661,8 +652,6 @@ class ChannelComponent extends Component {
 	}
 
 	render() {
-		// dsh todo add feats flag and hide changes...
-
 		let isCreateChannelFeatureAvailable = this.props.feature_flags ? this.props.feature_flags.create_channel_enabled : false;
 		Log.debug('Create channel feature flag is ', isCreateChannelFeatureAvailable, this.props.feature_flags);
 
@@ -685,32 +674,45 @@ class ChannelComponent extends Component {
 								containerTooltip="channels_desc_orderer"
 								tooltipDirection="right"
 								id="test__channels2--add--tile"
-								itemId="orderer_channels"
+								itemId="pending_osn_channels"
 								loading={this.props.orderer_loading}
-								items={this.props.orderer_channels}
+								items={this.props.pending_osn_channels}
 								listMapping={[
 									{
 										header: 'name',
 										attr: 'name',
 									},
 									{
-										header: 'block_height',
-										attr: 'height',
-									},
-									{
-										header: 'ordering_service_title',
+										header: 'cluster_names',
 										custom: channel => {
+											const consenterClusterNames = channel.extra_consenter_data ? channel.extra_consenter_data.map(orderer => orderer._cluster_name).join(', ') : '';
 											return (
 												<div>
-													{channel.orderers.map((orderer, i) => (
-														<>
-															<span key={i}>{orderer.name}</span>
-															{channel.orderers.length > 1 && channel.orderers.length !== i + 1 && ', '}
-														</>
-													))}
+													{consenterClusterNames}
 												</div>
 											);
 										},
+									},
+									{
+										header: 'consenters',
+										custom: channel => {
+											return (
+												<div>
+													{
+														channel.extra_consenter_data.map(orderer => {
+															return (
+																<p
+																	className="ibp-consenters"
+																	key={'orderer_' + orderer._id}
+																>
+																	{orderer.name} --- {orderer.host}:{orderer.port}
+																</p>
+															);
+														})
+													}
+												</div>
+											);
+										}
 									},
 								]}
 								select={(configBlockDoc) => {
@@ -848,7 +850,7 @@ const dataProps = {
 	history: PropTypes.object,
 	loading: PropTypes.bool,
 	orderer_loading: PropTypes.bool,
-	orderer_channels: PropTypes.array,
+	pending_osn_channels: PropTypes.array,
 	joinChannelModal: PropTypes.bool,
 	importOrdererModal: PropTypes.bool,
 	createChannelModal: PropTypes.bool,
