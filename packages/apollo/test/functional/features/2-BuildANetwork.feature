@@ -30,7 +30,9 @@ Feature: Build a network feature
         And I clicked the Associate identity button
         And the CA admin is set as 'Org1 CA Admin'
         When the 'admin' user was enrolled with id 'org1admin' and secret 'org1adminpw'
+        Then wait "3" seconds
         And the 'peer' user was enrolled with id 'peer1' and secret 'peer1pw'
+        Then wait "3" seconds
         Then the 'admin' user with id 'org1admin' should be enrolled
         And the 'peer' user with id 'peer1' should be enrolled
 
@@ -68,7 +70,7 @@ Feature: Build a network feature
         And I selected 'peer1' from the 'div#saasCA-enroll_id' dropdown
         And I provided 'peer1pw' for the 'Enter a secret' input
         And I selected 'Org1 MSP' from the 'div#saasCA-admin_msp' dropdown
-        And I selected '2.2' from the 'div#importPeerModal-version-version' dropdown
+        And I selected '2.4.3-1' value from the 'div#importPeerModal-version-version' dropdown
         And I clicked the button with text 'Next'
         And I selected 'Org1 MSP Admin' from the 'div#importPeerModal-identity-identity' dropdown
         And I clicked the button with text 'Next'
@@ -154,7 +156,7 @@ Feature: Build a network feature
         And I selected 'OS1' from the 'div#saasCA-enroll_id' dropdown
         And I provided 'OS1pw' for the 'Enter a secret' input
         And I selected 'Ordering Service MSP' value from the 'div#saasCA-admin_msp' dropdown
-        And I selected '2.2' from the 'div#importOrdererModal-version-version' dropdown
+        And I selected '2.4.3-1' value from the 'div#importOrdererModal-version-version' dropdown
         And I clicked the button with text 'Next'
         Then wait "5" seconds
         And I selected 'Ordering Service MSP Admin' value from the 'div#importOrdererModal-identity' dropdown

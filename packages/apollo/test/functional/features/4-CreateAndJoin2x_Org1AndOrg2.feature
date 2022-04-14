@@ -23,7 +23,7 @@ Feature: Create and Join a 2.x channel
         And I selected 'Org1 MSP (org1msp)' value from the 'div#channelModal-signature-selectedChannelCreator' dropdown
         And I selected 'Org1 MSP Admin' value from the 'div#channelModal-signature-selectedIdentity' dropdown
         And I clicked the button with text 'Next'
-        And I selected '2.0.0' from the 'div#channelModal-capabilities-application-selectedApplicationCapability' dropdown
+        And I selected '2.0.0' value from the 'div#channelModal-capabilities-application-selectedApplicationCapability' dropdown
         And I clicked the button with text 'Next'
         And I clicked the button with text 'Next'
         And I clicked the button with text 'Next'
