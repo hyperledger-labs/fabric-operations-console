@@ -291,6 +291,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 					'FABRIC-PEER': 'fabric-peer',
 					'FABRIC-ORDERER': 'fabric-orderer',
 					'MSP-EXTERNAL': 'msp-external',
+					BLOCK: 'config-block',
 					ENROLL_ID: 'enroll_id',
 					TEMPLATE_DEBUG: 'template_debug',
 					TEMPLATE: 'template',

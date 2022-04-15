@@ -547,7 +547,7 @@ class ItemContainer extends Component {
 		if (this.props.maxTilesPerPagination) {
 			return this.props.maxTilesPerPagination;
 		}
-		return 12;
+		return 15;
 	}
 
 	buildPagination(translate) {

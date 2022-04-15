@@ -477,7 +477,7 @@ function detectImplicitPolicy(policy: string) {
 		if (fmt.indexOf('MAJORITY') === 0) {
 			return true;
 		}
-		if (fmt.indexOf('ANY') === 0) {
+		if (fmt.indexOf('ALL') === 0) {
 			return true;
 		}
 	}

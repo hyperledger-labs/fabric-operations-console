@@ -29,7 +29,7 @@
 		"react/jsx-max-props-per-line": [1, { "maximum": 1 }],
 		"react/jsx-closing-bracket-location": [1, "line-aligned"],
 		"array-bracket-spacing": 0,
-		"space-before-function-paren": ["warn", "never"],
+		"space-before-function-paren": 0,
 		"arrow-spacing": 1,
 		"block-spacing": [1, "always"],
 		"comma-dangle": 0,

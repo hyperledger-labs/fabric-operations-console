@@ -25,18 +25,19 @@ const Timeline = ({ steps, onClose, selectedTimelineStep, header, estTime, progr
 				{<p className="ibp-template-timeline-estimate">{estTime}</p>}
 				{steps.map((step, index) => {
 					const currentStep = step[0];
+					const currentStepClass = currentStep.groupSteps.length === 1 ? 'ibp-timeline-step-container-short' : '';
+					const progressClass = !progressWithChecks ? 'ibp-timeline-step-container-without-checks' : '';
 					return (
 						<div key={index}>
 							{currentStep.groupTitle && <p className="ibp-timeline-group-label">{translate(currentStep.groupTitle)}</p>}
 							<div
-								className={`ibp-timeline-step-container ${currentStep.groupSteps.length === 1 ? 'ibp-timeline-step-container-short' : ''} ${
-									!progressWithChecks ? 'ibp-timeline-step-container-without-checks' : ''
-								}`}
+								className={`ibp-timeline-step-container ${currentStepClass} ${progressClass}`}
 								key={currentStep.groupTitle}
 							>
 								{currentStep.groupSteps.map((groupStep, groupStepIndex) => {
 									let incompleteStep = index === selectedTimelineStep.currentStepIndex && selectedTimelineStep.currentStepInsideOfGroupIndex < groupStepIndex;
 									let completedStep = selectedTimelineStep.currentStepIndex === index && selectedTimelineStep.currentStepInsideOfGroupIndex > groupStepIndex;
+									let stepClass = currentStep.type === 'intro' ? 'ibp-timeline-intro-step' : '';
 									return (
 										<div className="ibp-timeline-group-step-container"
 											key={groupStep.label}
@@ -53,20 +54,34 @@ const Timeline = ({ steps, onClose, selectedTimelineStep, header, estTime, progr
 											{!progressWithChecks &&
 												selectedTimelineStep.currentStepInsideOfGroupIndex === groupStepIndex &&
 												selectedTimelineStep.currentStepIndex === index && <span className="ibp-timeline-current-step-indicator" />}
-											{groupStep.isLink && !groupStep.disabled ? (
+
+											{groupStep.isLink && !groupStep.disabled && groupStep.hidden !== true ? (
+
+												// create a clickable step
 												<button className="ibp-template-timeline-label"
 													onClick={groupStep.onClick}
+													index={index}
+													groupStepIndex={groupStepIndex}
+													currentStepInsideOfGroupIndex={selectedTimelineStep.currentStepInsideOfGroupIndex}
+													currentStepIndex={selectedTimelineStep.currentStepIndex}
 												>
 													{translate(groupStep.label)}
 												</button>
-											) : (
+
+											// hidden step!!
+											) : groupStep.hidden === true ? <span></span> : (
+
+												// create a non-clickable step
 												<span
-													className={`ibp-timeline-label-only ${currentStep.type === 'intro' ? 'ibp-timeline-intro-step' : ''} ${
-														groupStep.disabled ? 'ibp-timeline-disabled-step' : ''
-													}`}
+													className={`ibp-timeline-label-only ${stepClass} ${groupStep.disabled ? 'ibp-timeline-disabled-step' : ''}`}
+													index={index}
+													groupStepIndex={groupStepIndex}
+													currentStepInsideOfGroupIndex={selectedTimelineStep.currentStepInsideOfGroupIndex}
+													currentStepIndex={selectedTimelineStep.currentStepIndex}
 												>
 													{translate(groupStep.label)}
 												</span>
+
 											)}
 										</div>
 									);

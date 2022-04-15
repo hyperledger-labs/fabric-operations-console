@@ -47,7 +47,7 @@ import { ProposalResponse as ProposalResponse_ProposalResponse } from './protoc/
 // Libs built by us
 import { DEFAULT_ERROR_MSG } from './libs/validation';
 import { DER_signAndPackCsrPem, DER_parsePem } from './libs/asn1_lib';
-import { PolicyLib } from './libs/proto_handlers/policy_pb_lib';
+import { PolicyLib,  } from './libs/proto_handlers/policy_pb_lib';
 import { ConfigTxLib } from './libs/proto_handlers/configtx_pb_lib';
 import { ProposalLib } from './libs/proto_handlers/proposal_pb_lib';
 import { conformPolicySyntax } from './libs/sig_policy_syntax_lib';
@@ -104,7 +104,7 @@ export {
 	pem2raw, exportJwkKey, exportHexKey, subtleVerifySignature, jwk2pem, exportPemKey, build_sig_collection_for_hash, scSignJwkRaw, scGenCSR,
 	test_encodeDecode_collection_config_packaged, load_pb, switchEncryption, encrypt, decrypt, DER_signAndPackCsrPem, DER_parsePem, getOrGenAesKey,
 	convertPolicy2PeerCliSyntax, policyIsMet, safer_hex_str, url_join, lifecycleLib, decode_chaincode_query_response, Query_ChannelQueryResponse,
-	Ledger_BlockchainInfo, policyLib,
+	Ledger_BlockchainInfo, policyLib
 };
 
 // proto handlers

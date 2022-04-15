@@ -187,8 +187,9 @@
 	}
 	.ibp-button:disabled,
 	.ibp-button:disabled:hover {
-		background-color: $buttonDisabled;
+		//background-color: $buttonDisabled;
 		cursor: not-allowed;
+		opacity: 0.3;
 	}
 	.ibp-side-panel-submitting-spinner {
 		position: absolute;

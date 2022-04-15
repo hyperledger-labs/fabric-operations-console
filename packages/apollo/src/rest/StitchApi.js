@@ -209,12 +209,7 @@ class StitchApi {
 
 	static async joinOSNChannel(opts) {
 		const joinOSNChannel = promisify(window.stitch.joinOSNChannel);
-		try {
-			let resp = await joinOSNChannel(opts);
-			return resp ? resp.data : resp;
-		} catch (error) {
-			return (error && error.http_resp) ? error.http_resp : error;
-		}
+		return await joinOSNChannel(opts);
 	}
 
 	static async unjoinOSNChannel(opts) {
@@ -224,6 +219,216 @@ class StitchApi {
 			return resp ? resp.data : resp;
 		} catch (error) {
 			return (error && error.http_resp) ? error.http_resp : error;
+		}
+	}
+
+	static async jsonToPb(opts) {
+		const jsonToPb = promisify(window.stitch.jsonToPb);
+		return await jsonToPb(opts);
+	}
+
+	static async pbToJson(opts) {
+		const pbToJson = promisify(window.stitch.pbToJson);
+		return await pbToJson(opts);
+	}
+
+	// this function conforms formats from the apollo create-channel wizard to the stitch config-block-generator
+	// and returns a genesis block aka config block 0
+	static buildGenesisBlockOSNadmin(opts) {
+		const config_block_opts = {
+			channel: opts.channel_id,
+			application_capabilities: opts.application_capabilities,
+			orderer_capabilities: opts.orderer_capabilities,
+			channel_capabilities: opts.channel_capabilities,
+			application_msps: build_app_msps(),
+			orderer_msps: build_orderer_msps(),
+			application_acls: opts.acls,
+			application_policies: {
+
+				// these policies can be null to use the default policy,
+				Admins: build_policy_from_wizard2('admin', 'ADMIN'),
+				Readers: build_policy_from_wizard2('reader', 'MEMBER'),
+				Writers: build_policy_from_wizard2('writer', 'MEMBER'),
+
+				// these policies can be null to use the default policy, or set an explicit policy in CLI format, or implicit policy as string
+				Endorsement: build_policy_from_wizard(opts.endorsement_policy, 'Endorsement', 'PEER'),
+				LifecycleEndorsement: build_policy_from_wizard(opts.lifecycle_policy, 'Endorsement', 'PEER'),
+			},
+
+			// these policies can be null to use the default policy
+			orderer_policies: {
+				Admins: build_orderer_policy_from_wizard2('admin', 'ADMIN'),
+
+				// we don't currently support customizing these values in apollo
+				//BlockValidation: 'ANY Writers',						// use null for default policy
+				//Readers: 'ANY Readers',								// use null for default policy
+				//Writers: 'ANY Writers',								// use null for default policy
+			},
+
+			batch_size: {
+				absolute_max_bytes: opts.block_params ? opts.block_params.absolute_max_bytes : null,
+				max_message_count: opts.block_params ? opts.block_params.max_message_count : null,
+				preferred_max_bytes: opts.block_params ? opts.block_params.preferred_max_bytes : null,
+			},
+			batch_timeout: opts.block_params ? opts.block_params.timeout : null,
+			channel_restrictions: null,
+			consensus_type: {
+				consenters: filter_consenters('consenters'),
+				options: opts.raft_params								// use null for defaults
+			}
+		};
+		return window.stitch.buildTemplateConfigBlock(config_block_opts);
+
+		// build application msp input data format from the wizard data
+		function build_app_msps() {
+			const ret = {};
+			for (let msp_id in opts.application_msps) {
+				ret[msp_id] = {
+					'Admins': null,			// use null for default policy (apollo doesn't let us set these atm)
+					'Endorsement': null,	// use null for default policy (apollo doesn't let us set these atm)
+					'Readers': null,		// use null for default policy (apollo doesn't let us set these atm)
+					'Writers': null,		// use null for default policy (apollo doesn't let us set these atm)
+
+					'MSP': {
+						...opts.application_msps[msp_id]
+					},
+				};
+			}
+			return ret;
+		}
+
+		// build the orderer msp input data format from the wizard data
+		function build_orderer_msps() {
+			const ret = {};
+			for (let i in opts.orderer_msps) {
+				let msp_id = opts.orderer_msps[i].msp_id;
+				ret[msp_id] = {
+					'Admins': null,										// use null for default policy
+					'Readers': null,									// use null for default policy
+					'Writers': null,									// use null for default policy
+
+					addresses: build_addresses(msp_id),					// required, string of addresses including port, no host
+
+					'MSP': {
+						...opts.orderer_msps[i]
+					},
+				};
+			}
+			return ret;
+
+			// build address list for this msp
+			function build_addresses(mspId) {
+				const addresses = [];
+				if (Array.isArray(opts.consenters)) {
+					for (let i in opts.consenters) {
+						const node = opts.consenters[i];
+						if (node && node.msp_id === mspId) {							// filter on this msp id
+							if (node.host && node.port) {								// required fields
+								addresses.push(node.host + ':' + node.port);
+							}
+						}
+					}
+				}
+				return addresses;
+			}
+		}
+
+		// only add consenters, remove followers
+		function filter_consenters(type) {
+			const ret = [];
+			if (Array.isArray(opts.consenters)) {
+				for (let i in opts.consenters) {
+					const node = opts.consenters[i];
+					if (type === 'consenters') {
+						if (node && node._consenter === true) {
+							ret.push(opts.consenters[i]);
+						}
+					} else {
+						if (node && node._consenter !== true) {
+							ret.push(opts.consenters[i]);
+						}
+					}
+				}
+			}
+			return ret;
+		}
+
+		// take apollo's weird policy format and make a implicit or explicit cli formatted policy
+		function build_policy_from_wizard(weird_policy_fmt, sub_policy, role) {
+			if (weird_policy_fmt) {
+
+				// ---------------------------
+				// Implicit Policies - builds something like: 'ANY Writers'
+				// ---------------------------
+				if (weird_policy_fmt.type === 'MAJORITY') {
+					return 'MAJORITY ' + sub_policy;
+				} else if (weird_policy_fmt.type === 'ANY') {
+					return 'ANY ' + sub_policy;
+				} else if (weird_policy_fmt.type === 'ALL') {
+					return 'ALL ' + sub_policy;
+				}
+
+				// ---------------------------
+				// Explicit Policies - builds something like: 'OutOf(1, "OrdererMSP.ADMIN")'
+				// ---------------------------
+				else {
+					let member_txt = '';						// build the members string as "MEMBER1.ROLE, MEMBER2.ROLE"
+					for (let i in weird_policy_fmt.members) {
+						const org = weird_policy_fmt.members[i];
+						member_txt += `"${org}.${role}", `;
+					}
+					if (member_txt.length > 2) {
+						member_txt = member_txt.substring(0, member_txt.length - 2);		// remove last space & comma
+						return `OutOf(${weird_policy_fmt.n}, ${member_txt})`;
+					}
+				}
+			}
+			return null;
+		}
+
+		// take apollo's application msp data and make an explicit cli formatted policy
+		// note this sets "n" to 1 aka ANY org
+		function build_policy_from_wizard2(apollo_perm_name, fabric_role) {
+			let member_txt = '';						// build the members string as "MEMBER1.ROLE, MEMBER2.ROLE"
+			const lc_perm = apollo_perm_name.toLowerCase();
+			let count = 0;
+
+			for (let org in opts.application_msps) {
+				if (Array.isArray(opts.application_msps[org].roles) && opts.application_msps[org].roles.includes(lc_perm)) {
+					member_txt += `"${org}.${fabric_role}", `;
+					count++;
+				}
+			}
+
+			if (count > 0) {
+				member_txt = member_txt.substring(0, member_txt.length - 2);		// remove last space & comma
+				return `OutOf(1, ${member_txt})`;									// we always set out-of 1
+			}
+
+			return null;
+		}
+
+		// take apollo's orderer msp data and make an explicit cli formatted policy
+		// note this sets "n" to be 1 (aka a ANY rule)
+		function build_orderer_policy_from_wizard2(apollo_perm_name, fabric_role) {
+			let member_txt = '';						// build the members string as "MEMBER1.ROLE, MEMBER2.ROLE"
+			const lc_perm = apollo_perm_name.toLowerCase();
+			let count = 0;
+
+			for (let i in opts.orderer_msps) {
+				let org = opts.orderer_msps[i].msp_id;
+				if (Array.isArray(opts.orderer_msps[i].roles) && opts.orderer_msps[i].roles.includes(lc_perm)) {
+					member_txt += `"${org}.${fabric_role}", `;
+					count++;
+				}
+			}
+
+			if (count > 0) {
+				member_txt = member_txt.substring(0, member_txt.length - 2);		// remove last space & comma
+				return `OutOf(1, ${member_txt})`;									// we always set out-of 1
+			}
+
+			return null;
 		}
 	}
 }

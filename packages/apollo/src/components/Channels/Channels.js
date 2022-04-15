@@ -34,6 +34,8 @@ import Logger from '../Log/Logger';
 import PageContainer from '../PageContainer/PageContainer';
 import PageHeader from '../PageHeader/PageHeader';
 import SVGs from '../Svgs/Svgs';
+import ConfigBlockApi from '../../rest/ConfigBlockApi';
+import { TrashCan20 } from '@carbon/icons-react/es';
 
 const SCOPE = 'channels';
 const Log = new Logger(SCOPE);
@@ -52,12 +54,15 @@ class ChannelComponent extends Component {
 	componentDidMount() {
 		this.mounted = true;
 		this.props.showBreadcrumb('channels', {}, this.props.history.location.pathname, true);
-		this.getAllChannels();
+		this.getAllPeerChannels();
 		this.getAllPeers();
 		this.getAllOrderers();
+		this.getAllOrdererChannels();
 		this.props.updateState(SCOPE, {
 			channelName: '',
 			loadingPeers: [],
+			feature_flags: this.props.feature_flags,
+			selectedConfigBlock: null,
 		});
 	}
 
@@ -191,7 +196,7 @@ class ChannelComponent extends Component {
 								: [];
 							let match = channel.name === notification.channel && _.intersection(pendingChannelOrderers, joinedChannelOrderers).length > 0;
 							return match;
-						  })
+						})
 						: null;
 				if (!matchingJoinedChannel) {
 					pendingChannels.push({
@@ -241,8 +246,8 @@ class ChannelComponent extends Component {
 		});
 	};
 
-	getAllChannels = () => {
-		this.props.updateState(SCOPE, { loading: true });
+	getAllPeerChannels = () => {
+		this.props.updateState(SCOPE, { loading: true, orderer_loading: true });
 		ChannelApi.getAllChannels()
 			.then(channelResp => {
 				if (!this.mounted) {
@@ -428,6 +433,42 @@ class ChannelComponent extends Component {
 		);
 	}
 
+	// build the channel tiles for orderers
+	buildJoinOrdererTile(channel) {
+		const translate = this.props.translate;
+		const consenterClusterNames = channel.extra_consenter_data ? channel.extra_consenter_data.map(orderer => orderer._cluster_name).join(', ') : '';
+		return (
+			<div className="ibp-channel-tile-stats">
+				<div className="ibp-channels-orderer">
+					<div>{consenterClusterNames}</div>
+					<div className="ibp-channels-del-channel"
+						onClick={(e) => {
+							e.stopPropagation();
+							this.removeConfigBlock(channel.id);
+							return false;
+						}}
+					>
+						<TrashCan20 />
+					</div>
+				</div>
+				<ItemTileLabels
+					custom={
+						<div>
+							{channel.pending && (
+								<div className="ibp-pending-channel-container">
+									<SVGs type="clock"
+										extendClass={{ 'ibp-pending-tile-clock': true }}
+									/>
+									<span className="ibp-pending-channel-label">{translate('pending_channel_message_orderer')}</span>
+								</div>
+							)}
+						</div>
+					}
+				/>
+			</div>
+		);
+	}
+
 	showJoinChannelModal = (peers, orderers, channel, pending) => {
 		this.props.updateState(SCOPE, {
 			joinChannelModal: true,
@@ -460,16 +501,11 @@ class ChannelComponent extends Component {
 		});
 	};
 
-	showCreateChannelModal = orderers => {
-		this.props.updateState(SCOPE, {
-			createChannelModal: true,
-			orderers,
-		});
-	};
-
 	hideCreateChannelModal = () => {
+		this.getAllOrdererChannels({ cache: 'skip' });
 		this.props.updateState(SCOPE, {
 			createChannelModal: false,
+			selectedConfigBlock: null,
 		});
 	};
 
@@ -487,21 +523,11 @@ class ChannelComponent extends Component {
 		});
 	};
 
-	createChannel = () => {
-		OrdererRestApi.getOrderers()
-			.then(orderers => {
-				if (!this.mounted) {
-					return;
-				}
-				this.showCreateChannelModal(orderers);
-			})
-			.catch(error => {
-				if (!this.mounted) {
-					return;
-				}
-				Log.error(error);
-				this.props.showError('error_orderers', {}, SCOPE);
-			});
+	createChannel = (selectedConfigBlock) => {
+		this.props.updateState(SCOPE, {
+			selectedConfigBlock: selectedConfigBlock,
+			createChannelModal: true,
+		});
 	};
 
 	joinChannel = () => {
@@ -560,27 +586,72 @@ class ChannelComponent extends Component {
 		}
 	};
 
-	getAddItems() {
+	// add blue action buttons on top of tile layout
+	addPeerButtons() {
+		const items = [];
+		items.push({
+			id: 'join_channel',
+			text: 'join_channel',
+			fn: this.joinChannel,
+		});
+
+		const osnadminFeatsEnabled = this.props.feature_flags ? this.props.feature_flags.osnadmin_feats_enabled : false;
+		if (!osnadminFeatsEnabled) {
+			return items.concat(this.addOSNButtons());
+		} else {
+			return items;
+		}
+	}
+
+	// add blue action buttons on top of tile layout
+	addOSNButtons() {
 		const isCreateChannelFeatureAvailable = this.props.feature_flags ? this.props.feature_flags.create_channel_enabled : false;
 		const items = [];
 		if (isCreateChannelFeatureAvailable) {
 			items.push({
 				id: 'create_channel',
 				text: 'create_channel',
-				fn: this.createChannel,
+				fn: () => {
+					this.createChannel(null);
+				}
 			});
 		}
-		items.push({
-			id: 'join_channel',
-			text: 'join_channel',
-			fn: this.joinChannel,
-		});
 		return items;
+	}
+
+	// get all pending channels for orderers
+	getAllOrdererChannels = async (opts) => {
+		this.props.updateState(SCOPE, { orderer_loading: true });
+
+		const config_blocks = await ConfigBlockApi.getAll(opts);
+		if (config_blocks && Array.isArray(config_blocks.blocks)) {
+			for (let i in config_blocks.blocks) {
+				config_blocks.blocks[i].name = config_blocks.blocks[i].channel;
+				config_blocks.blocks[i].pending = true;
+			}
+		}
+		this.props.updateState(SCOPE, { orderer_loading: false, pending_osn_channels: config_blocks.blocks });
+	}
+
+	// remove this pending join by removing the config block
+	// dsh todo add confirmation box before deleting
+	removeConfigBlock = async (id) => {
+		if (id && typeof id === 'string') {
+			try {
+				await ConfigBlockApi.delete(id);
+			} catch (e) {
+				return false;
+			}
+			await this.getAllOrdererChannels({ cache: 'skip' });		// refresh page after delete
+			return false;
+		}
 	}
 
 	render() {
 		let isCreateChannelFeatureAvailable = this.props.feature_flags ? this.props.feature_flags.create_channel_enabled : false;
 		Log.debug('Create channel feature flag is ', isCreateChannelFeatureAvailable, this.props.feature_flags);
+
+		const osnadminFeatsEnabled = this.props.feature_flags ? this.props.feature_flags.osnadmin_feats_enabled : false;
 		return (
 			<PageContainer setFocus={!this.props.loading}>
 				<div className="bx--row">
@@ -591,6 +662,72 @@ class ChannelComponent extends Component {
 						<div id="channels-container"
 							className="ibp__channels--container"
 						>
+							{osnadminFeatsEnabled && (<ItemContainer
+								emptyImage={emptyImage}
+								emptyTitle="empty_channels_title"
+								emptyMessage="empty_channels_text"
+								containerTitle="osn_channels"
+								containerTooltip="channels_desc_orderer"
+								tooltipDirection="right"
+								id="test__channels2--add--tile"
+								itemId="pending_osn_channels"
+								loading={this.props.orderer_loading}
+								items={this.props.pending_osn_channels}
+								listMapping={[
+									{
+										header: 'name',
+										attr: 'name',
+									},
+									{
+										header: 'cluster_names',
+										custom: channel => {
+											const consenterClusterNames = channel.extra_consenter_data ? channel.extra_consenter_data.map(orderer => orderer._cluster_name).join(', ') : '';
+											return (
+												<div>
+													{consenterClusterNames}
+												</div>
+											);
+										},
+									},
+									{
+										header: 'consenters',
+										custom: channel => {
+											return (
+												<div>
+													{
+														channel.extra_consenter_data.map(orderer => {
+															return (
+																<p
+																	className="ibp-consenters"
+																	key={'orderer_' + orderer._id}
+																>
+																	{orderer.name} --- {orderer.host}:{orderer.port}
+																</p>
+															);
+														})
+													}
+												</div>
+											);
+										}
+									},
+								]}
+								select={(configBlockDoc) => {
+									this.createChannel(configBlockDoc);
+								}}
+								tileMapping={{
+									title: 'name',
+									custom: data => {
+										return this.buildJoinOrdererTile(data);
+									},
+								}}
+								addItems={this.addOSNButtons()}
+								disableAddItem={this.props.importPeerModal || this.props.importOrdererModal || this.props.joinChannelModal}
+								largeTiles={true}
+								splitTiles={isCreateChannelFeatureAvailable}
+								isLink
+								maxTilesPerPagination={10}
+							/>)}
+
 							<ItemContainer
 								emptyImage={emptyImage}
 								emptyTitle="empty_channels_title"
@@ -634,12 +771,12 @@ class ChannelComponent extends Component {
 										return this.buildCustomTile(data);
 									},
 								}}
-								addItems={this.getAddItems()}
+								addItems={this.addPeerButtons()}
 								disableAddItem={this.props.importPeerModal || this.props.importOrdererModal || this.props.joinChannelModal}
 								largeTiles={true}
 								splitTiles={isCreateChannelFeatureAvailable}
 								isLink
-								maxTilesPerPagination={8}
+								maxTilesPerPagination={10}
 							/>
 						</div>
 						{this.props.importPeerModal && (
@@ -671,18 +808,18 @@ class ChannelComponent extends Component {
 								onComplete={channelName => {
 									this.props.showSuccess('channel_join_request_submitted', { channelName }, SCOPE, null, true);
 									this.props.updateState(SCOPE, { filteredChannels: [], allChannels: [] });
-									this.getAllChannels();
+									this.getAllPeerChannels();
 								}}
 								peers={this.props.peers}
 								orderers={this.props.orderers}
-								orderer={this.props.isPending ? this.props.orderers[0] : null}
+								orderer={(this.props.isPending && Array.isArray(this.props.orderers) && this.props.orderers.length > 0) ? this.props.orderers[0] : null}
 								pendingChannelName={this.props.isPending ? this.props.channelName : ''}
 								isPending={this.props.isPending}
 							/>
 						)}
 						{this.props.createChannelModal && (
 							<ChannelModal
-								orderers={this.props.orderers}
+								useConfigBlock={this.props.selectedConfigBlock}
 								onClose={this.hideCreateChannelModal}
 								onComplete={(channelName, isOrdererSignatureNeeded) => {
 									if (isOrdererSignatureNeeded) {
@@ -691,7 +828,7 @@ class ChannelComponent extends Component {
 										this.props.showSuccess('channel_creation_request_submitted', { channelName }, SCOPE, null, true);
 									}
 									this.props.updateState(SCOPE, { filteredChannels: [], allChannels: [] });
-									this.getAllChannels();
+									this.getAllPeerChannels();
 								}}
 							/>
 						)}
@@ -708,6 +845,8 @@ const dataProps = {
 	showChannelDetails: PropTypes.bool,
 	history: PropTypes.object,
 	loading: PropTypes.bool,
+	orderer_loading: PropTypes.bool,
+	pending_osn_channels: PropTypes.array,
 	joinChannelModal: PropTypes.bool,
 	importOrdererModal: PropTypes.bool,
 	createChannelModal: PropTypes.bool,
@@ -719,6 +858,7 @@ const dataProps = {
 	allChannels: PropTypes.array,
 	filteredChannels: PropTypes.array,
 	loadingPeers: PropTypes.array,
+	selectedConfigBlock: PropTypes.object,
 };
 
 ChannelComponent.propTypes = {

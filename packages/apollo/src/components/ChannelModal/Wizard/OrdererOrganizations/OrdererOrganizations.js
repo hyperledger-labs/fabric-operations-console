@@ -28,34 +28,39 @@ import SidePanelWarning from '../../../SidePanelWarning/SidePanelWarning';
 const SCOPE = 'channelModal';
 const Log = new Logger(SCOPE);
 
-export class Organizations extends Component {
-	checkOperatorCount() {
-		let hasOperator = false;
-		const { orgs } = this.props;
-		if (orgs) {
-			orgs.forEach(org => {
-				if (org.msp !== '' && org.roles.includes('admin')) {
-					hasOperator = true;
+// This is step "channel_orderer_organizations"
+//
+// this panel allows selecting the orderer orgs in the config-block and which one's get the admin role
+// (only used for osn admin nodes)
+export class OrdererOrganizations extends Component {
+	checkAdminCount() {
+		let hasAdmin = false;
+		const { ordering_orgs } = this.props;
+		if (ordering_orgs) {
+			ordering_orgs.forEach(org => {
+				if (org.msp_id !== '' && org.roles.includes('admin')) {
+					hasAdmin = true;
 				}
 			});
 		}
-		if (!hasOperator) {
+		if (!hasAdmin) {
 			this.props.updateState(SCOPE, {
-				noOperatorError: 'no_operator_error',
+				noAdminError: 'no_admin_error',
 			});
 		} else {
 			this.props.updateState(SCOPE, {
-				noOperatorError: null,
+				noAdminError: null,
 			});
 		}
 	}
 
 	onAddOrg = option => {
-		const { selectedOrg, orgs, updatePolicyDropdown, updateState, availableACLPolicies } = this.props;
+		const { selectedOrg, ordering_orgs, updatePolicyDropdown, updateState } = this.props;
 		let msp = selectedOrg;
+		let selected_orgs = Array.isArray(ordering_orgs) ? JSON.parse(JSON.stringify(ordering_orgs)) : [];
 		let new_org = {
-			msp: msp.msp_id,
-			roles: ['reader'],
+			msp_id: msp.msp_id,
+			roles: ['writer', 'reader'],			// defaults
 			admins: msp.admins,
 			host_url: msp.host_url,
 			root_certs: msp.root_certs,
@@ -65,13 +70,13 @@ export class Organizations extends Component {
 			intermediate_certs: msp.tls_intermediate_certs,
 			tls_intermediate_certs: msp.tls_intermediate_certs,
 		};
-		let updated_orgs = orgs ? [...orgs, new_org] : [new_org];
-		this.checkDuplicateMSP(new_org, updated_orgs);
-		this.checkNodeOUWarning(updated_orgs);
-		updatePolicyDropdown(updated_orgs, false);
+		if (!Array.isArray(selected_orgs)) { selected_orgs = []; }
+		selected_orgs.push(new_org);
+		this.checkDuplicateMSP(new_org, selected_orgs);
+		this.checkNodeOUWarning(selected_orgs);
+		updatePolicyDropdown(selected_orgs, false);
 		updateState(SCOPE, {
-			orgs: updated_orgs,
-			availableACLPolicies: [...availableACLPolicies, msp.msp_id],
+			ordering_orgs: selected_orgs,
 			selectedOrg: null,
 		});
 	};
@@ -103,7 +108,7 @@ export class Organizations extends Component {
 	checkDuplicateMSP = (new_org, added_orgs) => {
 		let count = 0;
 		added_orgs.forEach(org => {
-			if (new_org.msp === org.msp) {
+			if (new_org.msp_id === org.msp_id) {
 				count++;
 			}
 		});
@@ -114,13 +119,12 @@ export class Organizations extends Component {
 
 	onDeleteOrg = (index, org) => {
 		Log.debug('Deleting org: ', index);
-		const { orgs, updateState, availableACLPolicies, updatePolicyDropdown, verifyACLPolicyValidity } = this.props;
-		let updated_orgs = orgs.filter((c, i) => i !== index);
-		this.checkDuplicateMSP(orgs[index], updated_orgs);
+		const { ordering_orgs, updateState, updatePolicyDropdown, verifyACLPolicyValidity } = this.props;
+		let updated_orgs = ordering_orgs.filter((c, i) => i !== index);
+		this.checkDuplicateMSP(ordering_orgs[index], updated_orgs);
 		this.checkNodeOUWarning(updated_orgs);
 		updateState(SCOPE, {
-			orgs: updated_orgs,
-			availableACLPolicies: availableACLPolicies.filter(x => x !== org),
+			ordering_orgs: updated_orgs,
 		});
 		updatePolicyDropdown(updated_orgs, false);
 		verifyACLPolicyValidity(updated_orgs, null); //Show error if any acl(added) refers to this deleted org
@@ -128,34 +132,34 @@ export class Organizations extends Component {
 
 	onChangeOrgRole = (index, role, event) => {
 		Log.debug('Updating org role: ', index, role, event.target.checked);
-		const { orgs, updatePolicyDropdown, updateState } = this.props;
-		let org = orgs[index];
+		const { ordering_orgs, updatePolicyDropdown, updateState } = this.props;
+		let selected_orgs = Array.isArray(ordering_orgs) ? JSON.parse(JSON.stringify(ordering_orgs)) : [];
+
 		if (event.target.checked) {
-			org.roles = role === 'admin' ? ['admin', 'writer', 'reader'] : role === 'writer' ? ['writer', 'reader'] : ['reader'];
+			selected_orgs[index].roles = (role === 'admin') ? ['admin', 'writer', 'reader'] : ['writer', 'reader'];
 		} else {
-			org.roles = org.roles.filter(r => r !== role);
+			selected_orgs[index].roles = ['writer', 'reader'];
 		}
-		Log.debug('Updating org to: ', org);
-		let updated_orgs = Object.assign([...orgs], { i: org });
-		updatePolicyDropdown(updated_orgs, false);
+		Log.debug('Updating org to: ', selected_orgs);
+		updatePolicyDropdown(selected_orgs, false);
 		updateState(SCOPE, {
-			orgs: updated_orgs,
+			ordering_orgs: selected_orgs,
 		});
 	};
 
 	render() {
-		const { loading, noOperatorError, duplicateMSPError, msps, orgs, selectedOrg, missingDefinitionError, isChannelUpdate, translate } = this.props;
+		const { loading, noAdminError, duplicateMSPError, msps, ordering_orgs, selectedOrg, missingDefinitionError, isChannelUpdate, translate } = this.props;
 		return (
 			<div className="ibp-channel-organizations">
-				<p className="ibp-channel-section-title">{translate('channel_organizations')}</p>
+				<p className="ibp-channel-section-title">{translate('channel_orderer_organizations')}</p>
 				<p className="ibp-channel-section-desc">
-					{isChannelUpdate ? translate('update_channel_organization_desc') : translate('create_channel_organization_desc')}
+					{isChannelUpdate ? translate('update_channel_organization_desc') : translate('create_channel_orderer_org_desc')}
 				</p>
-				{this.checkOperatorCount()}
-				{noOperatorError && (
+				{this.checkAdminCount()}
+				{noAdminError && (
 					<div className="ibp-error-panel">
-						<SidePanelWarning title="operator_needed"
-							subtitle={noOperatorError}
+						<SidePanelWarning title="admin_needed_simple"
+							subtitle={noAdminError}
 						/>
 					</div>
 				)}
@@ -169,7 +173,7 @@ export class Organizations extends Component {
 				{!loading && (
 					<div className="ibp-add-orgs">
 						<div className="ibp-add-orgs-select-box">
-							{!!msps && !!orgs && (
+							{!!msps && !!ordering_orgs && (
 								<div>
 									<Form
 										scope={SCOPE}
@@ -178,7 +182,10 @@ export class Organizations extends Component {
 											{
 												name: 'selectedOrg',
 												type: 'dropdown',
-												options: msps ? msps.filter(x => !orgs.find(y => y.msp === x.msp_id && _.intersection(x.root_certs, y.root_certs).length >= 1)) : [],
+
+												// hide orgs that are already selected
+												options: msps ? msps.filter(x => !ordering_orgs.find(y => y.msp_id === x.msp_id && _.intersection(x.root_certs, y.root_certs).length >= 1)) : [],
+
 												default: 'select_msp_id',
 											},
 										]}
@@ -197,14 +204,14 @@ export class Organizations extends Component {
 					</div>
 				)}
 				<div className="ibp-add-added-orgs-table">
-					{orgs && orgs.length > 0 && (
+					{ordering_orgs && ordering_orgs.length > 0 && (
 						<div className="ibp-add-orgs-table">
-							<div className="ibp-add-orgs-msp label">{translate('organizations')}</div>
+							<div className="ibp-add-orgs-msp label">{translate('selected_msps')}</div>
 							<div className="ibp-add-orgs-role label">{translate('permissions')}</div>
 						</div>
 					)}
-					{orgs &&
-						orgs.map((org, i) => {
+					{ordering_orgs &&
+						ordering_orgs.map((org, i) => {
 							return (
 								<div key={'org_' + i}
 									className="ibp-add-orgs-table"
@@ -215,41 +222,24 @@ export class Organizations extends Component {
 											id={`ibp-add-orgs-msp-${i}`}
 											fields={[
 												{
-													name: `organization-${org.msp}`,
+													name: `organization-${org.msp_id}`,
 													required: true,
 													disabled: true,
 													hideLabel: true,
-													default: orgs[i].msp,
+													default: ordering_orgs[i].msp_id,
 												},
 											]}
 										/>
 									</div>
 									<div className="ibp-add-orgs-role">
 										<Checkbox
-											id={`ibp-add-orgs-msp-${org.msp}-role-admin`}
-											key={`ibp-add-orgs-msp-${org.msp}-role-admin`}
-											labelText={translate('operator')}
-											checked={orgs[i].roles.includes('admin')}
+											id={`ibp-add-orgs-msp-${org.msp_id}-role-admin`}
+											key={`ibp-add-orgs-msp-${org.msp_id}-role-admin`}
+											labelText={translate('administrator')}
+											checked={ordering_orgs[i].roles.includes('admin')}
 											onClick={event => {
 												this.onChangeOrgRole(i, 'admin', event);
 											}}
-										/>
-										<Checkbox
-											id={`ibp-add-orgs-msp-${org.msp}-role-writer`}
-											key={`ibp-add-orgs-msp-${org.msp}-role-writer`}
-											labelText={translate('writer')}
-											checked={orgs[i].roles.includes('writer')}
-											onClick={event => {
-												this.onChangeOrgRole(i, 'writer', event);
-											}}
-											disabled={orgs[i].roles.includes('admin')}
-										/>
-										<Checkbox
-											id={`ibp-add-orgs-msp-${org.msp}-role-reader`}
-											key={`ibp-add-orgs-msp-${org.msp}-role-reader`}
-											labelText={translate('reader')}
-											defaultChecked
-											disabled={true}
 										/>
 									</div>
 									<Button
@@ -264,7 +254,7 @@ export class Organizations extends Component {
 										className="ibp-add-orgs-remove"
 										size="default"
 										onClick={() => {
-											this.onDeleteOrg(i, org.msp);
+											this.onDeleteOrg(i, org.msp_id);
 										}}
 									/>
 								</div>
@@ -287,12 +277,11 @@ const dataProps = {
 	loading: PropTypes.bool,
 	existingOrgs: PropTypes.array,
 	msps: PropTypes.array,
-	orgs: PropTypes.array,
+	ordering_orgs: PropTypes.array,
 	selectedOrg: PropTypes.object,
-	noOperatorError: PropTypes.string,
+	noAdminError: PropTypes.string,
 	duplicateMSPError: PropTypes.string,
 	missingDefinitionError: PropTypes.string,
-	availableACLPolicies: PropTypes.array,
 	isChannelUpdate: PropTypes.bool,
 	selectedApplicationCapability: PropTypes.object,
 	selectedChannelCapability: PropTypes.object,
@@ -300,7 +289,7 @@ const dataProps = {
 	nodeou_warning: PropTypes.bool,
 };
 
-Organizations.propTypes = {
+OrdererOrganizations.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
 	translate: PropTypes.func, // Provided by withLocalize
@@ -313,4 +302,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(Organizations));
+)(withLocalize(OrdererOrganizations));
