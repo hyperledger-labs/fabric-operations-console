@@ -869,9 +869,6 @@ const template = {
 */
 function buildTemplateConfigBlock(opts: ExtTemp) {
 	let app_caps: StringObj = {}, ord_caps: StringObj = {}, ch_caps: StringObj = {};
-
-	console.log('dsh99 rec opts', JSON.stringify(opts, null, 2));
-
 	const ret = JSON.parse(JSON.stringify(template));
 
 	// set channel name
@@ -1047,7 +1044,6 @@ function buildTemplateConfigBlock(opts: ExtTemp) {
 	}
 
 	// whew... all done
-	console.log('dsh99 built new block', JSON.stringify(ret, null, 2));
 	return ret;
 }
 

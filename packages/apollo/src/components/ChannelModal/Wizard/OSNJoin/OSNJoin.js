@@ -46,10 +46,7 @@ class OSNJoin extends Component {
 		} = this.props;
 		let joinOsnMap = {};
 
-		console.log('dsh99 mounted osn-join, config-block?', use_osnadmin, use_config_block);
-
 		//const msps = await this.getMsps();
-		//console.log('dsh99 getMsps', msps);
 
 		// [Flow 1] - config block was passed in - load it
 		if (use_config_block) {
@@ -57,15 +54,10 @@ class OSNJoin extends Component {
 				submitting: true
 			});
 			const allOrderers = await getAllOrderers();
-			console.log('dsh99 allOrderers', allOrderers);
-
 			const json_block = await this.parseProto(use_config_block.block_b64);
-			console.log('dsh99 use_config_block as json', json_block);
 			this.setupDownloadGenesisLink(json_block, use_config_block.channel);
 			const consenters = _.get(json_block, 'data.data[0].payload.data.config.channel_group.groups.Orderer.values.ConsensusType.value.metadata.consenters');
-			console.log('dsh99 consenters from block', consenters);
 			joinOsnMap = await this.organize_osns(consenters, allOrderers, json_block);
-			console.log('dsh99 joinOsnMap:', joinOsnMap);
 
 			this.props.updateState(SCOPE, {
 				channel_id: use_config_block.channel,
@@ -82,11 +74,7 @@ class OSNJoin extends Component {
 		// [Flow 2] - config block was NOT passed in - create it then load it
 		else {
 			const options = buildCreateChannelOpts();						// get all the input data together
-			console.log('dsh99 wiz options: ', options);
-			console.log('dsh99 osnjoin configtxlator_url: ', configtxlator_url);
-
 			const my_block = StitchApi.buildGenesisBlockOSNadmin(options);
-			console.log('dsh99 new block: ', my_block);
 			const b_block = await this.createProto(my_block);
 			let block_stored = false;
 
@@ -96,7 +84,6 @@ class OSNJoin extends Component {
 
 			if (b_block && block_stored) {
 				joinOsnMap = await this.organize_osns(options.consenters, raftNodes, my_block);
-				console.log('dsh99 joinOsnMap:', joinOsnMap);
 				this.setupDownloadGenesisLink(my_block, options.channel_id);
 				this.props.updateState(SCOPE, {
 					channel_id: options.channel_id,

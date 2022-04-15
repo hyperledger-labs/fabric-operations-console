@@ -58,7 +58,6 @@ const url = require('url');
 const SCOPE = 'channelModal';
 const Log = new Logger(SCOPE);
 
-// dsh todo refresh pending osn channels on close of create-wizard panel
 // dsh todo create panel to send block to other consoles
 class ChannelModal extends Component {
 	constructor(props) {
@@ -75,7 +74,6 @@ class ChannelModal extends Component {
 	}
 
 	componentDidMount() {
-		console.log('dsh99 mounted channelmodal, config-block?', this.props.useConfigBlock);
 		this.resetTimelineSteps();
 
 		// get fresh list of orderers
@@ -85,7 +83,6 @@ class ChannelModal extends Component {
 			});
 		});
 
-		console.log('dsh99 osnadmin_feats_enabled?', this.props.osnadmin_feats_enabled);
 		let use_osnadmin = false;
 		let viewing_step = this.props.channelId ? 'organization_updating_channel' : 'prerequisites';
 
@@ -1473,7 +1470,6 @@ class ChannelModal extends Component {
 
 					// get all ordering groups
 					this.getAllOrderers().then(possible_consenters => {
-						console.log('dsh99 possible_consenters 1:', possible_consenters);
 						this.props.updateState(SCOPE, { raftNodes: possible_consenters, loadingConsenters: false, loading: false });
 					});
 				}
@@ -1550,17 +1546,16 @@ class ChannelModal extends Component {
 	}
 
 	checkHealth = orderer => {
-		// dsh todo uncomment all
-		//this.props.updateState(SCOPE, { isOrdererUnavailable: false, checkingOrdererStatus: true });
-		//OrdererRestApi.checkHealth(orderer)
-		//.then(resp => {
-		//Log.info('Orderer health:', resp);
-		this.props.updateState(SCOPE, { isOrdererUnavailable: false, checkingOrdererStatus: false });
-		//})
-		//.catch(error => {
-		//Log.error('Orderer status unavailable:', error);
-		//this.props.updateState(SCOPE, { isOrdererUnavailable: true, checkingOrdererStatus: false });
-		//});
+		this.props.updateState(SCOPE, { isOrdererUnavailable: false, checkingOrdererStatus: true });
+		OrdererRestApi.checkHealth(orderer)
+			.then(resp => {
+				Log.info('Orderer health:', resp);
+				this.props.updateState(SCOPE, { isOrdererUnavailable: false, checkingOrdererStatus: false });
+			})
+			.catch(error => {
+				Log.error('Orderer status unavailable:', error);
+				this.props.updateState(SCOPE, { isOrdererUnavailable: true, checkingOrdererStatus: false });
+			});
 	};
 
 	getAvailableCapabilities = isChannelUpdate => {
@@ -1961,17 +1956,14 @@ class ChannelModal extends Component {
 					});
 				}
 			}, () => {
-				console.log('dsh99 done nodes.');
 				return cluster_cb();
 			});
 		}, () => {
-			console.log('dsh99 done clusters, join_errors', join_errors);
 
 			let osnJoinSubmitFin = false;
 			if (join_errors === 0) {
 				osnJoinSubmitFin = true;
 			}
-			console.log('dsh99 osnJoinSubmitFin', osnJoinSubmitFin);
 
 			this.props.updateState(SCOPE, {
 				submitting: false,
@@ -1989,12 +1981,9 @@ class ChannelModal extends Component {
 				root_cert_b64pem: Array.isArray(cluster.tls_root_certs) ? cluster.tls_root_certs[0] : null,
 				b_config_block: b_genesis_block,
 			};
-			console.log('dsh99 join opts', j_opts);
 			try {
 				const msg = await StitchApi.joinOSNChannel(j_opts);
-				console.log('dsh99 join success msg', msg);
 			} catch (error) {
-				console.log('dsh99 join error', error);
 				const msg = (error && error.http_resp) ? error.http_resp : error;
 				handle_join_outcome(cluster, i, constants.OSN_JOIN_ERROR, msg);
 				return cb();

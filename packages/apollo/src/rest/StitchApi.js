@@ -234,8 +234,6 @@ class StitchApi {
 
 	// this function conforms formats from the apollo create-channel wizard to the stitch config-block-generator
 	// and returns a genesis block aka config block 0
-
-	// dsh todo - fix text on all panels, switch ordering service to orderer group
 	static buildGenesisBlockOSNadmin(opts) {
 		const config_block_opts = {
 			channel: opts.channel_id,
