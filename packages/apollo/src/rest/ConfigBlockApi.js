@@ -11,7 +11,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import Logger from '../components/Log/Logger';
 import { RestApi } from './RestApi';
 
 class ConfigBlockApi {
