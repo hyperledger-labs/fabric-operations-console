@@ -11,25 +11,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-//import _ from 'lodash';
 import Logger from '../components/Log/Logger';
-//import Helper from '../utils/helper';
-//import IdentityApi from './IdentityApi';
 import { RestApi } from './RestApi';
-//import StitchApi from './StitchApi';
 
 const Log = new Logger('ConfigBlockApi');
 
 class ConfigBlockApi {
 
 	// get a specific config block doc
-	static async get(tx_id) {
-		return await RestApi.get('/api/v3/configblocks/' + tx_id);
+	static async get(tx_id, opts) {
+		const queryTxt = (opts && opts.cache === 'skip') ? '?cache=skip' : '';
+		return await RestApi.get('/api/v3/configblocks/' + tx_id + queryTxt);
 	}
 
 	// get all config block docs
-	static async getAll() {
-		return await RestApi.get('/api/v3/configblocks');
+	static async getAll(opts) {
+		const queryTxt = (opts && opts.cache === 'skip') ? '?cache=skip' : '';
+		return await RestApi.get('/api/v3/configblocks' + queryTxt);
 	}
 
 	// store a new config block

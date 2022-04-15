@@ -48,7 +48,7 @@ module.exports = (logger, ev, t) => {
 	});
 
 	function getConfigBlockById(req, res) {
-		t.config_blocks_lib.getConfigBlockById(req.params.tx_id, (err, ret) => {
+		t.config_blocks_lib.getConfigBlockById(req.params.tx_id, t.ot_misc.skip_cache(req), (err, ret) => {
 			if (err) {
 				return res.status(t.ot_misc.get_code(err)).json(err);
 			} else {

@@ -502,7 +502,7 @@ class ChannelComponent extends Component {
 	};
 
 	hideCreateChannelModal = () => {
-		this.getAllOrdererChannels();
+		this.getAllOrdererChannels({ cache: 'skip' });
 		this.props.updateState(SCOPE, {
 			createChannelModal: false,
 			selectedConfigBlock: null,
@@ -620,10 +620,10 @@ class ChannelComponent extends Component {
 	}
 
 	// get all pending channels for orderers
-	getAllOrdererChannels = async () => {
+	getAllOrdererChannels = async (opts) => {
 		this.props.updateState(SCOPE, { orderer_loading: true });
 
-		const config_blocks = await ConfigBlockApi.getAll();
+		const config_blocks = await ConfigBlockApi.getAll(opts);
 		if (config_blocks && Array.isArray(config_blocks.blocks)) {
 			for (let i in config_blocks.blocks) {
 				config_blocks.blocks[i].name = config_blocks.blocks[i].channel;
@@ -642,7 +642,7 @@ class ChannelComponent extends Component {
 			} catch (e) {
 				return false;
 			}
-			await this.getAllOrdererChannels();		// refresh page after delete
+			await this.getAllOrdererChannels({ cache: 'skip' });		// refresh page after delete
 			return false;
 		}
 	}

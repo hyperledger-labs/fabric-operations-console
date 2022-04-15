@@ -365,7 +365,6 @@ class ChannelModal extends Component {
 						{
 							label: 'review_channel_info',
 							onClick: () => {
-								console.log('dsh99 review_channel_info 0');
 								this.showStep('review_channel_info', 3, 0);
 							},
 							isLink: false,
@@ -1071,7 +1070,6 @@ class ChannelModal extends Component {
 				back = onClose;
 				backButtonText = 'skip';
 				next = async () => {
-					console.log('dsh99 fired join-channel button', isComplete, osnJoinSubmitFin);
 					if (isComplete) {
 						if (osnJoinSubmitFin) {
 							this.props.updateState(SCOPE, {
@@ -1079,7 +1077,6 @@ class ChannelModal extends Component {
 							});
 							let tx_id = this.props.useConfigBlock ? this.props.useConfigBlock.id : null;
 							tx_id = tx_id || (this.props.block_stored_resp ? this.props.block_stored_resp.id : null);
-							console.log('dsh99 deleting tx', tx_id, this.props.useConfigBlock);
 							await ConfigBlockApi.delete(tx_id);
 							this.sidePanel.closeSidePanel();
 						} else {
@@ -1266,7 +1263,6 @@ class ChannelModal extends Component {
 					this.populateChaincodePolicy();
 				} else {
 					this.populateACLDropdowns();
-					console.log('dsh99 finished loading...');
 					this.props.updateState(SCOPE, { loading: false });
 				}
 			})
@@ -1466,7 +1462,6 @@ class ChannelModal extends Component {
 
 
 				orderer.osnadmin_url = 'testing';										// dsh todo - remove this
-				console.log('dsh99 osnadmin_feats_enabled', this.props.osnadmin_feats_enabled);
 
 
 
@@ -1511,7 +1506,6 @@ class ChannelModal extends Component {
 								this.props.updateState(SCOPE, { raftNodes: [], isTLSUnavailable: true, loadingConsenters: false, loading: false });
 							});
 					} else {
-						console.log('dsh99 possible_consenters 2:', consenters);
 						this.props.updateState(SCOPE, { raftNodes: consenters, loadingConsenters: false, loading: false });
 					}
 				}
@@ -1530,7 +1524,6 @@ class ChannelModal extends Component {
 		} catch (e) {
 			Log.error(e);
 		}
-		console.log('dsh99 getAllOrderers:', orderers);
 
 		for (let i in orderers) {
 			const node = orderers[i];
@@ -1822,8 +1815,6 @@ class ChannelModal extends Component {
 		let selectedApplicationCapability =
 			(this.props.selectedApplicationCapability && typeof this.props.selectedApplicationCapability === 'object' && this.props.selectedApplicationCapability.id !== 'use_default') ?
 				this.props.selectedApplicationCapability.id : this.getDefaultCap('application');
-		console.log('dsh99 setting app caps', selectedApplicationCapability);
-		console.log('dsh99 setting use_osn', this.props.use_osnadmin);
 		let orderer_urls = [];
 		if (this.isConsenterSetModified() && _.has(this.props.selectedOrderer, 'raft')) {
 			this.props.selectedOrderer.raft.forEach(node => {
@@ -1950,18 +1941,14 @@ class ChannelModal extends Component {
 		// iter over the selected clusters
 		async.eachLimit(joinOsnMap, 1, (cluster, cluster_cb) => {
 			if (!cluster.selected || !cluster.selected_identity) {
-				console.log('dsh99 skipping cluster', cluster.cluster_id);
 				return cluster_cb();
 			}
-			console.log('dsh99 working cluster', cluster);
 
 			// iter over the selected nodes in the selected cluster
 			async.eachOfLimit(cluster.nodes, 1, (node, i, node_cb) => {
 				if (node._status === constants.OSN_JOIN_SUCCESS) {
-					console.log('dsh99 skipping node', cluster.cluster_id, i, node.host + ':' + node.port);
 					return node_cb();				// node is already done
 				} else {
-					console.log('dsh99 joining node.', cluster.cluster_id, i, node.host + ':' + node.port);
 					perform_join(cluster, node, i, () => {
 
 						// joinOsnMap was changed, now reflect the change

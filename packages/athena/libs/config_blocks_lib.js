@@ -86,10 +86,11 @@ module.exports = function (logger, ev, t) {
 	//-------------------------------------------------------------
 	// Get one config block  - formatted
 	//-------------------------------------------------------------
-	exports.getConfigBlockById = (id, cb) => {
+	exports.getConfigBlockById = (id, skip_cache, cb) => {
 		const get_opts = {
 			db_name: ev.DB_COMPONENTS,
 			_id: id,
+			SKIP_CACHE: skip_cache,
 		};
 		t.otcc.getDoc(get_opts, (error, doc) => {
 			if (error) {										// error getting doc

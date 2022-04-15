@@ -104,7 +104,7 @@ export {
 	pem2raw, exportJwkKey, exportHexKey, subtleVerifySignature, jwk2pem, exportPemKey, build_sig_collection_for_hash, scSignJwkRaw, scGenCSR,
 	test_encodeDecode_collection_config_packaged, load_pb, switchEncryption, encrypt, decrypt, DER_signAndPackCsrPem, DER_parsePem, getOrGenAesKey,
 	convertPolicy2PeerCliSyntax, policyIsMet, safer_hex_str, url_join, lifecycleLib, decode_chaincode_query_response, Query_ChannelQueryResponse,
-	Ledger_BlockchainInfo, policyLib,
+	Ledger_BlockchainInfo
 };
 
 // proto handlers
