@@ -58,6 +58,8 @@ const url = require('url');
 const SCOPE = 'channelModal';
 const Log = new Logger(SCOPE);
 
+// dsh todo refresh pending osn channels on close of create-wizard panel
+// dsh todo create panel to send block to other consoles
 class ChannelModal extends Component {
 	constructor(props) {
 		super(props);
@@ -91,7 +93,7 @@ class ChannelModal extends Component {
 			use_osnadmin = true;
 			this.updateTimelineSteps(false, true, 2, 0, false);					// show all steps
 			this.showStepsInTimeline(['osn_join_channel']);
-			this.hideStepsInTimeline(['ordering_service_organization']);	// but hide this one
+			this.hideStepsInTimeline(['ordering_service_organization']);		// but hide this one
 			viewing_step = 'osn_join_channel';
 		}
 
@@ -103,8 +105,8 @@ class ChannelModal extends Component {
 			submitting: false,
 			timelineSteps: this.timelineSteps,
 			selectedTimelineStep: {
-				currentStepInsideOfGroupIndex: this.props.useConfigBlock ? 3 : 0,
-				currentStepIndex: this.props.useConfigBlock ? 1 : 0,
+				currentStepIndex: this.props.useConfigBlock ? 3 : 0,				// which step group to highlight
+				currentStepInsideOfGroupIndex: this.props.useConfigBlock ? 1 : 0,	// which step in the group to highlight
 			},
 			viewing: viewing_step,
 			channelName: this.props.channelId ? this.props.channelId : '',
@@ -513,7 +515,6 @@ class ChannelModal extends Component {
 	}
 
 	showStep = (name, group, step) => {
-		console.log('dsh99 showing step', name, group, step);
 		this.props.updateState(SCOPE, {
 			viewing: name,
 			selectedTimelineStep: {
@@ -1118,7 +1119,6 @@ class ChannelModal extends Component {
 		if (!this.canModifyConsenters()) {
 			removeSteps.push('consenter_set');
 			removeSteps.push('channel_orderer_organizations');
-			removeSteps.push('osn_join_channel');
 		}
 		if (!this.canModifyConsenters() || !isChannelUpdate) {
 			removeSteps.push('orderer_admin_set');
@@ -1170,7 +1170,6 @@ class ChannelModal extends Component {
 			});
 			updatedSteps.push(group);
 		});
-		console.log('dsh99 steps', updatedSteps);
 		this.props.updateState(SCOPE, {
 			timelineSteps: updatedSteps,
 			timelineLoading: false,
@@ -1210,7 +1209,6 @@ class ChannelModal extends Component {
 		});
 
 		if (needsChanges) {
-			console.log('dsh99 applying step changes', updatedSteps);
 			this.props.updateState(SCOPE, {
 				timelineSteps: updatedSteps,
 			});
@@ -1232,7 +1230,6 @@ class ChannelModal extends Component {
 			updatedSteps.push(group);
 		});
 
-		console.log('dsh99 resetting steps', updatedSteps);
 		this.props.updateState(SCOPE, {
 			timelineSteps: updatedSteps,
 		});
@@ -1845,7 +1842,6 @@ class ChannelModal extends Component {
 		let options = {
 			channel_id: this.props.channelName,
 			consortium_id: this.props.default_consortium,
-			org_msp_id: this.props.selectedChannelCreator.msp_id,
 			application_msps: organizations,
 			orderer_url: this.props.selectedOrderer.url2use,
 			all_orderer_urls: orderer_urls,
@@ -1990,7 +1986,6 @@ class ChannelModal extends Component {
 			}
 			console.log('dsh99 osnJoinSubmitFin', osnJoinSubmitFin);
 
-			// dsh todo create panel to send block to other consoles
 			this.props.updateState(SCOPE, {
 				submitting: false,
 				osnJoinSubmitFin: osnJoinSubmitFin,
@@ -2004,7 +1999,7 @@ class ChannelModal extends Component {
 				host: node.host + ':' + node.port,
 				certificate_b64pem: cluster.selected_identity ? cluster.selected_identity.cert : null,
 				private_key_b64pem: cluster.selected_identity ? cluster.selected_identity.private_key : null,
-				root_cert_b64pem: Array.isArray(cluster.tls_root_certs) ? cluster.tls_root_certs[0] : null,			// dsh todo this is not set yet
+				root_cert_b64pem: Array.isArray(cluster.tls_root_certs) ? cluster.tls_root_certs[0] : null,
 				b_config_block: b_genesis_block,
 			};
 			console.log('dsh99 join opts', j_opts);
@@ -2282,35 +2277,11 @@ class ChannelModal extends Component {
 	// render the step navigation in the left pane
 	renderChannelTimeline(translate) {
 		const { onClose, selectedTimelineStep, isChannelUpdate } = this.props;
-		const { timelineSteps, timelineLoading, advanced } = this.props;
-		let updatedSteps = [];
-
+		const { timelineSteps, timelineLoading } = this.props;
 		if (!timelineSteps || timelineLoading) return;
-
-		// last minute edit of the steps if the advanced option was picked
-		if (advanced) {
-			timelineSteps.forEach(group => {
-				group.forEach(subGroup => {
-					if (subGroup.groupTitle === 'advanced_configuration') {
-						subGroup.groupSteps.forEach(step => {
-							if (step.label === 'ordering_service_organization') {
-								step.disabled = !this.calcIfOrdererSignatureNeeded();
-							}
-							if (step.label === 'channel_lifecycle_policy' || step.label === 'channel_endorsement_policy') {
-								step.disabled = !this.isChannel2_0();
-							}
-						});
-					}
-				});
-				updatedSteps.push(group);
-			});
-		} else {
-			updatedSteps = timelineSteps;
-		}
-
 		return (
 			<Timeline
-				steps={updatedSteps}
+				steps={timelineSteps}
 				onClose={onClose}
 				selectedTimelineStep={selectedTimelineStep}
 				header={isChannelUpdate ? translate('update_channel') : translate('create_channel')}

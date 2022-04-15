@@ -41,12 +41,12 @@ class Prerequisites extends Component {
 				if (subGroup.groupTitle === 'advanced_configuration') {
 					if (event.target.checked) {
 						subGroup.groupSteps.forEach(step => {
-							if (step.label === 'channel_lifecycle_policy' && !this.props.isChannel2_0) {
-								step.disabled = true;
-							} else if (step.label === 'channel_endorsement_policy' && !this.props.isChannel2_0) {
-								step.disabled = true;
-							} else if (step.label !== 'ordering_service_organization' || this.props.isOrdererSignatureNeeded) {
-								step.disabled = false;
+							if (step.label === 'channel_lifecycle_policy') {
+								step.disabled = !this.props.isChannel2_0;
+							} else if (step.label === 'channel_endorsement_policy') {
+								step.disabled = !this.props.isChannel2_0;
+							} else if (step.label === 'ordering_service_organization') {
+								step.disabled = !this.props.isOrdererSignatureNeeded;
 							} else {
 								step.disabled = true;
 							}
@@ -60,6 +60,7 @@ class Prerequisites extends Component {
 			});
 			updatedSteps.push(group);
 		});
+
 		this.props.updateState(SCOPE, {
 			timelineSteps: updatedSteps,
 			advanced: event.target.checked,

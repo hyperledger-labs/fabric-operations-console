@@ -33,10 +33,8 @@ const SCOPE = 'channelModal';
 // This is step "osn_join_channel"
 //
 // panel allows the user to fire the join-channel api (which uses the osn admin endpoint on an orderer node)
-// dsh todo send block to other consoles if needed...
 class OSNJoin extends Component {
 	async componentDidMount() {
-		console.log('dsh99 OSNJoin mounted');
 		const {
 			use_osnadmin,
 			buildCreateChannelOpts,
@@ -55,6 +53,9 @@ class OSNJoin extends Component {
 
 		// [Flow 1] - config block was passed in - load it
 		if (use_config_block) {
+			this.props.updateState(SCOPE, {
+				submitting: true
+			});
 			const allOrderers = await getAllOrderers();
 			console.log('dsh99 allOrderers', allOrderers);
 
@@ -74,6 +75,7 @@ class OSNJoin extends Component {
 				b_genesis_block: window.stitch.base64ToUint8Array(use_config_block.block_b64),
 				select_followers_toggle: false,
 				block_error: '',
+				submitting: false
 			});
 		}
 
@@ -124,36 +126,7 @@ class OSNJoin extends Component {
 	// organize all nodes by their orderer cluster aka ordering service
 	async organize_osns(consenters, all_orderers, config_block) {
 		const ret = {};
-
-		// dsh todo remove this test
-		const testClusterId = 'testingCluster';
-		const testMspId = 'testingOrg';
-		ret[testClusterId] = {
-			nodes: [],
-			msp_id: testMspId,
-			cluster_name: 'My Test Cluster',
-			cluster_id: testClusterId,
-			selected_identity: null,
-			default_identity: null,
-			identities: await IdentityApi.getIdentitiesForMsp({
-				root_certs: [],
-				intermediate_certs: [],
-			}),
-			associated_identities: await IdentityApi.getAssociatedOrdererIdentities({
-				cluster_id: testClusterId,
-				msp_id: testMspId,
-			}),
-			selected: true,
-		};
-		ret[testClusterId].default_identity = this.pickDefaultIdentity(ret[testClusterId]);
-		const zero_identities = (ret[testClusterId].default_identity === null);
-		if (zero_identities) {
-			ret[testClusterId].selected = false;
-		}
-		// ^^ dsh todo remove this test
-
 		const msp_data = this.buildSimpleMspFromConfigBlock(config_block);
-		console.log('dsh99 found msp_data for', msp_data);
 
 		// first iter over nodes that were selected as consenters from wizard
 		for (let i in consenters) {
@@ -212,17 +185,11 @@ class OSNJoin extends Component {
 
 				// add some fields to each node entry, but don't propagate those fields
 				ret[cluster_id].nodes.push(init_node(consenter, true));
-
-				// dsh todo remove this testing stuff
-				const clone2 = JSON.parse(JSON.stringify(init_node(consenter, false)));
-				clone2._consenter = false;
-				ret[testClusterId].nodes.push(clone2);
 			}
 		}
 
 		// next iter over all known orderer nodes (these ones may or may not be a consenter)
 		// add nodes we are missing (these will be possible followers)
-		console.log('dsh99 all all_orderers', all_orderers);
 		for (let i in all_orderers) {
 			const cluster_id = all_orderers[i]._cluster_id;
 			if (ret[cluster_id]) {
@@ -329,7 +296,6 @@ class OSNJoin extends Component {
 
 	// select or unselect the cluster
 	toggleCluster = (cluster_id, evt) => {
-		console.log('dsh99 clicked toggleCluster', cluster_id, evt);
 		let { joinOsnMap } = this.props;
 		if (joinOsnMap && joinOsnMap[cluster_id]) {
 			joinOsnMap[cluster_id].selected = !joinOsnMap[cluster_id].selected;
@@ -375,7 +341,6 @@ class OSNJoin extends Component {
 	// selected identity in dropdown was changed
 	changeIdentity = (evt) => {
 		let { joinOsnMap } = this.props;
-		console.log('dsh99 changeIdentity fired', evt);
 		const keys = Object.keys(evt);
 		const fieldName = keys ? keys[0] : null;			// the first key is the dropdown's unique id/name
 
@@ -407,7 +372,6 @@ class OSNJoin extends Component {
 	// select or deselect follower nodes (orderers that are not consenters)
 	toggleFollowers = () => {
 		let { joinOsnMap } = this.props;
-		console.log('dsh99 toggleFollowers fired', this.props.select_followers_toggle);
 
 		for (let cluster_id in joinOsnMap) {
 			for (let i in joinOsnMap[cluster_id].nodes) {
@@ -426,7 +390,6 @@ class OSNJoin extends Component {
 
 	// select or unselect the node
 	toggleNode = (node_id, cluster_id, evt) => {
-		console.log('dsh99 clicked toggleNode', node_id, cluster_id, evt);
 		let { joinOsnMap } = this.props;
 		if (joinOsnMap && joinOsnMap[cluster_id]) {
 			for (let i in joinOsnMap[cluster_id].nodes) {
@@ -456,7 +419,6 @@ class OSNJoin extends Component {
 			block_error,
 			osnjoinSubmit,
 		} = this.props;
-		console.log('dsh99 OSNJoin rendering', joinOsnMap, channel_id);
 		return (
 			<div className="ibp-channel-osn-join">
 				<p className="ibp-join-osn-section-title">
@@ -696,16 +658,14 @@ class OSNJoin extends Component {
 	// store the block in the console db or show error
 	async storeGenesisBlock(bin_block, nodes_arr, json_block) {
 		try {
-			const resp = await ConfigBlockApi.store({
+			await ConfigBlockApi.store({
 				channel_id: _.get(json_block, 'data.data[0].payload.header.channel_header.channel_id'),
 				b_block: bin_block,
 				extra_consenter_data: nodes_arr,
 				tx_id: _.get(json_block, 'data.data[0].payload.header.channel_header.tx_id'),
 			});
-			console.log('dsh99 config block store resp', typeof resp, resp);
 			return true;
 		} catch (e) {
-			console.log('dsh99 config block store err', typeof e, e);
 			const code = (e && !isNaN(e.statusCode)) ? '(' + e.statusCode + ') ' : '';
 			const details = (e && typeof e.msg === 'string') ? (code + e.msg) : '';
 

@@ -155,7 +155,6 @@ module.exports = function (logger, ev, t) {
 				local_delete_doc((del_err, del_resp) => {
 					return cb(del_err, del_resp);
 				});
-				return cb(null, { msg: 'ok' });
 			}
 		});
 

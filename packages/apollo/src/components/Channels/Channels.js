@@ -502,6 +502,7 @@ class ChannelComponent extends Component {
 	};
 
 	hideCreateChannelModal = () => {
+		this.getAllOrdererChannels();
 		this.props.updateState(SCOPE, {
 			createChannelModal: false,
 			selectedConfigBlock: null,
@@ -523,7 +524,6 @@ class ChannelComponent extends Component {
 	};
 
 	createChannel = (selectedConfigBlock) => {
-		console.log('dsh99 selectedConfigBlock?', selectedConfigBlock);
 		this.props.updateState(SCOPE, {
 			selectedConfigBlock: selectedConfigBlock,
 			createChannelModal: true,
@@ -630,16 +630,12 @@ class ChannelComponent extends Component {
 				config_blocks.blocks[i].pending = true;
 			}
 		}
-		console.log('dsh99 getAllOrdererChannels', config_blocks.blocks);
-
 		this.props.updateState(SCOPE, { orderer_loading: false, pending_osn_channels: config_blocks.blocks });
 	}
 
 	// remove this pending join by removing the config block
-	// dsh todo add confirmation box
+	// dsh todo add confirmation box before deleting
 	removeConfigBlock = async (id) => {
-		console.log('dsh99 clicked removeConfigBlock', id);
-
 		if (id && typeof id === 'string') {
 			try {
 				await ConfigBlockApi.delete(id);
