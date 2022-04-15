@@ -1292,7 +1292,6 @@ class ChannelModal extends Component {
 		let all_orgs = this.props.orgs ? [...this.props.orgs, ...existingOrgs] : [...existingOrgs];
 		this.props.updateState(SCOPE, {
 			orgs: all_orgs,
-			//ordering_orgs: all_orgs,		// dsh what does this do
 			original_orgs: JSON.parse(JSON.stringify(all_orgs)),
 			missingDefinitionError:
 				missingDefinitions.length > 0 ? this.props.translate('missing_msp_definition', { list_of_msps: _.join(missingDefinitions, ',') }) : null,
@@ -1455,12 +1454,6 @@ class ChannelModal extends Component {
 						msp_id: node.msp_id,
 					};
 				});
-
-
-
-				orderer.osnadmin_url = 'testing';										// dsh todo - remove this
-
-
 
 				// [PATH 1] - using OSN Admin features in create channel wizard
 				if (this.props.osnadmin_feats_enabled && orderer && orderer.osnadmin_url) {
@@ -1982,7 +1975,7 @@ class ChannelModal extends Component {
 				b_config_block: b_genesis_block,
 			};
 			try {
-				const msg = await StitchApi.joinOSNChannel(j_opts);
+				await StitchApi.joinOSNChannel(j_opts);
 			} catch (error) {
 				const msg = (error && error.http_resp) ? error.http_resp : error;
 				handle_join_outcome(cluster, i, constants.OSN_JOIN_ERROR, msg);
@@ -2280,7 +2273,7 @@ class ChannelModal extends Component {
 
 	// render this step's content (only 1 step)
 	renderSection = (translate, section) => {
-		const { viewing, existingConsenters, existingOrdererOrgs, channelOrderer, existingCapabilities, existingBlockParams, joinOsnMap } = this.props;
+		const { viewing, existingConsenters, existingOrdererOrgs, channelOrderer, existingCapabilities, existingBlockParams } = this.props;
 		let isCapabilityModified = this.isAnyCapabilityModified();
 		let isAdminsModified = this.isAdminsModified();
 		let isChannel2_0 = this.isChannel2_0();

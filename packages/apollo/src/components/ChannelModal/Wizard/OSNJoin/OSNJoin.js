@@ -36,12 +36,9 @@ const SCOPE = 'channelModal';
 class OSNJoin extends Component {
 	async componentDidMount() {
 		const {
-			use_osnadmin,
 			buildCreateChannelOpts,
 			getAllOrderers,
-			configtxlator_url,
 			use_config_block,
-			osnjoinSubmit,
 			raftNodes,							// contains all console orderer nodes (not to be confused with all selected consenters)
 		} = this.props;
 		let joinOsnMap = {};

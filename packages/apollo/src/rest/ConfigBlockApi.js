@@ -14,8 +14,6 @@
 import Logger from '../components/Log/Logger';
 import { RestApi } from './RestApi';
 
-const Log = new Logger('ConfigBlockApi');
-
 class ConfigBlockApi {
 
 	// get a specific config block doc
