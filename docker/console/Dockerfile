@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/nodejs-12 as client
+FROM registry.access.redhat.com/ubi8/nodejs-16 as client
 ENV STITCH_DIR=/home/stitch
 ENV APOLLO_DIR=/home/apollo
 
@@ -57,7 +57,7 @@ RUN ls -l $APOLLO_DIR/build
 # ----------------------------
 # ------- Server Setup -------
 # ----------------------------
-FROM registry.access.redhat.com/ubi8/nodejs-12 as server
+FROM registry.access.redhat.com/ubi8/nodejs-16 as server
 ENV STITCH_DIR=/home/stitch
 ENV APOLLO_DIR=/home/apollo
 ENV SERVER_HOME=/home/athena
