@@ -84,7 +84,7 @@ COPY --chown=1001:0 ./athena $SERVER_HOME
 
 USER 0
 RUN (dnf update || true)\
-	&& npm install --production --no-save \
+	&& npm ci \
 	# Make sure we can see what packages are getting installed
 	&& npm ls --production > npm_ls_prod.txt \
 	&& (dnf clean all || true)
