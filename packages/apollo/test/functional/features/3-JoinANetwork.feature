@@ -23,6 +23,7 @@ Feature: Join a network feature
         And I am ready to get started
         And I am on the 'nodes' page
         And I clicked the 'Org2 CA' certificate authority
+        Then wait "3" seconds
         And I clicked the button with text 'Associate identity'
         And I provided 'admin' for the 'Enter an ID' input
         And I provided 'adminpw' for the 'Enter a secret' input
@@ -78,7 +79,7 @@ Feature: Join a network feature
         And I selected 'peer2' from the 'div#saasCA-enroll_id' dropdown
         And I provided 'peer2pw' for the 'Enter a secret' input
         And I selected 'Org2 MSP' value from the 'div#saasCA-admin_msp' dropdown
-        And I selected '2.2' from the 'div#importPeerModal-version-version' dropdown
+        And I selected '2.4.3-1' value from the 'div#importPeerModal-version-version' dropdown
         And I clicked the button with text 'Next'
         And I selected 'Org2 MSP Admin' value from the 'div#importPeerModal-identity-identity' dropdown
         And I clicked the button with text 'Next'
