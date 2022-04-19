@@ -150,7 +150,7 @@ describe('Key Lib', () => {
 								localStubs.ldapToOneline = sinon.stub(tools.asn1.x509.X500Name, 'ldapToOneline').returns('abc');
 							},
 							expectBlock: (done) => {
-								expect(key_lib.generateCSR.bind()).to.throw('Cannot read property \'curveName\' of undefined');
+								expect(key_lib.generateCSR.bind()).to.throw('Cannot read properties of undefined (reading \'curveName\')');
 								localStubs.ldapToOneline.restore();
 								done();
 							}

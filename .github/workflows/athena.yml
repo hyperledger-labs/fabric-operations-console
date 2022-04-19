@@ -21,7 +21,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: 16.x
       - name: Setup CouchDB
         uses: cobot/couchdb-action@v4
         with:
@@ -41,7 +41,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: 16.x
       - name: Setup CouchDB
         uses: cobot/couchdb-action@v4
         with:
@@ -59,7 +59,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: 16.x
       - run: npm config set registry https://registry.npmjs.org/
       - run: npm install -g ibm-openapi-validator@0.51.1
       - run: npm run validate
@@ -72,6 +72,6 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: 16.x
       - run: npm ci
       - run: npm run lint

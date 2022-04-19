@@ -59,5 +59,10 @@
 		"nyc": "^15.1.0",
 		"sinon": "^6.1.5",
 		"tap-file": "0.0.2"
+	},
+	"overrides": {
+		"winston": {
+			"async": "3.2.2"
+		}
 	}
 }
