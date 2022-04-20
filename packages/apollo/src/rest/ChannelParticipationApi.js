@@ -81,14 +81,19 @@ export class ChannelParticipationApi {
 	// identities - list of possible identities for auth - array of identity objects
 	// osns - the ordering service nodes to use
 	static async getChannels(identities, osns) {
-		let resp = [];
+		let resp = {
+			systemChannel: null,
+			channels: []
+		};
 		if (!Array.isArray(osns)) {
 			osns = [osns];
 		}
 		for (let i in osns) {
 			const single_resp = await ChannelParticipationApi._getChannels(identities, osns[i]);
-			_.merge(resp, single_resp);
-
+			resp.channels = _.unionWith(resp.channels, single_resp.channels, _.isEqual);
+			if (resp.systemChannel === null && single_resp.systemChannel !== undefined) {
+				resp.systemChannel = single_resp.systemChannel;
+			}
 		}
 		return resp;
 	}
