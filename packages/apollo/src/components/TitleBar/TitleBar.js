@@ -28,7 +28,6 @@ import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { updateState } from '../../redux/commonActions';
-import SettingsApi from '../../rest/SettingsApi';
 import Helper from '../../utils/helper';
 import { removeFromStorage } from '../../utils/localStorage';
 import ChaincodeModal from '../ChaincodeModal/ChaincodeModal';
