@@ -102,7 +102,6 @@ describe('Login component', () => {
 			confirmPassword: undefined,
 			translate: translateStub,
 			updateState: updateStateStub,
-			productLabelLogin: 'Login'
 		};
 	});
 

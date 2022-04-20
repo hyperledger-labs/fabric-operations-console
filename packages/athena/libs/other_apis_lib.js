@@ -113,10 +113,6 @@ module.exports = function (logger, ev, t) {
 			DISABLED_COMPACTION: ev.DISABLED_COMPACTION, 		// false is valid, don't make this a question mark
 			IMPORT_ONLY: ev.IMPORT_ONLY,						// false is valid, don't make this a question mark
 			READ_ONLY: ev.READ_ONLY, 							// false is valid, don't make this a question mark
-			PRODUCT_LABEL_KEY: ev.PRODUCT_LABEL_KEY || '?',
-			PRODUCT_LABEL_VER_KEY: ev.PRODUCT_LABEL_VER_KEY || '?',
-			PRODUCT_LABEL_NOTES_KEY: ev.PRODUCT_LABEL_NOTES_KEY || '?',
-			PRODUCT_LABEL_LOGIN_KEY: ev.PRODUCT_LABEL_LOGIN_KEY || '?',
 		};
 		return t.misc.sortItOut(ret);
 	};

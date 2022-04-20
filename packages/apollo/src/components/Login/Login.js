@@ -157,7 +157,7 @@ export class Login extends Component {
 					<div className="ibp-login-main">
 						<div className={`ibp-login-content ${this.props.changePassword ? 'ibp-change-password' : 'ibp-user-login'} `}>
 							<p className="ibp-login-content-title ibm-type-light">
-								{translate(this.props.changePassword ? 'change_your_password' : this.props.productLabelLogin)}
+								{translate(this.props.changePassword ? 'change_your_password' : 'product_label_login')}
 							</p>
 							<form
 								onSubmit={e => {
@@ -257,12 +257,10 @@ const dataProps = {
 	newPasswordError: PropTypes.string,
 	confirmPasswordError: PropTypes.string,
 };
-
 Login.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
 	translate: PropTypes.func, // Provided by withLocalize
-	productLabelLogin: PropTypes.string,
 };
 
 export default connect(

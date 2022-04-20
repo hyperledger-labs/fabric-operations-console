@@ -73,8 +73,6 @@ class Support extends Component {
 					hide_transaction_input,
 					hide_transaction_output,
 					mustgather_enabled,
-					productLabelVersion: settings.PRODUCT_LABEL_VER_KEY,
-					productLabelNotes: settings.PRODUCT_LABEL_NOTES_KEY,
 				});
 			})
 			.catch(error => {
@@ -101,7 +99,7 @@ class Support extends Component {
 		}
 		return (
 			<div>
-				{translate(this.props.productLabelVersion || 'product_label_version')}
+				{translate('product_label_version')}
 				{this.props.loading && <SkeletonText />}
 				<div id="version_id"
 					className="support-versions-section"
@@ -162,7 +160,6 @@ class Support extends Component {
 					<div className="bx--col-lg-12">
 						<ReleaseNotes loading={this.props.loading}
 							releaseNotes={this.props.releaseNotes}
-							productLabelNotes={this.props.productLabelNotes}
 						/>
 					</div>
 				</div>
@@ -180,8 +177,6 @@ const dataProps = {
 	mustgather_enabled: PropTypes.bool,
 	settings: PropTypes.object,
 	userInfo: PropTypes.object,
-	productLabelVersion: PropTypes.string,
-	productLabelNotes: PropTypes.string,
 };
 
 Support.propTypes = {

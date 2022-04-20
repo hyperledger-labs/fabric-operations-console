@@ -47,7 +47,6 @@ class TitleBar extends Component {
 			showWelcomeBanner: false,
 			closeWelcome: false,
 		});
-		this.getSettings();
 	}
 
 	componentDidUpdate(prevProps) {
@@ -57,16 +56,6 @@ class TitleBar extends Component {
 				skipToContentElement.tabIndex = 0;
 			}
 		}
-	}
-
-	getSettings() {
-		SettingsApi.getSettings()
-			.then(settings => {
-				this.props.updateState(SCOPE, {
-					productLabel: settings.PRODUCT_LABEL_KEY,
-				});
-			})
-			.catch(error => {});
 	}
 
 	openSignatureCollections = () => {
@@ -189,7 +178,7 @@ class TitleBar extends Component {
 		const translate = this.props.translate;
 		const { needsAttention } = this.props;
 		const needsAttentionStrLength = needsAttention ? needsAttention.toString().length : 0;
-		const productLabel = this.props.productLabel || 'product_label'; // may or may not contain "IBM"
+		const productLabel = 'product_label'; // may or may not contain "IBM"
 		return (
 			<div
 				role="banner"
@@ -341,7 +330,6 @@ const dataProps = {
 	showSignatureCollection: PropTypes.bool,
 	closeWelcome: PropTypes.bool,
 	details: PropTypes.object,
-	productLabel: 'product_label',
 };
 
 TitleBar.propTypes = {
