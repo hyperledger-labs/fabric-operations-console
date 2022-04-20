@@ -248,7 +248,7 @@ describe('Login component', () => {
 				.find('p')
 				.at(0)
 				.text()
-				.should.include('Login to');
+				.should.equal('product_label_login');
 			component
 				.find('div')
 				.at(2)
