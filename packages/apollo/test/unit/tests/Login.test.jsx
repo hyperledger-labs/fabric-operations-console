@@ -248,7 +248,7 @@ describe('Login component', () => {
 				.find('p')
 				.at(0)
 				.text()
-				.should.deep.equal('Login to Fabric Operations Console');
+				.should.equal('Login to Fabric Operations Console');
 			component
 				.find('div')
 				.at(2)
