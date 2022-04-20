@@ -138,11 +138,11 @@ class OrdererDetails extends Component {
 
 	/* get channel list from channel participation api */
 	getCPChannelList = async() => {
-		let node = this.props.selectedNode || this.props.details;
+		let node = this.props.selectedNode || this.props.details.raft;
 		let systemChannel = true;
 		let channelList = {};
 
-		let orderer_tls_identity = await IdentityApi.getTLSIdentity(node);
+		let orderer_tls_identity = await IdentityApi.getTLSIdentity(this.props.selectedNode || this.props.details);
 		if (orderer_tls_identity) {
 			try {
 				let all_identity = await IdentityApi.getIdentities();
