@@ -51,7 +51,7 @@ export class ChannelParticipationApi {
 	// --------------------------------------------------------
 	// identities - list of possible identities for auth - array of identity objects
 	// osn - the ordering service node to use - a optools node object
-	static async getChannels(identities, osn) {
+	static async _getChannels(identities, osn) {
 		const identity4tls = await ChannelParticipationApi.findMatchingIdentity({
 			identities: identities,
 			root_certs_b64pems: _.get(osn, 'msp.tlsca.root_certs')
@@ -73,6 +73,24 @@ export class ChannelParticipationApi {
 		}
 		Log.error('unable to get osn channels data');
 		return null;
+	}
+
+	// --------------------------------------------------------
+	// Fabric's osnadmin get-channels request - hard coded in stitch to use the athena proxy route
+	// --------------------------------------------------------
+	// identities - list of possible identities for auth - array of identity objects
+	// osns - the ordering service nodes to use
+	static async getChannels(identities, osns) {
+		let resp = [];
+		if (!Array.isArray(osns)) {
+			osns = [osns];
+		}
+		for (let i in osns) {
+			const single_resp = await ChannelParticipationApi._getChannels(identities, osns[i]);
+			_.merge(resp, single_resp);
+
+		}
+		return resp;
 	}
 
 	// --------------------------------------------------------
