@@ -112,8 +112,9 @@ All actions are defined below:
   - `blockchain.components.manage`
     - can enroll/reenroll/register/delete enroll ids
     - can edit admin certs on peer/orderer (file system)
-	- can view ca root enroll id/secret in deployer proxy route on a get-ca-details api
-	- can run the component /actions api (such as restart, re-enroll, enroll
+    - can view ca root enroll id/secret in deployer proxy route on a get-ca-details api
+    - can run the component /actions api (such as restart, re-enroll, enroll
+    - can create/delete config-block docs
   - `blockchain.instance.link` - hyperion action
     - can create a resource, associating it with a cluster
   - `blockchain.instance.view` - hyperion action

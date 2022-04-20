@@ -20,10 +20,10 @@ Feature: Create and Join a 2.x channel
         And I clicked the button with text 'Next'
         And I selected '1 out of 2' from the 'div#channelModal-custom-policy-customPolicy' dropdown
         And I clicked the button with text 'Next'
-        And I selected 'Org1 MSP' from the 'div#channelModal-signature-selectedChannelCreator' dropdown
-        And I selected 'Org1 MSP Admin' from the 'div#channelModal-signature-selectedIdentity' dropdown
+        And I selected 'Org1 MSP (org1msp)' value from the 'div#channelModal-signature-selectedChannelCreator' dropdown
+        And I selected 'Org1 MSP Admin' value from the 'div#channelModal-signature-selectedIdentity' dropdown
         And I clicked the button with text 'Next'
-        And I selected '2.0.0' from the 'div#channelModal-capabilities-application-selectedApplicationCapability' dropdown
+        And I selected '2.0.0' value from the 'div#channelModal-capabilities-application-selectedApplicationCapability' dropdown
         And I clicked the button with text 'Next'
         And I clicked the button with text 'Next'
         And I clicked the button with text 'Next'
@@ -40,6 +40,7 @@ Feature: Create and Join a 2.x channel
         And I am ready to get started
         And I am on the 'channels' page
         And I clicked on the 'channel2' channel
+        Then wait "5" seconds
         And I clicked the peer 'Peer Org1' select item
         And I clicked the peer 'Peer Org2' select item
         When I click the button with text 'Join channel'

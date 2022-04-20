@@ -62,8 +62,9 @@
 		}
 		.login-button:disabled,
 		.login-button:disabled:hover {
-			background-color: $buttonDisabled;
+			//background-color: $buttonDisabled;
 			cursor: not-allowed;
+			opacity: 0.3;
 		}
 	}
 }

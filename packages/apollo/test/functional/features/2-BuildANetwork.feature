@@ -6,7 +6,6 @@ Feature: Build a network feature
         And I am logged in
         And I am ready to get started
         And I am on the 'nodes' page
-        Then wait "10" seconds
         And I clicked the button with title 'Add Certificate Authority'
         And I clicked Create a Certificate Authority
         And I clicked the button with text 'Next'
@@ -31,7 +30,9 @@ Feature: Build a network feature
         And I clicked the Associate identity button
         And the CA admin is set as 'Org1 CA Admin'
         When the 'admin' user was enrolled with id 'org1admin' and secret 'org1adminpw'
+        Then wait "3" seconds
         And the 'peer' user was enrolled with id 'peer1' and secret 'peer1pw'
+        Then wait "3" seconds
         Then the 'admin' user with id 'org1admin' should be enrolled
         And the 'peer' user with id 'peer1' should be enrolled
 
@@ -69,7 +70,7 @@ Feature: Build a network feature
         And I selected 'peer1' from the 'div#saasCA-enroll_id' dropdown
         And I provided 'peer1pw' for the 'Enter a secret' input
         And I selected 'Org1 MSP' from the 'div#saasCA-admin_msp' dropdown
-        And I selected '2.2' from the 'div#importPeerModal-version-version' dropdown
+        And I selected '2.4.3-1' value from the 'div#importPeerModal-version-version' dropdown
         And I clicked the button with text 'Next'
         And I selected 'Org1 MSP Admin' from the 'div#importPeerModal-identity-identity' dropdown
         And I clicked the button with text 'Next'
@@ -105,8 +106,11 @@ Feature: Build a network feature
         And I provided 'Ordering Service CA Admin' for the 'Enter a name' input
         And I clicked the Associate identity button
         And the CA admin is set as 'Ordering Service CA Admin'
+        Then wait "5" seconds
         When the 'admin' user was enrolled with id 'OSadmin' and secret 'OSadminpw'
+        Then wait "2" seconds
         And the 'orderer' user was enrolled with id 'OS1' and secret 'OS1pw'
+        Then wait "2" seconds
         Then the 'admin' user with id 'OSadmin' should be enrolled
         And the 'orderer' user with id 'OS1' should be enrolled
 
@@ -119,14 +123,18 @@ Feature: Build a network feature
         And I provided 'Ordering Service MSP' for the 'Enter name for the MSP' input
         And I provided 'osmsp' for the 'Enter the MSP ID' input
         And I clicked the button with text 'Next'
-        And I selected 'Ordering Service CA' from the 'div#generateMSP-root-selectedRootCA' dropdown
+        Then wait "5" seconds
+        And I selected 'Ordering Service CA' value from the 'div#generateMSP-root-selectedRootCA' dropdown
         And I clicked the button with text 'Next'
         And I selected 'OSadmin' from the 'div#generateMSP-enroll_id' dropdown
         And I provided 'OSadminpw' for the 'Enter a secret' input
         And I provided 'Ordering Service MSP Admin' for the 'Enter name for the identity to be stored in your Wallet' input
         And I clicked the button with text 'Generate'
+        Then wait "5" seconds
         And I clicked the button with text 'Export'
+        Then wait "5" seconds
         And I clicked the button with text 'Next'
+        Then wait "5" seconds
         When I click the button with text 'Create MSP definition'
         Then I should see a success toast which says "MSP Ordering Service MSP has been created successfully."
 
@@ -138,15 +146,20 @@ Feature: Build a network feature
         And I clicked the button with title 'Add ordering service'
         And I clicked Create an ordering service
         And I clicked the button with text 'Next'
+        Then wait "3" seconds
         And I provided 'Ordering Service' for the 'Enter an ordering service display name' input
+        Then wait "2" seconds
         And I clicked the button with text 'Next'
-        And I selected the 'Ordering Service CA' certificate authority
+        Then wait "5" seconds
+        And I selected 'Ordering Service CA' value from the 'div#saasCA-saas_ca' dropdown
+        Then wait "5" seconds
         And I selected 'OS1' from the 'div#saasCA-enroll_id' dropdown
         And I provided 'OS1pw' for the 'Enter a secret' input
-        And I selected 'Ordering Service MSP' from the 'div#saasCA-admin_msp' dropdown
-        And I selected '2.2' from the 'div#importOrdererModal-version-version' dropdown
+        And I selected 'Ordering Service MSP' value from the 'div#saasCA-admin_msp' dropdown
+        And I selected '2.4.3-1' value from the 'div#importOrdererModal-version-version' dropdown
         And I clicked the button with text 'Next'
-        And I selected 'Ordering Service MSP Admin' from the 'div#importOrdererModal-identity' dropdown
+        Then wait "5" seconds
+        And I selected 'Ordering Service MSP Admin' value from the 'div#importOrdererModal-identity' dropdown
         And I clicked the button with text 'Next'
         When I click the button with text 'Add ordering service'
         Then I should see a success toast which says "Congratulations! You have successfully created 'Ordering Service'."
@@ -158,9 +171,9 @@ Feature: Build a network feature
         And I am ready to get started
         And I am on the 'nodes' page
         And I clicked the 'Ordering Service' orderer
+        Then wait "10" seconds
         And I clicked the button with title 'Add organization'
         And I selected 'Org1 MSP' from the 'div#orderer-add-msp-dropdown' dropdown
         When I click the button with text 'Add organization'
-        Then wait "5" seconds
+        Then wait "10" seconds
         Then a tile with title 'Org1 MSP' should have been created
-

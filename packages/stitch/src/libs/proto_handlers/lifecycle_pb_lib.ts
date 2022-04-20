@@ -25,7 +25,7 @@ import { PolicyLib } from './policy_pb_lib';
 // - the _b prefix on a function indicates it returns a serialized protobuf message as binary.
 // - TIL protobufjs prefers create() over fromObject()
 
-export { HiLvl };
+export { HiLvl, decode_validationParameter, __b_build_application_policy };
 
 const policyLib = new PolicyLib;
 

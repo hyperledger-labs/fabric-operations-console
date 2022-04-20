@@ -25,6 +25,9 @@ import _ from 'lodash';
 
 const SCOPE = 'channelModal';
 
+// This is step "organization_creating_channel"
+//
+// this panel allow selecting what org to use for the *channel* signature
 class OrgSignature extends Component {
 	componentDidMount() {
 		let mspIdentities = [];

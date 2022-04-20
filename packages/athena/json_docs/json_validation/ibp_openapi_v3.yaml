@@ -13438,6 +13438,21 @@ components:
           type: boolean
           description: "Enable or disable the 'Fabric Gateway' on the peer."
           example: true
+        endorsementTimeout:
+          type: number
+          example: 30s
+          x-validate_duration: true
+          x-minimum: 1e9 # 1 second
+          x-maximum: 2.628e15 # 1 month - dsh shrug
+          x-validate_case_insensitive: true
+        dialTimeout:
+          type: number
+          example: 2m
+          x-validate_duration: true
+          x-minimum: 1e9 # 1 second
+          x-maximum: 2.628e15 # 1 month - dsh shrug
+          x-validate_case_insensitive: true
+
 
     #ConfigPeer_handlers:
     #  type: object

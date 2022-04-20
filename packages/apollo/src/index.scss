@@ -9,6 +9,8 @@ $feature-flags: (
 // import Carbon styles here
 @import './assets/sass/imports';
 
+$better_disabled_text_color: #505456;
+
 * {
 	font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
 	font-size: 100%;
@@ -106,7 +108,7 @@ small {
 
 .bx--text-input {
 	&::placeholder {
-		color: $carbon--cool-gray-50;
+		color: $better_disabled_text_color;
 	}
 }
 
@@ -606,13 +608,18 @@ small {
 .bx--list-box--disabled .bx--list-box__label,
 .bx--list-box--disabled.bx--list-box--inline .bx--list-box__label,
 .bx--radio-button:disabled + .bx--radio-button__label {
-	color: $carbon--cool-gray-50;
+	color: $better_disabled_text_color;
 }
 
 .bx--content-switcher-btn.bx--content-switcher--selected {
 	&:focus {
 		box-shadow: inset 0 0 0 2px $action;
 	}
+}
+
+// override carbon, too dark
+.bx--dropdown--disabled .bx--dropdown-text, .bx--dropdown--disabled .bx--list-box__label {
+	color: $better_disabled_text_color;
 }
 
 .ibp-main svg,

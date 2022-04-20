@@ -7,11 +7,11 @@ CA_VERSION="1.5.2"
 function networkUp() {
 	networkDown
 	cd $SRC_DIR/..
-	#curl -sSL https://bit.ly/2ysbOFE | bash -s -- ${FABRIC_VERSION} ${CA_VERSION}
+	curl -sSL https://bit.ly/2ysbOFE | bash -s -- ${FABRIC_VERSION} ${CA_VERSION}
 	cd fabric-samples
-	#if [ "${FABRIC_VERSION}" == "2.2.3" ]; then
-#		git checkout release-2.2
-#	fi
+	if [ "${FABRIC_VERSION}" == "2.2.3" ]; then
+		git checkout release-2.2
+	fi
 	cd test-network
 	./network.sh up createChannel -ca -c mychannel -s couchdb
 	./network.sh deployCC -ccn fabcar -ccv 1 -cci initLedger -ccl go -ccp ../chaincode/fabcar/go/

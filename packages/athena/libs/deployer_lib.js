@@ -713,7 +713,8 @@ module.exports = function (logger, ev, t) {
 
 		function get_all_components_to_del(get_cb) {
 			const keys = [
-				ev.STR.MSP, ev.STR.MSP_EXTERNAL, ev.STR.CA, ev.STR.ORDERER, ev.STR.PEER, ev.STR.ENROLL_ID, ev.STR.TEMPLATE_DEBUG, ev.STR.SIG_COLLECTION
+				ev.STR.MSP, ev.STR.MSP_EXTERNAL, ev.STR.CA, ev.STR.ORDERER, ev.STR.PEER,
+				ev.STR.ENROLL_ID, ev.STR.TEMPLATE_DEBUG, ev.STR.SIG_COLLECTION, ev.STR.BLOCK,
 			];
 			const opts = {
 				db_name: ev.DB_COMPONENTS,					// db for peers/cas/orderers/msps/etc docs

@@ -28,7 +28,6 @@ import StitchApi from './StitchApi';
 const naturalSort = require('javascript-natural-sort');
 const channel_template = require('../utils/configtx/channel_template.json');
 const org_template = require('../utils/configtx/org_template.json');
-const url = require('url');
 const bytes = require('bytes');
 const diff = require('deep-diff');
 const urlParser = require('url');
@@ -204,7 +203,7 @@ class ChannelApi {
 					let channelPeers = channel.peers.map(peer => peer.id);
 					if (peerId) return channel.id === id && channelPeers.includes(peerId);
 					else return channel.id === id;
-				  })
+				})
 				: null;
 			if (channel) {
 				return channel;
@@ -273,7 +272,7 @@ class ChannelApi {
 
 		Log.info('Check consortium', options.consortium_id);
 		read_set.values.Consortium.value.name = options.consortium_id;
-		write_set.values.Consortium.value.name =options.consortium_id;
+		write_set.values.Consortium.value.name = options.consortium_id;
 		if (!write_set.groups.Application.values) {
 			write_set.groups.Application.values = {};
 		}
@@ -516,6 +515,17 @@ class ChannelApi {
 			node.values.Capabilities.value = {};
 			node.values.Capabilities.value.capabilities = {};
 		}
+
+		if (!node.values) {
+			node.values = {};
+		}
+		if (!node.values.Capabilities) {
+			node.values.Capabilities = {};
+			node.values.Capabilities.mod_policy = 'Admins';
+			node.values.Capabilities.value = {};
+			node.values.Capabilities.value.capabilities = {};
+		}
+
 		for (let i in channel_capabilities) {
 			Log.debug('Injecting channel capability', channel_capabilities[i]);
 			node.values.Capabilities.value.capabilities[channel_capabilities[i]] = {};
@@ -1247,7 +1257,7 @@ class ChannelApi {
 			if (peer_urls_array[i].indexOf('://') === -1) {
 				peer_urls_array[i] = 'grpcs://' + peer_urls_array[i]; // add dummy proto if dne, will be stripped out below anyway
 			}
-			let url_parts = url.parse(peer_urls_array[i], true);
+			let url_parts = urlParser.parse(peer_urls_array[i], true);
 			if (url_parts.hostname && !isNaN(url_parts.port) && parseInt(url_parts.port) !== 0) {
 				// double check we are adding a valid entry...
 				let anchor_peer_obj = {
@@ -1939,11 +1949,13 @@ class ChannelApi {
 				Log.error(err1);
 				cb(err1, null);
 			} else {
+				Log.debug('created bin from original config json');
 				ChannelApi._config_json2binary(opts.updated_json, opts.configtxlator_url, (err2, updated_proto) => {
 					if (err2 || !updated_proto) {
 						Log.error(err2);
 						cb(err2, null);
 					} else {
+						Log.debug('created bin from updated config json');
 						let formData = new FormData();
 						formData.append('channel', opts.channel_id);
 						formData.append('original', original_proto, 'original.pb');
