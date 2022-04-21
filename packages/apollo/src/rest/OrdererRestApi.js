@@ -95,11 +95,16 @@ class OrdererRestApi {
 	 * @return {Promise<FabricOrderer[]>} A Promise that resolves with the list of imported Orderer records.
 	 */
 	static async importOrderer(data) {
-		const all = [];
 		const cluster_ids = [];
-		data.forEach(json => {
-			const list = json.raft ? json.raft : [json];
-			list.forEach(node => {
+		const raft = {};
+		const result = [];
+
+		for (let i in data) {
+			const json = data[i];
+			const nodes = json.raft ? json.raft : [json];
+
+			for (let x in nodes) {
+				const node = nodes[x];
 				const newOrderer = {
 					type: 'fabric-orderer',
 					display_name: node.display_name,
@@ -125,34 +130,32 @@ class OrdererRestApi {
 						cluster_ids.push(node.cluster_id);
 					}
 					if (node.raft_action === 'append') {
-						all.push(NodeRestApi.importComponent(newOrderer));
+						const resp = await NodeRestApi.importComponent(newOrderer);
+						store_resp(resp);
 					}
 				} else {
-					all.push(NodeRestApi.importComponent(newOrderer));
-				}
-			});
-		});
-		if (all.length === 0) {
-			return [];
-		}
-		const newOrderers = await Promise.all(all);
-		const result = [];
-		const raft = {};
-		newOrderers.forEach(node => {
-			if (cluster_ids.indexOf(node.cluster_id) === -1) {
-				if (raft[node.cluster_id]) {
-					raft[node.cluster_id].raft.push(node);
-				} else {
-					raft[node.cluster_id] = {
-						...node,
-						display_name: node.cluster_name,
-						raft: [node],
-					};
-					result.push(raft[node.cluster_id]);
+					const resp = await NodeRestApi.importComponent(newOrderer);
+					store_resp(resp);
 				}
 			}
-		});
+		}
+
 		return result;
+
+		function store_resp(resp) {
+			if (cluster_ids.indexOf(resp.cluster_id) === -1) {
+				if (raft[resp.cluster_id]) {
+					raft[resp.cluster_id].raft.push(resp);
+				} else {
+					raft[resp.cluster_id] = {
+						...resp,
+						display_name: resp.cluster_name,
+						raft: [resp],
+					};
+					result.push(raft[resp.cluster_id]);
+				}
+			}
+		}
 	}
 
 	static async getOrdererDetails(id, includePrivateKeyAndCert) {
@@ -425,7 +428,7 @@ class OrdererRestApi {
 				msp_id: orderer.msp_id,
 				cert: ordererCerts ? ordererCerts.cert : null,
 				private_key: ordererCerts ? ordererCerts.private_key : null,
-			  };
+			};
 		const opts = {
 			msp_id: test.msp_id,
 			client_cert_b64pem: test.cert,
@@ -486,7 +489,7 @@ class OrdererRestApi {
 				msp_id: orderer.msp_id,
 				cert: ordererCerts ? ordererCerts.cert : null,
 				private_key: ordererCerts ? ordererCerts.private_key : null,
-			  };
+			};
 		if (!options.identityInfo) options.identityInfo = {};
 		const opts = {
 			msp_id: options.identityInfo.msp_id || test.msp_id,
@@ -949,7 +952,7 @@ class OrdererRestApi {
 							},
 						},
 					},
-				  ]
+				]
 				: [
 					{
 						msp: {
@@ -970,7 +973,7 @@ class OrdererRestApi {
 							},
 						},
 					},
-				  ],
+				],
 		};
 		if (data.clusterType === 'paid') {
 			node.resources = {
