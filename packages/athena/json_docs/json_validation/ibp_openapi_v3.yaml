@@ -12742,7 +12742,6 @@ components:
       x-validate_no_extra_keys: true
       x-validate_illegal_keys:
         - vm
-        - ledger
         - operations
       properties:
         peer:
@@ -12785,6 +12784,8 @@ components:
               $ref: '#/components/schemas/ConfigPeer_limits'
             gateway:
               $ref: '#/components/schemas/ConfigPeer_gateway'
+            ledger:
+              $ref: '#/components/schemas/ConfigPeer_ledger'
 
             # temp removed (not yet supported by deployer) - 05/28/2020
             #handlers:
@@ -13452,6 +13453,33 @@ components:
           x-minimum: 1e9 # 1 second
           x-maximum: 2.628e15 # 1 month - dsh shrug
           x-validate_case_insensitive: true
+
+    ConfigPeer_ledger: # fabric v2 only
+      type: object
+      x-validate_no_extra_keys: true
+      properties:
+        state:
+          type: object
+          x-validate_no_extra_keys: true
+          properties:
+            couchDBConfig:
+              type: object
+              x-validate_no_extra_keys: true
+              properties:
+                cacheSize:
+                  description: Maximum size of the cache for CouchDB operations in MB. Defaults to 64MB. Note that if the cache size is not a multiple of 32 MB, the peer will round the size to the next multiple of 32MB.
+                  type: number
+                  minimum: 0
+                  maximum: 4096
+                  example: 64
+                  x-validate_case_insensitive: true
+                maxRetriesOnStartup:
+                  description: Maximum number of retries for the peer to connect to CouchDB after peer startup. Defaults to 10.
+                  type: number
+                  minimum: 0
+                  maximum: 1000 # dsh shrug
+                  example: 10
+                  x-validate_case_insensitive: true
 
 
     #ConfigPeer_handlers:
