@@ -684,7 +684,7 @@ class ImportCAModal extends React.Component {
 				{!this.props.config_override && Helper.renderFieldSummary(translate, this.props, 'ca_admin_enroll_secret', 'admin_secret', true)}
 				{this.props.versions && this.props.versions.length && (
 					<div className="summary-section">
-						<p className="summary-label">{translate('version')}</p>
+						<p className="summary-label">{translate('fabric_version')}</p>
 						<p className="summary-value">{this.props.version ? this.props.version.version : this.props.versions[0].version}</p>
 					</div>
 				)}
