@@ -1,5 +1,19 @@
 [
 	{
+		"version": "1.0.1-1",
+		"date": "22 April 2022",
+		"description": [
+			{
+				"title": "Node v16",
+				"details": "Now using NodeJS version 16."
+			},
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
 		"version": "1.0.0-22",
 		"date": "28 March 2022",
 		"description": [
