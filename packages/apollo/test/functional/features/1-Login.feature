@@ -1,4 +1,4 @@
-@software1
+@software
 Feature: Login feature
 
     Scenario: When entering the default username and password
