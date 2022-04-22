@@ -51,6 +51,9 @@ exports.config = {
 
 		browser.automationUser = process.env.AUTOMATION_USER;
 		browser.automationPassword = process.env.AUTOMATION_PASSWORD;
+		browser.automationDefaultPassword = process.env.AUTOMATION_DEFAULT_PASSWORD;
+		console.log('Automation User = %s', browser.automationUser)
+
 		let consoleUrlPath = path.join(__dirname, 'settings', 'console_url.txt');
 		let consoleUrl;
 		try {

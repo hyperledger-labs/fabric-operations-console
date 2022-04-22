@@ -21,6 +21,7 @@ const { login, iamLogin, cloudLogin } = require('../helpers/login');
 Given(/^I am on the login page$/, async() => {
 	let header = element(by.css('.ibp-login-content-title'));
 	await browser.wait(ExpectedConditions.visibilityOf(header), 5000);
+	await browser.sleep(5000);
 	let text = await header.getText();
 	text.should.equal('Login to IBM Blockchain Platform');
 });
@@ -62,6 +63,25 @@ When(/^I change the password from '(.*?)' to '(.*?)'$/, async(currentPassword, n
 	await browser.sleep(5000);
 });
 
+When(/^I change the password from default password$/, async() => {
+	let currentPasswordInput = element(by.name('currentPassword'));
+	await browser.wait(ExpectedConditions.elementToBeClickable(currentPasswordInput), 5000);
+	await currentPasswordInput.sendKeys(browser.automationDefaultPassword);
+	let newPasswordInput = element(by.name('newPassword'));
+	await browser.wait(ExpectedConditions.visibilityOf(newPasswordInput), 5000);
+	await newPasswordInput.sendKeys(browser.automationPassword);
+	let confirmPasswordInput = element(by.name('confirmPassword'));
+	await browser.wait(ExpectedConditions.elementToBeClickable(confirmPasswordInput), 5000);
+	await confirmPasswordInput.sendKeys(browser.automationPassword);
+
+	const changePwButton = element(by.css("button[type = 'submit']"));
+
+	await browser.wait(ExpectedConditions.elementToBeClickable(changePwButton), 5000);
+	await changePwButton.click();
+
+	await browser.sleep(5000);
+});
+
 Then(/^I should be redirected to the login page again$/, async() => {
 	let emailInput = element(by.name('email'));
 	await browser.wait(ExpectedConditions.visibilityOf(emailInput), 10000);
@@ -69,6 +89,7 @@ Then(/^I should be redirected to the login page again$/, async() => {
 
 	let header = element(by.css('.ibp-login-content-title'));
 	await browser.wait(ExpectedConditions.visibilityOf(header), 10000);
+	await browser.sleep(10000);
 	let text = await header.getText();
 	text.should.equal('Login to IBM Blockchain Platform');
 });
@@ -85,6 +106,7 @@ Given(/^I am logged in$/, async() => {
 	try {
 		let header = element(by.css('.ibp-login-content-title'));
 		await browser.wait(ExpectedConditions.visibilityOf(header), 2000);
+		await browser.sleep(5000);
 		let text = await header.getText();
 		if (text.includes('Login to IBM Blockchain Platform')) {
 			await login();
@@ -104,6 +126,21 @@ Given(/^I am logged in$/, async() => {
 	}
 });
 
+Given(/^I am logged in for first time$/, async() => {
+	try {
+		let header = element(by.css('.ibp-login-content-title'));
+		await browser.wait(ExpectedConditions.visibilityOf(header), 2000);
+		await browser.sleep(5000);
+		let text = await header.getText();
+		if (text.includes('Login to IBM Blockchain Platform')) {
+			await login(browser.automationUser, browser.automationDefaultPassword);
+		}
+	} catch (err) {
+		console.log('Error logging into IBM Blockchain Platform for the first time.', err);
+	}
+});
+
+
 Given(/^I am logged in to IBM Cloud$/, async() => {
 	try {
 		let header = element(by.css('.login-form__title'));
@@ -113,7 +150,7 @@ Given(/^I am logged in to IBM Cloud$/, async() => {
 			await cloudLogin(browser.automationUser, browser.automationPassword);
 		}
 	} catch (err) {
-		// console.log('Error logging into IBM Cloud', err);
+		console.log('Error logging into IBM Cloud', err);
 		// no op
 	}
 	let elementId = element(by.css('[aria-label="Select dashboard"]'));
