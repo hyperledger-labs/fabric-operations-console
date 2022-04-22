@@ -15,10 +15,10 @@ const { browser, element, by, ExpectedConditions } = require('protractor');
 
 async function login(email, password) {
 	if (!email || !password) {
-		email = 'randomusername@email.com';
-		password = 'thispwisdifferent';
+		email = browser.automationUser;
+		password = browser.automationPassword;
 	}
-
+    console.log('login: Logging in as %s', email);
 	let emailInput = element(by.name('email'));
 	await browser.wait(ExpectedConditions.visibilityOf(emailInput), 6000);
 	await emailInput.sendKeys(email);
@@ -33,6 +33,7 @@ async function login(email, password) {
 }
 
 async function cloudLogin(email, password) {
+    console.log('cloudLogin: Logging in as %s', email);
 	let emailInput = element(by.id('userid'));
 	await browser.wait(ExpectedConditions.visibilityOf(emailInput), 6000);
 	await browser.sleep(1000);
@@ -61,6 +62,7 @@ async function cloudLogin(email, password) {
 }
 
 async function iamLogin(email, password) {
+    console.log('iamLogin: Logging in as %s', email);
 	let emailInput = element(by.id('username'));
 	await browser.wait(ExpectedConditions.visibilityOf(emailInput), 6000);
 	await emailInput.sendKeys(email);

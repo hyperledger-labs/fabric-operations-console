@@ -68,6 +68,23 @@ Given(/^I selected (?:'|")(.*?)(?:'|") value from the (?:'|")(.*?)(?:'|") dropdo
 	}
 });
 
+Given(/^I selected (?:'|")(.*?)(?:'|") matching value from the (?:'|")(.*?)(?:'|") dropdown$/, async(textToselect, dropdownelement) => {
+	await browser.sleep(2000);
+	let dropdown;
+	try {
+		dropdown = element(by.css(dropdownelement));
+		await browser.wait(ExpectedConditions.visibilityOf(dropdown), 10000);
+		await browser.wait(ExpectedConditions.elementToBeClickable(dropdown), 10000);
+		await dropdown.click();
+		await browser.sleep(2000);
+		let chosenOption = element(by.xpath("//div[contains(text(),'" + textToselect + "')]"));
+		await browser.wait(ExpectedConditions.elementToBeClickable(chosenOption), 10000);
+		await chosenOption.click();
+	} catch (err) {
+		console.log('Exception thrown while selecting value from dropdown: %s', err);
+	}
+});
+
 Given(/^I selected my cluster$/, async() => {
 	await browser.sleep(2000);
 	let selector = 'div#hyperion-cluster-list-dropdown';
