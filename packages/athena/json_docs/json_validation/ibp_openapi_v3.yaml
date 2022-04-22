@@ -12848,6 +12848,8 @@ components:
               $ref: '#/components/schemas/ConfigPeer_limits'
             gateway:
               $ref: '#/components/schemas/ConfigPeer_gateway'
+            ledger:
+              $ref: '#/components/schemas/ConfigPeer_ledger'
             # temp removed (not yet supported by deployer) - 05/28/2020
             #handlers:
             #  $ref: '#/components/schemas/ConfigPeer_handlers'
