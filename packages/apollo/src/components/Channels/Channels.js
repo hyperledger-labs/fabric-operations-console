@@ -138,6 +138,7 @@ class ChannelComponent extends Component {
 			if (!this.mounted) {
 				return;
 			}
+
 			// Build list that includes all raft nodes from all the console ordering services
 			let all_nodes = [];
 			orderers.forEach(orderer => {
@@ -148,8 +149,8 @@ class ChannelComponent extends Component {
 				}
 			});
 
-			const pendingChannels = [];
 			// Get pending channels from notifications instead of local storage
+			const pendingChannels = [];
 			let signature_requests = await this.getCreateChannelRequests();
 			signature_requests.forEach(notification => {
 				let notification_orderers = [];
