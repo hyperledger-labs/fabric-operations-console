@@ -1054,7 +1054,7 @@ class ChannelModal extends Component {
 					if (isComplete) {
 						use_osnadmin
 							? this.showStep('osn_join_channel', group_review, osnadmin_join_channel)
-							: (this.props.isChannelUpdate ? this.updateChannel : this.createChannel);
+							: (this.props.isChannelUpdate ? this.updateChannel() : this.createChannel());
 					}
 				};
 				type = use_osnadmin ? '' : 'submit';
