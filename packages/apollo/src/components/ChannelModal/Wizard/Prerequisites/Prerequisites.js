@@ -25,6 +25,9 @@ import TranslateLink from '../../../TranslateLink/TranslateLink';
 
 const SCOPE = 'channelModal';
 
+// This is step "prerequisites"
+//
+// this panel allow selecting if advanced Fabric options in a channel config block are editable from the defaults or not
 class Prerequisites extends Component {
 	onChangeAdvancedCheckbox = event => {
 		this.updateTimelineSteps(event);
@@ -34,6 +37,7 @@ class Prerequisites extends Component {
 		}
 	};
 
+	// change the steps based on if the advanced option is checked
 	updateTimelineSteps = event => {
 		let updatedSteps = [];
 		this.props.timelineSteps.forEach(group => {
@@ -41,19 +45,35 @@ class Prerequisites extends Component {
 				if (subGroup.groupTitle === 'advanced_configuration') {
 					if (event.target.checked) {
 						subGroup.groupSteps.forEach(step => {
-							if (step.label === 'channel_lifecycle_policy') {
+							if (step.label === 'capabilities') {
+								step.disabled = false;
+							} else if (step.label === 'channel_lifecycle_policy') {
 								step.disabled = !this.props.isChannel2_0;
 							} else if (step.label === 'channel_endorsement_policy') {
 								step.disabled = !this.props.isChannel2_0;
 							} else if (step.label === 'ordering_service_organization') {
 								step.disabled = !this.props.isOrdererSignatureNeeded;
-							} else {
-								step.disabled = true;
+							} else if (step.label === 'block_cutting_params') {
+								step.disabled = false;
+							} else if (step.label === 'channel_acls') {
+								step.disabled = false;
 							}
 						});
 					} else {
 						subGroup.groupSteps.forEach(step => {
-							step.disabled = true;
+							if (step.label === 'capabilities') {
+								step.disabled = true;
+							} else if (step.label === 'channel_lifecycle_policy') {
+								step.disabled = true;
+							} else if (step.label === 'channel_endorsement_policy') {
+								step.disabled = true;
+							} else if (step.label === 'ordering_service_organization') {
+								step.disabled = true;
+							} else if (step.label === 'block_cutting_params') {
+								step.disabled = true;
+							} else if (step.label === 'channel_acls') {
+								step.disabled = true;
+							}
 						});
 					}
 				}

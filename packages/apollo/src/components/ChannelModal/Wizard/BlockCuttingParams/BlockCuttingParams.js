@@ -27,6 +27,9 @@ import Form from '../../../Form/Form';
 const bytes = require('bytes');
 const SCOPE = 'channelModal';
 
+// This is step "block_cutting_params"
+//
+// this panel allow configuring the ordering service block cutting parameters for a channel
 class BlockCuttingParams extends Component {
 	onChangeOverrideDefaults = event => {
 		this.props.updateState(SCOPE, {

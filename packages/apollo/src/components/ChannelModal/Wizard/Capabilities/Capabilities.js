@@ -24,6 +24,9 @@ import ImportantBox from '../../../ImportantBox/ImportantBox';
 
 const SCOPE = 'channelModal';
 
+// This is step "capabilities"
+//
+// this panel allow selecting what Fabric application and/or orderer capabilities to set for the channel
 class Capabilities extends Component {
 	calculateCapabilityWarning(data) {
 		let applicationCapability = data.selectedApplicationCapability || this.props.selectedApplicationCapability;
@@ -60,6 +63,48 @@ class Capabilities extends Component {
 			});
 		}
 	}
+
+	// change the steps based on the selected "application" capability of a channel
+	updateTimelineSteps = (data) => {
+		let updatedSteps = [];
+
+		let applicationCapability = data.selectedApplicationCapability || this.props.selectedApplicationCapability;
+		const applicationCapabilityFormatted = _.get(applicationCapability, 'id', '');
+		const isChannel2_0 = (applicationCapabilityFormatted.indexOf('V2') === 0);
+
+		this.props.timelineSteps.forEach(group => {
+			group.forEach(subGroup => {
+				if (subGroup.groupTitle === 'advanced_configuration') {
+					if (isChannel2_0) {
+						subGroup.groupSteps.forEach(step => {
+							if (step.label === 'channel_lifecycle_policy') {
+								step.disabled = !isChannel2_0;
+							} else if (step.label === 'channel_endorsement_policy') {
+								step.disabled = !isChannel2_0;
+							} else if (step.label === 'ordering_service_organization') {
+								step.disabled = !this.props.isOrdererSignatureNeeded;
+							}
+						});
+					} else {
+						subGroup.groupSteps.forEach(step => {
+							if (step.label === 'channel_lifecycle_policy') {
+								step.disabled = true;
+							} else if (step.label === 'channel_endorsement_policy') {
+								step.disabled = true;
+							} else if (step.label === 'ordering_service_organization') {
+								step.disabled = true;
+							}
+						});
+					}
+				}
+			});
+			updatedSteps.push(group);
+		});
+
+		this.props.updateState(SCOPE, {
+			timelineSteps: updatedSteps,
+		});
+	};
 
 	render() {
 		const {
@@ -100,6 +145,7 @@ class Capabilities extends Component {
 							]}
 							onChange={data => {
 								this.calculateCapabilityWarning(data);
+								this.updateTimelineSteps(data);
 							}}
 						/>
 					</div>
@@ -188,6 +234,7 @@ const dataProps = {
 	channelPeers: PropTypes.array,
 	nodeou_warning: PropTypes.bool,
 	orgs: PropTypes.array,
+	timelineSteps: PropTypes.array,
 };
 
 Capabilities.propTypes = {

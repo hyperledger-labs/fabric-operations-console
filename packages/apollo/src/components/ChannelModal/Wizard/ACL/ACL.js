@@ -31,6 +31,9 @@ import Logger from '../../../Log/Logger';
 const SCOPE = 'channelModal';
 const Log = new Logger(SCOPE);
 
+// This is step "channel_acls"
+//
+// this panel allow selecting channel access-control-lists parameters in a channel
 class ACL extends Component {
 	componentDidMount() {
 		this.props.updateState(SCOPE, {
