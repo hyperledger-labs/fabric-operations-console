@@ -1377,8 +1377,12 @@ module.exports = function (logger, ev, t) {
 							root_certs_b64: exports.getCertsForMspId(allPartyData, msp_id),
 							debug_tag: 'sig collection signature',
 						};
+						if (!msp_id) {
+							logger.error('[auth sig collection] field "msp_id" is missing from "authorize". will be unable to verify signature.');
+						}
 						if (!t.misc.is_trusted_certificate(options)) {
-							logger.error('[auth sig collection] no root certs signed provided cert for scs. signature is not trusted', msp_id);
+							logger.error('[auth sig collection] cert that created scs is not trusted by any known root certs. sig not trusted. msp:', msp_id);
+							logger.debug('[auth sig collection] number of trusted certs for msp:', options.root_certs_b64.length, 'msp:', msp_id);
 							return send_unauthorized('unauthorized - untrusted signature (scs)');
 						} else {
 							logger.info('[validate cert] sig collection signature certificate validated with a root cert - step:[2/2]');

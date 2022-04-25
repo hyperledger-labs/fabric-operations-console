@@ -13467,6 +13467,7 @@ components:
             couchDBConfig:
               type: object
               x-validate_no_extra_keys: true
+              x-validate_case_insensitive: true
               properties:
                 cacheSize:
                   description: Maximum size of the cache for CouchDB operations in MB. Defaults to 64MB. Note that if the cache size is not a multiple of 32 MB, the peer will round the size to the next multiple of 32MB.

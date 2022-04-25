@@ -1794,15 +1794,7 @@ class ChannelModal extends Component {
 				tick_interval: this.props.tick_interval, */
 			};
 		}
-		let selectedOrdererCapability =
-			(this.props.selectedOrdererCapability && typeof this.props.selectedOrdererCapability === 'object' && this.props.selectedOrdererCapability.id !== 'use_default') ?
-				this.props.selectedOrdererCapability.id : this.getDefaultCap('orderer');
-		let selectedChannelCapability =
-			(this.props.selectedChannelCapability && typeof this.props.selectedChannelCapability === 'object' && this.props.selectedChannelCapability.id !== 'use_default') ?
-				this.props.selectedChannelCapability.id : this.getDefaultCap('channel');;
-		let selectedApplicationCapability =
-			(this.props.selectedApplicationCapability && typeof this.props.selectedApplicationCapability === 'object' && this.props.selectedApplicationCapability.id !== 'use_default') ?
-				this.props.selectedApplicationCapability.id : this.getDefaultCap('application');
+
 		let orderer_urls = [];
 		if (this.isConsenterSetModified() && _.has(this.props.selectedOrderer, 'raft')) {
 			this.props.selectedOrderer.raft.forEach(node => {
@@ -1827,6 +1819,7 @@ class ChannelModal extends Component {
 			orderer_msp: this.props.selectedOrderer.msp_id,
 			client_cert_b64pem: this.props.selectedIdentity ? this.props.selectedIdentity.cert : null,
 			client_prv_key_b64pem: this.props.selectedIdentity ? this.props.selectedIdentity.private_key : null,
+			org_msp_id: this.props.selectedChannelCreator ? this.props.selectedChannelCreator.msp_id : null,
 			configtxlator_url: this.props.configtxlator_url,
 			acls: acls,
 			n_out_of: this.props.customPolicy ? this.props.customPolicy.id : 1,
@@ -1834,21 +1827,33 @@ class ChannelModal extends Component {
 			block_params: block_params,
 			raft_params: raft_params,
 			consenters: this.decideConsenters(),
+			application_capabilities: this.setCapValue(this.props.selectedApplicationCapability, 'application'),		// this is sometimes null
+			orderer_capabilities: this.setCapValue(this.props.selectedOrdererCapability, 'orderer'),					// this is sometimes null
+			channel_capabilities: this.setCapValue(this.props.selectedChannelCapability, 'channel'),					// this is sometimes null
 		};
-		if (selectedApplicationCapability) {
-			options.application_capabilities = [selectedApplicationCapability];
-		}
-		if (selectedChannelCapability) {
-			options.channel_capabilities = [selectedChannelCapability];
-		}
-		if (selectedOrdererCapability) {
-			options.orderer_capabilities = [selectedOrdererCapability];
-		}
-		if (selectedApplicationCapability && selectedApplicationCapability.indexOf('V2_0') !== -1) {
+
+		if (options.application_capabilities && options.application_capabilities.includes('V2_0')) {
 			this.buildChaincodePolicyOptions(options, 'lifecycle_policy');
 			this.buildChaincodePolicyOptions(options, 'endorsement_policy');
 		}
+
 		return options;
+	}
+
+	// only set capability if using osnadmin OR if a non-default cap was chosen, else return null.
+	// - its important to return null here b/c otherwise we will think an orderer-signature is needed downstream, even on a create-channel-call which is wrong and leads to errors.
+	setCapValue = (selectedCapField, defaultCapFieldName) => {
+		// set this variable if one was selected, if using a default leave it as null
+		let selectedCapability =
+			(selectedCapField && typeof selectedCapField === 'object' && selectedCapField.id !== 'use_default') ? selectedCapField.id : null;
+
+		if (selectedCapability) {
+			return [selectedCapability];				// return selected cap as an array
+		} else if (this.props.use_osnadmin) {
+			this.getDefaultCap(defaultCapFieldName);	// return the default cap if using the osnadmin feature
+		} else {
+			return null;								// return null for other cases
+		}
 	}
 
 	// runs the legacy create channel api
