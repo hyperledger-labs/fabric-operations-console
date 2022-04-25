@@ -380,6 +380,7 @@ class ChannelApi {
 			err1.message_key = 'error_block_encode';
 			throw err1;
 		}
+
 		// If signature was provided, sign and submit the request, else request signature
 		if (options.client_cert_b64pem && options.client_prv_key_b64pem) {
 			// 3.sign channel update protobuf
@@ -434,6 +435,7 @@ class ChannelApi {
 			if (!isOrdererSignatureNeeded) {
 				let resp3;
 				try {
+					// we don't need a orderer sig, so go submit the tx to Fabric
 					const submitConfigUpdate = promisify(window.stitch.submitConfigUpdate);
 					resp3 = await submitConfigUpdate(c_opts);
 					// send async event... don't wait
@@ -470,6 +472,8 @@ class ChannelApi {
 					}
 				}
 			} else {
+
+				// we need an OS msp signature, so don't submit the tx to fabric yet, store a sig collection event in console
 				try {
 					const sig_resp = await SignatureRestApi.createRequest(signature_request);
 					Log.info('new channel signature resp:', sig_resp);
@@ -480,6 +484,7 @@ class ChannelApi {
 				}
 			}
 		} else {
+
 			// Request signature(only 1 required) from channel admins
 			const signature_request = {
 				channel_name: options.channel_id,

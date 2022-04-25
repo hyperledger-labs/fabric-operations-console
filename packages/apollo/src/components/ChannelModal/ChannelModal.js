@@ -1840,19 +1840,20 @@ class ChannelModal extends Component {
 		return options;
 	}
 
-	// only set capability if using osnadmin OR if a non-default cap was chosen, else return null.
-	// - its important to return null here b/c otherwise we will think an orderer-signature is needed downstream, even on a create-channel-call which is wrong and leads to errors.
+	// only set the capability if using osnadmin OR if a non-default cap was chosen, else return null.
+	// - its important to return null (and not the default) b/c otherwise we will think an orderer-signature is needed downstream, even on a legacy create-channel-call
+	//	 which is wrong and leads to errors.
 	setCapValue = (selectedCapField, defaultCapFieldName) => {
-		// set this variable if one was selected, if using a default leave it as null
+		// set this variable if one was selected, if using a default set null
 		let selectedCapability =
 			(selectedCapField && typeof selectedCapField === 'object' && selectedCapField.id !== 'use_default') ? selectedCapField.id : null;
 
 		if (selectedCapability) {
-			return [selectedCapability];				// return selected cap as an array
+			return [selectedCapability];						// return the selected capability (as an array) iff we have a selected one
 		} else if (this.props.use_osnadmin) {
-			this.getDefaultCap(defaultCapFieldName);	// return the default cap if using the osnadmin feature
+			return [this.getDefaultCap(defaultCapFieldName)];	// return the default capability (as array) iff using the osnadmin feature
 		} else {
-			return null;								// return null for other cases
+			return null;
 		}
 	}
 
@@ -2315,6 +2316,7 @@ class ChannelModal extends Component {
 				{(viewing === 'organization_creating_channel' || viewing === 'organization_updating_channel') && <OrgSignature editLoading={this.props.editLoading} />}
 				{viewing === 'capabilities' && <Capabilities existingCapabilities={existingCapabilities}
 					channelPeers={this.props.channelPeers}
+					isOrdererSignatureNeeded={isOrdererSignatureNeeded}
 				/>}
 				{viewing === 'lifecycle_policy' && (
 					<ChaincodePolicy
