@@ -1827,6 +1827,7 @@ class ChannelModal extends Component {
 			orderer_msp: this.props.selectedOrderer.msp_id,
 			client_cert_b64pem: this.props.selectedIdentity ? this.props.selectedIdentity.cert : null,
 			client_prv_key_b64pem: this.props.selectedIdentity ? this.props.selectedIdentity.private_key : null,
+			org_msp_id: this.props.selectedChannelCreator ? this.props.selectedChannelCreator.msp_id : null,
 			configtxlator_url: this.props.configtxlator_url,
 			acls: acls,
 			n_out_of: this.props.customPolicy ? this.props.customPolicy.id : 1,
