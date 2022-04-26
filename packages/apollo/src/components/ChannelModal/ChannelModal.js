@@ -703,12 +703,10 @@ class ChannelModal extends Component {
 				(!isOrdererSignatureNeeded || (selectedOrdererMsp && selectedOrdererMsp !== 'selectedChannelCreator')) &&
 				_.size(aclErrors) === 0 &&
 				(!isChannelUpdate ||
-					(selectedOrdererCapability &&
-						selectedOrdererCapability !== 'use_default' &&
-						selectedChannelCapability &&
-						selectedChannelCapability !== 'use_default' &&
-						selectedApplicationCapability &&
-						selectedApplicationCapability !== 'use_default'));
+					(selectedOrdererCapability && selectedOrdererCapability !== 'use_default' &&
+						selectedChannelCapability && selectedChannelCapability !== 'use_default' &&
+						selectedApplicationCapability && selectedApplicationCapability !== 'use_default')
+				);
 		}
 
 		if (step === 'channel_orderer_organizations') {
@@ -1558,6 +1556,7 @@ class ChannelModal extends Component {
 			let availableOrdererCapabilities = this.props.capabilities ? Helper.getFormattedCapabilities(this.props.capabilities.orderer) : [];
 			let availableApplicationCapabilities = this.props.capabilities ? Helper.getFormattedCapabilities(this.props.capabilities.application) : [];
 			if (this.props.channelId && this.props.existingCapabilities) {
+
 				// When editing, allow capabilities that are higher than current capability
 				let currentChannelCapability = semver.coerce(this.props.existingCapabilities.channel.replace(/_/g, '.')).version;
 				let currentOrdererCapability = semver.coerce(this.props.existingCapabilities.orderer.replace(/_/g, '.')).version;
@@ -1574,6 +1573,7 @@ class ChannelModal extends Component {
 				availableApplicationCapabilities = currentApplicationCapability
 					? availableApplicationCapabilities.filter(x => semver.gte(x.value, currentApplicationCapability))
 					: availableApplicationCapabilities;
+
 				this.props.updateState(SCOPE, {
 					selectedApplicationCapability: currentApplicationCapability,
 					selectedOrdererCapability: currentOrdererCapability,
@@ -1827,7 +1827,7 @@ class ChannelModal extends Component {
 			block_params: block_params,
 			raft_params: raft_params,
 			consenters: this.decideConsenters(),
-			application_capabilities: this.setCapValue(this.props.selectedApplicationCapability, 'application'),		// this is sometimes null
+			application_capabilities: this.setCapValue(this.props.selectedApplicationCapability, 'application') || [constants.DEFAULT_APPLICATION_CAPABILITY],
 			orderer_capabilities: this.setCapValue(this.props.selectedOrdererCapability, 'orderer'),					// this is sometimes null
 			channel_capabilities: this.setCapValue(this.props.selectedChannelCapability, 'channel'),					// this is sometimes null
 		};
