@@ -35,6 +35,7 @@ import HSMConfig from '../HSMConfig/HSMConfig';
 import Logger from '../Log/Logger';
 import LogSettings from '../LogSettings/LogSettings';
 import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
+import SidePanelError from '../SidePanelError/SidePanelError';
 import TranslateLink from '../TranslateLink/TranslateLink';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
@@ -89,6 +90,7 @@ class PeerModal extends React.Component {
 
 	async initData() {
 		await this.getMaxBlockHeight();
+		await this.testVersion(this.props.new_version);
 		this.getCAWithUsers();
 	}
 
@@ -469,6 +471,33 @@ class PeerModal extends React.Component {
 		this.props.updateState('wizard', { error: null });
 	};
 
+	selectedVersion = async (evt) => {
+		this.testVersion(evt.new_version);
+	}
+
+	// test if upgrading to this version is a breaking change or not
+	testVersion = async (new_version) => {
+		this.props.updateState(SCOPE, { loading: true, breaking_upgrade: false });
+		let breaking_upgrade = false;
+		let breaking_details = '';
+
+		// call dry run to validate the request, if it fails set the broken upgrade flag
+		try {
+			await NodeRestApi.applyPatch({ id: this.props.peer.id, version: new_version }, true);
+		} catch (e) {
+			if (e && e.msgs && e.msgs[0] && e.msgs[0].includes('Invalid \'version\' value')) {
+				breaking_upgrade = true;
+				breaking_details = (e && e.msgs) ? e.msgs[0] : '';
+			}
+		}
+
+		this.props.updateState(SCOPE, {
+			loading: false,
+			breaking_upgrade: breaking_upgrade,
+			breaking_details: breaking_details
+		});
+	}
+
 	renderActionButtons(translate) {
 		if (!this.props.peer) {
 			return;
@@ -673,6 +702,7 @@ class PeerModal extends React.Component {
 		return (
 			<WizardStep type="WizardStep"
 				title="patch_fabric_version"
+				disableSubmit={this.props.breaking_upgrade}
 			>
 				<div className="ibp-remove-peer-desc">
 					<p>
@@ -712,6 +742,7 @@ class PeerModal extends React.Component {
 											options: this.props.peer.upgradable_versions,
 										},
 									]}
+									onChange={this.selectedVersion}
 								/>
 								<div>
 									<a
@@ -727,16 +758,31 @@ class PeerModal extends React.Component {
 						</div>
 					</div>
 					<div className="ibp-error-panel">
-						<SidePanelWarning title="node_unavailable_during_upgrade_title"
-							subtitle="node_unavailable_during_upgrade_desc"
-						/>
-						{upgrade_v1_to_v2 && (
+						{this.props.breaking_upgrade && (
+							<SidePanelError
+								error={{
+									title: 'peer_breaking_upgrade_title',
+									subtitle: 'peer_breaking_upgrade',
+									details: this.props.breaking_details,
+									link: {
+										name: 'breaking_link_text',
+										href: 'https://hyperledger-fabric.readthedocs.io/en/latest/upgrade_to_newest_version.html#nodejs-v1-4-chaincode'
+									}
+								}}
+							/>
+						)}
+						{!this.props.breaking_upgrade && (
+							<SidePanelWarning title="node_unavailable_during_upgrade_title"
+								subtitle="node_unavailable_during_upgrade_desc"
+							/>
+						)}
+						{!this.props.breaking_upgrade && upgrade_v1_to_v2 && (
 							<SidePanelWarning
 								title="peer_v1_v2_upgrade_title"
 								subtitle={this.props.maxBlockHeight > constants.BLOCK_HEIGHT_UPGRADE_THRESHOLD ? 'peer_v1_v2_upgrade_long' : 'peer_v1_v2_upgrade'}
 							/>
 						)}
-						{upgrade_v1_to_v2 && (
+						{!this.props.breaking_upgrade && upgrade_v1_to_v2 && (
 							<SidePanelWarning
 								title="peer_v1_v2_chaincode_title"
 								subtitle={
@@ -1542,6 +1588,8 @@ const dataProps = {
 	log_level_identity: PropTypes.object,
 	log_spec: PropTypes.string,
 	new_log_spec: PropTypes.string,
+	breaking_upgrade: PropTypes.bool,
+	breaking_details: PropTypes.string,
 };
 
 PeerModal.propTypes = {

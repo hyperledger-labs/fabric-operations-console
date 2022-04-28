@@ -1898,6 +1898,53 @@ describe('Misc', () => {
 			]
 		},
 
+		//  version_matches_pattern
+		{
+			suiteDescribe: 'version_matches_pattern',
+			mainDescribe: 'Run version_matches_pattern',
+			testData: [
+				{
+					arrayOfInfoToTest: [
+						{
+							itStatement: 'should return matches, no dashes test_id=fxpmza',
+							expectBlock: (done) => {
+								expect(misc.version_matches_pattern('1.4.x', '1.4.1')).to.equal(true);
+								expect(misc.version_matches_pattern('1.4.x', '1.4.20')).to.equal(true);
+								expect(misc.version_matches_pattern('v1.4.x', 'v1.4.1')).to.equal(true);
+								expect(misc.version_matches_pattern('v1.4.x', 'v1.4.20')).to.equal(true);
+								expect(misc.version_matches_pattern('v1.4.x', 'v1.4')).to.equal(true);
+								expect(misc.version_matches_pattern('1.x.0', '1.0.0')).to.equal(true);
+								done();
+							}
+						},
+						{
+							itStatement: 'should return matches, with dashes test_id=tsffwj',
+							expectBlock: (done) => {
+								expect(misc.version_matches_pattern('1.4.x-1', '1.4.1-2')).to.equal(true);
+								expect(misc.version_matches_pattern('1.4.x-1', '1.4.220-2')).to.equal(true);
+								expect(misc.version_matches_pattern('v1.4.x-1', 'v1.4.1-2')).to.equal(true);
+								expect(misc.version_matches_pattern('v1.4.x-1', 'v1.4.20-2')).to.equal(true);
+								expect(misc.version_matches_pattern('v1.4.x-1', 'v1.4-2')).to.equal(true);
+								done();
+							}
+						},
+						{
+							itStatement: 'should not return matches, no dashes test_id=khvzxc',
+							expectBlock: (done) => {
+								expect(misc.version_matches_pattern('1.4.x', '1.5.1')).to.equal(false);
+								expect(misc.version_matches_pattern('1.4.x', '1.5.20')).to.equal(false);
+								expect(misc.version_matches_pattern('v1.4.x', 'v1.5.1')).to.equal(false);
+								expect(misc.version_matches_pattern('v1.4.x', 'v1.5.20')).to.equal(false);
+								expect(misc.version_matches_pattern('v1.4.x', 'v1.5')).to.equal(false);
+								expect(misc.version_matches_pattern('1.x.0', '2.0.0')).to.equal(false);
+								done();
+							}
+						},
+					]
+				}
+			]
+		},
+
 		//  forced_array
 		{
 			suiteDescribe: 'forced_array',
