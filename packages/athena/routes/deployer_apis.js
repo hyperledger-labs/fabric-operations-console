@@ -89,6 +89,14 @@ module.exports = (logger, ev, t) => {
 				logger.debug('[pre-flight] setting validate route:', req._validate_path);
 
 				t.validate.request(req, res, t.validate.resource_validation, () => {
+					if (req.body && req.body.dry_run_mode === true) {
+						logger.debug('[dry run] this is a dry run request, the component will not be edited. the request was valid.');
+						const ret = JSON.parse(JSON.stringify(ev.API_SUCCESS_RESPONSE));
+						ret.dry_run_mode = true;
+						res.status(200).json(ret);
+						return;
+					}
+
 					t.deployer.update_component(req, (errObj, ret) => {
 						if (errObj) {
 							res.status(t.ot_misc.get_code(errObj)).json(errObj);

@@ -2017,12 +2017,14 @@ module.exports = function (logger, ev, t) {
 			logger.debug('[deployer lib]', parsed.debug_tx_id, ' sending deployer api w/route:', opts.url);
 			/*return lc_cb(null, {
 				versions: {
-					orderer: {
-						'2.2.99': {
-							default: true
+					peer: {
+						'2.4.3': {
+							default: true,
+							version: '2.4.3'
 						},
-						'1.4.9-5': {
-							default: true
+						'1.4.12-11': {
+							default: false,
+							version: '1.4.12-11'
 						}
 					}
 				}

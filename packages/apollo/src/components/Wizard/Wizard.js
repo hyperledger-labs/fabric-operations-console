@@ -140,7 +140,7 @@ class Wizard extends Component {
 		let step = 0;
 		const children = _.isArray(this.props.children) ? this.props.children : [this.props.children];
 		return (
-			<div className={this.props.loading ? 'hidden_section' : ''}>
+			<div>
 				{children.map(child => {
 					key++;
 					if (!this.isWizardStep(child)) {
@@ -184,7 +184,7 @@ class Wizard extends Component {
 									)}
 								</h1>
 							)}
-							{child.props.desc && <p className="ibp-wizard-step-desc">{child.props.desc}</p>}
+							{!this.props.loading && child.props.desc && <p className="ibp-wizard-step-desc">{child.props.desc}</p>}
 							{child}
 						</div>
 					);
@@ -296,7 +296,7 @@ class Wizard extends Component {
 				loading={this.props.loading}
 			>
 				<div className={this.props.step === 1 ? 'ibp-wizard-first-step' : 'ibp-wizard-secondary-step'}>
-					{total > 1 && !this.props.loading && (
+					{total > 1 && (
 						<div className="ibp-wizard-step">
 							{translate('step_n_of_x', {
 								step: this.props.step,
@@ -305,10 +305,10 @@ class Wizard extends Component {
 						</div>
 					)}
 					{!!this.props.title && <h1 className="ibp-wizard-title">{translate(this.props.title)}</h1>}
+					<FocusComponent setFocus={this.props.setFocus}>{this.renderChildren(translate)}</FocusComponent>
 					{this.props.loading && <Loading withOverlay={false}
 						className="ibp-wizard-loading"
 					/>}
-					<FocusComponent setFocus={this.props.setFocus}>{this.renderChildren(translate)}</FocusComponent>
 				</div>
 			</SidePanel>
 		);

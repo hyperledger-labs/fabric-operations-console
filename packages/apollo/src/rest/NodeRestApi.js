@@ -534,7 +534,7 @@ class NodeRestApi {
 	}
 
 	/**
-	 * Create a new component from scratch.
+	 * Edit an existing component - cannot edit deployment data.
 	 * @param {Component} node Updated component data.
 	 * @return {Promise<Component|ValidationError|TranslatedError>} A Promise that
 	 * resolves with the updated component record or rejects with an error describing what went wrong.
@@ -751,11 +751,12 @@ class NodeRestApi {
 		}
 	}
 
-	/* Upgrade node version */
-	static async applyPatch(node) {
+	// Upgrade node version - edits deployment data.
+	static async applyPatch(node, dryRunMode) {
 		const all = [];
 		const body = {
 			version: node.version,
+			dry_run_mode: dryRunMode,		// if true the request is only validated, it does not perform an upgrade
 		};
 		const headers = {
 			'cache-control': 'no-cache',
@@ -763,10 +764,10 @@ class NodeRestApi {
 		if (node.raft) {
 			// todo move this logic into the orderer lib
 			node.raft.forEach(raft_node => {
-				all.push(RestApi.put(`/api/saas/v2/components/${raft_node.id}`, body, headers));
+				all.push(RestApi.put(`/api/saas/v3/components/${raft_node.id}`, body, headers));
 			});
 		} else {
-			all.push(RestApi.put(`/api/saas/v2/components/${node.id}`, body, headers));
+			all.push(RestApi.put(`/api/saas/v3/components/${node.id}`, body, headers));
 		}
 		return (await Promise.all(all))[0];
 	}

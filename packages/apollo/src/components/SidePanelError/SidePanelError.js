@@ -47,6 +47,9 @@ export class SidePanelError extends React.Component {
 		if (error instanceof Error && error.translation && error.translation.message && error.translation.params) {
 			return translate(error.translation.message, error.translation.params);
 		}
+		if (error.subtitle) {
+			return translate(error.subtitle, error.translateOptions);
+		}
 	}
 
 	render() {
@@ -71,6 +74,16 @@ export class SidePanelError extends React.Component {
 					subtitle={
 						<div>
 							{subtitle}
+							{this.props.error && this.props.error.link && this.props.error.link.href && this.props.error.link.name && (
+								<a
+									href={translate(this.props.error.link.href)}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="ibp-break-error-link"
+								>
+									{translate(this.props.error.link.name)}
+								</a>
+							)}
 							{details ? (
 								<div>
 									<div>

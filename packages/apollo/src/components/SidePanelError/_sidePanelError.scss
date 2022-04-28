@@ -28,6 +28,10 @@
 		border: 0;
 		border-top: 0.25rem solid $field-error;
 	}
+	.bx--inline-notification__title{
+		@include carbon--font-weight('semibold');
+
+	}
 	.bx--inline-notification__title,
 	.bx--inline-notification__subtitle {
 		color: $inverseText;
@@ -42,6 +46,12 @@
 		max-height: 10rem;
 		overflow: hidden;
 		text-overflow: ellipsis;
+	}
+
+	a.ibp-break-error-link{
+		font-size: 12px;
+		margin-bottom: 1.5rem;
+		display: block;
 	}
 }
 

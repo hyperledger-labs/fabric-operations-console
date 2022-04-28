@@ -121,6 +121,9 @@ x-validate_error_messages:
   # query parameter is not applicable to the component in the api
   invalid_query_param_import: "The query parameter '$PROPERTY_NAME' with value '$VALUE' is not applicable on imported components."
 
+  # this api is not applicable to imported components
+  invalid_on_imported_comps: "This api is not applicable on imported components."
+
   # this array is not the same length as the master array field
   unmatched_lengths: "Expected array '$PROPERTY_NAME' to be the same length as '$MASTER_PROPERTY' ($LEN elements)."
 
@@ -133,8 +136,14 @@ x-validate_error_messages:
   # it is invalid to set this field if using a free k8s plan - doesn't apply to IBP software
   invalid_key_on_free_plan: "A *free* IBM Cloud Kubernetes cluster cannot use the parameter '$PROPERTY_NAME'."
 
+  # it is invalid to set more than 1 key in this body
+  too_many_keys: "Too many fields in body. This API only supports 1 field in the body. Use multiple apis to update multiple fields."
+
   # this value must be a known hostname, typically from an imported or deployed CA
   unknown_enroll_host: "The parameter '$PROPERTY_NAME' was not found in the list of known hostnames. Import the CA using this hostname or use a hostname that is already known."
+
+  # it is invalid to upgrade fabric from version x to y
+  invalid_fabric_upgrade: "Invalid '$PROPERTY_NAME' value. Upgrading Fabric from '$VALUE' to '$VALUE2' is a potentially breaking update. Try a different incremental version."
 
 #
 #
@@ -4624,6 +4633,10 @@ components:
           type: boolean
           example: true
           description: Indicates if node OUs are enabled or not.
+    dry_run_mode:
+      type: boolean
+      example: false
+      description: If true the request will be validated only. It will not execute, it will not make changes.
     ecert_obj_general:
       type: object
       properties:
@@ -7112,6 +7125,8 @@ components:
           properties:
             ca:
               $ref: '#/components/schemas/ConfigCAUpdate'
+        dry_run_mode:
+          $ref: '#/components/schemas/dry_run_mode'
         replicas:
           $ref: '#/components/schemas/replicas'
         version:
@@ -7140,6 +7155,8 @@ components:
       properties:
         config_override:
           $ref: '#/components/schemas/ConfigOrdererUpdate'
+        dry_run_mode:
+          $ref: '#/components/schemas/dry_run_mode'
         resources:
           type: object
           description: CPU and memory properties. This feature is not available if using a free Kubernetes cluster.
@@ -7178,6 +7195,8 @@ components:
       properties:
         config_override:
           $ref: '#/components/schemas/ConfigPeerUpdate'
+        dry_run_mode:
+          $ref: '#/components/schemas/dry_run_mode'
         resources:
           $ref: '#/components/schemas/PeerResources'
         zone:

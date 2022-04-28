@@ -345,7 +345,8 @@ It only works when auth scheme is set to `couchdb`.
 User must be logged in to edit their password.
 
 The new password's length must be >= the setting `min_password_len` and <= the setting `max_password_len`.
-Check the [configuration readme](../env/README.md#Default-Settings-File) for default values.
+Passwords that are less than `min_passphrase_len` must also have uppercase & lowercase & special characters, passwords of equal or greater length do not need to met this rule.
+Check the [configuration readme](../env/README.md#Default-Settings-File) for default values for these settings.
 
 - **Method**: PUT
 - **Route**: `/api/v[123]/permissions/users/password`
