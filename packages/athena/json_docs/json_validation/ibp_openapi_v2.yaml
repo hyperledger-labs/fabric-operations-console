@@ -143,7 +143,7 @@ x-validate_error_messages:
   unknown_enroll_host: "The parameter '$PROPERTY_NAME' was not found in the list of known hostnames. Import the CA using this hostname or use a hostname that is already known."
 
   # it is invalid to upgrade fabric from version x to y
-  invalid_fabric_upgrade: "Invalid '$PROPERTY_NAME' value. Upgrading Fabric from '$VALUE' to '$VALUE2' is a potentially breaking update. Try a different incremental version."
+  invalid_fabric_upgrade: "Invalid '$PROPERTY_NAME' value. Upgrading Fabric from '$VALUE' to '$VALUE2' is a potentially breaking update. Read the Fabric docs for details. You can override this by setting \"ignore_warnings\" to true."
 
 #
 #

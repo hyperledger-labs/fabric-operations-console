@@ -756,6 +756,7 @@ class NodeRestApi {
 		const all = [];
 		const body = {
 			version: node.version,
+			ignore_warnings: node.ignore_warnings,
 			dry_run_mode: dryRunMode,		// if true the request is only validated, it does not perform an upgrade
 		};
 		const headers = {
