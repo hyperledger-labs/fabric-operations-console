@@ -97,7 +97,7 @@
 	x-validate_known_hostname:
 		- string. applies to enrollment "host" fields when deploying components
 		- will generate an error if this hostname is not in the whitelist
-	x-validate_breaking-version-upgrade:
+	x-validate_breaking_version_upgrade:
 		- object. applies to string types. validates if a breaking fabric upgrade is being requested. this field contains the rules.
 		- will generate an error if the current version and desired version match a breaking upgrade rule.
 */
@@ -744,7 +744,9 @@ module.exports = (logger, ev, t, opts) => {
 
 		// check if sending more than 1 root field in object
 		if ((body_spec['x-validate_only_one_key'] === 'ak' && t.ot_misc.detect_ak_route(req)) || body_spec['x-validate_only_one_key'] === 'all') {
-			if (typeof input === 'object' && Object.keys(input).length > 1) {
+			let count = Object.keys(input).length;
+			if (typeof input.ignore_warnings === 'boolean') { count--; }
+			if (typeof input === 'object' && count > 1) {
 				const symbols = {};
 				errors.push({ key: 'too_many_keys', symbols: symbols });
 			}
@@ -761,24 +763,28 @@ module.exports = (logger, ev, t, opts) => {
 		}
 
 		// check for incompatible fabric "version" upgrades
-		if (body_spec['x-validate_breaking-version-upgrade'] && typeof body_spec['x-validate_breaking-version-upgrade'] === 'object') {
-			if (req._component_doc && req._component_doc.version) {
-				for (let from_version in body_spec['x-validate_breaking-version-upgrade']) {	// iter on each rule
-					const invalid_upgrade_version = body_spec['x-validate_breaking-version-upgrade'][from_version];
-					const comps_version_atm = req._component_doc.version;
-					const desired_version = input;
+		if (body_spec['x-validate_breaking_version_upgrade'] && typeof body_spec['x-validate_breaking_version_upgrade'] === 'object') {
+			if (req && req.body && req.body.ignore_warnings === true) {
+				logger.warn('[validate] skipping breaking version upgrade checks b/c "ignore_warnings" is true');
+			} else {
+				if (req._component_doc && req._component_doc.version) {
+					for (let from_version in body_spec['x-validate_breaking_version_upgrade']) {	// iter on each rule
+						const invalid_upgrade_version = body_spec['x-validate_breaking_version_upgrade'][from_version];
+						const comps_version_atm = req._component_doc.version;
+						const desired_version = input;
 
-					// first check if the version in use matches an incompatible upgrade rule
-					if (t.misc.version_matches_pattern(from_version, comps_version_atm)) {
+						// first check if the version in use matches an incompatible upgrade rule
+						if (t.misc.version_matches_pattern(from_version, comps_version_atm)) {
 
-						// next check if the desired version matches the incompatible upgrade rule
-						if (t.misc.version_matches_pattern(invalid_upgrade_version, desired_version)) {
-							const symbols = {
-								'$PROPERTY_NAME': path2field.join('.'),
-								'$VALUE': from_version,
-								'$VALUE2': invalid_upgrade_version,
-							};
-							errors.push({ key: 'invalid_fabric_upgrade', symbols: symbols });
+							// next check if the desired version matches the incompatible upgrade rule
+							if (t.misc.version_matches_pattern(invalid_upgrade_version, desired_version)) {
+								const symbols = {
+									'$PROPERTY_NAME': path2field.join('.'),
+									'$VALUE': from_version,
+									'$VALUE2': invalid_upgrade_version,
+								};
+								errors.push({ key: 'invalid_fabric_upgrade', symbols: symbols });
+							}
 						}
 					}
 				}

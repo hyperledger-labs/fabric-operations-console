@@ -145,7 +145,7 @@ x-validate_error_messages:
   unknown_enroll_host: "The parameter '$PROPERTY_NAME' was not found in the list of known hostnames. Import the CA using this hostname or use a hostname that is already known."
 
   # it is invalid to upgrade fabric from version x to y
-  invalid_fabric_upgrade: "Invalid '$PROPERTY_NAME' value. Upgrading Fabric from '$VALUE' to '$VALUE2' is a potentially breaking update. Try a different incremental version."
+  invalid_fabric_upgrade: "Invalid '$PROPERTY_NAME' value. Upgrading Fabric from '$VALUE' to '$VALUE2' is a potentially breaking update. Read the Fabric docs for details. You can override this by setting \"ignore_warnings\" to true."
 
 
 #
@@ -11209,8 +11209,14 @@ components:
       type: string
       example: 1.4.6-1
       description: The Hyperledger Fabric release version to update to.
-      x-validate_breaking-version-upgrade:
-        1.4.x: 2.4.x  # you cannot upgrade 1.4.x to 2.4.x
+      x-validate_breaking_version_upgrade:
+        1.4.x: 2.4.x  # you cannot upgrade 1.4.x to 2.4.x, unless you ignore it
+        2.0.x: 2.4.x  # you cannot upgrade 2.0.x to 2.4.x, unless you ignore it
+        2.1.x: 2.4.x  # you cannot upgrade 2.1.x to 2.4.x, unless you ignore it
+        2.2.x: 2.4.x  # you cannot upgrade 2.2.x to 2.4.x, unless you ignore it
+    ignore_warnings:
+      type: boolean
+      description: If true will ignore upgrade validation warnings.
     timestamp_creation:
       type: number
       description: UTC UNIX timestamp of component onboarding to the UI. In milliseconds.
@@ -14192,6 +14198,8 @@ components:
           $ref: '#/components/schemas/PeerResources'
         version:
           $ref: '#/components/schemas/version_edit_peer'
+        ignore_warnings:
+          $ref: '#/components/schemas/ignore_warnings'
         zone:
           $ref: '#/components/schemas/k8s_zone'
 

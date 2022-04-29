@@ -39,6 +39,7 @@ import SidePanelError from '../SidePanelError/SidePanelError';
 import TranslateLink from '../TranslateLink/TranslateLink';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
+import { Checkbox } from 'carbon-components-react';
 
 const SCOPE = 'peerModal';
 const Log = new Logger(SCOPE);
@@ -82,6 +83,7 @@ class PeerModal extends React.Component {
 			log_level_identity: null,
 			log_spec: null,
 			new_log_spec: null,
+			ignore_breaking: false,
 		});
 		this.identities = null;
 		this.tls_identities = [];
@@ -348,6 +350,7 @@ class PeerModal extends React.Component {
 		let opts = {
 			id: this.props.peer.id,
 			version: this.props.new_version,
+			ignore_warnings: this.props.ignore_breaking
 		};
 		NodeRestApi.applyPatch(opts)
 			.then(resp => {
@@ -480,6 +483,7 @@ class PeerModal extends React.Component {
 		this.props.updateState(SCOPE, { loading: true, breaking_upgrade: false });
 		let breaking_upgrade = false;
 		let breaking_details = '';
+		let breaking_msg = 'peer_breaking_upgrade';
 
 		// call dry run to validate the request, if it fails set the broken upgrade flag
 		try {
@@ -488,13 +492,17 @@ class PeerModal extends React.Component {
 			if (e && e.msgs && e.msgs[0] && e.msgs[0].includes('Invalid \'version\' value')) {
 				breaking_upgrade = true;
 				breaking_details = (e && e.msgs) ? e.msgs[0] : '';
+				if (breaking_details.includes('from \'2.2')) {
+					breaking_msg = 'peer_breaking_upgrade2.2';
+				}
 			}
 		}
 
 		this.props.updateState(SCOPE, {
 			loading: false,
 			breaking_upgrade: breaking_upgrade,
-			breaking_details: breaking_details
+			breaking_details: breaking_details,
+			breaking_msg: breaking_msg,
 		});
 	}
 
@@ -688,6 +696,12 @@ class PeerModal extends React.Component {
 		);
 	}
 
+	onChangeIgnoreErrorCheckbox = event => {
+		this.props.updateState(SCOPE, {
+			ignore_breaking: event.target.checked,
+		});
+	};
+
 	renderUpgrade(translate) {
 		let upgrade_v1_to_v2 =
 			this.props.new_version &&
@@ -702,7 +716,7 @@ class PeerModal extends React.Component {
 		return (
 			<WizardStep type="WizardStep"
 				title="patch_fabric_version"
-				disableSubmit={this.props.breaking_upgrade}
+				disableSubmit={this.props.breaking_upgrade && this.props.ignore_breaking === false}
 			>
 				<div className="ibp-remove-peer-desc">
 					<p>
@@ -762,12 +776,22 @@ class PeerModal extends React.Component {
 							<SidePanelError
 								error={{
 									title: 'peer_breaking_upgrade_title',
-									subtitle: 'peer_breaking_upgrade',
+									subtitle: this.props.breaking_msg,
 									details: this.props.breaking_details,
 									link: {
 										name: 'breaking_link_text',
 										href: 'https://hyperledger-fabric.readthedocs.io/en/latest/upgrade_to_newest_version.html#nodejs-v1-4-chaincode'
 									}
+								}}
+							/>
+						)}
+						{this.props.breaking_upgrade && (
+							<Checkbox
+								id={'ignore_breaking'}
+								labelText={translate('ignore_breaking_txt')}
+								checked={this.props.ignore_breaking}
+								onClick={event => {
+									this.onChangeIgnoreErrorCheckbox(event);
 								}}
 							/>
 						)}
@@ -1590,6 +1614,8 @@ const dataProps = {
 	new_log_spec: PropTypes.string,
 	breaking_upgrade: PropTypes.bool,
 	breaking_details: PropTypes.string,
+	breaking_msg: PropTypes.string,
+	ignore_breaking: PropTypes.bool,
 };
 
 PeerModal.propTypes = {
