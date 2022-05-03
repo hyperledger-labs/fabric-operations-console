@@ -1165,7 +1165,7 @@ module.exports = function (logger, ev, t) {
 					athena_docs: athena_data ? athena_data.components : null,		// pass athena docs on too, useful
 					deployer_data: deployer_data,
 				};
-				if (!deployer_data._cached) {										// do not run sync w/cached deployer data
+				if (deployer_data && !deployer_data._cached) {						// do not run sync w/cached deployer data
 					batch_sync_deployer_attributes_with_couch(ret);					// we don't wait on batch sync... todo re-evaluate
 				}
 				return cb(null, ret);
@@ -1328,7 +1328,7 @@ module.exports = function (logger, ev, t) {
 				if (ret.deployer_data && ret.deployer_data.name) {
 					sync_opts.deployer_data[ret.deployer_data.name] = ret.deployer_data;
 				}
-				if (!deployer_data._cached) {										// do not run sync w/cached deployer data
+				if (deployer_data && !deployer_data._cached) {						// do not run sync w/cached deployer data
 					batch_sync_deployer_attributes_with_couch(sync_opts);			// we don't wait on batch sync... todo re-evaluate
 				}
 				return cb(null, ret);
