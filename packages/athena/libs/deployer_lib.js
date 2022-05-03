@@ -1165,7 +1165,9 @@ module.exports = function (logger, ev, t) {
 					athena_docs: athena_data ? athena_data.components : null,		// pass athena docs on too, useful
 					deployer_data: deployer_data,
 				};
-				batch_sync_deployer_attributes_with_couch(ret);						// we don't wait on batch sync... todo re-evaluate
+				if (!deployer_data._cached) {										// do not run sync on w/cached deployer data
+					batch_sync_deployer_attributes_with_couch(ret);					// we don't wait on batch sync... todo re-evaluate
+				}
 				return cb(null, ret);
 			}
 		});
@@ -1193,6 +1195,7 @@ module.exports = function (logger, ev, t) {
 			const hit = t.proxy_cache.get(req._key);
 			if (hit && hit.resp && hit.key_src === req._key_src) {					// protect from hash collision
 				hit.resp._cached_timestamp = hit.cached_ts;
+				hit.resp._cached = true;
 				hit.resp._cache_expires_in = t.misc.friendly_ms(t.proxy_cache.getTtl(req._key) - Date.now());
 				logger.debug('[deployer lib] using cached value for the deployer api: get all components', hit.resp._cache_expires_in);
 				return cb(hit.error, hit.resp);
@@ -1325,7 +1328,9 @@ module.exports = function (logger, ev, t) {
 				if (ret.deployer_data && ret.deployer_data.name) {
 					sync_opts.deployer_data[ret.deployer_data.name] = ret.deployer_data;
 				}
-				batch_sync_deployer_attributes_with_couch(sync_opts);			// we don't wait on batch sync... todo re-evaluate
+				if (!deployer_data._cached) {										// do not run sync on w/cached deployer data
+					batch_sync_deployer_attributes_with_couch(sync_opts);			// we don't wait on batch sync... todo re-evaluate
+				}
 				return cb(null, ret);
 			}
 		});
@@ -1355,6 +1360,7 @@ module.exports = function (logger, ev, t) {
 			const hit = t.proxy_cache.get(req._key);
 			if (hit && hit.resp && hit.key_src === req._key_src) {		// protect from hash collision
 				hit.resp._cached_timestamp = hit.cached_ts;
+				hit.resp._cached = true;
 				hit.resp._cache_expires_in = t.misc.friendly_ms(t.proxy_cache.getTtl(req._key) - Date.now());
 				logger.debug('[deployer lib] using cached value for the deployer api: get component', hit.resp._cache_expires_in);
 				return cb(hit.error, hit.resp);
