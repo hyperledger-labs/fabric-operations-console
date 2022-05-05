@@ -495,6 +495,7 @@ class PeerModal extends React.Component {
 				if (breaking_details.includes('from \'2.2')) {
 					breaking_msg = 'peer_breaking_upgrade2.2';
 				}
+				breaking_details = removeLastSentence(breaking_details);
 			}
 		}
 
@@ -504,6 +505,15 @@ class PeerModal extends React.Component {
 			breaking_details: breaking_details,
 			breaking_msg: breaking_msg,
 		});
+
+		// remove the last sentence of the error msg, its the "ignore_warnings" part
+		function removeLastSentence(str) {
+			if (typeof str === 'string' && str.includes('ignore_warnings')) {
+				const parts = str.split('.');
+				parts.splice(parts.length - 1, 1);		// remove the last one
+				return parts.join('.');
+			}
+		}
 	}
 
 	renderActionButtons(translate) {
