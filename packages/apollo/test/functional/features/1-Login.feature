@@ -1,4 +1,4 @@
-@software
+@saas
 Feature: Login feature
 
     Scenario: When entering the default username and password
