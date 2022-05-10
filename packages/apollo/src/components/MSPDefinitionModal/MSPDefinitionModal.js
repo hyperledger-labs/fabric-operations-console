@@ -218,7 +218,11 @@ export class MSPDefinitionModal extends Component {
 			disableSubmit: true,
 			error: null,
 		});
-		if (!this.props.msp_id || !this.props.msp_name || this.props.rootCerts.length === 0 || this.props.admins.length === 0) {
+
+		let notValidAdmin = (!this.props.fabric_node_ous?.enable && this.props.admins?.length === 0) ||
+							(this.props.fabric_node_ous?.enable && this.props.admins === undefined);
+
+		if (!this.props.msp_id || !this.props.msp_name || this.props.rootCerts.length === 0 || notValidAdmin) {
 			// required fields
 			this.props.updateState(SCOPE, {
 				error: {
