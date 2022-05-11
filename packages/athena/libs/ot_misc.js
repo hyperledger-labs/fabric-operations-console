@@ -182,7 +182,7 @@ module.exports = function (logger, t) {
 	//-------------------------------------------------------------
 	exports.validateUrl = (url, white_list_regex_array) => {
 		const host = t.misc.get_host(url);
-		if (host) {
+		if (host && Array.isArray(white_list_regex_array)) {
 			for (let i in white_list_regex_array) {
 				const regex = RegExp(white_list_regex_array[i]);
 				const match = regex.test(host);
