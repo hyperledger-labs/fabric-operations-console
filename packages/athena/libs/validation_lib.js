@@ -754,7 +754,7 @@ module.exports = (logger, ev, t, opts) => {
 
 		// check if the hostname is in our whitelist or not
 		if (body_spec['x-validate_known_hostname'] === true) {
-			if (!t.ot_misc.validateUrl(input, ev.HOST_WHITE_LIST)) {
+			if (!t.ot_misc.validateUrl(input, req._whitelist || ev.HOST_WHITE_LIST)) {
 				const symbols = {
 					'$PROPERTY_NAME': path2field.join('.'),
 				};

@@ -2207,6 +2207,62 @@ describe('Misc', () => {
 			]
 		},
 
+		// is_equal_arr
+		{
+			suiteDescribe: 'is_equal_arr',
+			mainDescribe: 'Run is_equal_arr',
+			testData: [
+				{
+					arrayOfInfoToTest: [
+						{
+							itStatement: 'should detect arrs as the same - test_id=nfnmrn',
+							expectBlock: (done) => {
+								let arr1;
+								let arr2;
+								arr1 = [1, 2, 3];
+								arr2 = [1, 2, 3];
+								expect(misc.is_equal_arr(arr1, arr2)).to.equal(true);
+
+								arr1 = [1, 2, 3, 4];
+								arr2 = [4, 3, 2, 1];
+								expect(misc.is_equal_arr(arr1, arr2)).to.equal(true);
+
+								arr1 = ['1', '1', '2', '3'];
+								arr2 = ['3', '1', '2', '1'];
+								expect(misc.is_equal_arr(arr1, arr2)).to.equal(true);
+
+								arr1 = ['1', 1, false, null];
+								arr2 = ['1', 1, null, false];
+								expect(misc.is_equal_arr(arr1, arr2)).to.equal(true);
+								done();
+							}
+						},
+						{
+							itStatement: 'should detect arrs as different - test_id=rhasjs',
+							expectBlock: (done) => {
+								let arr1;
+								let arr2;
+								arr1 = [1, 2, 3, 4];
+								arr2 = [4, 3, 2, 1, 1];
+								expect(misc.is_equal_arr(arr1, arr2)).to.equal(false);
+
+								arr1 = ['1', '1', '2', '3'];
+								arr2 = ['3', '1', '2'];
+								expect(misc.is_equal_arr(arr1, arr2)).to.equal(false);
+
+								arr1 = ['1', 1, false, null];
+								arr2 = [];
+								expect(misc.is_equal_arr(arr1, arr2)).to.equal(false);
+
+								expect(misc.is_equal_arr(arr1, null)).to.equal(false);
+								done();
+							}
+						}
+					]
+				}
+			]
+		},
+
 		// conform_bytes
 		{
 			suiteDescribe: 'conform_bytes',

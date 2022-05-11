@@ -1036,7 +1036,7 @@ module.exports = function (logger, ev, t) {
 	}
 
 	//-------------------------------------------------------------
-	// Rebuild ips/domains on whitelist
+	// Rebuild ips/domains on whitelist aka safelist
 	//-------------------------------------------------------------
 	exports.rebuildWhiteList = (req, cb) => {
 		req._skip_cache = true;
@@ -1047,7 +1047,7 @@ module.exports = function (logger, ev, t) {
 			(join) => {
 				exports.get_all_components(req, (err, resp) => {
 					if (err) {
-						logger.warn('[comp lib] could not get component docs to rebuild white list', err);
+						logger.warn('[comp lib] could not get component docs to rebuild hostname safelist', err);
 					}
 					join(err, resp);
 				});
@@ -1057,7 +1057,7 @@ module.exports = function (logger, ev, t) {
 			(join) => {
 				t.signature_collection_lib.getSignatureCollectionsDocs(req, (err, resp) => {
 					if (err) {
-						logger.warn('[comp lib] could not get signature collections to rebuild white list', err);
+						logger.warn('[comp lib] could not get signature collections to rebuild hostname safelist', err);
 					}
 					join(null, resp);						// don't care if we can't get these
 				});
@@ -1065,7 +1065,7 @@ module.exports = function (logger, ev, t) {
 
 		], (a_err, results) => {
 			if (a_err) {
-				logger.error('[comp lib] cannot update white list, could not get components'); // error details already logged
+				logger.error('[comp lib] cannot update hostname safelist, could not get components'); // error details already logged
 				return cb(a_err);
 			} else {
 				const components_arr = results[0] ? results[0].components : [];
@@ -1110,24 +1110,29 @@ module.exports = function (logger, ev, t) {
 				}
 			}
 
-			// get the settings doc to edit it
 			const opts = {
 				db_name: ev.DB_SYSTEM,
 				_id: process.env.SETTINGS_DOC_ID
 			};
-			t.otcc.repeatWriteSafe(opts, (settings_doc) => {		// don't use wr_doc in callback, use "doc" passed into writeDoc
-				settings_doc.host_white_list = Object.keys(urls2add);
-				return { doc: settings_doc };						// doc has the right _rev
-			}, (err) => {
-				if (err) {
-					logger.error('error editing settings doc for white list 1', err);
-					return cb_built(err);
-				} else {
-					ev.update(null, () => {							// update settings to get the new white list setting
-						return cb_built(null);
-					});
-				}
-			});
+			const new_list = Object.keys(urls2add);
+
+			if (t.misc.is_equal_arr(ev.HOST_WHITE_LIST, new_list)) {	// if its the same, don't make a new write, would be pointless churn
+				logger.debug('[comp lib] hostname safelist has not changed, skipping a settings doc update');
+				return cb_built(null, new_list);
+			} else {
+				ev.HOST_WHITE_LIST = new_list;
+				t.otcc.repeatWriteSafe(opts, (settings_doc) => {		// don't use wr_doc in callback, use "doc" passed into writeDoc
+					settings_doc.host_white_list = new_list;
+					return { doc: settings_doc };						// doc has the right _rev
+				}, (err) => {
+					if (err) {
+						logger.error('[comp lib] error editing settings doc for safelist 1', err);
+						return cb_built(err, new_list);
+					} else {
+						return cb_built(null, new_list);
+					}
+				});
+			}
 		}
 	};
 

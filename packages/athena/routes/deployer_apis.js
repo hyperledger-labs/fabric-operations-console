@@ -36,20 +36,24 @@ module.exports = (logger, ev, t) => {
 	});
 
 	function provision(req, res) {
-		req.body.type = t.component_lib.find_type(req);				// body cannot be null, dealt with in body parser
+		req.body.type = t.component_lib.find_type(req);					// body cannot be null, dealt with in body parser
 		if (!req.body.type) {
 			return res.status(400).json(t.validate.fmt_input_error(req, [{ key: 'missing_type' }]));
 		}
 		req._validate_path = '/ak/api/' + t.validate.pick_ver(req) + '/kubernetes/components/' + req.body.type;
 		logger.debug('[pre-flight] setting validate route:', req._validate_path);
 
-		t.validate.request(req, res, t.validate.valid_create_component, () => {
-			t.deployer.provision_component(req, (errObj, ret) => {
-				if (errObj) {
-					res.status(t.ot_misc.get_code(errObj)).json(errObj);
-				} else {
-					res.status(200).json(ret.athena_fmt);
-				}
+		t.component_lib.rebuildWhiteList(req, (error, whitelist) => {	// get up to date whitelist
+			req._whitelist = whitelist;
+
+			t.validate.request(req, res, t.validate.valid_create_component, () => {
+				t.deployer.provision_component(req, (errObj, ret) => {
+					if (errObj) {
+						res.status(t.ot_misc.get_code(errObj)).json(errObj);
+					} else {
+						res.status(200).json(ret.athena_fmt);
+					}
+				});
 			});
 		});
 	}

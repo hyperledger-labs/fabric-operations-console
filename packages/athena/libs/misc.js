@@ -721,6 +721,25 @@ module.exports = function (logger, t) {
 	};
 
 	// ------------------------------------------
+	// compares if arrays have differences or not (when order does not matter)
+	// ------------------------------------------
+	exports.is_equal_arr = function (a, b) {
+		try {
+			a = JSON.parse(JSON.stringify(a));
+			b = JSON.parse(JSON.stringify(b));
+			a.sort();						// order does not matter for this function
+			b.sort();
+		} catch (e) { }
+
+		try {
+			return JSON.stringify(a) === JSON.stringify(b);
+		} catch (e) {
+			logger.error('[misc] error when comparing arr fields', e);
+			return false;
+		}
+	};
+
+	// ------------------------------------------
 	// compares if JSON has differences or not
 	// ------------------------------------------
 	exports.is_equal = function (a, b) {

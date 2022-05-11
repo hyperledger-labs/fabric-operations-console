@@ -89,6 +89,10 @@ describe('Deployer APIs', () => {
 			return next();
 		};
 
+		tools.component_lib.rebuildWhiteList = (req, cb) => {
+			return cb();
+		};
+
 		deployer_lib = tools.deployer;
 		tools.stubs.record_deployer_operation = sinon.stub(deployer_lib, 'record_deployer_operation').callsArgWith(4, null, { prop: 'something here' });
 		tools.stubs.send_actions = sinon.stub(deployer_lib, 'send_actions').callsArgWith(1, null);
