@@ -1127,7 +1127,7 @@ module.exports = function (logger, ev, t) {
 				}, (err) => {
 					if (err) {
 						logger.error('[comp lib] error editing settings doc for safelist 1', err);
-						return cb_built(err);
+						return cb_built(err, new_list);
 					} else {
 						return cb_built(null, new_list);
 					}
