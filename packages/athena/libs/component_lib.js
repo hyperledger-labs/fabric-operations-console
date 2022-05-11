@@ -1117,7 +1117,7 @@ module.exports = function (logger, ev, t) {
 			const new_list = Object.keys(urls2add);
 
 			if (t.misc.is_equal_arr(ev.HOST_WHITE_LIST, new_list)) {	// if its the same, don't make a new write, would be pointless churn
-				logger.debug('[comp lib] hostname safelist has not changed, skipping write');
+				logger.debug('[comp lib] hostname safelist has not changed, skipping a settings doc update');
 				return cb_built(null, new_list);
 			} else {
 				ev.HOST_WHITE_LIST = new_list;

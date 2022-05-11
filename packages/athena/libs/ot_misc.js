@@ -191,7 +191,7 @@ module.exports = function (logger, t) {
 				}
 			}
 		}
-		logger.warn('host to proxy does not match white list', encodeURI(host));
+		logger.warn('[ot_misc] this hostname was not found in safelist', encodeURI(host));
 		return false;
 	};
 

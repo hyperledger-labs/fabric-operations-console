@@ -754,14 +754,12 @@ module.exports = (logger, ev, t, opts) => {
 
 		// check if the hostname is in our whitelist or not
 		if (body_spec['x-validate_known_hostname'] === true) {
-			t.component_lib.rebuildWhiteList(req, (error, whitelist) => {						// get up to date whitelist
-				if (!t.ot_misc.validateUrl(input, whitelist)) {
-					const symbols = {
-						'$PROPERTY_NAME': path2field.join('.'),
-					};
-					errors.push({ key: 'unknown_enroll_host', symbols: symbols });
-				}
-			});
+			if (!t.ot_misc.validateUrl(input, req._whitelist || ev.HOST_WHITE_LIST)) {
+				const symbols = {
+					'$PROPERTY_NAME': path2field.join('.'),
+				};
+				errors.push({ key: 'unknown_enroll_host', symbols: symbols });
+			}
 		}
 
 		// check for incompatible fabric "version" upgrades
