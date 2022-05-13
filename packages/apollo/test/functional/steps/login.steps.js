@@ -113,11 +113,14 @@ Given(/^I am logged in$/, async() => {
 		}
 	} catch (err) {
 		try {
-			let loginContainer = element(by.css('.login'));
-			let header = loginContainer.element(by.css('.form-heading'));
-			await browser.wait(ExpectedConditions.visibilityOf(header), 2000);
+		    console.log('iamLogin');
+			// let loginContainer = element(by.css('.login'));
+			let header = element(by.css('.heading-container'));
+            await browser.sleep(5000);
+            await browser.wait(ExpectedConditions.visibilityOf(header), 2000);
 			let text = await header.getText();
 			if (text.includes('Log in to IBM')) {
+			    console.log('Calling iamLogin function');
 				await iamLogin(browser.automationUser, browser.automationPassword);
 			}
 		} catch (err) {

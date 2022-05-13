@@ -71,13 +71,38 @@ async function iamLogin(email, password) {
 	await browser.wait(ExpectedConditions.elementToBeClickable(loginButton), 8000);
 	await loginButton.click();
 
+	// Check if Sign in with w3id is displayed or not
+	try{
+        console.log('Checking if Sign in with w3id text is displayed or not');
+        await browser.sleep(10000);
+        let signInw3IdElement = element(by.id('credentialSignin'));
+        await browser.wait(ExpectedConditions.visibilityOf(signInw3IdElement), 8000);
+        let signInw3IdText = await signInw3IdElement.getText();
+        console.log('signInw4Text = %s'. signInw3IdText);
+        if (signInw3IdText.includes('w3id Credentials')) {
+            console.log('Sign in with w3id Credentials link is displayed');
+            let signInw3IdLink = element(by.id('credentialSignin'));
+            signInw3IdElement.click();
+            await browser.sleep(3000);
+
+            console.log('Entering user name')
+            let w3EmailInput = element(by.id('user-name-input'));
+            await browser.wait(ExpectedConditions.visibilityOf(w3EmailInput), 6000);
+            await w3EmailInput.sendKeys(email);
+        }
+    } catch (err)
+    {
+        console.log('Error %s', err);
+    }
+
 	let passwordInput = element(by.name('password'));
 	await browser.wait(ExpectedConditions.visibilityOf(passwordInput), 6000);
 	await passwordInput.sendKeys(password);
 
-	loginButton = element(by.id('signinbutton'));
+	loginButton = element(by.id('login-button'));
 	await browser.wait(ExpectedConditions.elementToBeClickable(loginButton), 8000);
 	await loginButton.click();
+	console.log('Clicked on Sign In button');
 }
 
 module.exports = {
