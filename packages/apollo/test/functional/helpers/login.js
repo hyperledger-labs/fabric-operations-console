@@ -23,10 +23,12 @@ async function login(email, password) {
 	await browser.wait(ExpectedConditions.visibilityOf(emailInput), 6000);
 	await emailInput.sendKeys(email);
 
+	console.log('login: Entering password %s', password);
 	let passwordInput = element(by.name('login_password'));
 	await browser.wait(ExpectedConditions.visibilityOf(passwordInput), 6000);
 	await passwordInput.sendKeys(password);
 
+	console.log('login: Clicking on Login button');
 	const loginButton = element(by.css('button[id="login"]'));
 	await browser.wait(ExpectedConditions.elementToBeClickable(loginButton), 8000);
 	await loginButton.click();
