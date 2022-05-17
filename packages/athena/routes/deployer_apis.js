@@ -92,21 +92,25 @@ module.exports = (logger, ev, t) => {
 				req._validate_path = '/ak/api/' + t.validate.pick_ver(req) + '/kubernetes/components/' + type + '/{id}';
 				logger.debug('[pre-flight] setting validate route:', req._validate_path);
 
-				t.validate.request(req, res, t.validate.resource_validation, () => {
-					if (req.body && req.body.dry_run_mode === true) {
-						logger.debug('[dry run] this is a dry run request, the component will not be edited. the request was valid.');
-						const ret = JSON.parse(JSON.stringify(ev.API_SUCCESS_RESPONSE));
-						ret.dry_run_mode = true;
-						res.status(200).json(ret);
-						return;
-					}
+				t.component_lib.rebuildWhiteList(req, (error, whitelist) => {	// get up to date whitelist
+					req._whitelist = whitelist;
 
-					t.deployer.update_component(req, (errObj, ret) => {
-						if (errObj) {
-							res.status(t.ot_misc.get_code(errObj)).json(errObj);
-						} else {
-							res.status(200).json(ret.athena_fmt);
+					t.validate.request(req, res, t.validate.resource_validation, () => {
+						if (req.body && req.body.dry_run_mode === true) {
+							logger.debug('[dry run] this is a dry run request, the component will not be edited. the request was valid.');
+							const ret = JSON.parse(JSON.stringify(ev.API_SUCCESS_RESPONSE));
+							ret.dry_run_mode = true;
+							res.status(200).json(ret);
+							return;
 						}
+
+						t.deployer.update_component(req, (errObj, ret) => {
+							if (errObj) {
+								res.status(t.ot_misc.get_code(errObj)).json(errObj);
+							} else {
+								res.status(200).json(ret.athena_fmt);
+							}
+						});
 					});
 				});
 			}
