@@ -31,10 +31,16 @@ When(/^I login with the email '(.*?)' and password '(.*?)'$/, async(email, passw
 });
 
 Then(/^I should be asked to change the default password$/, async() => {
-	let currentPasswordInput = element(by.name('currentPassword'));
-	await browser.wait(ExpectedConditions.visibilityOf(currentPasswordInput), 20000);
-	let isDisplayed = await currentPasswordInput.isDisplayed();
-	isDisplayed.should.equal(true);
+	try{
+		await browser.sleep(3000);
+		let currentPasswordInput = element(by.name('currentPassword'));
+		await browser.wait(ExpectedConditions.visibilityOf(currentPasswordInput), 50000);
+		let isDisplayed = await currentPasswordInput.isDisplayed();
+		isDisplayed.should.equal(true);
+		console.log('Reset password page is loaded');
+	}catch (err) {
+		console.log('User is not on change the default password page %s', err);
+	}
 });
 
 Given(/^I am on the change default password page$/, async() => {
@@ -64,6 +70,7 @@ When(/^I change the password from '(.*?)' to '(.*?)'$/, async(currentPassword, n
 });
 
 When(/^I change the password from default password$/, async() => {
+	console.log('Changing password to %s', browser.automationPassword);
 	let currentPasswordInput = element(by.name('currentPassword'));
 	await browser.wait(ExpectedConditions.elementToBeClickable(currentPasswordInput), 5000);
 	await currentPasswordInput.sendKeys(browser.automationDefaultPassword);
@@ -131,11 +138,13 @@ Given(/^I am logged in$/, async() => {
 
 Given(/^I am logged in for first time$/, async() => {
 	try {
+		await browser.sleep(3000);
 		let header = element(by.css('.ibp-login-content-title'));
 		await browser.wait(ExpectedConditions.visibilityOf(header), 2000);
 		await browser.sleep(5000);
 		let text = await header.getText();
 		if (text.includes('Login to IBM Blockchain Platform')) {
+			console.log('Calling login function...');
 			await login(browser.automationUser, browser.automationDefaultPassword);
 		}
 	} catch (err) {
