@@ -26,7 +26,7 @@ import { scGetHashAsHex } from './subtle_crypto';
 // exports
 export { logger, getLogger, pp, load_pb, __pb_root };
 export { uint8ArrayToStr, utf8StrToUint8Array, arrToUint8Array, uint8ArrayToHexStr, hexStrToUint8Array, generate_tx_id, base64toHexStr, url_join };
-export { base64ToUint8Array, sortObjectOut, uint8ArrayToBase64, isUint8Array, underscores_2_camelCase, friendly_ms, sort_keys, camelCase_2_underscores };
+export { base64ToUint8Array, base64ToUtf8, sortObjectOut, uint8ArrayToBase64, isUint8Array, underscores_2_camelCase, friendly_ms, sort_keys, camelCase_2_underscores };
 
 // ------------------------------------------
 // Load the protobuf json bundle - this is used to encode/decode protos (used by the "protobuf.js" lib)
@@ -163,7 +163,7 @@ function arrToUint8Array(arr: any) {		// dsh don't use this unless you cannot ca
 }
 
 // --------------------------------------------------------------------------------
-// Convert Uint8Array to a string - note this only works on strings that can be represented with utf 8
+// Convert Uint8Array to a string - note this only works on strings that can be represented with ascii
 // --------------------------------------------------------------------------------
 function uint8ArrayToStr(arr: Uint8Array) {
 	let ret = '';
@@ -171,6 +171,18 @@ function uint8ArrayToStr(arr: Uint8Array) {
 		ret += String.fromCharCode(arr[pos] & 255);
 	}
 	return ret;
+}
+
+// --------------------------------------------------------------------------------
+// Convert Base64 string to a utf8 string (utf8/unicode support)
+// --------------------------------------------------------------------------------
+function base64ToUtf8(str: string) {
+	if (typeof str === 'string') {
+		return decodeURIComponent(Array.prototype.map.call(atob(str), function (c: string) {
+			return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);		// create a URI encoded character from each byte
+		}).join(''));
+	}
+	return '';
 }
 
 // --------------------------------------------------------------------------------
