@@ -155,7 +155,7 @@ class UserProfile extends Component {
 						danger
 						open
 					>
-						<p>{translate('logout_modal')}</p>
+						<p>{translate('logout_modal', { bust: Date.now() })}</p>
 					</Modal>
 				)}
 			</div>
