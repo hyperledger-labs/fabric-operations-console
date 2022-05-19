@@ -1558,8 +1558,8 @@ class ChannelModal extends Component {
 			if (this.props.channelId && this.props.existingCapabilities) {
 
 				// When editing, allow capabilities that are higher than current capability
-				let currentChannelCapability = semver.coerce(this.props.existingCapabilities.channel.replace(/_/g, '.')).version;
-				let currentOrdererCapability = semver.coerce(this.props.existingCapabilities.orderer.replace(/_/g, '.')).version;
+				let currentChannelCapability = this.props.existingCapabilities.channel ? semver.coerce(this.props.existingCapabilities.channel.replace(/_/g, '.')).version : null;
+				let currentOrdererCapability = this.props.existingCapabilities.orderer ? semver.coerce(this.props.existingCapabilities.orderer.replace(/_/g, '.')).version : null;
 				let currentApplicationCapability = this.props.existingCapabilities.application
 					? semver.coerce(this.props.existingCapabilities.application.replace(/_/g, '.')).version
 					: null;

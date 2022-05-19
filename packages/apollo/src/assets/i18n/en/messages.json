@@ -664,6 +664,7 @@
 	"remove_ca_confirm": "Please type the name of the Certificate Authority to confirm:",
 	"remove_consenter_system_channel_desc": "This action will remove the consenter ${name} from the ordering service system channel.",
 	"remove_consenter_application_channel_desc": "This action will remove the consenter ${name} from channel ${channelId}.",
+	"remove_consenter_confirm_channel": "Please type the name of the consenter to confirm:",
 	"remove_consenter_confirm": "Please type the URL of the consenter to confirm:",
 	"confirm_consenter_url": "Consenter URL",
 	"confirm_consenter_url_placeholder": "Enter the URL of the consenter to be removed",
