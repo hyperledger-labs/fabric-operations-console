@@ -116,7 +116,7 @@ class ChannelConsenterModal extends React.Component {
 					</p>
 				</div>
 				<div>
-					<div className="ibp-remove-consenter-confirm">{translate('remove_consenter_confirm')}</div>
+					<div className="ibp-remove-consenter-confirm">{translate('remove_consenter_confirm_channel')}</div>
 					<Form
 						scope={SCOPE}
 						id={SCOPE + '-remove'}

@@ -419,34 +419,35 @@ class ChannelDetails extends Component {
 							return isTLSCertMismatchFound;
 						})
 						.then(isTLSCertMismatchFound => {
-							if (isTLSCertMismatchFound) {
-								// Populate the orderer host url and orderer msps to send the update cert request to
-								MspRestApi.getAllMsps()
-									.then(async all_msps => {
-										let msps = [];
-										all_msps.forEach(msp => {
-											msps.push({ ...msp, display_name: msp.display_name + ' (' + msp.msp_id + ')' });
-										});
 
-										if (_.size(this.channel.orderers) > 0) {
-											const orderer_msp_ids = [];
-											this.channel.orderers.forEach(x =>
-												_.has(x, 'raft') ? x.raft.forEach(y => orderer_msp_ids.push(y.msp_id)) : orderer_msp_ids.push(x.msp_id)
-											);
-											msps = msps.filter(msp => orderer_msp_ids.includes(msp.msp_id));
-										}
-										this.props.updateState(SCOPE, {
-											ordererMSPs: msps,
-										});
-										const channelOrderer = this.orderers && this.orderers.length ? this.orderers[0] : null;
-										this.ordererHost = await OrdererRestApi.getOrdererURL(channelOrderer, this.consenters);
-										if (cb) cb();
-									})
-									.catch(error => {
-										Log.error(error);
-										this.props.updateState(SCOPE, { ordererMSPs: [] });
+							// Populate the orderer host url and orderer msps for the update cert flow && the remove consenter flow
+							MspRestApi.getAllMsps()
+								.then(async all_msps => {
+									let msps = [];
+									all_msps.forEach(msp => {
+										msps.push({ ...msp, display_name: msp.display_name + ' (' + msp.msp_id + ')' });
 									});
-							} else if (cb) cb();
+
+									if (_.size(this.channel.orderers) > 0) {
+										const orderer_msp_ids = [];
+										this.channel.orderers.forEach(x =>
+											_.has(x, 'raft') ? x.raft.forEach(y => orderer_msp_ids.push(y.msp_id)) : orderer_msp_ids.push(x.msp_id)
+										);
+										msps = msps.filter(msp => orderer_msp_ids.includes(msp.msp_id));
+									}
+									this.props.updateState(SCOPE, {
+										ordererMSPs: msps,
+									});
+
+									const channelOrderer = this.orderers && this.orderers.length ? this.orderers[0] : null;
+									this.ordererHost = await OrdererRestApi.getOrdererURL(channelOrderer, this.consenters);
+									if (cb) cb();
+								})
+								.catch(error => {
+									Log.error(error);
+									this.props.updateState(SCOPE, { ordererMSPs: [] });
+									if (cb) cb();
+								});
 						});
 				})
 				.catch(error => {
@@ -860,7 +861,7 @@ class ChannelDetails extends Component {
 				<p className="ibp-node-tile-msp">{node.msp_id}</p>
 				<ItemTileLabels
 					location={node.location}
-					// certificateWarning={node.certificateWarning}
+				// certificateWarning={node.certificateWarning}
 				/>
 				{this.getNodeStatus(node)}
 			</div>
@@ -1186,7 +1187,7 @@ class ChannelDetails extends Component {
 				msp_id: peer.msp_id,
 				client_cert_b64pem: peer.cert,
 				client_prv_key_b64pem: peer.private_key,
-			  }
+			}
 			: null;
 		return (
 			<PageContainer>
