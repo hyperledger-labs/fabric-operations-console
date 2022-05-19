@@ -32,9 +32,9 @@ When(/^I login with the email '(.*?)' and password '(.*?)'$/, async(email, passw
 
 Then(/^I should be asked to change the default password$/, async() => {
 	try{
-		await browser.sleep(3000);
+		await browser.sleep(8000);
 		let currentPasswordInput = element(by.name('currentPassword'));
-		await browser.wait(ExpectedConditions.visibilityOf(currentPasswordInput), 50000);
+		await browser.wait(ExpectedConditions.elementToBeClickable(currentPasswordInput), 50000);
 		let isDisplayed = await currentPasswordInput.isDisplayed();
 		isDisplayed.should.equal(true);
 		console.log('Reset password page is loaded');
@@ -111,9 +111,9 @@ Then(/^I should see a welcome modal$/, async() => {
 
 Given(/^I am logged in$/, async() => {
 	try {
+		await browser.sleep(5000);
 		let header = element(by.css('.ibp-login-content-title'));
 		await browser.wait(ExpectedConditions.visibilityOf(header), 2000);
-		await browser.sleep(5000);
 		let text = await header.getText();
 		if (text.includes('Login to IBM Blockchain Platform')) {
 			await login();
@@ -130,8 +130,10 @@ Given(/^I am logged in$/, async() => {
 			    console.log('Calling iamLogin function');
 				await iamLogin(browser.automationUser, browser.automationPassword);
 			}
-		} catch (err) {
-			// already logged in
+		} catch (loginError) {
+			let current_url = await browser.getCurrentUrl();
+			console.log('Current page is %s', current_url);
+			console.log('Error while logging in %s', loginError);
 		}
 	}
 });
