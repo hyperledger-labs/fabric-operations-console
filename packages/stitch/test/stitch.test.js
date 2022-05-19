@@ -4158,6 +4158,28 @@ yJMfGXHykKD1d2F+B58=
 		});
 	});
 
+	describe('base64ToUtf8', () => {
+		testId = 0;
+
+		it(getId() + 'should return utf8 string - ascii', (done) => {
+			const b64str = 'aGVsbG8tdGhlcmUtYnVkZHkhQCMhJF4m';
+			expect(stitch.base64ToUtf8(b64str)).to.equal('hello-there-buddy!@#!$^&');
+			done();
+		});
+
+		it(getId() + 'should return utf8 string - utf8 - chinese', (done) => {
+			const b64str = '5ryi5a2X';
+			expect(stitch.base64ToUtf8(b64str)).to.equal('漢字');
+			done();
+		});
+
+		it(getId() + 'should return utf8 string - utf8 - emojii', (done) => {
+			const b64str = '8J+ZgvCfmIDwn5iD';
+			expect(stitch.base64ToUtf8(b64str)).to.equal('🙂😀😃');
+			done();
+		});
+	});
+
 	// ---------------------------------------------------------------------------------------------------------------------
 	// don't leave this test in.  comment it out and run it manually.
 	//describe('create a new channel', () => {

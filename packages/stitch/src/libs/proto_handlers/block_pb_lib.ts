@@ -86,7 +86,7 @@ const massDecodeMap = <any>{	// this is only possible with maps (aka dictionarie
 };
 
 // Libs built by us
-import { logger, uint8ArrayToBase64, base64ToUint8Array, __pb_root, sort_keys } from '../misc';
+import { logger, uint8ArrayToBase64, base64ToUint8Array, base64ToUtf8, __pb_root, sort_keys } from '../misc';
 import { ChaincodeLib } from './chaincode_pb_lib';
 
 // exports
@@ -559,13 +559,13 @@ function decode_payload_data(b_data: any, type: number) {
 	// types are defined in common.proto HeaderType (0 - 7)
 	/*
 	MESSAGE = 0;                   // Used for messages which are signed but opaque
-    CONFIG = 1;                    // Used for messages which express the channel config
-    CONFIG_UPDATE = 2;             // Used for transactions which update the channel config
-    ENDORSER_TRANSACTION = 3;      // Used by the SDK to submit endorser based transactions
-    ORDERER_TRANSACTION = 4;       // Used internally by the orderer for management
-    DELIVER_SEEK_INFO = 5;         // Used as the type for Envelope messages submitted to instruct the Deliver API to seek
-    CHAINCODE_PACKAGE = 6;         // Used for packaging chaincode artifacts for install
-    PEER_RESOURCE_UPDATE = 7;      // Used for encoding updates to the peer resource configuration
+	CONFIG = 1;                    // Used for messages which express the channel config
+	CONFIG_UPDATE = 2;             // Used for transactions which update the channel config
+	ENDORSER_TRANSACTION = 3;      // Used by the SDK to submit endorser based transactions
+	ORDERER_TRANSACTION = 4;       // Used internally by the orderer for management
+	DELIVER_SEEK_INFO = 5;         // Used as the type for Envelope messages submitted to instruct the Deliver API to seek
+	CHAINCODE_PACKAGE = 6;         // Used for packaging chaincode artifacts for install
+	PEER_RESOURCE_UPDATE = 7;      // Used for encoding updates to the peer resource configuration
 	*/
 	if (type === 1) {						// config envelope
 		const p_config_envelope = Configtx_ConfigEnvelope.deserializeBinary(<Uint8Array>b_data);
@@ -681,7 +681,7 @@ function decode_payload_data(b_data: any, type: number) {
 					for (let z in kv_rwset.writesList) {
 						if (kv_rwset.writesList[z].value) {
 							try {
-								kv_rwset.writesList[z].value = atob(kv_rwset.writesList[z].value);	// decode "value", might break so don't kill yourself trying
+								kv_rwset.writesList[z].value = base64ToUtf8(kv_rwset.writesList[z].value);	// decode "value", might break so don't kill yourself trying
 							} catch (e) {
 							}
 						}

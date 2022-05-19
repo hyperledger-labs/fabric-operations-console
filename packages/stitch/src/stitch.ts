@@ -47,7 +47,7 @@ import { ProposalResponse as ProposalResponse_ProposalResponse } from './protoc/
 // Libs built by us
 import { DEFAULT_ERROR_MSG } from './libs/validation';
 import { DER_signAndPackCsrPem, DER_parsePem } from './libs/asn1_lib';
-import { PolicyLib,  } from './libs/proto_handlers/policy_pb_lib';
+import { PolicyLib, } from './libs/proto_handlers/policy_pb_lib';
 import { ConfigTxLib } from './libs/proto_handlers/configtx_pb_lib';
 import { ProposalLib } from './libs/proto_handlers/proposal_pb_lib';
 import { conformPolicySyntax } from './libs/sig_policy_syntax_lib';
@@ -71,7 +71,7 @@ import { pem2jwks, importJwkEcdsaKey, pem2raw, exportJwkKey, exportHexKey, subtl
 import { scSignPemRaw, scGenEcdsaKeys, build_sig_collection_for_hash, scSignJwkRaw, validatePrivateKey, validatePublicKey } from './libs/crypto_misc';
 import { decode_chaincode_query_response, decode_chaincode_deployment_spec, decode_processed_transaction, } from './libs/proto_handlers/block_pb_lib';
 import { lc_installChaincode, lc_getInstalledChaincodeData, lc_getAllInstalledChaincodeData, lc_getInstalledChaincodePackage } from './libs/lifecycle';
-import { load_pb, uint8ArrayToStr, logger, getLogger, pp, sortObjectOut, uint8ArrayToHexStr, hexStrToUint8Array, utf8StrToUint8Array } from './libs/misc';
+import { load_pb, uint8ArrayToStr, logger, getLogger, pp, sortObjectOut, uint8ArrayToHexStr, hexStrToUint8Array, utf8StrToUint8Array, base64ToUtf8 } from './libs/misc';
 import { GrpcData, fmt_err, fmt_ok, find_alternative_status_message, is_error_code, Fmt, OrderFmt, OrderFmtBlock, fill_in_missing } from './libs/validation';
 import { LifecycleLib } from './libs/proto_handlers/lifecycle_pb_lib';
 import { getOSNChannels, getOSNChannel, joinOSNChannel, unjoinOSNChannel } from './libs/fabric_rest';
@@ -104,7 +104,7 @@ export {
 	pem2raw, exportJwkKey, exportHexKey, subtleVerifySignature, jwk2pem, exportPemKey, build_sig_collection_for_hash, scSignJwkRaw, scGenCSR,
 	test_encodeDecode_collection_config_packaged, load_pb, switchEncryption, encrypt, decrypt, DER_signAndPackCsrPem, DER_parsePem, getOrGenAesKey,
 	convertPolicy2PeerCliSyntax, policyIsMet, safer_hex_str, url_join, lifecycleLib, decode_chaincode_query_response, Query_ChannelQueryResponse,
-	Ledger_BlockchainInfo, policyLib
+	Ledger_BlockchainInfo, policyLib, base64ToUtf8
 };
 
 // proto handlers
