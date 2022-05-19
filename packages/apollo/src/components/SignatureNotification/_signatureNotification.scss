@@ -105,6 +105,9 @@
 			position: absolute;
 			right: 1rem;
 			top: 1rem;
+			.bx--btn--secondary .bx--btn__icon, .bx--btn--secondary .bx--btn__icon path:not([data-icon-path]):not([fill="none"]){
+				fill: #000;
+			}
 			.ibp-signature-request-audit-button {
 				background-color: transparent;
 				border: 0;
