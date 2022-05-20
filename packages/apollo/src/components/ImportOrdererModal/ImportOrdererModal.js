@@ -43,6 +43,7 @@ import WizardStep from '../WizardStep/WizardStep';
 
 const SCOPE = 'importOrdererModal';
 const Log = new Logger(SCOPE);
+const semver = require('semver');
 
 class ImportOrdererModal extends React.Component {
 	componentDidMount() {
@@ -97,6 +98,7 @@ class ImportOrdererModal extends React.Component {
 				zone: false,
 				resource_allocation: false,
 				hsm: false,
+				systemless: true,
 			},
 			hsm: null,
 			config_override: null,
@@ -127,14 +129,21 @@ class ImportOrdererModal extends React.Component {
 			.then(all_versions => {
 				let versions = all_versions.orderer;
 				if (versions) {
+					const filtered = versions.filter(i => this.validVersion(i, this.props.advanced_config.systemless));
 					this.props.updateState(SCOPE, {
-						versions,
+						origVersions: versions,
+						versions: filtered,
 					});
 				}
 			})
 			.catch(error => {
 				Log.error(error);
 			});
+	}
+
+	// if systemless is checked omit versions less than 2.4
+	validVersion(i, systemless) {
+		return (!systemless || semver.gte(semver.coerce(i.version), semver.coerce('2.4')));
 	}
 
 	onComplete() {
@@ -391,6 +400,11 @@ class ImportOrdererModal extends React.Component {
 		if (this.props.advanced_config.hsm) {
 			data.hsm = this.props.hsm;
 		}
+		if (this.props.feature_flags && this.props.feature_flags.osnadmin_feats_enabled) {
+			if (this.props.advanced_config && this.props.advanced_config.systemless) {
+				data.systemless = true;
+			}
+		}
 		if (this.props.config_override) {
 			data.config_override = this.props.editedConfigOverride ? this.props.editedConfigOverride : this.props.config_override;
 		}
@@ -613,7 +627,7 @@ class ImportOrdererModal extends React.Component {
 					id: `${zone}`,
 					label: zone,
 				};
-			  })
+			})
 			: [];
 		if (zones.length > 1) {
 			zones.unshift({
@@ -635,7 +649,7 @@ class ImportOrdererModal extends React.Component {
 					id: `${zone}`,
 					name: zone,
 				};
-			  })
+			})
 			: [];
 		if (zones.length > 1) {
 			zones.push({
@@ -759,7 +773,7 @@ class ImportOrdererModal extends React.Component {
 								const zones = this.props.zones.length ? [] : this.buildDefaultZones();
 								this.props.updateState(SCOPE, { zones });
 							}}
-							onChange={() => {}}
+							onChange={() => { }}
 							aria-label={translate('default_zones')}
 							labelA={translate('no')}
 							labelB={translate('yes')}
@@ -870,6 +884,28 @@ class ImportOrdererModal extends React.Component {
 								disabled={this.props.third_party_ca}
 							/>
 							<BlockchainTooltip withCheckbox>{translate('hsm_tooltip')}</BlockchainTooltip>
+						</div>
+					)}
+					{this.props.feature_flags && this.props.feature_flags.osnadmin_feats_enabled && (
+						<div className="ibp-advanced-orderer-checkboxes">
+							<Checkbox
+								id="advanced_config_systemless"
+								labelText={translate('systemless_config')}
+								onChange={() => {
+									const filtered = this.props.origVersions.filter(i => this.validVersion(i, !this.props.advanced_config.systemless));
+									this.props.updateState(SCOPE, {
+										advanced_config: {
+											...this.props.advanced_config,
+											systemless: !this.props.advanced_config.systemless,
+										},
+										// if systemless is checked omit versions less than 2.4
+										versions: filtered,
+										version: null
+									});
+								}}
+								checked={this.props.advanced_config.systemless}
+							/>
+							<BlockchainTooltip withCheckbox>{translate('systemless_tooltip')}</BlockchainTooltip>
 						</div>
 					)}
 					{this.props.clusterType === 'paid' && (
@@ -1467,7 +1503,7 @@ class ImportOrdererModal extends React.Component {
 	}
 
 	renderSelectVersion(translate) {
-		if (!this.props.versions || this.props.versions.length < 2) {
+		if (!this.props.versions) {
 			return;
 		}
 		return (
@@ -1492,9 +1528,6 @@ class ImportOrdererModal extends React.Component {
 	}
 
 	isVersionValid() {
-		if (!this.props.versions || this.props.versions.length < 2) {
-			return true;
-		}
 		if (this.props.version && this.props.version.version) {
 			return true;
 		}
@@ -2023,6 +2056,7 @@ const dataProps = {
 	mspError: PropTypes.string,
 	caError: PropTypes.string,
 	versions: PropTypes.array,
+	origVersions: PropTypes.array,
 	version: PropTypes.object,
 };
 

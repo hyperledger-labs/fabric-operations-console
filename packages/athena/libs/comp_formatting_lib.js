@@ -590,6 +590,9 @@ module.exports = function (logger, ev, t) {
 			if (Array.isArray(incoming_body.admin_certs)) {
 				ret.admincerts = incoming_body.admin_certs;
 			}
+			if (incoming_body.systemless) {
+				ret.channelless = true;
+			}
 
 			return JSON.parse(JSON.stringify(ret));												// deep copy to get rid of undefined fields
 		}

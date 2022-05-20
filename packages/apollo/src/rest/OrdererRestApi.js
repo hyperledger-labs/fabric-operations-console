@@ -853,6 +853,9 @@ class OrdererRestApi {
 		if (data.zones && data.zones.length) {
 			raft.zone = data.zones;
 		}
+		if (data.systemless) {
+			raft.systemless = true;
+		}
 		if (data.saas_ca) {
 			raft.crypto = [];
 			raft.config_override = [];
@@ -926,6 +929,7 @@ class OrdererRestApi {
 			type: 'fabric-orderer',
 			orderer_type: 'raft',
 			msp_id: data.admin_msp.msp_id,
+			systemless: data.systemless ? true : false,
 			crypto: data.saas_ca
 				? [
 					{
