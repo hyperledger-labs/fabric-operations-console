@@ -13,7 +13,7 @@
 */
 
 // Libs built by us
-import { __pb_root, logger, base64ToUint8Array, camelCase_2_underscores } from '../misc';
+import { __pb_root, logger, base64ToUint8Array, base64ToUtf8, camelCase_2_underscores } from '../misc';
 import { conformPolicySyntax } from '../sig_policy_syntax_lib';
 import { MixedPolicySyntax } from '../proto_handlers/collection_pb_lib';
 import { convertPolicy2PeerCliSyntax } from '../sig_policy_syntax_reverse_lib';
@@ -272,7 +272,7 @@ function decode_validationParameter(parameter: string) {
 	if (typeof parameter) {
 		let temp = '';
 		try {											// policy might be a simple string, or the fabric sig policy object syntax
-			temp = atob(parameter);						// base 64 decode, look for simple string
+			temp = base64ToUtf8(parameter);				// base 64 decode, look for simple string
 		} catch (e) { }
 
 		const pos = temp.indexOf('/');
