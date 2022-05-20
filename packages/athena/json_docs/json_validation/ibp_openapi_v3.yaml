@@ -13776,6 +13776,10 @@ components:
               $ref: '#/components/schemas/StorageObject'
         system_channel_id:
           $ref: '#/components/schemas/system_channel_id'
+        systemless:
+          type: boolean
+          description: If true, the orderer will not have a system channel and channel partipation APIs must be used to create application channels. Requires Fabric v2.4+. Defaults `false`.
+          example: true
         zone:
           type: array
           minLength: 0
