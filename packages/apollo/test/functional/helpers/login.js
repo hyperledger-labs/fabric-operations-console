@@ -15,6 +15,7 @@ const { browser, element, by, ExpectedConditions } = require('protractor');
 
 async function login(email, password) {
 	if (!email || !password) {
+	    console.log('Taking username and password from environment variable')
 		email = browser.automationUser;
 		password = browser.automationPassword;
 	}

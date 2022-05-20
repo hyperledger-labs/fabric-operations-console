@@ -32,13 +32,19 @@ When(/^I login with the email '(.*?)' and password '(.*?)'$/, async(email, passw
 
 Then(/^I should be asked to change the default password$/, async() => {
 	try{
-		await browser.sleep(8000);
+		await browser.sleep(10000);
 		let currentPasswordInput = element(by.name('currentPassword'));
-		await browser.wait(ExpectedConditions.elementToBeClickable(currentPasswordInput), 50000);
+		await browser.wait(ExpectedConditions.visibilityOf(currentPasswordInput), 50000);
+		await browser.sleep(5000);
 		let isDisplayed = await currentPasswordInput.isDisplayed();
 		isDisplayed.should.equal(true);
 		console.log('Reset password page is loaded');
 	}catch (err) {
+		//Check if user is still on login page with error message displayed
+		let errorText = element(by.id('login-form-login_password-error-msg'));
+		await browser.wait(ExpectedConditions.visibilityOf(errorText), 5000);
+		let loginErrorText = await errorText.getText();
+		console.log('User is on login page. Error message displayed: %s', loginErrorText);
 		console.log('User is not on change the default password page %s', err);
 	}
 });
@@ -133,7 +139,7 @@ Given(/^I am logged in$/, async() => {
 		} catch (loginError) {
 			let current_url = await browser.getCurrentUrl();
 			console.log('Current page is %s', current_url);
-			console.log('Error while logging in %s', loginError);
+			console.log('User is already logged in');
 		}
 	}
 });
