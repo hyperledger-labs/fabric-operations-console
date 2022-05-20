@@ -133,7 +133,7 @@ Given(/^I am logged in$/, async() => {
 		} catch (loginError) {
 			let current_url = await browser.getCurrentUrl();
 			console.log('Current page is %s', current_url);
-			console.log('Error while logging in %s', loginError);
+			console.log('User is already logged in');
 		}
 	}
 });
