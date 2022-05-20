@@ -379,7 +379,8 @@ module.exports = function (logger, ev, t) {
 
 				// if we are a Software OpTools AND the request is for creating an API key -> let it work if request's password matches the default password
 				if (ev.AUTH_SCHEME !== 'iam' && req.method === 'POST' &&
-					(req.path.includes('/permissions/keys') || req.path.includes('/identity/token'))
+					// these routes are allowed to use the default pass
+					(req.path.includes('/permissions/keys') || req.path.includes('/identity/token') || req.path.includes('/settings'))
 					|| (ev.AUTH_SCHEME !== 'iam' && ev.ALLOW_DEFAULT_PASSWORD)) {
 					logger.warn('[middle] no password set for user. checking against default password:', t.misc.censorEmail(username));
 					const secret_details = t.misc.salt_secret(ev.DEFAULT_USER_PASSWORD);
