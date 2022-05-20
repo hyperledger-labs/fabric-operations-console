@@ -726,7 +726,7 @@ function decode_payload_data(b_data: any, type: number) {
 			if (input && input.chaincodeSpec && input.chaincodeSpec.input) {			// base64 decode the input strings
 				for (let x in input.chaincodeSpec.input.argsList) {
 					try {
-						input.chaincodeSpec.input.argsList[x] = atob(<string>input.chaincodeSpec.input.argsList[x]);
+						input.chaincodeSpec.input.argsList[x] = base64ToUtf8(<string>input.chaincodeSpec.input.argsList[x]);
 					} catch (e) { }
 				}
 			}
