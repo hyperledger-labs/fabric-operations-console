@@ -73,9 +73,9 @@ const watcher = watch(watch_paths, {
 // setup the actions for our watcher
 notice_crashes();
 watcher.on('add', path => {
-	if (first_run === false) {				// don't spam logs on initial start
-		logger.debug('[watcher] file:', path, 'has been added');
-	}
+	//if (first_run === false) {				// don't spam logs on initial start
+	//	logger.debug('[watcher] file:', path, 'has been added');
+	//}
 	file_count++;
 	restart();
 }).on('change', path => {

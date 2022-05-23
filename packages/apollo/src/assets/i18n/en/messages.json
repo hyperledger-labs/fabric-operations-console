@@ -2271,6 +2271,7 @@
 	"update_hsm": "Update HSM",
 	"remove_hsm": "Remove HSM",
 	"manage_hsm": "Manage HSM",
+	"hsm_config": "Hardware Security Module (HSM)",
 	"systemless_config": "Without a System Channel",
 	"systemless_tooltip": "Select this option when you want to create an orderer without a system channel. If selected this will restrict the orderer to Fabric v2.4 or higher.",
 	"hsm_config_short": "Hardware Security Module (HSM)",
@@ -2632,5 +2633,6 @@
 	"download_gen": "Download Genesis",
 	"consenter": "Consenter",
 	"follower": "Follower",
-	"clusters_title": "Orderers to join:"
+	"clusters_title": "Orderers to join:",
+	"restarting": "Restarting..."
 }

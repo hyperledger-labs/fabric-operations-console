@@ -39,6 +39,7 @@ const client_levels = ['error', 'warn', 'info', 'debug'];
 
 const MINIMUM_MAX_IDLE_TIME = Math.floor(30);
 const MAXIMUM_MAX_IDLE_TIME = Math.floor(8 * 60 * 60);
+let progressInterval = null;
 
 export class Settings extends Component {
 	componentDidMount() {
@@ -53,16 +54,21 @@ export class Settings extends Component {
 			max_idle_time_enabled: false,
 			max_idle_time: MAXIMUM_MAX_IDLE_TIME,
 			changed: {},
+			loading: true,
+			saving: false,
 		});
 		this.getSettings();
 	}
 
-	getSettings() {
-		this.props.updateState(SCOPE, {
-			loading: true,
-		});
+	getSettings(afterRestart) {
 		SettingsApi.getSettings()
 			.then(settings => {
+				clearInterval(progressInterval);
+				this.props.updateState(SCOPE, {
+					width: 0,							// reset progress bar
+					saving: false,						// hide progress bar
+				});
+
 				const hide_transaction_input = !!_.get(settings, 'TRANSACTION_VISIBILITY.hide_input');
 				const hide_transaction_output = !!_.get(settings, 'TRANSACTION_VISIBILITY.hide_output');
 				const client_log_enabled = _.get(settings, 'FILE_LOGGING.client.enabled');
@@ -85,9 +91,13 @@ export class Settings extends Component {
 				});
 			})
 			.catch(error => {
-				Log.error(error);
-				this.props.showError('error_getting_settings', {}, SCOPE);
-				this.props.updateState(SCOPE, { loading: false });
+				if (afterRestart) {
+					// keep waiting for restart
+				} else {
+					Log.error(error);
+					this.props.showError('error_getting_settings', {}, SCOPE);
+					this.props.updateState(SCOPE, { loading: false });
+				}
 			});
 	}
 
@@ -133,6 +143,20 @@ export class Settings extends Component {
 		}
 		return new Promise((resolve, reject) => {
 			if (changed) {
+				this.props.updateState(SCOPE, {
+					saving: true,						// show progress bar
+					width: 10,
+				});
+				clearInterval(progressInterval);
+				progressInterval = setInterval(() => {
+					let width = isNaN(this.props.width) ? 0 : (this.props.width + (2 + Math.random() * 10));
+					if (width > 95) { width = 95; }		// hang at 95 until done
+					this.props.updateState(SCOPE, {
+						width: Math.round(width),
+					});
+					this.getSettings(true);
+				}, 1200);
+
 				SettingsApi.updateSettings(data)
 					.then(() => {
 						if (this.props.changed.client_log_level) {
@@ -187,7 +211,7 @@ export class Settings extends Component {
 												},
 											});
 										}}
-										onChange={() => {}}
+										onChange={() => { }}
 										aria-label={translate('input')}
 										labelA={translate('visible')}
 										labelB={translate('hidden')}
@@ -214,7 +238,7 @@ export class Settings extends Component {
 												},
 											});
 										}}
-										onChange={() => {}}
+										onChange={() => { }}
 										aria-label={translate('output')}
 										labelA={translate('visible')}
 										labelB={translate('hidden')}
@@ -240,8 +264,6 @@ export class Settings extends Component {
 	}
 
 	renderLogging(translate) {
-		const disable_client_logging_updates = !this.props.isAdmin || !this.props.client_log_enabled;
-		const disbale_server_logging_updates = !this.props.isAdmin || !this.props.server_log_enabled;
 		return (
 			<div>
 				<div className="settings-section">
@@ -270,7 +292,7 @@ export class Settings extends Component {
 												},
 											});
 										}}
-										onChange={() => {}}
+										onChange={() => { }}
 										aria-label={translate('client_logging')}
 										disabled={!this.props.isAdmin}
 										labelA={translate('off')}
@@ -288,10 +310,10 @@ export class Settings extends Component {
 										{
 											name: 'client_log_level',
 											type: 'dropdown',
-											options: disable_client_logging_updates ? [] : this.buildLoggingLevels(client_levels, translate),
+											options: !this.props.isAdmin ? [] : this.buildLoggingLevels(client_levels, translate),
 											skipLabel: true,
 											default: this.props.client_log_level || client_levels[0],
-											disabled: disable_client_logging_updates,
+											disabled: !this.props.isAdmin,
 										},
 									]}
 									id={SCOPE + '-client'}
@@ -307,7 +329,6 @@ export class Settings extends Component {
 							)}
 						</div>
 					</div>
-					<p>{translate('log_performance_warning')}</p>
 				</div>
 				<div className="settings-section">
 					<h3 className="settings-label">
@@ -335,7 +356,7 @@ export class Settings extends Component {
 												},
 											});
 										}}
-										onChange={() => {}}
+										onChange={() => { }}
 										aria-label={translate('server_logging')}
 										disabled={!this.props.isAdmin}
 										labelA={translate('off')}
@@ -353,10 +374,10 @@ export class Settings extends Component {
 										{
 											name: 'server_log_level',
 											type: 'dropdown',
-											options: disbale_server_logging_updates ? [] : this.buildLoggingLevels(server_levels, translate),
+											options: !this.props.isAdmin ? [] : this.buildLoggingLevels(server_levels, translate),
 											skipLabel: true,
 											default: this.props.server_log_level || server_levels[0],
-											disabled: disbale_server_logging_updates,
+											disabled: !this.props.isAdmin,
 										},
 									]}
 									id={SCOPE + '-server'}
@@ -406,7 +427,7 @@ export class Settings extends Component {
 												},
 											});
 										}}
-										onChange={() => {}}
+										onChange={() => { }}
 										aria-label={translate('inactivity_timeout')}
 										disabled={!this.props.isAdmin}
 										labelA={translate('off')}
@@ -467,6 +488,7 @@ export class Settings extends Component {
 					<div className="settings-button-container">
 						<Button
 							id="data_export_button"
+							disabled={this.props.saving}
 							onClick={() => {
 								this.props.updateState(SCOPE, { showExportModal: true });
 							}}
@@ -476,6 +498,7 @@ export class Settings extends Component {
 						{ActionsHelper.canImportComponent(this.props.userInfo) && (
 							<Button
 								id="data_import_button"
+								disabled={this.props.saving}
 								onClick={() => {
 									this.props.updateState(SCOPE, { showImportModal: true });
 								}}
@@ -512,6 +535,7 @@ export class Settings extends Component {
 
 	render = () => {
 		const translate = this.props.translate;
+		const progress_width = isNaN(this.props.width) ? 0 : this.props.width;
 		return (
 			<PageContainer>
 				<div className="bx--row">
@@ -527,10 +551,20 @@ export class Settings extends Component {
 								<Button id="save_settings"
 									className="ibp-save-changes"
 									onClick={this.saveSettings}
-									disabled={!this.props.isAdmin}
+									disabled={!this.props.isAdmin || this.props.saving}
 								>
 									{translate('save_changes')}
 								</Button>
+								{this.props.saving && (<div>
+									{translate('restarting')}
+									<div id="ibp-progress-bar-wrap">
+										<div id="ibp-progress-bar"
+											style={{
+												width: progress_width + '%'
+											}}
+										/>
+									</div>
+								</div>)}
 							</div>
 							{this.renderDataManagement(translate)}
 						</div>
@@ -543,6 +577,7 @@ export class Settings extends Component {
 
 const dataProps = {
 	loading: PropTypes.bool,
+	saving: PropTypes.bool,
 	hide_transaction_input: PropTypes.bool,
 	hide_transaction_output: PropTypes.bool,
 	showExportModal: PropTypes.bool,
@@ -553,6 +588,7 @@ const dataProps = {
 	server_log_level: PropTypes.string,
 	max_idle_time_enabled: PropTypes.bool,
 	max_idle_time: PropTypes.number,
+	width: PropTypes.number,
 	changed: PropTypes.object,
 };
 
