@@ -20,7 +20,7 @@ const winston = require('winston');
 const { formatDate } = require('./libs/log_lib.js')({});
 let child = null;
 let restart_debounce = null;
-let first_run = true;
+//let first_run = true;
 let file_count = 0;
 let notice_crash_interval = null;
 let crash_count = 0;
@@ -73,9 +73,9 @@ const watcher = watch(watch_paths, {
 // setup the actions for our watcher
 notice_crashes();
 watcher.on('add', path => {
-	if (first_run === false) {				// don't spam logs on initial start
-		logger.debug('[watcher] file:', path, 'has been added');
-	}
+	//if (first_run === false) {				// don't spam logs on initial start
+	//	logger.debug('[watcher] file:', path, 'has been added');
+	//}
 	file_count++;
 	restart();
 }).on('change', path => {
@@ -93,7 +93,7 @@ function restart() {
 	clearTimeout(restart_debounce);
 
 	restart_debounce = setTimeout(() => {
-		first_run = false;
+		//first_run = false;
 		logger.debug('[watcher] watching:', file_count, 'files');
 		logger.info('[watcher] starting server');
 		const opts = { env: process.env, stdio: 'inherit' };		// pass all env vars to child (why not?)

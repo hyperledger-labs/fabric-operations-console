@@ -1859,7 +1859,7 @@
 	"error_inactivity_settings": "Unable to change user inactivity settings",
 	"error_inactivity_settings_server_restart": "Server is restarting. Please wait a few moments before attempting to change inactivity settings.",
 	"max_idle_time": "Session timeout (in seconds)",
-	"max_idle_time_tooltip": "Session timeout must be at least 30 seconds and no longer than 8 hours (28800 seconds)",
+	"max_idle_time_tooltip": "Session timeout must be at least 60 seconds and no longer than 8 hours (28800 seconds)",
 	"max_idle_time_success": "Session timeout settings have been updated.  Refresh the page for the settings to take effect.",
 	"user_roles_find_more": "Find out more about user roles",
 	"user_roles_find_more_link": "${DOC_PREFIX}console-icp-manage#console-icp-manage-users",
@@ -2271,6 +2271,7 @@
 	"update_hsm": "Update HSM",
 	"remove_hsm": "Remove HSM",
 	"manage_hsm": "Manage HSM",
+	"hsm_config": "Hardware Security Module (HSM)",
 	"systemless_config": "Without a System Channel",
 	"systemless_tooltip": "Select this option when you want to create an orderer without a system channel. If selected this will restrict the orderer to Fabric v2.4 or higher.",
 	"hsm_config_short": "Hardware Security Module (HSM)",
@@ -2632,5 +2633,6 @@
 	"download_gen": "Download Genesis",
 	"consenter": "Consenter",
 	"follower": "Follower",
-	"clusters_title": "Orderers to join:"
+	"clusters_title": "Orderers to join:",
+	"restarting": "Restarting..."
 }
