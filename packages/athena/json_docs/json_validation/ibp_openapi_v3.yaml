@@ -13972,7 +13972,7 @@ components:
               type: number
               description: Maximum time in milliseconds for a browser client to be idle. Once exceeded the user is logged out. Defaults to `90000` ms (1.5 minutes). _Refresh browser after changes_
               minimum: 60000 # 1 minute - a "large" minimum delay prevents immediate logout (which would be a lockout of sorts)
-              maximum: 2678400000 # 1 month - dsh shrug
+              maximum: 28800000 # 8 hours
               example: 90000
         file_logging:
           $ref: '#/components/schemas/EditLogSettingsBody'

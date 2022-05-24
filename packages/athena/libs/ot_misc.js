@@ -91,7 +91,7 @@ module.exports = function (logger, t) {
 		logger.warn('[http] graceful shutoff has started, waiting a few seconds for requests to end...');
 		setTimeout(() => {
 			return cb();			// give time for connections to finish before moving on
-		}, 10 * 1000);
+		}, 4 * 1000);
 	};
 
 	//-------------------------------------------------------------

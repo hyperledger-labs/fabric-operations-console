@@ -40,6 +40,7 @@ const client_levels = ['error', 'warn', 'info', 'debug'];
 const MINIMUM_MAX_IDLE_TIME = Math.floor(30);
 const MAXIMUM_MAX_IDLE_TIME = Math.floor(8 * 60 * 60);
 let progressInterval = null;
+let giveUpTimer = null;
 
 export class Settings extends Component {
 	componentDidMount() {
@@ -64,6 +65,7 @@ export class Settings extends Component {
 		SettingsApi.getSettings()
 			.then(settings => {
 				clearInterval(progressInterval);
+				clearTimeout(giveUpTimer);
 				this.props.updateState(SCOPE, {
 					width: 0,							// reset progress bar
 					saving: false,						// hide progress bar
@@ -144,18 +146,27 @@ export class Settings extends Component {
 		return new Promise((resolve, reject) => {
 			if (changed) {
 				this.props.updateState(SCOPE, {
-					saving: true,						// show progress bar
+					saving: true,							// show progress bar
 					width: 10,
 				});
 				clearInterval(progressInterval);
 				progressInterval = setInterval(() => {
 					let width = isNaN(this.props.width) ? 0 : (this.props.width + (2 + Math.random() * 10));
-					if (width > 95) { width = 95; }		// hang at 95 until done
+					if (width > 95) { width = 95; }			// hang at 95 until done
 					this.props.updateState(SCOPE, {
 						width: Math.round(width),
 					});
 					this.getSettings(true);
-				}, 1200);
+				}, 1400);
+
+				clearTimeout(giveUpTimer);
+				giveUpTimer = setTimeout(() => {
+					clearInterval(progressInterval);
+					this.props.updateState(SCOPE, {
+						width: 0,							// reset progress bar
+						saving: false,						// hide progress bar
+					});
+				}, 1000 * 60 * 2);							// after 2 minutes give up
 
 				SettingsApi.updateSettings(data)
 					.then(() => {
