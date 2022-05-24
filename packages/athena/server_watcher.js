@@ -93,7 +93,7 @@ function restart() {
 	clearTimeout(restart_debounce);
 
 	restart_debounce = setTimeout(() => {
-		first_run = false;
+		//first_run = false;
 		logger.debug('[watcher] watching:', file_count, 'files');
 		logger.info('[watcher] starting server');
 		const opts = { env: process.env, stdio: 'inherit' };		// pass all env vars to child (why not?)
