@@ -110,6 +110,7 @@ class StitchApi {
 		}
 	}
 
+	// get config, retry multiple orderers
 	static async getChannelConfigWithRetry(opts, orderers) {
 		opts.include_bin = true;
 		const getChannelConfigBlockFromOrderer = promisify(window.stitch.getChannelConfigBlockFromOrderer);

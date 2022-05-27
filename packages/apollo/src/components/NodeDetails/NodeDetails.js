@@ -60,11 +60,13 @@ class NodeDetails extends Component {
 						{this.renderField(translate, 'msp_id')}
 						{this.renderField(translate, 'msp.ca.name')}
 						{this.renderField(translate, 'msp.tlsca.name')}
+						{this.renderField(translate, 'osnadmin_url')}
 					</div>
 					<div className="node-details-column">
 						{this.renderField(translate, 'api_url')}
 						{this.renderField(translate, 'operations_url')}
 						{this.renderField(translate, 'hsm.pkcs11endpoint')}
+						{this.renderField(translate, 'version')}
 					</div>
 				</div>
 			</div>
