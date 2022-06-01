@@ -76,7 +76,6 @@ When(/^I change the password from '(.*?)' to '(.*?)'$/, async(currentPassword, n
 });
 
 When(/^I change the password from default password$/, async() => {
-	console.log('Changing password to %s', browser.automationPassword);
 	let currentPasswordInput = element(by.name('currentPassword'));
 	await browser.wait(ExpectedConditions.elementToBeClickable(currentPasswordInput), 5000);
 	await currentPasswordInput.sendKeys(browser.automationDefaultPassword);
@@ -126,14 +125,12 @@ Given(/^I am logged in$/, async() => {
 		}
 	} catch (err) {
 		try {
-		    console.log('iamLogin');
 			// let loginContainer = element(by.css('.login'));
 			let header = element(by.css('.heading-container'));
             await browser.sleep(5000);
             await browser.wait(ExpectedConditions.visibilityOf(header), 2000);
 			let text = await header.getText();
 			if (text.includes('Log in to IBM')) {
-			    console.log('Calling iamLogin function');
 				await iamLogin(browser.automationUser, browser.automationPassword);
 			}
 		} catch (loginError) {
@@ -152,7 +149,6 @@ Given(/^I am logged in for first time$/, async() => {
 		await browser.sleep(5000);
 		let text = await header.getText();
 		if (text.includes('Login to IBM Blockchain Platform')) {
-			console.log('Calling login function...');
 			await login(browser.automationUser, browser.automationDefaultPassword);
 		}
 	} catch (err) {
