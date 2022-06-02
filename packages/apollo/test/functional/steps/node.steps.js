@@ -39,18 +39,20 @@ Then(/^the (certificate authority|peer|orderer) with name (?:'|")(.*?)(?:'|") sh
 		.first();
 
 	try {
-		await browser.wait(ExpectedConditions.elementToBeClickable(tile), 10000);
+		await browser.wait(ExpectedConditions.elementToBeClickable(tile), 20000);
 		let isRunning = tile.element(by.className('ibp-node-status-running'));
-		await browser.wait(ExpectedConditions.elementToBeClickable(isRunning), 5 * 60 * 1000);
+		await browser.wait(ExpectedConditions.elementToBeClickable(isRunning), 10 * 60 * 1000);
 	} catch (err) {
 		console.log('Refreshing browser, retrying check to see if node is running');
 		// If the status goes unknown, refresh and try again.
 		await browser.refresh();
-		await browser.wait(ExpectedConditions.elementToBeClickable(tile), 10000);
+		await browser.wait(ExpectedConditions.elementToBeClickable(tile), 20000);
 		let isRunning = tile.element(by.className('ibp-node-status-running'));
-		await browser.wait(ExpectedConditions.elementToBeClickable(isRunning), 5 * 60 * 1000);
+		await browser.wait(ExpectedConditions.elementToBeClickable(isRunning), 10 * 60 * 1000);
 	}
 
+	console.log('Wait for 3 minutes...');
+	await browser.sleep(180000);
 	await tile.click();
 });
 
@@ -69,31 +71,36 @@ Given(/^I clicked the (?:'|")(.*?)(?:'|") (certificate authority|orderer)$/, asy
 			})
 			.first();
 
-		await browser.wait(ExpectedConditions.elementToBeClickable(tile), 5000);
+		await browser.wait(ExpectedConditions.elementToBeClickable(tile), 15000);
 
 		let isRunning = tile.element(by.className('ibp-node-status-running'));
-		await browser.wait(ExpectedConditions.elementToBeClickable(isRunning), 3000);
+		await browser.wait(ExpectedConditions.elementToBeClickable(isRunning), 30000);
 
 		await tile.click();
 	} else if (nodeType === 'orderer') {
-		const tiles = getOrdererTiles();
+		try{
+			const tiles = getOrdererTiles();
 
-		let tile = tiles
-			.filter(_tile => {
-				return _tile
-					.element(by.tagName('h4'))
-					.getText()
-					.then(text => {
-						return text === name;
-					});
-			})
-			.first();
+			let tile = tiles
+				.filter(_tile => {
+					return _tile
+						.element(by.tagName('h4'))
+						.getText()
+						.then(text => {
+							return text === name;
+						});
+				})
+				.first();
 
-		await browser.wait(ExpectedConditions.elementToBeClickable(tile), 5000);
+			await browser.wait(ExpectedConditions.elementToBeClickable(tile), 15000);
 
-		let isRunning = tile.element(by.className('ibp-node-status-running'));
-		await browser.wait(ExpectedConditions.elementToBeClickable(isRunning), 3000);
+			let isRunning = tile.element(by.className('ibp-node-status-running'));
+			await browser.wait(ExpectedConditions.elementToBeClickable(isRunning), 30000);
 
-		await tile.click();
+			await tile.click();
+
+		}catch (err) {
+			console.log('Error: %s', err);
+		}
 	}
 });

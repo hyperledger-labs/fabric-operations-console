@@ -12,10 +12,44 @@
  * limitations under the License.
 */
 const { browser, element, by, ExpectedConditions } = require('protractor');
+const https = require('https');
+
+async function get2FACode() {
+	// for 2FA we need the key to use to reference the 'account' of the ID in use
+	let ibptest2fa = process.env['IBPTEST_2FA_KEY'];
+	if (!ibptest2fa) {
+		throw new Error('Need to have IBPTEST_2FA_KEY');
+	}
+
+	console.log(`cloud login - getting 2fa code`);
+	return new Promise((resolve, reject) => {
+		const url = `https://newrelictotp.mybluemix.net/generatePassCode/${ibptest2fa}`;
+		console.log('Request URL: %s', url)
+		https.get(url, res => {
+			let data = [];
+			const headerDate = res.headers && res.headers.date ? res.headers.date : 'no response date';
+			console.log('Status Code:', res.statusCode);
+			console.log('Date in Response header:', headerDate);
+
+			res.on('data', chunk => {
+				data.push(chunk);
+			});
+
+			res.on('end', () => {
+				console.log('Login 2FA - Response ended: ');
+				const response = JSON.parse(Buffer.concat(data).toString());
+				console.log(response)
+				resolve(response.passcode)
+			});
+		}).on('error', err => {
+			reject('Login 2FA - HTTP Error: ', err.message);
+		});
+	})
+
+}
 
 async function login(email, password) {
 	if (!email || !password) {
-	    console.log('Taking username and password from environment variable')
 		email = browser.automationUser;
 		password = browser.automationPassword;
 	}
@@ -24,12 +58,10 @@ async function login(email, password) {
 	await browser.wait(ExpectedConditions.visibilityOf(emailInput), 6000);
 	await emailInput.sendKeys(email);
 
-	console.log('login: Entering password %s', password);
 	let passwordInput = element(by.name('login_password'));
 	await browser.wait(ExpectedConditions.visibilityOf(passwordInput), 6000);
 	await passwordInput.sendKeys(password);
 
-	console.log('login: Clicking on Login button');
 	const loginButton = element(by.css('button[id="login"]'));
 	await browser.wait(ExpectedConditions.elementToBeClickable(loginButton), 8000);
 	await loginButton.click();
@@ -90,7 +122,6 @@ async function iamLogin(email, password) {
 
             let w3EmailInput = element(by.id('user-name-input'));
             await browser.wait(ExpectedConditions.visibilityOf(w3EmailInput), 6000);
-			console.log('Entering user name')
             await w3EmailInput.sendKeys(email);
         }
     } catch (err)
@@ -107,7 +138,44 @@ async function iamLogin(email, password) {
 	await browser.wait(ExpectedConditions.elementToBeClickable(loginButton), 8000);
 	await loginButton.click();
 	console.log('Clicked on Sign In button');
-	await browser.sleep(8000);
+	await browser.sleep(10000);
+
+	//Check to see if user is logged in or waiting for 2FA OTP
+	console.log('Checking if user is logged in OR 2FA OTP is required');
+	let dashboard = element(by.css('[aria-label="Select dashboard"]'));
+	if (await dashboard.isPresent()) {
+		console.log('Found the dashboard - exit early');
+		return; // all is good
+	}
+
+	console.log('cloud login - checking for 2FA');
+	try{
+		// need to approach the 2FA now
+		let totp = element(by.id('totp'));
+		await browser.wait(ExpectedConditions.elementToBeClickable(totp), 8000);
+		console.log('cloud login OTP - is clickable');
+		await browser.sleep(1000);
+		await totp.click();
+		await browser.sleep(3000);
+
+		// we need to at this point get the 2FA key, from the pretend authenticator app
+		console.log('Calling 2FA method');
+		let otp = await get2FACode();
+		console.log(`otp code is ${otp}`);
+		// get the input area
+		let otpInput = element(by.id('otp-input'));
+
+		await browser.wait(ExpectedConditions.visibilityOf(otpInput), 2000);
+		await browser.sleep(1000);
+		await otpInput.sendKeys(otp);
+		let submitOtpButton = element(by.id('submit_btn'));
+		await browser.wait(ExpectedConditions.elementToBeClickable(submitOtpButton), 1000);
+		await browser.sleep(1000);
+		await submitOtpButton.click();
+		await browser.sleep(5000);
+	} catch(errorMsg){
+		console.log('TOTP not needed...user might have logged in without 2fa');
+	}
 }
 
 module.exports = {
