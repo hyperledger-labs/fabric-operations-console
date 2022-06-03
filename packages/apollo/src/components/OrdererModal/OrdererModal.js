@@ -491,7 +491,7 @@ class OrdererModal extends React.Component {
 		// todo This portion of the OrdererRestApi hasn't been updated to use translated errors.  Isolate it from the removeOrderer flow for now
 		try {
 			// only take out the node from consenter set if this is deployed (not imported)
-			if (this.props.orderer && this.props.orderer.location === 'ibm_saas' && this.props.ordererModalType !== 'force_delete') {
+			if (this.props.orderer && this.props.orderer.location === 'ibm_saas' && this.props.ordererModalType !== 'force_delete' && this.props.systemChannel === true) {
 				await OrdererRestApi.removeAllNodesFromSystemChannel(this.props.orderer, this.props.configtxlator_url, feature_flags);
 			}
 		} catch (error) {
@@ -2459,6 +2459,8 @@ export default withRouter(
 			newProps['capabilitiesEnabled'] =
 				state['settings'] && state['settings']['feature_flags'] ? state['settings']['feature_flags']['capabilities_enabled'] : null;
 			newProps['capabilities'] = state['settings'] && state['settings']['capabilities'] ? state['settings']['capabilities'] : [];
+			newProps['channelList'] = state['ordererDetails']['channelList'];
+			newProps['systemChannel'] = state['ordererDetails']['systemChannel'];
 			newProps['configtxlator_url'] = state['settings']['configtxlator_url'];
 			newProps['feature_flags'] = _.get(state, 'settings.feature_flags');
 			return newProps;
