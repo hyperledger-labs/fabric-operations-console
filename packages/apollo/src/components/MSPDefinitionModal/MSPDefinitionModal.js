@@ -161,8 +161,9 @@ export class MSPDefinitionModal extends Component {
 				duplicateMSPExists = await MspRestApi.checkIfMSPExists(json.msp_id, json.root_certs, json.intermediate_certs);
 			}
 
-			let admin_certs = json.admins
-				? json.admins.map(x => {
+			let admin_certs = [];
+			if (json.admins) {
+				for (const x of json.admins) {
 					let parsedCert = StitchApi.parseCertificate(x);
 					if (!parsedCert) {
 						valid = false;
@@ -171,10 +172,27 @@ export class MSPDefinitionModal extends Component {
 								title: 'invalid_admin_certificate',
 							},
 						});
+						break;
 					}
-					return { cert: parsedCert && parsedCert.base_64_pem ? parsedCert.base_64_pem : '' };
-				  })
-				: [];
+					admin_certs.push({ cert: parsedCert && parsedCert.base_64_pem ? parsedCert.base_64_pem : '' });
+
+					// check if the admin cert is from one of the root certs. Otherwise peer would crash.
+					let isFromRoot = await StitchApi.isIdentityFromRootCert({
+						certificate_b64pem: x,
+						root_certs_b64pems: [...json.root_certs, ...json.intermediate_certs],
+					});
+					if (!isFromRoot) {
+						valid = false;
+						this.props.updateState(SCOPE, {
+							error: {
+								title: 'is_not_from_root',
+							},
+							disableSubmit: true,
+						});
+						break;
+					}
+				}
+			}
 
 			this.props.updateState(SCOPE, {
 				msp_id: json.msp_id,
