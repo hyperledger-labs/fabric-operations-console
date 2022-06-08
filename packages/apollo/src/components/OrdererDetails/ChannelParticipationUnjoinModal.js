@@ -45,9 +45,13 @@ class ChannelParticipationUnjoinModal extends Component {
 					});
 				})
 				.catch(error => {
-					this.props.updateState(SCOPE, {
-						error,
-					});
+					// ignore 404/503 since some of the nodes may not have system channel
+					const status = _.get(error, 'grpc_resp.status');
+					if (status !== 404 && status !== 503) {
+						this.props.updateState(SCOPE, {
+							error,
+						});
+					}
 				});
 			this.props.updateState(SCOPE, {
 				loading: false,

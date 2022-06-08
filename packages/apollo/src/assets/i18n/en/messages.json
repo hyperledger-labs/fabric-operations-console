@@ -838,6 +838,7 @@
 	"generate_msp_desc1": "A Membership Service Provider (MSP) uses your CA to create a formal definition of your organization and includes a certificate identifying an administrator of the organization.",
 	"generate_msp_desc2": "After adding this MSP to the ordering service, you will be able to create or join channels.",
 	"msp_details": "MSP details",
+	"is_not_from_root": "One of the admin cert is not from the root CA. Ensure that all the admin certs are from the root CA.",
 	"root_cert_details": "Root Certificate Authority details",
 	"admins": "Additional administrators (optional)",
 	"admin_certs": "Admin certificates",
