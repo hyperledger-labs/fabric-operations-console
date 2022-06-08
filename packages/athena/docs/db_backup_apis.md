@@ -5,7 +5,7 @@ Start a backup of all **OpTools** databases.
 This api will return before the backup is done.
 Use the get-backup-doc api to see the status of a backup.
 - **Method**: POST
-- **Route**: `/api/v[123]/backups` || `/api/v[123]/backups`
+- **Route**: `/api/v[123]/backups` || `/ak/api/v[123]/backups`
 - **Auth**: need `blockchain.optools.settings` action
 - **Body**: `n/a`
 - **Response**:
@@ -51,7 +51,7 @@ Use the webhook api to see the status of the restore.
 Note: normally each doc in the backup data appears only once, but if it does appear multiple times the last one in the array will be the winning doc.
 Also note - after a restore the component white list will be rebuilt.
 - **Method**: PUT
-- **Route**: `/api/v[123]/backups` || `/api/v[123]/backups`
+- **Route**: `/api/v[123]/backups` || `/ak/api/v[123]/backups`
 - **Auth**: need `blockchain.optools.settings` action
 - **Query Params**:
 	- `skip_system` - should be an array of doc ids that will NOT be restored to the system db. example: `skip_system=["00_settings_athena"]`
@@ -83,7 +83,7 @@ This api will return before the restore is done.
 Use the webhook api to see the status of the restore.
 Also note - after a restore the component white list will be rebuilt.
 - **Method**: PUT
-- **Route**: `/api/v[123]/backups/:backup_id` || `/api/v[123]/backups/:backup_id`
+- **Route**: `/api/v[123]/backups/:backup_id` || `/ak/api/v[123]/backups/:backup_id`
 - **Auth**: need `blockchain.optools.settings` action
 - **Query Params**:
 	- `skip_system` - should be an array of doc ids that will NOT be restored to the system db. example: `skip_system="['00_settings_athena']"`

@@ -87,8 +87,10 @@ class LeftNav extends Component {
 		}
 	}
 
+	// change <title> of the browser tab
 	async getPageTitle(path) {
-		let title = 'IBM Blockchain Platform';
+		const translate = this.props.translate;
+		let title = translate('product_label');
 		let pathArray = path.split('/');
 		let suffix = pathArray[1];
 		let idx = pathArray.indexOf('channel');
