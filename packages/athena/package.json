@@ -62,7 +62,7 @@
 	},
 	"overrides": {
 		"winston": {
-			"async": "3.2.2"
+			"async": "3.2.3"
 		}
 	}
 }
