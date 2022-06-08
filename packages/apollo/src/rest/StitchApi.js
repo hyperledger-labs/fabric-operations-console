@@ -190,22 +190,14 @@ class StitchApi {
 
 	static async getOSNChannels(opts) {
 		const getOSNChannels = promisify(window.stitch.getOSNChannels);
-		try {
-			let resp = await getOSNChannels(opts);
-			return resp ? resp.data : resp;
-		} catch (error) {
-			return (error && error.http_resp) ? error.http_resp : error;
-		}
+		let resp = await getOSNChannels(opts);
+		return resp ? resp.data : resp;
 	}
 
 	static async getOSNChannel(opts) {
 		const getOSNChannel = promisify(window.stitch.getOSNChannel);
-		try {
-			let resp = await getOSNChannel(opts);
-			return resp ? resp.data : resp;
-		} catch (error) {
-			return (error && error.http_resp) ? error.http_resp : error;
-		}
+		let resp = await getOSNChannel(opts);
+		return resp ? resp.data : resp;
 	}
 
 	static async joinOSNChannel(opts) {
@@ -215,12 +207,8 @@ class StitchApi {
 
 	static async unjoinOSNChannel(opts) {
 		const unjoinOSNChannel = promisify(window.stitch.unjoinOSNChannel);
-		try {
-			let resp = await unjoinOSNChannel(opts);
-			return resp ? resp.data : resp;
-		} catch (error) {
-			return (error && error.http_resp) ? error.http_resp : error;
-		}
+		let resp = await unjoinOSNChannel(opts);
+		return resp ? resp.data : resp;
 	}
 
 	static async jsonToPb(opts) {
