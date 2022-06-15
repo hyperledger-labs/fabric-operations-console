@@ -98,8 +98,8 @@ class ImportOrdererModal extends React.Component {
 				zone: false,
 				resource_allocation: false,
 				hsm: false,
-				systemless: true,
 			},
+			systemless: null,
 			hsm: null,
 			config_override: null,
 			editedConfigOverride: null,
@@ -129,7 +129,7 @@ class ImportOrdererModal extends React.Component {
 			.then(all_versions => {
 				let versions = all_versions.orderer;
 				if (versions) {
-					const filtered = versions.filter(i => this.validVersion(i, this.props.advanced_config.systemless));
+					const filtered = versions.filter(i => this.validVersion(i, this.props.systemless));
 					this.props.updateState(SCOPE, {
 						origVersions: versions,
 						versions: filtered,
@@ -401,7 +401,7 @@ class ImportOrdererModal extends React.Component {
 			data.hsm = this.props.hsm;
 		}
 		if (this.props.feature_flags && this.props.feature_flags.osnadmin_feats_enabled) {
-			if (this.props.advanced_config && this.props.advanced_config.systemless) {
+			if (this.props.systemless) {
 				data.systemless = true;
 			}
 		}
@@ -886,28 +886,6 @@ class ImportOrdererModal extends React.Component {
 							<BlockchainTooltip withCheckbox>{translate('hsm_tooltip')}</BlockchainTooltip>
 						</div>
 					)}
-					{this.props.feature_flags && this.props.feature_flags.osnadmin_feats_enabled && (
-						<div className="ibp-advanced-orderer-checkboxes">
-							<Checkbox
-								id="advanced_config_systemless"
-								labelText={translate('systemless_config')}
-								onChange={() => {
-									const filtered = this.props.origVersions.filter(i => this.validVersion(i, !this.props.advanced_config.systemless));
-									this.props.updateState(SCOPE, {
-										advanced_config: {
-											...this.props.advanced_config,
-											systemless: !this.props.advanced_config.systemless,
-										},
-										// if systemless is checked omit versions less than 2.4
-										versions: filtered,
-										version: null
-									});
-								}}
-								checked={this.props.advanced_config.systemless}
-							/>
-							<BlockchainTooltip withCheckbox>{translate('systemless_tooltip')}</BlockchainTooltip>
-						</div>
-					)}
 					{this.props.clusterType === 'paid' && (
 						<div className="ibp-advanced-orderer-checkboxes">
 							<Checkbox
@@ -934,6 +912,54 @@ class ImportOrdererModal extends React.Component {
 						link="_THIRD_PARTY_CA_LINK"
 					/>}
 				</div>
+			</div>
+		);
+	}
+
+	// create the system channel configuration radio buttons
+	renderSystemChannelRadios(translate) {
+		return (
+			<div className="ibp-form">
+				{this.props.feature_flags && this.props.feature_flags.osnadmin_feats_enabled && (
+					<div>
+						<Form
+							scope={SCOPE}
+							id="systemChannelConfig"
+							fields={[
+								{
+									name: 'system_config',
+									type: 'radio',
+									tooltip: 'systemless_tooltip',
+									required: true,
+									label: 'systemless_title',
+									options: [
+										{
+											id: 'without-system',	// this is the value of the radio...
+											label: translate('systemless_config'),
+										},
+										{
+											id: 'with-system',		// this is the value of the radio...
+											label: translate('system_config'),
+										},
+									],
+									default: 'nothing'				// select neither radio on first load, this forces the user to decide
+								},
+							]}
+							onChange={data => {
+								const systemless = !(data && data.system_config && data.system_config === 'with-system');
+								const filtered = this.props.origVersions ? this.props.origVersions.filter(i => this.validVersion(i, systemless)) : [];
+								this.props.updateState(SCOPE, {
+									systemless: systemless,
+
+									// if systemless is checked omit versions less than 2.4
+									versions: filtered,
+									version: null
+								});
+								return systemless;
+							}}
+						/>
+					</div>
+				)}
 			</div>
 		);
 	}
@@ -974,11 +1000,12 @@ class ImportOrdererModal extends React.Component {
 		const supported_orderers = Helper.getSupportedOrderers();
 		const ignore_list = this.props.ignore_list ? this.props.ignore_list : [];
 		const append_list = this.props.append_list ? this.props.append_list : [];
+		const needs2selectSysConfig = this.props.feature_flags && this.props.feature_flags.osnadmin_feats_enabled && typeof this.props.systemless !== 'boolean';
 		return (
 			<WizardStep
 				type="WizardStep"
 				title={this.props.raftParent ? 'add_orderer_node' : 'add_orderer'}
-				disableSubmit={this.props.disableSubmit}
+				disableSubmit={this.props.disableSubmit || needs2selectSysConfig}
 				onNext={this.checkForRequirements}
 			>
 				<div>
@@ -1055,6 +1082,7 @@ class ImportOrdererModal extends React.Component {
 										}}
 									/>
 								)}
+								{this.renderSystemChannelRadios(translate)}
 								{this.renderAdvancedCheckboxes(translate)}
 							</div>
 						)}
@@ -2058,6 +2086,8 @@ const dataProps = {
 	versions: PropTypes.array,
 	origVersions: PropTypes.array,
 	version: PropTypes.object,
+	systemless: PropTypes.bool,
+	system_config: PropTypes.string,
 };
 
 ImportOrdererModal.propTypes = {
