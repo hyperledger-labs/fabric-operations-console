@@ -21,12 +21,12 @@ Then(/^I should see a success toast which says (?:'|")(.*?)(?:'|")$/, async expe
 	let successElement;
 	try {
 		successElement = element(by.className('bx--toast-notification__title'));
-		await browser.wait(ExpectedConditions.visibilityOf(successElement), 60000);
+		await browser.wait(ExpectedConditions.visibilityOf(successElement), 5 * 60 * 1000);
 		let successText = await successElement.getText();
 		successText.should.contain(expectedMessage);
 	} catch (err) {
 		successElement = element(by.className('bx--toast-notification__subtitle'));
-		await browser.wait(ExpectedConditions.visibilityOf(successElement), 60000);
+		await browser.wait(ExpectedConditions.visibilityOf(successElement), 5 * 60 * 1000);
 		let successText = await successElement.getText();
 		successText.should.contain(expectedMessage);
 	}
