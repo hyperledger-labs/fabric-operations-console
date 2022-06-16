@@ -27,7 +27,7 @@ async function clickButton(property, value) {
 		throw new Error('Property not supported');
 	}
 
-	await browser.wait(ExpectedConditions.elementToBeClickable(button), 60000);
+	await browser.wait(ExpectedConditions.elementToBeClickable(button), 2 * 60 * 1000);
 	await button.click();
 }
 

@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16.x
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
       - run: npm run lint
 
   build-code:
@@ -30,7 +30,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 16.x
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
       - run: npm run build
 
   unit-tests:
@@ -41,5 +41,5 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 16.x
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
       - run: npm test
