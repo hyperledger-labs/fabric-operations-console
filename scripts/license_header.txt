@@ -13,19 +13,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-const proxy = require('http-proxy-middleware');
-
-module.exports = app => {
-	const options = {
-		target: 'http://localhost:4000/',
-		changeOrigin: true,
-	};
-	app.use(proxy(['/api'], options));
-	app.use(proxy(['/proxy'], options));
-	app.use(proxy(['/auth'], options));
-	app.use(proxy(['/caproxy'], options));
-	app.use(proxy(['/grpcwp'], options));
-	app.use(proxy(['/deployer'], options));
-	app.use(proxy(['/version.txt'], options));
-	app.use(proxy(['/releaseNotes.json'], options));
-};
