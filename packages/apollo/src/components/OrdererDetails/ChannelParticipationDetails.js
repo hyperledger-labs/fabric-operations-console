@@ -25,7 +25,6 @@ import Logger from '../Log/Logger';
 import SVGs from '../Svgs/Svgs';
 import ChannelParticipationModal from './ChannelParticipationModal';
 import ChannelParticipationUnjoinModal from './ChannelParticipationUnjoinModal';
-import ChannelModal from '../ChannelModal/ChannelModal';
 import JoinOSNChannelModal from '../JoinOSNChannelModal/JoinOSNChannelModal';
 import _ from 'lodash';
 
@@ -95,32 +94,47 @@ class ChannelParticipationDetails extends Component {
 		});
 	};
 
-	joinChannel = () => {
+	// open the join channel modal
+	joinChannel = (channelDetails) => {
 		this.props.updateState(SCOPE, {
-			//selectedConfigBlock: selectedConfigBlock,
 			joinChannelModal: true,
+			joinChannelDetails: channelDetails
 		});
 	};
 
+	// build the button/icons in each channel tile
 	buildCustomTile = (channel) => {
+		const translate = this.props.translate;
 		return (
 			<div>
 				{channel.type === 'system_channel' && (
-					<p className='ibp-orderer-channel-sub'>System Channel</p>
+					<p className='ibp-orderer-channel-sub'>{translate('system_channel')}</p>
 				)}
 				<button className="ibp-orderer-channel-info"
 					onClick={async () => await this.openCPDetailsModal(channel)}
 				>
-					<SVGs type="settings" />
+					<SVGs type="settings"
+						title={translate('channel_info_title')}
+					/>
 				</button>
 				<button className="ibp-orderer-channel-unjoin"
 					onClick={async () => await this.openCPUnjoinModal(channel)}
 				>
-					<SVGs type="trash" />
+					<SVGs type="trash"
+						title={translate('unjoin_channel_title')}
+					/>
+				</button>
+				<button className="ibp-orderer-channel-join"
+					onClick={() => this.joinChannel(channel)}
+				>
+					<SVGs type="plus"
+						title={translate('join_osn_title')}
+					/>
 				</button>
 			</div>
 		);
 	}
+
 	render() {
 		return (
 			<div>
@@ -172,33 +186,11 @@ class ChannelParticipationDetails extends Component {
 						onClose={this.closeCPUnjoinModal}
 					/>
 				)}
-				{/*this.props.joinChannelModal && (
-					<ChannelModal
-						useConfigBlock={this.props.selectedConfigBlock}
-						onClose={() => {
-							this.props.updateState(SCOPE, {
-								joinChannelModal: false,
-								selectedConfigBlock: null,
-							});
-						}}
-						onComplete={(channelName, isOrdererSignatureNeeded) => {
-							if (isOrdererSignatureNeeded) {
-								this.props.showSuccess('channel_creation_request_submitted_to_orderer', { channelName }, SCOPE, null, true);
-							} else {
-								this.props.showSuccess('channel_creation_request_submitted', { channelName }, SCOPE, null, true);
-							}
-							this.props.updateState(SCOPE, { filteredChannels: [], allChannels: [] });
-							this.getAllPeerChannels();
-						}}
-					/>
-					)*/}
-
 				{this.props.joinChannelModal && (
 					<JoinOSNChannelModal
 						onClose={() => {
 							this.props.updateState(SCOPE, {
 								joinChannelModal: false,
-								selectedConfigBlock: null,
 							});
 						}}
 						onComplete={() => {
@@ -208,10 +200,7 @@ class ChannelParticipationDetails extends Component {
 							//	this.getChannelDetails();
 							//});
 						}}
-						//existingChannel={this.props.match.params.channelId}
-						//existingMembers={this.props.members}
-						//peers={peersNotJoinedYet}
-						isAddingNode
+						joinChannelDetails={this.props.joinChannelDetails}
 					/>
 				)}
 			</div>
@@ -226,6 +215,7 @@ const dataProps = {
 	showCPDetailsModal: PropTypes.bool,
 	showCPUnjoinModal: PropTypes.bool,
 	joinChannelModal: PropTypes.bool,
+	joinChannelDetails: PropTypes.object,
 };
 
 ChannelParticipationDetails.propTypes = {

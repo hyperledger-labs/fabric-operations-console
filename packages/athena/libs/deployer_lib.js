@@ -2033,6 +2033,16 @@ module.exports = function (logger, ev, t) {
 							default: false,
 							version: '1.4.12-11'
 						}
+					},
+					orderer: {
+						'2.4.3': {
+							default: true,
+							version: '2.4.3'
+						},
+						'1.4.12-11': {
+							default: false,
+							version: '1.4.12-11'
+						}
 					}
 				}
 			});*/

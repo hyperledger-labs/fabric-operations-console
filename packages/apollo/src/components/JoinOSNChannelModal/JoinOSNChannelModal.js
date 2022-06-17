@@ -37,62 +37,72 @@ const SCOPE = 'joinOSNChannelModal';
 const Log = new Logger(SCOPE);
 const url = require('url');
 
-// dsh todo - if node has already joined disable it
-// dsh todo - join flow from drill down should be scoped to the clicked cluster, not all clusters
-// dsh todo - must have at least 1 node selected to click join-channel
-
 class JoinOSNChannelModal extends React.Component {
 	async componentDidMount() {
-		// if we need to get orderers....
-		const oss = await OrdererRestApi.getOrderers(true);
 
-		// build individual orderer node options
-		const orderers = [];
-		for (let i in oss) {
-			for (let x in oss[i].raft) {
-				const temp = JSON.parse(JSON.stringify(oss[i].raft[x]));
-				temp.display_name = `[${oss[i].raft[x].cluster_name}] ${oss[i].raft[x].display_name}`;
-				orderers.push(temp);
-			}
-		};
-		console.log('dsh99 got orderers', orderers, this.props.configtxlator_url);
+		// [Flow 1] - the channel is not yet selected, show step to select a node and channel name
+		if (!this.props.joinChannelDetails) {
+			// if we need to get orderers....
+			const oss = await OrdererRestApi.getOrderers(true);
 
-		this.props.updateState(SCOPE, {
-			orderers,
-			channels: [],
-			disableSubmit: true,
-			submitting: false,
-			configtxlator_url: this.props.configtxlator_url,
-			drill_down_flow: false,							// true if user clicked on specific cluster before coming to this panel
-		});
+			// build individual orderer node options
+			const orderers = [];
+			for (let i in oss) {
+				for (let x in oss[i].raft) {
+					const temp = JSON.parse(JSON.stringify(oss[i].raft[x]));
+					temp.display_name = `[${oss[i].raft[x].cluster_name}] ${oss[i].raft[x].display_name}`;
+					orderers.push(temp);
+				}
+			};
+
+			this.props.updateState(SCOPE, {
+				orderers,
+				channels: [],
+				disableSubmit: true,
+				submitting: false,								// dsh todo is submitting actually used?
+				configtxlator_url: this.props.configtxlator_url,
+				drill_down_flow: false,							// true if user clicked on specific cluster before coming to this panel
+				block_error: '',
+			});
+		}
+
+		// [Flow 2] - the channel was already chosen, skip to step to select joining osns
+		else {
+			this.props.updateState(SCOPE, {
+				orderers: null,									// setting null here skips the first step
+				configtxlator_url: this.props.configtxlator_url,
+				block_error: '',
+			});
+			await this.setupForJoin(this.props.joinChannelDetails.name);
+		}
 	}
 
 	componentWillUnmount() {
-		if (!this.props.isPending) {
-			this.props.updateState(SCOPE, {
-				config_block_b64: null,
-				selected_osn: null,
-			});
-		}
+		this.props.updateState(SCOPE, {
+			config_block_b64: null,
+			selected_osn: null,
+			joinChannelDetails: null,
+		});
 	}
 
 	// get all the channels for selected orderer node
 	loadChannels = async (orderer) => {
-		console.log('dsh99 loadChannels orderer', orderer);
 		if (!orderer || !orderer.osnadmin_url) { return; }
-
 		let orderer_tls_identity = await IdentityApi.getTLSIdentity(orderer);
-		console.log('dsh99 orderer_tls_identity', orderer_tls_identity);
 
 		if (orderer_tls_identity) {
 			try {
 				let all_identities = await IdentityApi.getIdentities();
-				//console.log('dsh99 all_identities', all_identities);
 				const channels = await ChannelParticipationApi._getChannels(all_identities, orderer);
-				console.log('dsh99 awaited channels', channels);
 				return channels;
-			} catch (error) {
-				console.log('dsh99 error', error);
+			} catch (e) {
+				Log.error(e);
+				const code = (e && !isNaN(e.status_code)) ? '(' + e.status_code + ') ' : '';
+				const details = (e && typeof e.stitch_msg === 'string') ? (code + e.stitch_msg) : '';
+				this.props.updateState(SCOPE, {
+					block_error_title: '[Error] Could not load channels. Resolve error to continue:',
+					block_error: details,
+				});
 				return [];
 			}
 		}
@@ -100,26 +110,32 @@ class JoinOSNChannelModal extends React.Component {
 
 	// get config block for the selected channel via the selected orderer
 	getChannelConfigBlock = async (channel) => {
-		console.log('dsh99 selected_osn', channel, this.props.selected_osn);
+		let osn_to_use = this.props.selected_osn;							// default to the one selected in the drop down
+		if (this.props.joinChannelDetails && this.props.joinChannelDetails.nodes) {
+			for (let i in this.props.joinChannelDetails.nodes) {
+				if (this.props.joinChannelDetails.nodes[i]._channel_resp) {
+					osn_to_use = this.props.joinChannelDetails.nodes[i];	// use the first node that knows this channel if available
+					break;
+				}
+			}
+		}
+
 		let all_identities = await IdentityApi.getIdentities();
 		const identity4tls = await ChannelParticipationApi.findMatchingIdentity({
 			identities: all_identities,
-			root_certs_b64pems: _.get(this.props.selected_osn, 'msp.tlsca.root_certs')
+			root_certs_b64pems: _.get(osn_to_use, 'msp.tlsca.root_certs')
 		});
 
 		const opts = {
-			msp_id: this.props.selected_osn.msp_id,
+			msp_id: osn_to_use.msp_id,
 			client_cert_b64pem: identity4tls.cert,
 			client_prv_key_b64pem: identity4tls.private_key,
-			orderer_host: this.props.selected_osn.url2use,
+			orderer_host: osn_to_use.url2use,
 			channel_id: channel,
 			include_bin: true,
 		};
-		console.log('dsh99 get config opts', opts);
-		const resp = await StitchApi.getChannelConfigWithRetry(opts, [this.props.selected_osn]);
-		console.log('dsh99 config resp', resp);
+		const resp = await StitchApi.getChannelConfigWithRetry(opts, [osn_to_use]);
 		const config = window.stitch.uint8ArrayToBase64(resp.grpc_message);
-		console.log('dsh99 config', config);
 		return config;
 	};
 
@@ -129,27 +145,15 @@ class JoinOSNChannelModal extends React.Component {
 
 		// config block was passed in - load it
 		if (config_block_b64) {
-			/*this.props.updateState(SCOPE, {
-				//submitting: true,
-				loading: true
-			});*/
 			const allOrderers = await this.getAllOrderers();
 			const all_identities = await IdentityApi.getIdentities();
-			console.log('dsh99 all_identities', all_identities);
-			console.log('dsh99 allOrderers', allOrderers);
 
 			const json_block = await this.parseProto(config_block_b64);
 			const channel_id = _.get(json_block, 'data.data[0].payload.header.channel_header.channel_id');
-
 			const channel_map = await ChannelParticipationApi.map1Channel(all_identities, allOrderers, channel_id);
-			console.log('dsh99 channel map', channel_map);
-
-			//this.setupDownloadGenesisLink(json_block, channel_id);
-			//console.log('dsh99 setupDownloadGenesisLink');
 
 			const consenters = _.get(json_block, 'data.data[0].payload.data.config.channel_group.groups.Orderer.values.ConsensusType.value.metadata.consenters');
 			joinOsnMap = await this.organize_osns(consenters, allOrderers, json_block, channel_map);
-			console.log('dsh99 joinOsnMap', joinOsnMap);
 
 			this.props.updateState(SCOPE, {
 				channel_id: channel_id,
@@ -157,9 +161,9 @@ class JoinOSNChannelModal extends React.Component {
 				count: this.countOrderers(joinOsnMap),
 				follower_count: this.countFollowers(joinOsnMap),
 				b_genesis_block: window.stitch.base64ToUint8Array(config_block_b64),
-				//json_block: json_block,
 				select_followers_toggle: false,
 				block_error: '',
+				block_error_title: '',
 				submitting: false,
 				loading: false,
 			});
@@ -217,10 +221,12 @@ class JoinOSNChannelModal extends React.Component {
 		try {
 			return await StitchApi.pbToJson(c_opts);
 		} catch (e) {
+			Log.error(e);
 			const code = (e && !isNaN(e.status_code)) ? '(' + e.status_code + ') ' : '';
 			const details = (e && typeof e.stitch_msg === 'string') ? (code + e.stitch_msg) : '';
 			this.props.updateState(SCOPE, {
-				block_error: 'Could not parse genesis-block. Resolve error to continue: ' + details,
+				block_error_title: '[Error] Could not parse config-block. Resolve error to continue:',
+				block_error: details,
 				joinOsnMap: {},
 				count: 0,
 				follower_count: 0,
@@ -231,25 +237,15 @@ class JoinOSNChannelModal extends React.Component {
 
 	// download genesis block as JSON - for debug and what not
 	setupDownloadGenesisLink = (block, channel_name) => {
-		console.log('dsh99 setting up download', channel_name, block);
-
 		let link = document.getElementById('ibp-download-genesis-link2');
-		console.log('dsh99 download link', link);
-
 		if (link) {
-			console.log('dsh99 download here 1');
 			const d = new Date();
 			const dateStr = d.toLocaleDateString().split('/').join('-') + '-' + d.toLocaleTimeString().replace(/[:\s]/g, '');
-			console.log('dsh99 download here 2');
 			let name = 'IBP_' + channel_name + '_genesis_' + dateStr + '.json';
-			console.log('dsh99 download here 3');
 			const blob = new Blob([JSON.stringify(block, null, '\t')], { type: 'text/plain' });
-			console.log('dsh99 download here 4');
 			let url = URL.createObjectURL(blob);
-			console.log('dsh99 download here 5');
 			link.setAttribute('href', url);
 			link.setAttribute('download', name);
-			console.log('dsh99 setup download', name);
 		}
 	}
 
@@ -315,11 +311,6 @@ class JoinOSNChannelModal extends React.Component {
 	async organize_osns(consenters, all_orderers, config_block, channel_data) {
 		const ret = {};
 		const msp_data = this.buildSimpleMspFromConfigBlock(config_block);
-
-		console.log('dsh99 consenters', consenters);
-		console.log('dsh99 all_orderers', all_orderers);
-		console.log('dsh99 config_block', config_block);
-		console.log('dsh99 msp_data', msp_data);
 
 		// first iter over nodes that were selected as consenters from wizard
 		for (let i in consenters) {
@@ -519,10 +510,8 @@ class JoinOSNChannelModal extends React.Component {
 	// selected orderer was changed
 	changeOrderer = async (change) => {
 		const orderer = change.orderer_joined;
-		console.log('dsh99 selected orderer', orderer);
 		const resp = await this.loadChannels(orderer);
 		const channels = (resp && Array.isArray(resp.channels)) ? resp.channels : [];
-		console.log('dsh99 channels', channels);
 		this.props.updateState(SCOPE, {
 			channels: channels,
 			selected_osn: orderer,
@@ -531,34 +520,49 @@ class JoinOSNChannelModal extends React.Component {
 
 	// selected channel was changed
 	changeChannel = async (change) => {
-		const channel = change.channel;
-		console.log('dsh99 selected channel', channel);
+		const channelName = (change && change.channel) ? change.channel.name : '';
+		await this.setupForJoin(channelName);
+	};
+
+	// get the config block and load the 2nd step
+	setupForJoin = async (channelName) => {
 		this.props.updateState(SCOPE, {
 			config_block_b64: null,
 			loading: true,
 			drill_down_flow: true,
 		});
 		try {
-			const config_block_b64 = await this.getChannelConfigBlock(channel.name);
+			const config_block_b64 = await this.getChannelConfigBlock(channelName);
 			this.props.updateState(SCOPE, {
 				config_block_b64: config_block_b64,
 				//loading: false,		// keep loading true until parseConfigBlock is done
 			});
 			try {
 				const json_block = await this.parseConfigBlock(config_block_b64);
-				this.setupDownloadGenesisLink(json_block, channel.name);
-				console.log('dsh99 setupDownloadGenesisLink');
+				this.setupDownloadGenesisLink(json_block, channelName);
 			} catch (e) {
-				console.log('dsh99 error', e);
+				Log.error(e);
+				const code = (e && !isNaN(e.status_code)) ? '(' + e.status_code + ') ' : '';
+				const details = (e && typeof e.stitch_msg === 'string') ? (code + e.stitch_msg) : '';
+				this.props.updateState(SCOPE, {
+					block_error_title: '[Error] Could not parse config-block. Resolve error to continue:',
+					block_error: details,
+					config_block_b64: null,
+					loading: false,
+				});
 			}
 		} catch (e) {
-			// dsh todo show error if we can't get the block
+			Log.error(e);
+			const code = (e && !isNaN(e.status_code)) ? '(' + e.status_code + ') ' : '';
+			const details = (e && typeof e.stitch_msg === 'string') ? (code + e.stitch_msg) : '';
 			this.props.updateState(SCOPE, {
+				block_error_title: '[Error] Could not get config-block. Resolve error to continue:',
+				block_error: details,
 				config_block_b64: null,
 				loading: false,
 			});
 		}
-	};
+	}
 
 	// select or unselect the cluster
 	toggleCluster = (cluster_id, evt) => {
@@ -644,7 +648,6 @@ class JoinOSNChannelModal extends React.Component {
 		} = this.props;
 		this.props.updateState(SCOPE, {
 			submitting: true,
-			//osnjoinSubmit: true,
 			osnJoinSubmitFin: false,		// dsh todo what is difference w/this and submitting
 			joinOsnMap: JSON.parse(JSON.stringify(reset(joinOsnMap))),
 		});
@@ -746,10 +749,10 @@ class JoinOSNChannelModal extends React.Component {
 	// -----------------------------------------------------------------------------------------------
 	// step 1 - [select orderer, channel, get config-block]
 	renderSelectOrderer(translate) {
-		// dsh todo if config block was passed in skip this step, try to reduce step count too
 		if (!this.props.orderers) {
 			return;
 		}
+
 		return (
 			<WizardStep
 				type="WizardStep"
@@ -757,7 +760,7 @@ class JoinOSNChannelModal extends React.Component {
 				//title={translate('select_osn')}
 				desc={translate('select_osn_desc')}
 				tooltip={translate('select_orderer_tooltip')}
-				disableSubmit={!this.props.config_block_b64 || this.props.loading}
+				disableSubmit={!this.props.config_block_b64 || this.props.loading || this.props.block_error}
 			>
 				<Form
 					scope={SCOPE}
@@ -804,19 +807,10 @@ class JoinOSNChannelModal extends React.Component {
 			select_followers_toggle,
 			follower_count,
 			block_error,
+			block_error_title,
 			drill_down_flow,
-			json_block
-			//osnjoinSubmit,
 		} = this.props;
 
-		if (!this.props.orderers) {
-			return;
-		}
-
-		//this.setupDownloadGenesisLink(json_block, channel_id);
-		//console.log('dsh99 setupDownloadGenesisLink');
-
-		console.log('dsh99 rendering renderSelectJoiningOSNs followers', follower_count, 'map', joinOsnMap, 'count', count);
 		return (
 			<WizardStep
 				type="WizardStep"
@@ -824,7 +818,7 @@ class JoinOSNChannelModal extends React.Component {
 				//title={translate('select_osn')}
 				//desc={translate('select_osn_desc')}
 				//tooltip={translate('select_orderer_tooltip')}
-				disableSubmit={count === 0}
+				disableSubmit={count === 0 || block_error}
 			>
 				{this.props.loading && <Loading withOverlay={false}
 					className="ibp-wizard-loading"
@@ -835,7 +829,7 @@ class JoinOSNChannelModal extends React.Component {
 						<div className="ibp-join-osn-error-wrap">
 							<InlineNotification
 								kind="error"
-								title={translate('error')}
+								title={block_error_title}
 								subtitle={block_error}
 								hideCloseButton={true}
 							/>
@@ -850,9 +844,9 @@ class JoinOSNChannelModal extends React.Component {
 						</div>
 					)}
 
-					{joinOsnMap && !_.isEmpty(Object.keys(joinOsnMap)) && (
+					{!this.props.loading && joinOsnMap && !_.isEmpty(Object.keys(joinOsnMap)) && (
 						<p className="ibp-join-osn-cluster-title">
-							{translate('clusters_title')}
+							{translate('clusters_title', { channel: channel_id })}
 							<span className="ibp-join-osn-count">({count || '0'} {count === 1 ? translate('node_lc') : translate('nodes_lc')})</span>
 							<a href="#"
 								id="ibp-download-genesis-link2"
@@ -880,20 +874,14 @@ class JoinOSNChannelModal extends React.Component {
 						</p>
 					)}
 
-					{(!joinOsnMap || _.isEmpty(Object.keys(joinOsnMap))) && (
-						<div>{translate('loading')}</div>
-					)}
-
-					{joinOsnMap && !_.isEmpty(Object.keys(joinOsnMap)) && (
+					{!this.props.loading && joinOsnMap && !_.isEmpty(Object.keys(joinOsnMap)) && (
 						<div className="ibp-join-osn-msp-wrap">
 							{Object.values(joinOsnMap).map((cluster, i) => {
-								//if (osnjoinSubmit) {
 								//	if (cluster.selected === true) {
 								return (this.renderClusterSection(cluster));
 								//	}
 								//} else {
 								//	return (this.renderClusterSection(cluster));
-								//}
 							})}
 						</div>
 					)}
@@ -907,7 +895,6 @@ class JoinOSNChannelModal extends React.Component {
 		const { translate, drill_down_flow } = this.props;
 		const unselectedClass = (cluster.selected === true) ? '' : 'ibp-join-unselected-cluster';
 		const zero_identities = (cluster.default_identity === null);
-		console.log('dsh99 rendering renderClusterSection zero_identities', zero_identities, 'drill_down_flow', drill_down_flow);
 
 		return (
 			<div key={'cluster_' + cluster.cluster_id}
@@ -957,7 +944,6 @@ class JoinOSNChannelModal extends React.Component {
 	renderNodesSection(nodes, cluster) {
 		const { translate } = this.props;
 		const unselectedClass = (cluster.selected === true) ? '' : ' ibp-join-unselected-cluster';
-		console.log('dsh99 rendering renderNodesSection nodes', nodes);
 
 		if (Array.isArray(nodes)) {
 			return (nodes.map((node, i) => {
@@ -1057,21 +1043,14 @@ class JoinOSNChannelModal extends React.Component {
 
 const dataProps = {
 	channel: PropTypes.string,
-	pendingChannelName: PropTypes.string,
 	submitting: PropTypes.bool,
 	disableSubmit: PropTypes.bool,
 	orderers: PropTypes.array,
 	orderer: PropTypes.object,
-	channel_orderer_addresses: PropTypes.array,
-	hideChannelStep: PropTypes.bool,
-	peer: PropTypes.any,
-	selectedPeers: PropTypes.any,
-	isPending: PropTypes.bool,
 	loading: PropTypes.bool,
 	channels: PropTypes.bool,
 	selected_osn: PropTypes.object,
 	drill_down_flow: PropTypes.bool,
-	json_block: PropTypes.object,
 
 	config_block_b64: PropTypes.object,
 	b_genesis_block: PropTypes.blob,
@@ -1079,17 +1058,13 @@ const dataProps = {
 	select_followers_toggle: PropTypes.bool,
 	channel_id: PropTypes.string,
 	block_error: PropTypes.string,
+	block_error_title: PropTypes.string,
 	count: PropTypes.number,
 	follower_count: PropTypes.number,
 	joinOsnMap: PropTypes.Object,
 
 	consenters: PropTypes.array,
 	osnJoinSubmitFin: PropTypes.bool,
-	//use_osnadmin: PropTypes.bool,
-	//osnjoinSubmit: PropTypes.bool,  // dsh todo what does ths do
-	//raftNodes: PropTypes.object,
-	//use_config_block: PropTypes.object,
-	//block_stored_resp: PropTypes.object,
 };
 
 JoinOSNChannelModal.propTypes = {
@@ -1097,6 +1072,7 @@ JoinOSNChannelModal.propTypes = {
 	onComplete: PropTypes.func,
 	onClose: PropTypes.func,
 	updateState: PropTypes.func,
+	joinChannelDetails: PropTypes.object,
 	translate: PropTypes.func, // Provided by withLocalize
 };
 
