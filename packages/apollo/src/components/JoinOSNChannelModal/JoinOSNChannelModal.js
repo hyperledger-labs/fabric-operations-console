@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import _, { reject } from 'lodash';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withLocalize } from 'react-localize-redux';
