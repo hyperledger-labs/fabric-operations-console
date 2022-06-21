@@ -70,7 +70,7 @@ class ChannelParticipationUnjoinModal extends Component {
 		}
 	}
 
-	onUnjoin = async() => {
+	onUnjoin = async () => {
 		try {
 			this.props.myNodeList.map(async osn => {
 				let all_identities = await IdentityApi.getIdentities();
@@ -100,8 +100,11 @@ class ChannelParticipationUnjoinModal extends Component {
 
 	renderUnjoin = (translate) => {
 		let nodesArray = [];
-		if (this.props.channelInfo.nodes !== undefined)
-			nodesArray = Object.values(this.props.channelInfo.nodes).filter(node => node._channel_resp.consensusRelation !== undefined);;
+		if (this.props.channelInfo.nodes !== undefined) {
+			nodesArray = Object.values(this.props.channelInfo.nodes).filter(node => {
+				return node && node._channel_resp && node._channel_resp.consensusRelation !== undefined;
+			});
+		}
 
 		return (
 			<div>

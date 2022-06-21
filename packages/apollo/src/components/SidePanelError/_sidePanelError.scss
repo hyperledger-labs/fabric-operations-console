@@ -2,6 +2,9 @@
 	background-color: $inverseBackground;
 	color: $inverseText;
 	z-index: $sidePanelError;
+	.bx--inline-notification{
+		max-width: 100%;
+	}
 	.bx--inline-notification__text-wrapper {
 		display: block;
 	}

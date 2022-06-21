@@ -139,8 +139,8 @@ class OrdererDetails extends Component {
 	}
 
 	/* get channel list from channel participation api */
-	getCPChannelList = async() => {
-		let node = this.props.selectedNode || this.props.details.raft;
+	getCPChannelList = async () => {
+		let nodes = this.props.selectedNode || this.props.details.raft;
 		let systemChannel = true;
 		let channelList = {};
 
@@ -148,7 +148,8 @@ class OrdererDetails extends Component {
 		if (orderer_tls_identity) {
 			try {
 				let all_identity = await IdentityApi.getIdentities();
-				channelList = await ChannelParticipationApi.getChannels(all_identity, node);
+				channelList = await ChannelParticipationApi.mapChannels(all_identity, nodes);
+
 				// TODO: consolidate error handling
 				if (_.get(channelList, 'code') === 'ECONNREFUSED') {
 					this.props.showError('orderer_not_available_title', SCOPE);
@@ -501,7 +502,7 @@ class OrdererDetails extends Component {
 		});
 	};
 
-	refreshCerts = async() => {
+	refreshCerts = async () => {
 		try {
 			const resp = await NodeRestApi.getUnCachedDataWithDeployerAttrs(this.props.selectedNode.id);
 			Log.debug('Refresh cert response:', resp);
@@ -1473,8 +1474,8 @@ class OrdererDetails extends Component {
 													label={translate('usage_info', {
 														patch:
 															this.props.selectedNode.isUpgradeAvailable &&
-															this.props.selectedNode.location === 'ibm_saas' &&
-															ActionsHelper.canCreateComponent(this.props.userInfo) ? (
+																this.props.selectedNode.location === 'ibm_saas' &&
+																ActionsHelper.canCreateComponent(this.props.userInfo) ? (
 																	<div className="ibp-details-patch-container">
 																		<div className="ibp-patch-available-tag ibp-node-details"
 																			onClick={() => this.openOrdererSettings('upgrade')}

@@ -73,15 +73,15 @@ export class ChannelParticipationApi {
 				Log.error('req error - unable to get osn channels:', error);
 			}
 		}
-		Log.error('unable to get osn channels data');
+		Log.error('unable to get osn channels data for node', osn.osnadmin_url);
 		return null;
 	}
 
 	// --------------------------------------------------------
-	// Fabric's osnadmin get-channels request - hard coded in stitch to use the athena proxy route
+	// Iter over nodes and perform Fabric's osnadmin get-channels request - hard coded in stitch to use the athena proxy route
 	// --------------------------------------------------------
 	// identities - list of possible identities for auth - array of identity objects
-	// osns - the ordering service nodes to use
+	// osns - array of ordering service nodes to use
 	static async getChannels(identities, osns) {
 		let resp = {
 			systemChannel: null,
@@ -92,9 +92,11 @@ export class ChannelParticipationApi {
 		}
 		for (let i in osns) {
 			const single_resp = await ChannelParticipationApi._getChannels(identities, osns[i]);
-			resp.channels = _.unionWith(resp.channels, single_resp.channels, _.isEqual);
-			if (resp.systemChannel === null && single_resp.systemChannel !== undefined) {
-				resp.systemChannel = single_resp.systemChannel;
+			if (single_resp && single_resp.channels) {
+				resp.channels = _.unionWith(resp.channels, single_resp.channels, _.isEqual);
+				if (resp.systemChannel === null && single_resp.systemChannel !== undefined) {
+					resp.systemChannel = single_resp.systemChannel;
+				}
 			}
 		}
 		return resp;
@@ -124,7 +126,7 @@ export class ChannelParticipationApi {
 				};
 				return await StitchApi.getOSNChannel(opts);
 			} catch (error) {
-				Log.error('req error - unable to get osn channel details:', error);
+				Log.error('req error - unable to get osn channel details:', error, osn.osnadmin_url);
 			}
 		}
 		Log.error('unable to get osn channel data');

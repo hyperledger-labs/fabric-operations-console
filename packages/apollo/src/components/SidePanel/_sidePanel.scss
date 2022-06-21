@@ -69,7 +69,7 @@
 	height: 100%;
 	max-width: 100%;
 	padding-bottom: 4rem;
-	width: 85%;
+	width: 63%;
 	.ibp-side-panel-inner-content {
 		padding-bottom: 4rem;
 	}
@@ -309,11 +309,11 @@ textarea.bx--text__input {
 		position: fixed;
 		right: 0;
 		top: 0;
-		width: 542px;
+		width: 100%;
 		z-index: $firstLayer;
 	}
 	.ibp-side-panel-submitting-overlay.ibp-large-side-panel-overlay {
-		width: 62rem;
+		width: 100%;
 	}
 	.ibp-side-panel-submitting-overlay.ibp-vertical-panel-overlay {
 		height: 100%;

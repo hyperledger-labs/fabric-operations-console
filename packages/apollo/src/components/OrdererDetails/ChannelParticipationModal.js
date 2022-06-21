@@ -29,14 +29,16 @@ class ChannelParticipationModal extends Component {
 	renderCPDetails = () => {
 		let nodesArray = [];
 		if (this.props.channelInfo.nodes !== undefined)
-			nodesArray = Object.values(this.props.channelInfo.nodes).filter(node => node._channel_resp.consensusRelation !== undefined);
+			nodesArray = Object.values(this.props.channelInfo.nodes).filter(node => {
+				return node && node._channel_resp && node._channel_resp.consensusRelation !== undefined;
+			});
 		const fields = [
 			{
 				name: 'nodes',
 				default:
 					nodesArray.map((val, idx) =>
 						<div key={idx}>
-							<p>{val.name} ({val._channel_resp.consensusRelation})</p>
+							<p>{val.name} ({val && val._channel_resp ? val._channel_resp.consensusRelation : ''})</p>
 						</div>
 					)
 				,

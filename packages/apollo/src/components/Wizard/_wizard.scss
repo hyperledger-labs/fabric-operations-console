@@ -9,6 +9,7 @@
 	margin-bottom: 2rem;
 	.bx--tooltip__label {
 		@include carbon--type-style('productive-heading-05');
+		font-size: 1.65rem;
 	}
 }
 
@@ -27,6 +28,7 @@
 	padding-top: 2rem;
 	.bx--tooltip__label {
 		@include carbon--type-style('productive-heading-04');
+		font-size: 1.4rem;
 	}
 }
 
@@ -48,12 +50,12 @@
 	display: block;
 }
 
-.visible_section {
+/*.visible_section {
 	p,
 	a {
 		@include carbon--type-style('body-short-02');
 	}
-}
+}*/
 
 .ibp-panel--content {
 	.ibp-wizard-first-step,

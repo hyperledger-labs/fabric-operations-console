@@ -190,7 +190,8 @@
 }
 
 .ibp-orderer-channel-info,
-.ibp-orderer-channel-unjoin {
+.ibp-orderer-channel-unjoin,
+.ibp-orderer-channel-join {
 	align-items: center;
 	background: transparent;
 	border: 0;
@@ -217,6 +218,10 @@
 }
 .ibp-orderer-channel-unjoin {
 	right: 1rem;
+}
+
+.ibp-orderer-channel-join{
+	right: 5rem;
 }
 
 .ibp-orderer-channel-info {

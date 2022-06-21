@@ -27,6 +27,7 @@ import Logger from '../Log/Logger';
 import SVGs from '../Svgs/Svgs';
 import ChannelParticipationModal from './ChannelParticipationModal';
 import ChannelParticipationUnjoinModal from './ChannelParticipationUnjoinModal';
+import JoinOSNChannelModal from '../JoinOSNChannelModal/JoinOSNChannelModal';
 import _ from 'lodash';
 
 const naturalSort = require('javascript-natural-sort');
@@ -38,6 +39,7 @@ class ChannelParticipationDetails extends Component {
 		this.props.updateState(SCOPE, {
 			showCPDetailsModal: false,
 			showCPUnjoinModal: false,
+			createChannelModal: false,
 		});
 	}
 
@@ -47,7 +49,7 @@ class ChannelParticipationDetails extends Component {
 		});
 	};
 
-	openCPDetailsModal = async(channel) => {
+	openCPDetailsModal = async (channel) => {
 		await this.loadChannelData(channel.name);
 		this.props.updateState(SCOPE, {
 			showCPDetailsModal: true,
@@ -60,14 +62,14 @@ class ChannelParticipationDetails extends Component {
 		});
 	};
 
-	openCPUnjoinModal = async(channel) => {
+	openCPUnjoinModal = async (channel) => {
 		await this.loadChannelData(channel.name);
 		this.props.updateState(SCOPE, {
 			showCPUnjoinModal: true,
 		});
 	};
 
-	loadChannelData = async(channelId) => {
+	loadChannelData = async (channelId) => {
 		if (this.props.details && !this.props.details.osnadmin_url) return;
 		let node = this.props.selectedNode || this.props.details;
 		let nodes = this.props.selectedNode ? [this.props.selectedNode] : this.props.details.raft;
@@ -94,25 +96,47 @@ class ChannelParticipationDetails extends Component {
 		});
 	};
 
+	// open the join channel modal
+	joinChannel = (channelDetails) => {
+		this.props.updateState(SCOPE, {
+			joinChannelModal: true,
+			joinChannelDetails: channelDetails
+		});
+	};
+
+	// build the button/icons in each channel tile
 	buildCustomTile = (channel) => {
+		const translate = this.props.translate;
 		return (
 			<div>
 				{channel.type === 'system_channel' && (
-					<p className='ibp-orderer-channel-sub'>System Channel</p>
+					<p className='ibp-orderer-channel-sub'>{translate('system_channel')}</p>
 				)}
 				<button className="ibp-orderer-channel-info"
-					onClick={async() => await this.openCPDetailsModal(channel)}
+					onClick={async () => await this.openCPDetailsModal(channel)}
 				>
-					<SVGs type="settings" />
+					<SVGs type="settings"
+						title={translate('channel_info_title')}
+					/>
 				</button>
 				<button className="ibp-orderer-channel-unjoin"
-					onClick={async() => await this.openCPUnjoinModal(channel)}
+					onClick={async () => await this.openCPUnjoinModal(channel)}
 				>
-					<SVGs type="trash" />
+					<SVGs type="trash"
+						title={translate('unjoin_channel_title')}
+					/>
+				</button>
+				<button className="ibp-orderer-channel-join"
+					onClick={() => this.joinChannel(channel)}
+				>
+					<SVGs type="plus"
+						title={translate('join_osn_title')}
+					/>
 				</button>
 			</div>
 		);
 	}
+
 	render() {
 		return (
 			<div>
@@ -137,12 +161,21 @@ class ChannelParticipationDetails extends Component {
 								return this.buildCustomTile(data);
 							},
 						}}
+						addItems={
+							[{
+								id: 'join_channel',
+								text: 'join_channel',
+								fn: () => {
+									this.joinChannel(null);
+								}
+							}]
+						}
 						widerTiles
 					/>)
 				}
 				{this.props.showCPDetailsModal && (
 					<ChannelParticipationModal
-						channelInfo= {this.props.channelInfo}
+						channelInfo={this.props.channelInfo}
 						details={this.props.details}
 						onClose={this.closeCPDetailsModal}
 					/>
@@ -155,6 +188,23 @@ class ChannelParticipationDetails extends Component {
 						onClose={this.closeCPUnjoinModal}
 					/>
 				)}
+				{this.props.joinChannelModal && (
+					<JoinOSNChannelModal
+						onClose={() => {
+							this.props.updateState(SCOPE, {
+								joinChannelModal: false,
+							});
+						}}
+						onComplete={() => {
+							//this.hideJoinChannelModal();
+							//this.props.showSuccess('nodes_added_successfully', {}, SCOPE);
+							//this.getChannel(() => {
+							//	this.getChannelDetails();
+							//});
+						}}
+						joinChannelDetails={this.props.joinChannelDetails}
+					/>
+				)}
 			</div>
 		);
 	}
@@ -164,8 +214,10 @@ const dataProps = {
 	channelList: PropTypes.object,
 	channelInfo: PropTypes.object,
 	selectedNode: PropTypes.object,
-	showCPDetailsModal:  PropTypes.bool,
-	showCPUnjoinModal:  PropTypes.bool,
+	showCPDetailsModal: PropTypes.bool,
+	showCPUnjoinModal: PropTypes.bool,
+	joinChannelModal: PropTypes.bool,
+	joinChannelDetails: PropTypes.object,
 };
 
 ChannelParticipationDetails.propTypes = {
