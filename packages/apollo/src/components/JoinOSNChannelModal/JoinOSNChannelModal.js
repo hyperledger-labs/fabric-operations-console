@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import _ from 'lodash';
+import _, { reject } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withLocalize } from 'react-localize-redux';
@@ -32,6 +32,8 @@ import { Toggle } from 'carbon-components-react';
 import * as constants from '../../utils/constants';
 import { WarningFilled16, CheckmarkFilled16, ProgressBarRound16, CircleDash16 } from '@carbon/icons-react/es';
 import { NodeRestApi } from '../../rest/NodeRestApi';
+import async from 'async';
+import { promisify } from 'util';
 
 const SCOPE = 'joinOSNChannelModal';
 const Log = new Logger(SCOPE);
@@ -59,7 +61,7 @@ class JoinOSNChannelModal extends React.Component {
 				orderers,
 				channels: [],
 				disableSubmit: true,
-				submitting: false,								// dsh todo is submitting actually used?
+				submitting: false,								// submitting controls the wizard spinner after submit is clicked
 				configtxlator_url: this.props.configtxlator_url,
 				drill_down_flow: false,							// true if user clicked on specific cluster before coming to this panel
 				block_error: '',
@@ -504,9 +506,9 @@ class JoinOSNChannelModal extends React.Component {
 		return null;
 	}
 
-	// -----------------------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------------------------------------------------------------
 	// Actions Section
-	// -----------------------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------------------------------------------------------------
 	// selected orderer was changed
 	changeOrderer = async (change) => {
 		const orderer = change.orderer_joined;
@@ -632,23 +634,15 @@ class JoinOSNChannelModal extends React.Component {
 		});
 	}
 
-	// join the OSNs
-	async onSubmit() {
-		console.log('dsh99 submit button clicked');
-		this.props.updateState(SCOPE, {
-			submitting: true
-		});
-		return false;
-
-		/*
-		// perform the osnadmin join-channel apis on a new channel (config block is a genesis block)
+	// perform the osnadmin join-channel apis on the channel (config block is a genesis block)
+	// dsh todo - remove async each limit and do a for loop with awaits
+	async onSubmit(self, cb) {
 		const {
 			joinOsnMap,
 			b_genesis_block,
-		} = this.props;
-		this.props.updateState(SCOPE, {
+		} = self.props;
+		self.props.updateState(SCOPE, {
 			submitting: true,
-			osnJoinSubmitFin: false,		// dsh todo what is difference w/this and submitting
 			joinOsnMap: JSON.parse(JSON.stringify(reset(joinOsnMap))),
 		});
 		let join_errors = 0;
@@ -665,12 +659,11 @@ class JoinOSNChannelModal extends React.Component {
 					return node_cb();				// node is already done
 				} else {
 					perform_join(cluster, node, i, () => {
-
-						// joinOsnMap was changed, now reflect the change
-						this.props.updateState(SCOPE, {
-							joinOsnMap: JSON.parse(JSON.stringify(joinOsnMap)),
-						});
 						setTimeout(() => {
+							// joinOsnMap was changed, now reflect the change
+							self.props.updateState(SCOPE, {
+								joinOsnMap: JSON.parse(JSON.stringify(joinOsnMap)),
+							});
 							return node_cb();
 						}, 300 + Math.random() * 2000);		// slow down
 					});
@@ -679,17 +672,15 @@ class JoinOSNChannelModal extends React.Component {
 				return cluster_cb();
 			});
 		}, () => {
-
-			let osnJoinSubmitFin = false;
-			if (join_errors === 0) {
-				osnJoinSubmitFin = true;
-			}
-
-			this.props.updateState(SCOPE, {
+			self.props.updateState(SCOPE, {
 				submitting: false,
-				osnJoinSubmitFin: osnJoinSubmitFin,
 			});
 
+			if (join_errors > 0) {
+				return cb({ failures: true }, null);
+			} else {
+				return cb(null, null);
+			}
 		});
 
 		// convert json to pb && then send joinOSNChannel call && reflect the status in the UI
@@ -701,6 +692,7 @@ class JoinOSNChannelModal extends React.Component {
 				root_cert_b64pem: Array.isArray(cluster.tls_root_certs) ? cluster.tls_root_certs[0] : null,
 				b_config_block: b_genesis_block,
 			};
+
 			try {
 				await StitchApi.joinOSNChannel(j_opts);
 			} catch (error) {
@@ -729,7 +721,7 @@ class JoinOSNChannelModal extends React.Component {
 			}
 		}
 
-		// clear errors and status of each node
+		// clear error status and error message of each node
 		function reset(obj) {
 			for (let cluster_id in obj) {
 				for (let i in obj[cluster_id].nodes) {
@@ -741,12 +733,11 @@ class JoinOSNChannelModal extends React.Component {
 			}
 			return obj;
 		}
-		*/
 	}
 
-	// -----------------------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------------------------------------------------------------
 	// Rendering Section
-	// -----------------------------------------------------------------------------------------------
+	// ------------------------------------------------------------------------------------------------------------------------------------
 	// step 1 - [select orderer, channel, get config-block]
 	renderSelectOrderer(translate) {
 		if (!this.props.orderers) {
@@ -1025,11 +1016,26 @@ class JoinOSNChannelModal extends React.Component {
 	// main render
 	render() {
 		const translate = this.props.translate;
+		const on_submit = promisify(this.onSubmit);
+
 		return (
 			<Wizard
 				title="join_osn_channel_title"
 				onClose={this.props.onClose}
-				onSubmit={async () => await this.onSubmit()}
+				onSubmit={async () => {
+					let keepSidePanelOpen = false;
+					try {
+						keepSidePanelOpen = await on_submit(this);
+					} catch (e) {
+						keepSidePanelOpen = true;
+					}
+					if (keepSidePanelOpen) {
+						return Promise.reject({
+							title: translate('general_join_fail_title'),
+							details: translate('general_join_failure')
+						});
+					}
+				}}
 				showSubmitSpinner={this.props.submitting}
 				submitButtonLabel={translate('join_channel')}
 				extraLargePanel={true}
@@ -1064,7 +1070,6 @@ const dataProps = {
 	joinOsnMap: PropTypes.Object,
 
 	consenters: PropTypes.array,
-	osnJoinSubmitFin: PropTypes.bool,
 };
 
 JoinOSNChannelModal.propTypes = {

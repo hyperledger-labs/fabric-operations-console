@@ -309,11 +309,11 @@ textarea.bx--text__input {
 		position: fixed;
 		right: 0;
 		top: 0;
-		width: 542px;
+		width: 100%;
 		z-index: $firstLayer;
 	}
 	.ibp-side-panel-submitting-overlay.ibp-large-side-panel-overlay {
-		width: 62rem;
+		width: 100%;
 	}
 	.ibp-side-panel-submitting-overlay.ibp-vertical-panel-overlay {
 		height: 100%;
