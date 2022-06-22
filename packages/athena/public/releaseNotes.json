@@ -1,5 +1,37 @@
 [
 	{
+		"version": "1.0.3-13",
+		"date": "22 June 2022",
+		"description": [
+			{
+				"title": "Enabled OSN Admin Features",
+				"details": "Several features that use Fabric's \"channel participation\" apis has been added. Such as the ability to join/un-join orderers to application channels. Requires Fabric v2.4+."
+			},
+			{
+				"title": "Enabled system channel removal flows",
+				"details": "The ability to remove a system channel from an orderer has been added."
+			},
+			{
+				"title": "Create Orderer Changes",
+				"details": "The ability to choose between creating an orderer with a system channel or without one has been added. Requires Fabric v2.4+ & a configured deployer."
+			},
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
+		"version": "1.0.3-12",
+		"date": "9 June 2022",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
 		"version": "1.0.3-11",
 		"date": "25 May 2022",
 		"description": [
