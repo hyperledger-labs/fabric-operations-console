@@ -523,8 +523,8 @@ __default_settings_doc.json:__
   "read_only_enabled": false,
 
   // if true the osnadmin/channel-participation features in Fabric v2.4+ will be enabled
-  // defaults false
-  "osnadmin_feats_enabled": false
+  // defaults true
+  "osnadmin_feats_enabled": true
 },
 
 // file logging settings

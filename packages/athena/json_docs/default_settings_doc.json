@@ -110,7 +110,7 @@
 		"import_only_enabled": true,
 		"mustgather_enabled": false,
 		"read_only_enabled": false,
-		"osnadmin_feats_enabled": false
+		"osnadmin_feats_enabled": true
 	},
 	"file_logging": {
 		"client": {
