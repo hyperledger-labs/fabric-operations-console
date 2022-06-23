@@ -281,6 +281,35 @@ class OrdererModal extends React.Component {
 			});
 	}
 
+	loadUsersFromCA(ca) {
+		this.props.updateState(SCOPE, { loadingUsers: true });
+		return CertificateAuthorityRestApi.getUsers(ca)
+			.then(all_users => {
+				const users = [];
+				if (all_users && all_users.length) {
+					all_users.forEach(user => {
+						if (user.type === 'peer') {
+							users.push(user);
+						}
+					});
+				}
+				this.props.updateState(SCOPE, {
+					enroll_id: users.length ? users[0].id : undefined,
+					enroll_secret: undefined,
+					users,
+					loadingUsers: false,
+				});
+			})
+			.catch(error => {
+				Log.error(error);
+				this.props.updateState(SCOPE, {
+					enroll_id: undefined,
+					users: [],
+					loadingUsers: false,
+				});
+			});
+	}
+
 	getIdentityFromName(name) {
 		let id = null;
 		if (this.identities) {
@@ -331,30 +360,34 @@ class OrdererModal extends React.Component {
 				const associatedIdentities = {};
 				if (identities.length) {
 					this.identities = identities;
-					this.props.orderer.raft.forEach(node => {
-						if (associatedIdentities[node.msp_id] === undefined) {
-							associatedIdentities[node.msp_id] = null;
-							if (this.props.orderer.associatedIdentities) {
-								this.props.orderer.associatedIdentities.forEach(identity => {
-									if (identity.msp_id === node.msp_id) {
-										associatedIdentities[node.msp_id] = this.getIdentityFromName(identity.name);
-									}
-								});
+					if (this.props.orderer && this.props.orderer.raft) {
+						this.props.orderer.raft.forEach(node => {
+							if (associatedIdentities[node.msp_id] === undefined) {
+								associatedIdentities[node.msp_id] = null;
+								if (this.props.orderer.associatedIdentities) {
+									this.props.orderer.associatedIdentities.forEach(identity => {
+										if (identity.msp_id === node.msp_id) {
+											associatedIdentities[node.msp_id] = this.getIdentityFromName(identity.name);
+										}
+									});
+								}
 							}
-						}
-					});
-					this.props.orderer.pending.forEach(node => {
-						if (associatedIdentities[node.msp_id] === undefined) {
-							associatedIdentities[node.msp_id] = null;
-							if (this.props.orderer.associatedIdentities) {
-								this.props.orderer.associatedIdentities.forEach(identity => {
-									if (identity.msp_id === node.msp_id) {
-										associatedIdentities[node.msp_id] = this.getIdentityFromName(identity.name);
-									}
-								});
+						});
+					}
+					if (this.props.orderer && this.props.orderer.pending) {
+						this.props.orderer.pending.forEach(node => {
+							if (associatedIdentities[node.msp_id] === undefined) {
+								associatedIdentities[node.msp_id] = null;
+								if (this.props.orderer.associatedIdentities) {
+									this.props.orderer.associatedIdentities.forEach(identity => {
+										if (identity.msp_id === node.msp_id) {
+											associatedIdentities[node.msp_id] = this.getIdentityFromName(identity.name);
+										}
+									});
+								}
 							}
-						}
-					});
+						});
+					}
 				}
 				this.props.updateState(SCOPE, {
 					associatedIdentities,
@@ -378,11 +411,13 @@ class OrdererModal extends React.Component {
 
 	isAll20Nodes = () => {
 		let isAll20 = true;
-		this.props.orderer.raft.forEach(orderer => {
-			if (!orderer.version || orderer.version.indexOf('2') !== 0) {
-				isAll20 = false;
-			}
-		});
+		if (this.props.orderer && this.props.orderer.raft) {
+			this.props.orderer.raft.forEach(orderer => {
+				if (!orderer.version || orderer.version.indexOf('2') !== 0) {
+					isAll20 = false;
+				}
+			});
+		}
 		return isAll20;
 	};
 
@@ -788,18 +823,19 @@ class OrdererModal extends React.Component {
 							{this.props.capabilitiesEnabled &&
 								this.props.availableChannelCapabilities &&
 								this.props.availableOrdererCapabilities &&
-								(this.props.availableChannelCapabilities.length > 0 || this.props.availableOrdererCapabilities.length > 0) && (
-								<Button
-									id="capabilities"
-									kind="secondary"
-									className="ibp-orderer-action"
-									onClick={() => {
-										this.showAction('capabilities');
-									}}
-								>
-									{translate('channel_capabilities')}
-								</Button>
-							)}
+								(this.props.availableChannelCapabilities.length > 0 || this.props.availableOrdererCapabilities.length > 0) &&
+								(
+									<Button
+										id="capabilities"
+										kind="secondary"
+										className="ibp-orderer-action"
+										onClick={() => {
+											this.showAction('capabilities');
+										}}
+									>
+										{translate('channel_capabilities')}
+									</Button>
+								)}
 							<Button
 								id="channel_maintenance"
 								kind="secondary"
@@ -1018,7 +1054,7 @@ class OrdererModal extends React.Component {
 
 	async associateIdentityWithOrderer() {
 		const keys = Object.keys(this.props.associatedIdentities);
-		keys.reduce(async(previousPromise, msp_id) => {
+		keys.reduce(async (previousPromise, msp_id) => {
 			await previousPromise;
 			const id = this.props.associatedIdentities[msp_id];
 			try {
@@ -1494,7 +1530,7 @@ class OrdererModal extends React.Component {
 										maintenance_mode: !this.props.maintenance_mode,
 									});
 								}}
-								onChange={() => {}}
+								onChange={() => { }}
 								aria-label={translate('maintenance_mode')}
 								labelA={translate('no')}
 								labelB={translate('yes')}

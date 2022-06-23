@@ -117,7 +117,11 @@ module.exports = function (logger, ev, t) {
 						const athena_comp_type = (incoming_body && incoming_body.type) ? incoming_body.type.toLowerCase() : null;
 						if (athena_comp_type === ev.STR.ORDERER) {
 							build_body_opts.node_i = 0;
-							build_body_opts.consenter_proposal_fin = false;
+							if (incoming_body.systemless === true) {			// nodes w/o the system channel should not have this flag set
+								build_body_opts.consenter_proposal_fin = true;
+							} else {
+								build_body_opts.consenter_proposal_fin = false;
+							}
 						}
 						const component_req = {
 							path: req2athena.path,			// pass path so the response formatter knows what api version was called to pick the format
@@ -389,7 +393,7 @@ module.exports = function (logger, ev, t) {
 					fill_in_existing_raft_details(build_object_fields(fmt_body), (_, filled_body) => {
 						call_deployer(filled_body, route2use);
 					});
-				} else {															// all other components go here
+				} else {																// all other components go here
 					call_deployer(fmt_body, route2use);
 				}
 			}
@@ -423,10 +427,13 @@ module.exports = function (logger, ev, t) {
 			let url2use = '';
 			if (fmt_body.orderertype === ev.STR.RAFT) {									// raft orderer clusters use different routes than other components
 				if (!is_appending_raft) {												// creating new raft cluster
-					logger.debug('[deployer lib]', req._tx_id, 'rafting we be. orderer type:', fmt_body.orderertype, 'id:', fmt_body.dep_component_id);
+					logger.debug('[deployer lib]', req._tx_id, 'ordering-cluster creating we be. id:', fmt_body.dep_component_id);
 					url2use = '/api/v3/instance/' + parsed.iid + '/type/orderer/component';
-				} else {																// appending to an existing raft cluster
-					logger.debug('[deployer lib]', req._tx_id, 'raft appending we be. orderer type:', fmt_body.orderertype, 'id:', fmt_body.dep_component_id);
+				} else if (fmt_body.channelless || fmt_body.systemless) {				// appending to an existing raft cluster without system channel
+					logger.debug('[deployer lib]', req._tx_id, 'systemless ordering-cluster appending we be. id:', fmt_body.dep_component_id);
+					url2use = '/api/v3/instance/' + parsed.iid + '/precreate/type/orderer/component';
+				} else {																// appending to an existing raft cluster with system channel
+					logger.debug('[deployer lib]', req._tx_id, 'legacy ordering-cluster appending we be. id:', fmt_body.dep_component_id);
 					url2use = '/api/v3/instance/' + parsed.iid + '/precreate/type/orderer/component';
 				}
 				if (fmt_body.dep_component_id) {										// only add if found, id is optional
@@ -455,6 +462,10 @@ module.exports = function (logger, ev, t) {
 			};
 			logger.debug('[deployer lib]', req._tx_id, 'sending deployer api w/route:', opts.url);
 			send_dep_req(opts, (err, depRespBody) => {
+				/*depRespBody = {
+					location: 'ibm-saas'
+				};
+				const fmt_ret = {};*/
 				const { fmt_err, fmt_ret } = handle_dep_response(parsed, err, depRespBody);
 				if (fmt_err) {																// error is already logged
 					if (t.ot_misc.get_code(fmt_err) === 409) {								// don't call clean up on a 409 error code
@@ -1902,6 +1913,7 @@ module.exports = function (logger, ev, t) {
 
 		send_dep_req(options, (err, depRespBody) => {
 			let { fmt_err, fmt_ret } = handle_dep_response(parsed, err, depRespBody);
+			//fmt_err = null;
 			if (fmt_err && opts.FORCE === true) {
 				logger.debug('[deployer lib]', opts.debug_tx_id, 'deployer resp has error, but force is set. will force del component:', parsed.component_id);
 				fmt_err = null;												// if we are forcing del, we don't care about deployer errors

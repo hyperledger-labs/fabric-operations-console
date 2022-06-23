@@ -131,7 +131,8 @@ class ImportOrdererModal extends React.Component {
 			.then(all_versions => {
 				let versions = all_versions.orderer;
 				if (versions) {
-					const filtered = versions.filter(i => this.validVersion(i, this.props.systemless));
+					const withoutSystem = this.props.systemless || (this.props.appendingNode && !this.props.systemChannel);
+					const filtered = versions.filter(i => this.validVersion(i, withoutSystem));
 					this.props.updateState(SCOPE, {
 						origVersions: versions,
 						versions: filtered,
@@ -404,6 +405,11 @@ class ImportOrdererModal extends React.Component {
 		}
 		if (this.props.feature_flags && this.props.feature_flags.osnadmin_feats_enabled) {
 			if (this.props.systemless) {
+				data.systemless = true;
+			}
+
+			// if you are appending a node && don't have a system channel, this node must be w/o a system channel too
+			if (this.props.appendingNode && !this.props.systemChannel) {
 				data.systemless = true;
 			}
 		}
@@ -922,46 +928,42 @@ class ImportOrdererModal extends React.Component {
 	renderSystemChannelRadios(translate) {
 		return (
 			<div className="ibp-form">
-				{this.props.feature_flags && this.props.feature_flags.osnadmin_feats_enabled && (
-					<div>
-						<Form
-							scope={SCOPE}
-							id="systemChannelConfig"
-							fields={[
+				<Form
+					scope={SCOPE}
+					id="systemChannelConfig"
+					fields={[
+						{
+							name: 'system_config',
+							type: 'radio',
+							tooltip: 'systemless_tooltip',
+							required: true,
+							label: 'systemless_title',
+							options: [
 								{
-									name: 'system_config',
-									type: 'radio',
-									tooltip: 'systemless_tooltip',
-									required: true,
-									label: 'systemless_title',
-									options: [
-										{
-											id: 'without-system',	// this is the value of the radio...
-											label: translate('systemless_config'),
-										},
-										{
-											id: 'with-system',		// this is the value of the radio...
-											label: translate('system_config'),
-										},
-									],
-									default: 'nothing'				// select neither radio on first load, this forces the user to decide
+									id: 'without-system',	// this is the value of the radio...
+									label: translate('systemless_config'),
 								},
-							]}
-							onChange={data => {
-								const systemless = !(data && data.system_config && data.system_config === 'with-system');
-								const filtered = this.props.origVersions ? this.props.origVersions.filter(i => this.validVersion(i, systemless)) : [];
-								this.props.updateState(SCOPE, {
-									systemless: systemless,
+								{
+									id: 'with-system',		// this is the value of the radio...
+									label: translate('system_config'),
+								},
+							],
+							default: 'nothing'				// select neither radio on first load, this forces the user to decide
+						},
+					]}
+					onChange={data => {
+						const systemless = !(data && data.system_config && data.system_config === 'with-system');
+						const filtered = this.props.origVersions ? this.props.origVersions.filter(i => this.validVersion(i, systemless)) : [];
+						this.props.updateState(SCOPE, {
+							systemless: systemless,
 
-									// if systemless is checked omit versions less than 2.4
-									versions: filtered,
-									version: null
-								});
-								return systemless;
-							}}
-						/>
-					</div>
-				)}
+							// if systemless is checked omit versions less than 2.4
+							versions: filtered,
+							version: null
+						});
+						return systemless;
+					}}
+				/>
 			</div>
 		);
 	}
@@ -1002,7 +1004,14 @@ class ImportOrdererModal extends React.Component {
 		const supported_orderers = Helper.getSupportedOrderers();
 		const ignore_list = this.props.ignore_list ? this.props.ignore_list : [];
 		const append_list = this.props.append_list ? this.props.append_list : [];
-		const needs2selectSysConfig = this.props.feature_flags && this.props.feature_flags.osnadmin_feats_enabled && typeof this.props.systemless !== 'boolean';
+		const osnadmin_feats_enabled = (this.props.feature_flags && this.props.feature_flags.osnadmin_feats_enabled);
+
+		// if you are not appending an orderer, render the sys channel choice
+		// if you are appending an orderer, only render if you do not have a system channel. otherwise forced to use systemless.
+		const renderSystemChChoice = osnadmin_feats_enabled && (!this.props.appendingNode || this.props.systemChannel);
+
+		// if its not rendered, you don't need to select it
+		const needs2selectSysConfig = osnadmin_feats_enabled && typeof this.props.systemless !== 'boolean' && renderSystemChChoice;
 		return (
 			<WizardStep
 				type="WizardStep"
@@ -1084,7 +1093,7 @@ class ImportOrdererModal extends React.Component {
 										}}
 									/>
 								)}
-								{this.renderSystemChannelRadios(translate)}
+								{renderSystemChChoice && this.renderSystemChannelRadios(translate)}
 								{this.renderAdvancedCheckboxes(translate)}
 							</div>
 						)}
@@ -1795,6 +1804,7 @@ class ImportOrdererModal extends React.Component {
 				default_memory = undefined;
 			}
 		}
+		const data = this.getCreateData();
 		return (
 			<WizardStep type="WizardStep"
 				title={translate('summary')}
@@ -1857,6 +1867,10 @@ class ImportOrdererModal extends React.Component {
 						)}
 					</div>
 				)}
+				<div className="summary-section">
+					<p className="summary-label">{translate('configuration')}</p>
+					<p className="summary-value">{data.systemless ? translate('systemless_config') : translate('system_config')}</p>
+				</div>
 				{!this.props.config_override && this.props.advanced_config.hsm && Helper.renderHSMSummary(translate, this.props.hsm)}
 				{this.props.config_override && this.props.advanced_config.hsm && (
 					<div className="hsm-summary">{Helper.renderFieldSummary(translate, this.props.hsm, 'hsm_pkcs11endpoint', 'pkcs11endpoint')}</div>
@@ -2100,6 +2114,8 @@ ImportOrdererModal.propTypes = {
 	joinChannel: PropTypes.bool,
 	updateState: PropTypes.func,
 	raftParent: PropTypes.object,
+	appendingNode: PropTypes.bool,
+	systemChannel: PropTypes.bool,
 	translate: PropTypes.func, // Provided by withLocalize
 };
 
