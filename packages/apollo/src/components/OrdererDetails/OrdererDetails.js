@@ -1230,7 +1230,7 @@ class OrdererDetails extends Component {
 						{this.props.showAddNode && (
 							<ImportOrdererModal
 								raftParent={this.props.details}
-								systemChannel={this.systemChannel}
+								systemChannel={this.props.systemChannel}
 								appendingNode={!_.isEmpty(this.props.details)}
 								onClose={this.closeAddOrdererNode}
 								onComplete={() => {
@@ -1270,6 +1270,7 @@ class OrdererDetails extends Component {
 								onClose={this.closeOrdererSettings}
 								currentCapabilities={this.props.capabilities}
 								isOrdererAdmin={!this.props.disabled}
+								systemChannel={this.props.systemChannel}
 								onComplete={ordererList => {
 									if (this.props.selectedNode) {
 										if (this.props.ordererModalType === 'upgrade') {
