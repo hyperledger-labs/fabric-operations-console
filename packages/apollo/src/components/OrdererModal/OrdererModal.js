@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { Button, CodeSnippet, Loading, SkeletonText, Toggle, ToggleSmall } from 'carbon-components-react';
+import { Button, CodeSnippet, Loading, SkeletonText, Toggle, ToggleSmall, Checkbox } from 'carbon-components-react';
 import _ from 'lodash';
 import parse from 'parse-duration';
 import PropTypes from 'prop-types';
@@ -42,6 +42,7 @@ import HSMConfig from '../HSMConfig/HSMConfig';
 import ImportantBox from '../ImportantBox/ImportantBox';
 import Logger from '../Log/Logger';
 import LogSettings from '../LogSettings/LogSettings';
+import { ChannelParticipationApi } from '../../rest/ChannelParticipationApi';
 import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import TranslateLink from '../TranslateLink/TranslateLink';
 import Wizard from '../Wizard/Wizard';
@@ -107,12 +108,17 @@ class OrdererModal extends React.Component {
 			log_level_identity: null,
 			log_spec: null,
 			new_log_spec: null,
+			ignore_del_warning: false,
 		});
 		this.identities = null;
-		this.getCAWithUsers();			// dsh todo why is this always being called
+		this.getCAWithUsers();						// dsh todo why is this always being called
 
 		try {
-			this.getChannelsWithNodes();
+			if (this.props.systemChannel) {
+				this.getChannelsWithNodes();		// legacy way
+			} else {
+				this.loadChannelsOnOSN();			// osn admin way
+			}
 		} catch (e) {
 			this.props.updateState(SCOPE, {
 				channel_loading: false,
@@ -126,6 +132,51 @@ class OrdererModal extends React.Component {
 				loading: false,
 			});
 		}
+	}
+
+	// load the channels this orderer is on - to find ones its a consenter on and block a delete...
+	async loadChannelsOnOSN() {
+		const orderer = this.props.orderer;
+		if (!orderer || !orderer.osnadmin_url) { return; }
+		this.props.updateState(SCOPE, {
+			channel_loading: true,
+			channelsWithNode: [],
+			safeChannelsWithNode: [],
+		});
+		let channelMap = null;
+		let channelsPreventingDelete = [];		// these channels have this node on it as a consenter, so deleting this consenter can lose quorum, dangerous
+
+		let orderer_tls_identity = await IdentityApi.getTLSIdentity(orderer);
+		if (orderer_tls_identity) {
+			try {
+				let all_identities = await IdentityApi.getIdentities();
+				const channels = await ChannelParticipationApi.mapChannels(all_identities, [orderer]);
+				channelMap = channels;
+			} catch (e) {
+				Log.error(e);
+				const code = (e && !isNaN(e.status_code)) ? '(' + e.status_code + ') ' : '';
+				const details = (e && typeof e.stitch_msg === 'string') ? (code + e.stitch_msg) : '';
+				Log.error(details);
+				channelMap = null;
+			}
+		}
+
+		// find the channels this node is a consenter on, stop delete
+		if (channelMap && channelMap.channels) {
+			for (let i in channelMap.channels) {
+				for (let node in channelMap.channels[i].nodes) {		// this is only ever an object with 1 key, our osn, so it doesn't really loop
+					const osn = channelMap.channels[i].nodes[node];
+					if (osn._channel_resp && osn._channel_resp.consensusRelation === 'consenter') {
+						channelsPreventingDelete.push(channelMap.channels[i].name);
+					}
+				}
+			}
+		}
+
+		this.props.updateState(SCOPE, {
+			channel_loading: false,
+			channelsWithNode: channelsPreventingDelete,
+		});
 	}
 
 	async getChannelsWithNodes() {
@@ -150,7 +201,6 @@ class OrdererModal extends React.Component {
 		});
 
 		try {
-			// dsh todo why are we getting channel names form system channel if there sys channel dne
 			allChannels = await OrdererRestApi.getAllChannelNamesFromOrderer(options);
 		} catch (e) {
 			Log.error('unable to load all channels from orderer', e);
@@ -1178,7 +1228,9 @@ class OrdererModal extends React.Component {
 			<WizardStep
 				type="WizardStep"
 				title={title}
-				disableSubmit={this.props.disableRemove || this.props.channel_loading || (this.props.channelsWithNode && this.props.channelsWithNode.length > 0)}
+				disableSubmit={this.props.disableRemove || this.props.channel_loading ||
+					(this.props.channelsWithNode && this.props.channelsWithNode.length > 0 && this.props.ignore_del_warning === false)
+				}
 			>
 				<div className="ibp-remove-orderer-desc">
 					<p>
@@ -1230,10 +1282,9 @@ class OrdererModal extends React.Component {
 						}}
 					/>
 				</div>
-				{this.props.channel_loading && <Loading withOverlay={false} />}
 				{this.props.channelsWithNode && this.props.channelsWithNode.length > 0 && (
 					<>
-						<ImportantBox text="consenter_exists_warning" />
+						<ImportantBox text={this.props.systemChannel ? 'consenter_exists_warning' : 'consenter_exists_warning_simpler'} />
 						<ul>
 							{this.props.channelsWithNode.map(channel => {
 								return (
@@ -1268,6 +1319,18 @@ class OrdererModal extends React.Component {
 							})}
 						</ul>
 					</>
+				)}
+
+				{!this.props.systemChannel && this.props.channelsWithNode && this.props.channelsWithNode.length > 0 && (<Checkbox
+					id="ignore-del-id"
+					labelText={translate('ignore_del_warning')}
+					onChange={() => {
+						this.props.updateState(SCOPE, {
+							ignore_del_warning: !this.props.ignore_del_warning,
+						});
+					}}
+					checked={this.props.ignore_del_warning}
+				/>
 				)}
 			</WizardStep>
 		);
@@ -2436,7 +2499,7 @@ class OrdererModal extends React.Component {
 				submitButtonLabel={this.getSubmitButtonLabel(translate)}
 				submitButtonId={this.getSubmitButtonId()}
 				error={this.props.error}
-				loading={this.props.loading}
+				loading={this.props.loading || this.props.channel_loading}
 			>
 				{this.renderPages(translate)}
 			</Wizard>
@@ -2511,6 +2574,7 @@ const dataProps = {
 	log_level_identity: PropTypes.object,
 	log_spec: PropTypes.string,
 	new_log_spec: PropTypes.string,
+	ignore_del_warning: PropTypes.bool,
 };
 
 OrdererModal.propTypes = {
@@ -2519,6 +2583,7 @@ OrdererModal.propTypes = {
 	onClose: PropTypes.func,
 	ordererId: PropTypes.string,
 	singleNodeRaft: PropTypes.bool,
+	systemChannel: PropTypes.bool,
 	updateState: PropTypes.func,
 	translate: PropTypes.func, // Provided by withLocalize
 };
@@ -2536,7 +2601,6 @@ export default withRouter(
 				state['settings'] && state['settings']['feature_flags'] ? state['settings']['feature_flags']['capabilities_enabled'] : null;
 			newProps['capabilities'] = state['settings'] && state['settings']['capabilities'] ? state['settings']['capabilities'] : [];
 			newProps['channelList'] = state['ordererDetails']['channelList'];
-			newProps['systemChannel'] = state['ordererDetails']['systemChannel'];
 			newProps['configtxlator_url'] = state['settings']['configtxlator_url'];
 			newProps['feature_flags'] = _.get(state, 'settings.feature_flags');
 			return newProps;
