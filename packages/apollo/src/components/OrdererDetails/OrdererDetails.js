@@ -1204,8 +1204,23 @@ class OrdererDetails extends Component {
 			});
 		}
 		const isScalingNodesAllowed = this.props.scaleRaftNodesEnabled;
-		const canDelete = (this.props.selectedNode && this.props.selectedNode.location !== 'ibm_saas') || isScalingNodesAllowed;
+		const canDeleteLegacy = (this.props.selectedNode && this.props.selectedNode.location !== 'ibm_saas') || isScalingNodesAllowed;
 		const translate = this.props.translate;
+		const canDeleteSystemless = !this.props.systemChannel;
+		const canDelete = canDeleteLegacy || canDeleteSystemless;
+
+		const buttonsOnTheNodesTab = [];
+		if (isScalingNodesAllowed && ActionsHelper.canCreateComponent(this.props.userInfo) && !free) {
+			buttonsOnTheNodesTab.push({
+				text: 'add_orderer_node',
+				fn: this.openAddOrdererNode,
+			});
+		} else if (ActionsHelper.canCreateComponent(this.props.userInfo) && this.channelParticipationEnabled(this.props.details)) {
+			buttonsOnTheNodesTab.push({
+				text: 'add_orderer_node',
+				fn: this.openAddOrdererNode,
+			});
+		}
 		return (
 			<PageContainer>
 				<div>
@@ -1215,6 +1230,8 @@ class OrdererDetails extends Component {
 						{this.props.showAddNode && (
 							<ImportOrdererModal
 								raftParent={this.props.details}
+								systemChannel={this.systemChannel}
+								appendingNode={!_.isEmpty(this.props.details)}
 								onClose={this.closeAddOrdererNode}
 								onComplete={() => {
 									this.refresh();
@@ -1447,16 +1464,7 @@ class OrdererDetails extends Component {
 																},
 															}}
 															select={this.openNodeDetails}
-															addItems={
-																isScalingNodesAllowed && ActionsHelper.canCreateComponent(this.props.userInfo) && !free
-																	? [
-																		{
-																			text: 'add_orderer_node',
-																			fn: this.openAddOrdererNode,
-																		},
-																	]
-																	: []
-															}
+															addItems={buttonsOnTheNodesTab}
 														/>
 													</div>
 												</Tab>
@@ -1475,7 +1483,8 @@ class OrdererDetails extends Component {
 														patch:
 															this.props.selectedNode.isUpgradeAvailable &&
 																this.props.selectedNode.location === 'ibm_saas' &&
-																ActionsHelper.canCreateComponent(this.props.userInfo) ? (
+																ActionsHelper.canCreateComponent(this.props.userInfo) ?
+																(
 																	<div className="ibp-details-patch-container">
 																		<div className="ibp-patch-available-tag ibp-node-details"
 																			onClick={() => this.openOrdererSettings('upgrade')}

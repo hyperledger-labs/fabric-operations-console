@@ -109,9 +109,23 @@ class OrdererModal extends React.Component {
 			new_log_spec: null,
 		});
 		this.identities = null;
-		this.getCAWithUsers();
-		this.getChannelsWithNodes();
-		this.checkNodeStatus();
+		this.getCAWithUsers();			// dsh todo why is this always being called
+
+		try {
+			this.getChannelsWithNodes();
+		} catch (e) {
+			this.props.updateState(SCOPE, {
+				channel_loading: false,
+			});
+		}
+
+		try {
+			this.checkNodeStatus();
+		} catch (e) {
+			this.props.updateState(SCOPE, {
+				loading: false,
+			});
+		}
 	}
 
 	async getChannelsWithNodes() {
@@ -129,61 +143,78 @@ class OrdererModal extends React.Component {
 			ordererId: this.props.orderer.id,
 			configtxlator_url: this.props.configtxlator_url,
 		};
+
+		let allChannels = null;
 		this.props.updateState(SCOPE, {
 			channel_loading: true,
 		});
-		let allChannels = await OrdererRestApi.getAllChannelNamesFromOrderer(options);
-		this.props.updateState(SCOPE, {
-			channel_loading: false,
-		});
-		allChannels.forEach(async channel_id => {
-			let block_options = {
-				ordererId: options.ordererId,
-				channelId: channel_id,
-				configtxlator_url: options.configtxlator_url,
-			};
-			this.props.updateState(SCOPE, {
-				channel_loading: true,
-			});
-			try {
-				const block = await OrdererRestApi.getChannelConfigBlock(block_options);
-				const _block_binary2json = promisify(ChannelApi._block_binary2json);
-				const resp = await _block_binary2json(block, options.configtxlator_url);
-				let l_consenters = _.get(resp, 'data.data[0].payload.data.config.channel_group.groups.Orderer.values.ConsensusType.value.metadata.consenters', []);
-				let orderersInConsenter = [];
-				nodesToDelete.forEach(node => {
-					let ordererInConsenter = _.filter(l_consenters, consenter => {
-						return node.backend_addr === consenter.host + ':' + Number(consenter.port);
-					});
-					if (!_.isEmpty(ordererInConsenter)) orderersInConsenter.push(ordererInConsenter);
-				});
-				// if this is the only node in consenter, don't count the channel
-				if (orderersInConsenter.length > 0 && orderersInConsenter.length !== l_consenters.length) {
-					let channelsWithNode = [...this.props.channelsWithNode, channel_id];
-					channelsWithNode.sort((a, b) => {
-						return naturalSort(a, b);
-					});
-					this.props.updateState(SCOPE, {
-						channelsWithNode,
-					});
-				} else if (orderersInConsenter.length > 0 && orderersInConsenter.length === l_consenters.length) {
-					let safeChannelsWithNode = [...this.props.safeChannelsWithNode, channel_id];
-					safeChannelsWithNode.sort((a, b) => {
-						return naturalSort(a, b);
-					});
-					this.props.updateState(SCOPE, {
-						safeChannelsWithNode,
-					});
-				}
-			} catch (error) {
-				this.props.updateState(SCOPE, {
-					channel_loading: false,
-				});
-				Log.error(error);
-			}
+
+		try {
+			// dsh todo why are we getting channel names form system channel if there sys channel dne
+			allChannels = await OrdererRestApi.getAllChannelNamesFromOrderer(options);
+		} catch (e) {
+			Log.error('unable to load all channels from orderer', e);
+		}
+
+		if (!allChannels) {
 			this.props.updateState(SCOPE, {
 				channel_loading: false,
 			});
+		} else {
+			allChannels.forEach(async channel_id => {
+				let block_options = {
+					ordererId: options.ordererId,
+					channelId: channel_id,
+					configtxlator_url: options.configtxlator_url,
+				};
+				this.props.updateState(SCOPE, {
+					channel_loading: true,
+				});
+				try {
+					const block = await OrdererRestApi.getChannelConfigBlock(block_options);
+					const _block_binary2json = promisify(ChannelApi._block_binary2json);
+					const resp = await _block_binary2json(block, options.configtxlator_url);
+					let l_consenters = _.get(resp, 'data.data[0].payload.data.config.channel_group.groups.Orderer.values.ConsensusType.value.metadata.consenters', []);
+					let orderersInConsenter = [];
+					nodesToDelete.forEach(node => {
+						let ordererInConsenter = _.filter(l_consenters, consenter => {
+							return node.backend_addr === consenter.host + ':' + Number(consenter.port);
+						});
+						if (!_.isEmpty(ordererInConsenter)) orderersInConsenter.push(ordererInConsenter);
+					});
+					// if this is the only node in consenter, don't count the channel
+					if (orderersInConsenter.length > 0 && orderersInConsenter.length !== l_consenters.length) {
+						let channelsWithNode = [...this.props.channelsWithNode, channel_id];
+						channelsWithNode.sort((a, b) => {
+							return naturalSort(a, b);
+						});
+						this.props.updateState(SCOPE, {
+							channelsWithNode,
+						});
+					} else if (orderersInConsenter.length > 0 && orderersInConsenter.length === l_consenters.length) {
+						let safeChannelsWithNode = [...this.props.safeChannelsWithNode, channel_id];
+						safeChannelsWithNode.sort((a, b) => {
+							return naturalSort(a, b);
+						});
+						this.props.updateState(SCOPE, {
+							safeChannelsWithNode,
+						});
+					}
+				} catch (error) {
+					this.props.updateState(SCOPE, {
+						channel_loading: false,
+					});
+					Log.error(error);
+				}
+
+				this.props.updateState(SCOPE, {
+					channel_loading: false,
+				});
+			});
+		}
+
+		this.props.updateState(SCOPE, {
+			channel_loading: false,
 		});
 	}
 
@@ -211,7 +242,8 @@ class OrdererModal extends React.Component {
 			loading: true,
 		});
 		let components = {};
-		let orderer = await OrdererRestApi.getOrdererDetails(this.props.orderer.cluster_id);
+
+		let orderer = await OrdererRestApi.getClusterDetails(this.props.orderer.cluster_id);
 		if (_.has(orderer, 'raft')) {
 			orderer.raft.forEach(x => {
 				components[x.id] = {
@@ -228,20 +260,22 @@ class OrdererModal extends React.Component {
 			let notOkList = _.filter(statuses, status => status.status === 'not ok');
 			if (_.size(notOkList) > 0) {
 				const down_nodes = notOkList.map(node => {
-					const node_details = orderer.raft.find(component => component.operations_url + '/healthz' === node.status_url);
-					return node_details.display_name;
+					if (orderer && orderer.raft) {
+						const node_details = orderer.raft.find(component => component.operations_url + '/healthz' === node.status_url);
+						return node_details.display_name;
+					}
 				});
 				this.props.updateState(SCOPE, {
 					down_nodes,
-					loading: false,
 				});
 			}
 		} catch (e) {
 			Log.error(e);
-			this.props.updateState(SCOPE, {
-				loading: false,
-			});
 		}
+
+		this.props.updateState(SCOPE, {
+			loading: false,
+		});
 	}
 
 	getCAList() {
@@ -278,6 +312,32 @@ class OrdererModal extends React.Component {
 			})
 			.finally(() => {
 				this.getIdentities();
+			});
+	}
+
+	loadUsersFromCA(ca) {
+		this.props.updateState(SCOPE, { loadingUsers: true });
+		return CertificateAuthorityRestApi.getUsers(ca)
+			.then(all_users => {
+				const users = [];
+				if (all_users && all_users.length) {
+					all_users.forEach(user => {
+						if (user.type === 'peer') {
+							users.push(user);
+						}
+					});
+				}
+				this.props.updateState(SCOPE, {
+					users,
+					loadingUsers: false,
+				});
+			})
+			.catch(error => {
+				Log.error(error);
+				this.props.updateState(SCOPE, {
+					users: [],
+					loadingUsers: false,
+				});
 			});
 	}
 
@@ -331,30 +391,34 @@ class OrdererModal extends React.Component {
 				const associatedIdentities = {};
 				if (identities.length) {
 					this.identities = identities;
-					this.props.orderer.raft.forEach(node => {
-						if (associatedIdentities[node.msp_id] === undefined) {
-							associatedIdentities[node.msp_id] = null;
-							if (this.props.orderer.associatedIdentities) {
-								this.props.orderer.associatedIdentities.forEach(identity => {
-									if (identity.msp_id === node.msp_id) {
-										associatedIdentities[node.msp_id] = this.getIdentityFromName(identity.name);
-									}
-								});
+					if (this.props.orderer && this.props.orderer.raft) {
+						this.props.orderer.raft.forEach(node => {
+							if (associatedIdentities[node.msp_id] === undefined) {
+								associatedIdentities[node.msp_id] = null;
+								if (this.props.orderer.associatedIdentities) {
+									this.props.orderer.associatedIdentities.forEach(identity => {
+										if (identity.msp_id === node.msp_id) {
+											associatedIdentities[node.msp_id] = this.getIdentityFromName(identity.name);
+										}
+									});
+								}
 							}
-						}
-					});
-					this.props.orderer.pending.forEach(node => {
-						if (associatedIdentities[node.msp_id] === undefined) {
-							associatedIdentities[node.msp_id] = null;
-							if (this.props.orderer.associatedIdentities) {
-								this.props.orderer.associatedIdentities.forEach(identity => {
-									if (identity.msp_id === node.msp_id) {
-										associatedIdentities[node.msp_id] = this.getIdentityFromName(identity.name);
-									}
-								});
+						});
+					}
+					if (this.props.orderer && this.props.orderer.pending) {
+						this.props.orderer.pending.forEach(node => {
+							if (associatedIdentities[node.msp_id] === undefined) {
+								associatedIdentities[node.msp_id] = null;
+								if (this.props.orderer.associatedIdentities) {
+									this.props.orderer.associatedIdentities.forEach(identity => {
+										if (identity.msp_id === node.msp_id) {
+											associatedIdentities[node.msp_id] = this.getIdentityFromName(identity.name);
+										}
+									});
+								}
 							}
-						}
-					});
+						});
+					}
 				}
 				this.props.updateState(SCOPE, {
 					associatedIdentities,
@@ -378,11 +442,13 @@ class OrdererModal extends React.Component {
 
 	isAll20Nodes = () => {
 		let isAll20 = true;
-		this.props.orderer.raft.forEach(orderer => {
-			if (!orderer.version || orderer.version.indexOf('2') !== 0) {
-				isAll20 = false;
-			}
-		});
+		if (this.props.orderer && this.props.orderer.raft) {
+			this.props.orderer.raft.forEach(orderer => {
+				if (!orderer.version || orderer.version.indexOf('2') !== 0) {
+					isAll20 = false;
+				}
+			});
+		}
 		return isAll20;
 	};
 
@@ -712,6 +778,13 @@ class OrdererModal extends React.Component {
 						key={button.id}
 						className="ibp-ca-action bx--btn bx--btn--tertiary bx--btn--sm"
 						onClick={() => {
+							/*if (button) {
+								// dsh todo - move things out...
+								if (button.id === 'update_certs') {
+									this.getCAWithUsers();
+								}
+							}*/
+
 							if (button.onClick) {
 								button.onClick();
 							} else {
@@ -788,18 +861,19 @@ class OrdererModal extends React.Component {
 							{this.props.capabilitiesEnabled &&
 								this.props.availableChannelCapabilities &&
 								this.props.availableOrdererCapabilities &&
-								(this.props.availableChannelCapabilities.length > 0 || this.props.availableOrdererCapabilities.length > 0) && (
-								<Button
-									id="capabilities"
-									kind="secondary"
-									className="ibp-orderer-action"
-									onClick={() => {
-										this.showAction('capabilities');
-									}}
-								>
-									{translate('channel_capabilities')}
-								</Button>
-							)}
+								(this.props.availableChannelCapabilities.length > 0 || this.props.availableOrdererCapabilities.length > 0) &&
+								(
+									<Button
+										id="capabilities"
+										kind="secondary"
+										className="ibp-orderer-action"
+										onClick={() => {
+											this.showAction('capabilities');
+										}}
+									>
+										{translate('channel_capabilities')}
+									</Button>
+								)}
 							<Button
 								id="channel_maintenance"
 								kind="secondary"
@@ -1018,7 +1092,7 @@ class OrdererModal extends React.Component {
 
 	async associateIdentityWithOrderer() {
 		const keys = Object.keys(this.props.associatedIdentities);
-		keys.reduce(async(previousPromise, msp_id) => {
+		keys.reduce(async (previousPromise, msp_id) => {
 			await previousPromise;
 			const id = this.props.associatedIdentities[msp_id];
 			try {
@@ -1494,7 +1568,7 @@ class OrdererModal extends React.Component {
 										maintenance_mode: !this.props.maintenance_mode,
 									});
 								}}
-								onChange={() => {}}
+								onChange={() => { }}
 								aria-label={translate('maintenance_mode')}
 								labelA={translate('no')}
 								labelB={translate('yes')}

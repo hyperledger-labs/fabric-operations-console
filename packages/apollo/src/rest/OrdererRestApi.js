@@ -87,7 +87,13 @@ class OrdererRestApi {
 				break;
 			}
 		}
-		let orderers = await OrdererRestApi.getOrdererDetails(srcNode.cluster_id || srcNode.ordererId);
+
+		let orderers = null;
+		if (srcNode.cluster_id) {
+			orderers = await OrdererRestApi.getClusterDetails(srcNode.cluster_id);
+		} else {
+			orderers = await OrdererRestApi.getNodeDetails(srcNode.ordererId);
+		}
 		return orderers.raft ? orderers.raft : [orderers];
 	}
 
@@ -160,8 +166,14 @@ class OrdererRestApi {
 		}
 	}
 
-	static async getOrdererDetails(id, includePrivateKeyAndCert) {
-		return NodeRestApi.getNodeDetails(id, includePrivateKeyAndCert);
+	// [ ! do not use this function !]
+	// dsh todo - hunt down code using this function and replace with getClusterDetails when possible
+	static async getOrdererDetails(orderer_id, includePrivateKeyAndCert) {
+		return NodeRestApi.getNodeDetails(orderer_id, includePrivateKeyAndCert);
+	}
+
+	static async getClusterDetails(cluster_id, includePrivateKeyAndCert) {
+		return NodeRestApi.getClusterDetails(cluster_id, includePrivateKeyAndCert);
 	}
 
 	static async updateConfigOverride(node) {
@@ -201,7 +213,7 @@ class OrdererRestApi {
 		if (url2use === null && orderer.cluster_id) {
 			// If orderer is not in the consenter set, look for other nodes in the same
 			// cluster that we can use to submit the update
-			const cluster = await OrdererRestApi.getOrdererDetails(orderer.cluster_id);
+			const cluster = await OrdererRestApi.getClusterDetails(orderer.cluster_id);
 			let url = null;
 			if (cluster.raft) {
 				for (let i = 0; i < cluster.raft.length && !url; i++) {
@@ -353,10 +365,10 @@ class OrdererRestApi {
 		let channel_names = [];
 		let stopexec = false;
 		await async.until(
-			async.asyncify(async() => {
+			async.asyncify(async () => {
 				return stopexec;
 			}),
-			async.asyncify(async() => {
+			async.asyncify(async () => {
 				let blocks = [];
 				const BLOCKS_AT_ONCE = Number(options.blocks_at_once) || 2;
 				for (let i = on_block_number; i < on_block_number + BLOCKS_AT_ONCE; i++) {
@@ -408,7 +420,7 @@ class OrdererRestApi {
 	static async getSystemChannelBlockFromOrderer(options) {
 		const orderer = await OrdererRestApi.getOrdererDetails(options.ordererId, true);
 		if (orderer.cluster_id && !options.altUrls) {
-			const cluster = await OrdererRestApi.getOrdererDetails(orderer.cluster_id, true);
+			const cluster = await OrdererRestApi.getClusterDetails(orderer.cluster_id, true);
 			options.altUrls = [];
 			if (cluster.raft) {
 				cluster.raft.forEach(node => {
@@ -431,6 +443,7 @@ class OrdererRestApi {
 				cert: ordererCerts ? ordererCerts.cert : null,
 				private_key: ordererCerts ? ordererCerts.private_key : null,
 			};
+
 		const opts = {
 			msp_id: test.msp_id,
 			client_cert_b64pem: test.cert,
@@ -442,6 +455,12 @@ class OrdererRestApi {
 			stop_block: options.stop_block,
 			channel_id: options.channelId || orderer.system_channel_id || this.systemChannel,
 		};
+		if (!opts.orderer_host) {
+			throw new Error('cannot get config block, missing orderer_host');
+		}
+		if (!opts.configtxlator_url) {
+			throw new Error('cannot get config block, missing configtxlator_url');
+		}
 		let resp;
 		try {
 			let getChannelBlockFromOrderer = promisify(window.stitch.getChannelBlockFromOrderer);
@@ -461,7 +480,7 @@ class OrdererRestApi {
 	static async getChannelConfigBlock(options) {
 		const orderer = await OrdererRestApi.getOrdererDetails(options.ordererId, true);
 		if (orderer.cluster_id && !options.altUrls) {
-			const cluster = await OrdererRestApi.getOrdererDetails(orderer.cluster_id, true);
+			const cluster = await OrdererRestApi.getClusterDetails(orderer.cluster_id, true);
 			options.altUrls = [];
 			if (cluster.raft) {
 				cluster.raft.forEach(node => {
