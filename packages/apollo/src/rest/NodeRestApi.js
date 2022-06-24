@@ -203,8 +203,6 @@ class NodeRestApi {
 	 * @returns {Promise<Component[]>} Sorted list of all components of a given type
 	 */
 	static async getNodes(type, skip_cache) {
-		// Attaching available versions to nodes allows us to show users that updated are available to a given node.
-		const upgradeVersions = await NodeRestApi.getAvailableVersions();
 		let nodes;
 		try {
 			nodes = await NodeRestApi.getAllNodes(skip_cache);
@@ -222,6 +220,40 @@ class NodeRestApi {
 			}
 		}
 		const filteredNodes = type ? nodes.filter(n => n.type === type) : nodes;
+		return this.formatNodes(filteredNodes);
+	}
+
+	/**
+	 * Get a sorted list of all the components of a given type
+	 * @param {string} cluster_id The id of the ordering service
+	 * @param {boolean} skip_cache True if we need to force a new REST call
+	 * @returns {Promise<Component[]>} Sorted list of all components of a given type
+	 */
+	static async getClusterNodes(cluster_id, skip_cache) {
+		let nodes;
+		try {
+			nodes = await NodeRestApi.getAllNodes(skip_cache);
+			// NOTE: the nodes list is already sorted at this point
+		} catch (error) {
+			if (error.statusCode === 404 && error.msg === 'no components exist') {
+				nodes = [];
+			} else {
+				// todo page reload logic shouldn't be in this library.
+				if (error && error.error === 'login to use this api') {
+					// session has expired, reload page to force login
+					window.location.reload();
+				}
+				throw error;
+			}
+		}
+		const filteredNodes = nodes.filter(n => n.cluster_id === cluster_id);		// dsh todo does this work?
+		return this.formatNodes(filteredNodes);
+	}
+
+	static async formatNodes(filteredNodes) {
+		// Attaching available versions to nodes allows us to show users that updated are available to a given node.
+		const upgradeVersions = await NodeRestApi.getAvailableVersions();
+
 		const newNodes = [];
 		const clusters = {};
 		const ff = await SettingsApi.getFeatureFlags();
@@ -419,8 +451,22 @@ class NodeRestApi {
 	 * @return {Promise<Component|Error>} A Promise that resolves with the new
 	 * component record or rejects with an error if the node could not be found
 	 */
+	// [! Do NOT use this function on new code !]
+	// this function is awful performance wise, it loads ALL components and looks up versions & status on all nodes to find details on 1 node.
+	// dsh todo - remove this function...!
 	static async getNodeById(id) {
-		const nodes = await NodeRestApi.getNodes();
+		const nodes = await NodeRestApi.getNodes();		// getNodes() is the culprit
+		return NodeRestApi.findNode(id, nodes);
+	}
+
+	// get the cluster data
+	static async getClusterById(id) {
+		const nodes = await NodeRestApi.getClusterNodes(id);
+		return NodeRestApi.findNode(id, nodes);
+	}
+
+	// return 1 node from an array of nodes, look up is by id
+	static findNode(id, nodes) {
 		let node = null;
 		nodes.forEach(test => {
 			if (!node) {
@@ -444,7 +490,7 @@ class NodeRestApi {
 			}
 		});
 		if (!node) {
-			Log.error('Node not found. id:', id, node);
+			Log.error('Node not found. id:', id, 'nodes:', nodes);
 		}
 		return node;
 	}
@@ -568,12 +614,13 @@ class NodeRestApi {
 	/**
 	 * Update version information (if available) for the node
 	 * @param {Component} node Component record to be updated
+	 * @param {boolean} doNotRecurse If true it will not recurse over raft nodes - prevents infinite loop/run away
 	 * @return {Promise<Component>} A Promise that resolves with the updated component record
 	 */
-	static async updateNodeVersion(node) {
-		if (node.raft) {
+	static async updateNodeVersion(node, doNotRecurse) {
+		if (node.raft && !doNotRecurse) {
 			for (let i = 0; i < node.raft.length; i++) {
-				await NodeRestApi.updateNodeVersion(node.raft[i]);
+				await NodeRestApi.updateNodeVersion(node.raft[i], true);
 			}
 		} else {
 			if (node.operations_url && !node.version) {
@@ -603,11 +650,26 @@ class NodeRestApi {
 	 * @return {Promise<Component|Error>} A Promise that resolves with
 	 * the new component record or rejects with an error if the node could not be found
 	 */
+	// [! Do NOT use this function on new code !]
+	// horrible performance!
+	// dsh todo remove calls to this function where possible.
 	static async getNodeDetails(id, includePrivateKeyAndCert) {
 		const node = await NodeRestApi.getNodeById(id);
+		return await NodeRestApi.processDetails(node, id, includePrivateKeyAndCert);
+	}
+
+	// get ordering cluster details
+	static async getClusterDetails(cluster_id, includePrivateKeyAndCert) {
+		const node = await NodeRestApi.getClusterById(cluster_id);
+		return await NodeRestApi.processDetails(node, cluster_id, includePrivateKeyAndCert);
+	}
+
+	// get ordering cluster details
+	static async processDetails(node, cluster_id, includePrivateKeyAndCert) {
 		if (!node) {
 			return null;
 		}
+
 		await NodeRestApi.updateNodeVersion(node);
 		if (node.type === 'fabric-orderer') {
 			node.associatedIdentities = [];

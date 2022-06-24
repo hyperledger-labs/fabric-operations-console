@@ -1504,7 +1504,12 @@ class ChannelApi {
 					config_update_signatures: [signature],
 				};
 				try {
-					let orderers = await OrdererRestApi.getOrdererDetails(options.cluster_id || options.currentOrdererId || options.ordererId);
+					let orderers = null;
+					if (options.cluster_id) {
+						orderers = await OrdererRestApi.getClusterDetails(options.cluster_id);
+					} else {
+						orderers = await OrdererRestApi.getOrdererDetails(options.currentOrdererId || options.ordererId);
+					}
 					orderers = orderers.raft ? orderers.raft : [orderers];
 					const resp3 = await StitchApi.submitWithRetry(c_opts, orderers);
 					// send async event... don't wait

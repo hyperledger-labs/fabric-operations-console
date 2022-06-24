@@ -1433,7 +1433,7 @@ class ChannelModal extends Component {
 		const selectedOrderer = data ? data : this.props.selectedOrderer;
 		if (!_.has(selectedOrderer, 'id')) return;
 
-		OrdererRestApi.getOrdererDetails(selectedOrderer.id, true).then(orderer => {
+		OrdererRestApi.getClusterDetails(selectedOrderer.cluster_id, true).then(orderer => {
 			let getCertsFromDeployer = false;
 
 			if (orderer && orderer.raft) {
