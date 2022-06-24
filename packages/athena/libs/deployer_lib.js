@@ -462,10 +462,6 @@ module.exports = function (logger, ev, t) {
 			};
 			logger.debug('[deployer lib]', req._tx_id, 'sending deployer api w/route:', opts.url);
 			send_dep_req(opts, (err, depRespBody) => {
-				/*depRespBody = {
-					location: 'ibm-saas'
-				};
-				const fmt_ret = {};*/
 				const { fmt_err, fmt_ret } = handle_dep_response(parsed, err, depRespBody);
 				if (fmt_err) {																// error is already logged
 					if (t.ot_misc.get_code(fmt_err) === 409) {								// don't call clean up on a 409 error code
@@ -1913,7 +1909,6 @@ module.exports = function (logger, ev, t) {
 
 		send_dep_req(options, (err, depRespBody) => {
 			let { fmt_err, fmt_ret } = handle_dep_response(parsed, err, depRespBody);
-			//fmt_err = null;
 			if (fmt_err && opts.FORCE === true) {
 				logger.debug('[deployer lib]', opts.debug_tx_id, 'deployer resp has error, but force is set. will force del component:', parsed.component_id);
 				fmt_err = null;												// if we are forcing del, we don't care about deployer errors
