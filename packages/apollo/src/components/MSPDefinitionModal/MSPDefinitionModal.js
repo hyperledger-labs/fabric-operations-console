@@ -67,7 +67,7 @@ export class MSPDefinitionModal extends Component {
 				intermediate_certs: this.props.msp.intermediate_certs,
 				admins: this.props.msp.admins ? this.props.msp.admins.map(x => {
 					return { cert: x };
-				}): [] /* prettier-ignore */,
+				}) : [] /* prettier-ignore */,
 				tls_root_certs: this.props.msp.tls_root_certs,
 				tls_intermediate_certs: this.props.msp.tls_intermediate_certs,
 				revocation_list: this.props.msp.revocation_list,
@@ -124,7 +124,7 @@ export class MSPDefinitionModal extends Component {
 		return true;
 	};
 
-	onUpload = async(data, valid) => {
+	onUpload = async (data, valid) => {
 		Log.debug('Uploaded json: ', data, valid);
 
 		let json = data && data.length ? data[0] : null;
@@ -179,9 +179,13 @@ export class MSPDefinitionModal extends Component {
 					admin_certs.push({ cert: parsedCert && parsedCert.base_64_pem ? parsedCert.base_64_pem : '' });
 
 					// check if the admin cert is from one of the root certs. Otherwise peer would crash.
+					let roots = (json && Array.isArray(json.root_certs)) ? json.root_certs : [];
+					if (json && Array.isArray(json.intermediate_certs)) {
+						roots = roots.concat(json.intermediate_certs);
+					}
 					let isFromRoot = await StitchApi.isIdentityFromRootCert({
 						certificate_b64pem: x,
-						root_certs_b64pems: [...json.root_certs, ...json.intermediate_certs],
+						root_certs_b64pems: roots,
 					});
 					if (!isFromRoot) {
 						valid = false;
@@ -240,7 +244,7 @@ export class MSPDefinitionModal extends Component {
 		});
 
 		let notValidAdmin = (!this.props.fabric_node_ous?.enable && this.props.admins?.length === 0) ||
-							(this.props.fabric_node_ous?.enable && this.props.admins === undefined);
+			(this.props.fabric_node_ous?.enable && this.props.admins === undefined);
 
 		if (!this.props.msp_id || !this.props.msp_name || this.props.rootCerts.length === 0 || notValidAdmin) {
 			// required fields
