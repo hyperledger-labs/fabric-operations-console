@@ -362,6 +362,8 @@ class JoinOSNChannelModal extends React.Component {
 							msp_id: node_data.msp_id,
 						}),
 
+						tls_identity:   await IdentityApi.getTLSIdentity(node_data),
+
 						// if this cluster of orderer nodes is selected to join the channel - defaults true
 						selected: true,
 
@@ -734,10 +736,11 @@ class JoinOSNChannelModal extends React.Component {
 
 		// convert json to pb && then send joinOSNChannel call && reflect the status in the UI
 		async function perform_join(cluster, node, i, cb) {
+            console.log('DBG ~ file: JoinOSNChannelModal.js ~ line 739 ~ JoinOSNChannelModal ~ perform_join ~ cluster', cluster);
 			const j_opts = {
 				host: node.osnadmin_url,
-				certificate_b64pem: cluster.selected_identity ? cluster.selected_identity.cert : null,
-				private_key_b64pem: cluster.selected_identity ? cluster.selected_identity.private_key : null,
+				certificate_b64pem: cluster.tls_identity ? cluster.tls_identity.cert : null,
+				private_key_b64pem: cluster.tls_identity ? cluster.tls_identity.private_key : null,
 				root_cert_b64pem: Array.isArray(cluster.tls_root_certs) ? cluster.tls_root_certs[0] : null,
 				b_config_block: b_genesis_block,
 			};
