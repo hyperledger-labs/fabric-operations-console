@@ -38,6 +38,7 @@ import PageHeader from '../PageHeader/PageHeader';
 import SVGs from '../Svgs/Svgs';
 import ConfigBlockApi from '../../rest/ConfigBlockApi';
 import { TrashCan20 } from '@carbon/icons-react/es';
+import JoinOSNChannelModal from '../JoinOSNChannelModal/JoinOSNChannelModal';
 
 const SCOPE = 'channels';
 const Log = new Logger(SCOPE);
@@ -65,6 +66,8 @@ class ChannelComponent extends Component {
 			loadingPeers: [],
 			feature_flags: this.props.feature_flags,
 			selectedConfigBlock: null,
+			createChannelModal: false,
+			joinOsnModal: false,
 		});
 	}
 
@@ -715,7 +718,11 @@ class ChannelComponent extends Component {
 									},
 								]}
 								select={(configBlockDoc) => {
-									this.createChannel(configBlockDoc);
+									this.props.updateState(SCOPE, {
+										selectedConfigBlock: configBlockDoc,
+										createChannelModal: false,
+										joinOsnModal: true,
+									});
 								}}
 								tileMapping={{
 									title: 'name',
@@ -824,15 +831,37 @@ class ChannelComponent extends Component {
 							<ChannelModal
 								useConfigBlock={this.props.selectedConfigBlock}
 								onClose={this.hideCreateChannelModal}
-								onComplete={(channelName, isOrdererSignatureNeeded) => {
-									if (isOrdererSignatureNeeded) {
-										this.props.showSuccess('channel_creation_request_submitted_to_orderer', { channelName }, SCOPE, null, true);
+								onComplete={(channelName, isOrdererSignatureNeeded, genesisBlockDoc) => {
+									if (genesisBlockDoc) {
+										this.props.updateState(SCOPE, {
+											joinOsnModal: true,
+											createChannelModal: false,
+											selectedConfigBlock: genesisBlockDoc,
+										});
 									} else {
-										this.props.showSuccess('channel_creation_request_submitted', { channelName }, SCOPE, null, true);
+										if (isOrdererSignatureNeeded) {
+											this.props.showSuccess('channel_creation_request_submitted_to_orderer', { channelName }, SCOPE, null, true);
+										} else {
+											this.props.showSuccess('channel_creation_request_submitted', { channelName }, SCOPE, null, true);
+										}
+										this.props.updateState(SCOPE, {
+											filteredChannels: [],
+											allChannels: [],
+										});
+										this.getAllPeerChannels();
 									}
-									this.props.updateState(SCOPE, { filteredChannels: [], allChannels: [] });
-									this.getAllPeerChannels();
 								}}
+							/>
+						)}
+						{this.props.joinOsnModal && (
+							<JoinOSNChannelModal
+								onClose={() => {
+									this.props.updateState(SCOPE, {
+										joinOsnModal: false,
+									});
+								}}
+								onComplete={() => { }}
+								selectedConfigBlockDoc={this.props.selectedConfigBlock}
 							/>
 						)}
 					</div>
@@ -851,6 +880,7 @@ const dataProps = {
 	orderer_loading: PropTypes.bool,
 	pending_osn_channels: PropTypes.array,
 	joinChannelModal: PropTypes.bool,
+	joinOsnModal: PropTypes.bool,
 	importOrdererModal: PropTypes.bool,
 	createChannelModal: PropTypes.bool,
 	importPeerModal: PropTypes.bool,

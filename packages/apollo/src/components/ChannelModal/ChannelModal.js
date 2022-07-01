@@ -88,6 +88,7 @@ class ChannelModal extends Component {
 		let use_osnadmin = false;
 		let viewing_step = this.props.channelId ? 'organization_updating_channel' : 'prerequisites';
 
+		// dsh todo remove all usage of useConfigBlock from this modal, no longer needed since we will use the joinosn modal instead
 		if (this.props.useConfigBlock) {
 			use_osnadmin = true;
 			this.updateTimelineSteps(false, true, 2, 0, false);					// show all steps
@@ -625,8 +626,7 @@ class ChannelModal extends Component {
 			selectedApplicationCapability,
 			lifecycle_policy,
 			endorsement_policy,
-			joinOsnMap,
-			b_genesis_block,
+			genesis_block_doc,
 			use_osnadmin
 		} = this.props;
 		let updatedConsenterCount = this.consenterUpdateCount();
@@ -716,16 +716,7 @@ class ChannelModal extends Component {
 		}
 
 		if (step === 'osn_join_channel') {
-			complete = false;
-			for (let clusterId in joinOsnMap) {
-
-				// must have a cluster selected && that cluster needs nodes && an identity selected
-				if (joinOsnMap[clusterId].selected === true && joinOsnMap[clusterId].nodes.length > 0 && joinOsnMap[clusterId].selected_identity) {
-					complete = true;
-					break;
-				}
-			}
-			complete = complete && b_genesis_block;		// also needs the block data to exist
+			complete = genesis_block_doc ? true : false;		// needs the block data to exist
 		}
 
 		if (complete && !this.completedSteps.includes(step)) {
@@ -1068,20 +1059,11 @@ class ChannelModal extends Component {
 				backButtonText = 'skip';
 				next = async () => {
 					if (isComplete) {
-						if (osnJoinSubmitFin) {
-							this.props.updateState(SCOPE, {
-								submitting: true,
-							});
-							let tx_id = this.props.useConfigBlock ? this.props.useConfigBlock.id : null;
-							tx_id = tx_id || (this.props.block_stored_resp ? this.props.block_stored_resp.id : null);
-							await ConfigBlockApi.delete(tx_id);
-							this.sidePanel.closeSidePanel();
-						} else {
-							this.createChannelAsOsnAdmin();				// trigger the create channel api
-						}
+						this.props.onComplete(null, null, this.props.genesis_block_doc);
+						// dsh to do remove osnJoinSubmitFin
 					}
 				};
-				nextButtonText = osnJoinSubmitFin ? 'close' : 'join';
+				nextButtonText = 'continue';
 				this.disableAllStepLinksInTimelineExcept(['osn_join_channel', 'review_channel_info']);
 				break;
 
@@ -1919,6 +1901,7 @@ class ChannelModal extends Component {
 			});
 	}
 
+	// dsh todo remove this
 	// perform the osnadmin join-channel apis on a new channel (config block is a genesis block)
 	async createChannelAsOsnAdmin(cb) {
 		const {
@@ -1968,7 +1951,7 @@ class ChannelModal extends Component {
 
 			this.props.updateState(SCOPE, {
 				submitting: false,
-				osnJoinSubmitFin: osnJoinSubmitFin,
+				osnJoinSubmitFin: true,// osnJoinSubmitFin,  // dsh todo undo this
 			});
 
 		});
@@ -2364,7 +2347,8 @@ class ChannelModal extends Component {
 				)}
 				{viewing === 'osn_join_channel' && (
 					<OSNJoin buildCreateChannelOpts={this.buildCreateChannelOpts}
-						getAllOrderers={this.getAllOrderers}
+						b_genesis_block={this.props.b_genesis_block}
+						genesis_block_doc={this.props.genesis_block_doc}
 					/>
 				)}
 			</FocusComponent>
@@ -2495,6 +2479,7 @@ const dataProps = {
 	osnJoinSubmitFin: PropTypes.bool,
 	joinOsnMap: PropTypes.object,
 	b_genesis_block: PropTypes.blob,
+	genesis_block_doc: PropTypes.object,
 	block_stored_resp: PropTypes.object,
 	osnadmin_feats_enabled: PropTypes.bool,
 	configtxlator_url: PropTypes.string,

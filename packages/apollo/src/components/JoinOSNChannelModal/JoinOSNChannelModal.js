@@ -42,8 +42,18 @@ const url = require('url');
 class JoinOSNChannelModal extends React.Component {
 	async componentDidMount() {
 
-		// [Flow 1] - the channel is not yet selected, show step to select a node and channel name
-		if (!this.props.joinChannelDetails) {
+		// [Flow 1] - joining via the pending channel tile, is a new channel
+		if (this.props.selectedConfigBlockDoc) {
+			this.props.updateState(SCOPE, {
+				orderers: null,									// setting null here skips the first step
+				configtxlator_url: this.props.configtxlator_url,
+				block_error: '',
+			});
+			await this.setupForJoinViaPendingTile();
+		}
+
+		// [Flow 2] - joining via the join-channel button, the channel is not yet selected, show step to select a node and channel name
+		else if (!this.props.joinChannelDetails) {
 			// if we need to get orderers....
 			const oss = await OrdererRestApi.getOrderers(true);
 
@@ -68,14 +78,14 @@ class JoinOSNChannelModal extends React.Component {
 			});
 		}
 
-		// [Flow 2] - the channel was already chosen, skip to step to select joining osns
+		// [Flow 3] - joining via the channel tile, skip to step to select joining osns
 		else {
 			this.props.updateState(SCOPE, {
 				orderers: null,									// setting null here skips the first step
 				configtxlator_url: this.props.configtxlator_url,
 				block_error: '',
 			});
-			await this.setupForJoin(this.props.joinChannelDetails.name);
+			await this.setupForJoinViaChannelTile(this.props.joinChannelDetails.name);
 		}
 	}
 
@@ -526,8 +536,8 @@ class JoinOSNChannelModal extends React.Component {
 		await this.setupForJoin(channelName);
 	};
 
-	// get the config block and load the 2nd step
-	setupForJoin = async (channelName) => {
+	// get the config block from selected channel and load the 2nd step
+	setupForJoinViaChannelTile = async (channelName) => {
 		this.props.updateState(SCOPE, {
 			config_block_b64: null,
 			loading: true,
@@ -559,6 +569,32 @@ class JoinOSNChannelModal extends React.Component {
 			const details = (e && typeof e.stitch_msg === 'string') ? (code + e.stitch_msg) : '';
 			this.props.updateState(SCOPE, {
 				block_error_title: '[Error] Could not get config-block. Resolve error to continue:',
+				block_error: details,
+				config_block_b64: null,
+				loading: false,
+			});
+		}
+	}
+
+	// parse the config block from pending channel tile and load the 2nd step
+	setupForJoinViaPendingTile = async () => {
+		const channelName = this.props.selectedConfigBlockDoc.channel;
+
+		this.props.updateState(SCOPE, {
+			config_block_b64: this.props.selectedConfigBlockDoc.block_b64,
+			loading: true,
+			drill_down_flow: true,
+		});
+
+		try {
+			const json_block = await this.parseConfigBlock(this.props.selectedConfigBlockDoc.block_b64);
+			this.setupDownloadGenesisLink(json_block, channelName);
+		} catch (e) {
+			Log.error(e);
+			const code = (e && !isNaN(e.status_code)) ? '(' + e.status_code + ') ' : '';
+			const details = (e && typeof e.stitch_msg === 'string') ? (code + e.stitch_msg) : '';
+			this.props.updateState(SCOPE, {
+				block_error_title: '[Error] Could not parse config-block. Resolve error to continue:',
 				block_error: details,
 				config_block_b64: null,
 				loading: false,
@@ -827,10 +863,20 @@ class JoinOSNChannelModal extends React.Component {
 						</div>
 					)}
 
-					{!block_error && (
+					{!block_error && !this.props.loading && (
 						<div>
 							<p className="ibp-join-osn-desc">
 								{drill_down_flow ? translate('osn-join-desc2') : translate('osn-join-desc')}
+							</p>
+						</div>
+					)}
+
+					{!block_error && this.props.loading && (
+						<div>
+							<br/>
+							<br/>
+							<p className="ibp-join-osn-desc">
+								{translate('osn-join-loading-desc')}
 							</p>
 						</div>
 					)}
@@ -1078,6 +1124,7 @@ JoinOSNChannelModal.propTypes = {
 	onClose: PropTypes.func,
 	updateState: PropTypes.func,
 	joinChannelDetails: PropTypes.object,
+	selectedConfigBlockDoc: PropTypes.object,
 	translate: PropTypes.func, // Provided by withLocalize
 };
 
