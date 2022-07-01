@@ -627,8 +627,7 @@ class ChannelComponent extends Component {
 
 	// get all pending channels for orderers
 	getAllOrdererChannels = async (opts) => {
-		this.props.updateState(SCOPE, { orderer_loading: true });
-
+		this.props.updateState(SCOPE, { orderer_loading: true, pending_osn_channels: [] });
 		const config_blocks = await ConfigBlockApi.getAll(opts);
 		if (config_blocks && Array.isArray(config_blocks.blocks)) {
 			for (let i in config_blocks.blocks) {
@@ -860,7 +859,9 @@ class ChannelComponent extends Component {
 										joinOsnModal: false,
 									});
 								}}
-								onComplete={() => { }}
+								onComplete={() => {
+									this.getAllOrdererChannels({ cache: 'skip' });
+								}}
 								selectedConfigBlockDoc={this.props.selectedConfigBlock}
 							/>
 						)}

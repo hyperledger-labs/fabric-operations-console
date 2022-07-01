@@ -34,6 +34,7 @@ import { WarningFilled16, CheckmarkFilled16, ProgressBarRound16, CircleDash16 } 
 import { NodeRestApi } from '../../rest/NodeRestApi';
 import async from 'async';
 import { promisify } from 'util';
+import ConfigBlockApi from '../../rest/ConfigBlockApi';
 
 const SCOPE = 'joinOSNChannelModal';
 const Log = new Logger(SCOPE);
@@ -320,19 +321,20 @@ class JoinOSNChannelModal extends React.Component {
 	}
 
 	// organize all nodes by their orderer cluster aka ordering service
-	async organize_osns(consenters, all_orderers, config_block, channel_data) {
+	async organize_osns(consentersInConfigBlock, all_orderers, config_block, channel_data) {
 		const ret = {};
 		const msp_data = this.buildSimpleMspFromConfigBlock(config_block);
 
-		// first iter over nodes that were selected as consenters from wizard
-		for (let i in consenters) {
-			const consenter = consenters[i];
+		// first iter over nodes that are in the config block as consenters
+		for (let i in consentersInConfigBlock) {
+			const consenter = consentersInConfigBlock[i];
 			const node_data = find_orderer_data(consenter.host, consenter.port);
 
-			if (node_data && node_data.msp_id) {
-				consenter._id = node_data._id;
+			if (node_data && node_data.msp_id && node_data.osnadmin_url) {
+				consenter._id = node_data._id;					// only copy what we need
 				consenter.name = node_data.name;
 				consenter._consenter = true;
+				consenter.osnadmin_url = node_data.osnadmin_url;
 
 				const cluster_id = node_data._cluster_id;
 				if (!ret[cluster_id]) {
@@ -390,9 +392,11 @@ class JoinOSNChannelModal extends React.Component {
 			const cluster_id = all_orderers[i]._cluster_id;
 			if (ret[cluster_id]) {											// only add nodes for cluster that was selected
 				if (!osn_already_exist(cluster_id, all_orderers[i]._id)) {	// orderer is not in map yet
-					const node = all_orderers[i];
-					node._consenter = false;
-					ret[cluster_id].nodes.push(init_node(node, false));
+					if (all_orderers[i].osnadmin_url) {						// osn-join flow needs the osnadmin_url field
+						const node = all_orderers[i];
+						node._consenter = false;
+						ret[cluster_id].nodes.push(init_node(node, false));
+					}
 				}
 			}
 		}
@@ -682,6 +686,7 @@ class JoinOSNChannelModal extends React.Component {
 			joinOsnMap: JSON.parse(JSON.stringify(reset(joinOsnMap))),
 		});
 		let join_errors = 0;
+		let join_successes = 0;
 
 		// iter over the selected clusters
 		async.eachLimit(joinOsnMap, 1, (cluster, cluster_cb) => {
@@ -700,6 +705,7 @@ class JoinOSNChannelModal extends React.Component {
 							self.props.updateState(SCOPE, {
 								joinOsnMap: JSON.parse(JSON.stringify(joinOsnMap)),
 							});
+
 							return node_cb();
 						}, 300 + Math.random() * 2000);		// slow down
 					});
@@ -707,7 +713,14 @@ class JoinOSNChannelModal extends React.Component {
 			}, () => {
 				return cluster_cb();
 			});
-		}, () => {
+		}, async () => {
+
+			// if at least one joined, we can delete the pending join tile if it exist
+			let tx_id = self.props.selectedConfigBlockDoc ? self.props.selectedConfigBlockDoc.id : null;
+			if (join_successes > 0 && tx_id) {
+				await ConfigBlockApi.delete(tx_id);
+			}
+
 			self.props.updateState(SCOPE, {
 				submitting: false,
 			});
@@ -722,7 +735,7 @@ class JoinOSNChannelModal extends React.Component {
 		// convert json to pb && then send joinOSNChannel call && reflect the status in the UI
 		async function perform_join(cluster, node, i, cb) {
 			const j_opts = {
-				host: node.host + ':' + node.port,
+				host: node.osnadmin_url,
 				certificate_b64pem: cluster.selected_identity ? cluster.selected_identity.cert : null,
 				private_key_b64pem: cluster.selected_identity ? cluster.selected_identity.private_key : null,
 				root_cert_b64pem: Array.isArray(cluster.tls_root_certs) ? cluster.tls_root_certs[0] : null,
@@ -754,6 +767,8 @@ class JoinOSNChannelModal extends React.Component {
 			}
 			if (outcome === constants.OSN_JOIN_ERROR) {
 				join_errors++;
+			} else if (outcome === constants.OSN_JOIN_SUCCESS) {
+				join_successes++;
 			}
 		}
 
@@ -873,8 +888,8 @@ class JoinOSNChannelModal extends React.Component {
 
 					{!block_error && this.props.loading && (
 						<div>
-							<br/>
-							<br/>
+							<br />
+							<br />
 							<p className="ibp-join-osn-desc">
 								{translate('osn-join-loading-desc')}
 							</p>
@@ -1080,6 +1095,8 @@ class JoinOSNChannelModal extends React.Component {
 							title: translate('general_join_fail_title'),
 							details: translate('general_join_failure')
 						});
+					} else {
+						this.props.onComplete();
 					}
 				}}
 				showSubmitSpinner={this.props.submitting}
