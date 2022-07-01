@@ -138,6 +138,7 @@ class Review extends Component {
 						organizationError
 					)}
 					{this.renderSection(translate, 'policy', customPolicy ? customPolicy.name : null, policyError)}
+					{this.renderSection(translate, 'orderer_type', use_osnadmin ? translate('systemless_config') : translate('system_config'))}
 					{(Array.isArray(selected_ordering_orgs) && selected_ordering_orgs.length > 0) &&
 						this.renderSection(translate, 'review_orderers', selected_ordering_orgs.join(','))}
 					{!use_osnadmin &&

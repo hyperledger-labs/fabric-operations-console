@@ -34,6 +34,7 @@ import { WarningFilled16, CheckmarkFilled16, ProgressBarRound16, CircleDash16 } 
 import { NodeRestApi } from '../../rest/NodeRestApi';
 import async from 'async';
 import { promisify } from 'util';
+import ConfigBlockApi from '../../rest/ConfigBlockApi';
 
 const SCOPE = 'joinOSNChannelModal';
 const Log = new Logger(SCOPE);
@@ -42,8 +43,18 @@ const url = require('url');
 class JoinOSNChannelModal extends React.Component {
 	async componentDidMount() {
 
-		// [Flow 1] - the channel is not yet selected, show step to select a node and channel name
-		if (!this.props.joinChannelDetails) {
+		// [Flow 1] - joining via the pending channel tile, is a new channel
+		if (this.props.selectedConfigBlockDoc) {
+			this.props.updateState(SCOPE, {
+				orderers: null,									// setting null here skips the first step
+				configtxlator_url: this.props.configtxlator_url,
+				block_error: '',
+			});
+			await this.setupForJoinViaPendingTile();
+		}
+
+		// [Flow 2] - joining via the join-channel button, the channel is not yet selected, show step to select a node and channel name
+		else if (!this.props.joinChannelDetails) {
 			// if we need to get orderers....
 			const oss = await OrdererRestApi.getOrderers(true);
 
@@ -68,14 +79,14 @@ class JoinOSNChannelModal extends React.Component {
 			});
 		}
 
-		// [Flow 2] - the channel was already chosen, skip to step to select joining osns
+		// [Flow 3] - joining via the channel tile, skip to step to select joining osns
 		else {
 			this.props.updateState(SCOPE, {
 				orderers: null,									// setting null here skips the first step
 				configtxlator_url: this.props.configtxlator_url,
 				block_error: '',
 			});
-			await this.setupForJoin(this.props.joinChannelDetails.name);
+			await this.setupForJoinViaChannelTile(this.props.joinChannelDetails.name);
 		}
 	}
 
@@ -310,19 +321,20 @@ class JoinOSNChannelModal extends React.Component {
 	}
 
 	// organize all nodes by their orderer cluster aka ordering service
-	async organize_osns(consenters, all_orderers, config_block, channel_data) {
+	async organize_osns(consentersInConfigBlock, all_orderers, config_block, channel_data) {
 		const ret = {};
 		const msp_data = this.buildSimpleMspFromConfigBlock(config_block);
 
-		// first iter over nodes that were selected as consenters from wizard
-		for (let i in consenters) {
-			const consenter = consenters[i];
+		// first iter over nodes that are in the config block as consenters
+		for (let i in consentersInConfigBlock) {
+			const consenter = consentersInConfigBlock[i];
 			const node_data = find_orderer_data(consenter.host, consenter.port);
 
-			if (node_data && node_data.msp_id) {
-				consenter._id = node_data._id;
+			if (node_data && node_data.msp_id && node_data.osnadmin_url) {
+				consenter._id = node_data._id;					// only copy what we need
 				consenter.name = node_data.name;
 				consenter._consenter = true;
+				consenter.osnadmin_url = node_data.osnadmin_url;
 
 				const cluster_id = node_data._cluster_id;
 				if (!ret[cluster_id]) {
@@ -380,9 +392,11 @@ class JoinOSNChannelModal extends React.Component {
 			const cluster_id = all_orderers[i]._cluster_id;
 			if (ret[cluster_id]) {											// only add nodes for cluster that was selected
 				if (!osn_already_exist(cluster_id, all_orderers[i]._id)) {	// orderer is not in map yet
-					const node = all_orderers[i];
-					node._consenter = false;
-					ret[cluster_id].nodes.push(init_node(node, false));
+					if (all_orderers[i].osnadmin_url) {						// osn-join flow needs the osnadmin_url field
+						const node = all_orderers[i];
+						node._consenter = false;
+						ret[cluster_id].nodes.push(init_node(node, false));
+					}
 				}
 			}
 		}
@@ -526,8 +540,8 @@ class JoinOSNChannelModal extends React.Component {
 		await this.setupForJoin(channelName);
 	};
 
-	// get the config block and load the 2nd step
-	setupForJoin = async (channelName) => {
+	// get the config block from selected channel and load the 2nd step
+	setupForJoinViaChannelTile = async (channelName) => {
 		this.props.updateState(SCOPE, {
 			config_block_b64: null,
 			loading: true,
@@ -559,6 +573,32 @@ class JoinOSNChannelModal extends React.Component {
 			const details = (e && typeof e.stitch_msg === 'string') ? (code + e.stitch_msg) : '';
 			this.props.updateState(SCOPE, {
 				block_error_title: '[Error] Could not get config-block. Resolve error to continue:',
+				block_error: details,
+				config_block_b64: null,
+				loading: false,
+			});
+		}
+	}
+
+	// parse the config block from pending channel tile and load the 2nd step
+	setupForJoinViaPendingTile = async () => {
+		const channelName = this.props.selectedConfigBlockDoc.channel;
+
+		this.props.updateState(SCOPE, {
+			config_block_b64: this.props.selectedConfigBlockDoc.block_b64,
+			loading: true,
+			drill_down_flow: true,
+		});
+
+		try {
+			const json_block = await this.parseConfigBlock(this.props.selectedConfigBlockDoc.block_b64);
+			this.setupDownloadGenesisLink(json_block, channelName);
+		} catch (e) {
+			Log.error(e);
+			const code = (e && !isNaN(e.status_code)) ? '(' + e.status_code + ') ' : '';
+			const details = (e && typeof e.stitch_msg === 'string') ? (code + e.stitch_msg) : '';
+			this.props.updateState(SCOPE, {
+				block_error_title: '[Error] Could not parse config-block. Resolve error to continue:',
 				block_error: details,
 				config_block_b64: null,
 				loading: false,
@@ -646,6 +686,7 @@ class JoinOSNChannelModal extends React.Component {
 			joinOsnMap: JSON.parse(JSON.stringify(reset(joinOsnMap))),
 		});
 		let join_errors = 0;
+		let join_successes = 0;
 
 		// iter over the selected clusters
 		async.eachLimit(joinOsnMap, 1, (cluster, cluster_cb) => {
@@ -664,6 +705,7 @@ class JoinOSNChannelModal extends React.Component {
 							self.props.updateState(SCOPE, {
 								joinOsnMap: JSON.parse(JSON.stringify(joinOsnMap)),
 							});
+
 							return node_cb();
 						}, 300 + Math.random() * 2000);		// slow down
 					});
@@ -671,7 +713,14 @@ class JoinOSNChannelModal extends React.Component {
 			}, () => {
 				return cluster_cb();
 			});
-		}, () => {
+		}, async () => {
+
+			// if at least one joined, we can delete the pending join tile if it exist
+			let tx_id = self.props.selectedConfigBlockDoc ? self.props.selectedConfigBlockDoc.id : null;
+			if (join_successes > 0 && tx_id) {
+				await ConfigBlockApi.delete(tx_id);
+			}
+
 			self.props.updateState(SCOPE, {
 				submitting: false,
 			});
@@ -686,7 +735,7 @@ class JoinOSNChannelModal extends React.Component {
 		// convert json to pb && then send joinOSNChannel call && reflect the status in the UI
 		async function perform_join(cluster, node, i, cb) {
 			const j_opts = {
-				host: node.host + ':' + node.port,
+				host: node.osnadmin_url,
 				certificate_b64pem: cluster.selected_identity ? cluster.selected_identity.cert : null,
 				private_key_b64pem: cluster.selected_identity ? cluster.selected_identity.private_key : null,
 				root_cert_b64pem: Array.isArray(cluster.tls_root_certs) ? cluster.tls_root_certs[0] : null,
@@ -718,6 +767,8 @@ class JoinOSNChannelModal extends React.Component {
 			}
 			if (outcome === constants.OSN_JOIN_ERROR) {
 				join_errors++;
+			} else if (outcome === constants.OSN_JOIN_SUCCESS) {
+				join_successes++;
 			}
 		}
 
@@ -827,10 +878,20 @@ class JoinOSNChannelModal extends React.Component {
 						</div>
 					)}
 
-					{!block_error && (
+					{!block_error && !this.props.loading && (
 						<div>
 							<p className="ibp-join-osn-desc">
 								{drill_down_flow ? translate('osn-join-desc2') : translate('osn-join-desc')}
+							</p>
+						</div>
+					)}
+
+					{!block_error && this.props.loading && (
+						<div>
+							<br />
+							<br />
+							<p className="ibp-join-osn-desc">
+								{translate('osn-join-loading-desc')}
 							</p>
 						</div>
 					)}
@@ -1034,6 +1095,8 @@ class JoinOSNChannelModal extends React.Component {
 							title: translate('general_join_fail_title'),
 							details: translate('general_join_failure')
 						});
+					} else {
+						this.props.onComplete();
 					}
 				}}
 				showSubmitSpinner={this.props.submitting}
@@ -1078,6 +1141,7 @@ JoinOSNChannelModal.propTypes = {
 	onClose: PropTypes.func,
 	updateState: PropTypes.func,
 	joinChannelDetails: PropTypes.object,
+	selectedConfigBlockDoc: PropTypes.object,
 	translate: PropTypes.func, // Provided by withLocalize
 };
 

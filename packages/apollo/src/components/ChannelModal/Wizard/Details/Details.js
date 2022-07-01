@@ -28,16 +28,17 @@ const SCOPE = 'channelModal';
 
 const Log = new Logger(SCOPE);
 
+// This is step "channel_details"
+//
+// panel stores allows the user to select the channel name and ordering cluster to use for a create channel
 class Details extends Component {
 	onChangeChannelDetails = value => {
-		const { advanced, checkHealth, getOrderingServiceDetails } = this.props;
+		const { checkHealth, getOrderingServiceDetails } = this.props;
 		if (value.channelName) {
 			this.validateChannelName(value);
 		} else if (value.selectedOrderer) {
 			checkHealth(value.selectedOrderer);
-			if (advanced) {
-				getOrderingServiceDetails(value.selectedOrderer);
-			}
+			getOrderingServiceDetails(value.selectedOrderer);
 		}
 	};
 
@@ -81,7 +82,7 @@ class Details extends Component {
 	};
 
 	render() {
-		const { channelOrderer, isChannelUpdate, checkingOrdererStatus, orderers, channelNameError, isOrdererUnavailable, translate } = this.props;
+		const { channelOrderer, isChannelUpdate, checkingOrdererStatus, loadingConsenters, orderers, channelNameError, isOrdererUnavailable, translate } = this.props;
 		const associatedOrdererNotFound = isChannelUpdate && !channelOrderer;
 		const multipleOrderersAssociationsFound = isChannelUpdate && _.size(channelOrderer) > 1;
 		const fields = [
@@ -105,7 +106,7 @@ class Details extends Component {
 				required: true,
 				tooltip: 'channel_orderer_desc',
 				options: orderers,
-				inlineLoading: checkingOrdererStatus,
+				inlineLoading: checkingOrdererStatus || loadingConsenters,
 			});
 		}
 		return (
@@ -151,6 +152,7 @@ const dataProps = {
 	channelNameError: PropTypes.string,
 	isOrdererUnavailable: PropTypes.bool,
 	checkingOrdererStatus: PropTypes.bool,
+	loadingConsenters: PropTypes.bool,
 	advanced: PropTypes.bool,
 };
 

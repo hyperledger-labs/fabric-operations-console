@@ -48,9 +48,6 @@ import SidePanel from '../SidePanel/SidePanel';
 import Timeline from '../Timeline/Timeline';
 import ChaincodePolicy from './Wizard/ChaincodePolicy/ChaincodePolicy';
 import { triggers, triggerSurvey } from '../../utils/medallia';
-import StitchApi from '../../rest/StitchApi';
-import async from 'async';
-import ConfigBlockApi from '../../rest/ConfigBlockApi';
 
 const acl_resources = require('../../utils/acl/resources.json');
 const bytes = require('bytes');
@@ -88,14 +85,6 @@ class ChannelModal extends Component {
 		let use_osnadmin = false;
 		let viewing_step = this.props.channelId ? 'organization_updating_channel' : 'prerequisites';
 
-		if (this.props.useConfigBlock) {
-			use_osnadmin = true;
-			this.updateTimelineSteps(false, true, 2, 0, false);					// show all steps
-			this.showStepsInTimeline(['osn_join_channel']);
-			this.hideStepsInTimeline(['ordering_service_organization']);		// but hide this one
-			viewing_step = 'osn_join_channel';
-		}
-
 		let isChannelUpdate = this.props.channelId ? true : false; // channelId is passed only when editing channel
 		this.props.updateState(SCOPE, {
 			loading: true,
@@ -104,8 +93,8 @@ class ChannelModal extends Component {
 			submitting: false,
 			timelineSteps: this.timelineSteps,
 			selectedTimelineStep: {
-				currentStepIndex: this.props.useConfigBlock ? 3 : 0,				// which step group to highlight
-				currentStepInsideOfGroupIndex: this.props.useConfigBlock ? 1 : 0,	// which step in the group to highlight
+				currentStepIndex: 0,				// which step group to highlight
+				currentStepInsideOfGroupIndex: 0,	// which step in the group to highlight
 			},
 			viewing: viewing_step,
 			channelName: this.props.channelId ? this.props.channelId : '',
@@ -171,10 +160,6 @@ class ChannelModal extends Component {
 			nodeou_warning: false,
 			osnadmin_feats_enabled: this.props.osnadmin_feats_enabled,
 			configtxlator_url: this.props.configtxlator_url,
-			joinOsnMap: {},
-			use_config_block: this.props.useConfigBlock,
-			osnjoinSubmit: false,
-			osnJoinSubmitFin: false,
 		});
 		this.getAvailableCapabilities(isChannelUpdate);
 		if (!this.props.editLoading) {
@@ -214,6 +199,7 @@ class ChannelModal extends Component {
 			isOrdererUnavailable: false,
 			isTLSUnavailable: false,
 			checkingOrdererStatus: false,
+			loadingConsenters: false,
 			customPolicy: null,
 		});
 	}
@@ -625,13 +611,14 @@ class ChannelModal extends Component {
 			selectedApplicationCapability,
 			lifecycle_policy,
 			endorsement_policy,
-			joinOsnMap,
-			b_genesis_block,
-			use_osnadmin
+			genesis_block_doc,
+			use_osnadmin,
+			loadingConsenters
 		} = this.props;
 		let updatedConsenterCount = this.consenterUpdateCount();
 		if (step === 'channel_details') {
-			complete = channelName && !channelNameError && !isOrdererUnavailable && !checkingOrdererStatus && selectedOrderer && selectedOrderer !== 'select_orderer';
+			complete = channelName && !channelNameError && !isOrdererUnavailable && !checkingOrdererStatus &&
+				selectedOrderer && selectedOrderer !== 'select_orderer' && !loadingConsenters;
 		}
 		if (step === 'channel_organizations') {
 			complete = !noOperatorError && !duplicateMSPError && !missingDefinitionError && orgs && !orgs.find(org => org.msp === '');
@@ -716,16 +703,7 @@ class ChannelModal extends Component {
 		}
 
 		if (step === 'osn_join_channel') {
-			complete = false;
-			for (let clusterId in joinOsnMap) {
-
-				// must have a cluster selected && that cluster needs nodes && an identity selected
-				if (joinOsnMap[clusterId].selected === true && joinOsnMap[clusterId].nodes.length > 0 && joinOsnMap[clusterId].selected_identity) {
-					complete = true;
-					break;
-				}
-			}
-			complete = complete && b_genesis_block;		// also needs the block data to exist
+			complete = genesis_block_doc ? true : false;		// needs the block data to exist
 		}
 
 		if (complete && !this.completedSteps.includes(step)) {
@@ -739,7 +717,7 @@ class ChannelModal extends Component {
 	}
 
 	getButtons(translate) {
-		const { viewing, advanced, submitting, isChannelUpdate, use_osnadmin, onClose, osnJoinSubmitFin } = this.props;
+		const { viewing, advanced, submitting, isChannelUpdate, use_osnadmin, onClose } = this.props;
 		const isHigherCapabilityAvailable = this.isAnyHigherCapabilityAvailable();
 		const isChannel2_0 = this.isChannel2_0();
 		const canModifyConsenters = this.canModifyConsenters();
@@ -1068,20 +1046,10 @@ class ChannelModal extends Component {
 				backButtonText = 'skip';
 				next = async () => {
 					if (isComplete) {
-						if (osnJoinSubmitFin) {
-							this.props.updateState(SCOPE, {
-								submitting: true,
-							});
-							let tx_id = this.props.useConfigBlock ? this.props.useConfigBlock.id : null;
-							tx_id = tx_id || (this.props.block_stored_resp ? this.props.block_stored_resp.id : null);
-							await ConfigBlockApi.delete(tx_id);
-							this.sidePanel.closeSidePanel();
-						} else {
-							this.createChannelAsOsnAdmin();				// trigger the create channel api
-						}
+						this.props.onComplete(null, null, this.props.genesis_block_doc);
 					}
 				};
-				nextButtonText = osnJoinSubmitFin ? 'close' : 'join';
+				nextButtonText = 'continue';
 				this.disableAllStepLinksInTimelineExcept(['osn_join_channel', 'review_channel_info']);
 				break;
 
@@ -1432,12 +1400,12 @@ class ChannelModal extends Component {
 	getOrderingServiceDetails = data => {
 		const selectedOrderer = data ? data : this.props.selectedOrderer;
 		if (!_.has(selectedOrderer, 'id')) return;
+		this.props.updateState(SCOPE, { loadingConsenters: true });
 
 		OrdererRestApi.getOrdererDetails(selectedOrderer.id, true).then(orderer => {
 			let getCertsFromDeployer = false;
 
 			if (orderer && orderer.raft) {
-				this.props.updateState(SCOPE, { loadingConsenters: true });
 				const consenters = orderer.raft.map(node => {
 					let address = node.backend_addr.split(':');
 					if (!node.client_tls_cert && node.location === 'ibm_saas') {
@@ -1463,7 +1431,11 @@ class ChannelModal extends Component {
 
 					// get all ordering groups
 					this.getAllOrderers().then(possible_consenters => {
-						this.props.updateState(SCOPE, { raftNodes: possible_consenters, loadingConsenters: false, loading: false });
+						this.props.updateState(SCOPE, {
+							raftNodes: possible_consenters,
+							loadingConsenters: false,
+							loading: false
+						});
 					});
 				}
 
@@ -1919,111 +1891,6 @@ class ChannelModal extends Component {
 			});
 	}
 
-	// perform the osnadmin join-channel apis on a new channel (config block is a genesis block)
-	async createChannelAsOsnAdmin(cb) {
-		const {
-			joinOsnMap,
-			b_genesis_block,
-		} = this.props;
-		this.props.updateState(SCOPE, {
-			submitting: true,
-			osnjoinSubmit: true,
-			createChannelError: null,
-			osnJoinSubmitFin: false,
-			joinOsnMap: JSON.parse(JSON.stringify(reset(joinOsnMap))),
-		});
-		let join_errors = 0;
-
-		// iter over the selected clusters
-		async.eachLimit(joinOsnMap, 1, (cluster, cluster_cb) => {
-			if (!cluster.selected || !cluster.selected_identity) {
-				return cluster_cb();
-			}
-
-			// iter over the selected nodes in the selected cluster
-			async.eachOfLimit(cluster.nodes, 1, (node, i, node_cb) => {
-				if (node._status === constants.OSN_JOIN_SUCCESS) {
-					return node_cb();				// node is already done
-				} else {
-					perform_join(cluster, node, i, () => {
-
-						// joinOsnMap was changed, now reflect the change
-						this.props.updateState(SCOPE, {
-							joinOsnMap: JSON.parse(JSON.stringify(joinOsnMap)),
-						});
-						setTimeout(() => {
-							return node_cb();
-						}, 300 + Math.random() * 2000);		// slow down
-					});
-				}
-			}, () => {
-				return cluster_cb();
-			});
-		}, () => {
-
-			let osnJoinSubmitFin = false;
-			if (join_errors === 0) {
-				osnJoinSubmitFin = true;
-			}
-
-			this.props.updateState(SCOPE, {
-				submitting: false,
-				osnJoinSubmitFin: osnJoinSubmitFin,
-			});
-
-		});
-
-		// convert json to pb && then send joinOSNChannel call && reflect the status in the UI
-		async function perform_join(cluster, node, i, cb) {
-			const j_opts = {
-				host: node.host + ':' + node.port,
-				certificate_b64pem: cluster.selected_identity ? cluster.selected_identity.cert : null,
-				private_key_b64pem: cluster.selected_identity ? cluster.selected_identity.private_key : null,
-				root_cert_b64pem: Array.isArray(cluster.tls_root_certs) ? cluster.tls_root_certs[0] : null,
-				b_config_block: b_genesis_block,
-			};
-			try {
-				await StitchApi.joinOSNChannel(j_opts);
-			} catch (error) {
-				const msg = (error && error.http_resp) ? error.http_resp : error;
-				handle_join_outcome(cluster, i, constants.OSN_JOIN_ERROR, msg);
-				return cb();
-			}
-
-			handle_join_outcome(cluster, i, constants.OSN_JOIN_SUCCESS);
-			return cb();
-		}
-
-		// update the state of the node
-		function handle_join_outcome(cluster, index, outcome, error_msg) {
-			if (typeof error_msg === 'object') {
-				error_msg = JSON.stringify(error_msg);
-			}
-			if (joinOsnMap[cluster.cluster_id]) {
-				if (Array.isArray(joinOsnMap[cluster.cluster_id].nodes) && joinOsnMap[cluster.cluster_id].nodes[index]) {
-					joinOsnMap[cluster.cluster_id].nodes[index]._status = outcome;
-					joinOsnMap[cluster.cluster_id].nodes[index]._error = error_msg;
-				}
-			}
-			if (outcome === constants.OSN_JOIN_ERROR) {
-				join_errors++;
-			}
-		}
-
-		// clear errors and status of each node
-		function reset(obj) {
-			for (let cluster_id in obj) {
-				for (let i in obj[cluster_id].nodes) {
-					if (obj[cluster_id].nodes[i]._status === constants.OSN_JOIN_ERROR) {
-						obj[cluster_id].nodes[i]._status = constants.OSN_JOIN_PENDING;
-					}
-					obj[cluster_id].nodes[i]._error = '';
-				}
-			}
-			return obj;
-		}
-	}
-
 	updateChannel = async () => {
 		let existing_msps = {};
 		this.props.existingOrgs.forEach(org => {
@@ -2364,7 +2231,8 @@ class ChannelModal extends Component {
 				)}
 				{viewing === 'osn_join_channel' && (
 					<OSNJoin buildCreateChannelOpts={this.buildCreateChannelOpts}
-						getAllOrderers={this.getAllOrderers}
+						b_genesis_block={this.props.b_genesis_block}
+						genesis_block_doc={this.props.genesis_block_doc}
 					/>
 				)}
 			</FocusComponent>
@@ -2435,7 +2303,6 @@ const dataProps = {
 	loading: PropTypes.bool,
 	submitting: PropTypes.bool,
 	orderers: PropTypes.array,
-	use_config_block: PropTypes.object,
 	channelOrderer: PropTypes.array,
 	identities: PropTypes.array,
 	channelNameError: PropTypes.string,
@@ -2443,6 +2310,7 @@ const dataProps = {
 	noAdminError: PropTypes.string,
 	duplicateMSPError: PropTypes.string,
 	isOrdererUnavailable: PropTypes.bool,
+	loadingOrdererDetails: PropTypes.bool,
 	isTLSUnavailable: PropTypes.bool,
 	checkingOrdererStatus: PropTypes.bool,
 	createChannelError: PropTypes.any,
@@ -2491,10 +2359,8 @@ const dataProps = {
 	original_orgs: PropTypes.array,
 	use_default_consenters: PropTypes.bool,
 	use_osnadmin: PropTypes.bool,
-	osnjoinSubmit: PropTypes.bool,
-	osnJoinSubmitFin: PropTypes.bool,
-	joinOsnMap: PropTypes.object,
 	b_genesis_block: PropTypes.blob,
+	genesis_block_doc: PropTypes.object,
 	block_stored_resp: PropTypes.object,
 	osnadmin_feats_enabled: PropTypes.bool,
 	configtxlator_url: PropTypes.string,
