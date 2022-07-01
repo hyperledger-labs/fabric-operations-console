@@ -199,6 +199,7 @@ class ChannelModal extends Component {
 			isOrdererUnavailable: false,
 			isTLSUnavailable: false,
 			checkingOrdererStatus: false,
+			loadingConsenters: false,
 			customPolicy: null,
 		});
 	}
@@ -611,11 +612,13 @@ class ChannelModal extends Component {
 			lifecycle_policy,
 			endorsement_policy,
 			genesis_block_doc,
-			use_osnadmin
+			use_osnadmin,
+			loadingConsenters
 		} = this.props;
 		let updatedConsenterCount = this.consenterUpdateCount();
 		if (step === 'channel_details') {
-			complete = channelName && !channelNameError && !isOrdererUnavailable && !checkingOrdererStatus && selectedOrderer && selectedOrderer !== 'select_orderer';
+			complete = channelName && !channelNameError && !isOrdererUnavailable && !checkingOrdererStatus &&
+				selectedOrderer && selectedOrderer !== 'select_orderer' && !loadingConsenters;
 		}
 		if (step === 'channel_organizations') {
 			complete = !noOperatorError && !duplicateMSPError && !missingDefinitionError && orgs && !orgs.find(org => org.msp === '');
@@ -1397,12 +1400,12 @@ class ChannelModal extends Component {
 	getOrderingServiceDetails = data => {
 		const selectedOrderer = data ? data : this.props.selectedOrderer;
 		if (!_.has(selectedOrderer, 'id')) return;
+		this.props.updateState(SCOPE, { loadingConsenters: true });
 
 		OrdererRestApi.getOrdererDetails(selectedOrderer.id, true).then(orderer => {
 			let getCertsFromDeployer = false;
 
 			if (orderer && orderer.raft) {
-				this.props.updateState(SCOPE, { loadingConsenters: true });
 				const consenters = orderer.raft.map(node => {
 					let address = node.backend_addr.split(':');
 					if (!node.client_tls_cert && node.location === 'ibm_saas') {
@@ -1428,7 +1431,11 @@ class ChannelModal extends Component {
 
 					// get all ordering groups
 					this.getAllOrderers().then(possible_consenters => {
-						this.props.updateState(SCOPE, { raftNodes: possible_consenters, loadingConsenters: false, loading: false });
+						this.props.updateState(SCOPE, {
+							raftNodes: possible_consenters,
+							loadingConsenters: false,
+							loading: false
+						});
 					});
 				}
 
@@ -2303,6 +2310,7 @@ const dataProps = {
 	noAdminError: PropTypes.string,
 	duplicateMSPError: PropTypes.string,
 	isOrdererUnavailable: PropTypes.bool,
+	loadingOrdererDetails: PropTypes.bool,
 	isTLSUnavailable: PropTypes.bool,
 	checkingOrdererStatus: PropTypes.bool,
 	createChannelError: PropTypes.any,
