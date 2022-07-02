@@ -810,8 +810,8 @@
 .ibp-join-osn-node-wrap-wrap {
 	margin-left: 2.3rem;
 	margin-bottom: 0.5rem;
-	width: 84%;
-	max-width: 46rem;
+	width: 85%;
+	max-width: 55rem;
 }
 
 .ibp-join-osn-node-wrap {
@@ -897,7 +897,9 @@
 }
 
 .ibp-join-osn-clusterid {
-	min-width: 20rem;
+	min-width: 35rem;
+	padding: 1.5rem;
+	padding-top: 0rem;
 }
 
 .ibp-join-osn-count {
@@ -906,8 +908,10 @@
 }
 
 .ibp-join-osn-error {
-	font-size: 0.75rem;
+	font-size: 0.875rem;
+	font-weight: 500;
 	color: #fb4b53;
+	line-height: 1.2rem;
 }
 
 .ibp-join-osn-cluster-title {
@@ -931,6 +935,6 @@
 	color: #fb4b53;
 }
 
-.ibp-join-osn-joined{
+.ibp-join-osn-joined {
 	opacity: 0.4;
 }

@@ -168,13 +168,16 @@ class JoinOSNChannelModal extends React.Component {
 			const consenters = _.get(json_block, 'data.data[0].payload.data.config.channel_group.groups.Orderer.values.ConsensusType.value.metadata.consenters');
 			joinOsnMap = await this.organize_osns(consenters, allOrderers, json_block, channel_map);
 
+			const possibleNodes = this.countPossibleNodes(joinOsnMap);
+			const selectedNodes = this.countSelectedOrderers(joinOsnMap);
 			this.props.updateState(SCOPE, {
 				channel_id: channel_id,
 				joinOsnMap: joinOsnMap,
-				count: this.countOrderers(joinOsnMap),
-				follower_count: this.countFollowers(joinOsnMap),
+				count: selectedNodes,
+				possible_nodes: possibleNodes,
+				follower_count: this.countFollowers(joinOsnMap),		// this isn't used anymore... remove?
 				b_genesis_block: window.stitch.base64ToUint8Array(config_block_b64),
-				select_followers_toggle: false,
+				select_all_toggle: possibleNodes === selectedNodes,
 				block_error: '',
 				block_error_title: '',
 				submitting: false,
@@ -263,13 +266,29 @@ class JoinOSNChannelModal extends React.Component {
 	}
 
 	// count the selected orderers
-	countOrderers(useMap) {
+	countSelectedOrderers(useMap) {
 		let updateCount = 0;
 		for (let id in useMap) {
 			if (useMap[id].selected === true) {
 				for (let i in useMap[id].nodes) {
-					// dont count nodes that are already joined
+					// don't count nodes that are already joined
 					if (useMap[id].nodes[i]._selected && useMap[id].nodes[i]._status !== constants.OSN_JOIN_SUCCESS) {
+						updateCount++;
+					}
+				}
+			}
+		}
+		return updateCount;
+	}
+
+	// count the selected orderers
+	countPossibleNodes(useMap) {
+		let updateCount = 0;
+		for (let id in useMap) {
+			if (useMap[id].selected === true) {
+				for (let i in useMap[id].nodes) {
+					// don't count nodes that are already joined
+					if (useMap[id].nodes[i]._status !== constants.OSN_JOIN_SUCCESS) {
 						updateCount++;
 					}
 				}
@@ -324,6 +343,7 @@ class JoinOSNChannelModal extends React.Component {
 	async organize_osns(consentersInConfigBlock, all_orderers, config_block, channel_data) {
 		const ret = {};
 		const msp_data = this.buildSimpleMspFromConfigBlock(config_block);
+		let all_identities = await IdentityApi.getIdentities();
 
 		// first iter over nodes that are in the config block as consenters
 		for (let i in consentersInConfigBlock) {
@@ -336,6 +356,12 @@ class JoinOSNChannelModal extends React.Component {
 				consenter._consenter = true;
 				consenter.osnadmin_url = node_data.osnadmin_url;
 
+				// get tls identity for node
+				const identity4tls = await ChannelParticipationApi.findMatchingIdentity({
+					identities: all_identities,
+					root_certs_b64pems: _.get(node_data, 'msp.tlsca.root_certs')
+				});
+
 				const cluster_id = node_data._cluster_id;
 				if (!ret[cluster_id]) {
 					ret[cluster_id] = {
@@ -344,23 +370,8 @@ class JoinOSNChannelModal extends React.Component {
 						cluster_name: node_data._cluster_name,
 						cluster_id: node_data._cluster_id,
 
-						// currently selected identity
-						selected_identity: null,
-
-						// the identity we think they should use - populated next
-						default_identity: null,
-
-						// all identities from msp
-						identities: await IdentityApi.getIdentitiesForMsp({
-							root_certs: (msp_data && msp_data[node_data.msp_id]) ? msp_data[node_data.msp_id].root_certs : [],
-							intermediate_certs: (msp_data && msp_data[node_data.msp_id]) ? msp_data[node_data.msp_id].intermediate_certs : [],
-						}),
-
-						// identities associated with this orderer cluster
-						associated_identities: await IdentityApi.getAssociatedOrdererIdentities({
-							cluster_id: cluster_id,
-							msp_id: node_data.msp_id,
-						}),
+						// the identity we think they should use
+						tls_identity: identity4tls,
 
 						// if this cluster of orderer nodes is selected to join the channel - defaults true
 						selected: true,
@@ -369,20 +380,18 @@ class JoinOSNChannelModal extends React.Component {
 						tls_root_certs: (msp_data && msp_data[node_data.msp_id]) ? msp_data[node_data.msp_id].tls_root_certs : [],
 					};
 
-					ret[cluster_id].default_identity = this.pickDefaultIdentity(ret[cluster_id]);
-					ret[cluster_id].selected_identity = ret[cluster_id].default_identity ? JSON.parse(JSON.stringify(ret[cluster_id].default_identity)) : null;
-
-					const zero_identities = (ret[cluster_id].default_identity === null);
-					if (zero_identities) {
-						ret[cluster_id].selected = false;
-					}
-					for (let z in ret[cluster_id].identities) {
-						ret[cluster_id].identities[z]._cluster_id = cluster_id;		// store id here so we can link it back up
+					// if the first node we itered on didn't find a tls identity for some reason this could still be null, replace it now
+					if (!ret[cluster_id].tls_identity) {
+						ret[cluster_id].tls_identity = identity4tls;
 					}
 				}
 
-				// add some fields to each node entry, but don't propagate those fields
-				ret[cluster_id].nodes.push(init_node(consenter, true));
+				// orderer is not in map yet (this shouldn't be possible for the consenters array, but just in case)
+				if (!osn_already_exist(cluster_id, node_data._id)) {
+
+					// add some fields to each node entry, but don't propagate those fields
+					ret[cluster_id].nodes.push(init_node(consenter, true));
+				}
 			}
 		}
 
@@ -412,34 +421,7 @@ class JoinOSNChannelModal extends React.Component {
 
 		// iter over joined osn to this channel and set if each osn has joined or not
 
-		return fancy_cluster_sort(ret);
-
-		// sort clusters, clusters that have identities are first
-		function fancy_cluster_sort(ret) {
-			let ordered = {};
-			Object.keys(ret).sort((a, b) => {
-				if (ret[a] && ret[b]) {
-
-					// if neither a or b has a default, alpha sort on the keys a & b
-					if (!ret[a].default_identity && !ret[b].default_identity) {
-						return a.localeCompare(b, { usage: 'sort', numeric: true, caseFirst: 'upper' });
-					}
-
-					// if a entry doesn't have a default but b does, set b first & a last
-					if (!ret[a].default_identity) { return 1; }
-
-					// if b entry doesn't have a default but a does, set a first & b last
-					if (!ret[b].default_identity) { return -1; }
-
-					// if a and b have a default, alpha sort on the keys a & b
-					return a.localeCompare(b, { usage: 'sort', numeric: true, caseFirst: 'upper' });
-				}
-			}).forEach(function (key) {
-				ordered[key] = ret[key];							// sort all the object's keys
-			});
-
-			return ordered;
-		}
+		return ret;
 
 		// sort orderer nodes, nodes that are consenters are first
 		function fancy_node_sort(arr) {
@@ -502,22 +484,6 @@ class JoinOSNChannelModal extends React.Component {
 			}
 			return null;
 		}
-	}
-
-	// get the default identity for the dropdown
-	pickDefaultIdentity(cluster_obj) {
-		if (cluster_obj) {
-			// return first associated id if possible
-			if (Array.isArray(cluster_obj.associated_identities) && cluster_obj.associated_identities.length > 0) {
-				return cluster_obj.associated_identities[0];
-			}
-
-			// return first identity from this msp
-			if (Array.isArray(cluster_obj.identities) && cluster_obj.identities.length > 0) {
-				cluster_obj.identities[1];
-			}
-		}
-		return null;
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------------------------
@@ -613,26 +579,9 @@ class JoinOSNChannelModal extends React.Component {
 			joinOsnMap[cluster_id].selected = !joinOsnMap[cluster_id].selected;
 			this.props.updateState(SCOPE, {
 				joinOsnMap: JSON.parse(JSON.stringify(joinOsnMap)),
-				count: this.countOrderers(joinOsnMap),
+				count: this.countSelectedOrderers(joinOsnMap),
 				follower_count: this.countFollowers(joinOsnMap),
 			});
-		}
-	}
-
-	// selected identity in dropdown was changed
-	changeIdentity = (evt) => {
-		let { joinOsnMap } = this.props;
-		const keys = Object.keys(evt);
-		const fieldName = keys ? keys[0] : null;			// the first key is the dropdown's unique id/name
-
-		const cluster_id = (fieldName && evt && evt[fieldName]) ? evt[fieldName]._cluster_id : null;
-		if (cluster_id) {
-			if (joinOsnMap && joinOsnMap[cluster_id]) {
-				joinOsnMap[cluster_id].selected_identity = evt[fieldName];
-				this.props.updateState(SCOPE, {
-					joinOsnMap: JSON.parse(JSON.stringify(joinOsnMap)),
-				});
-			}
 		}
 	}
 
@@ -644,9 +593,11 @@ class JoinOSNChannelModal extends React.Component {
 				if (joinOsnMap[cluster_id].nodes[i]._id === node_id) {
 					joinOsnMap[cluster_id].nodes[i]._selected = !joinOsnMap[cluster_id].nodes[i]._selected;
 
+					const selectedOsns = this.countSelectedOrderers(joinOsnMap);
 					this.props.updateState(SCOPE, {
+						select_all_toggle: this.props.possible_nodes === selectedOsns,
 						joinOsnMap: JSON.parse(JSON.stringify(joinOsnMap)),
-						count: this.countOrderers(joinOsnMap),
+						count: selectedOsns,
 					});
 
 					break;
@@ -655,22 +606,22 @@ class JoinOSNChannelModal extends React.Component {
 		}
 	}
 
-	// select or deselect follower nodes (orderers that are not consenters)
-	toggleFollowers = () => {
+	// select or deselect all nodes
+	toggleSelected = () => {
 		let { joinOsnMap } = this.props;
 
 		for (let cluster_id in joinOsnMap) {
 			for (let i in joinOsnMap[cluster_id].nodes) {
-				if (!joinOsnMap[cluster_id].nodes[i]._consenter) {		// skip consenters
-					joinOsnMap[cluster_id].nodes[i]._selected = !this.props.select_followers_toggle;
-				}
+				//if (!joinOsnMap[cluster_id].nodes[i]._consenter) {		// skip consenters
+				joinOsnMap[cluster_id].nodes[i]._selected = !this.props.select_all_toggle;
+				//}
 			}
 		}
 
 		this.props.updateState(SCOPE, {
-			select_followers_toggle: !this.props.select_followers_toggle,
+			select_all_toggle: !this.props.select_all_toggle,
 			joinOsnMap: JSON.parse(JSON.stringify(joinOsnMap)),
-			count: this.countOrderers(joinOsnMap),
+			count: this.countSelectedOrderers(joinOsnMap),
 		});
 	}
 
@@ -690,7 +641,7 @@ class JoinOSNChannelModal extends React.Component {
 
 		// iter over the selected clusters
 		async.eachLimit(joinOsnMap, 1, (cluster, cluster_cb) => {
-			if (!cluster.selected || !cluster.selected_identity) {
+			if (!cluster.selected || !cluster.tls_identity) {
 				return cluster_cb();
 			}
 
@@ -718,7 +669,11 @@ class JoinOSNChannelModal extends React.Component {
 			// if at least one joined, we can delete the pending join tile if it exist
 			let tx_id = self.props.selectedConfigBlockDoc ? self.props.selectedConfigBlockDoc.id : null;
 			if (join_successes > 0 && tx_id) {
-				await ConfigBlockApi.delete(tx_id);
+				try {
+					await ConfigBlockApi.delete(tx_id);
+				} catch (e) {
+					Log.error(e);
+				}
 			}
 
 			self.props.updateState(SCOPE, {
@@ -736,8 +691,8 @@ class JoinOSNChannelModal extends React.Component {
 		async function perform_join(cluster, node, i, cb) {
 			const j_opts = {
 				host: node.osnadmin_url,
-				certificate_b64pem: cluster.selected_identity ? cluster.selected_identity.cert : null,
-				private_key_b64pem: cluster.selected_identity ? cluster.selected_identity.private_key : null,
+				certificate_b64pem: cluster.tls_identity ? cluster.tls_identity.cert : null,
+				private_key_b64pem: cluster.tls_identity ? cluster.tls_identity.private_key : null,
 				root_cert_b64pem: Array.isArray(cluster.tls_root_certs) ? cluster.tls_root_certs[0] : null,
 				b_config_block: b_genesis_block,
 			};
@@ -846,8 +801,7 @@ class JoinOSNChannelModal extends React.Component {
 			joinOsnMap,
 			channel_id,
 			count,
-			select_followers_toggle,
-			follower_count,
+			select_all_toggle,
 			block_error,
 			block_error_title,
 			drill_down_flow,
@@ -908,17 +862,16 @@ class JoinOSNChannelModal extends React.Component {
 							</a>
 
 							<Toggle
-								id="select_followers_toggle"
+								id="select_all_toggle"
 								className="ibp-join-osn-select-followers"
-								toggled={select_followers_toggle}
-								onToggle={this.toggleFollowers}
+								toggled={select_all_toggle}
+								onToggle={this.toggleSelected}
 								onChange={() => { }}
-								disabled={follower_count <= 0}
 								aria-label={
 									drill_down_flow ?
-										select_followers_toggle ? translate('unselect_all') : translate('select_all')
+										select_all_toggle ? translate('unselect_all') : translate('select_all')
 										:
-										select_followers_toggle ? translate('unselect_followers') : translate('select_followers')
+										select_all_toggle ? translate('unselect_followers') : translate('select_followers')
 								}
 								labelA={drill_down_flow ? translate('select_all') : translate('select_followers')}
 								labelB={drill_down_flow ? translate('unselect_all') : translate('unselect_followers')}
@@ -946,7 +899,6 @@ class JoinOSNChannelModal extends React.Component {
 	renderClusterSection(cluster) {
 		const { translate, drill_down_flow } = this.props;
 		const unselectedClass = (cluster.selected === true) ? '' : 'ibp-join-unselected-cluster';
-		const zero_identities = (cluster.default_identity === null);
 
 		return (
 			<div key={'cluster_' + cluster.cluster_id}
@@ -961,7 +913,7 @@ class JoinOSNChannelModal extends React.Component {
 						onChange={event => {
 							this.toggleCluster(cluster.cluster_id, event);
 						}}
-						disabled={zero_identities}
+						disabled={!cluster.tls_identity}
 					/>}
 
 					<label name={'joinCluster' + cluster.cluster_id}
@@ -970,22 +922,6 @@ class JoinOSNChannelModal extends React.Component {
 						<div className="ibp-join-osn-label">{translate('cluster')}:</div>
 						<div className={'ibp-join-osn-clusterid ' + unselectedClass}>{cluster.cluster_name}</div>
 					</label>
-					<Form
-						scope={SCOPE}
-						id={SCOPE + '-join-cluster-' + cluster.cluster_id}
-						className="ibp-join-osn-identity-wrap"
-						fields={[
-							{
-								name: 'selectedId-' + cluster.cluster_id,
-								label: 'transaction_identity',
-								type: 'dropdown',
-								options: cluster.identities,
-								default: zero_identities ? 'signature_for_join_placeholder_no_options' : cluster.default_identity,
-								disabled: cluster.selected !== true || zero_identities
-							},
-						]}
-						onChange={this.changeIdentity}
-					/>
 				</div >
 				<div>{this.renderNodesSection(cluster.nodes, cluster)}</div>
 			</div >
@@ -1024,15 +960,15 @@ class JoinOSNChannelModal extends React.Component {
 						>
 							<input type="checkbox"
 								className="ibp-join-osn-icon"
-								checked={/*cluster.selected === true &&*/ (node._consenter === true || node._selected === true) && !hasJoinedChannel}
+								checked={node._selected === true && !hasJoinedChannel}
 								indeterminate={hasJoinedChannel}
 								name={'joinNode' + node._id}
 								id={'joinNode' + node._id}
 								onChange={event => {
 									this.toggleNode(node._id, cluster.cluster_id, event);
 								}}
-								disabled={node._consenter === true || !cluster.selected || hasJoinedChannel}
-								title={(hasJoinedChannel) ? translate('already_joined') : (node._consenter === true ? 'Cannot deselect individual consenters' : 'Node is a follower')}
+								disabled={hasJoinedChannel}
+								title={(hasJoinedChannel) ? translate('already_joined') : (node._consenter === true ? 'Node is a consenter' : 'Node is a follower')}
 							/>
 							<span className="ibp-join-osn-node-details">
 								<div className="ibp-join-osn-name">{node.name}</div>
@@ -1124,12 +1060,13 @@ const dataProps = {
 	config_block_b64: PropTypes.object,
 	b_genesis_block: PropTypes.blob,
 	configtxlator_url: PropTypes.string,
-	select_followers_toggle: PropTypes.bool,
+	select_all_toggle: PropTypes.bool,
 	channel_id: PropTypes.string,
 	block_error: PropTypes.string,
 	block_error_title: PropTypes.string,
 	count: PropTypes.number,
 	follower_count: PropTypes.number,
+	possible_nodes: PropTypes.number,
 	joinOsnMap: PropTypes.Object,
 
 	consenters: PropTypes.array,
