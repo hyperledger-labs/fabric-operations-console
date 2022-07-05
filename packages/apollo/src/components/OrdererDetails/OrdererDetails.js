@@ -73,7 +73,7 @@ class OrdererDetails extends Component {
 			selected: null,
 			nodes: [],
 			usageModal: false,
-			systemChannel: false,
+			systemChannel: true,
 			disabled: true,
 			nodeStatus: {},
 			notAvailable: false,
@@ -135,7 +135,8 @@ class OrdererDetails extends Component {
 	// detect if channel participation features should be shown, based on osnadmin_url availability and a feature flag
 	channelParticipationEnabled(obj) {
 		const has_osnadmin_url = (obj && typeof obj.osnadmin_url === 'string') ? true : false;
-		return this.props.feature_flags && (this.props.feature_flags.osnadmin_feats_enabled === true) && has_osnadmin_url;
+		const osnadmin_feats_enabled = this.props.feature_flags && this.props.feature_flags.osnadmin_feats_enabled === true;
+		return osnadmin_feats_enabled && has_osnadmin_url && !this.props.systemChannel;
 	}
 
 	/* get channel list from channel participation api */
@@ -255,7 +256,7 @@ class OrdererDetails extends Component {
 				this.openNodeDetails(nodeToOpen);
 			}
 		}
-		this.props.updateState(SCOPE, { loading: false });
+		//this.props.updateState(SCOPE, { loading: false });
 	}
 
 	checkHealth(orderer, skipStatusCache) {
@@ -1221,6 +1222,8 @@ class OrdererDetails extends Component {
 				fn: this.openAddOrdererNode,
 			});
 		}
+		const hasAssociatedIdentities = this.props.details && this.props.details.associatedIdentities && this.props.details.associatedIdentities.length > 0;
+
 		return (
 			<PageContainer>
 				<div>
@@ -1392,7 +1395,7 @@ class OrdererDetails extends Component {
 												<Tab id="ibp-orderer-details"
 													label={translate('details')}
 												>
-													{this.channelParticipationEnabled(this.props.details) && !this.props.orderer_tls_identity &&
+													{!this.props.loading && this.channelParticipationEnabled(this.props.details) && !this.props.orderer_tls_identity &&
 														<div>
 															<SidePanelWarning title="tls_identity_not_found"
 																subtitle="orderer_tls_admin_identity_not_found"
@@ -1407,7 +1410,7 @@ class OrdererDetails extends Component {
 															unJoinComplete={this.getCPChannelList}
 														/>
 													}
-													{this.props.details.associatedIdentities && !this.props.details.associatedIdentities.length && (
+													{!hasAssociatedIdentities && (
 														<div className="ibp-orderer-no-identity">
 															<p>{translate('orderer_no_identity')}</p>
 															<Button id="no-identity-button"
@@ -1417,7 +1420,7 @@ class OrdererDetails extends Component {
 															</Button>
 														</div>
 													)}
-													{this.props.systemChannel && this.props.details.associatedIdentities && !!this.props.details.associatedIdentities.length && (
+													{!this.channelParticipationEnabled(this.props.details) && hasAssociatedIdentities && (
 														<div>
 															{this.renderPendingNotice(translate)}
 															{this.renderRunningPartial(translate)}
