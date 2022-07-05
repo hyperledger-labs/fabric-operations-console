@@ -649,6 +649,8 @@ class JoinOSNChannelModal extends React.Component {
 			async.eachOfLimit(cluster.nodes, 1, (node, i, node_cb) => {
 				if (node._status === constants.OSN_JOIN_SUCCESS) {
 					return node_cb();				// node is already done
+				} else if (!node._selected) {
+					return node_cb();				// node is not selected
 				} else {
 					perform_join(cluster, node, i, () => {
 						setTimeout(() => {
