@@ -428,6 +428,8 @@ module.exports = function (logger, ev, t) {
 
 			// simon doesn't like that the value was "raft" in the input body, and is "etcdraft" in get responses, put it back
 			component_doc.orderer_type = (component_doc.orderer_type === ev.STR.RAFT) ? ev.STR.ATHENA_RAFT : component_doc.orderer_type;
+
+			component_doc.systemless = incoming_body.systemless;
 		} else {
 			return null;															// unknown component_type
 		}
