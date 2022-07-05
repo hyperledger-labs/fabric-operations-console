@@ -43,6 +43,9 @@ export class Login extends Component {
 			newPasswordError: '',
 			confirmPasswordError: '',
 		});
+
+		// change <title> of the browser tab
+		document.title = this.props.translate('product_label');
 	}
 
 	componentWillUnmount() { }
