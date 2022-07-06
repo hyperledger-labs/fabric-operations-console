@@ -1074,6 +1074,19 @@ class OrdererDetails extends Component {
 		const groups = [];
 		let hsm = Helper.getHSMBCCSP(_.get(this.props, 'selectedNode.config_override.General')) === 'PKCS11';
 		if (!hsm) hsm = Helper.getHSMBCCSP(_.get(this.props, 'selectedNode.config_override[0].General')) === 'PKCS11';
+
+		if (!this.props.selectedNode) {
+			groups.push({
+				label: 'orderer_type',
+				value: this.isSystemLess(this.props.details) ? translate('systemless_config') : translate('system_config'),
+			});
+		} else {
+			groups.push({
+				label: 'orderer_type',
+				value: this.isSystemLess(this.props.selectedNode) ? translate('systemless_config') : translate('system_config'),
+			});
+		}
+
 		if (this.props.selectedNode) {
 			groups.push({
 				label: 'node_location',

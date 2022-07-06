@@ -29,6 +29,7 @@ import ChannelParticipationModal from './ChannelParticipationModal';
 import ChannelParticipationUnjoinModal from './ChannelParticipationUnjoinModal';
 import JoinOSNChannelModal from '../JoinOSNChannelModal/JoinOSNChannelModal';
 import _ from 'lodash';
+import emptyImage from '../../assets/images/empty_channels.svg';
 
 const naturalSort = require('javascript-natural-sort');
 const SCOPE = 'ChannelParticipationDetails';
@@ -144,6 +145,7 @@ class ChannelParticipationDetails extends Component {
 					(<ItemContainer
 						containerTitle="channels"
 						containerTooltip="cp_channels_tooltip"
+						emptyImage={emptyImage}
 						emptyTitle="empty_cp_channels_title"
 						emptyMessage="empty_cp_channels_text"
 						itemId="channel-list"
