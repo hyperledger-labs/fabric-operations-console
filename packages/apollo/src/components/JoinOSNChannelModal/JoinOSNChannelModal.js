@@ -114,7 +114,7 @@ class JoinOSNChannelModal extends React.Component {
 				const details = (e && typeof e.stitch_msg === 'string') ? (code + e.stitch_msg) : '';
 				this.props.updateState(SCOPE, {
 					block_error_title: '[Error] Could not load channels. Resolve error to continue:',
-					block_error: details,
+					block_error: details ? details : e.toString(),
 				});
 				return [];
 			}
@@ -242,7 +242,7 @@ class JoinOSNChannelModal extends React.Component {
 			const details = (e && typeof e.stitch_msg === 'string') ? (code + e.stitch_msg) : '';
 			this.props.updateState(SCOPE, {
 				block_error_title: '[Error] Could not parse config-block. Resolve error to continue:',
-				block_error: details,
+				block_error: details ? details : e.toString(),
 				joinOsnMap: {},
 				count: 0,
 				follower_count: 0,
@@ -503,11 +503,21 @@ class JoinOSNChannelModal extends React.Component {
 	// selected channel was changed
 	changeChannel = async (change) => {
 		const channelName = (change && change.channel) ? change.channel.name : '';
-		await this.setupForJoin(channelName);
+		await this.setupForJoinViaChannelDropDown(channelName);
 	};
 
-	// get the config block from selected channel and load the 2nd step
+	// get the config block from the selected channel in drop down and load the 2nd step
+	setupForJoinViaChannelDropDown = async (channelName) => {
+		return this.setupForJoinChannel(channelName);
+	}
+
+	// get the config block from the selected channel tile and load the 2nd step
 	setupForJoinViaChannelTile = async (channelName) => {
+		return this.setupForJoinChannel(channelName);
+	}
+
+	// get the config block and load the 2nd step
+	setupForJoinChannel = async (channelName) => {
 		this.props.updateState(SCOPE, {
 			config_block_b64: null,
 			loading: true,
@@ -528,7 +538,7 @@ class JoinOSNChannelModal extends React.Component {
 				const details = (e && typeof e.stitch_msg === 'string') ? (code + e.stitch_msg) : '';
 				this.props.updateState(SCOPE, {
 					block_error_title: '[Error] Could not parse config-block. Resolve error to continue:',
-					block_error: details,
+					block_error: details ? details : e.toString(),
 					config_block_b64: null,
 					loading: false,
 				});
@@ -539,7 +549,7 @@ class JoinOSNChannelModal extends React.Component {
 			const details = (e && typeof e.stitch_msg === 'string') ? (code + e.stitch_msg) : '';
 			this.props.updateState(SCOPE, {
 				block_error_title: '[Error] Could not get config-block. Resolve error to continue:',
-				block_error: details,
+				block_error: details ? details : e.toString(),
 				config_block_b64: null,
 				loading: false,
 			});
@@ -563,9 +573,10 @@ class JoinOSNChannelModal extends React.Component {
 			Log.error(e);
 			const code = (e && !isNaN(e.status_code)) ? '(' + e.status_code + ') ' : '';
 			const details = (e && typeof e.stitch_msg === 'string') ? (code + e.stitch_msg) : '';
+
 			this.props.updateState(SCOPE, {
 				block_error_title: '[Error] Could not parse config-block. Resolve error to continue:',
-				block_error: details,
+				block_error: details ? details : e.toString(),
 				config_block_b64: null,
 				loading: false,
 			});
@@ -793,6 +804,17 @@ class JoinOSNChannelModal extends React.Component {
 				{this.props.loading && <Loading withOverlay={false}
 					className="ibp-wizard-loading"
 				/>}
+
+				{this.props.block_error && (
+					<div className="ibp-join-osn-error-wrap">
+						<InlineNotification
+							kind="error"
+							title={this.props.block_error_title}
+							subtitle={this.props.block_error}
+							hideCloseButton={true}
+						/>
+					</div>
+				)}
 			</WizardStep>
 		);
 	}

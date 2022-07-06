@@ -129,6 +129,20 @@ class Consenters extends Component {
 			});
 		}
 
+		// if we are not using a system channel then filter out nodes that are *not* systemless
+		if (this.props.use_osnadmin) {
+			allowed_raftNodes = raftNodes.filter(x => {
+				return x._systemless;
+			});
+		}
+
+		// else filter out nodes that *are* systemless
+		else {
+			allowed_raftNodes = raftNodes.filter(x => {
+				return !x._systemless;
+			});
+		}
+
 		// remove consenter options that have already been selected, match on host + port
 		if (allowed_raftNodes) {
 			if (consenters) {
