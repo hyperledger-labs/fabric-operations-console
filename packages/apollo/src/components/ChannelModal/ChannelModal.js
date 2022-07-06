@@ -1499,6 +1499,7 @@ class ChannelModal extends Component {
 					_consenter: false,					// defaults false, flips to true once selected
 					_cluster_id: node.cluster_id,		// pass data for the OSNJoin panel
 					_cluster_name: node.cluster_name,	// pass data for the OSNJoin panel
+					_systemless: node.systemless,
 					_id: node.id,
 					host: urlObj.hostname,
 					port: urlObj.port,
@@ -2086,14 +2087,16 @@ class ChannelModal extends Component {
 			return this.props.use_default_consenters ? [] : this.props.consenters;
 		} else {
 			if (!this.props.use_default_consenters || this.props.consenters.length > 0) {
-				// use the selected consenters if they are any, when using osnadmin
+				// use the selected consenters if there are any, when using osnadmin
 				return this.props.consenters;
 			} else {
-				// select all orderers that are owned by any orderer org, when using osnadmin
+
+				// select all orderers that are owned by any selected orderer orgs, when using osnadmin
 				const defaults = this.props.raftNodes.filter(x => {
-					let find = this.props.ordering_orgs.find(y => x.msp_id === y.msp_id);
-					return find ? true : false;
+					let found = this.props.ordering_orgs.find(y => x.msp_id === y.msp_id);
+					return found && x._systemless;
 				});
+
 				const default_arr = [];
 				for (const msp_id in defaults) {
 					defaults[msp_id]._consenter = true;				// all default nodes are consenters
@@ -2227,6 +2230,7 @@ class ChannelModal extends Component {
 						consenterUpdateCount={this.consenterUpdateCount}
 						canModifyConsenters={canModifyConsenters}
 						getDefaultCap={this.getDefaultCap}
+						buildCreateChannelOpts={this.buildCreateChannelOpts}
 					/>
 				)}
 				{viewing === 'osn_join_channel' && (

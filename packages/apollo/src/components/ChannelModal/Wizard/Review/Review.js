@@ -118,7 +118,9 @@ class Review extends Component {
 			endorsement_policy.type === 'SPECIFIC' && !(_.size(endorsement_policy.members) > 0 && endorsement_policy.n > 0)
 				? 'review_endorsement_policy_error'
 				: null;
-		// dsh todo add orderer orgs to review panel for osnadmin flow
+
+		const osn_options = this.props.buildCreateChannelOpts();
+
 		return (
 			<div className="ibp-channel-review">
 				<p className="ibp-channel-section-title">{translate('review_channel_info')}</p>
@@ -161,7 +163,7 @@ class Review extends Component {
 						this.renderSection(translate, 'application_channel_capability_version', using_app_cap)}
 				</div>
 
-				{advanced && (
+				{(advanced || use_osnadmin) && (
 					<>
 						<div className="ibp-summary-section-separator">
 							<hr />
@@ -197,7 +199,7 @@ class Review extends Component {
 									ordererOrgsError
 								)}
 
-							{canModifyConsenters &&
+							{!use_osnadmin && canModifyConsenters &&
 								(_.size(consenters) > 0 || use_default_consenters) &&
 								this.renderSection(
 									translate,
@@ -207,6 +209,16 @@ class Review extends Component {
 										: consenters.map(consenter => {
 											return { value: consenter.name };
 										}),
+									consenterError
+								)}
+
+							{use_osnadmin && osn_options && Array.isArray(osn_options.consenters) &&
+								this.renderSection(
+									translate,
+									'consenter_set',
+									osn_options.consenters.map(consenter => {
+										return { value: consenter.name };
+									}),
 									consenterError
 								)}
 

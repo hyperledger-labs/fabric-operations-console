@@ -434,7 +434,7 @@ class OrdererDetails extends Component {
 				});
 			})
 			.catch(error => {
-				if (this.isSystemLess(this.props.details)) {
+				if (this.isSystemLess(this.props.details) || this.props.channelsLoading) {
 					// node's without system channel are expected to fail, don't show a warning.
 					// ideally this function wouldn't be called, but the timing is tricky and this might get called before we know the configuration by checkHealth()
 					return null;
