@@ -1424,7 +1424,7 @@ class ChannelModal extends Component {
 				});
 
 				// [PATH 1] - using OSN Admin features in create channel wizard
-				if (this.props.osnadmin_feats_enabled && orderer && orderer.osnadmin_url) {
+				if (this.props.osnadmin_feats_enabled && orderer && orderer.osnadmin_url && orderer.systemless) {
 					this.props.updateState(SCOPE, { use_osnadmin: true });				// change the menu options
 					this.showStepsInTimeline(['osn_join_channel', 'channel_orderer_organizations']);
 					this.hideStepsInTimeline(['ordering_service_organization', 'organization_creating_channel']);	// but hide these

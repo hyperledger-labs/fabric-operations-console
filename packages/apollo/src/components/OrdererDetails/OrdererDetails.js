@@ -145,10 +145,6 @@ class OrdererDetails extends Component {
 		return osnadmin_feats_enabled && has_osnadmin_url;
 	}
 
-
-	// dsh todo look for all logic that is using osnadmin_url only, and make it more robust
-
-
 	// detect if channel participation features should be shown, based on osnadmin_url availability and a feature flag && system channel should not exist
 	isSystemLess(obj) {
 		return this.channelParticipationEnabled(obj) && !this.props.systemChannel;
@@ -301,7 +297,7 @@ class OrdererDetails extends Component {
 				if (this.timestamp) {
 					this.timestamp = 0;
 					this.props.updateState(SCOPE, { notAvailable: false });
-					if (!this.isSystemLess(this.props.details)) {		// dsh todo we went through here b/c systemChannel isn't set yet, add loading?
+					if (!this.isSystemLess(this.props.details)) {
 						this.getSystemChannelConfig();
 					}
 				}

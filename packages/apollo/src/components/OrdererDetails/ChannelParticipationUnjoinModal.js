@@ -28,6 +28,7 @@ import SidePanel from '../SidePanel/SidePanel';
 import Clipboard from '../../utils/clipboard';
 import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import { OrdererRestApi } from '../../rest/OrdererRestApi';
+import { NodeRestApi } from '../../rest/NodeRestApi';
 import ImportantBox from '../ImportantBox/ImportantBox';
 
 const SCOPE = 'ChannelParticipationUnjoinModal';
@@ -81,6 +82,16 @@ class ChannelParticipationUnjoinModal extends Component {
 				if (_.get(unjoinResp, 'error') !== undefined) {
 					this.props.updateState(SCOPE, { error: unjoinResp.error });
 				} else {
+
+					if (this.props.channelInfo.systemChannel) {
+						try {
+							// update the orderer as systemless
+							await NodeRestApi.updateNode({ id: osn.id, systemless: true });
+						} catch (e) {
+							console.error(e);
+						}
+					}
+
 					this.props.onComplete();
 					this.props.onClose();
 				}
