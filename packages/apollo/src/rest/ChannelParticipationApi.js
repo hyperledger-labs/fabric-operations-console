@@ -90,16 +90,19 @@ export class ChannelParticipationApi {
 		if (!Array.isArray(osns)) {
 			osns = [osns];
 		}
+		let at_least_one_resp = false;
+
 		for (let i in osns) {
 			const single_resp = await ChannelParticipationApi._getChannels(identities, osns[i]);
 			if (single_resp && single_resp.channels) {
+				at_least_one_resp = true;
 				resp.channels = _.unionWith(resp.channels, single_resp.channels, _.isEqual);
 				if (resp.systemChannel === null && single_resp.systemChannel !== undefined) {
 					resp.systemChannel = single_resp.systemChannel;
 				}
 			}
 		}
-		return resp;
+		return at_least_one_resp ? resp : null;
 	}
 
 	// --------------------------------------------------------
@@ -220,6 +223,7 @@ export class ChannelParticipationApi {
 			};
 			let last_ch_list_resp = null;
 			let last_osn = null;
+			let at_least_one_resp = false;
 
 			// iter on each osn in input
 			for (let i in osns) {
@@ -230,6 +234,7 @@ export class ChannelParticipationApi {
 				}
 
 				if (resp && Array.isArray(resp.channels)) {
+					at_least_one_resp = true;
 
 					// iter on each channel in channel list
 					for (let z in resp.channels) {
@@ -248,7 +253,7 @@ export class ChannelParticipationApi {
 				ret.systemChannel = await ChannelParticipationApi.map1Channel(identities, last_osn, sys_name);
 			}
 
-			return ret;
+			return at_least_one_resp ? ret : null;
 		}
 
 		Log.error('unable to create channels map with osnadmin data');

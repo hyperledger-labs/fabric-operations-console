@@ -11295,6 +11295,10 @@ components:
       type: string
       description: The TLS CA's "CAName" attribute. This name is used to distinguish this TLS CA from the other CA.
       example: tlsca
+    systemless:
+      type: boolean
+      description: If true, the orderer will not have a system channel and channel participation APIs must be used to create application channels. Requires Fabric v2.4+. Defaults `false`.
+      example: true
     tags:
       type: array
       minLength: 0
@@ -13777,9 +13781,7 @@ components:
         system_channel_id:
           $ref: '#/components/schemas/system_channel_id'
         systemless:
-          type: boolean
-          description: If true, the orderer will not have a system channel and channel participation APIs must be used to create application channels. Requires Fabric v2.4+. Defaults `false`.
-          example: true
+          $ref: '#/components/schemas/systemless'
         zone:
           type: array
           minLength: 0
@@ -13905,6 +13907,8 @@ components:
           $ref: '#/components/schemas/consenter_proposal_fin'
         location:
           $ref: '#/components/schemas/location_saas'
+        systemless:
+          $ref: '#/components/schemas/systemless'
         system_channel_id:
           $ref: '#/components/schemas/system_channel_id'
         tags:
