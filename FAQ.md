@@ -18,6 +18,9 @@
 1. Can I skip the password change after first login?
 	- Normally users are forced to change their password after the first login. If you are creating a developer setup often this can be a hassle. If you would like to disable this behavior, set the field `allow_default_password` as `true` in your [config.yaml](https://github.com/hyperledger-labs/fabric-operations-console/blob/main/docker/console/env/config.yaml).
 
+1. What's the deal with system channel removal?
+	- See our [System Channel Removal page](./docs/system_channel_removal.md) for details.
+
 ## Error Help:
 
 - Crypto.subtle errors look like:

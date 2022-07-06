@@ -197,17 +197,14 @@ Ensure that the `docker` has enough resources to be able to build the images. We
 
 If you do not have enough memory allocated to docker, the following command will fail with out of memory error similar to the below.
 
-```#16 109.5 The build failed because the process exited too early. This probably means the system ran out of memory or someone called `kill -9` on the process.```
-
-## Notes:
-* When making a Git commit, a pre-commit Git hook will call `lerna run lint`.
-* When pushing to Git, a pre-push Git hook that calls `detect-secrets-hook` will be run. To install this utility you'll need Python 3.x and `pip`. Once installed, run the following command from the root directory:
-```bash
-npm run install-detect-secrets
 ```
+#16 109.5 The build failed because the process exited too early.
+This probably means the system ran out of memory or someone called `kill -9` on the process.
+```
+___
 
 ## FAQ / Need Help?
-Check out known error messages and fixes in our [FAQ](./FAQ.md).
+Check out common error messages, fixes, and other questions in our [FAQ](./FAQ.md).
 
 ## APIs
 Check out our [api doc](./docs/apis.md) for APIs offered by the Console.
