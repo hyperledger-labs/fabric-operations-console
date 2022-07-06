@@ -116,6 +116,8 @@ class OrdererDetails extends Component {
 		this.props.clearNotifications(SCOPE);
 		this.props.updateState(SCOPE, {
 			loading: true,
+			channelsLoading: true,
+			sysChLoading: true,
 			members: [],
 			admins: [],
 			systemChannel: true,
@@ -125,18 +127,27 @@ class OrdererDetails extends Component {
 		});
 		let nodes = await MspRestApi.getAllMsps();
 		this.props.updateState(SCOPE, { nodes });
-		await this.getDetails(skipStatusCache);
-		if (this.channelParticipationEnabled(this.props.details)) {
+
+		const ordererDetails = await this.getDetails(skipStatusCache);
+		if (this.channelParticipationEnabled(ordererDetails)) {
 			await this.getCPChannelList();
 		};
-		this.props.updateState(SCOPE, { loading: false });
+		this.props.updateState(SCOPE, {
+			loading: false,
+			channelsLoading: false,
+		});
 	};
 
-	// detect if channel participation features should be shown, based on osnadmin_url availability and a feature flag
+	// detect if channel participation features are enabled (this doesn't mean they should be shown!)
 	channelParticipationEnabled(obj) {
 		const has_osnadmin_url = (obj && typeof obj.osnadmin_url === 'string') ? true : false;
 		const osnadmin_feats_enabled = this.props.feature_flags && this.props.feature_flags.osnadmin_feats_enabled === true;
-		return osnadmin_feats_enabled && has_osnadmin_url && !this.props.systemChannel;
+		return osnadmin_feats_enabled && has_osnadmin_url;
+	}
+
+	// detect if channel participation features should be shown, based on osnadmin_url availability and a feature flag && system channel should not exist
+	isSystemLess(obj) {
+		return this.channelParticipationEnabled(obj) && !this.props.systemChannel;
 	}
 
 	/* get channel list from channel participation api */
@@ -146,27 +157,36 @@ class OrdererDetails extends Component {
 		let channelList = {};
 
 		let orderer_tls_identity = await IdentityApi.getTLSIdentity(this.props.selectedNode || this.props.details);
-		if (orderer_tls_identity) {
+		if (!orderer_tls_identity) {
+			// if we don't have a tls identity, we cannot load the system channel details via the channel participation apis...
+			// so assume we do (or do not) have a system channel based on the "systemless" field
+			// if we do have the identity it will be more robust to just look up the system channel details via channel participation apis
+			systemChannel = (this.props.details && this.props.details.systemless) ? false : true;		// using the systemless field is our fall back method...
+		} else {
 			try {
 				let all_identity = await IdentityApi.getIdentities();
-				channelList = await ChannelParticipationApi.mapChannels(all_identity, nodes);
+				const resp = await ChannelParticipationApi.mapChannels(all_identity, nodes);
 
 				// TODO: consolidate error handling
-				if (_.get(channelList, 'code') === 'ECONNREFUSED') {
+				if (_.get(resp, 'code') === 'ECONNREFUSED') {
 					this.props.showError('orderer_not_available_title', SCOPE);
 				}
-				if (_.get(channelList, 'code') === 'ECONNRESET') {
+				if (_.get(resp, 'code') === 'ECONNRESET') {
 					this.props.showError('orderer_not_available_title', SCOPE);
 				}
-				if (_.get(channelList, 'systemChannel.name')) {
-					await this.getSystemChannelConfig();
-					channelList.systemChannel.type = 'system_channel';
-					if (channelList.channels === null) {
-						channelList.channels = [];
+
+				if (resp) {
+					channelList = resp;
+					if (_.get(channelList, 'systemChannel.name')) {					// system channel does exist
+						await this.getSystemChannelConfig();
+						channelList.systemChannel.type = 'system_channel';
+						if (channelList.channels === null) {
+							channelList.channels = [];
+						}
+						channelList.channels.push(channelList.systemChannel);
+					} else {														// system channel does not exist
+						systemChannel = false;
 					}
-					channelList.channels.push(channelList.systemChannel);
-				} else {
-					systemChannel = false;
 				}
 			} catch (error) {
 				Log.error('Unable to get channel list:', error);
@@ -201,6 +221,7 @@ class OrdererDetails extends Component {
 			Log.error(error);
 		}
 		this.props.updateState(SCOPE, { details: orderer });
+
 		this.props.showBreadcrumb('orderer_details_title', { ordererName: orderer.cluster_name }, this.pathname);
 		this.timestamp = new Date().getTime();
 		setTimeout(() => {
@@ -211,6 +232,7 @@ class OrdererDetails extends Component {
 			}
 		}, 30000);
 		this.checkHealth(orderer, skipStatusCache);
+
 		if (orderer.raft) {
 			orderer.raft.forEach(node => {
 				ComponentApi.getUsageInformation(node)
@@ -256,6 +278,7 @@ class OrdererDetails extends Component {
 				this.openNodeDetails(nodeToOpen);
 			}
 		}
+		return orderer;
 		//this.props.updateState(SCOPE, { loading: false });
 	}
 
@@ -274,7 +297,7 @@ class OrdererDetails extends Component {
 				if (this.timestamp) {
 					this.timestamp = 0;
 					this.props.updateState(SCOPE, { notAvailable: false });
-					if (!this.channelParticipationEnabled(this.props.details)) {
+					if (!this.isSystemLess(this.props.details)) {
 						this.getSystemChannelConfig();
 					}
 				}
@@ -405,16 +428,22 @@ class OrdererDetails extends Component {
 					members: this.getMsps(first_consortium.groups),
 					admins: this.getMsps(resp.channel_group.groups.Orderer.groups),
 					capabilities: this.getCapabilities(resp.channel_group),
-					loading: false,
+					sysChLoading: false,
 					disabled: false,
 					consenters: l_consenters.map(consenter => this.getConsenterNodeInfo(consenter)),
 				});
 			})
 			.catch(error => {
+				if (this.isSystemLess(this.props.details)) {
+					// node's without system channel are expected to fail, don't show a warning.
+					// ideally this function wouldn't be called, but the timing is tricky and this might get called before we know the configuration by checkHealth()
+					return null;
+				}
+
 				Log.error(error);
 				this.props.updateState(SCOPE, {
 					disabled: true,
-					loading: false,
+					sysChLoading: false,
 				});
 				if (error.message_key) {
 					this.props.showError(error.message_key, { nodeName: error.nodeName }, SCOPE);
@@ -1046,6 +1075,26 @@ class OrdererDetails extends Component {
 		const groups = [];
 		let hsm = Helper.getHSMBCCSP(_.get(this.props, 'selectedNode.config_override.General')) === 'PKCS11';
 		if (!hsm) hsm = Helper.getHSMBCCSP(_.get(this.props, 'selectedNode.config_override[0].General')) === 'PKCS11';
+
+		if (this.props.channelsLoading) {
+			groups.push({
+				label: 'orderer_type',
+				value: translate('loading'),
+			});
+		} else {
+			if (!this.props.selectedNode) {
+				groups.push({
+					label: 'orderer_type',
+					value: this.isSystemLess(this.props.details) ? translate('systemless_config') : translate('system_config'),
+				});
+			} else {
+				groups.push({
+					label: 'orderer_type',
+					value: this.isSystemLess(this.props.selectedNode) ? translate('systemless_config') : translate('system_config'),
+				});
+			}
+		}
+
 		if (this.props.selectedNode) {
 			groups.push({
 				label: 'node_location',
@@ -1216,7 +1265,7 @@ class OrdererDetails extends Component {
 				text: 'add_orderer_node',
 				fn: this.openAddOrdererNode,
 			});
-		} else if (ActionsHelper.canCreateComponent(this.props.userInfo) && this.channelParticipationEnabled(this.props.details)) {
+		} else if (ActionsHelper.canCreateComponent(this.props.userInfo) && this.isSystemLess(this.props.details)) {
 			buttonsOnTheNodesTab.push({
 				text: 'add_orderer_node',
 				fn: this.openAddOrdererNode,
@@ -1395,22 +1444,23 @@ class OrdererDetails extends Component {
 												<Tab id="ibp-orderer-details"
 													label={translate('details')}
 												>
-													{!this.props.loading && this.channelParticipationEnabled(this.props.details) && !this.props.orderer_tls_identity &&
+													{!this.props.loading && this.isSystemLess(this.props.details) && !this.props.orderer_tls_identity &&
 														<div>
 															<SidePanelWarning title="tls_identity_not_found"
 																subtitle="orderer_tls_admin_identity_not_found"
 															/>
 														</div>
 													}
-													{this.channelParticipationEnabled(this.props.details) && this.props.orderer_tls_identity &&
+													{this.isSystemLess(this.props.details) && this.props.orderer_tls_identity &&
 														<ChannelParticipationDetails
 															selectedNode={this.props.selectedNode}
 															channelList={this.props.channelList}
 															details={this.props.details}
 															unJoinComplete={this.getCPChannelList}
+															loading={this.props.loading}
 														/>
 													}
-													{!hasAssociatedIdentities && (
+													{!this.props.loading && !hasAssociatedIdentities && (
 														<div className="ibp-orderer-no-identity">
 															<p>{translate('orderer_no_identity')}</p>
 															<Button id="no-identity-button"
@@ -1420,7 +1470,7 @@ class OrdererDetails extends Component {
 															</Button>
 														</div>
 													)}
-													{!this.channelParticipationEnabled(this.props.details) && hasAssociatedIdentities && (
+													{!this.isSystemLess(this.props.details) && hasAssociatedIdentities && (
 														<div>
 															{this.renderPendingNotice(translate)}
 															{this.renderRunningPartial(translate)}
@@ -1432,7 +1482,7 @@ class OrdererDetails extends Component {
 																configtxlator_url={this.props.configtxlator_url}
 																onClose={this.onClose}
 																ordererId={this.props.match.params.ordererId}
-																loading={this.props.loading}
+																loading={this.props.sysChLoading}
 																disableAddItem={this.props.disabled}
 															/>
 															<OrdererMembers
@@ -1441,7 +1491,7 @@ class OrdererDetails extends Component {
 																configtxlator_url={this.props.configtxlator_url}
 																ordererId={this.props.match.params.ordererId}
 																onClose={this.onClose}
-																loading={this.props.loading}
+																loading={this.props.sysChLoading}
 																disableAddItem={this.props.disabled}
 															/>
 															{this.renderConsenters(translate)}
@@ -1505,7 +1555,7 @@ class OrdererDetails extends Component {
 													{this.renderUsage(translate)}
 												</Tab>
 											)}
-											{this.channelParticipationEnabled(this.props.selectedNode) && (
+											{this.isSystemLess(this.props.selectedNode) && (
 												<Tab
 													id="ibp-orderer-channels"
 													label={translate('channels')}
@@ -1555,6 +1605,8 @@ const dataProps = {
 	details: PropTypes.object,
 	history: PropTypes.object,
 	loading: PropTypes.bool,
+	channelsLoading: PropTypes.bool,
+	sysChLoading: PropTypes.bool,
 	match: PropTypes.object,
 	members: PropTypes.array,
 	selected: PropTypes.object,
