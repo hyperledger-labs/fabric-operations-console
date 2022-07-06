@@ -151,6 +151,7 @@ class ChannelParticipationDetails extends Component {
 						itemId="channel-list"
 						id="channel-list-tile"
 						items={this.props.channelList.channels}
+						loading={this.props.loading}
 						listMapping={[
 							{
 								header: 'channel',

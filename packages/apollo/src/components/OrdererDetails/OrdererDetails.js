@@ -116,6 +116,8 @@ class OrdererDetails extends Component {
 		this.props.clearNotifications(SCOPE);
 		this.props.updateState(SCOPE, {
 			loading: true,
+			channelsLoading: true,
+			sysChLoading: true,
 			members: [],
 			admins: [],
 			systemChannel: true,
@@ -130,7 +132,10 @@ class OrdererDetails extends Component {
 		if (this.channelParticipationEnabled(ordererDetails)) {
 			await this.getCPChannelList();
 		};
-		this.props.updateState(SCOPE, { loading: false });
+		this.props.updateState(SCOPE, {
+			loading: false,
+			channelsLoading: false,
+		});
 	};
 
 	// detect if channel participation features are enabled (this doesn't mean they should be shown!)
@@ -427,7 +432,7 @@ class OrdererDetails extends Component {
 					members: this.getMsps(first_consortium.groups),
 					admins: this.getMsps(resp.channel_group.groups.Orderer.groups),
 					capabilities: this.getCapabilities(resp.channel_group),
-					loading: false,
+					sysChLoading: false,
 					disabled: false,
 					consenters: l_consenters.map(consenter => this.getConsenterNodeInfo(consenter)),
 				});
@@ -442,7 +447,7 @@ class OrdererDetails extends Component {
 				Log.error(error);
 				this.props.updateState(SCOPE, {
 					disabled: true,
-					loading: false,
+					sysChLoading: false,
 				});
 				if (error.message_key) {
 					this.props.showError(error.message_key, { nodeName: error.nodeName }, SCOPE);
@@ -1075,16 +1080,23 @@ class OrdererDetails extends Component {
 		let hsm = Helper.getHSMBCCSP(_.get(this.props, 'selectedNode.config_override.General')) === 'PKCS11';
 		if (!hsm) hsm = Helper.getHSMBCCSP(_.get(this.props, 'selectedNode.config_override[0].General')) === 'PKCS11';
 
-		if (!this.props.selectedNode) {
+		if (this.props.channelsLoading) {
 			groups.push({
 				label: 'orderer_type',
-				value: this.isSystemLess(this.props.details) ? translate('systemless_config') : translate('system_config'),
+				value: translate('loading'),
 			});
 		} else {
-			groups.push({
-				label: 'orderer_type',
-				value: this.isSystemLess(this.props.selectedNode) ? translate('systemless_config') : translate('system_config'),
-			});
+			if (!this.props.selectedNode) {
+				groups.push({
+					label: 'orderer_type',
+					value: this.isSystemLess(this.props.details) ? translate('systemless_config') : translate('system_config'),
+				});
+			} else {
+				groups.push({
+					label: 'orderer_type',
+					value: this.isSystemLess(this.props.selectedNode) ? translate('systemless_config') : translate('system_config'),
+				});
+			}
 		}
 
 		if (this.props.selectedNode) {
@@ -1449,9 +1461,10 @@ class OrdererDetails extends Component {
 															channelList={this.props.channelList}
 															details={this.props.details}
 															unJoinComplete={this.getCPChannelList}
+															loading={this.props.loading}
 														/>
 													}
-													{!hasAssociatedIdentities && (
+													{!this.props.loading && !hasAssociatedIdentities && (
 														<div className="ibp-orderer-no-identity">
 															<p>{translate('orderer_no_identity')}</p>
 															<Button id="no-identity-button"
@@ -1473,7 +1486,7 @@ class OrdererDetails extends Component {
 																configtxlator_url={this.props.configtxlator_url}
 																onClose={this.onClose}
 																ordererId={this.props.match.params.ordererId}
-																loading={this.props.loading}
+																loading={this.props.sysChLoading}
 																disableAddItem={this.props.disabled}
 															/>
 															<OrdererMembers
@@ -1482,7 +1495,7 @@ class OrdererDetails extends Component {
 																configtxlator_url={this.props.configtxlator_url}
 																ordererId={this.props.match.params.ordererId}
 																onClose={this.onClose}
-																loading={this.props.loading}
+																loading={this.props.sysChLoading}
 																disableAddItem={this.props.disabled}
 															/>
 															{this.renderConsenters(translate)}
@@ -1596,6 +1609,8 @@ const dataProps = {
 	details: PropTypes.object,
 	history: PropTypes.object,
 	loading: PropTypes.bool,
+	channelsLoading: PropTypes.bool,
+	sysChLoading: PropTypes.bool,
 	match: PropTypes.object,
 	members: PropTypes.array,
 	selected: PropTypes.object,
