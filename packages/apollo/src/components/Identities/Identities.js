@@ -39,6 +39,7 @@ const Log = new Logger(SCOPE);
 const naturalSort = require('javascript-natural-sort');
 const moment = require('moment');
 
+// This is shown on the /wallet route!
 class Identities extends Component {
 	async componentDidMount() {
 		this.identities = [];
@@ -193,10 +194,10 @@ class Identities extends Component {
 		return (
 			<div className="ibp-identity-tile-stats">
 				<div className="ibp-wallet-identity-expiration">
-					<div>{parsedCert ? translate('expiration') + ':' + moment(parsedCert.not_after_ts).fromNow() : ''}</div>
+					<div>{parsedCert ? translate('expiration') + ': ' + moment(parsedCert.not_after_ts).fromNow() : ''}</div>
 				</div>
 				<div className="ibp-wallet-identity-from-ca">
-					<div>{identity.from_ca ? translate(label) + ':' + from_ca : ''}</div>
+					<div>{identity.from_ca ? translate(label) + ': ' + from_ca : ''}</div>
 				</div>
 			</div>
 		);
