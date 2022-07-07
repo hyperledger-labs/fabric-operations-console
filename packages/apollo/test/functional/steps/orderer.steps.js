@@ -34,3 +34,14 @@ Then(/^the consortium member (?:'|")(.*?)(?:'|") should exist$/, async mspName =
 	let title = await _title.getText();
 	title.should.equal(mspName);
 });
+
+Given(/^I select radio button with text (?:'|")(.*?)(?:'|")$/, async text => {
+	try{
+		let elementXpath = "//span[text()='" + text  + "']";
+		let elementId = element(by.xpath(elementXpath));
+		await browser.wait(ExpectedConditions.visibilityOf(elementId), 5000);
+		elementId.click();
+	} catch (err) {
+		console.log('Error: %s', err);
+	}
+});
