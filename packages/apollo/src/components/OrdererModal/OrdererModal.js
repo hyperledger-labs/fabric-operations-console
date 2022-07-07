@@ -609,7 +609,8 @@ class OrdererModal extends React.Component {
 		// todo This portion of the OrdererRestApi hasn't been updated to use translated errors.  Isolate it from the removeOrderer flow for now
 		try {
 			// only take out the node from consenter set if this is deployed (not imported)
-			if (this.props.orderer && this.props.orderer.location === 'ibm_saas' && this.props.ordererModalType !== 'force_delete' && this.props.systemChannel === true) {
+			// only take out these nodes if we are using a system channel, if systemless skip this part
+			if (this.props.orderer && this.props.orderer.location === 'ibm_saas' && this.props.ordererModalType !== 'force_delete' && this.props.systemChannel) {
 				await OrdererRestApi.removeAllNodesFromSystemChannel(this.props.orderer, this.props.configtxlator_url, feature_flags);
 			}
 		} catch (error) {
@@ -1321,7 +1322,7 @@ class OrdererModal extends React.Component {
 					</>
 				)}
 
-				{!this.props.systemChannel && this.props.channelsWithNode && this.props.channelsWithNode.length > 0 && (<Checkbox
+				{this.props.channelsWithNode && this.props.channelsWithNode.length > 0 && (<Checkbox
 					id="ignore-del-id"
 					labelText={translate('ignore_del_warning')}
 					onChange={() => {

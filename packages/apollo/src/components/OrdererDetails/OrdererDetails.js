@@ -1453,13 +1453,14 @@ class OrdererDetails extends Component {
 															/>
 														</div>
 													}
-													{this.isSystemLess(this.props.details) && this.props.orderer_tls_identity &&
+													{this.channelParticipationEnabled(this.props.details) && this.props.orderer_tls_identity &&
 														<ChannelParticipationDetails
 															selectedNode={this.props.selectedNode}
 															channelList={this.props.channelList}
 															details={this.props.details}
 															unJoinComplete={this.getCPChannelList}
 															loading={this.props.loading}
+															isSystemLess={this.isSystemLess(this.props.details)}
 														/>
 													}
 													{!this.props.loading && !hasAssociatedIdentities && (

@@ -127,13 +127,15 @@ class ChannelParticipationDetails extends Component {
 						title={translate('unjoin_channel_title')}
 					/>
 				</button>
-				<button className="ibp-orderer-channel-join"
-					onClick={() => this.joinChannel(channel)}
-				>
-					<SVGs type="plus"
-						title={translate('join_osn_title')}
-					/>
-				</button>
+				{this.props.isSystemLess && (
+					<button className="ibp-orderer-channel-join"
+						onClick={() => this.joinChannel(channel)}
+					>
+						<SVGs type="plus"
+							title={translate('join_osn_title')}
+						/>
+					</button>
+				)}
 			</div>
 		);
 	}
@@ -165,13 +167,16 @@ class ChannelParticipationDetails extends Component {
 							},
 						}}
 						addItems={
-							[{
-								id: 'join_channel',
-								text: 'join_channel',
-								fn: () => {
-									this.joinChannel(null);
-								}
-							}]
+							this.props.isSystemLess ?
+								[{
+									id: 'join_channel',
+									text: 'join_channel',
+									fn: () => {
+										this.joinChannel(null);
+									}
+								}]
+
+								: []
 						}
 						widerTiles
 					/>)
