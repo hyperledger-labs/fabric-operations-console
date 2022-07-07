@@ -568,7 +568,7 @@ module.exports = (logger, ev, t, opts) => {
 				}
 			}
 			if (body_spec['maxLength'] !== undefined) {
-				if (input.length > body_spec['maxLength']) {
+				if (input && input.length > body_spec['maxLength']) {
 					const symbols = {
 						'$PROPERTY_NAME': path2field.join('.'),
 						'$MAX': body_spec['maxLength'],

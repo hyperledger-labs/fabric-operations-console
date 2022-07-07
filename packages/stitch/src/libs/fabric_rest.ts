@@ -194,8 +194,12 @@ function getOSNChannels(opts: ExtOsn, cb: Function) {
 	};
 	proxy_fetch_get_json(fetch_options).then(response => {
 		called_cb = true;
+		if (response && response.channels === null) {	// this can be null for some reason, make it an empty array
+			response.channels = [];
+		}
+
 		if (!response || !response.channels) {
-			return cb(fmt_err(fetch_options, response, 'Failed to get channels'), response);
+			return cb(fmt_err(fetch_options, response, 'Failed to get channels (the response was valid but empty)'), response);
 		} else {
 			return cb(null, fmt_ok(fetch_options, response));
 		}

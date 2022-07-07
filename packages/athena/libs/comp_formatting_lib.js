@@ -73,7 +73,7 @@ module.exports = function (logger, ev, t) {
 			doc.location = doc.location || '-';			// init field if dne
 			if (doc.type === ev.STR.ORDERER) {
 				doc.consenter_proposal_fin = (doc.consenter_proposal_fin === false) ? false : true;	// legacy docs should be set to `true`
-				doc.system_channel_id = doc.system_channel_id || ev.SYSTEM_CHANNEL_ID;
+				doc.system_channel_id = (typeof doc.system_channel_id === 'string') ? doc.system_channel_id : ev.SYSTEM_CHANNEL_ID;
 			}
 
 			if (t.ot_misc.detect_ak_route(req)) {

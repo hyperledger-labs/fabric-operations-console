@@ -153,15 +153,16 @@ class OrdererDetails extends Component {
 	/* get channel list from channel participation api */
 	getCPChannelList = async () => {
 		let nodes = this.props.selectedNode || this.props.details.raft;
-		let systemChannel = true;
 		let channelList = {};
+
+		// if we cannot get the channels b/c of an network error, perm error, etc, default to the using the "systemless" field
+		let systemChannel = (this.props.details && this.props.details.systemless) ? false : true;
 
 		let orderer_tls_identity = await IdentityApi.getTLSIdentity(this.props.selectedNode || this.props.details);
 		if (!orderer_tls_identity) {
 			// if we don't have a tls identity, we cannot load the system channel details via the channel participation apis...
 			// so assume we do (or do not) have a system channel based on the "systemless" field
 			// if we do have the identity it will be more robust to just look up the system channel details via channel participation apis
-			systemChannel = (this.props.details && this.props.details.systemless) ? false : true;		// using the systemless field is our fall back method...
 		} else {
 			try {
 				let all_identity = await IdentityApi.getIdentities();
@@ -178,12 +179,13 @@ class OrdererDetails extends Component {
 				if (resp) {
 					channelList = resp;
 					if (_.get(channelList, 'systemChannel.name')) {					// system channel does exist
-						await this.getSystemChannelConfig();
+						systemChannel = true;
 						channelList.systemChannel.type = 'system_channel';
 						if (channelList.channels === null) {
 							channelList.channels = [];
 						}
 						channelList.channels.push(channelList.systemChannel);
+						await this.getSystemChannelConfig();
 					} else {														// system channel does not exist
 						systemChannel = false;
 					}

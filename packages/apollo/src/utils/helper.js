@@ -159,7 +159,7 @@ const Helper = {
 				type: node.type,
 				msp_id: node.msp_id,
 				systemless: node.systemless,
-				system_channel_id: node.systemless ? null : node.system_channel_id,
+				system_channel_id: node.systemless ? '' : node.system_channel_id,
 				msp: node.msp,
 				cluster_id: Helper.normalizeClusterId(node.cluster_id),
 				cluster_name: node.cluster_name,

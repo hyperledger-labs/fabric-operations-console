@@ -140,7 +140,8 @@ module.exports = function (logger, ev, t) {
 				component_doc.tags.push(ev.STR.ORDERER);
 				component_doc.consenter_proposal_fin = (component_doc.consenter_proposal_fin === false) ? false : true;	// legacy docs should be `true`
 				if (component_doc.system_channel_id) {		// if it exists, copy, if not skip or else will trigger needless multi edit for raft
-					component_doc.system_channel_id = component_doc.system_channel_id || ev.SYSTEM_CHANNEL_ID;
+					component_doc.system_channel_id = (typeof component_doc.system_channel_id === 'string') ?
+						component_doc.system_channel_id : ev.SYSTEM_CHANNEL_ID;
 				}
 			} else if (component_doc.type === ev.STR.MSP || component_doc.type === ev.STR.MSP_EXTERNAL) {
 				component_doc.tags.push(component_doc.type);
