@@ -58,10 +58,13 @@ const NodeStatus = {
 				};
 			}
 		}
+
+		console.log('ibp99 - getStatusFromPhase', status);
 		return status;
 	},
 
 	checkResources(node) {
+		console.log('ibp99 - checkResources', node.id);
 		return new Promise((resolve, reject) => {
 			ComponentApi.getComponent(node)
 				.then(resp => {
@@ -83,8 +86,10 @@ const NodeStatus = {
 						});
 					} else {
 						if ((node.type === 'fabric-orderer' || node.type === 'orderer') && node.consenter_proposal_fin === false) {
+							console.log('ibp99 - getting comp status from deployer', node.id);
 							NodeRestApi.getNodeDetailsFromDeployer(node.id)
 								.then(() => {
+									console.log('ibp99 - deployer says the component is running', node.id);
 									resolve({
 										id: node.id,
 										status: 'running',
@@ -267,6 +272,7 @@ const NodeStatus = {
 								// all good, so return status
 							}
 							if (status) {
+								console.log('ibp99 - getStatusInternal 1', id, status);
 								this.updateStatus(id, status, scope, prop, callback);
 								complete[id] = true;
 							}
@@ -284,6 +290,7 @@ const NodeStatus = {
 						if (this.in_progress[id]) {
 							results_list.forEach(result => {
 								if (result && result.id) {
+									console.log('ibp99 - getStatusInternal 2', result.id, result.status);
 									this.updateStatus(result.id, result.status, scope, prop, callback);
 									switch (result.status) {
 										case 'initialized':

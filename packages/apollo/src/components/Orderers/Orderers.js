@@ -185,10 +185,12 @@ class Orderers extends Component {
 
 	getOrdererStatus = orderer => {
 		let status = orderer.status;
+		const translate = this.props.translate;
+		let className = 'ibp-node-status-skeleton';
+
 		if (status === false) {
 			status = 'unknown';
 		}
-		let className = 'ibp-node-status-skeleton';
 		if (status === 'running' || status === 'stopped' || status === 'unknown') {
 			className = 'ibp-node-status-' + status;
 		}
@@ -198,8 +200,8 @@ class Orderers extends Component {
 		if (!orderer.operations_url) {
 			className = 'ibp-node-status-unretrievable';
 		}
-		const translate = this.props.translate;
-		return orderer && status ? (
+
+		return (orderer && status) ? (
 			<div className="ibp-node-status-container"
 				tabIndex="0"
 			>
