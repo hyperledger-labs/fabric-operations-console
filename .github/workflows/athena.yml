@@ -51,6 +51,17 @@ jobs:
       - run: npm ci
       - run: ../../common/deploy_scripts/test_run_athena.sh
 
+  audit:
+    name: NPM Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+      - run: npm audit
+
   openapi:
     name: Validate OpenAPI
     runs-on: ubuntu-latest
