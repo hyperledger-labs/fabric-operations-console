@@ -250,7 +250,7 @@ export class ChannelParticipationApi {
 			// use the last channel response data and the last osn to get the system channel details
 			if (last_ch_list_resp && last_ch_list_resp.systemChannel) {
 				const sys_name = last_ch_list_resp.systemChannel.name;
-				ret.systemChannel = await ChannelParticipationApi.map1Channel(identities, last_osn, sys_name);
+				ret.systemChannel = await ChannelParticipationApi.map1Channel(identities, [last_osn], sys_name);
 			}
 
 			return at_least_one_resp ? ret : null;
