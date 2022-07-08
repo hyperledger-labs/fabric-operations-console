@@ -1,5 +1,23 @@
 [
 	{
+		"version": "1.0.3-18",
+		"date": "8 July 2022",
+		"description": [
+			{
+				"title": "Fixed OSN Admin Features",
+				"details": "Several fixes for the new OSN Admin Features that use Fabric's \"channel participation\" apis."
+			},
+			{
+				"title": "Removed auto restart on admin_certs change",
+				"details": "Removed the automatic restart initiated by the console when editing a component's `admin_certs` field. The restart is handled by operator instead."
+			},
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
 		"version": "1.0.3-13",
 		"date": "22 June 2022",
 		"description": [
