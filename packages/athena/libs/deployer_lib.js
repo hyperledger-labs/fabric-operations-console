@@ -863,7 +863,8 @@ module.exports = function (logger, ev, t) {
 
 		// decide if this api needs a restart action
 		function needs_to_restart() {
-			const restart_keys = ['config_override', 'node_ou', 'admin_certs'];		// array of keys (athena format) that will trigger a auto restart
+			// removed config_override and admin_certs from here b/c of issue 4841
+			const restart_keys = ['node_ou'];					// array of keys (athena format) that will trigger a auto restart
 			if (req && req.body) {
 				for (let key in req.body) {						// check the body sent to athena
 					const lc_key = key.toLowerCase();
