@@ -410,7 +410,7 @@ class JoinOSNChannelModal extends React.Component {
 			}
 		}
 
-		// remove clusters with no nodes (b/c there is nothing to join)
+		// remove clusters with no nodes (b/c it cannot be used)
 		for (let clusterId in ret) {
 			if (!Array.isArray(ret[clusterId].nodes) || ret[clusterId].nodes.length === 0) {
 				delete ret[clusterId];
@@ -492,12 +492,29 @@ class JoinOSNChannelModal extends React.Component {
 	// selected orderer was changed
 	changeOrderer = async (change) => {
 		const orderer = change.orderer_joined;
-		const resp = await this.loadChannels(orderer);
-		const channels = (resp && Array.isArray(resp.channels)) ? resp.channels : [];
-		this.props.updateState(SCOPE, {
-			channels: channels,
-			selected_osn: orderer,
-		});
+		try {
+			const resp = await this.loadChannels(orderer);
+			const channels = (resp && Array.isArray(resp.channels)) ? resp.channels : [];
+
+			let noChannelsError = '[Error] This orderer hasn\'t joined any channels:';
+			let noChannelsErrorDets =
+				'This join requires pulling the channel config block from one orderer and passing it to the joining orderer. Since there are no channels on this orderer it cannot be used.';
+
+			this.props.updateState(SCOPE, {
+				channels: channels,
+				selected_osn: orderer,
+
+				block_error_title: (channels.length === 0) ? noChannelsError : '',
+				block_error: (channels.length === 0) ? noChannelsErrorDets : '',
+			});
+		} catch (e) {
+			Log.error(e);
+			this.props.updateState(SCOPE, {
+				block_error_title: '[Error] Unable to fetch channels.',
+				block_error:
+					'This join requires pulling the channel config block from one orderer and passing it to the joining orderer. Since we loaded 0 channels on this orderer it cannot be used.',
+			});
+		}
 	};
 
 	// selected channel was changed
