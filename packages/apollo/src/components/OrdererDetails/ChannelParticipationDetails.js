@@ -120,13 +120,15 @@ class ChannelParticipationDetails extends Component {
 						title={translate('channel_info_title')}
 					/>
 				</button>
-				<button className="ibp-orderer-channel-unjoin"
-					onClick={async () => await this.openCPUnjoinModal(channel)}
-				>
-					<SVGs type="trash"
-						title={translate('unjoin_channel_title')}
-					/>
-				</button>
+				{(this.props.isSystemLess || channel.type === 'system_channel') && (
+					<button className="ibp-orderer-channel-unjoin"
+						onClick={async () => await this.openCPUnjoinModal(channel)}
+					>
+						<SVGs type="trash"
+							title={translate('unjoin_channel_title')}
+						/>
+					</button>
+				)}
 				{this.props.isSystemLess && (
 					<button className="ibp-orderer-channel-join"
 						onClick={() => this.joinChannel(channel)}
