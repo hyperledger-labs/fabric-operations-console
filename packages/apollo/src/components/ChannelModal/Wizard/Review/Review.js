@@ -120,6 +120,7 @@ class Review extends Component {
 				: null;
 
 		const osn_options = this.props.buildCreateChannelOpts();
+		const consenterError2 = (!osn_options || !Array.isArray(osn_options.consenters) || osn_options.consenters.length === 0) ? 'review_consenter_error' : null;
 
 		return (
 			<div className="ibp-channel-review">
@@ -212,14 +213,14 @@ class Review extends Component {
 									consenterError
 								)}
 
-							{use_osnadmin && osn_options && Array.isArray(osn_options.consenters) &&
+							{use_osnadmin && !isChannelUpdate &&
 								this.renderSection(
 									translate,
 									'consenter_set',
-									osn_options.consenters.map(consenter => {
+									(osn_options && Array.isArray(osn_options.consenters)) ? osn_options.consenters.map(consenter => {
 										return { value: consenter.name };
-									}),
-									consenterError
+									}) : '',
+									consenterError2
 								)}
 
 							{isOrdererSignatureNeeded &&
