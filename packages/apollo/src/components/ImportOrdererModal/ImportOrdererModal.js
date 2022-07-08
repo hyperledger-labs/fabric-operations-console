@@ -1005,13 +1005,15 @@ class ImportOrdererModal extends React.Component {
 		const ignore_list = this.props.ignore_list ? this.props.ignore_list : [];
 		const append_list = this.props.append_list ? this.props.append_list : [];
 		const osnadmin_feats_enabled = (this.props.feature_flags && this.props.feature_flags.osnadmin_feats_enabled);
+		const importing = (this.props.location !== 'ibm_saas');
 
 		// if you are not appending an orderer, render the sys channel choice
 		// if you are appending an orderer, only render if you do not have a system channel. otherwise forced to use systemless.
 		const renderSystemChChoice = osnadmin_feats_enabled && (!this.props.appendingNode || this.props.systemChannel);
 
 		// if its not rendered, you don't need to select it
-		const needs2selectSysConfig = osnadmin_feats_enabled && typeof this.props.systemless !== 'boolean' && renderSystemChChoice;
+		const needs2selectSysConfig = !importing && osnadmin_feats_enabled && typeof this.props.systemless !== 'boolean' && renderSystemChChoice;
+
 		return (
 			<WizardStep
 				type="WizardStep"
@@ -1026,7 +1028,7 @@ class ImportOrdererModal extends React.Component {
 								<Loading withOverlay={false} />
 							</div>
 						)}
-						{this.props.location === 'ibm_saas' && (
+						{!importing && (
 							<div>
 								{this.props.raftParent ? (
 									<div>
@@ -1204,6 +1206,10 @@ class ImportOrdererModal extends React.Component {
 										},
 										{
 											name: 'system_channel_id',
+											required: false,
+										},
+										{
+											name: 'systemless',
 											required: false,
 										},
 										{

@@ -15006,6 +15006,8 @@ components:
           $ref: '#/components/schemas/msp_id'
         operations_url:
           $ref: '#/components/schemas/operations_url_orderer'
+        systemless:
+          $ref: '#/components/schemas/systemless'
         system_channel_id:
           $ref: '#/components/schemas/system_channel_id'
         tags:

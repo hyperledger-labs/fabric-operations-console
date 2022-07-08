@@ -1441,6 +1441,10 @@ class ChannelModal extends Component {
 
 				// [PATH 2] - using legacy create channel wizard
 				else {
+					this.props.updateState(SCOPE, { use_osnadmin: false });
+					this.showStepsInTimeline(['ordering_service_organization', 'organization_creating_channel']);
+					this.hideStepsInTimeline(['osn_join_channel', 'channel_orderer_organizations']);	// but hide these
+
 					if (getCertsFromDeployer) {
 						NodeRestApi.getTLSSignedCertFromDeployer(orderer.raft)
 							.then(nodesWithCerts => {
