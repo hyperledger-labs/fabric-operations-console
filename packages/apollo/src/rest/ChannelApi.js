@@ -572,7 +572,7 @@ class ChannelApi {
 	}
 	static getOrdererAddresses(config) {
 		let addresses = [];
-		const l_orderers = _.get(config, 'channel_group.values_map.OrdererAddresses.value.addresses_list');
+		const l_orderers = _.get(config, 'channel_group.values_map.OrdererAddresses.value.addresses_list', []);
 		addresses.push(...l_orderers);
 		if (addresses.length === 0) {
 			const orderer_grp = _.get(config, 'channel_group.groups_map.Orderer.groups_map');
