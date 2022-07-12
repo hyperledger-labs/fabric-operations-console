@@ -126,7 +126,8 @@ class JoinOSNChannelModal extends React.Component {
 		let osn_to_use = this.props.selected_osn;							// default to the one selected in the drop down
 		if (this.props.joinChannelDetails && this.props.joinChannelDetails.nodes) {
 			for (let i in this.props.joinChannelDetails.nodes) {
-				if (this.props.joinChannelDetails.nodes[i]._channel_resp) {
+				if (this.props.joinChannelDetails.nodes[i]._channel_resp &&
+					this.props.joinChannelDetails.nodes[i]._channel_resp.consensusRelation === 'consenter') {
 					osn_to_use = this.props.joinChannelDetails.nodes[i];	// use the first node that knows this channel if available
 					break;
 				}
