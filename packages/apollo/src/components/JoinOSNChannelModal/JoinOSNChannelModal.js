@@ -132,17 +132,12 @@ class JoinOSNChannelModal extends React.Component {
 				}
 			}
 		}
-
-		let all_identities = await IdentityApi.getIdentities();
-		const identity4tls = await ChannelParticipationApi.findMatchingIdentity({
-			identities: all_identities,
-			root_certs_b64pems: _.get(osn_to_use, 'msp.tlsca.root_certs')
-		});
+		let identity = await IdentityApi.getAssociatedOrdererIdentities(osn_to_use);
 
 		const opts = {
 			msp_id: osn_to_use.msp_id,
-			client_cert_b64pem: identity4tls.cert,
-			client_prv_key_b64pem: identity4tls.private_key,
+			client_cert_b64pem: identity[0].cert,
+			client_prv_key_b64pem: identity[0].private_key,
 			orderer_host: osn_to_use.url2use,
 			channel_id: channel,
 			include_bin: true,
@@ -541,7 +536,9 @@ class JoinOSNChannelModal extends React.Component {
 			drill_down_flow: true,
 		});
 		try {
+			console.log('DBG ~ file: JoinOSNChannelModal.js ~ line 538 ~ JoinOSNChannelModal ~ setupForJoinChannel= ~ channelName', channelName);
 			const config_block_b64 = await this.getChannelConfigBlock(channelName);
+			console.log('DBG ~ file: JoinOSNChannelModal.js ~ line 538 ~ JoinOSNChannelModal ~ setupForJoinChannel= ~ config_block_b64', config_block_b64);
 			this.props.updateState(SCOPE, {
 				config_block_b64: config_block_b64,
 				//loading: false,		// keep loading true until parseConfigBlock is done
