@@ -405,7 +405,7 @@ class OrdererModal extends React.Component {
 	async getApplicableIdentities() {
 		const keys = Object.keys(this.props.associatedIdentities);
 		let valid_identities = {};
-		const allOrderers = this.props.orderer.raft ? this.props.orderer.raft : this.props.orderer;
+		const allOrderers = this.props.orderer.raft ? this.props.orderer.raft : [this.props.orderer];
 		let msp_root_certs = {};
 		let msp_root_certs_intermediate = {};
 		for (let orderer of allOrderers) {
