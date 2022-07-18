@@ -41,7 +41,7 @@ Given(/^I provided a name for the service$/, async() => {
 });
 
 Given(/^I selected (?:'|")(.*?)(?:'|") from the (?:'|")(.*?)(?:'|") dropdown$/, async(element, selector) => {
-	await browser.sleep(2000);
+	await browser.sleep(5000);
 	try {
 		await selectDropdownOption(element, selector);
 	} catch (e) {

@@ -24,16 +24,16 @@ Then(/^the chaincode with name (?:'|")(.*?)(?:'|") should have been created in (
 	let tileTitleEl;
 	try {
 		tileTitleEl = element(by.cssContainingText('.ibp-tile-content-title', chaincodeName));
-		await browser.wait(ExpectedConditions.elementToBeClickable(tileTitleEl), 6 * 60 * 1000);
+		await browser.wait(ExpectedConditions.elementToBeClickable(tileTitleEl), 10 * 60 * 1000);
 	} catch (e) {
 		await browser.sleep(60 * 1000);
 		await browser.refresh();
 		tileTitleEl = element(by.cssContainingText('.ibp-tile-content-title', chaincodeName));
-		await browser.wait(ExpectedConditions.elementToBeClickable(tileTitleEl), 6 * 60 * 1000);
+		await browser.wait(ExpectedConditions.elementToBeClickable(tileTitleEl), 10 * 60 * 1000);
 	}
 	let tile = await tileTitleEl.element(by.xpath('../..'));
 	let stateEl = await tile.element(by.css('.ibp-channel-chaincode-status'));
-	browser.wait(ExpectedConditions.textToBePresentInElement(stateEl, state), 6 * 60 * 1000);
+	browser.wait(ExpectedConditions.textToBePresentInElement(stateEl, state), 10 * 60 * 1000);
 	let stateText = await stateEl.getText();
 	stateText.should.equal(state);
 });
