@@ -53,8 +53,13 @@ Then(/^the (certificate authority|peer|orderer) with name (?:'|")(.*?)(?:'|") sh
 		await browser.wait(ExpectedConditions.elementToBeClickable(isRunning), 10 * 60 * 1000);
 	}
 
-	console.log('Wait for 3 minutes...');
-	await browser.sleep(180000);
+    if (nodeType === 'orderer') {
+        console.log('Wait for 5 minutes...');
+        await browser.sleep(300000);
+    }else{
+        console.log('Wait for 3 minutes...');
+        await browser.sleep(180000);
+    }
 	await tile.click();
 });
 
