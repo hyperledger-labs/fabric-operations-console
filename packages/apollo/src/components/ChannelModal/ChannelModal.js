@@ -180,6 +180,7 @@ class ChannelModal extends Component {
 			loading: false,
 			submitting: false,
 			identities: null,
+			channelId: '',
 			orgs: [],
 			ordering_orgs: [],
 			original_orgs: [],
@@ -1030,7 +1031,7 @@ class ChannelModal extends Component {
 						: () => this.showStep('organization_creating_channel', group_prerequisites, step_org_signature);
 				next = () => {
 					if (isComplete) {
-						use_osnadmin
+						(use_osnadmin && !this.props.isChannelUpdate)
 							? this.showStep('osn_join_channel', group_review, osnadmin_join_channel)
 							: (this.props.isChannelUpdate ? this.updateChannel() : this.createChannel());
 					}
