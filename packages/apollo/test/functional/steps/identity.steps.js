@@ -31,7 +31,7 @@ Given(/^I clicked the Associate identity button$/, async() => {
 
 Given(/^the CA admin is set as (?:'|")(.*?)(?:'|")$/, async identityName => {
 	const adminInfo = element(by.css('div.ibp-identity-information'));
-	await browser.wait(ExpectedConditions.textToBePresentInElement(adminInfo, identityName), 15000);
+	await browser.wait(ExpectedConditions.textToBePresentInElement(adminInfo, identityName), 60000);
 	await browser.sleep(2000);
 });
 
