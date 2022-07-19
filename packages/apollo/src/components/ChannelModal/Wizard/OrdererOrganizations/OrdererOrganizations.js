@@ -150,7 +150,19 @@ export class OrdererOrganizations extends Component {
 	};
 
 	render() {
-		const { loading, noAdminError, duplicateMSPError, msps, ordering_orgs, selectedOrg, missingDefinitionError, isChannelUpdate, translate } = this.props;
+		const { loading, noAdminError, duplicateMSPError, msps, ordering_orgs, selectedOrg, missingDefinitionError, isChannelUpdate, raftNodes, translate } = this.props;
+
+		// hide orgs that are already selected
+		let msp_opts = msps ? msps.filter(x =>
+			!ordering_orgs.find(y => y.msp_id === x.msp_id && _.intersection(x.root_certs, y.root_certs).length >= 1)
+		) : [];
+
+		// since we are using osn admin features aka systemless config then only allow msp choices that have a known orderer.
+		// b/c we need at least 1 orderer to be a consenter in the genesis block
+		msp_opts = msp_opts ? msp_opts.filter(x =>
+			raftNodes.find(y => y.msp_id === x.msp_id)
+		) : [];
+
 		return (
 			<div className="ibp-channel-organizations">
 				<p className="ibp-channel-section-title">{translate('channel_orderer_organizations')}</p>
@@ -175,7 +187,7 @@ export class OrdererOrganizations extends Component {
 				{!loading && (
 					<div className="ibp-add-orgs">
 						<div className="ibp-add-orgs-select-box">
-							{!!msps && !!ordering_orgs && (
+							{msp_opts && (
 								<div>
 									<Form
 										scope={SCOPE}
@@ -184,10 +196,7 @@ export class OrdererOrganizations extends Component {
 											{
 												name: 'selectedOrg',
 												type: 'dropdown',
-
-												// hide orgs that are already selected
-												options: msps ? msps.filter(x => !ordering_orgs.find(y => y.msp_id === x.msp_id && _.intersection(x.root_certs, y.root_certs).length >= 1)) : [],
-
+												options: msp_opts,
 												default: 'select_msp_id',
 											},
 										]}
@@ -288,6 +297,7 @@ const dataProps = {
 	selectedApplicationCapability: PropTypes.object,
 	selectedChannelCapability: PropTypes.object,
 	selectedOrdererCapability: PropTypes.object,
+	raftNodes: PropTypes.array,
 	nodeou_warning: PropTypes.bool,
 };
 
