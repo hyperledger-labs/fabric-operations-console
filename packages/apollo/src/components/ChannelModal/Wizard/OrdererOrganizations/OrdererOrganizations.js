@@ -24,38 +24,23 @@ import { connect } from 'react-redux';
 import { updateState } from '../../../../redux/commonActions';
 import Helper from '../../../../utils/helper';
 import Form from '../../../Form/Form';
-import Logger from '../../../Log/Logger';
 import SidePanelWarning from '../../../SidePanelWarning/SidePanelWarning';
 
 const SCOPE = 'channelModal';
-const Log = new Logger(SCOPE);
 
 // This is step "channel_orderer_organizations"
 //
 // this panel allows selecting the orderer orgs in the config-block and which one's get the admin role
 // (only used for osn admin nodes)
 export class OrdererOrganizations extends Component {
-	checkAdminCount() {
-		let hasAdmin = false;
-		const { ordering_orgs } = this.props;
-		if (ordering_orgs) {
-			ordering_orgs.forEach(org => {
-				if (org.msp_id !== '' && org.roles.includes('admin')) {
-					hasAdmin = true;
-				}
-			});
-		}
-		if (!hasAdmin) {
-			this.props.updateState(SCOPE, {
-				noAdminError: 'no_admin_error',
-			});
-		} else {
-			this.props.updateState(SCOPE, {
-				noAdminError: null,
-			});
-		}
+	componentDidMount() {
+		this.props.updateState(SCOPE, {
+			noAdminError: 'no_admin_error',
+			noOrderersError: false
+		});
 	}
 
+	// user added a new msp/org
 	onAddOrg = option => {
 		const { selectedOrg, ordering_orgs, updatePolicyDropdown, updateState } = this.props;
 		let msp = selectedOrg;
@@ -81,7 +66,74 @@ export class OrdererOrganizations extends Component {
 			ordering_orgs: selected_orgs,
 			selectedOrg: null,
 		});
+		this.checkAdminCount(selected_orgs);
+		this.checkOrdererCount(selected_orgs);
 	};
+
+	// user removed a selected msp/org
+	onDeleteOrg = (index, org) => {
+		const { ordering_orgs, updateState, updatePolicyDropdown, verifyACLPolicyValidity } = this.props;
+		let updated_orgs = ordering_orgs.filter((c, i) => i !== index);
+		this.checkDuplicateMSP(ordering_orgs[index], updated_orgs);
+		this.checkNodeOUWarning(updated_orgs);
+		updateState(SCOPE, {
+			ordering_orgs: updated_orgs,
+		});
+		updatePolicyDropdown(updated_orgs, false);
+		verifyACLPolicyValidity(updated_orgs, null); //Show error if any acl(added) refers to this deleted org
+		this.checkAdminCount(updated_orgs);
+		this.checkOrdererCount(updated_orgs);
+	};
+
+	// user changed the role of a selected msp/org
+	onChangeOrgRole = (index, role, event) => {
+		const { ordering_orgs, updatePolicyDropdown, updateState } = this.props;
+		let selected_orgs = Array.isArray(ordering_orgs) ? JSON.parse(JSON.stringify(ordering_orgs)) : [];
+
+		if (event.target.checked) {
+			selected_orgs[index].roles = (role === 'admin') ? ['admin', 'writer', 'reader'] : ['writer', 'reader'];
+		} else {
+			selected_orgs[index].roles = ['writer', 'reader'];
+		}
+		updatePolicyDropdown(selected_orgs, false);
+		updateState(SCOPE, {
+			ordering_orgs: selected_orgs,
+		});
+		this.checkAdminCount(selected_orgs);
+	};
+
+	checkAdminCount(selected_ordering_orgs) {
+		let hasAdmin = false;
+		if (selected_ordering_orgs) {
+			selected_ordering_orgs.forEach(org => {
+				if (org.msp_id !== '' && org.roles.includes('admin')) {
+					hasAdmin = true;
+				}
+			});
+		}
+		if (!hasAdmin) {
+			this.props.updateState(SCOPE, {
+				noAdminError: 'no_admin_error',
+			});
+		} else {
+			this.props.updateState(SCOPE, {
+				noAdminError: null,
+			});
+		}
+	}
+
+	// since we are using osn admin features aka systemless config then make sure at leats one msp choice has a known orderer.
+	// b/c we need at least 1 orderer to be a consenter in the genesis block
+	checkOrdererCount(selected_ordering_orgs) {
+		const raftNodes = this.props.raftNodes;
+		const msps_with_orderers = (selected_ordering_orgs && raftNodes) ? selected_ordering_orgs.filter(x =>
+			raftNodes.find(y => y.msp_id === x.msp_id)
+		) : [];
+
+		this.props.updateState(SCOPE, {
+			noOrderersError: (!Array.isArray(msps_with_orderers) || msps_with_orderers.length === 0) ? true : false,
+		});
+	}
 
 	checkNodeOUWarning(orgs) {
 		let applicationCapability = this.props.selectedApplicationCapability;
@@ -119,48 +171,12 @@ export class OrdererOrganizations extends Component {
 		});
 	};
 
-	onDeleteOrg = (index, org) => {
-		Log.debug('Deleting org: ', index);
-		const { ordering_orgs, updateState, updatePolicyDropdown, verifyACLPolicyValidity } = this.props;
-		let updated_orgs = ordering_orgs.filter((c, i) => i !== index);
-		this.checkDuplicateMSP(ordering_orgs[index], updated_orgs);
-		this.checkNodeOUWarning(updated_orgs);
-		updateState(SCOPE, {
-			ordering_orgs: updated_orgs,
-		});
-		updatePolicyDropdown(updated_orgs, false);
-		verifyACLPolicyValidity(updated_orgs, null); //Show error if any acl(added) refers to this deleted org
-	};
-
-	onChangeOrgRole = (index, role, event) => {
-		Log.debug('Updating org role: ', index, role, event.target.checked);
-		const { ordering_orgs, updatePolicyDropdown, updateState } = this.props;
-		let selected_orgs = Array.isArray(ordering_orgs) ? JSON.parse(JSON.stringify(ordering_orgs)) : [];
-
-		if (event.target.checked) {
-			selected_orgs[index].roles = (role === 'admin') ? ['admin', 'writer', 'reader'] : ['writer', 'reader'];
-		} else {
-			selected_orgs[index].roles = ['writer', 'reader'];
-		}
-		Log.debug('Updating org to: ', selected_orgs);
-		updatePolicyDropdown(selected_orgs, false);
-		updateState(SCOPE, {
-			ordering_orgs: selected_orgs,
-		});
-	};
-
 	render() {
-		const { loading, noAdminError, duplicateMSPError, msps, ordering_orgs, selectedOrg, missingDefinitionError, isChannelUpdate, raftNodes, translate } = this.props;
+		const { loading, noAdminError, noOrderersError, duplicateMSPError, msps, ordering_orgs, selectedOrg, missingDefinitionError, isChannelUpdate, raftNodes, translate } = this.props;
 
 		// hide orgs that are already selected
-		let msp_opts = msps ? msps.filter(x =>
+		const msp_opts = msps ? msps.filter(x =>
 			!ordering_orgs.find(y => y.msp_id === x.msp_id && _.intersection(x.root_certs, y.root_certs).length >= 1)
-		) : [];
-
-		// since we are using osn admin features aka systemless config then only allow msp choices that have a known orderer.
-		// b/c we need at least 1 orderer to be a consenter in the genesis block
-		msp_opts = msp_opts ? msp_opts.filter(x =>
-			raftNodes.find(y => y.msp_id === x.msp_id)
 		) : [];
 
 		return (
@@ -169,11 +185,17 @@ export class OrdererOrganizations extends Component {
 				<p className="ibp-channel-section-desc">
 					{isChannelUpdate ? translate('update_channel_organization_desc') : translate('create_channel_orderer_org_desc')}
 				</p>
-				{this.checkAdminCount()}
 				{noAdminError && (
 					<div className="ibp-error-panel">
 						<SidePanelWarning title="admin_needed_simple"
 							subtitle={noAdminError}
+						/>
+					</div>
+				)}
+				{noOrderersError && (
+					<div className="ibp-error-panel">
+						<SidePanelWarning title="orderer_needed_simple"
+							subtitle="orderer_needed_error"
 						/>
 					</div>
 				)}
@@ -299,6 +321,7 @@ const dataProps = {
 	selectedOrdererCapability: PropTypes.object,
 	raftNodes: PropTypes.array,
 	nodeou_warning: PropTypes.bool,
+	noOrderersError: PropTypes.bool,
 };
 
 OrdererOrganizations.propTypes = {

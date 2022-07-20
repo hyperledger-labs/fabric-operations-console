@@ -592,6 +592,7 @@ class ChannelModal extends Component {
 			checkingOrdererStatus,
 			noOperatorError,
 			noAdminError,
+			noOrderersError,
 			duplicateMSPError,
 			missingDefinitionError,
 			orgs,
@@ -700,7 +701,7 @@ class ChannelModal extends Component {
 		}
 
 		if (step === 'channel_orderer_organizations') {
-			complete = !noAdminError && !duplicateMSPError && !missingDefinitionError && ordering_orgs && !ordering_orgs.find(org => org.msp === '');
+			complete = !noAdminError && !duplicateMSPError && !noOrderersError && !missingDefinitionError && ordering_orgs && !ordering_orgs.find(org => org.msp === '');
 		}
 
 		if (step === 'osn_join_channel') {
@@ -2317,6 +2318,7 @@ const dataProps = {
 	channelNameError: PropTypes.string,
 	noOperatorError: PropTypes.string,
 	noAdminError: PropTypes.string,
+	noOrderersError: PropTypes.bool,
 	duplicateMSPError: PropTypes.string,
 	isOrdererUnavailable: PropTypes.bool,
 	loadingOrdererDetails: PropTypes.bool,
