@@ -185,6 +185,9 @@ function find_alternative_status_message(data: GrpcData) {
 		// i've seen this when asking orderer for system channel
 		'200': 'grpc code OK = (http code 200) success',
 
+		// i've seen this when asking orderer config block when OS does not have quorum
+		'503': 'grpc code UNAVAILABLE = (http code 503) service unavailable',
+
 		//code 02 - "Response closed without headers" - can happen from an untrusted tls self signed cert, accept cert in browser
 	};
 	if (code) {
