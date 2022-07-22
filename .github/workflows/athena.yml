@@ -60,7 +60,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16.x
-      - run: npm audit
+      - run: npm audit --prod
 
   openapi:
     name: Validate OpenAPI

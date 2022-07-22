@@ -560,8 +560,13 @@ class JoinOSNChannelModal extends React.Component {
 			}
 		} catch (e) {
 			Log.error(e);
-			const code = (e && !isNaN(e.status_code)) ? '(' + e.status_code + ') ' : '';
-			const details = (e && typeof e.stitch_msg === 'string') ? (code + e.stitch_msg) : '';
+			const code = (e && e.grpc_resp && !isNaN(e.grpc_resp.status)) ? e.grpc_resp.status : '';
+			let details = (e && typeof e.stitch_msg === 'string') ? ('(' + code + ') ' + e.stitch_msg) : '';
+
+			if (Number(code) === 503) {
+				details = 'Error 503 - Unable to retrieve the config-block because the orderer does not have quorum.';
+			}
+
 			this.props.updateState(SCOPE, {
 				block_error_title: '[Error] Could not get config-block. Resolve error to continue:',
 				block_error: details ? details : e.toString(),

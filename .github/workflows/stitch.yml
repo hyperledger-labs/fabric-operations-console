@@ -21,3 +21,14 @@ jobs:
       - run: npm ci
       - run: npm run build_all
       - run: npm run test
+
+  audit:
+    name: NPM Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+      - run: npm audit --prod
