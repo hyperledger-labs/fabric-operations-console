@@ -852,17 +852,12 @@ module.exports = function (logger, ev, t) {
 
 		// depending on the body send a restart action now
 		function restart_comp_if_needed(cb_action) {
-			if (!needs_to_restart()) {
-				return cb_action();								// no restart needed
-			} else {
-				auto_restart(req, () => {
-					return cb_action();
-				});
-			}
+			// removed auto restart here b/c of issue 4841
+			return cb_action();									// no restart needed
 		}
 
 		// decide if this api needs a restart action
-		function needs_to_restart() {
+		/*function needs_to_restart() {
 			// removed config_override and admin_certs from here b/c of issue 4841
 			const restart_keys = ['node_ou'];					// array of keys (athena format) that will trigger a auto restart
 			if (req && req.body) {
@@ -874,7 +869,7 @@ module.exports = function (logger, ev, t) {
 				}
 			}
 			return false;
-		}
+		}*/
 	};
 
 	// send the request to the deployer and parse its response
