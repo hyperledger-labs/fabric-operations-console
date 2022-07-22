@@ -1405,7 +1405,7 @@
 	"tls_root_certificate": "TLS root certificate",
 	"tls_intermediate_certificate": "TLS intermediate certificate",
 	"pending_channel_message": "Pending Channel - join a peer",
-	"pending_channel_message_orderer": "Pending Channel",
+	"pending_channel_message_orderer": "Pending Channel - join an orderer",
 	"export": "Export",
 	"third_party_ca_peer_header": "Use this panel to upload files that contain the certificates for your peer that were obtained from the CA that is not managed by this console. Then select the organization that this peer belongs to from the list of MSPs.",
 	"third_party_ca_orderer_header": "Use this panel to upload files that contain the certificates for your ordering service that were obtained from the CA that is not managed by this console. Then select the organization that this ordering service belongs to from the list of MSPs.",
