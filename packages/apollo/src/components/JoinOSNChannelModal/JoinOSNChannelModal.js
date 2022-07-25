@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
-import { updateState } from '../../redux/commonActions';
+import { updateState, showSuccess } from '../../redux/commonActions';
 import { OrdererRestApi } from '../../rest/OrdererRestApi';
 import Helper from '../../utils/helper';
 import Form from '../Form/Form';
@@ -1067,6 +1067,7 @@ class JoinOSNChannelModal extends React.Component {
 					let keepSidePanelOpen = false;
 					try {
 						keepSidePanelOpen = await on_submit(this);
+						this.props.showSuccess('channel_join_request_submitted', { channelName: this.props.channel_id }, SCOPE, null, true);
 					} catch (e) {
 						keepSidePanelOpen = true;
 					}
@@ -1121,6 +1122,7 @@ JoinOSNChannelModal.propTypes = {
 	onComplete: PropTypes.func,
 	onClose: PropTypes.func,
 	updateState: PropTypes.func,
+	showSuccess: PropTypes.func,
 	joinChannelDetails: PropTypes.object,
 	selectedConfigBlockDoc: PropTypes.object,
 	translate: PropTypes.func, // Provided by withLocalize
@@ -1138,5 +1140,6 @@ export default connect(
 	},
 	{
 		updateState,
+		showSuccess,
 	}
 )(withLocalize(JoinOSNChannelModal));
