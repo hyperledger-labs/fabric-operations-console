@@ -180,7 +180,6 @@ class ChannelModal extends Component {
 			loading: false,
 			submitting: false,
 			identities: null,
-			channelId: '',
 			orgs: [],
 			ordering_orgs: [],
 			original_orgs: [],
