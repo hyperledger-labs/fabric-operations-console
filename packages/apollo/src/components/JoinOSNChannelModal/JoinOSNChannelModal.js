@@ -1014,8 +1014,8 @@ class JoinOSNChannelModal extends React.Component {
 								disabled={hasJoinedChannel}
 								title={(hasJoinedChannel) ? translate('already_joined') : (node._consenter === true ? 'Node is a consenter' : 'Node is a follower')}
 							/>
+							<div className="ibp-join-osn-name">{node.name}</div>
 							<span className="ibp-join-osn-node-details">
-								<div className="ibp-join-osn-name">{node.name}</div>
 								<div className="ibp-join-osn-host">
 									{label} - {node.host}:{node.port}
 								</div>
