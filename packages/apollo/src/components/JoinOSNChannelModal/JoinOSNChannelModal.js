@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
-import { updateState, showSuccess } from '../../redux/commonActions';
+import { updateState } from '../../redux/commonActions';
 import { OrdererRestApi } from '../../rest/OrdererRestApi';
 import Helper from '../../utils/helper';
 import Form from '../Form/Form';
@@ -560,13 +560,8 @@ class JoinOSNChannelModal extends React.Component {
 			}
 		} catch (e) {
 			Log.error(e);
-			const code = (e && e.grpc_resp && !isNaN(e.grpc_resp.status)) ? e.grpc_resp.status : '';
-			let details = (e && typeof e.stitch_msg === 'string') ? ('(' + code + ') ' + e.stitch_msg) : '';
-
-			if (Number(code) === 503) {
-				details = 'Error 503 - Unable to retrieve the config-block because the orderer does not have quorum.';
-			}
-
+			const code = (e && !isNaN(e.status_code)) ? '(' + e.status_code + ') ' : '';
+			const details = (e && typeof e.stitch_msg === 'string') ? (code + e.stitch_msg) : '';
 			this.props.updateState(SCOPE, {
 				block_error_title: '[Error] Could not get config-block. Resolve error to continue:',
 				block_error: details ? details : e.toString(),
@@ -1014,8 +1009,9 @@ class JoinOSNChannelModal extends React.Component {
 								disabled={hasJoinedChannel}
 								title={(hasJoinedChannel) ? translate('already_joined') : (node._consenter === true ? 'Node is a consenter' : 'Node is a follower')}
 							/>
+							<div className="ibp-join-osn-name">{node.name}</div>
 							<span className="ibp-join-osn-node-details">
-								<div className="ibp-join-osn-name">{node.name}</div>
+								
 								<div className="ibp-join-osn-host">
 									{label} - {node.host}:{node.port}
 								</div>
@@ -1067,7 +1063,6 @@ class JoinOSNChannelModal extends React.Component {
 					let keepSidePanelOpen = false;
 					try {
 						keepSidePanelOpen = await on_submit(this);
-						this.props.showSuccess('channel_join_request_submitted', { channelName: this.props.channel_id }, SCOPE, null, true);
 					} catch (e) {
 						keepSidePanelOpen = true;
 					}
@@ -1122,7 +1117,6 @@ JoinOSNChannelModal.propTypes = {
 	onComplete: PropTypes.func,
 	onClose: PropTypes.func,
 	updateState: PropTypes.func,
-	showSuccess: PropTypes.func,
 	joinChannelDetails: PropTypes.object,
 	selectedConfigBlockDoc: PropTypes.object,
 	translate: PropTypes.func, // Provided by withLocalize
@@ -1140,6 +1134,5 @@ export default connect(
 	},
 	{
 		updateState,
-		showSuccess,
 	}
 )(withLocalize(JoinOSNChannelModal));
