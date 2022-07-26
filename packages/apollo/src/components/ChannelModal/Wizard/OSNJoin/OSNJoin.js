@@ -99,14 +99,14 @@ class OSNJoin extends Component {
 				)}
 
 				{!block_error && !this.props.loading && (
-					<div>
-						<center>
+					<div className='ibp-channel-section-genesis'>
+						<left>
 							<SVGs type={'partyPopper'}
-								width="100px"
-								height="100px"
+								width="120px"
+								height="120px"
 							/>
-						</center>
-
+						</left>
+						<div className='ibp-channel-section-genesis-align'>
 						<p className="ibp-join-osn-genesis ibp-channel-section-desc">
 							{translate('osn-join-config-block', { channel: channel_id })}
 						</p>
@@ -114,6 +114,7 @@ class OSNJoin extends Component {
 						<p className="ibp-join-osn-desc">
 							{translate('osn-join-desc3')}
 						</p>
+						</div>
 					</div>
 				)}
 			</div>
