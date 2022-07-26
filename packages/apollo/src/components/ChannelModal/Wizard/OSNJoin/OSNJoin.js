@@ -107,13 +107,13 @@ class OSNJoin extends Component {
 							/>
 						</left>
 						<div className='ibp-channel-section-genesis-align'>
-						<p className="ibp-join-osn-genesis ibp-channel-section-desc">
-							{translate('osn-join-config-block', { channel: channel_id })}
-						</p>
+							<p className="ibp-join-osn-genesis ibp-channel-section-desc">
+								{translate('osn-join-config-block', { channel: channel_id })}
+							</p>
 
-						<p className="ibp-join-osn-desc">
-							{translate('osn-join-desc3')}
-						</p>
+							<p className="ibp-join-osn-desc">
+								{translate('osn-join-desc3')}
+							</p>
 						</div>
 					</div>
 				)}
