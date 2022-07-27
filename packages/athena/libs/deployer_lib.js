@@ -117,7 +117,7 @@ module.exports = function (logger, ev, t) {
 						const athena_comp_type = (incoming_body && incoming_body.type) ? incoming_body.type.toLowerCase() : null;
 						if (athena_comp_type === ev.STR.ORDERER) {
 							build_body_opts.node_i = 0;
-							if (incoming_body.systemless === true) {			// nodes w/o the system channel should not have this flag set
+							if (t.ot_misc.is_systemless_req(incoming_body)) {			// nodes w/o the system channel should not have this flag set
 								build_body_opts.consenter_proposal_fin = true;
 							} else {
 								build_body_opts.consenter_proposal_fin = false;
@@ -354,14 +354,15 @@ module.exports = function (logger, ev, t) {
 			const tls_ca_root_cert = results[0];
 			const taken_ids = results[1];
 			const available_vers_by_type = results[2];
-			req._tls_ca_root_cert = tls_ca_root_cert;														// store here, used later during onboard
+			req._tls_ca_root_cert = tls_ca_root_cert;												// store here, used later during onboard
 			const existing_cluster_ids = taken_ids.cluster_ids;										// rename
 			const fmt_body = t.comp_fmt.fmt_body_athena_to_dep(req, taken_ids, available_vers_by_type);	// translate athena spec to deployer here
 			const is_appending = is_appending_a_raft_orderer(fmt_body, existing_cluster_ids);
 			req._dep_component_id = fmt_body ? fmt_body.dep_component_id : null;					// store id we are using for cleanup incase provision fails
 			req._component_display_name = (fmt_body && fmt_body.parameters) ? fmt_body.parameters.display_name : null;	// store name for activity tracker
 			if (fmt_body.orderertype === ev.STR.RAFT) {
-				if (is_appending === false) {														// new raft cluster
+				// a systemless append should still use `bulk_add_components` b/c dep response will be an array of 1 orderer instead of object
+				if (is_appending === false || t.ot_misc.is_systemless_req(fmt_body)) {				// new raft cluster
 					parsed.OPERATION = 'bulk_add_components';
 				} else {																			// appending to existing cluster
 					parsed.OPERATION = 'add_component';
@@ -390,7 +391,7 @@ module.exports = function (logger, ev, t) {
 
 				// if we are appending to a cluster, we need fields like cluster id also deployer can't handle a config array
 				if (fmt_body.orderertype === ev.STR.RAFT && is_appending) {
-					const append_body = (fmt_body.channelless || fmt_body.systemless) ? fmt_body : build_object_fields(fmt_body);	// legacy needs it as obj
+					const append_body = t.ot_misc.is_systemless_req(fmt_body) ? fmt_body : build_object_fields(fmt_body);	// legacy needs it as obj
 					fill_in_existing_raft_details(append_body, (_, filled_body) => {
 						call_deployer(filled_body, route2use);
 					});
@@ -431,7 +432,7 @@ module.exports = function (logger, ev, t) {
 				if (!is_appending_raft) {												// creating new raft cluster
 					logger.debug('[deployer lib]', req._tx_id, 'ordering-cluster creating we be. id:', fmt_body.dep_component_id);
 					url2use = '/api/v3/instance/' + parsed.iid + '/type/orderer/component';
-				} else if (fmt_body.channelless || fmt_body.systemless) {				// appending to an existing raft cluster without system channel
+				} else if (t.ot_misc.is_systemless_req(fmt_body)) {				// appending to an existing raft cluster without system channel
 					logger.debug('[deployer lib]', req._tx_id, 'systemless ordering-cluster appending we be. id:', fmt_body.dep_component_id);
 					url2use = '/api/v3/instance/' + parsed.iid + '/type/orderer/component';
 				} else {																// appending to an existing raft cluster with system channel

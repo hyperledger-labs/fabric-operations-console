@@ -1077,6 +1077,17 @@ module.exports = function (logger, t) {
 		}
 	};
 
+	// -----------------------------------------------------------------
+	// detect if body indicates an orderer without a system channel
+	// -----------------------------------------------------------------
+	exports.is_systemless_req = function (body) {
+		if (body) {
+			return (body.channelless === true || body.systemless === true);
+		} else {
+			return false;
+		}
+	};
+
 	//--------------------------------------------------
 	// wait for the fabric component to start
 	//--------------------------------------------------
