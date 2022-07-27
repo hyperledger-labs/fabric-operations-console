@@ -49,6 +49,7 @@ class JoinOSNChannelModal extends React.Component {
 				orderers: null,									// setting null here skips the first step
 				configtxlator_url: this.props.configtxlator_url,
 				block_error: '',
+				show_channels_nav_link: false,
 			});
 			await this.setupForJoinViaPendingTile();
 		}
@@ -76,6 +77,7 @@ class JoinOSNChannelModal extends React.Component {
 				configtxlator_url: this.props.configtxlator_url,
 				drill_down_flow: false,							// true if user clicked on specific cluster before coming to this panel
 				block_error: '',
+				show_channels_nav_link: false,
 			});
 		}
 
@@ -85,6 +87,7 @@ class JoinOSNChannelModal extends React.Component {
 				orderers: null,									// setting null here skips the first step
 				configtxlator_url: this.props.configtxlator_url,
 				block_error: '',
+				show_channels_nav_link: false,
 			});
 			await this.setupForJoinViaChannelTile(this.props.joinChannelDetails.name);
 		}
@@ -537,9 +540,7 @@ class JoinOSNChannelModal extends React.Component {
 			drill_down_flow: true,
 		});
 		try {
-			console.log('DBG ~ file: JoinOSNChannelModal.js ~ line 538 ~ JoinOSNChannelModal ~ setupForJoinChannel= ~ channelName', channelName);
 			const config_block_b64 = await this.getChannelConfigBlock(channelName);
-			console.log('DBG ~ file: JoinOSNChannelModal.js ~ line 538 ~ JoinOSNChannelModal ~ setupForJoinChannel= ~ config_block_b64', config_block_b64);
 			this.props.updateState(SCOPE, {
 				config_block_b64: config_block_b64,
 				//loading: false,		// keep loading true until parseConfigBlock is done
@@ -562,16 +563,45 @@ class JoinOSNChannelModal extends React.Component {
 			Log.error(e);
 			const code = (e && e.grpc_resp && !isNaN(e.grpc_resp.status)) ? e.grpc_resp.status : '';
 			let details = (e && typeof e.stitch_msg === 'string') ? ('(' + code + ') ' + e.stitch_msg) : '';
+			let show_channels_nav_link = false;
 
 			if (Number(code) === 503) {
-				details = 'Error 503 - Unable to retrieve the config-block because the orderer does not have quorum.';
+				details = '503 - Unable to retrieve the config-block because the orderer does not have quorum. ';
+			}
+			details = details ? details : e.toString();
+
+			// --------------------------------------------------
+			// Attempt to find config blocks from the database
+			// --------------------------------------------------
+			try {
+				const local_config_blocks = await this.tryToFindLocalConfigBlocks(channelName);
+
+				// if we find 1 and only 1, load it and continue as normal
+				/*if (Array.isArray(local_config_blocks) && local_config_blocks.length === 1 && local_config_blocks[0].block_b64) {
+					local_config_block_b64 = local_config_blocks[0].block_b64;
+					Log.debug('found config block in console database: ' + channelName);
+				}*/
+
+				// if we find a couple, prompt user to pick one
+				if (Array.isArray(local_config_blocks) && local_config_blocks.length > 0 && local_config_blocks[0].block_b64) {
+					Log.debug('found 1+ config blocks in console database: ' + channelName);
+					show_channels_nav_link = true;
+					details += 'The console was unable to pull the latest config block from your ordering cluster. This is a required step. ';
+					details += 'However, you may still be able to join using a previous config block stored by the console. ';
+					details += 'Use the link below to browse the "Channels" tab and pick the already-joined channel tile to continue. ';
+				}
+			} catch (e) {
+				Log.debug('was unable to use config block in console database: ' + channelName);
+				Log.error(e);
 			}
 
+			// show config block retrieval error
 			this.props.updateState(SCOPE, {
 				block_error_title: '[Error] Could not get config-block. Resolve error to continue:',
-				block_error: details ? details : e.toString(),
+				block_error: details,
 				config_block_b64: null,
 				loading: false,
+				show_channels_nav_link: show_channels_nav_link,
 			});
 		}
 	}
@@ -703,7 +733,7 @@ class JoinOSNChannelModal extends React.Component {
 			let tx_id = self.props.selectedConfigBlockDoc ? self.props.selectedConfigBlockDoc.id : null;
 			if (join_successes > 0 && tx_id) {
 				try {
-					await ConfigBlockApi.delete(tx_id);
+					await ConfigBlockApi.archive(tx_id);
 				} catch (e) {
 					Log.error(e);
 				}
@@ -772,6 +802,20 @@ class JoinOSNChannelModal extends React.Component {
 			}
 			return obj;
 		}
+	}
+
+	// try to find a config block doc with the same channel name
+	async tryToFindLocalConfigBlocks(channel_name) {
+		const ret = [];
+		const config_blocks = await ConfigBlockApi.getAll({ cache: 'skip', visibility: 'all' });
+		if (config_blocks && Array.isArray(config_blocks.blocks)) {
+			for (let i in config_blocks.blocks) {
+				if (config_blocks.blocks[i] && config_blocks.blocks[i].channel === channel_name) {
+					ret.push(config_blocks.blocks[i]);
+				}
+			}
+		}
+		return ret;
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------------------------
@@ -849,6 +893,7 @@ class JoinOSNChannelModal extends React.Component {
 			block_error,
 			block_error_title,
 			drill_down_flow,
+			show_channels_nav_link,
 		} = this.props;
 
 		return (
@@ -892,6 +937,10 @@ class JoinOSNChannelModal extends React.Component {
 								{translate('osn-join-loading-desc')}
 							</p>
 						</div>
+					)}
+
+					{show_channels_nav_link && (
+						<a href="/channels?visibility=all">{translate('browse_channels_tab')}</a>
 					)}
 
 					{!this.props.loading && joinOsnMap && !_.isEmpty(Object.keys(joinOsnMap)) && (
@@ -1101,6 +1150,7 @@ const dataProps = {
 	channels: PropTypes.bool,
 	selected_osn: PropTypes.object,
 	drill_down_flow: PropTypes.bool,
+	show_channels_nav_link: PropTypes.bool,
 
 	config_block_b64: PropTypes.object,
 	b_genesis_block: PropTypes.blob,

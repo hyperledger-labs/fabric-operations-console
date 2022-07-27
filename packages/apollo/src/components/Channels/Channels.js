@@ -40,6 +40,7 @@ import ConfigBlockApi from '../../rest/ConfigBlockApi';
 import { TrashCan20 } from '@carbon/icons-react/es';
 import JoinOSNChannelModal from '../JoinOSNChannelModal/JoinOSNChannelModal';
 
+const url = require('url');
 const SCOPE = 'channels';
 const Log = new Logger(SCOPE);
 const RETRY_LIMIT = 40000;
@@ -57,10 +58,13 @@ class ChannelComponent extends Component {
 	componentDidMount() {
 		this.mounted = true;
 		this.props.showBreadcrumb('channels', {}, this.props.history.location.pathname, true);
+		const url_parts = url.parse(window.location.href, true);
+		const opts = url_parts && url_parts.query && url_parts.query.visibility ? { visibility: url_parts.query.visibility } : null;
+
 		this.getAllPeerChannels();
 		this.getAllPeers();
 		this.getAllOrderers();
-		this.getAllOrdererChannels();
+		this.getAllOrdererChannels(opts);
 		this.props.updateState(SCOPE, {
 			channelName: '',
 			loadingPeers: [],
@@ -68,6 +72,7 @@ class ChannelComponent extends Component {
 			selectedConfigBlock: null,
 			createChannelModal: false,
 			joinOsnModal: false,
+			showingAllChannels: (url_parts && url_parts.query && url_parts.query.visibility && url_parts.query.visibility === 'all')
 		});
 	}
 
@@ -443,6 +448,13 @@ class ChannelComponent extends Component {
 	buildJoinOrdererTile(channel) {
 		const translate = this.props.translate;
 		const consenterClusterNames = channel.extra_consenter_data ? channel.extra_consenter_data.map(orderer => orderer._cluster_name).join(', ') : '';
+		const archived = channel.visibility === 'archive';
+		let date_str = '';
+		try {
+			date_str = channel.archived_ts ? new Date(channel.archived_ts).toLocaleDateString() : '';
+		} catch (e) {
+			// do nothing
+		}
 		return (
 			<div className="ibp-channel-tile-stats">
 				<div className="ibp-channels-orderer">
@@ -454,18 +466,26 @@ class ChannelComponent extends Component {
 							return false;
 						}}
 					>
-						<TrashCan20 />
+						{!archived && <TrashCan20 />}
 					</div>
 				</div>
 				<ItemTileLabels
 					custom={
 						<div>
-							{channel.pending && (
+							{!archived && (
 								<div className="ibp-pending-channel-container">
 									<SVGs type="clock"
 										extendClass={{ 'ibp-pending-tile-clock': true }}
 									/>
 									<span className="ibp-pending-channel-label">{translate('pending_channel_message_orderer')}</span>
+								</div>
+							)}
+							{archived && (
+								<div className="ibp-pending-channel-container">
+									<SVGs type="stepperComplete"
+										extendClass={{ 'ibp-pending-tile-success': true }}
+									/>
+									<span className="ibp-pending-channel-label">{translate('archived_channel_message_orderer', { date: date_str })}</span>
 								</div>
 							)}
 						</div>
@@ -669,9 +689,9 @@ class ChannelComponent extends Component {
 						>
 							{osnadminFeatsEnabled && (<ItemContainer
 								emptyImage={emptyImage}
-								emptyTitle="empty_channels_title"
-								emptyMessage="empty_channels_text"
-								containerTitle="osn_channels"
+								emptyTitle="empty_pending_channels_title"
+								emptyMessage="empty_pending_channels_text"
+								containerTitle={this.props.showingAllChannels ? 'osn_channels' : 'pending_osn_channels'}
 								containerTooltip="channels_desc_orderer"
 								tooltipDirection="right"
 								id="test__channels2--add--tile"
@@ -893,6 +913,7 @@ const dataProps = {
 	filteredChannels: PropTypes.array,
 	loadingPeers: PropTypes.array,
 	selectedConfigBlock: PropTypes.object,
+	showingAllChannels: PropTypes.bool,
 };
 
 ChannelComponent.propTypes = {

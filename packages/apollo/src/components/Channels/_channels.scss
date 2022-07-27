@@ -49,13 +49,19 @@
 	font-size: 0.8rem;
 }
 
-.ibp-pending-tile-clock {
+.ibp-pending-tile-clock, .ibp-pending-tile-success {
 	height: 1rem;
 	vertical-align: bottom;
 }
+.ibp-pending-tile-success{
+	margin-right: 0.6rem;
+}
 
 .ibp__channels--container .ibp-container-tile.ibp-container-tile-pending{
-	background-color: #7b7575;
+	background-color: #606060;
+}
+.ibp__channels--container .ibp-container-tile.ibp-container-tile-archived{
+	background-color: #464646;
 }
 .ibp-channels-orderer{
 	white-space: initial;

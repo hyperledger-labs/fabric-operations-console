@@ -113,5 +113,32 @@ module.exports = (logger, ev, t) => {
 		});
 	}
 
+	//--------------------------------------------------
+	// Archive a config block doc
+	//--------------------------------------------------
+	app.put('/api/v[123]/configblocks/:tx_id', t.middleware.verify_manage_action_session, (req, res) => {
+		archiveConfigBlock(req, res);
+	});
+	app.put('/ak/api/v[123]/configblocks/:tx_id', t.middleware.verify_manage_action_ak, (req, res) => {
+		archiveConfigBlock(req, res);
+	});
+
+	function archiveConfigBlock(req, res) {
+		if (t.ot_misc.is_v2plus_route(req)) {
+			req._validate_path = '/ak/api/' + t.validate.pick_ver(req) + '/configblocks/{id}';
+			logger.debug('[pre-flight] setting validate route:', req._validate_path);
+		}
+
+		t.validate.request(req, res, null, () => {
+			t.config_blocks_lib.archiveBlockDoc(req, (err, ret) => {
+				if (err) {
+					return res.status(t.ot_misc.get_code(err)).json(err);
+				} else {
+					return res.status(200).json(ret);
+				}
+			});
+		});
+	}
+
 	return app;
 };
