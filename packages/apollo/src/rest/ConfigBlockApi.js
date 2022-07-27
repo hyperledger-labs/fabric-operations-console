@@ -25,7 +25,15 @@ class ConfigBlockApi {
 
 	// get all config block docs
 	static async getAll(opts) {
-		const queryTxt = (opts && opts.cache === 'skip') ? '?cache=skip' : '';
+		let queryTxt = (opts && opts.cache === 'skip') ? '?cache=skip' : '';
+		if (opts && opts.visibility) {
+			if (queryTxt) {
+				queryTxt += '&';
+			} else {
+				queryTxt = '?';
+			}
+			queryTxt += 'visibility=' + opts.visibility;
+		}
 		return await RestApi.get('/api/v3/configblocks' + queryTxt);
 	}
 
@@ -50,6 +58,11 @@ class ConfigBlockApi {
 	// delete a config block
 	static async delete(tx_id) {
 		return await RestApi.delete('/api/v3/configblocks/' + tx_id);
+	}
+
+	// archive a config block
+	static async archive(tx_id) {
+		return await RestApi.put('/api/v3/configblocks/' + tx_id);
 	}
 }
 

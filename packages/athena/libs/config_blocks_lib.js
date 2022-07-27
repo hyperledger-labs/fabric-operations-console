@@ -24,6 +24,7 @@ module.exports = function (logger, ev, t) {
 		the_doc._id = the_doc._id || the_doc.tx_id;
 		the_doc.type = ev.STR.BLOCK;
 		the_doc.timestamp = Date.now();
+		the_doc.visibility = ev.STR.TX_INBOX;
 		delete the_doc._rev;
 		return the_doc;
 	}
@@ -31,13 +32,14 @@ module.exports = function (logger, ev, t) {
 	// format config block doc *response*
 	function format_response(the_doc) {
 		the_doc.id = the_doc._id;
+		if (!the_doc.visibility) { the_doc.visibility = ev.STR.TX_INBOX; }
 		delete the_doc._id;
 		delete the_doc._rev;
 		return t.misc.sortKeys(the_doc);
 	}
 
 	//-------------------------------------------------------------
-	// Get all config block docs - raw
+	// Get all config block docs - raw - (the query param "visibility" will control if "inbox" or "archive" status docs are returned )
 	//-------------------------------------------------------------
 	exports.getConfigBlockDocs = (req, cb) => {
 		const opts = {
@@ -59,8 +61,23 @@ module.exports = function (logger, ev, t) {
 			} else {
 				const ret = [];
 				if (resp) {
+					const filter_on = req.query.visibility;
 					for (let i in resp.rows) {
-						ret.push(resp.rows[i].doc);
+						if (filter_on === 'all') {								// return everything
+							ret.push(resp.rows[i].doc);
+						} else if (filter_on === ev.STR.TX_INBOX) {				// only return "inbox" docs
+							if (!resp.rows[i].doc.visibility || resp.rows[i].doc.visibility === ev.STR.TX_INBOX) {	// if field dne, treat it as inbox
+								ret.push(resp.rows[i].doc);
+							}
+						} else if (filter_on === ev.STR.TX_ARCHIVE) {			// only return "archived" docs
+							if (resp.rows[i].doc.visibility === ev.STR.TX_ARCHIVE) {
+								ret.push(resp.rows[i].doc);
+							}
+						} else {												// default - only return "inbox" docs
+							if (!resp.rows[i].doc.visibility || resp.rows[i].doc.visibility === ev.STR.TX_INBOX) {
+								ret.push(resp.rows[i].doc);
+							}
+						}
 					}
 				}
 				return cb(null, ret);
@@ -134,7 +151,6 @@ module.exports = function (logger, ev, t) {
 		logger.info('[config block] attempting to delete a block doc:', req.params.tx_id);
 
 		// create a notification
-		// dsh todo make these
 		const notice = { message: 'deleting a config block doc. tx_id: ' + req.params.tx_id };
 		t.notifications.procrastinate(req, notice);
 
@@ -189,6 +205,57 @@ module.exports = function (logger, ev, t) {
 						details: 'removed'
 					};
 					return loc_cb(null, ret);
+				}
+			});
+		}
+	};
+
+	//--------------------------------------------------
+	// Archive the config block doc (changes visibility to "archive")
+	//--------------------------------------------------
+	exports.archiveBlockDoc = (req, cb) => {
+		logger.info('[config block] attempting to archive a block doc:', req.params.tx_id);
+
+		// create a notification
+		const notice = { message: 'archiving a config block doc. tx_id: ' + req.params.tx_id };
+		t.notifications.procrastinate(req, notice);
+
+		// ----- Get the doc first ----- //
+		const get_opts = {
+			db_name: ev.DB_COMPONENTS,
+			_id: req.params.tx_id,
+			SKIP_CACHE: true
+		};
+		t.otcc.getDoc(get_opts, (err_getBlockDoc, block_doc) => {
+			if (err_getBlockDoc) {
+				const error_code = t.ot_misc.get_code(err_getBlockDoc);
+				if (error_code === 404) {
+					logger.warn('[config block] block doc (to archive) does not exist:', error_code);
+					return cb({ statusCode: error_code, msg: 'config-block by this tx id does not exist. tx id: "' + req.params.tx_id + '"' });
+				} else {
+					logger.error('[config block] error trying to find block doc to archive it:', error_code, err_getBlockDoc);
+					return cb({ statusCode: error_code, msg: 'problem getting the config-block doc for deletion. tx id: "' + req.params.tx_id + '"' });
+				}
+			} else {
+				archive_doc(block_doc, (del_err, del_resp) => {
+					return cb(del_err, del_resp);
+				});
+			}
+		});
+
+		// change visibility of the local doc in our db to "archive"
+		function archive_doc(config_block_doc, loc_cb) {
+			config_block_doc.visibility = ev.STR.TX_ARCHIVE;
+			config_block_doc.archived_ts = Date.now();
+
+			t.otcc.writeDoc({ db_name: ev.DB_COMPONENTS }, config_block_doc, (err_writeDoc, wroteDoc) => {
+				if (err_writeDoc) {
+					const error_code = t.ot_misc.get_code(err_writeDoc);
+					logger.error('[config block] error trying to archive config block doc:', error_code, err_writeDoc);
+					return cb({ statusCode: error_code, msg: 'problem archiving the config-block doc. tx id: "' + req.params.tx_id + '"' });
+				} else {
+					logger.error('[config block] success, created block. tx_id: ' + req.params.tx_id);
+					return cb(null, format_response(wroteDoc));
 				}
 			});
 		}
