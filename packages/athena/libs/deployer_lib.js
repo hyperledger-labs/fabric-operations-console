@@ -390,7 +390,8 @@ module.exports = function (logger, ev, t) {
 
 				// if we are appending to a cluster, we need fields like cluster id also deployer can't handle a config array
 				if (fmt_body.orderertype === ev.STR.RAFT && is_appending) {
-					fill_in_existing_raft_details(build_object_fields(fmt_body), (_, filled_body) => {
+					const append_body = (fmt_body.channelless || fmt_body.systemless) ? fmt_body : build_object_fields(fmt_body);	// legacy needs it as obj
+					fill_in_existing_raft_details(append_body, (_, filled_body) => {
 						call_deployer(filled_body, route2use);
 					});
 				} else {																// all other components go here
@@ -400,6 +401,7 @@ module.exports = function (logger, ev, t) {
 		});
 
 		// deployer only supports certain fields as objects for pre-create - convert array fields to an object/string
+		// (do not run this on a systemless appending flow)
 		function build_object_fields(dep_body_fmt) {
 			const fields = ['crypto', 'config', 'zone', 'region', 'configoverride'];	// these fields do not work as arrays for pre-create
 			for (let i in fields) {
@@ -431,7 +433,7 @@ module.exports = function (logger, ev, t) {
 					url2use = '/api/v3/instance/' + parsed.iid + '/type/orderer/component';
 				} else if (fmt_body.channelless || fmt_body.systemless) {				// appending to an existing raft cluster without system channel
 					logger.debug('[deployer lib]', req._tx_id, 'systemless ordering-cluster appending we be. id:', fmt_body.dep_component_id);
-					url2use = '/api/v3/instance/' + parsed.iid + '/precreate/type/orderer/component';
+					url2use = '/api/v3/instance/' + parsed.iid + '/type/orderer/component';
 				} else {																// appending to an existing raft cluster with system channel
 					logger.debug('[deployer lib]', req._tx_id, 'legacy ordering-cluster appending we be. id:', fmt_body.dep_component_id);
 					url2use = '/api/v3/instance/' + parsed.iid + '/precreate/type/orderer/component';
