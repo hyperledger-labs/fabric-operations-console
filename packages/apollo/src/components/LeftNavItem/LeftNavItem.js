@@ -30,7 +30,7 @@ class LeftNavItem extends Component {
 				>
 					<NavLink
 						to={{
-							pathname: this.props.path + window.location.search,
+							pathname: this.props.path,
 							title: this.props.itemId,
 						}}
 						exact
@@ -46,7 +46,7 @@ class LeftNavItem extends Component {
 					</NavLink>
 					<div className={`${this.props.globalNavSubmenu.length ? 'left-nav-extended' : 'left-nav-shortened'} left-nav-item-content`}>
 						<Link className="ibp-left-nav-header-link"
-							to={this.props.path + window.location.search}
+							to={this.props.path}
 							tabIndex="-1"
 						>
 							<h4 className="ibp-left-nav-text">{translate(this.props.itemId)}</h4>
