@@ -98,6 +98,9 @@ const ItemContainerTile = ({ data, mapping, largeTiles, select, menuItems, class
 	if (data.pending === true) {
 		defaultClassName = `${defaultClassName} ibp-container-tile-pending`;
 	}
+	if (data.visibility === 'archive') {
+		defaultClassName = `${defaultClassName} ibp-container-tile-archived`;
+	}
 	if (activeItem) {
 		defaultClassName = `${defaultClassName} ibp-container-tile-selected`;
 	}
