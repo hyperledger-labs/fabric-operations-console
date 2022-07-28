@@ -410,6 +410,7 @@ class ChannelComponent extends Component {
 			});
 	};
 
+	// build peer channel tiles
 	buildCustomTile(channel) {
 		const translate = this.props.translate;
 		return (
@@ -447,7 +448,6 @@ class ChannelComponent extends Component {
 	// build the channel tiles for orderers
 	buildJoinOrdererTile(channel) {
 		const translate = this.props.translate;
-		const consenterClusterNames = channel.extra_consenter_data ? channel.extra_consenter_data.map(orderer => orderer._cluster_name).join(', ') : '';
 		const archived = channel.visibility === 'archive';
 		let date_str = '';
 		try {
@@ -455,10 +455,19 @@ class ChannelComponent extends Component {
 		} catch (e) {
 			// do nothing
 		}
+
+		const clusters = {};
+		for (let i in channel.extra_consenter_data) {
+			if (channel.extra_consenter_data[i]._cluster_name) {
+				clusters[channel.extra_consenter_data[i]._cluster_name] = true;
+			}
+		}
+		const cluster_names = Object.keys(clusters);
+
 		return (
 			<div className="ibp-channel-tile-stats">
 				<div className="ibp-channels-orderer">
-					<div>{consenterClusterNames}</div>
+					<div>{(cluster_names && cluster_names.length > 0) ? cluster_names.join(', ') : ''}</div>
 					<div className="ibp-channels-del-channel"
 						onClick={(e) => {
 							e.stopPropagation();
