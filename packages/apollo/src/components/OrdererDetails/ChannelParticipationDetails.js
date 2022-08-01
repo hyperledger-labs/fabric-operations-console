@@ -212,6 +212,7 @@ class ChannelParticipationDetails extends Component {
 							//	this.getChannelDetails();
 							//});
 						}}
+						selectedCluster={this.props.details}
 						joinChannelDetails={this.props.joinChannelDetails}
 					/>
 				)}
