@@ -340,6 +340,7 @@ class JoinOSNChannelModal extends React.Component {
 		const ret = {};
 		const msp_data = this.buildSimpleMspFromConfigBlock(config_block);
 		let all_identities = await IdentityApi.getIdentities();
+		const selectedClusterId = this.props.selectedCluster ? this.props.selectedCluster.cluster_id : null;
 
 		// first iter over nodes that are in the config block as consenters
 		for (let i in consentersInConfigBlock) {
@@ -396,7 +397,14 @@ class JoinOSNChannelModal extends React.Component {
 				}
 			}
 
-			// if ths cluster id dne, but this msp matches one that is a consenter, init this cluster and add its nodes
+			// if user has entered via drill down then add nodes from the selected cluster (init cluster if needed)
+			if (selectedClusterId && cluster_id === selectedClusterId && !ret[cluster_id] && this.props.drill_down_flow) {
+				if (node && node.msp_id && node.osnadmin_url) {
+					ret[cluster_id] = await init_cluster(node, false);
+				}
+			}
+
+			// if this cluster id dne yet, but this msp matches one that is a consenter, init this cluster and add its nodes
 			if (!ret[cluster_id] && msp_is_consenter(msp_id, consentersInConfigBlock)) {
 				if (node && node.msp_id && node.osnadmin_url) {
 					ret[cluster_id] = await init_cluster(node, true);
@@ -1175,6 +1183,7 @@ JoinOSNChannelModal.propTypes = {
 	updateState: PropTypes.func,
 	showSuccess: PropTypes.func,
 	joinChannelDetails: PropTypes.object,
+	selectedCluster: PropTypes.object,
 	selectedConfigBlockDoc: PropTypes.object,
 	translate: PropTypes.func, // Provided by withLocalize
 };
