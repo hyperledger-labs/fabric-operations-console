@@ -43,7 +43,6 @@ class OSNJoin extends Component {
 
 		// config block was passed in - load it
 		const options = buildCreateChannelOpts();						// get all the input data together
-		console.log('dsh99 block opts', options);
 		this.props.updateState(SCOPE, {
 			channel_id: options ? options.channel_id : '',
 		});
@@ -56,7 +55,6 @@ class OSNJoin extends Component {
 
 			if (b_block) {
 				block_doc = await this.storeGenesisBlock(b_block, options.consenters, my_block);
-				console.log('dsh99 block_doc', block_doc);
 			}
 
 			this.props.updateState(SCOPE, {
@@ -64,7 +62,6 @@ class OSNJoin extends Component {
 				genesis_block_doc: block_doc,
 				loading: false,
 			});
-			console.log('dsh99 block_doc2', block_doc);
 		}, 1200);								// slow this down so the spinner doesn't flash
 	}
 
@@ -102,21 +99,22 @@ class OSNJoin extends Component {
 				)}
 
 				{!block_error && !this.props.loading && (
-					<div>
-						<center>
+					<div className='ibp-channel-section-genesis'>
+						<left>
 							<SVGs type={'partyPopper'}
-								width="100px"
-								height="100px"
+								width="120px"
+								height="120px"
 							/>
-						</center>
+						</left>
+						<div className='ibp-channel-section-genesis-align'>
+							<p className="ibp-join-osn-genesis ibp-channel-section-desc">
+								{translate('osn-join-config-block', { channel: channel_id })}
+							</p>
 
-						<p className="ibp-join-osn-genesis ibp-channel-section-desc">
-							{translate('osn-join-config-block', { channel: channel_id })}
-						</p>
-
-						<p className="ibp-join-osn-desc">
-							{translate('osn-join-desc3')}
-						</p>
+							<p className="ibp-join-osn-desc">
+								{translate('osn-join-desc3')}
+							</p>
+						</div>
 					</div>
 				)}
 			</div>
@@ -145,13 +143,19 @@ class OSNJoin extends Component {
 	// store the block in the console db or show error
 	async storeGenesisBlock(bin_block, nodes_arr, json_block) {
 		try {
-			const apiResp = await ConfigBlockApi.store({
-				channel_id: _.get(json_block, 'data.data[0].payload.header.channel_header.channel_id'),
-				b_block: bin_block,
-				extra_consenter_data: nodes_arr,
-				tx_id: _.get(json_block, 'data.data[0].payload.header.channel_header.tx_id'),
-			});
-			return apiResp;
+			const channel_id = _.get(json_block, 'data.data[0].payload.header.channel_header.channel_id');
+			const tx_id = _.get(json_block, 'data.data[0].payload.header.channel_header.tx_id');
+			if (channel_id) {
+				const apiResp = await ConfigBlockApi.store({
+					channel_id: channel_id,
+					b_block: bin_block,
+					extra_consenter_data: nodes_arr,
+					tx_id: tx_id,
+				});
+				return apiResp;
+			} else {
+				return null;
+			}
 		} catch (e) {
 			const code = (e && !isNaN(e.statusCode)) ? '(' + e.statusCode + ') ' : '';
 			const details = (e && typeof e.msg === 'string') ? (code + e.msg) : '';

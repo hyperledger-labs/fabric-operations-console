@@ -731,7 +731,7 @@ class JoinChannelModal extends React.Component {
 				headerLink={translate('_JOIN_CHANNEL_LINK', { DOC_PREFIX: this.props.docPrefix })}
 				headerLinkText={translate('find_out_more')}
 				title={translate('select_channel')}
-				disableSubmit={this.disableSubmit}
+				disableSubmit={this.props.disableSubmit}
 				onNext={() => this.filterPeers()}
 			>
 				<Form
@@ -741,6 +741,7 @@ class JoinChannelModal extends React.Component {
 						{
 							name: 'channel',
 							specialRules: Helper.SPECIAL_RULES_CHANNEL_NAME,
+							required: true
 						},
 					]}
 					onChange={this.onChannelChange}

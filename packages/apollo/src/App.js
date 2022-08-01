@@ -208,7 +208,7 @@ class App extends Component {
 		}
 		let platform = '';
 		if (settings.INFRASTRUCTURE === 'openshift') {
-			platform = '-sw-252';
+			platform = '-sw-253';			// doc link that software uses hardcoded.... 2.5.3
 		}
 		const modifiedCrnString = settings.CRN_STRING && settings.CRN_STRING.indexOf('::') !== -1 && settings.CRN_STRING.slice(0, -1);
 		const doc_prefix = bmix_url + '/docs/services/blockchain' + platform + '?topic=blockchain' + platform + '-';

@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
-import { updateState } from '../../redux/commonActions';
+import { updateState, showSuccess } from '../../redux/commonActions';
 import { OrdererRestApi } from '../../rest/OrdererRestApi';
 import Helper from '../../utils/helper';
 import Form from '../Form/Form';
@@ -43,17 +43,18 @@ const url = require('url');
 class JoinOSNChannelModal extends React.Component {
 	async componentDidMount() {
 
-		// [Flow 1] - joining via the pending channel tile, is a new channel
+		// [Flows 1 & 4] - joining via the pending channel tile OR came from the create-channel wizard
 		if (this.props.selectedConfigBlockDoc) {
 			this.props.updateState(SCOPE, {
 				orderers: null,									// setting null here skips the first step
 				configtxlator_url: this.props.configtxlator_url,
 				block_error: '',
+				show_channels_nav_link: false,
 			});
 			await this.setupForJoinViaPendingTile();
 		}
 
-		// [Flow 2] - joining via the join-channel button, the channel is not yet selected, show step to select a node and channel name
+		// [Flow 2] - joining via the join-channel blue button, the channel is not yet selected, show step to select a node and channel name
 		else if (!this.props.joinChannelDetails) {
 			// if we need to get orderers....
 			const oss = await OrdererRestApi.getOrderers(true);
@@ -74,8 +75,8 @@ class JoinOSNChannelModal extends React.Component {
 				disableSubmit: true,
 				submitting: false,								// submitting controls the wizard spinner after submit is clicked
 				configtxlator_url: this.props.configtxlator_url,
-				drill_down_flow: false,							// true if user clicked on specific cluster before coming to this panel
 				block_error: '',
+				show_channels_nav_link: false,
 			});
 		}
 
@@ -85,6 +86,7 @@ class JoinOSNChannelModal extends React.Component {
 				orderers: null,									// setting null here skips the first step
 				configtxlator_url: this.props.configtxlator_url,
 				block_error: '',
+				show_channels_nav_link: false,
 			});
 			await this.setupForJoinViaChannelTile(this.props.joinChannelDetails.name);
 		}
@@ -184,7 +186,7 @@ class JoinOSNChannelModal extends React.Component {
 		}
 	}
 
-	// get all known orderers and filter them to down to ones that can be a consenter
+	// get all known orderers and filter them to down to ones that *could* be a consenter (we just need the bare minimal fields, tls cert, hostname, & port)
 	async getAllOrderers() {
 		let orderers = null;
 		let possible_consenters = [];
@@ -265,12 +267,10 @@ class JoinOSNChannelModal extends React.Component {
 	countSelectedOrderers(useMap) {
 		let updateCount = 0;
 		for (let id in useMap) {
-			if (useMap[id].selected === true) {
-				for (let i in useMap[id].nodes) {
-					// don't count nodes that are already joined
-					if (useMap[id].nodes[i]._selected && useMap[id].nodes[i]._status !== constants.OSN_JOIN_SUCCESS) {
-						updateCount++;
-					}
+			for (let i in useMap[id].nodes) {
+				// don't count nodes that are already joined
+				if (useMap[id].nodes[i]._selected && useMap[id].nodes[i]._status !== constants.OSN_JOIN_SUCCESS) {
+					updateCount++;
 				}
 			}
 		}
@@ -351,35 +351,26 @@ class JoinOSNChannelModal extends React.Component {
 				consenter.name = node_data.name;
 				consenter._consenter = true;
 				consenter.osnadmin_url = node_data.osnadmin_url;
-
-				// get tls identity for node
-				const identity4tls = await ChannelParticipationApi.findMatchingIdentity({
-					identities: all_identities,
-					root_certs_b64pems: _.get(node_data, 'msp.tlsca.root_certs')
-				});
+				consenter._msp_id = node_data.msp_id;
 
 				const cluster_id = node_data._cluster_id;
 				if (!ret[cluster_id]) {
-					ret[cluster_id] = {
-						nodes: [],					// populated later
-						msp_id: node_data.msp_id,
-						cluster_name: node_data._cluster_name,
-						cluster_id: node_data._cluster_id,
-
-						// the identity we think they should use
-						tls_identity: identity4tls,
-
-						// if this cluster of orderer nodes is selected to join the channel - defaults true
-						selected: true,
-
-						// the root certs for the MSP that controls this cluster, used later in the join-channel api
-						tls_root_certs: (msp_data && msp_data[node_data.msp_id]) ? msp_data[node_data.msp_id].tls_root_certs : [],
-					};
-
-					// if the first node we itered on didn't find a tls identity for some reason this could still be null, replace it now
-					if (!ret[cluster_id].tls_identity) {
-						ret[cluster_id].tls_identity = identity4tls;
+					if (node_data && node_data.msp_id && node_data.osnadmin_url) {
+						ret[cluster_id] = await init_cluster(node_data, true);
 					}
+				}
+
+
+				// if the first node we itered on didn't find a tls identity for some reason this could still be null, replace it now
+				if (ret[cluster_id] && !ret[cluster_id].tls_identity) {
+
+					// get tls identity for node
+					const identity4tls = await ChannelParticipationApi.findMatchingIdentity({
+						identities: all_identities,
+						root_certs_b64pems: _.get(node_data, 'msp.tlsca.root_certs')
+					});
+
+					ret[cluster_id].tls_identity = identity4tls;
 				}
 
 				// orderer is not in map yet (this shouldn't be possible for the consenters array, but just in case)
@@ -395,10 +386,27 @@ class JoinOSNChannelModal extends React.Component {
 		// add nodes we are missing (these will be possible followers)
 		for (let i in all_orderers) {
 			const cluster_id = all_orderers[i]._cluster_id;
-			if (ret[cluster_id]) {											// only add nodes for cluster that was selected
-				if (!osn_already_exist(cluster_id, all_orderers[i]._id)) {	// orderer is not in map yet
-					if (all_orderers[i].osnadmin_url) {						// osn-join flow needs the osnadmin_url field
-						const node = all_orderers[i];
+			const msp_id = all_orderers[i].msp_id;
+			const node = all_orderers[i];
+
+			// if user has *not* entered via drill down then add nodes from all known clusters (init cluster if needed)
+			if (!ret[cluster_id] && !this.props.drill_down_flow) {
+				if (node && node.msp_id && node.osnadmin_url) {
+					ret[cluster_id] = await init_cluster(node, false);
+				}
+			}
+
+			// if ths cluster id dne, but this msp matches one that is a consenter, init this cluster and add its nodes
+			if (!ret[cluster_id] && msp_is_consenter(msp_id, consentersInConfigBlock)) {
+				if (node && node.msp_id && node.osnadmin_url) {
+					ret[cluster_id] = await init_cluster(node, true);
+				}
+			}
+
+			// we only add orderers from clusters that are in "ret", else skip this node
+			if (ret[cluster_id]) {
+				if (!osn_already_exist(cluster_id, node._id)) {	// orderer is not in map yet
+					if (node.osnadmin_url) {						// osn-join flow needs the osnadmin_url field
 						node._consenter = false;
 						ret[cluster_id].nodes.push(init_node(node, false));
 					}
@@ -415,9 +423,33 @@ class JoinOSNChannelModal extends React.Component {
 			}
 		}
 
-		// iter over joined osn to this channel and set if each osn has joined or not
-
 		return ret;
+
+		// init the "ret" field for this node's cluster
+		async function init_cluster(node_data, selected) {
+
+			// get tls identity for node
+			const identity4tls = await ChannelParticipationApi.findMatchingIdentity({
+				identities: all_identities,
+				root_certs_b64pems: _.get(node_data, 'msp.tlsca.root_certs')
+			});
+
+			return {
+				nodes: [],					// populated later
+				msp_id: node_data.msp_id,
+				cluster_name: node_data._cluster_name,
+				cluster_id: node_data._cluster_id,
+
+				// the identity we think they should use
+				tls_identity: identity4tls,
+
+				// if this cluster of orderer nodes is selected to join the channel - defaults true
+				selected: selected,
+
+				// the root certs for the MSP that controls this cluster, used later in the join-channel api
+				tls_root_certs: (msp_data && msp_data[node_data.msp_id]) ? msp_data[node_data.msp_id].tls_root_certs : [],
+			};
+		}
 
 		// sort orderer nodes, nodes that are consenters are first
 		function fancy_node_sort(arr) {
@@ -480,6 +512,17 @@ class JoinOSNChannelModal extends React.Component {
 			}
 			return null;
 		}
+
+		// figure out if this msp is a consenter or not
+		// dsh todo use root cert
+		function msp_is_consenter(msp_id, consenters) {
+			for (let i in consenters) {
+				if (consenters[i]._msp_id === msp_id) {
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------------------------
@@ -534,12 +577,10 @@ class JoinOSNChannelModal extends React.Component {
 		this.props.updateState(SCOPE, {
 			config_block_b64: null,
 			loading: true,
-			drill_down_flow: true,
+			drill_down_flow: true,		// true if user clicked on specific cluster before coming to this panel
 		});
 		try {
-			console.log('DBG ~ file: JoinOSNChannelModal.js ~ line 538 ~ JoinOSNChannelModal ~ setupForJoinChannel= ~ channelName', channelName);
 			const config_block_b64 = await this.getChannelConfigBlock(channelName);
-			console.log('DBG ~ file: JoinOSNChannelModal.js ~ line 538 ~ JoinOSNChannelModal ~ setupForJoinChannel= ~ config_block_b64', config_block_b64);
 			this.props.updateState(SCOPE, {
 				config_block_b64: config_block_b64,
 				//loading: false,		// keep loading true until parseConfigBlock is done
@@ -560,13 +601,47 @@ class JoinOSNChannelModal extends React.Component {
 			}
 		} catch (e) {
 			Log.error(e);
-			const code = (e && !isNaN(e.status_code)) ? '(' + e.status_code + ') ' : '';
-			const details = (e && typeof e.stitch_msg === 'string') ? (code + e.stitch_msg) : '';
+			const code = (e && e.grpc_resp && !isNaN(e.grpc_resp.status)) ? e.grpc_resp.status : '';
+			let details = (e && typeof e.stitch_msg === 'string') ? ('(' + code + ') ' + e.stitch_msg) : '';
+			let show_channels_nav_link = false;
+
+			if (Number(code) === 503) {
+				details = '503 - Unable to retrieve the config-block because the orderer does not have quorum. ';
+			}
+			details = details ? details : e.toString();
+
+			// --------------------------------------------------
+			// Attempt to find config blocks from the database
+			// --------------------------------------------------
+			try {
+				const local_config_blocks = await this.tryToFindLocalConfigBlocks(channelName);
+
+				// if we find 1 and only 1, load it and continue as normal
+				/*if (Array.isArray(local_config_blocks) && local_config_blocks.length === 1 && local_config_blocks[0].block_b64) {
+					local_config_block_b64 = local_config_blocks[0].block_b64;
+					Log.debug('found config block in console database: ' + channelName);
+				}*/
+
+				// if we find a couple, prompt user to pick one
+				if (Array.isArray(local_config_blocks) && local_config_blocks.length > 0 && local_config_blocks[0].block_b64) {
+					Log.debug('found 1+ config blocks in console database: ' + channelName);
+					show_channels_nav_link = true;
+					details += 'The console was unable to pull the latest config block from your ordering cluster. This is a required step. ';
+					details += 'However, you may still be able to join using a previous config block stored by the console. ';
+					details += 'Use the link below to browse the "Channels" tab and pick the already-joined channel tile to continue. ';
+				}
+			} catch (e) {
+				Log.debug('was unable to use config block in console database: ' + channelName);
+				Log.error(e);
+			}
+
+			// show config block retrieval error
 			this.props.updateState(SCOPE, {
 				block_error_title: '[Error] Could not get config-block. Resolve error to continue:',
-				block_error: details ? details : e.toString(),
+				block_error: details,
 				config_block_b64: null,
 				loading: false,
+				show_channels_nav_link: show_channels_nav_link,
 			});
 		}
 	}
@@ -578,7 +653,7 @@ class JoinOSNChannelModal extends React.Component {
 		this.props.updateState(SCOPE, {
 			config_block_b64: this.props.selectedConfigBlockDoc.block_b64,
 			loading: true,
-			drill_down_flow: true,
+			drill_down_flow: false,
 		});
 
 		try {
@@ -594,19 +669,6 @@ class JoinOSNChannelModal extends React.Component {
 				block_error: details ? details : e.toString(),
 				config_block_b64: null,
 				loading: false,
-			});
-		}
-	}
-
-	// select or unselect the cluster
-	toggleCluster = (cluster_id, evt) => {
-		let { joinOsnMap } = this.props;
-		if (joinOsnMap && joinOsnMap[cluster_id]) {
-			joinOsnMap[cluster_id].selected = !joinOsnMap[cluster_id].selected;
-			this.props.updateState(SCOPE, {
-				joinOsnMap: JSON.parse(JSON.stringify(joinOsnMap)),
-				count: this.countSelectedOrderers(joinOsnMap),
-				follower_count: this.countFollowers(joinOsnMap),
 			});
 		}
 	}
@@ -638,9 +700,7 @@ class JoinOSNChannelModal extends React.Component {
 
 		for (let cluster_id in joinOsnMap) {
 			for (let i in joinOsnMap[cluster_id].nodes) {
-				//if (!joinOsnMap[cluster_id].nodes[i]._consenter) {		// skip consenters
 				joinOsnMap[cluster_id].nodes[i]._selected = !this.props.select_all_toggle;
-				//}
 			}
 		}
 
@@ -698,7 +758,7 @@ class JoinOSNChannelModal extends React.Component {
 			let tx_id = self.props.selectedConfigBlockDoc ? self.props.selectedConfigBlockDoc.id : null;
 			if (join_successes > 0 && tx_id) {
 				try {
-					await ConfigBlockApi.delete(tx_id);
+					await ConfigBlockApi.archive(tx_id);
 				} catch (e) {
 					Log.error(e);
 				}
@@ -767,6 +827,20 @@ class JoinOSNChannelModal extends React.Component {
 			}
 			return obj;
 		}
+	}
+
+	// try to find a config block doc with the same channel name
+	async tryToFindLocalConfigBlocks(channel_name) {
+		const ret = [];
+		const config_blocks = await ConfigBlockApi.getAll({ cache: 'skip', visibility: 'all' });
+		if (config_blocks && Array.isArray(config_blocks.blocks)) {
+			for (let i in config_blocks.blocks) {
+				if (config_blocks.blocks[i] && config_blocks.blocks[i].channel === channel_name) {
+					ret.push(config_blocks.blocks[i]);
+				}
+			}
+		}
+		return ret;
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------------------------
@@ -844,6 +918,7 @@ class JoinOSNChannelModal extends React.Component {
 			block_error,
 			block_error_title,
 			drill_down_flow,
+			show_channels_nav_link,
 		} = this.props;
 
 		return (
@@ -889,6 +964,10 @@ class JoinOSNChannelModal extends React.Component {
 						</div>
 					)}
 
+					{show_channels_nav_link && (
+						<a href="/channels?visibility=all">{translate('browse_channels_tab')}</a>
+					)}
+
 					{!this.props.loading && joinOsnMap && !_.isEmpty(Object.keys(joinOsnMap)) && (
 						<p className="ibp-join-osn-cluster-title">
 							{translate('clusters_title', { channel: channel_id })}
@@ -906,26 +985,18 @@ class JoinOSNChannelModal extends React.Component {
 								toggled={select_all_toggle}
 								onToggle={this.toggleSelected}
 								onChange={() => { }}
-								aria-label={
-									drill_down_flow ?
-										select_all_toggle ? translate('unselect_all') : translate('select_all')
-										:
-										select_all_toggle ? translate('unselect_followers') : translate('select_followers')
-								}
-								labelA={drill_down_flow ? translate('select_all') : translate('select_followers')}
-								labelB={drill_down_flow ? translate('unselect_all') : translate('unselect_followers')}
+								aria-label={select_all_toggle ? translate('unselect_all') : translate('select_all')}
+								labelA={translate('select_all')}
+								labelB={translate('unselect_all')}
 							/>
 						</p>
 					)}
 
 					{!this.props.loading && joinOsnMap && !_.isEmpty(Object.keys(joinOsnMap)) && (
 						<div className="ibp-join-osn-msp-wrap">
+							<div className="ibp-join-osn-label">{translate('clusters')}:</div>
 							{Object.values(joinOsnMap).map((cluster, i) => {
-								//	if (cluster.selected === true) {
 								return (this.renderClusterSection(cluster));
-								//	}
-								//} else {
-								//	return (this.renderClusterSection(cluster));
 							})}
 						</div>
 					)}
@@ -936,30 +1007,15 @@ class JoinOSNChannelModal extends React.Component {
 
 	// create the cluster section (this contains each node)
 	renderClusterSection(cluster) {
-		const { translate, drill_down_flow } = this.props;
-		const unselectedClass = (cluster.selected === true) ? '' : 'ibp-join-unselected-cluster';
-
 		return (
 			<div key={'cluster_' + cluster.cluster_id}
 				className="ibp-join-osn-wrap"
 			>
 				<div>
-					{!drill_down_flow && <input type="checkbox"
-						className="ibp-join-osn-cluster-check"
-						checked={cluster.selected === true}
-						name={'joinCluster' + cluster.cluster_id}
-						id={'joinCluster' + cluster.cluster_id}
-						onChange={event => {
-							this.toggleCluster(cluster.cluster_id, event);
-						}}
-						disabled={!cluster.tls_identity}
-					/>}
-
 					<label name={'joinCluster' + cluster.cluster_id}
 						className="ibp-join-osn-cluster-wrap"
 					>
-						<div className="ibp-join-osn-label">{translate('cluster')}:</div>
-						<div className={'ibp-join-osn-clusterid ' + unselectedClass}>{cluster.cluster_name}</div>
+						<div className={'ibp-join-osn-clusterid'}>{cluster.cluster_name}</div>
 					</label>
 				</div >
 				<div>{this.renderNodesSection(cluster.nodes, cluster)}</div>
@@ -970,7 +1026,6 @@ class JoinOSNChannelModal extends React.Component {
 	// create the line for an orderer node
 	renderNodesSection(nodes, cluster) {
 		const { translate } = this.props;
-		const unselectedClass = (cluster.selected === true) ? '' : ' ibp-join-unselected-cluster';
 
 		if (Array.isArray(nodes)) {
 			return (nodes.map((node, i) => {
@@ -991,7 +1046,7 @@ class JoinOSNChannelModal extends React.Component {
 				const hasJoinedChannel = (node._status === constants.OSN_JOIN_SUCCESS);
 
 				return (
-					<div className={'ibp-join-osn-node-wrap-wrap' + unselectedClass}
+					<div className={'ibp-join-osn-node-wrap-wrap'}
 						key={'node-wrap-' + i}
 					>
 						<div className={'ibp-join-osn-node-wrap ' + statusClassBorder}
@@ -1009,12 +1064,12 @@ class JoinOSNChannelModal extends React.Component {
 								disabled={hasJoinedChannel}
 								title={(hasJoinedChannel) ? translate('already_joined') : (node._consenter === true ? 'Node is a consenter' : 'Node is a follower')}
 							/>
-							<span className="ibp-join-osn-node-details">
-								<div className="ibp-join-osn-name">{node.name}</div>
+							<div className="ibp-join-osn-name">{node.name}</div>
+							<div className="ibp-join-osn-node-details">
 								<div className="ibp-join-osn-host">
 									{label} - {node.host}:{node.port}
 								</div>
-							</span>
+							</div>
 							<span className={'ibp-join-osn-status ' + statusClassIcon}>
 								{this.renderStatusIcon(node._status, hasJoinedChannel)}
 							</span>
@@ -1062,6 +1117,7 @@ class JoinOSNChannelModal extends React.Component {
 					let keepSidePanelOpen = false;
 					try {
 						keepSidePanelOpen = await on_submit(this);
+						this.props.showSuccess('channel_join_request_submitted', { channelName: this.props.channel_id }, SCOPE, null, true);
 					} catch (e) {
 						keepSidePanelOpen = true;
 					}
@@ -1095,6 +1151,7 @@ const dataProps = {
 	channels: PropTypes.bool,
 	selected_osn: PropTypes.object,
 	drill_down_flow: PropTypes.bool,
+	show_channels_nav_link: PropTypes.bool,
 
 	config_block_b64: PropTypes.object,
 	b_genesis_block: PropTypes.blob,
@@ -1116,6 +1173,7 @@ JoinOSNChannelModal.propTypes = {
 	onComplete: PropTypes.func,
 	onClose: PropTypes.func,
 	updateState: PropTypes.func,
+	showSuccess: PropTypes.func,
 	joinChannelDetails: PropTypes.object,
 	selectedConfigBlockDoc: PropTypes.object,
 	translate: PropTypes.func, // Provided by withLocalize
@@ -1133,5 +1191,6 @@ export default connect(
 	},
 	{
 		updateState,
+		showSuccess,
 	}
 )(withLocalize(JoinOSNChannelModal));

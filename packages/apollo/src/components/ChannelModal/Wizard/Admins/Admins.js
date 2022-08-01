@@ -29,7 +29,9 @@ import TranslateLink from '../../../TranslateLink/TranslateLink';
 
 const SCOPE = 'channelModal';
 
-// this panel allow selecting the **order orgs** for a channel
+// This is step "orderer_admin_set"
+//
+// this panel allow selecting the **orderer orgs** for a channel
 class Admins extends Component {
 	onAddAdmin = option => {
 		const orderer_orgs = _.isEmpty(this.props.orderer_orgs) ? [this.props.selectedAdmin] : [...this.props.orderer_orgs, this.props.selectedAdmin];

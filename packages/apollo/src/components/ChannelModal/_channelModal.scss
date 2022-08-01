@@ -155,32 +155,44 @@
 					bottom: 0;
 					// hack to get custom dashed border //
 					background: linear-gradient(90deg, $carbon--cool-gray-80 100%, transparent 100%) top left no-repeat,
-						linear-gradient(90deg,
-							transparent calc(0.5rem / 2),
-							$carbon--cool-gray-80 calc(0.5rem / 2),
-							$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
-							transparent calc(0.5rem / 2 + 0.5rem)) top center repeat-x,
+						linear-gradient(
+								90deg,
+								transparent calc(0.5rem / 2),
+								$carbon--cool-gray-80 calc(0.5rem / 2),
+								$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
+								transparent calc(0.5rem / 2 + 0.5rem)
+							)
+							top center repeat-x,
 						linear-gradient(90deg, $carbon--cool-gray-80 100%, transparent 100%) top right no-repeat,
 						linear-gradient(0deg, $carbon--cool-gray-80 100%, transparent 100%) top left no-repeat,
-						linear-gradient(0deg,
-							transparent calc(0.5rem / 2),
-							$carbon--cool-gray-80 calc(0.5rem / 2),
-							$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
-							transparent calc(0.5rem / 2 + 0.5rem)) center left repeat-y,
+						linear-gradient(
+								0deg,
+								transparent calc(0.5rem / 2),
+								$carbon--cool-gray-80 calc(0.5rem / 2),
+								$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
+								transparent calc(0.5rem / 2 + 0.5rem)
+							)
+							center left repeat-y,
 						linear-gradient(0deg, $carbon--cool-gray-80 100%, transparent 100%) bottom left no-repeat,
 						linear-gradient(90deg, $carbon--cool-gray-80 100%, transparent 100%) bottom left no-repeat,
-						linear-gradient(90deg,
-							transparent calc(0.5rem / 2),
-							$carbon--cool-gray-80 calc(0.5rem / 2),
-							$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
-							transparent calc(0.5rem / 2 + 0.5rem)) bottom center repeat-x,
+						linear-gradient(
+								90deg,
+								transparent calc(0.5rem / 2),
+								$carbon--cool-gray-80 calc(0.5rem / 2),
+								$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
+								transparent calc(0.5rem / 2 + 0.5rem)
+							)
+							bottom center repeat-x,
 						linear-gradient(90deg, $carbon--cool-gray-80 100%, transparent 100%) bottom right no-repeat,
 						linear-gradient(0deg, $carbon--cool-gray-80 100%, transparent 100%) top right no-repeat,
-						linear-gradient(0deg,
-							transparent calc(0.5rem / 2),
-							$carbon--cool-gray-80 calc(0.5rem / 2),
-							$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
-							transparent calc(0.5rem / 2 + 0.5rem)) center right repeat-y,
+						linear-gradient(
+								0deg,
+								transparent calc(0.5rem / 2),
+								$carbon--cool-gray-80 calc(0.5rem / 2),
+								$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
+								transparent calc(0.5rem / 2 + 0.5rem)
+							)
+							center right repeat-y,
 						linear-gradient(0deg, $carbon--cool-gray-80 100%, transparent 100%) bottom right no-repeat;
 					background-size: 0.5rem 2px, calc(0.5rem + 0.5rem) 2px, 0.5rem 2px, 2px 0.5rem, 2px calc(0.5rem + 0.5rem), 2px 0.5rem;
 				}
@@ -205,32 +217,44 @@
 						right: 0;
 						bottom: 0;
 						background: linear-gradient(90deg, $carbon--blue-50 100%, transparent 100%) top left no-repeat,
-							linear-gradient(90deg,
-								transparent calc(0.5rem / 2),
-								$carbon--blue-50 calc(0.5rem / 2),
-								$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
-								transparent calc(0.5rem / 2 + 0.5rem)) top center repeat-x,
+							linear-gradient(
+									90deg,
+									transparent calc(0.5rem / 2),
+									$carbon--blue-50 calc(0.5rem / 2),
+									$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
+									transparent calc(0.5rem / 2 + 0.5rem)
+								)
+								top center repeat-x,
 							linear-gradient(90deg, $carbon--blue-50 100%, transparent 100%) top right no-repeat,
 							linear-gradient(0deg, $carbon--blue-50 100%, transparent 100%) top left no-repeat,
-							linear-gradient(0deg,
-								transparent calc(0.5rem / 2),
-								$carbon--blue-50 calc(0.5rem / 2),
-								$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
-								transparent calc(0.5rem / 2 + 0.5rem)) center left repeat-y,
+							linear-gradient(
+									0deg,
+									transparent calc(0.5rem / 2),
+									$carbon--blue-50 calc(0.5rem / 2),
+									$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
+									transparent calc(0.5rem / 2 + 0.5rem)
+								)
+								center left repeat-y,
 							linear-gradient(0deg, $carbon--blue-50 100%, transparent 100%) bottom left no-repeat,
 							linear-gradient(90deg, $carbon--blue-50 100%, transparent 100%) bottom left no-repeat,
-							linear-gradient(90deg,
-								transparent calc(0.5rem / 2),
-								$carbon--blue-50 calc(0.5rem / 2),
-								$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
-								transparent calc(0.5rem / 2 + 0.5rem)) bottom center repeat-x,
+							linear-gradient(
+									90deg,
+									transparent calc(0.5rem / 2),
+									$carbon--blue-50 calc(0.5rem / 2),
+									$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
+									transparent calc(0.5rem / 2 + 0.5rem)
+								)
+								bottom center repeat-x,
 							linear-gradient(90deg, $carbon--blue-50 100%, transparent 100%) bottom right no-repeat,
 							linear-gradient(0deg, $carbon--blue-50 100%, transparent 100%) top right no-repeat,
-							linear-gradient(0deg,
-								transparent calc(0.5rem / 2),
-								$carbon--blue-50 calc(0.5rem / 2),
-								$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
-								transparent calc(0.5rem / 2 + 0.5rem)) center right repeat-y,
+							linear-gradient(
+									0deg,
+									transparent calc(0.5rem / 2),
+									$carbon--blue-50 calc(0.5rem / 2),
+									$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
+									transparent calc(0.5rem / 2 + 0.5rem)
+								)
+								center right repeat-y,
 							linear-gradient(0deg, $carbon--blue-50 100%, transparent 100%) bottom right no-repeat;
 						background-size: 0.5rem 2px, calc(0.5rem + 0.5rem) 2px, 0.5rem 2px, 2px 0.5rem, 2px calc(0.5rem + 0.5rem), 2px 0.5rem;
 					}
@@ -274,7 +298,7 @@
 	}
 
 	.ibp-panel-content-children {
-		&>*:not(.ibp-vertical-panel-timeline-container) {
+		& > *:not(.ibp-vertical-panel-timeline-container) {
 			margin-left: 19.5rem;
 		}
 	}
@@ -341,6 +365,14 @@
 		color: #f3f3f3;
 		letter-spacing: 0;
 		line-height: 2.25rem;
+	}
+
+	.ibp-channel-section-genesis {
+		display: flex;
+	}
+
+	.ibp-channel-section-genesis-align {
+		padding-left: 5%;
 	}
 
 	.ibp-channel-section-desc {
@@ -759,182 +791,4 @@
 		max-width: 18rem;
 		margin-left: 2rem;
 	}
-}
-
-
-
-
-.ibp-join-osn-wrap {
-	margin-bottom: 2rem;
-	border-left: 3px #505355 solid;
-	padding-left: 0.25rem;
-}
-
-.ibp-join-osn-desc p,
-.ibp-join-osn-desc span {
-	font-size: .875rem;
-	font-weight: 400;
-	line-height: 1rem;
-}
-
-.ibp-join-osn-cluster-check {
-	vertical-align: top;
-	cursor: pointer;
-	margin-top: 3rem;
-}
-
-.ibp-join-osn-checkmark {
-	margin-right: 0.5rem;
-	height: 1rem;
-	vertical-align: middle;
-}
-
-.ibp-form .ibp-form-field .ibp-join-osn-identity-wrap {
-	margin-top: 0;
-}
-
-.ibp-join-osn-identity-wrap {
-	display: inline-block;
-	//margin-top: -1rem;
-	width: 25rem;
-}
-
-.ibp-join-osn-cluster-wrap {
-	font-size: 1.1rem;
-	margin: 0 1rem;
-	display: inline-block;
-	vertical-align: top;
-	margin-top: 0.6rem;
-}
-
-.ibp-join-osn-node-wrap-wrap {
-	margin-left: 2.3rem;
-	margin-bottom: 0.5rem;
-	width: 85%;
-	max-width: 55rem;
-}
-
-.ibp-join-osn-node-wrap {
-	border: 1px solid #2f3235;
-	padding: 0.5rem;
-	position: relative;
-}
-
-.ibp-join-osn-node-wrap-success {
-	border-right: 4px solid #0f62fe;
-}
-
-.ibp-join-osn-node-wrap-error {
-	border-right: 4px solid #fb4b53;
-}
-
-.ibp-join-osn-name {
-	font-size: 1rem;
-}
-
-.ibp-join-osn-host {
-	font-size: 0.8rem;
-	color: #ccc;
-	opacity: 0.5;
-	margin-top: 0.4rem;
-}
-
-.ibp-join-osn-status {
-	width: 2rem;
-	position: absolute;
-	right: 0;
-	top: 0.8rem;
-	color: #0f62fe;
-}
-
-.ibp-join-osn-status-error {
-	color: #fb4b53;
-}
-
-.ibp-join-osn-icon {
-	display: inline-block;
-	vertical-align: top;
-	line-height: 1rem;
-	margin-right: 0.5rem;
-}
-
-.ibp-osn-join-icon-consenter {
-	color: #0043ce;
-}
-
-.ibp-osn-join-icon-follower {
-	color: #6f7172;
-}
-
-.ibp-join-osn-node-details {
-	display: inline-block;
-	font-weight: 400;
-}
-
-.ibp-join-osn-label {
-	font-size: .75rem;
-	font-weight: 400;
-	line-height: 1.34;
-	letter-spacing: .32px;
-	color: #c1c7cd;
-	margin-bottom: 1.2rem;
-}
-
-.ibp-join-download {
-	font-size: 0.75rem;
-	margin-left: 1rem;
-	float: right;
-}
-
-.ibp-join-unselected-cluster {
-	opacity: 0.3;
-}
-
-.ibp-join-osn-msp-wrap {
-	max-height: 18rem;
-	overflow-y: scroll;
-	margin-top: 2rem;
-}
-
-.ibp-join-osn-clusterid {
-	min-width: 35rem;
-	padding: 1.5rem;
-	padding-top: 0rem;
-}
-
-.ibp-join-osn-count {
-	font-size: 1.25rem;
-	margin-left: 1rem;
-}
-
-.ibp-join-osn-error {
-	font-size: 0.875rem;
-	font-weight: 500;
-	color: #fb4b53;
-	line-height: 1.2rem;
-}
-
-.ibp-join-osn-cluster-title {
-	font-size: 1.25rem;
-	margin-top: 2rem;
-}
-
-.ibp-join-osn-identity-wrap>.ibp-form-field {
-	margin-bottom: 0.5rem;
-}
-
-/*
-.ibp-join-osn-select-followers {
-	float: right;
-	margin-right: 10rem;
-	margin-top: -.5rem;
-}
-*/
-
-.ibp-join-osn-error-wrap {
-	color: #fb4b53;
-}
-
-.ibp-join-osn-joined {
-	opacity: 0.4;
 }
