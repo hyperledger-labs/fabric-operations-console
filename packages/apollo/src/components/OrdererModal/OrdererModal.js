@@ -1182,8 +1182,7 @@ class OrdererModal extends React.Component {
 				tooltip: 'existing_identity_dropdown_tooltip',
 				options,
 				required: false,
-				label: 'do_not_translate',
-				labelOptions: { text: msp_id },
+				label: 'orderer_admin_identity',
 				default: !this.identities || !this.identities.length ? translate('no_identities') : msp_identity ? msp_identity : do_not_associate,
 			});
 		});
