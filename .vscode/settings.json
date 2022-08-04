@@ -42,7 +42,8 @@
         "**/*.chunk.*": true,
         "**/coverage": true,
         "**/dist": true,
-        "**/logs": true
+        "**/logs": true,
+        "**/build/static": true
     },
     "tslint.enable": [
         true,
