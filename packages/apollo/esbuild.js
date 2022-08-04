@@ -26,7 +26,7 @@ const node_stdlib_browser_plugin = require('node-stdlib-browser/helpers/esbuild/
 const stdLibBrowser = require('node-stdlib-browser');
 
 // set file names
-const fileNameBase = 'out.' + Date.now();
+const fileNameBase = 'apollo.' + Date.now();
 const buildPath = './build';
 const buildStaticPath = './build/static';
 const inputPath = './public';
@@ -45,7 +45,7 @@ copy_dir_sync(inputPath, buildPath);
 // ---------------------------------
 console.log('[builder] Cache busting base file name is', fileNameBase);
 let indexHtml = fs.readFileSync(indexOutputFilePath, 'utf8');
-indexHtml = indexHtml.replace(/out\.\d+/g, fileNameBase);
+indexHtml = indexHtml.replace(/apollo\.\d+/g, fileNameBase);
 fs.writeFileSync(indexOutputFilePath, indexHtml);
 console.log('[builder] Cache busting is done');
 
@@ -75,15 +75,15 @@ require('esbuild').build({
 	],
 	platform: 'browser',
 	bundle: true,
-	//minify: true,
+	minify: true,
 	sourcemap: true,
 	//target: ['chrome58', 'firefox57', 'safari11'],
 	outfile: outFilePath,
 }).catch(() => {
+	console.error('[builder] Build Failed');
 	process.exit(1);
 });
-
-console.log('[builder] Built app to location', outFilePath);
+console.log('[builder] Building app to location', outFilePath);
 
 // ---------------------------------
 // check if the path to a file exists, create it if needed
@@ -111,7 +111,6 @@ function check_dir_sync(opts) {
 	return true;
 };
 
-
 // ---------------------------------
 // copy an entire directory
 // ---------------------------------
@@ -138,7 +137,6 @@ function copy_dir_sync(old_dir_path, new_dir_path) {
 		}
 	}
 };
-
 
 // ---------------------------------
 // remove an entire directory
