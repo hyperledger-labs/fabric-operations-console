@@ -1490,6 +1490,55 @@ const Helper = {
 			array2 = [];							// init empty array if null/anything else
 		}
 		return array1.concat(array2);
+	},
+
+	// mimic the moment-js.fromNow() function - returns text indicating how much time has elapsed from the input timestamp
+	fromNow(utc_timestamp_ms, translate) {
+		let ret = '';
+		const ms = Date.now() - Number(utc_timestamp_ms);
+		if (isNaN(ms)) {
+			ret = translate('friendly_ms_unknown_ago');
+		} else if (ms < -365 * 24 * 60 * 60 * 1000) {
+			//format for years
+			ret = translate('friendly_ms_years', { years: (-1 * ms / 1000 / 60 / 60 / 24 / 365).toFixed(0) });
+		} else if (ms < -30 * 24 * 60 * 60 * 1000) {
+			//format for months
+			ret = translate('friendly_ms_months', { months: (-1 * ms / 1000 / 60 / 60 / 24 / 30).toFixed(0) });
+		} else if (ms < -24 * 60 * 60 * 1000) {
+			//format for days
+			ret = translate('friendly_ms_days', { days: (-1 * ms / 1000 / 60 / 60 / 24).toFixed(0) });
+		} else if (ms < -60 * 60 * 1000) {
+			//format for hours
+			ret = translate('friendly_ms_hrs', { hours: (-1 * ms / 1000 / 60 / 60).toFixed(0) });
+		} else if (ms < -60 * 1000) {
+			//format for mins
+			ret = translate('friendly_ms_mins', { minutes: (-1 * ms / 1000 / 60).toFixed(0) });
+		} else if (ms < -1000) {
+			//format to seconds
+			ret = translate('friendly_ms_secs', { seconds: (-1 * ms).toFixed(0) });
+		} else if (ms > 365 * 24 * 60 * 60 * 1000) {
+			//format for years
+			ret = translate('friendly_ms_years_ago', { years: (ms / 1000 / 60 / 60 / 24 / 365).toFixed(0) });
+		} else if (ms > 30 * 24 * 60 * 60 * 1000) {
+			//format for months
+			ret = translate('friendly_ms_months_ago', { months: (ms / 1000 / 60 / 60 / 24 / 30).toFixed(0) });
+		} else if (ms > 24 * 60 * 60 * 1000) {
+			//format for days
+			ret = translate('friendly_ms_days_ago', { days: (ms / 1000 / 60 / 60 / 24).toFixed(0) });
+		} else if (ms > 60 * 60 * 1000) {
+			//format for hours
+			ret = translate('friendly_ms_hrs_ago', { hours: (ms / 1000 / 60 / 60).toFixed(0) });
+		} else if (ms > 60 * 1000) {
+			//format for mins
+			ret = translate('friendly_ms_mins_ago', { minutes: (ms / 1000 / 60).toFixed(0) });
+		} else if (ms > 1000) {
+			//format for secs
+			ret = translate('friendly_ms_secs_ago', { seconds: (ms / 1000).toFixed(0) });
+		} else {
+			//format to ms
+			ret = translate('friendly_ms_ms_ago', { millisecs: ms.toFixed(0) });
+		}
+		return ret;
 	}
 };
 
