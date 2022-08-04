@@ -1,6 +1,7 @@
 .ibp-members-auth-services-label {
 	padding-bottom: 1rem;
 	display: flex;
+
 	.bx--tooltip__label {
 		@include carbon--type-style('productive-heading-04');
 	}
@@ -100,14 +101,17 @@
 	text-align: left;
 	text-decoration: none;
 	transition: $basic-duo-transition;
+
 	&:hover {
 		background-color: $actionHover;
 	}
+
 	&:focus {
 		border: 2px solid $white;
 		box-shadow: inset 0px 0px 0px 1px $carbon--cool-gray-100;
 		outline: 0;
 	}
+
 	.ibp-iam-launch-icon {
 		height: 1rem;
 		margin-left: 1rem;

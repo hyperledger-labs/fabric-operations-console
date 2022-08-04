@@ -34,6 +34,7 @@
 	.bx--file__state-container {
 		display: none;
 	}
+
 	.ibp-clear-files-button {
 		margin-top: 1.5rem;
 	}
@@ -53,6 +54,7 @@ fieldset.ibp-ca-locations {
 		font-weight: 400;
 		margin-bottom: 1rem;
 	}
+
 	.ibp-ca-location {
 		height: 5rem;
 		width: 100%;
@@ -62,6 +64,7 @@ fieldset.ibp-ca-locations {
 .ibp-ca-locations {
 	margin-top: 1rem;
 	margin-bottom: 1rem;
+
 	.ibp-ca-location {
 		background-color: transparent;
 		border: 1px solid $itemBackground;
@@ -69,19 +72,23 @@ fieldset.ibp-ca-locations {
 		height: 5rem;
 		padding: 1rem;
 		position: relative;
+
 		&:hover,
 		&:focus {
 			background-color: $itemHover;
 		}
+
 		.ibp-import-node-add-icon {
 			bottom: 1rem;
 			position: absolute;
 			right: 1rem;
 		}
+
 		.bx--tile__checkmark {
 			display: none;
 		}
 	}
+
 	.bx--tile--is-selected {
 		outline: 1px solid $action;
 	}
@@ -89,10 +96,12 @@ fieldset.ibp-ca-locations {
 
 .summary-section {
 	margin-bottom: 1rem;
+
 	.summary-label {
 		@include carbon--type-style('label-01');
 		color: $carbon--cool-gray-30;
 	}
+
 	.summary-value {
 		color: $text;
 	}
@@ -105,13 +114,16 @@ fieldset.ibp-ca-locations {
 	color: $inverseText;
 	display: flex;
 	flex-direction: row;
+
 	.ibp-usage-footer-column {
 		flex-grow: 1;
 		flex-shrink: 1;
 		padding: 1rem;
+
 		.ibp-usage-footer-heading {
 			@include carbon--font-weight('semibold');
 		}
+
 		p {
 			@include carbon--type-style('body-short-01');
 		}
@@ -131,6 +143,7 @@ fieldset.ibp-ca-locations {
 	.bx--checkbox-wrapper {
 		display: inline-block;
 	}
+
 	.ibp-tooltip-container {
 		display: inline;
 	}
@@ -142,20 +155,25 @@ fieldset.ibp-ca-locations {
 		flex-direction: row;
 		margin-bottom: 0.5rem;
 		margin-top: 0.5rem;
-		> * {
+
+		>* {
 			flex-grow: 0;
 		}
+
 		.db-toggle-label {
 			flex-grow: 1;
 		}
+
 		.bx--toggle__label {
 			margin-top: -0.5rem;
 		}
-		.bx--toggle--small + .bx--toggle__label .bx--toggle__appearance:before {
+
+		.bx--toggle--small+.bx--toggle__label .bx--toggle__appearance:before {
 			height: 1.5rem;
 			width: 2.625rem;
 		}
-		.bx--toggle--small + .bx--toggle__label .bx--toggle__appearance:after {
+
+		.bx--toggle--small+.bx--toggle__label .bx--toggle__appearance:after {
 			height: 1.125rem;
 			width: 1.125rem;
 		}
@@ -189,6 +207,7 @@ fieldset.ibp-ca-locations {
 
 .ibp-ca-zone-desc {
 	margin-bottom: 1rem;
+
 	.ibp-ca-zone-link,
 	.ibp-ca-zone-link:hover {
 		display: block;

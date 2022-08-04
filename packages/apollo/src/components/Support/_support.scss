@@ -1,9 +1,11 @@
 .support-left-section {
 	position: sticky;
 	background-color: $carbon--cool-gray-90;
+
 	.support-versions-section {
 		padding-top: 0.1rem;
 	}
+
 	.ibp-support {
 		padding: 1rem;
 		font-size: 0.875rem;
@@ -28,10 +30,13 @@
 		height: 5rem;
 		width: 100%;
 	}
+
 	padding-top: 3rem;
+
 	.bx--btn--secondary.ibp__add--item--button-with-text {
 		max-width: 100%;
 	}
+
 	.bx--btn--secondary.ibp__add--item--button-with-text.support-button-label {
 		height: 100%;
 		padding-top: 1rem;

@@ -4,6 +4,7 @@
 		color: $warning;
 		padding-left: 1.25rem;
 		position: relative;
+
 		svg {
 			position: absolute;
 			bottom: 0px;
@@ -12,6 +13,7 @@
 			margin-right: 0.5rem;
 		}
 	}
+
 	.ibp-identity-admin {
 		@include carbon--type-style('label-01');
 	}

@@ -16,7 +16,9 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import defaultTranslation from '../assets/i18n/en/messages.json';
 import Helper from './helper';
-const moment = require('moment');
+
+// INJECT TRANSLATIONS IF FILES PRESENT
+const Data = {};
 
 const Localization = {
 	langs: [
@@ -37,27 +39,15 @@ const Localization = {
 		en: defaultTranslation,
 	},
 
-	getTranslation: function(lang, callback) {
-		if (lang !== 'en') {
-			require('moment/locale/' + lang + '.js');
-			moment.locale(lang);
-		}
+	getTranslation: function (lang, callback) {
 		if (this.loaded[lang]) {
 			callback(this.loaded[lang]);
 		} else {
-			import('../assets/i18n/' + lang + '/messages.json').then(translations => {
-				let fixed = translations;
-				if (fixed.ibm_saas) {
-					fixed = { ...translations };
-					delete fixed.ibm_saas;
-				}
-				this.loaded[lang] = fixed;
-				callback(fixed);
-			});
+			callback(Data[lang]);
 		}
 	},
 
-	onMissingTranslation: function(data) {
+	onMissingTranslation: function (data) {
 		if (data.translationId === 'ibm_saas') {
 			const ibm_saas = Helper.getPlatform();
 			if (this.loaded[data.languageCode][ibm_saas]) {
@@ -68,7 +58,7 @@ const Localization = {
 		return data.translationId;
 	},
 
-	init: function(props) {
+	init: function (props) {
 		delete defaultTranslation.ibm_saas;
 		props.initialize({
 			languages: this.langs,

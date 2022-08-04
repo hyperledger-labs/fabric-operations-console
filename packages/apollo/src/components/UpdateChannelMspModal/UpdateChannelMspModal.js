@@ -33,7 +33,6 @@ import Form from '../Form/Form';
 import Logger from '../Log/Logger';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
-const moment = require('moment');
 
 const SCOPE = 'updateChannelMspModal';
 const Log = new Logger(SCOPE);
@@ -407,10 +406,10 @@ class UpdateChannelMspModal extends React.Component {
 				{days !== undefined && days < constants.CERTIFICATE_WARNING_DAYS ? (
 					<p className="ibp-msp-cert-expiry">
 						<WarningFilled16 />
-						{translate('admin_certs_expiry') + ': ' + moment(last).fromNow()}
+						{translate('admin_certs_expiry') + ': ' + Helper.fromNow(last, translate)}
 					</p>
 				) : (
-					<p>{translate('admin_certs_expiry') + ': ' + moment(last).fromNow()}</p>
+					<p>{translate('admin_certs_expiry') + ': ' + Helper.fromNow(last, translate)}</p>
 				)}
 				{this.props.showCertDetails && <CertificateList parsed={parsed} />}
 				<div className="ibp-toggle-cert-details">

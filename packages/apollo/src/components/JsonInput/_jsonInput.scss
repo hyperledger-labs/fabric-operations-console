@@ -40,6 +40,7 @@
 	border: 2px solid $field-border;
 	margin-bottom: 0.5rem;
 	position: relative;
+
 	.ibp-json-delete {
 		position: absolute;
 		right: 0.5rem;
@@ -63,11 +64,13 @@
 	outline-offset: -2px;
 	padding-bottom: 1rem;
 	position: relative;
+
 	.ibp-json-error-detail {
 		color: $carbon--red-50;
 		margin-top: 0.5rem;
 		padding: 1rem 1rem 0;
 	}
+
 	.ibp-file-uploader-error-icon {
 		position: absolute;
 		top: 0.55rem;
@@ -84,6 +87,7 @@
 	display: flex;
 	flex-direction: row;
 	margin-top: 2rem;
+
 	.bx--tooltip__label {
 		@include carbon--type-style('body-short-01');
 		@include carbon--font-weight('semibold');

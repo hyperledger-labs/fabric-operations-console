@@ -7,21 +7,26 @@
 	margin-bottom: 0.0625rem;
 	padding: 1rem;
 	position: relative;
+
 	&.ibp-container-tile-pending {
 		background-color: #{$carbon--cool-gray-90}50;
+
 		&:hover,
 		&:focus {
 			background-color: #{$carbon--cool-gray-80}50;
 		}
 	}
+
 	&.ibp-container-tile-link {
 		cursor: pointer;
+
 		&:focus {
 			box-shadow: inset 0px 0px 0px 2px white;
 			outline: 0;
 			transition: $basic-duo-transition;
 		}
 	}
+
 	.bx--overflow-menu {
 		height: 0;
 		overflow: hidden;
@@ -29,11 +34,13 @@
 		right: 0;
 		top: 0.5rem;
 	}
+
 	.ibp-item-menu-loading {
 		position: absolute;
 		right: 0;
 		top: 0;
 	}
+
 	.ibp-new-item {
 		background-color: $navigationHover;
 		position: absolute;
@@ -42,15 +49,18 @@
 		top: 0px;
 		left: 0px;
 	}
+
 	&.ibp-container-tile-selected {
 		cursor: pointer;
 		box-shadow: inset 0px 0px 0px 1px $action;
+
 		&:focus {
 			box-shadow: inset 0px 0px 0px 2px white;
 			outline: 0;
 			transition: $basic-duo-transition;
 		}
 	}
+
 	&.ibp-container-tile-placeholder {
 		background: linear-gradient(to bottom, $carbon--cool-gray-90 0%, $carbon--cool-gray-100 95%);
 		outline: 0;
@@ -62,6 +72,7 @@
 .ibp-container-tile:focus-within {
 	background-color: $itemHover;
 	transition: $basic-duo-transition;
+
 	.bx--overflow-menu {
 		height: auto;
 		overflow: visible;
@@ -69,16 +80,19 @@
 }
 
 .ibp-container-grid-wider-tiles {
+
 	.ibp-container-tile:hover,
 	.ibp-container-tile:focus,
 	.ibp-container-tile:focus-within {
 		background-color: $itemHover;
 		transition: $basic-duo-transition;
+
 		.bx--overflow-menu {
 			height: auto;
 			overflow: visible;
 		}
 	}
+
 	.ibp-container-grid-add:hover,
 	.ibp-container-grid-add:focus,
 	.ibp-container-grid-add:focus-within {
@@ -103,6 +117,7 @@
 
 .ibp-container-tile-skeleton {
 	pointer-events: none;
+
 	.ibp-container-tile-skeleton-title {
 		animation: skeletonShimmer 600ms linear infinite forwards alternate;
 		background-color: $itemHover;
@@ -110,6 +125,7 @@
 		height: 1.25rem;
 		width: 6rem;
 	}
+
 	.ibp-container-tile-skeleton-subtitle {
 		animation: skeletonShimmer 600ms linear infinite forwards alternate;
 		background-color: $itemHover;

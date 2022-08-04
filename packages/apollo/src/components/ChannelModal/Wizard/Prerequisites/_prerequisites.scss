@@ -37,6 +37,7 @@
 		display: flex;
 		flex-direction: row;
 		padding-top: 0.5rem;
+
 		&.label {
 			@include carbon--type-style('body-short-01');
 			padding-top: 0;

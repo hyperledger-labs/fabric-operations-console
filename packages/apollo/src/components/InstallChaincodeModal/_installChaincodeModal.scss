@@ -45,14 +45,17 @@
 	height: 3.75rem;
 	margin-top: 1.68rem;
 	max-width: 28rem;
+
 	.ibp-json-file-name {
 		@include carbon--type-style('body-short-02');
 		padding-left: 1rem;
 	}
+
 	.ibp-json-file-other-details {
 		display: flex;
 		line-height: 2rem;
 		padding-right: 1rem;
+
 		.ibp-json-file-version {
 			@include carbon--type-style('label-01');
 			align-items: center;
@@ -64,6 +67,7 @@
 			padding: 0 0.75rem;
 			color: $white;
 		}
+
 		.ibp-json-file-remove-icon {
 			background-color: transparent;
 			border: none;
@@ -81,15 +85,18 @@
 				padding-left: 0;
 				padding-right: 1.5rem;
 				width: 100%;
+
 				&:before,
 				&:after {
 					left: initial;
 					right: 0;
 				}
+
 				&:after {
 					right: 0.25rem;
 				}
 			}
+
 			.bx--checkbox-label.bx--type-gamma {
 				@include carbon--type-style('productive-heading-03');
 				border-bottom: 1px solid $itemHover;
