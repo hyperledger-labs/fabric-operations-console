@@ -1,6 +1,7 @@
 .ibp-tooltip-container {
 	display: flex;
 	height: fit-content;
+
 	&.ibp-tooltip-container-with-checkbox {
 		align-items: center;
 		display: flex;
@@ -19,10 +20,12 @@
 		top: -0.27rem;
 		z-index: $highestLayer;
 	}
+
 	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--bottom.bx--tooltip--align-start::before {
 		bottom: -0.27rem;
 		z-index: $highestLayer;
 	}
+
 	.bx--tooltip--definition {
 		.bx--tooltip__trigger {
 			text-align: left;

@@ -9,6 +9,7 @@
 	grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
 	margin-bottom: 3rem;
 	max-width: 928px;
+
 	&:before {
 		content: '';
 		grid-column: 1 / 1;
@@ -16,23 +17,26 @@
 		padding-bottom: 60%;
 		width: 0;
 	}
+
 	&:first-child {
 		grid-column: 1 / 1;
 		grid-row: 1 / 1;
 	}
+
 	.ibp-action-tile {
 		background-color: $carbon--blue-60;
 		overflow: hidden;
 		padding: 1rem;
 		position: relative;
 		width: 100%;
+
 		&:hover {
 			background: $actionHover;
 		}
 	}
 }
 
-.ibp-action-tiles > :first-child {
+.ibp-action-tiles> :first-child {
 	grid-column: 1/1;
 	grid-row: 1/1;
 }
@@ -55,11 +59,13 @@
 	padding: 0.25rem;
 	position: absolute;
 	width: 1.875rem;
+
 	&:hover,
 	&:focus {
 		background-color: $carbon--cool-gray-70;
 		cursor: pointer;
 	}
+
 	svg {
 		height: 1.25rem;
 		width: 1.25rem;
@@ -69,9 +75,11 @@
 .ibp-msp-delete {
 	right: 1rem;
 }
+
 .ibp-msp-download {
 	right: 3rem;
 }
+
 .ibp-msp-edit {
 	right: 5rem;
 }
@@ -93,8 +101,9 @@
 }
 
 .ibp__button--container {
-	.bx--btn--secondary + .bx--btn--primary,
-	.bx--btn--tertiary + .bx--btn--danger--primary {
+
+	.bx--btn--secondary+.bx--btn--primary,
+	.bx--btn--tertiary+.bx--btn--danger--primary {
 		margin-left: 0;
 	}
 }

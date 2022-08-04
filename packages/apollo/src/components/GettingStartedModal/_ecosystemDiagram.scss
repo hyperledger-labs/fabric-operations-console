@@ -34,6 +34,7 @@
 	max-width: 900px;
 	margin: auto;
 	position: relative;
+
 	.diagram--parent-container {
 		height: 100%;
 		max-width: 100%;
@@ -87,6 +88,7 @@
 
 .diagram--text-container {
 	pointer-events: none;
+
 	&.diagram--text-box {
 		background-color: $carbon--cool-gray-90;
 		height: 11.25rem;
@@ -94,18 +96,23 @@
 		width: 23.75rem;
 		z-index: $highestLayer;
 	}
+
 	&.diagram--text-box-long {
 		width: 500px;
 	}
+
 	&.diagram--text-box-taller {
 		height: 12.5rem;
 	}
+
 	.diagram--text-header {
 		@include carbon--font-weight('semibold');
 	}
+
 	.diagram--text {
 		color: $carbon--cool-gray-20;
 	}
+
 	.diagram--text-container-inner {
 		background-color: $carbon--cool-gray-90;
 		padding: 1rem;

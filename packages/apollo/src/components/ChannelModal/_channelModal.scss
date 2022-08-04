@@ -155,44 +155,32 @@
 					bottom: 0;
 					// hack to get custom dashed border //
 					background: linear-gradient(90deg, $carbon--cool-gray-80 100%, transparent 100%) top left no-repeat,
-						linear-gradient(
-								90deg,
-								transparent calc(0.5rem / 2),
-								$carbon--cool-gray-80 calc(0.5rem / 2),
-								$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
-								transparent calc(0.5rem / 2 + 0.5rem)
-							)
-							top center repeat-x,
+						linear-gradient(90deg,
+							transparent calc(0.5rem / 2),
+							$carbon--cool-gray-80 calc(0.5rem / 2),
+							$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
+							transparent calc(0.5rem / 2 + 0.5rem)) top center repeat-x,
 						linear-gradient(90deg, $carbon--cool-gray-80 100%, transparent 100%) top right no-repeat,
 						linear-gradient(0deg, $carbon--cool-gray-80 100%, transparent 100%) top left no-repeat,
-						linear-gradient(
-								0deg,
-								transparent calc(0.5rem / 2),
-								$carbon--cool-gray-80 calc(0.5rem / 2),
-								$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
-								transparent calc(0.5rem / 2 + 0.5rem)
-							)
-							center left repeat-y,
+						linear-gradient(0deg,
+							transparent calc(0.5rem / 2),
+							$carbon--cool-gray-80 calc(0.5rem / 2),
+							$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
+							transparent calc(0.5rem / 2 + 0.5rem)) center left repeat-y,
 						linear-gradient(0deg, $carbon--cool-gray-80 100%, transparent 100%) bottom left no-repeat,
 						linear-gradient(90deg, $carbon--cool-gray-80 100%, transparent 100%) bottom left no-repeat,
-						linear-gradient(
-								90deg,
-								transparent calc(0.5rem / 2),
-								$carbon--cool-gray-80 calc(0.5rem / 2),
-								$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
-								transparent calc(0.5rem / 2 + 0.5rem)
-							)
-							bottom center repeat-x,
+						linear-gradient(90deg,
+							transparent calc(0.5rem / 2),
+							$carbon--cool-gray-80 calc(0.5rem / 2),
+							$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
+							transparent calc(0.5rem / 2 + 0.5rem)) bottom center repeat-x,
 						linear-gradient(90deg, $carbon--cool-gray-80 100%, transparent 100%) bottom right no-repeat,
 						linear-gradient(0deg, $carbon--cool-gray-80 100%, transparent 100%) top right no-repeat,
-						linear-gradient(
-								0deg,
-								transparent calc(0.5rem / 2),
-								$carbon--cool-gray-80 calc(0.5rem / 2),
-								$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
-								transparent calc(0.5rem / 2 + 0.5rem)
-							)
-							center right repeat-y,
+						linear-gradient(0deg,
+							transparent calc(0.5rem / 2),
+							$carbon--cool-gray-80 calc(0.5rem / 2),
+							$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
+							transparent calc(0.5rem / 2 + 0.5rem)) center right repeat-y,
 						linear-gradient(0deg, $carbon--cool-gray-80 100%, transparent 100%) bottom right no-repeat;
 					background-size: 0.5rem 2px, calc(0.5rem + 0.5rem) 2px, 0.5rem 2px, 2px 0.5rem, 2px calc(0.5rem + 0.5rem), 2px 0.5rem;
 				}
@@ -217,44 +205,32 @@
 						right: 0;
 						bottom: 0;
 						background: linear-gradient(90deg, $carbon--blue-50 100%, transparent 100%) top left no-repeat,
-							linear-gradient(
-									90deg,
-									transparent calc(0.5rem / 2),
-									$carbon--blue-50 calc(0.5rem / 2),
-									$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
-									transparent calc(0.5rem / 2 + 0.5rem)
-								)
-								top center repeat-x,
+							linear-gradient(90deg,
+								transparent calc(0.5rem / 2),
+								$carbon--blue-50 calc(0.5rem / 2),
+								$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
+								transparent calc(0.5rem / 2 + 0.5rem)) top center repeat-x,
 							linear-gradient(90deg, $carbon--blue-50 100%, transparent 100%) top right no-repeat,
 							linear-gradient(0deg, $carbon--blue-50 100%, transparent 100%) top left no-repeat,
-							linear-gradient(
-									0deg,
-									transparent calc(0.5rem / 2),
-									$carbon--blue-50 calc(0.5rem / 2),
-									$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
-									transparent calc(0.5rem / 2 + 0.5rem)
-								)
-								center left repeat-y,
+							linear-gradient(0deg,
+								transparent calc(0.5rem / 2),
+								$carbon--blue-50 calc(0.5rem / 2),
+								$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
+								transparent calc(0.5rem / 2 + 0.5rem)) center left repeat-y,
 							linear-gradient(0deg, $carbon--blue-50 100%, transparent 100%) bottom left no-repeat,
 							linear-gradient(90deg, $carbon--blue-50 100%, transparent 100%) bottom left no-repeat,
-							linear-gradient(
-									90deg,
-									transparent calc(0.5rem / 2),
-									$carbon--blue-50 calc(0.5rem / 2),
-									$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
-									transparent calc(0.5rem / 2 + 0.5rem)
-								)
-								bottom center repeat-x,
+							linear-gradient(90deg,
+								transparent calc(0.5rem / 2),
+								$carbon--blue-50 calc(0.5rem / 2),
+								$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
+								transparent calc(0.5rem / 2 + 0.5rem)) bottom center repeat-x,
 							linear-gradient(90deg, $carbon--blue-50 100%, transparent 100%) bottom right no-repeat,
 							linear-gradient(0deg, $carbon--blue-50 100%, transparent 100%) top right no-repeat,
-							linear-gradient(
-									0deg,
-									transparent calc(0.5rem / 2),
-									$carbon--blue-50 calc(0.5rem / 2),
-									$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
-									transparent calc(0.5rem / 2 + 0.5rem)
-								)
-								center right repeat-y,
+							linear-gradient(0deg,
+								transparent calc(0.5rem / 2),
+								$carbon--blue-50 calc(0.5rem / 2),
+								$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
+								transparent calc(0.5rem / 2 + 0.5rem)) center right repeat-y,
 							linear-gradient(0deg, $carbon--blue-50 100%, transparent 100%) bottom right no-repeat;
 						background-size: 0.5rem 2px, calc(0.5rem + 0.5rem) 2px, 0.5rem 2px, 2px 0.5rem, 2px calc(0.5rem + 0.5rem), 2px 0.5rem;
 					}
@@ -298,7 +274,7 @@
 	}
 
 	.ibp-panel-content-children {
-		& > *:not(.ibp-vertical-panel-timeline-container) {
+		&>*:not(.ibp-vertical-panel-timeline-container) {
 			margin-left: 19.5rem;
 		}
 	}

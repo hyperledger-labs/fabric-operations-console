@@ -3,6 +3,7 @@
 		opacity: 0;
 		transform: translateY(-2rem);
 	}
+
 	100% {
 		opacity: 1;
 		transform: translateY(0px);
@@ -13,6 +14,7 @@
 	0% {
 		opacity: 1;
 	}
+
 	100% {
 		opacity: 0;
 	}
@@ -22,6 +24,7 @@
 	0% {
 		transform: translateY(-21.625rem);
 	}
+
 	100% {
 		transform: translateY(0px);
 	}
@@ -32,6 +35,7 @@
 		opacity: 1;
 		transform: translateY(0px);
 	}
+
 	100% {
 		opacity: 0;
 		transform: translateY(-21.625rem);
@@ -45,31 +49,37 @@
 			animation: 0.25s ease-in-out forwards fadeIn;
 		}
 	}
+
 	.ibp-welcome-get-started-section {
 		.ibp-welcome-tile-item {
 			&:first-of-type {
 				border: 0;
 			}
+
 			&:nth-child(1) {
 				opacity: 0;
 				animation: 0.25s ease-in-out forwards fadeIn;
 				animation-delay: 0.25s;
 			}
+
 			&:nth-child(2) {
 				opacity: 0;
 				animation: 0.25s ease-in-out forwards fadeIn;
 				animation-delay: 0.5s;
 			}
+
 			&:nth-child(3) {
 				opacity: 0;
 				animation: 0.25s ease-in-out forwards fadeIn;
 				animation-delay: 0.75s;
 			}
+
 			&:nth-child(4) {
 				opacity: 0;
 				animation: 0.25s ease-in-out forwards fadeIn;
 				animation-delay: 1s;
 			}
+
 			&:nth-child(5) {
 				opacity: 0;
 				animation: 0.25s ease-in-out forwards fadeIn;
@@ -101,29 +111,36 @@
 	text-align: left;
 	max-height: 11.25rem;
 	min-height: 11.25rem;
+
 	&:hover,
 	&:focus {
 		background: $itemHover;
+
 		.ibp-welcome-tile-launch-icon {
 			opacity: 1;
 		}
 	}
+
 	&:focus {
 		outline: 0;
 		box-shadow: inset 0px 0px 0px 2px $white;
 	}
+
 	.ibp-welcome-tile-header {
 		@include carbon--font-weight('semibold');
 		padding-bottom: 0.5rem;
 		padding-top: 0.75rem;
 	}
+
 	& p {
 		@include carbon--type-style('label-01');
 		color: $carbon--cool-gray-30;
 	}
+
 	& * {
 		@include carbon--type-style('body-short-01');
 	}
+
 	.ibp-welcome-tile-launch-icon {
 		transition: $basic-duo-transition;
 		position: absolute;
@@ -131,6 +148,7 @@
 		right: 1rem;
 		opacity: 0;
 	}
+
 	.ibp-welcome-banner-video-link {
 		@include carbon--type-style('label-01');
 		border: 0;
@@ -142,6 +160,7 @@
 		border-bottom: 1px solid transparent;
 		cursor: pointer;
 		outline: 0;
+
 		&:hover,
 		&:focus {
 			border-bottom: 1px solid $carbon--blue-40;

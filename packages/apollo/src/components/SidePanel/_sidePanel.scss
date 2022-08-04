@@ -21,10 +21,12 @@
 	top: 0;
 	width: 33.875rem;
 	z-index: $firstLayer;
+
 	.ibp-panel-content-flex-div {
 		display: flex;
 		flex-direction: column;
 		height: 100%;
+
 		.ibp-panel-content-children {
 			padding-left: 2rem;
 			padding-right: 2rem;
@@ -33,33 +35,40 @@
 			overflow: auto;
 			padding-bottom: 1rem;
 		}
+
 		.ibp-panel-footer,
 		.ibp-side-panel-error {
 			flex-grow: 0;
 			flex-shrink: 0;
 		}
 	}
+
 	&.ibp-large-panel {
 		height: 100%;
 		max-width: 100%;
 		padding-bottom: 4rem;
 		width: 62rem;
+
 		.ibp-side-panel-inner-content {
 			padding-bottom: 4rem;
 		}
 	}
+
 	&.ibp-panel--content-no-buttons {
 		height: 100vh;
 	}
+
 	&.ibp-vertical-panel {
 		height: 100%;
 		left: 2rem;
 		top: 3rem;
 		width: calc(100% - 4rem);
-		& + .ibp-button-container {
+
+		&+.ibp-button-container {
 			right: 2rem;
 		}
 	}
+
 	.bx--snippet.bx--snippet--inline {
 		z-index: $firstLayer;
 	}
@@ -70,6 +79,7 @@
 	max-width: 100%;
 	padding-bottom: 4rem;
 	width: 63%;
+
 	.ibp-side-panel-inner-content {
 		padding-bottom: 4rem;
 	}
@@ -80,6 +90,7 @@
 	max-width: 100%;
 	padding-bottom: 6rem;
 	width: 62rem;
+
 	.ibp-side-panel-inner-content {
 		padding-bottom: 4rem;
 	}
@@ -87,12 +98,15 @@
 
 .side__panel--outer--container,
 .vertical__panel--outer--container {
+
 	.ibp-large-panel-button-container,
 	.ibp-extra-large-panel-button-container,
 	.ibp-vertical-panel-button-container {
 		width: 31rem;
+
 		&.ibp-button-container {
 			justify-content: flex-end;
+
 			.ibp-button {
 				&:first-child:last-child {
 					background-color: $action;
@@ -105,12 +119,15 @@
 			}
 		}
 	}
+
 	.ibp-vertical-panel-close {
 		right: 3rem;
 		top: 4rem;
 	}
+
 	.ibp-vertical-panel-button-container {
 		height: 6rem;
+
 		.ibp-button {
 			height: 100%;
 		}
@@ -124,8 +141,9 @@
 	justify-content: flex-start;
 	position: fixed;
 	right: 0;
-	width: 542px;
+	width: 489px;
 	z-index: $panelOpenButtonLayer;
+
 	.ibp-button {
 		border: 0;
 		color: $text;
@@ -137,15 +155,18 @@
 		width: 50%;
 		background-color: $cancelButton;
 		transition: $basic-duo-transition;
+
 		&:focus {
 			box-shadow: inset 0px 0px 0px 2px white;
 			outline: 0;
 		}
+
 		span {
 			position: absolute;
 			top: 1rem;
 		}
 	}
+
 	.ibp-button:hover,
 	.ibp-button:focus {
 		background-color: $cancelButtonHover;
@@ -156,7 +177,9 @@
 		flex-shrink: 0;
 		flex-basis: 50%;
 		width: 50%;
+
 		&#back {
+
 			&:hover,
 			&:focus {
 				background-color: $cancelButtonHover;
@@ -171,10 +194,13 @@
 	.ibp-button:last-child:not(:first-child):not(:disabled) {
 		background-color: $action;
 	}
+
 	.ibp-button:not(#cancel):last-child:focus,
 	.ibp-button:not(#cancel):last-child:hover {
 		background-color: $actionHover;
+
 		&#confirm_remove {
+
 			&:focus,
 			&:hover {
 				background-color: $hover-danger;
@@ -185,16 +211,19 @@
 			background-color: $cancelButtonHover;
 		}
 	}
+
 	.ibp-button:disabled,
 	.ibp-button:disabled:hover {
 		//background-color: $buttonDisabled;
 		cursor: not-allowed;
 		opacity: 0.3;
 	}
+
 	.ibp-side-panel-submitting-spinner {
 		position: absolute;
 		top: 0.75rem;
 		right: 1rem;
+
 		svg {
 			stroke: $text;
 		}
@@ -224,6 +253,7 @@ textarea.bx--text__input {
 	0% {
 		transform: translateX(10rem);
 	}
+
 	100% {
 		transform: translateX(0px);
 	}
@@ -234,6 +264,7 @@ textarea.bx--text__input {
 		opacity: 1;
 		transform: translateX(0px);
 	}
+
 	100% {
 		opacity: 0;
 		transform: translateX(10rem);
@@ -244,6 +275,7 @@ textarea.bx--text__input {
 	0% {
 		transform: translateY(10rem);
 	}
+
 	100% {
 		transform: translateY(0px);
 	}
@@ -254,6 +286,7 @@ textarea.bx--text__input {
 		opacity: 1;
 		transform: translateY(0px);
 	}
+
 	100% {
 		opacity: 0;
 		transform: translateY(10rem);
@@ -297,6 +330,7 @@ textarea.bx--text__input {
 	position: fixed;
 	right: 0;
 	z-index: $panelOpenLayer;
+
 	.ibp-side-panel-submitting-overlay {
 		background-color: rgba(0, 0, 0, 0.5);
 		color: #ffffff;
@@ -312,9 +346,11 @@ textarea.bx--text__input {
 		width: 100%;
 		z-index: $firstLayer;
 	}
+
 	.ibp-side-panel-submitting-overlay.ibp-large-side-panel-overlay {
 		width: 100%;
 	}
+
 	.ibp-side-panel-submitting-overlay.ibp-vertical-panel-overlay {
 		height: 100%;
 		left: 2rem;

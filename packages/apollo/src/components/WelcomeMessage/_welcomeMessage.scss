@@ -44,9 +44,11 @@
 	text-decoration: none;
 	color: #ffffff;
 }
+
 .with-btn {
 	right: 15rem;
 }
+
 .doc-only {
 	right: 0;
 }
@@ -78,6 +80,7 @@
 	padding-top: 1rem;
 	position: relative;
 	width: 100%;
+
 	&:before {
 		content: '';
 		position: absolute;
@@ -123,6 +126,7 @@
 	@include carbon--type-style('body-short-01');
 	margin: 0rem 0rem 1rem 1rem;
 	width: 38rem;
+
 	.ibp-beta-close-date {
 		@include carbon--font-weight('semibold');
 	}
@@ -141,6 +145,7 @@
 	position: relative;
 	justify-content: space-between;
 	width: 100%;
+
 	&:before {
 		content: '';
 		position: absolute;
@@ -149,11 +154,13 @@
 		height: 0.25rem;
 		background: linear-gradient(to right, $carbon--blue-80, $carbon--blue-60);
 	}
+
 	.partyPopperIcon {
 		margin-right: 4rem;
 		max-height: 160px;
 		max-width: 160px;
 	}
+
 	.ibp-ga-welcome-desc {
 		padding-right: 0.5rem;
 	}
@@ -174,20 +181,25 @@
 	transition: $basic-duo-transition;
 	color: $text;
 	border: 2px solid transparent;
+
 	& * {
 		@include carbon--type-style('body-short-01');
 	}
+
 	&:hover {
 		background-color: $actionHover;
 	}
+
 	&:focus {
 		border: 2px solid $white;
 		box-shadow: inset 0px 0px 0px 1px $carbon--cool-gray-100;
 		outline: 0;
 	}
+
 	.ibp-nodes-welcome-start-expand {
 		margin-right: 1rem;
 		cursor: pointer;
+
 		.launchIcon {
 			width: 1.25rem;
 		}
@@ -237,14 +249,17 @@
 	from {
 		height: 0rem;
 	}
+
 	to {
 		height: 9rem;
 	}
 }
+
 @keyframes welcomeCollapseStart {
 	from {
 		height: 9rem;
 	}
+
 	to {
 		height: 0rem;
 	}
@@ -266,14 +281,17 @@
 	from {
 		height: 0rem;
 	}
+
 	to {
 		height: 45.75rem;
 	}
 }
+
 @keyframes welcomeCollapseBuild {
 	from {
 		height: 45.75rem;
 	}
+
 	to {
 		height: 0rem;
 	}
@@ -295,6 +313,7 @@
 	from {
 		height: 0rem;
 	}
+
 	to {
 		height: 26.4rem;
 	}
@@ -304,6 +323,7 @@
 	from {
 		height: 26.4rem;
 	}
+
 	to {
 		height: 0rem;
 	}
@@ -319,11 +339,13 @@
 	overflow: hidden;
 	animation: welcomeCollapseJoin ease 0.5s;
 }
+
 //---Deploy
 @keyframes welcomeExpansionDeploy {
 	from {
 		height: 0rem;
 	}
+
 	to {
 		height: 28.9rem;
 	}
@@ -333,6 +355,7 @@
 	from {
 		height: 26.4rem;
 	}
+
 	to {
 		height: 0rem;
 	}

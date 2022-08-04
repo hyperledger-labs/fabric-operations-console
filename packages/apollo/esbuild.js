@@ -90,8 +90,8 @@ require('esbuild').build({
 		Buffer: 'Buffer'
 	},
 	plugins: [
+		sassPlugin.sassPlugin({ quietDeps: true }),
 		svgrPlugin(),
-		sassPlugin.sassPlugin(),
 		node_stdlib_browser_plugin(stdLibBrowser),
 	],
 	external: [],			// don't use external, it is not intended for a bundled app in a browser

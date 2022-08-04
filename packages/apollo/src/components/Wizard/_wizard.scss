@@ -7,6 +7,7 @@
 .ibp-wizard-title {
 	@include carbon--type-style('productive-heading-05');
 	margin-bottom: 2rem;
+
 	.bx--tooltip__label {
 		@include carbon--type-style('productive-heading-05');
 		font-size: 1.65rem;
@@ -26,6 +27,7 @@
 	align-items: baseline;
 	display: flex;
 	padding-top: 2rem;
+
 	.bx--tooltip__label {
 		@include carbon--type-style('productive-heading-04');
 		font-size: 1.4rem;
@@ -58,6 +60,7 @@
 }*/
 
 .ibp-panel--content {
+
 	.ibp-wizard-first-step,
 	.ibp-wizard-secondary-step {
 		.ibp-wizard-loading {

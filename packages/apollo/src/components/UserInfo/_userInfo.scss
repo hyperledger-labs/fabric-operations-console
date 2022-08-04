@@ -9,14 +9,17 @@
 	height: 3rem;
 	position: relative;
 	flex-grow: 0;
+
 	.ibp-header-icon-button-container {
 		align-items: center;
 		display: flex;
 		justify-content: center;
 		width: 3rem;
+
 		&:hover {
 			background-color: $carbon--cool-gray-90;
 		}
+
 		&.ibp-header-active-item {
 			&:before {
 				background-color: $action;
@@ -27,6 +30,7 @@
 				width: 3rem;
 			}
 		}
+
 		&.ibp-header-user-info-button {
 			background-color: transparent;
 			border: 0;
@@ -35,10 +39,12 @@
 			outline: 0;
 			padding: 0;
 			transition: $basic-duo-transition;
+
 			&:hover,
 			&:focus {
 				background: $itemHover;
 			}
+
 			&:focus {
 				border: 2px solid $white;
 				box-shadow: inset 0px 0px 0px 1px $carbon--cool-gray-100;
@@ -56,18 +62,22 @@
 	right: 0;
 	top: 3rem;
 	width: 16.25rem;
+
 	.ibp-user-info-username {
 		@include carbon--type-style('body-short-01');
 		@include carbon--font-weight('semibold');
 		color: $carbon--cool-gray-20;
 	}
+
 	.ibp-header-user-info-subtext {
 		@include carbon--type-style('body-short-01');
 		color: $carbon--cool-gray-20;
 	}
+
 	.ibp-user-info-detail-content {
 		margin-bottom: 1.5rem;
 	}
+
 	.ibp-header-user-info-logout {
 		border-bottom: 1px solid $carbon--cool-gray-80;
 		border-top: 1px solid $carbon--cool-gray-80;
@@ -77,16 +87,19 @@
 		padding: 0.5rem;
 		text-decoration: none;
 		transition: $basic-duo-transition;
+
 		&:hover,
 		&:focus {
 			background-color: $itemHover;
 		}
+
 		&:focus {
 			box-shadow: inset 0px 0px 0px 2px $white;
 			outline: 0;
 		}
 	}
 }
+
 .ibp-user-info-detail-container-longer {
 	min-height: 10rem;
 }

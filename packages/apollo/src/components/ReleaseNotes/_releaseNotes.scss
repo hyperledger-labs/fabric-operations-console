@@ -3,10 +3,12 @@
 	border-right: 1px solid $carbon--cool-gray-50;
 	padding-right: 1rem;
 }
+
 .ibp-note-current-version {
 	padding-bottom: 0.25rem;
 	padding-top: 0.4rem;
 }
+
 .ipb-note-current {
 	@include carbon--type-style('label-01');
 	padding: 0.25rem 0 0 1rem;
