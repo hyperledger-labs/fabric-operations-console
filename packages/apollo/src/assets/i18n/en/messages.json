@@ -1213,6 +1213,7 @@
 	"empty_pending_channels_text": "You can create a channel using orderers you have provisioned or imported.",
 	"empty_cp_channels_title": "No channels available",
 	"empty_cp_channels_text": "Join an orderer to a channel to view channels.",
+	"empty_cp_channels_text_drilldown": "Join this orderer to a channel to view channels.",
 	"empty_identities_title": "No identities available",
 	"empty_identities_text": "Get started by creating a Certificate Authority and an organization MSP definition. You can then view your organization admin identity here and use it to interact with your network. You can also import identities if you have changed browsers.",
 	"empty_installed_title": "No installed smart contracts",
