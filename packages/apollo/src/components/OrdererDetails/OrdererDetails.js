@@ -1461,6 +1461,7 @@ class OrdererDetails extends Component {
 															unJoinComplete={this.getCPChannelList}
 															loading={this.props.loading}
 															isSystemLess={this.isSystemLess(this.props.details)}
+															drillDown={false}
 														/>
 													}
 													{!this.props.loading && !hasAssociatedIdentities && (
@@ -1567,7 +1568,9 @@ class OrdererDetails extends Component {
 														selectedNode={this.props.selectedNode}
 														channelList={this.props.channelList}
 														details={this.props.details}
+														loading={this.props.loading}
 														unJoinComplete={this.getCPChannelList}
+														drillDown={true}
 													/>
 												</Tab>
 											)}
