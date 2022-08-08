@@ -1,5 +1,27 @@
 [
 	{
+		"version": "1.0.3-28",
+		"date": "8 Aug 2022",
+		"description": [
+			{
+				"title": "New Js Bundler",
+				"details": "Now using `esbuild` to build the Fabric Operations console. This allowed us to remove many out-of-date dev dependencies."
+			},
+			{
+				"title": "Fixed appending orderer",
+				"details": "Fixed the appending orderer to cluster flow when using an OS without a system channel."
+			},
+			{
+				"title": "Fixed OSN Admin Features",
+				"details": "More fixes for the new OSN Admin Features that use Fabric's \"channel participation\" apis."
+			},
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
 		"version": "1.0.3-18",
 		"date": "8 July 2022",
 		"description": [
