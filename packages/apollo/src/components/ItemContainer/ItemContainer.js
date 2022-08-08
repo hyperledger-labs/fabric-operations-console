@@ -341,13 +341,12 @@ class ItemContainer extends Component {
 	}
 
 	buildEmptyState(translate, table) {
+		const EmptyImage = this.props.emptyImage;
+
 		if (this.props.emptyImage && this.props.emptyTitle && this.props.emptyMessage) {
 			return (
 				<div className={`ibp-container-empty ${this.props.view === 'variableGrid' ? 'ibp-container-empty-grid' : ''}`}>
-					<img src={this.props.emptyImage}
-						className="ibp-container-empty-image"
-						alt=""
-					/>
+					<EmptyImage className="ibp-container-empty-image" />
 					<div className="ibp-container-empty-text">
 						<div className="ibp-container-empty-title">
 							<h4>{translate(this.props.emptyTitle, this.props.emptyTranslationOpts)}</h4>

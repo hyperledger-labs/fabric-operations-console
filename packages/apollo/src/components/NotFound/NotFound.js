@@ -18,7 +18,7 @@ import React, { Component } from 'react';
 import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import notFound from '../../assets/images/404_illustration.svg';
+import NotFoundImg from '../../assets/images/404_illustration.svg';
 import Helper from '../../utils/helper';
 
 const SCOPE = 'notFound';
@@ -57,7 +57,7 @@ export class NotFound extends Component {
 					</div>
 				</div>
 				<div className="ibp-404-illustration-container">
-					<img src={notFound}
+					<NotFoundImg
 						alt="Not found illustration"
 						className="ibp-not-found-illustration-img"
 					/>
