@@ -21,8 +21,8 @@ import React, { Component } from 'react';
 import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { promisify } from 'util';
-import requiresAttentionImage from '../../assets/images/requires_attention.svg';
-import requiresAttentionImage2 from '../../assets/images/requires_attention_2.svg';
+import RequiresAttentionImage from '../../assets/images/requires_attention.svg';
+import RequiresAttentionImage2 from '../../assets/images/requires_attention_2.svg';
 import { clearNotifications, showBreadcrumb, showError, showSuccess, showWarning, updateBreadcrumb, updateState } from '../../redux/commonActions';
 import ChannelApi from '../../rest/ChannelApi';
 import { ChannelParticipationApi } from '../../rest/ChannelParticipationApi';
@@ -855,7 +855,7 @@ class OrdererDetails extends Component {
 					</div>
 					{this.props.error && <SidePanelError error={this.props.error} />}
 				</div>
-				<img src={requiresAttentionImage2}
+				<RequiresAttentionImage2
 					className="ibp-requires-attention-image"
 					alt=""
 				/>
@@ -876,7 +876,7 @@ class OrdererDetails extends Component {
 					<h3>{translate('running_partial')}</h3>
 					<p>{translate('running_partial_desc')}</p>
 				</div>
-				<img src={requiresAttentionImage}
+				<RequiresAttentionImage
 					className="ibp-requires-attention-image"
 					alt=""
 				/>
@@ -897,7 +897,7 @@ class OrdererDetails extends Component {
 					<h3>{translate('missing_endorsement_policy_title')}</h3>
 					<p>{translate('missing_endorsement_policy_desc', { orgs: this.props.missingEndorsementOrgs.join(',') })}</p>
 				</div>
-				<img src={requiresAttentionImage}
+				<RequiresAttentionImage
 					className="ibp-requires-attention-image ibp-requires-attention-small-image"
 					alt=""
 				/>
@@ -942,7 +942,7 @@ class OrdererDetails extends Component {
 						</Button>
 					</div>
 				</div>
-				<img src={requiresAttentionImage}
+				<RequiresAttentionImage
 					className="ibp-requires-attention-image"
 					alt=""
 				/>
