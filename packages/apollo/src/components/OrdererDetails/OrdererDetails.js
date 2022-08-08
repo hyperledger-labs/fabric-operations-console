@@ -152,7 +152,7 @@ class OrdererDetails extends Component {
 
 	/* get channel list from channel participation api */
 	getCPChannelList = async () => {
-		let nodes = this.props.selectedNode || this.props.details.raft;
+		let useNodes = this.props.selectedNode ? [this.props.selectedNode] : this.props.details.raft;
 		let channelList = {};
 
 		// if we cannot get the channels b/c of an network error, perm error, etc, default to the using the "systemless" field
@@ -166,7 +166,7 @@ class OrdererDetails extends Component {
 		} else {
 			try {
 				let all_identity = await IdentityApi.getIdentities();
-				const resp = await ChannelParticipationApi.mapChannels(all_identity, nodes);
+				const resp = await ChannelParticipationApi.mapChannels(all_identity, useNodes);
 
 				// TODO: consolidate error handling
 				if (_.get(resp, 'code') === 'ECONNREFUSED') {
