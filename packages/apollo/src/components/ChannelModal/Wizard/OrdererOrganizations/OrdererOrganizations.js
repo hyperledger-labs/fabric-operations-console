@@ -42,7 +42,7 @@ export class OrdererOrganizations extends Component {
 
 	// user added a new msp/org
 	onAddOrg = option => {
-		const { selectedOrg, ordering_orgs, updatePolicyDropdown, updateState } = this.props;
+		const { selectedOrg, ordering_orgs, updateState } = this.props;
 		let msp = selectedOrg;
 		let selected_orgs = Array.isArray(ordering_orgs) ? JSON.parse(JSON.stringify(ordering_orgs)) : [];
 		let new_org = {
@@ -61,7 +61,6 @@ export class OrdererOrganizations extends Component {
 		selected_orgs.push(new_org);
 		this.checkDuplicateMSP(new_org, selected_orgs);
 		this.checkNodeOUWarning(selected_orgs);
-		updatePolicyDropdown(selected_orgs, false);
 		updateState(SCOPE, {
 			ordering_orgs: selected_orgs,
 			selectedOrg: null,
@@ -72,22 +71,20 @@ export class OrdererOrganizations extends Component {
 
 	// user removed a selected msp/org
 	onDeleteOrg = (index, org) => {
-		const { ordering_orgs, updateState, updatePolicyDropdown, verifyACLPolicyValidity } = this.props;
+		const { ordering_orgs, updateState } = this.props;
 		let updated_orgs = ordering_orgs.filter((c, i) => i !== index);
 		this.checkDuplicateMSP(ordering_orgs[index], updated_orgs);
 		this.checkNodeOUWarning(updated_orgs);
 		updateState(SCOPE, {
 			ordering_orgs: updated_orgs,
 		});
-		updatePolicyDropdown(updated_orgs, false);
-		verifyACLPolicyValidity(updated_orgs, null); //Show error if any acl(added) refers to this deleted org
 		this.checkAdminCount(updated_orgs);
 		this.checkOrdererCount(updated_orgs);
 	};
 
 	// user changed the role of a selected msp/org
 	onChangeOrgRole = (index, role, event) => {
-		const { ordering_orgs, updatePolicyDropdown, updateState } = this.props;
+		const { ordering_orgs, updateState } = this.props;
 		let selected_orgs = Array.isArray(ordering_orgs) ? JSON.parse(JSON.stringify(ordering_orgs)) : [];
 
 		if (event.target.checked) {
@@ -95,7 +92,6 @@ export class OrdererOrganizations extends Component {
 		} else {
 			selected_orgs[index].roles = ['writer', 'reader'];
 		}
-		updatePolicyDropdown(selected_orgs, false);
 		updateState(SCOPE, {
 			ordering_orgs: selected_orgs,
 		});

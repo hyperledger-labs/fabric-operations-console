@@ -2196,9 +2196,7 @@ class ChannelModal extends Component {
 				)}
 				{viewing === 'channel_update_policy' && <Policy />}
 				{viewing === 'channel_orderer_organizations' && (
-					<OrdererOrganizations updatePolicyDropdown={this.updatePolicyDropdown}
-						verifyACLPolicyValidity={this.verifyACLPolicyValidity}
-					/>
+					<OrdererOrganizations/>
 				)}
 				{(viewing === 'organization_creating_channel' || viewing === 'organization_updating_channel') && <OrgSignature editLoading={this.props.editLoading} />}
 				{viewing === 'capabilities' && <Capabilities existingCapabilities={existingCapabilities}
