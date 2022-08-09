@@ -616,11 +616,13 @@
 		display: flex;
 		justify-content: flex-start;
 		padding: 2rem;
+		padding-left: 1rem;
 		text-align: left;
 
 		.ibp-container-empty-image {
-			max-width: 13rem;
+			max-width: 16rem;
 			padding-bottom: 2rem;
+			height: 10rem;
 		}
 
 		.ibp-container-empty-text {
