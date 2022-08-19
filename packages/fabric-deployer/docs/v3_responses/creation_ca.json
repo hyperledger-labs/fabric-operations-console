@@ -1,0 +1,428 @@
+{
+    "name": "org1ca",
+    "ca_name": "ca",
+    "tlsca_name": "tlsca",
+    "endpoints": {
+      "api": "https://v3api-response-org1ca-ca.ocp44.us-south.containers.appdomain.cloud:443",
+      "operations": "https://v3api-response-org1ca-operations.ocp44.us-south.containers.appdomain.cloud:443"
+    },
+    "resources": {
+      "requests": {
+        "cpu": "100m",
+        "memory": "200M"
+      },
+      "limits": {
+        "cpu": "100m",
+        "memory": "200M"
+      }
+    },
+    "individualResources": {
+      "init": {
+        "limits": {
+          "cpu": "100m",
+          "memory": "200M"
+        },
+        "requests": {
+          "cpu": "100m",
+          "memory": "200M"
+        }
+      },
+      "ca": {
+        "limits": {
+          "cpu": "100m",
+          "memory": "200M"
+        },
+        "requests": {
+          "cpu": "100m",
+          "memory": "200M"
+        }
+      }
+    },
+    "tls": {
+      "cert": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUR5ekNDQTNDZ0F3SUJBZ0lSQUovbVZKbk1HaVZpMEZMcG1JM1M4L1V3Q2dZSUtvWkl6ajBFQXdJd2dkMHgKQ3pBSkJnTlZCQVlUQWxWVE1SY3dGUVlEVlFRSUV3NU9iM0owYUNCRFlYSnZiR2x1WVRFUE1BMEdBMVVFQnhNRwpSSFZ5YUdGdE1Rd3dDZ1lEVlFRS0V3TkpRazB4RXpBUkJnTlZCQXNUQ2tKc2IyTnJZMmhoYVc0eGdZQXdmZ1lEClZRUURFM2RwWW5BeU5URXRiMk4wTWpBdGIzSm5NV05oTFdOaExtOXdaVzV6YUdsbWREUjRMV2xpY0hZeUxYUmwKYzNRdE5qaGxNVEJtTlRnelpqQXlOalV5T1dabE4yRTRPV1JoTkRBeE5qbGxaalF0TURBd01DNTFjeTF6YjNWMAphQzVqYjI1MFlXbHVaWEp6TG1Gd2NHUnZiV0ZwYmk1amJHOTFaREFlRncweU1ERXdNakF5TWpJMk5EUmFGdzB6Ck1ERXdNVGd5TWpJMk5EUmFNSUhkTVFzd0NRWURWUVFHRXdKVlV6RVhNQlVHQTFVRUNCTU9UbTl5ZEdnZ1EyRnkKYjJ4cGJtRXhEekFOQmdOVkJBY1RCa1IxY21oaGJURU1NQW9HQTFVRUNoTURTVUpOTVJNd0VRWURWUVFMRXdwQwpiRzlqYTJOb1lXbHVNWUdBTUg0R0ExVUVBeE4zYVdKd01qVXhMVzlqZERJd0xXOXlaekZqWVMxallTNXZjR1Z1CmMyaHBablEwZUMxcFluQjJNaTEwWlhOMExUWTRaVEV3WmpVNE0yWXdNalkxTWpsbVpUZGhPRGxrWVRRd01UWTUKWldZMExUQXdNREF1ZFhNdGMyOTFkR2d1WTI5dWRHRnBibVZ5Y3k1aGNIQmtiMjFoYVc0dVkyeHZkV1F3V1RBVApCZ2NxaGtqT1BRSUJCZ2dxaGtqT1BRTUJCd05DQUFRdGd4TUtjcTRsT2lvaEZxclU2c2RCRGwvNjNGc25ZR2tECmxUNU9LNTF0MVJpajMyclRQQXE1WUJ3N3JSWjBZK3ZWUkV2bVJEdnFiRENuVzdJVTQzSCtvNElCRFRDQ0FRa3cKZ2dFRkJnTlZIUkVFZ2Ywd2dmcUNkMmxpY0RJMU1TMXZZM1F5TUMxdmNtY3hZMkV0WTJFdWIzQmxibk5vYVdaMApOSGd0YVdKd2RqSXRkR1Z6ZEMwMk9HVXhNR1kxT0RObU1ESTJOVEk1Wm1VM1lUZzVaR0UwTURFMk9XVm1OQzB3Ck1EQXdMblZ6TFhOdmRYUm9MbU52Ym5SaGFXNWxjbk11WVhCd1pHOXRZV2x1TG1Oc2IzVmtnbjlwWW5BeU5URXQKYjJOME1qQXRiM0puTVdOaExXOXdaWEpoZEdsdmJuTXViM0JsYm5Ob2FXWjBOSGd0YVdKd2RqSXRkR1Z6ZEMwMgpPR1V4TUdZMU9ETm1NREkyTlRJNVptVTNZVGc1WkdFME1ERTJPV1ZtTkMwd01EQXdMblZ6TFhOdmRYUm9MbU52CmJuUmhhVzVsY25NdVlYQndaRzl0WVdsdUxtTnNiM1ZrTUFvR0NDcUdTTTQ5QkFNQ0Ewa0FNRVlDSVFERUoxTUoKMm1CYjUzbzdIa2M0ZzZNeHpwTGRISGU1ZDhCOU1WRHltZDU4NmdJaEFQekgwbXV0U2NHTk9rZnVoWnF0bWg2UwpiME0yL0JETlp3WFZQYXZQZEtXZgotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+    },
+    "storage": {
+      "ca": {
+        "size": "100M",
+        "class": "portworx-1reps"
+      }
+    },
+    "crstatus": {
+      "type": "Deploying",
+      "status": "True",
+      "reason": "waitingForPods",
+      "message": "Waiting for pods",
+      "lastHeartbeatTime": "2020-10-20 22:26:44.002916619 +0000 UTC m=+322.258187184",
+      "version": "2.5.1",
+      "versions": {
+        "reconciled": "1.4.9"
+      }
+    },
+    "version": "1.4.9-0",
+    "configs": {
+      "ca": {
+        "cfg": {
+          "identities": {
+            "passwordattempts": 10,
+            "allowremove": true
+          },
+          "affiliations": {
+            "allowremove": true
+          }
+        },
+        "ca": {
+          "name": "ca",
+          "keyfile": "/crypto/ca/key.pem",
+          "certfile": "/crypto/ca/cert.pem",
+          "chainfile": "/crypto/ca/chain.pem"
+        },
+        "signing": {
+          "profiles": {
+            "ca": {
+              "usage": [
+                "cert sign",
+                "crl sign"
+              ],
+              "caconstraint": {
+                "isca": true
+              },
+              "authremote": {},
+              "expiry": "43800h0m0s"
+            },
+            "tls": {
+              "usage": [
+                "signing",
+                "key encipherment",
+                "server auth",
+                "client auth",
+                "key agreement"
+              ],
+              "caconstraint": {},
+              "authremote": {},
+              "expiry": "87600h0m0s"
+            }
+          },
+          "default": {
+            "usage": [
+              "digital signature"
+            ],
+            "caconstraint": {},
+            "authremote": {},
+            "expiry": "87600h0m0s"
+          }
+        },
+        "csr": {
+          "CN": "org1ca-ca",
+          "names": [
+            {
+              "C": "US",
+              "ST": "North Carolina",
+              "O": "Hyperledger",
+              "OU": "Fabric"
+            }
+          ],
+          "hosts": [
+            "localhost",
+            "127.0.0.1"
+          ],
+          "ca": {
+            "pathlen": 0,
+            "pathlenzero": false,
+            "expiry": "131400h",
+            "backdate": ""
+          }
+        },
+        "registry": {
+          "maxenrollments": -1,
+          "identities": [
+            {
+              "name": "admin",
+              "pass": "adminpw",
+              "type": "client",
+              "attrs": {
+                "hf.AffiliationMgr": true,
+                "hf.GenCRL": true,
+                "hf.IntermediateCA": true,
+                "hf.Registrar.Attributes": "*",
+                "hf.Registrar.DelegateRoles": "*",
+                "hf.Registrar.Roles": "*",
+                "hf.Revoker": true
+              }
+            }
+          ]
+        },
+        "affiliations": {
+          "org1": [
+            "department1",
+            "department2"
+          ],
+          "org2": [
+            "department1"
+          ]
+        },
+        "ldap": {
+          "url": "ldap://<adminDN>:<adminPassword>@<host>:<port>/<base>",
+          "attribute": {
+            "names": [
+              "uid",
+              "member"
+            ],
+            "converters": [
+              {}
+            ],
+            "maps": {
+              "groups": [
+                {}
+              ]
+            }
+          },
+          "tls": {
+            "client": {}
+          }
+        },
+        "db": {
+          "type": "postgres",
+          "datasource": "host=postgres.v3api-response.svc.cluster.local port=5432 user=admin password=adminpw dbname=ibmclouddb sslmode=disable",
+          "tls": {
+            "client": {}
+          }
+        },
+        "bccsp": {
+          "default": "SW",
+          "sw": {
+            "security": 256,
+            "hash": "SHA2",
+            "filekeystore": {
+              "keystore": "msp/keystore"
+            }
+          }
+        },
+        "intermediate": {
+          "parentserver": {},
+          "tls": {
+            "client": {}
+          },
+          "enrollment": {
+            "name": "",
+            "Type": ""
+          }
+        },
+        "crl": {
+          "expiry": "24h0m0s"
+        },
+        "port": 7054,
+        "cors": {
+          "enabled": false,
+          "origins": [
+            "*"
+          ]
+        },
+        "debug": true,
+        "tls": {
+          "enabled": true,
+          "certfile": "/crypto/ca/tls-cert.pem",
+          "keyfile": "/crypto/ca/tls-key.pem",
+          "clientauth": {
+            "type": "noclientcert"
+          }
+        },
+        "cafiles": [
+          "/data/tlsca/fabric-ca-server-config.yaml"
+        ],
+        "crlsizelimit": 512000,
+        "metrics": {
+          "provider": "prometheus",
+          "statsd": {
+            "network": "udp",
+            "address": "127.0.0.1:8125",
+            "writeinterval": "10s",
+            "prefix": "server"
+          }
+        },
+        "operations": {
+          "listenaddress": "0.0.0.0:9443",
+          "metrics": {},
+          "tls": {
+            "enabled": true,
+            "certfile": "/crypto/ca/operations-cert.pem",
+            "keyfile": "/crypto/ca/operations-key.pem"
+          }
+        }
+      },
+      "tlsca": {
+        "cfg": {
+          "identities": {
+            "passwordattempts": 10,
+            "allowremove": true
+          },
+          "affiliations": {
+            "allowremove": true
+          }
+        },
+        "ca": {
+          "name": "tlsca",
+          "keyfile": "/crypto/tlsca/key.pem",
+          "certfile": "/crypto/tlsca/cert.pem",
+          "chainfile": "/crypto/tlsca/chain.pem"
+        },
+        "signing": {
+          "profiles": null,
+          "default": {
+            "usage": [
+              "signing",
+              "key encipherment",
+              "server auth",
+              "client auth",
+              "key agreement"
+            ],
+            "caconstraint": {},
+            "authremote": {},
+            "expiry": "87600h0m0s"
+          }
+        },
+        "csr": {
+          "CN": "org1ca-tlsca",
+          "names": [
+            {
+              "C": "US",
+              "ST": "North Carolina",
+              "O": "Hyperledger",
+              "OU": "Fabric"
+            }
+          ],
+          "hosts": [
+            "localhost"
+          ],
+          "ca": {
+            "pathlen": 0,
+            "pathlenzero": false,
+            "expiry": "131400h",
+            "backdate": ""
+          }
+        },
+        "registry": {
+          "maxenrollments": -1,
+          "identities": [
+            {
+              "name": "admin",
+              "pass": "adminpw",
+              "type": "client",
+              "attrs": {
+                "hf.AffiliationMgr": true,
+                "hf.GenCRL": true,
+                "hf.IntermediateCA": true,
+                "hf.Registrar.Attributes": "*",
+                "hf.Registrar.DelegateRoles": "*",
+                "hf.Registrar.Roles": "*",
+                "hf.Revoker": true
+              }
+            }
+          ]
+        },
+        "affiliations": {
+          "org1": [
+            "department1",
+            "department2"
+          ],
+          "org2": [
+            "department1"
+          ]
+        },
+        "ldap": {
+          "url": "ldap://<adminDN>:<adminPassword>@<host>:<port>/<base>",
+          "attribute": {
+            "names": [
+              "uid",
+              "member"
+            ],
+            "converters": [
+              {}
+            ],
+            "maps": {
+              "groups": [
+                {}
+              ]
+            }
+          },
+          "tls": {
+            "client": {}
+          }
+        },
+        "db": {
+          "type": "postgres",
+          "datasource": "host=postgres.v3api-response.svc.cluster.local port=5432 user=admin password=adminpw dbname=ibmclouddb sslmode=disable",
+          "tls": {
+            "client": {}
+          }
+        },
+        "bccsp": {
+          "default": "SW",
+          "sw": {
+            "security": 256,
+            "hash": "SHA2",
+            "filekeystore": {
+              "keystore": "msp/keystore"
+            }
+          }
+        },
+        "intermediate": {
+          "parentserver": {},
+          "tls": {
+            "client": {}
+          },
+          "enrollment": {
+            "name": "",
+            "Type": ""
+          }
+        },
+        "crl": {
+          "expiry": "24h0m0s"
+        },
+        "port": 7054,
+        "cors": {
+          "enabled": false,
+          "origins": [
+            "*"
+          ]
+        },
+        "debug": true,
+        "tls": {
+          "enabled": true,
+          "certfile": "/tmp/data/org1ca/tlsca/tls-cert.pem",
+          "keyfile": "/tmp/data/org1ca/tlsca/tls-key.pem",
+          "clientauth": {
+            "type": "noclientcert"
+          }
+        },
+        "crlsizelimit": 512000,
+        "metrics": {
+          "provider": "prometheus",
+          "statsd": {
+            "network": "udp",
+            "address": "127.0.0.1:8125",
+            "writeinterval": "10s",
+            "prefix": "server"
+          }
+        },
+        "operations": {
+          "listenaddress": "0.0.0.0:9443",
+          "metrics": {},
+          "tls": {
+            "enabled": true
+          }
+        }
+      }
+    },
+    "creation_timestamp": 1603232812,
+    "last_updated": 1603232812,
+    "replicas": 1,
+    "msp": {
+      "ca": {
+        "signcerts": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNGekNDQWIyZ0F3SUJBZ0lVUTV0enIxTnBiNVRqeVZNSGF5NUxvSURWZzJjd0NnWUlLb1pJemowRUF3SXcKWVRFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVJJd0VBWURWUVFERXdsdmNtY3hZMkV0ClkyRXdIaGNOTWpBeE1ESXdNakl5TWpBd1doY05NelV4TURFM01qSXlNakF3V2pCaE1Rc3dDUVlEVlFRR0V3SlYKVXpFWE1CVUdBMVVFQ0JNT1RtOXlkR2dnUTJGeWIyeHBibUV4RkRBU0JnTlZCQW9UQzBoNWNHVnliR1ZrWjJWeQpNUTh3RFFZRFZRUUxFd1pHWVdKeWFXTXhFakFRQmdOVkJBTVRDVzl5WnpGallTMWpZVEJaTUJNR0J5cUdTTTQ5CkFnRUdDQ3FHU000OUF3RUhBMElBQkxyL1VXSWRJejNIaTd3RU9XanNpNzNmU2VKSzhjMTMzVE5uL2FiRlExMzMKWlJtOGZzYjJVTE9YR09ka3ZIREEyMkV3akRJVTVCcHhrWnlGS0d4TXNzK2pVekJSTUE0R0ExVWREd0VCL3dRRQpBd0lCQmpBUEJnTlZIUk1CQWY4RUJUQURBUUgvTUIwR0ExVWREZ1FXQkJSWThRVVR2ZW5oaEp4c0VnN0lycnNGClJiWjFGVEFQQmdOVkhSRUVDREFHaHdSL0FBQUJNQW9HQ0NxR1NNNDlCQU1DQTBnQU1FVUNJUUNuMjlaSjl0WTIKMGZLWjE3bGR1KzFBbTRrOE9HMnpKcWU3MHg0SXFOMmtld0lnUGhWRFZKL3pJWkxDRUF0MDVuTHE2WENvWWVLOApLaktDRFlFUjJ6WWgzMWc9Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K"
+      },
+      "tlsca": {
+        "signcerts": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNDekNDQWJLZ0F3SUJBZ0lVZFY5VWNKcFZqeHBCdk1GWU9sOFo3SU9lU2Zzd0NnWUlLb1pJemowRUF3SXcKWkRFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVJVd0V3WURWUVFERXd4dmNtY3hZMkV0CmRHeHpZMkV3SGhjTk1qQXhNREl3TWpJeU1qQXdXaGNOTXpVeE1ERTNNakl5TWpBd1dqQmtNUXN3Q1FZRFZRUUcKRXdKVlV6RVhNQlVHQTFVRUNCTU9UbTl5ZEdnZ1EyRnliMnhwYm1FeEZEQVNCZ05WQkFvVEMwaDVjR1Z5YkdWawpaMlZ5TVE4d0RRWURWUVFMRXdaR1lXSnlhV014RlRBVEJnTlZCQU1UREc5eVp6RmpZUzEwYkhOallUQlpNQk1HCkJ5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEEwSUFCRGttc1pZZCtEck1iZ1hHWGsxdVFMVHlnYWhSYS9qYWloR1YKUi80L2FQeGxsWWJnQ0VDUVdjcFo1ZmdIcGNueDYxZVljemZ0cWFtL3MwdVpzK3FselRXalFqQkFNQTRHQTFVZApEd0VCL3dRRUF3SUJCakFQQmdOVkhSTUJBZjhFQlRBREFRSC9NQjBHQTFVZERnUVdCQlNGZ1FxK2tCZlNwVDNSCkhOTWpSbXBSMlkrVGFqQUtCZ2dxaGtqT1BRUURBZ05IQURCRUFpQUF5L2NMSGZvL3BiNzk2OXJxQTFlRXViSS8KSFhRcUlNb3BnNGE2K0dxVDJBSWdUSENBZGdXclZadDdYdnYxUjA4eE9WN1AyTTdaZGZUKzNkbVNIcWF2eXZRPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+      }
+    }
+  }
+  

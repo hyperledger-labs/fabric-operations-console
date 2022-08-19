@@ -1,0 +1,59 @@
+{
+	"_id": "crn:v1:staging:public:blockchain:us-south:a/4587bcdeb4c40add6cb58c5cdf76fbcb:c7d873de-a7e5-4247-b297-ce0ec26fd880:peer:peer2",
+	"guid": "crn:v1:staging:public:blockchain:us-south:a/4587bcdeb4c40add6cb58c5cdf76fbcb:c7d873de-a7e5-4247-b297-ce0ec26fd880:peer:peer2",
+	"url": "/v2/resource_instances/crn:v1:staging:public:blockchain:us-south:a/4587bcdeb4c40add6cb58c5cdf76fbcb:c7d873de-a7e5-4247-b297-ce0ec26fd880:peer:peer2",
+	"created_at": 1547501436,
+	"updated_at": 0,
+	"deleted_at": 0,
+	"name": "peer2",
+	"region_id": "",
+	"account_id": "a/4587bcdeb4c40add6cb58c5cdf76fbcb",
+	"resource_plan_id": "",
+	"resource_group_id": "",
+	"resource_group_crn": "",
+	"crn": "crn:v1:staging:public:blockchain:us-south:a/4587bcdeb4c40add6cb58c5cdf76fbcb:c7d873de-a7e5-4247-b297-ce0ec26fd880:peer:peer2",
+	"state": "created",
+	"type": "resource",
+	"resource_id": "crn:v1:staging:public:blockchain:us-south:a/4587bcdeb4c40add6cb58c5cdf76fbcb:c7d873de-a7e5-4247-b297-ce0ec26fd880:peer:peer2",
+	"dashboard_url": "",
+	"last_operation": "created",
+	"resource_aliases_url": "",
+	"ResourceBindingsURL": "",
+	"resource_keys_url": "",
+	"plan_history": null,
+	"migrated": false,
+	"region_binding_id": "",
+	"region_binding_crn": "",
+	"source_crn": "",
+	"resource_details": {
+		"crn": {
+			"Version": "v1",
+			"Cname": "staging",
+			"Ctype": "public",
+			"ServiceName": "blockchain",
+			"Location": "us-south",
+			"AccountID": "a/4587bcdeb4c40add6cb58c5cdf76fbcb",
+			"InstanceID": "c7d873de-a7e5-4247-b297-ce0ec26fd880",
+			"ResourceType": "peer",
+			"ResourceID": "peer2"
+		},
+		"crnString": "crn:v1:staging:public:blockchain:us-south:a/4587bcdeb4c40add6cb58c5cdf76fbcb:c7d873de-a7e5-4247-b297-ce0ec26fd880:peer:peer2",
+		"endpoints": {
+			"api": "grpcs://169.55.231.152:30184",
+			"events": "grpcs://169.55.231.152:31933",
+			"grpcweb": "grpcs://169.55.231.152:31760"
+		},
+		"message": "ok",
+		"name": "peer2",
+		"resources": {
+			"limits": {
+				"cpu": "500m",
+				"memory": "2008M"
+			},
+			"requests": {
+				"cpu": "500m",
+				"memory": "2008M"
+			}
+		}
+	}
+}

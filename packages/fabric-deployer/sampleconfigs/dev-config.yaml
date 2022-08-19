@@ -1,0 +1,53 @@
+db:
+  connectionurl: "http://couchdb:5984"
+  createdb: false
+  serviceinstances: 
+    name: "dev_serviceinstances"
+    designdocs:
+      - ./designdocs/serviceinstances/by_account.json
+      - ./designdocs/serviceinstances/metrics.json
+  resourcebindings:
+    name: "dev_resourcebindings"
+    designdocs:
+      - ./designdocs/resourcebindings/by_account.json
+  components:
+    name: "dev_components"
+    designdocs:
+      - ./designdocs/components/service_broker.json
+      - ./designdocs/components/deployer.json
+      - ./designdocs/components/plutus.json
+      - ./designdocs/components/search_indices.json
+  resourcegroups:
+    name: "dev_resourcegroups"
+    designdocs:
+      - ./designdocs/resourcegroups/by_account.json
+
+dashboardurl: "https://hyperion.stage1.ng.bluemix.net/welcome"
+
+catalog: "/catalogs/dev/en-us_catalog.json"
+
+port: 8080
+
+loglevel: debug
+
+iam:
+  zone: staging
+  apikey: fake
+
+crn:
+  version: v1
+  cname: bluemix
+  ctype: public
+  servicename: blockchain
+  location: us-south
+  
+deployerurl: "http://deployer.url"
+
+tls:
+  enabled: false
+  certpath: /certs/tls.crt
+  keypath: /certs/tls.key
+
+auth:
+  username: test
+  password: test

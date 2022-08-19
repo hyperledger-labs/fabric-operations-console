@@ -1,0 +1,23 @@
+db:
+  connectionurl: "http://couchdb:5984"
+  createdb: true
+  components:
+    name: "components"
+    designdocs:
+      - ./designdocs/components/service_broker.json
+      - ./designdocs/components/deployer.json
+      - ./designdocs/components/plutus.json
+      - ./designdocs/components/search_indices.json
+
+port: 8080
+
+loglevel: debug
+
+tls:
+  enabled: false
+  certpath: /certs/tls.crt
+  keypath: /certs/tls.key
+
+auth:
+  username: test
+  password: test

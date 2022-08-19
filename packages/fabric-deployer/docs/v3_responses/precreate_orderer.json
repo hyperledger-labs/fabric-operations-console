@@ -1,0 +1,191 @@
+{
+    "name": "orderer",
+    "endpoints": {
+        "api": "grpcs://v3api-response-orderer-orderer.ocp44.us-south.containers.appdomain.cloud:443",
+        "grpcweb": "https://v3api-response-orderer-grpcweb.ocp44.us-south.containers.appdomain.cloud:443",
+        "operations": "https://v3api-response-orderer-operations.ocp44.us-south.containers.appdomain.cloud:443"
+    },
+    "msp": {
+        "tls": {
+            "cacerts": [
+                "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNGekNDQWI2Z0F3SUJBZ0lVUUxiaGo0R2VDemllOUluVkNTVGlibDlpei9rd0NnWUlLb1pJemowRUF3SXcKYWpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVJzd0dRWURWUVFERXhKdmNtUmxjbVZ5CmIzSm5ZMkV0ZEd4elkyRXdIaGNOTWpBeE1ESXdNakl5TlRBd1doY05NelV4TURFM01qSXlOVEF3V2pCcU1Rc3cKQ1FZRFZRUUdFd0pWVXpFWE1CVUdBMVVFQ0JNT1RtOXlkR2dnUTJGeWIyeHBibUV4RkRBU0JnTlZCQW9UQzBoNQpjR1Z5YkdWa1oyVnlNUTh3RFFZRFZRUUxFd1pHWVdKeWFXTXhHekFaQmdOVkJBTVRFbTl5WkdWeVpYSnZjbWRqCllTMTBiSE5qWVRCWk1CTUdCeXFHU000OUFnRUdDQ3FHU000OUF3RUhBMElBQkZXakdtNVlLek1TOTd3eGM5Y3cKV3ZXemkvNEk0Q0p5ZmpEVnIwcWVLWGZoQ1djdlk4cXhGT2pXbWRmR2NrdEsxZEZQSTU2RDdnR1Y4UFJ4QVlRZQp3c21qUWpCQU1BNEdBMVVkRHdFQi93UUVBd0lCQmpBUEJnTlZIUk1CQWY4RUJUQURBUUgvTUIwR0ExVWREZ1FXCkJCUWZyZ0VzcXd6dGVrNUlKYjRZUVdtSDJoVjl1VEFLQmdncWhrak9QUVFEQWdOSEFEQkVBaUIzZXBDQ3grR2IKMmtwSDhrM3NJdzJSR2N5YWR6NzU2ek96L2NjM3VjNFZGUUlnSHpaanpzMmxndVZtenM5VG9GaWJFSnVUZUZscgpvT1BXK0IxU25td2FVTFE9Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K"
+            ],
+            "signcerts": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVVakNDQS9tZ0F3SUJBZ0lVQkdXQ0ZJaHhkUnFGQ1BpelFWRnZoeDJxYTJjd0NnWUlLb1pJemowRUF3SXcKYWpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVJzd0dRWURWUVFERXhKdmNtUmxjbVZ5CmIzSm5ZMkV0ZEd4elkyRXdIaGNOTWpBeE1ESXdNak13TnpBd1doY05NekF4TURFNE1qTXhNakF3V2pCSk1SQXcKRGdZRFZRUUxFd2R2Y21SbGNtVnlNVFV3TXdZRFZRUURFeXd5TW1VelltTXdZaTAxTm1Fd0xUUTVObUV0WVdGaQpNeTFsWW1GaFpqWTBPV00xWmpjdGIzSmtaWEpsY2pCWk1CTUdCeXFHU000OUFnRUdDQ3FHU000OUF3RUhBMElBCkJDYnNjZkM1MlNFSStVV1VuTTg5clluZ0VyK1U0bzZOaG1MbVpEczNZek84M0tHL3QwZ2REaEpCQlFSaDZUY1gKUVlydDFYTXBQLzgwRzFCY2hDNXlWcXVqZ2dLY01JSUNtREFPQmdOVkhROEJBZjhFQkFNQ0E2Z3dIUVlEVlIwbApCQll3RkFZSUt3WUJCUVVIQXdFR0NDc0dBUVVGQndNQ01Bd0dBMVVkRXdFQi93UUNNQUF3SFFZRFZSME9CQllFCkZQenhmaFN0U0ExYThhM1A1VlR0RS82VmpKZldNQjhHQTFVZEl3UVlNQmFBRkIrdUFTeXJETzE2VGtnbHZoaEIKYVlmYUZYMjVNSUlCbEFZRFZSMFJCSUlCaXpDQ0FZZUNmV2xpY0RJMU1TMXZZM1F5TUMxdmNtUmxjbVZ5TFc5eQpaR1Z5WlhJdWIzQmxibk5vYVdaME5IZ3RhV0p3ZGpJdGRHVnpkQzAyT0dVeE1HWTFPRE5tTURJMk5USTVabVUzCllUZzVaR0UwTURFMk9XVm1OQzB3TURBd0xuVnpMWE52ZFhSb0xtTnZiblJoYVc1bGNuTXVZWEJ3Wkc5dFlXbHUKTG1Oc2IzVmtnb0dBYVdKd01qVXhMVzlqZERJd0xXOXlaR1Z5WlhJdGIzQmxjbUYwYVc5dWN5NXZjR1Z1YzJocApablEwZUMxcFluQjJNaTEwWlhOMExUWTRaVEV3WmpVNE0yWXdNalkxTWpsbVpUZGhPRGxrWVRRd01UWTVaV1kwCkxUQXdNREF1ZFhNdGMyOTFkR2d1WTI5dWRHRnBibVZ5Y3k1aGNIQmtiMjFoYVc0dVkyeHZkV1NDZldsaWNESTEKTVMxdlkzUXlNQzF2Y21SbGNtVnlMV2R5Y0dOM1pXSXViM0JsYm5Ob2FXWjBOSGd0YVdKd2RqSXRkR1Z6ZEMwMgpPR1V4TUdZMU9ETm1NREkyTlRJNVptVTNZVGc1WkdFME1ERTJPV1ZtTkMwd01EQXdMblZ6TFhOdmRYUm9MbU52CmJuUmhhVzVsY25NdVlYQndaRzl0WVdsdUxtTnNiM1ZraHdSL0FBQUJNSUdBQmdncUF3UUZCZ2NJQVFSMGV5SmgKZEhSeWN5STZleUpvWmk1QlptWnBiR2xoZEdsdmJpSTZJaUlzSW1obUxrVnVjbTlzYkcxbGJuUkpSQ0k2SWpJeQpaVE5pWXpCaUxUVTJZVEF0TkRrMllTMWhZV0l6TFdWaVlXRm1OalE1WXpWbU55MXZjbVJsY21WeUlpd2lhR1l1ClZIbHdaU0k2SW05eVpHVnlaWElpZlgwd0NnWUlLb1pJemowRUF3SURSd0F3UkFJZ1NzcGo0Q1Y4TzJ2UlNIZEwKQUJBdzlySXcyMjdMK3pFbjJxMUljTUVVYVlzQ0lHaXVQSGs1NHhlVm53RSt0T24zREZWazVSaDM1VzZBTlAxMQp4QWxXNGp0NAotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+        },
+        "component": {
+            "cacerts": [
+                "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUNJekNDQWNtZ0F3SUJBZ0lVT3lQamNyVm84Y2hRWXBycGFXMkpwcmN6bHVZd0NnWUlLb1pJemowRUF3SXcKWnpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVJnd0ZnWURWUVFERXc5dmNtUmxjbVZ5CmIzSm5ZMkV0WTJFd0hoY05NakF4TURJd01qSXlOVEF3V2hjTk16VXhNREUzTWpJeU5UQXdXakJuTVFzd0NRWUQKVlFRR0V3SlZVekVYTUJVR0ExVUVDQk1PVG05eWRHZ2dRMkZ5YjJ4cGJtRXhGREFTQmdOVkJBb1RDMGg1Y0dWeQpiR1ZrWjJWeU1ROHdEUVlEVlFRTEV3WkdZV0p5YVdNeEdEQVdCZ05WQkFNVEQyOXlaR1Z5WlhKdmNtZGpZUzFqCllUQlpNQk1HQnlxR1NNNDlBZ0VHQ0NxR1NNNDlBd0VIQTBJQUJKSmNnSDc2SEQ5NkFaakhVbGMwQVVHYWlaK3cKZk9SNDJzZ1BxcWZDdTNSS0ZTVWpucDA4ZzRPUWRLV0JLRmhPS0ZQZFkwK1JJVEtWdWZ1MkZlMS9pU1dqVXpCUgpNQTRHQTFVZER3RUIvd1FFQXdJQkJqQVBCZ05WSFJNQkFmOEVCVEFEQVFIL01CMEdBMVVkRGdRV0JCUytMVkxvCnc3YVFDSU16ZFlvN0JzcEUwUCtOaERBUEJnTlZIUkVFQ0RBR2h3Ui9BQUFCTUFvR0NDcUdTTTQ5QkFNQ0EwZ0EKTUVVQ0lRRFpGN3ZDK1ZYZW50c3lEZTdvN1ltZlJkSDN5Mi9RVmlnakNqclpZU1JrSmdJZ2J2dlkzd1dvc3J1QwpDNXdRU3Q5ckV4MHVXSWY5SWtLNFdQcDMxS1cxSE1vPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+            ],
+            "signcerts": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN3akNDQW1tZ0F3SUJBZ0lVWmxFMm10VHZEUlRwdDdnRDNrYzZDckI3TFB3d0NnWUlLb1pJemowRUF3SXcKWnpFTE1Ba0dBMVVFQmhNQ1ZWTXhGekFWQmdOVkJBZ1REazV2Y25Sb0lFTmhjbTlzYVc1aE1SUXdFZ1lEVlFRSwpFd3RJZVhCbGNteGxaR2RsY2pFUE1BMEdBMVVFQ3hNR1JtRmljbWxqTVJnd0ZnWURWUVFERXc5dmNtUmxjbVZ5CmIzSm5ZMkV0WTJFd0hoY05NakF4TURJd01qTXdOekF3V2hjTk16QXhNREU0TWpNeE1qQXdXakJKTVJBd0RnWUQKVlFRTEV3ZHZjbVJsY21WeU1UVXdNd1lEVlFRREV5d3lNbVV6WW1Nd1lpMDFObUV3TFRRNU5tRXRZV0ZpTXkxbApZbUZoWmpZME9XTTFaamN0YjNKa1pYSmxjakJaTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEEwSUFCT3QxCklhdzBRQ3BVZjJUNWJWQ2Q3eERqT0JjMkl6V2F5dDE2MFZ6dzAzTzR3SHV0c1pGNk1TZ1QvNEN4SFBobWhnRTYKWS83bkE4NXcydldER3RtTDRiK2pnZ0VQTUlJQkN6QU9CZ05WSFE4QkFmOEVCQU1DQjRBd0RBWURWUjBUQVFILwpCQUl3QURBZEJnTlZIUTRFRmdRVVdkU0htR0ZKVm9vc3BsZ3dYMmVzdHBuNzhMb3dId1lEVlIwakJCZ3dGb0FVCnZpMVM2TU8ya0FpRE0zV0tPd2JLUk5EL2pZUXdLQVlEVlIwUkJDRXdINElkYVdKd0xXOXdaWEpoZEc5eUxUWTUKWXpWaU5qYzFPV0l0YmpWd2FEUXdnWUFHQ0NvREJBVUdCd2dCQkhSN0ltRjBkSEp6SWpwN0ltaG1Ma0ZtWm1scwphV0YwYVc5dUlqb2lJaXdpYUdZdVJXNXliMnhzYldWdWRFbEVJam9pTWpKbE0ySmpNR0l0TlRaaE1DMDBPVFpoCkxXRmhZak10WldKaFlXWTJORGxqTldZM0xXOXlaR1Z5WlhJaUxDSm9aaTVVZVhCbElqb2liM0prWlhKbGNpSjkKZlRBS0JnZ3Foa2pPUFFRREFnTkhBREJFQWlCVExRd2xkeXR3cmJ1ZUdBdEE3TEMxbUN6dVppdjhhVURXWXo1dwozSEVoM2dJZ2Vhd1BpKyt4WUJCNVp3ekJtRTlrMmxjekNobTExTTY2dHoxZVVOOWdMeW89Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K"
+        }
+    },
+    "crypto": {
+        "enrollment": {
+            "component": {
+                "cahost": "v3api-response-ordererorgca-ca.ocp44.us-south.containers.appdomain.cloud",
+                "caport": "443",
+                "caname": "ca",
+                "catls": {
+                    "cacert": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUQ1ekNDQTR5Z0F3SUJBZ0lRWjVjU0ZMWHJIZGEwOEw3bTZFUStHREFLQmdncWhrak9QUVFEQWpDQjVERUwKTUFrR0ExVUVCaE1DVlZNeEZ6QVZCZ05WQkFnVERrNXZjblJvSUVOaGNtOXNhVzVoTVE4d0RRWURWUVFIRXdaRQpkWEpvWVcweEREQUtCZ05WQkFvVEEwbENUVEVUTUJFR0ExVUVDeE1LUW14dlkydGphR0ZwYmpHQmh6Q0JoQVlEClZRUURFMzFwWW5BeU5URXRiMk4wTWpBdGIzSmtaWEpsY205eVoyTmhMV05oTG05d1pXNXphR2xtZERSNExXbGkKY0hZeUxYUmxjM1F0TmpobE1UQm1OVGd6WmpBeU5qVXlPV1psTjJFNE9XUmhOREF4TmpsbFpqUXRNREF3TUM1MQpjeTF6YjNWMGFDNWpiMjUwWVdsdVpYSnpMbUZ3Y0dSdmJXRnBiaTVqYkc5MVpEQWVGdzB5TURFd01qQXlNakk1Ck16SmFGdzB6TURFd01UZ3lNakk1TXpKYU1JSGtNUXN3Q1FZRFZRUUdFd0pWVXpFWE1CVUdBMVVFQ0JNT1RtOXkKZEdnZ1EyRnliMnhwYm1FeER6QU5CZ05WQkFjVEJrUjFjbWhoYlRFTU1Bb0dBMVVFQ2hNRFNVSk5NUk13RVFZRApWUVFMRXdwQ2JHOWphMk5vWVdsdU1ZR0hNSUdFQmdOVkJBTVRmV2xpY0RJMU1TMXZZM1F5TUMxdmNtUmxjbVZ5CmIzSm5ZMkV0WTJFdWIzQmxibk5vYVdaME5IZ3RhV0p3ZGpJdGRHVnpkQzAyT0dVeE1HWTFPRE5tTURJMk5USTUKWm1VM1lUZzVaR0UwTURFMk9XVm1OQzB3TURBd0xuVnpMWE52ZFhSb0xtTnZiblJoYVc1bGNuTXVZWEJ3Wkc5dApZV2x1TG1Oc2IzVmtNRmt3RXdZSEtvWkl6ajBDQVFZSUtvWkl6ajBEQVFjRFFnQUV4UHdBemgvMFFUU0NDd25SCmVBT3h3bXFYdVZzLzAzV0dHakFNZm9sSFlEVnlEV1U1WkljUFFaYUpONGVhQ0t0ZVNmNWtyTDh1alNjSG5IakwKdFRoRmg2T0NBUnd3Z2dFWU1JSUJGQVlEVlIwUkJJSUJDekNDQVFlQ2ZXbGljREkxTVMxdlkzUXlNQzF2Y21SbApjbVZ5YjNKblkyRXRZMkV1YjNCbGJuTm9hV1owTkhndGFXSndkakl0ZEdWemRDMDJPR1V4TUdZMU9ETm1NREkyCk5USTVabVUzWVRnNVpHRTBNREUyT1dWbU5DMHdNREF3TG5WekxYTnZkWFJvTG1OdmJuUmhhVzVsY25NdVlYQncKWkc5dFlXbHVMbU5zYjNWa2dvR0ZhV0p3TWpVeExXOWpkREl3TFc5eVpHVnlaWEp2Y21kallTMXZjR1Z5WVhScApiMjV6TG05d1pXNXphR2xtZERSNExXbGljSFl5TFhSbGMzUXROamhsTVRCbU5UZ3paakF5TmpVeU9XWmxOMkU0Ck9XUmhOREF4TmpsbFpqUXRNREF3TUM1MWN5MXpiM1YwYUM1amIyNTBZV2x1WlhKekxtRndjR1J2YldGcGJpNWoKYkc5MVpEQUtCZ2dxaGtqT1BRUURBZ05KQURCR0FpRUFxZjZERUV3dzVncHJEYlE0TU1RTzQzS3NDMDFqTVY2RwozemhuUWx3Um5XQUNJUUNIcHkxVzVUeHZHMGNSR09QdDhTZzZsSzU1eWk1TC9vTS9GWXZ2c2Uva2hBPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo="
+                },
+                "enrollid": "22e3bc0b-56a0-496a-aab3-ebaaf649c5f7-orderer",
+                "enrollsecret": "redacted"
+            },
+            "tls": {
+                "cahost": "v3api-response-ordererorgca-ca.ocp44.us-south.containers.appdomain.cloud",
+                "caport": "443",
+                "caname": "tlsca",
+                "catls": {
+                    "cacert": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUQ1ekNDQTR5Z0F3SUJBZ0lRWjVjU0ZMWHJIZGEwOEw3bTZFUStHREFLQmdncWhrak9QUVFEQWpDQjVERUwKTUFrR0ExVUVCaE1DVlZNeEZ6QVZCZ05WQkFnVERrNXZjblJvSUVOaGNtOXNhVzVoTVE4d0RRWURWUVFIRXdaRQpkWEpvWVcweEREQUtCZ05WQkFvVEEwbENUVEVUTUJFR0ExVUVDeE1LUW14dlkydGphR0ZwYmpHQmh6Q0JoQVlEClZRUURFMzFwWW5BeU5URXRiMk4wTWpBdGIzSmtaWEpsY205eVoyTmhMV05oTG05d1pXNXphR2xtZERSNExXbGkKY0hZeUxYUmxjM1F0TmpobE1UQm1OVGd6WmpBeU5qVXlPV1psTjJFNE9XUmhOREF4TmpsbFpqUXRNREF3TUM1MQpjeTF6YjNWMGFDNWpiMjUwWVdsdVpYSnpMbUZ3Y0dSdmJXRnBiaTVqYkc5MVpEQWVGdzB5TURFd01qQXlNakk1Ck16SmFGdzB6TURFd01UZ3lNakk1TXpKYU1JSGtNUXN3Q1FZRFZRUUdFd0pWVXpFWE1CVUdBMVVFQ0JNT1RtOXkKZEdnZ1EyRnliMnhwYm1FeER6QU5CZ05WQkFjVEJrUjFjbWhoYlRFTU1Bb0dBMVVFQ2hNRFNVSk5NUk13RVFZRApWUVFMRXdwQ2JHOWphMk5vWVdsdU1ZR0hNSUdFQmdOVkJBTVRmV2xpY0RJMU1TMXZZM1F5TUMxdmNtUmxjbVZ5CmIzSm5ZMkV0WTJFdWIzQmxibk5vYVdaME5IZ3RhV0p3ZGpJdGRHVnpkQzAyT0dVeE1HWTFPRE5tTURJMk5USTUKWm1VM1lUZzVaR0UwTURFMk9XVm1OQzB3TURBd0xuVnpMWE52ZFhSb0xtTnZiblJoYVc1bGNuTXVZWEJ3Wkc5dApZV2x1TG1Oc2IzVmtNRmt3RXdZSEtvWkl6ajBDQVFZSUtvWkl6ajBEQVFjRFFnQUV4UHdBemgvMFFUU0NDd25SCmVBT3h3bXFYdVZzLzAzV0dHakFNZm9sSFlEVnlEV1U1WkljUFFaYUpONGVhQ0t0ZVNmNWtyTDh1alNjSG5IakwKdFRoRmg2T0NBUnd3Z2dFWU1JSUJGQVlEVlIwUkJJSUJDekNDQVFlQ2ZXbGljREkxTVMxdlkzUXlNQzF2Y21SbApjbVZ5YjNKblkyRXRZMkV1YjNCbGJuTm9hV1owTkhndGFXSndkakl0ZEdWemRDMDJPR1V4TUdZMU9ETm1NREkyCk5USTVabVUzWVRnNVpHRTBNREUyT1dWbU5DMHdNREF3TG5WekxYTnZkWFJvTG1OdmJuUmhhVzVsY25NdVlYQncKWkc5dFlXbHVMbU5zYjNWa2dvR0ZhV0p3TWpVeExXOWpkREl3TFc5eVpHVnlaWEp2Y21kallTMXZjR1Z5WVhScApiMjV6TG05d1pXNXphR2xtZERSNExXbGljSFl5TFhSbGMzUXROamhsTVRCbU5UZ3paakF5TmpVeU9XWmxOMkU0Ck9XUmhOREF4TmpsbFpqUXRNREF3TUM1MWN5MXpiM1YwYUM1amIyNTBZV2x1WlhKekxtRndjR1J2YldGcGJpNWoKYkc5MVpEQUtCZ2dxaGtqT1BRUURBZ05KQURCR0FpRUFxZjZERUV3dzVncHJEYlE0TU1RTzQzS3NDMDFqTVY2RwozemhuUWx3Um5XQUNJUUNIcHkxVzVUeHZHMGNSR09QdDhTZzZsSzU1eWk1TC9vTS9GWXZ2c2Uva2hBPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo="
+                },
+                "enrollid": "22e3bc0b-56a0-496a-aab3-ebaaf649c5f7-orderer",
+                "enrollsecret": "redacted",
+                "csr": {
+                    "hosts": [
+                        "v3api-response-orderer-orderer.ocp44.us-south.containers.appdomain.cloud",
+                        "v3api-response-orderer-operations.ocp44.us-south.containers.appdomain.cloud",
+                        "v3api-response-orderer-grpcweb.ocp44.us-south.containers.appdomain.cloud",
+                        "127.0.0.1"
+                    ]
+                }
+            }
+        }
+    },
+    "resources": {
+        "requests": {
+            "cpu": "1200m",
+            "memory": "2400M"
+        },
+        "limits": {
+            "cpu": "1200m",
+            "memory": "2400M"
+        }
+    },
+    "individualResources": {
+        "init": {
+            "limits": {
+                "cpu": "100m",
+                "memory": "200M"
+            },
+            "requests": {
+                "cpu": "100m",
+                "memory": "200M"
+            }
+        },
+        "orderer": {
+            "limits": {
+                "cpu": "1",
+                "memory": "2G"
+            },
+            "requests": {
+                "cpu": "1",
+                "memory": "2G"
+            }
+        },
+        "proxy": {
+            "limits": {
+                "cpu": "100m",
+                "memory": "200M"
+            },
+            "requests": {
+                "cpu": "100m",
+                "memory": "200M"
+            }
+        }
+    },
+    "storage": {
+        "orderer": {
+            "size": "5G",
+            "class": "portworx-1reps"
+        }
+    },
+    "crstatus": {
+        "type": "Initializing",
+        "status": "True",
+        "reason": "Setting default values for either zone, region, and/or external endpoint",
+        "message": "Operator has updated spec with defaults as part of initialization",
+        "lastHeartbeatTime": "2020-10-20 23:12:19.602249408 +0000 UTC m=+3057.857520503",
+        "version": "2.5.1",
+        "versions": {
+            "reconciled": "1.4.9"
+        }
+    },
+    "version": "1.4.9-0",
+    "config": {
+        "general": {
+            "ledgerType": "file",
+            "listenAddress": "127.0.0.1",
+            "listenPort": 7050,
+            "tls": {
+                "privateKey": "tls/server.key",
+                "certificate": "tls/server.crt",
+                "rootCas": [
+                    "tls/ca.crt"
+                ]
+            },
+            "cluster": {
+                "dialTimeout": "0s",
+                "rpcTimeout": "0s",
+                "replicationPullTimeout": "0s",
+                "replicationRetryTimeout": "0s",
+                "replicationBackgroundRefreshInterval": "0s",
+                "sendBufferSize": 10,
+                "certExpirationWarningThreshold": "0s",
+                "tlsHandshakeTimeShift": "0s"
+            },
+            "keepalive": {
+                "serverMinInterval": "1m1s",
+                "serverInterval": "2h0m0s",
+                "serverTimeout": "20s"
+            },
+            "connectionTimeout": "0s",
+            "genesisMethod": "provisional",
+            "genesisFile": "genesisblock",
+            "profile": {
+                "address": "0.0.0.0:6060"
+            },
+            "localMspDir": "msp",
+            "localMspId": "SampleOrg",
+            "BCCSP": {
+                "default": "SW",
+                "SW": {
+                    "security": 256,
+                    "hash": "SHA2",
+                    "filekeystore": {}
+                }
+            },
+            "authentication": {
+                "timeWindow": "15m0s"
+            }
+        },
+        "fileLedger": {
+            "location": "/var/hyperledger/production/orderer",
+            "prefix": "hyperledger-fabric-ordererledger"
+        },
+        "debug": {},
+        "consensus": {
+            "SnapDir": "/var/hyperledger/production/orderer/etcdraft/snapshot",
+            "WALDir": "/var/hyperledger/production/orderer/etcdraft/wal"
+        },
+        "operations": {
+            "listenAddress": "127.0.0.1:8443",
+            "tls": {}
+        },
+        "metrics": {
+            "provider": "prometheus",
+            "statsd": {
+                "network": "udp",
+                "address": "127.0.0.1:8125",
+                "writeInterval": "30s"
+            }
+        }
+    },
+    "nodeou": {
+        "enabled": true
+    },
+    "creation_timestamp": 1603235545,
+    "last_updated": 1603235545,
+    "region": "us-south",
+    "zone": "dal13",
+    "replicas": 1
+}
