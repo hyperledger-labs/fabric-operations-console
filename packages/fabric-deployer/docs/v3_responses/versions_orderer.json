@@ -1,0 +1,33 @@
+{
+    "versions": {
+      "1.4.9-0": {
+        "default": true,
+        "version": "1.4.9-0",
+        "image": {
+          "ordererInitImage": "us.icr.io/ibp-temp/ibp-init",
+          "ordererInitTag": "sha256:75a24e088353294113ca399c64a6ea918435dd59f2839a3bb6af2b95135e236b",
+          "ordererImage": "us.icr.io/ibp-temp/ibp-orderer",
+          "ordererTag": "sha256:8dedfab829fbc973cc4d6775ac21ce94b5cf0aeff78ddadae311f45692edfb7f",
+          "grpcwebImage": "us.icr.io/ibp-temp/ibp-grpcweb",
+          "grpcwebTag": "sha256:81e333a50cba5302bb20261838b7e47e9619fb9c79b2b3e47d9da13b7f2affd9",
+          "enrollerImage": "us.icr.io/ibp-temp/ibp-enroller",
+          "enrollerTag": "sha256:4af69be4d525e1c40a4896c71a3aff66ad9817e6c73568caab4feeb80bda01ab"
+        }
+      },
+      "2.2.1-0": {
+        "default": false,
+        "version": "2.2.1-0",
+        "image": {
+          "ordererInitImage": "us.icr.io/ibp-temp/ibp-init",
+          "ordererInitTag": "sha256:75a24e088353294113ca399c64a6ea918435dd59f2839a3bb6af2b95135e236b",
+          "ordererImage": "us.icr.io/ibp-temp/ibp-orderer",
+          "ordererTag": "sha256:e68bc3aaefa73f79c923ead70258369660563a995d4b0286704787f633afc8db",
+          "grpcwebImage": "us.icr.io/ibp-temp/ibp-grpcweb",
+          "grpcwebTag": "sha256:81e333a50cba5302bb20261838b7e47e9619fb9c79b2b3e47d9da13b7f2affd9",
+          "enrollerImage": "us.icr.io/ibp-temp/ibp-enroller",
+          "enrollerTag": "sha256:4af69be4d525e1c40a4896c71a3aff66ad9817e6c73568caab4feeb80bda01ab"
+        }
+      }
+    }
+  }
+  

@@ -1,0 +1,16 @@
+{
+    "versions": {
+      "1.4.9-0": {
+        "default": true,
+        "version": "1.4.9-0",
+        "image": {
+          "caImage": "us.icr.io/ibp-temp/ibp-ca",
+          "caTag": "sha256:5e41ad17db016c3d3026ec931b9f8bc4ecb44e7617def38b5ed8ef55d8cb0f6d",
+          "caInitImage": "us.icr.io/ibp-temp/ibp-init",
+          "caInitTag": "sha256:75a24e088353294113ca399c64a6ea918435dd59f2839a3bb6af2b95135e236b",
+          "enrollerImage": "us.icr.io/ibp-temp/ibp-enroller",
+          "enrollerTag": "sha256:4af69be4d525e1c40a4896c71a3aff66ad9817e6c73568caab4feeb80bda01ab"
+        }
+      }
+    }
+  }

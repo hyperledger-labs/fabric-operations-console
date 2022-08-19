@@ -1,0 +1,50 @@
+{
+    "versions": {
+      "1.4.9-0": {
+        "default": true,
+        "version": "1.4.9-0",
+        "image": {
+          "peerInitImage": "us.icr.io/ibp-temp/ibp-init",
+          "peerInitTag": "sha256:75a24e088353294113ca399c64a6ea918435dd59f2839a3bb6af2b95135e236b",
+          "peerImage": "us.icr.io/ibp-temp/ibp-peer",
+          "peerTag": "sha256:59dd67649a2b920108f806062edadc85093195b684962512a210773ce17ec81c",
+          "dindImage": "us.icr.io/ibp-temp/ibp-dind",
+          "dindTag": "sha256:bd83e2a0eb012ffd456516b007a9a7c4cbd5aac3a83acd181a3bcc38f1522155",
+          "grpcwebImage": "us.icr.io/ibp-temp/ibp-grpcweb",
+          "grpcwebTag": "sha256:81e333a50cba5302bb20261838b7e47e9619fb9c79b2b3e47d9da13b7f2affd9",
+          "fluentdImage": "us.icr.io/ibp-temp/ibp-fluentd",
+          "fluentdTag": "sha256:c21587fb8ad93439680acd9afeef2df5c7bf287906471133c3402c393f57fc73",
+          "couchdbImage": "us.icr.io/ibp-temp/ibp-couchdb",
+          "couchdbTag": "sha256:4d6725348c61d67d0eb5493ac63ce50e0bc23b8fa25151a7b11f6dc921169ddf",
+          "enrollerImage": "us.icr.io/ibp-temp/ibp-enroller",
+          "enrollerTag": "sha256:4af69be4d525e1c40a4896c71a3aff66ad9817e6c73568caab4feeb80bda01ab"
+        }
+      },
+      "2.2.1-0": {
+        "default": false,
+        "version": "2.2.1-0",
+        "image": {
+          "peerInitImage": "us.icr.io/ibp-temp/ibp-init",
+          "peerInitTag": "sha256:75a24e088353294113ca399c64a6ea918435dd59f2839a3bb6af2b95135e236b",
+          "peerImage": "us.icr.io/ibp-temp/ibp-peer",
+          "peerTag": "sha256:9eb33d4291216bdc1558dc1dbf416c84472806251b9da5fc15d4534b665de7ae",
+          "grpcwebImage": "us.icr.io/ibp-temp/ibp-grpcweb",
+          "grpcwebTag": "sha256:81e333a50cba5302bb20261838b7e47e9619fb9c79b2b3e47d9da13b7f2affd9",
+          "couchdbImage": "us.icr.io/ibp-temp/ibp-couchdb",
+          "couchdbTag": "sha256:2a85f35b918bf65230fb272fdd71311139c3bf483417bb4e122933513cb5e281",
+          "chaincodeLauncherImage": "us.icr.io/ibp-temp/ibp-chaincode-launcher",
+          "chaincodeLauncherTag": "sha256:926ee80ba890210457e04104d4584992c3ed102bc49c2cbb1e049c50faa3eaa6",
+          "builderImage": "us.icr.io/ibp-temp/ibp-ccenv",
+          "builderTag": "sha256:87ee3300f98cf00ff90633fd8fd95e73891a73d1084b123569ac436301df11d1",
+          "goEnvImage": "us.icr.io/ibp-temp/ibp-goenv",
+          "goEnvTag": "sha256:dc717d4b53136a0cba19d78555041fbd86f3a70f6e5071a3537aeef9937e0d68",
+          "javaEnvImage": "us.icr.io/ibp-temp/ibp-javaenv",
+          "javaEnvTag": "sha256:803e51761262efb2849198b4d39a1dafd574733afa7cc8ef25b7a54221b7ffc3",
+          "nodeEnvImage": "us.icr.io/ibp-temp/ibp-nodeenv",
+          "nodeEnvTag": "sha256:96ddcbacab264c95878da9ff0d16ffca23bdadcf952c8cfad6d2aff027e3235c",
+          "enrollerImage": "us.icr.io/ibp-temp/ibp-enroller",
+          "enrollerTag": "sha256:4af69be4d525e1c40a4896c71a3aff66ad9817e6c73568caab4feeb80bda01ab"
+        }
+      }
+    }
+  }
