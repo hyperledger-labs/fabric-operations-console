@@ -1,0 +1,21 @@
+name: Build Deployer image
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Granting private modules access
+        run: |
+          git config --global url."https://${{ secrets.ACCESS_TOKEN }}:x-oauth-basic@github.com/IBM-Blockchain".insteadOf "https://github.com/IBM-Blockchain" 
+      - name: Checkout fabric-deployer repo
+        uses: actions/checkout@v3
+      - name: Build
+        run: make image
+      - name: Push
+        run: |
+          docker login ghcr.io -u $GITHUB_ACTOR -p ${{ secrets.CR_TOKEN }}
+          make image-push image-push-latest

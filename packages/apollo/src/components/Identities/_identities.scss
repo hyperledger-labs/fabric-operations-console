@@ -10,10 +10,12 @@
 	flex-direction: column;
 	height: 90%;
 	display: flex;
+
 	.ibp-wallet-identity-expiration {
 		position: absolute;
 		bottom: 1rem;
 	}
+
 	.ibp-wallet-identity-from-ca {
 		color: $carbon--cool-gray-20;
 		position: absolute;

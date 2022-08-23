@@ -2,6 +2,7 @@
 	align-items: center;
 	display: flex;
 	margin-bottom: 2rem;
+
 	.ibp-page-header,
 	.ibp-orderer-details-location,
 	.ibp-node-upgrade {
@@ -12,30 +13,37 @@
 		padding-top: 0;
 		min-height: 60px;
 	}
+
 	.ibp-orderer-settings-icon {
 		cursor: pointer;
+
 		.settingsIcon {
 			width: 1.25rem;
 			height: 1.25rem;
 		}
 	}
+
 	.ibp-orderer-details-location {
 		align-items: center;
 		color: $field-color;
 		display: flex;
+
 		* {
 			color: $carbon--cool-gray-50;
 		}
 	}
+
 	.ibp-node-upgrade {
 		align-items: left;
 		display: flex;
 		flex-direction: column;
 	}
 }
+
 .ibp-orderer-details-cert-expiry-link {
 	margin-top: 1rem;
 }
+
 .ibp-orderer-warning,
 .ibp-not-available {
 	margin-bottom: 1rem;
@@ -43,9 +51,11 @@
 
 .ibp-usage-div {
 	margin-top: 1rem;
+
 	.ibp-item-container {
 		padding-top: 2.25rem;
 	}
+
 	.ibp__table--toolbar {
 		display: none;
 	}
@@ -62,6 +72,7 @@
 
 .ibp-ordering-node-empty {
 	text-align: center;
+
 	.ibp-ordering-node-empty-image {
 		margin-top: 2rem;
 		margin-bottom: 2rem;
@@ -70,10 +81,12 @@
 
 .ibp-requires-attention {
 	width: 100%;
+
 	p {
 		font-style: italic;
 		font-size: 0.875rem;
 	}
+
 	.ibp-notification-icon {
 		position: absolute;
 		top: 0;
@@ -93,19 +106,23 @@
 	padding: 2rem;
 	display: flex;
 	flex-direction: row;
+
 	h3 {
 		margin-bottom: 1rem;
 	}
+
 	p {
 		button {
 			z-index: $firstLayer;
 		}
 	}
+
 	.go-to-node-button {
 		margin-top: 2rem;
 		width: 12rem;
 		padding-right: 1rem;
 	}
+
 	.ibp-requires-attention-image {
 		flex-grow: 0;
 		margin-left: 2rem;
@@ -120,15 +137,19 @@
 	padding: 2rem;
 	display: flex;
 	flex-direction: row;
+
 	h3 {
 		margin-bottom: 1rem;
 	}
+
 	.connect-node-button {
 		padding-right: 1rem;
+
 		svg {
 			margin-left: 1rem;
 		}
 	}
+
 	.ibp-requires-attention-image {
 		flex-grow: 0;
 		margin-left: 2rem;
@@ -139,42 +160,51 @@
 	.ibp--node-details-sticky-container-content {
 		margin-top: 0;
 	}
+
 	.ibp-node-version-value {
 		margin-top: 1rem;
 		@include carbon--type-style('body-short-01');
 		color: $carbon--cool-gray-30;
 	}
+
 	.ibp-upgrade-available {
 		position: relative;
 		padding-bottom: 5rem;
 		background: linear-gradient(to right, #0000ff, #13171a);
+
 		.ibp-new-version-actions {
 			margin-top: 1rem;
 		}
+
 		button {
 			position: absolute;
 			bottom: 0;
 			right: 0;
 		}
 	}
+
 	.ibp-usage-div {
 		.ibp-item-container {
 			padding-top: 0;
 		}
 	}
+
 	.ibp-node-version-and-hsm {
 		display: flex;
 		flex-direction: row;
+
 		.ibp-hsm-tab {
 			flex-direction: column;
 			padding-bottom: 5rem;
 			position: relative;
+
 			button {
 				position: absolute;
 				bottom: 0;
 				right: 0;
 			}
 		}
+
 		.ibp-hsm-tab:not(:first-child) {
 			margin-left: 2rem;
 			min-width: 60%;
@@ -184,6 +214,7 @@
 
 .ibp-orderer-no-identity {
 	margin-top: 1rem;
+
 	button {
 		margin-top: 1rem;
 	}
@@ -205,22 +236,26 @@
 	padding: 0.25rem;
 	position: absolute;
 	width: 1.875rem;
+
 	&:hover {
 		background-color: $carbon--cool-gray-70;
 	}
+
 	&:focus {
 		box-shadow: inset 0 0 0 2px $carbon--white-0;
 	}
+
 	svg {
 		height: 1.25rem;
 		width: 1.25rem;
 	}
 }
+
 .ibp-orderer-channel-unjoin {
 	right: 1rem;
 }
 
-.ibp-orderer-channel-join{
+.ibp-orderer-channel-join {
 	right: 5rem;
 }
 

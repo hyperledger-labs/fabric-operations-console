@@ -18,15 +18,14 @@ import React from 'react';
 import launch from '../../assets/images/launch.svg';
 
 const WelcomeBannerTile = props => {
+	const TileIcon = props.mainTileIcon;
 	return (
 		<button
 			onClick={props.tileClick}
 			className="ibp-welcome-tile-item"
 			aria-label={`${props.header} ${props.description} ${props.videoTile ? props.linkText : ''}`}
 		>
-			<img src={props.mainTileIcon}
-				alt="Architechture icon"
-			/>
+			<TileIcon/>
 			<h4 className="ibp-welcome-tile-header">{props.header}</h4>
 			<p>{props.description}</p>
 			{props.videoTile && (

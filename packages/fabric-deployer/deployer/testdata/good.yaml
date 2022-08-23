@@ -1,0 +1,41 @@
+db:
+  connectionurl: "http://couchdb:5984"
+  createdb: true
+  serviceinstances: 
+    name: "dev_serviceinstances"
+    designdocs:
+  resourcebindings:
+    name: "dev_resourcebindings"
+    designdocs:
+  components:
+    name: "dev_components"
+    designdocs:
+      - ../../designdocs/components/service_broker.json
+  resourcegroups:
+    name: "dev_resourcegroups"
+    designdocs:
+
+dashboardurl: "https://dashboard.url"
+
+catalog: "../../catalogs/en-us_catalog.json"
+
+port: 8080
+
+loglevel: debug
+
+iam:
+  zone: staging
+  apikey: test
+
+crn:
+  version: v1
+  cname: bluemix
+  ctype: public
+  servicename: blockchain
+  location: us-south
+  
+deployerurl: "http://deployer.url"
+
+auth:
+  username: "test"
+  password: "test"

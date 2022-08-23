@@ -27,9 +27,11 @@
 		height: 1.5rem;
 		padding: 0 1rem;
 		width: auto;
+
 		&.ibp-node-details {
 			margin-top: 0.5rem;
 		}
+
 		&.ibp-tile-label {
 			bottom: 2.5rem;
 			position: absolute;
@@ -45,21 +47,26 @@
 	justify-content: flex-start;
 	max-width: 28rem;
 	padding: 1.25rem 1.75rem;
+
 	.ibp-node-current-version-label {
 		@include carbon--type-style('body-short-02');
 		color: $carbon--cool-gray-30;
 	}
+
 	.ibp-node-name-version {
 		display: inline-flex;
 		padding-top: 0.5rem;
+
 		.ibp-node-name {
 			@include carbon--type-style('body-short-02');
 			height: 2rem;
 			line-height: 2rem;
+
 			&.ibp-chaincode-upgrade-name {
 				margin-top: 0.75rem;
 			}
 		}
+
 		.ibp-node-version {
 			@include carbon--type-style('label-01');
 			background: $carbon--blue-80;
@@ -71,6 +78,7 @@
 			min-width: 1.875rem;
 			padding: 0 0.75rem;
 		}
+
 		.ibp-node-available-versions {
 			width: 90%;
 		}
@@ -106,17 +114,21 @@
 	min-height: 5rem;
 	padding: 1.5rem;
 	width: 100%;
+
 	.ibp-node-version-label {
 		@include carbon--type-style('body-short-01');
 		color: white;
 	}
+
 	.ibp-node-version-value {
 		@include carbon--type-style('body-short-01');
 		color: white;
 	}
+
 	.ibp-node-button-section {
 		margin-left: 2rem;
 	}
+
 	.ibp-node-version-section {
 		display: flex;
 		flex-direction: column;

@@ -2,6 +2,7 @@
 	0% {
 		transform: translateY(4rem);
 	}
+
 	100% {
 		transform: translateY(0px);
 	}
@@ -18,12 +19,15 @@
 	bottom: 0;
 	padding: 1rem;
 	transition: $basic-duo-transition;
+
 	.ibp-side-panel-inline-confirmation-title {
 		@include carbon--type-style('productive-heading-01');
 	}
+
 	.ibp-side-panel-inline-confirmation-subtitle {
 		@include carbon--type-style('body-short-01');
 	}
+
 	.ibp-side-panel-inline-close-icon {
 		cursor: pointer;
 		position: absolute;

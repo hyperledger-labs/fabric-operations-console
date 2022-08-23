@@ -330,3 +330,6 @@ viewstates
 resourceid
 mustgather
 osnadmin
+esbuild
+outfile
+svgr

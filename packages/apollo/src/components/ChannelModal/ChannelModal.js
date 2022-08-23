@@ -903,7 +903,11 @@ class ChannelModal extends Component {
 					if (isChannelUpdate) {
 						this.showStep('channel_update_policy', group_required, step_policy);
 					} else {
-						this.showStep('organization_creating_channel', group_required, step_org_signature);
+						if (use_osnadmin) {
+							this.showStep('channel_orderer_organizations', group_required, step_org_signature);
+						} else {
+							this.showStep('organization_creating_channel', group_required, step_org_signature);
+						}
 					}
 				};
 				next = () => {
@@ -1028,7 +1032,13 @@ class ChannelModal extends Component {
 					? () => this.showStep('channel_acls', group_advanced, step_acl)
 					: isChannelUpdate
 						? () => this.showStep('channel_update_policy', group_required, step_policy)
-						: () => this.showStep('organization_creating_channel', group_prerequisites, step_org_signature);
+						: () => {
+							if (use_osnadmin) {
+								this.showStep('channel_orderer_organizations', group_required, step_org_signature);
+							} else {
+								this.showStep('organization_creating_channel', group_prerequisites, step_org_signature);
+							}
+						};
 				next = () => {
 					if (isComplete) {
 						(use_osnadmin && !this.props.isChannelUpdate)
@@ -2186,9 +2196,7 @@ class ChannelModal extends Component {
 				)}
 				{viewing === 'channel_update_policy' && <Policy />}
 				{viewing === 'channel_orderer_organizations' && (
-					<OrdererOrganizations updatePolicyDropdown={this.updatePolicyDropdown}
-						verifyACLPolicyValidity={this.verifyACLPolicyValidity}
-					/>
+					<OrdererOrganizations/>
 				)}
 				{(viewing === 'organization_creating_channel' || viewing === 'organization_updating_channel') && <OrgSignature editLoading={this.props.editLoading} />}
 				{viewing === 'capabilities' && <Capabilities existingCapabilities={existingCapabilities}

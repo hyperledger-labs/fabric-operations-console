@@ -8,10 +8,12 @@
 	position: absolute;
 	right: 0.25rem;
 	top: 0;
-	svg > g {
+
+	svg>g {
 		fill: $carbon--cool-gray-30;
 	}
-	svg:hover > g {
+
+	svg:hover>g {
 		fill: $carbon--cool-gray-10;
 	}
 }

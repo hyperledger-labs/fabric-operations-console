@@ -19,7 +19,7 @@ import React, { Component } from 'react';
 import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import notificationEmpty from '../../assets/images/notification_empty.svg';
+import NotificationEmptyImage from '../../assets/images/notification_empty.svg';
 import { showError, updateState } from '../../redux/commonActions';
 import { MspRestApi } from '../../rest/MspRestApi';
 import SignatureRestApi from '../../rest/SignatureRestApi';
@@ -418,7 +418,7 @@ class SignatureCollection extends Component {
 				)}
 				{!this.props.loading && requests.length === 0 && (
 					<div className="ibp-signature-requests-empty-container">
-						<img src={notificationEmpty}
+						<NotificationEmptyImage
 							alt=""
 							className="ibp-signature-requests-empty-img"
 						/>

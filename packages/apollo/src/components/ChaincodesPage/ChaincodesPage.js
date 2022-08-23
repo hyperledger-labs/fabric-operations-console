@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
-import requiresAttentionImage from '../../assets/images/requires_attention.svg';
+import RequiresAttentionImage from '../../assets/images/requires_attention.svg';
 import { clearNotifications, showBreadcrumb, showError, updateState } from '../../redux/commonActions';
 import ChaincodeApi from '../../rest/ChaincodeApi';
 import ChannelApi from '../../rest/ChannelApi';
@@ -189,10 +189,7 @@ class ChaincodesPage extends Component {
 									</Button>
 								</div>
 							</div>
-							<img src={requiresAttentionImage}
-								className="ibp-requires-attention-image"
-								alt=""
-							/>
+							<RequiresAttentionImage className="ibp-requires-attention-image" />
 						</div>
 						<div className="ibp-chaincodepage-component">
 							<Chaincodes

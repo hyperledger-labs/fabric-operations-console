@@ -39,6 +39,7 @@
 	.ibp-channels-block-text {
 		@include carbon--font-weight('regular');
 	}
+
 	.ibp-channel-loading-item {
 		width: 4rem;
 	}
@@ -49,42 +50,49 @@
 	font-size: 0.8rem;
 }
 
-.ibp-pending-tile-clock, .ibp-pending-tile-success {
+.ibp-pending-tile-clock,
+.ibp-pending-tile-success {
 	height: 1rem;
 	vertical-align: bottom;
 }
-.ibp-pending-tile-success{
+
+.ibp-pending-tile-success {
 	margin-right: 0.6rem;
 }
 
-.ibp__channels--container .ibp-container-tile.ibp-container-tile-pending{
+.ibp__channels--container .ibp-container-tile.ibp-container-tile-pending {
 	background-color: #606060;
 }
-.ibp__channels--container .ibp-container-tile.ibp-container-tile-archived{
+
+.ibp__channels--container .ibp-container-tile.ibp-container-tile-archived {
 	background-color: #464646;
 }
-.ibp-channels-orderer{
+
+.ibp-channels-orderer {
 	white-space: initial;
 	font-size: 0.75rem;
 }
-#channels-container > .ibp-item-container .ibp-container-grid-large .ibp-container-tile{
+
+#channels-container>.ibp-item-container .ibp-container-grid-large .ibp-container-tile {
 	min-height: 9rem;
 }
-.ibp-channels-del-channel{
+
+.ibp-channels-del-channel {
 	cursor: pointer;
 	padding: 0.5rem;
 	position: absolute;
 	top: 0;
 	right: 0;
 }
-.ibp-item-container{
+
+.ibp-item-container {
 	margin-bottom: 1rem;
 }
 
-.ibp-channels-del-channel:hover{
+.ibp-channels-del-channel:hover {
 	background: #0f62fe;
 }
 
-.ibp-consenters{
+.ibp-consenters {
 	font-size: 0.75rem;
 }

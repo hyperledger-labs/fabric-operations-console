@@ -1,0 +1,9 @@
+.vscode/
+bin/
+deployer-to-go
+*.test
+test.results
+vendor
+.env
+golang_copyright.txt
+shell_copyright.txt

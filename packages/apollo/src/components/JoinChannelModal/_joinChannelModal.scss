@@ -68,15 +68,18 @@
 
 .anchor-peer-toggle {
 	margin-top: 1.5rem;
+
 	.bx--form-item {
 		flex-grow: 0;
 	}
+
 	.settings-toggle-inner {
 		align-items: center;
 		display: flex;
 		flex-direction: row;
 		margin-bottom: 1.5rem;
 	}
+
 	.settings-toggle-label {
 		@include carbon--type-style('body-short-01');
 		padding-bottom: 0.5rem;
@@ -86,9 +89,11 @@
 
 .ibp-address-override-section {
 	margin-top: 1rem;
+
 	p {
 		margin-bottom: 1rem;
 	}
+
 	.ibp-peer-mapping {
 		padding-left: 1rem;
 	}

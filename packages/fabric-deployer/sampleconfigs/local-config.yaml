@@ -1,0 +1,168 @@
+domain: "0.0.0.0"
+
+db:
+  connectionurl: "http://couchdb:5984"
+  createdb: true
+  components:
+    name: "components"
+    designdocs:
+      - ./designdocs/components/service_broker.json
+      - ./designdocs/components/deployer.json
+      - ./designdocs/components/plutus.json
+      - ./designdocs/components/search_indices.json
+
+port: 8080
+
+loglevel: debug
+
+tls:
+  enabled: false
+  certpath: /certs/tls.crt
+  keypath: /certs/tls.key
+
+auth:
+  username: admin
+  password: admin
+
+imagePullSecret: "regcred"
+versions:
+  ca:
+    1.4.1:
+      default: true
+      version: 1.4.1
+      image:
+        initImage: "us.icr.io/ibp2/hlfabric-init"
+        initTag: "amd64-alpine-1.4.1-0b67b4e"
+    1.4.0:
+      version: 1.4.0
+      image:
+        caImage: "ibmcom/ibp-fabric-ca"
+        caTag: "1.4.0"
+  peer:
+    1.4.1:
+      default: true
+      version: 1.4.1
+      image:
+        initImage: "us.icr.io/ibp2/hlfabric-init"
+        initTag: "amd64-alpine-1.4.1-0b67b4e"
+        peerImage: "us.icr.io/ibp2/hlfabric-peer"
+        peerTag: "1.4.1"
+  orderer:
+    1.4.1:
+      default: true
+      version: 1.4.1
+      image:
+        initImage: "us.icr.io/ibp2/hlfabric-init"
+        initTag: "amd64-alpine-1.4.1-0b67b4e"
+        ordererImage: "us.icr.io/ibp2/hlfabric-orderer"
+        ordererTag: "amd64-alpine-1.4.1-c336f6b"
+
+defaults:
+  storage:
+    ca:
+      ca:
+        size: 1Gi
+        class: default
+    peer:
+      peer:
+        size: 1Gi
+        class: default
+      couchdb:
+        size: 1Gi
+        class: default
+      statedb:
+        size: 1Gi
+        class: default
+    orderer:
+      orderer:
+        size: 1Gi
+        class: default
+  resources:
+    ca:
+      init:
+        requests:
+          cpu: 30m
+          memory: 1Gi
+        limits:
+          cpu: 2
+          memory: 4Gi
+      ca:
+        requests:
+          cpu: 30m
+          memory: 1Gi
+        limits:
+          cpu: 2
+          memory: 4Gi
+    peer:
+      init:
+        requests:
+          cpu: 30m
+          memory: 1Gi
+        limits:
+          cpu: 2
+          memory: 4Gi
+      peer:
+        requests:
+          cpu: 10m
+          memory: 2Gi
+        limits:
+          cpu: 2
+          memory: 4Gi
+      dind:
+        requests:
+          cpu: 20m
+          memory: 1Gi
+        limits:
+          cpu: 2
+          memory: 4Gi
+      fluentd:
+        requests:
+          cpu: 20m
+          memory: 1Gi
+        limits:
+          cpu: 2
+          memory: 4Gi
+      proxy:
+        requests:
+          cpu: 30m
+          memory: 1Gi
+        limits:
+          cpu: 2
+          memory: 4Gi
+      couchdb:
+        requests:
+          cpu: 40m
+          memory: 1Gi
+        limits:
+          cpu: 2
+          memory: 4Gi
+    orderer:
+      init:
+        requests:
+          cpu: 30m
+          memory: 1Gi
+        limits:
+          cpu: 2
+          memory: 4Gi
+      proxy:
+        requests:
+          cpu: 30m
+          memory: 1Gi
+        limits:
+          cpu: 2
+          memory: 4Gi
+      orderer:
+        requests:
+          cpu: 40m
+          memory: 1Gi
+        limits:
+          cpu: 2
+          memory: 4Gi
+
+serviceConfig:
+  type: "NodePort"
+
+timeouts:
+  componentDeploy: 10000
+  apiServer: 100000
+

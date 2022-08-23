@@ -151,10 +151,10 @@ class ChannelParticipationDetails extends Component {
 						containerTooltip="cp_channels_tooltip"
 						emptyImage={emptyImage}
 						emptyTitle="empty_cp_channels_title"
-						emptyMessage="empty_cp_channels_text"
+						emptyMessage={this.props.drillDown ? 'empty_cp_channels_text_drilldown' : 'empty_cp_channels_text'}
 						itemId="channel-list"
 						id="channel-list-tile"
-						items={this.props.channelList.channels}
+						items={(this.props.channelList && Array.isArray(this.props.channelList.channels)) ? this.props.channelList.channels : []}
 						loading={this.props.loading}
 						listMapping={[
 							{
@@ -212,6 +212,7 @@ class ChannelParticipationDetails extends Component {
 							//	this.getChannelDetails();
 							//});
 						}}
+						selectedCluster={this.props.details}
 						joinChannelDetails={this.props.joinChannelDetails}
 					/>
 				)}
@@ -227,6 +228,7 @@ const dataProps = {
 	showCPDetailsModal: PropTypes.bool,
 	showCPUnjoinModal: PropTypes.bool,
 	joinChannelModal: PropTypes.bool,
+	drillDown: PropTypes.bool,
 	joinChannelDetails: PropTypes.object,
 };
 

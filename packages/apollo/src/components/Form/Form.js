@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
-import plusIcon from '../../assets/images/plus.svg';
+import PlusIcon from '../../assets/images/plus.svg';
 import { updateState } from '../../redux/commonActions';
 import Helper from '../../utils/helper';
 import BlockchainSlider from '../BlockchainSlider/BlockchainSlider';
@@ -709,8 +709,7 @@ class Form extends Component {
 						}}
 					>
 						{translate(field.addText || 'add')}
-						<img className="ibp-name-value-add-button-img"
-							src={plusIcon}
+						<PlusIcon className="ibp-name-value-add-button-img"
 							role="presentation"
 							alt=""
 						/>
