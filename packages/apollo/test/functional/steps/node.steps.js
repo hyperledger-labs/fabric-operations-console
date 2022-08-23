@@ -53,17 +53,12 @@ Then(/^the (certificate authority|peer|orderer) with name (?:'|")(.*?)(?:'|") sh
 		await browser.wait(ExpectedConditions.elementToBeClickable(isRunning), 10 * 60 * 1000);
 	}
 
-    if (nodeType === 'orderer') {
-        console.log('Wait for 5 minutes...');
-        await browser.sleep(300000);
-    }else{
-        console.log('Wait for 3 minutes...');
-        await browser.sleep(180000);
-    }
+    console.log('Wait for 2 minutes...');
+    await browser.sleep(120000);
 	await tile.click();
 });
 
-Given(/^I clicked the (?:'|")(.*?)(?:'|") (certificate authority|orderer)$/, async(name, nodeType) => {
+Given(/^I clicked the (?:'|")(.*?)(?:'|") (certificate authority|orderer|peer)$/, async(name, nodeType) => {
 	if (nodeType === 'certificate authority') {
 		const tiles = getCATiles();
 
@@ -87,6 +82,31 @@ Given(/^I clicked the (?:'|")(.*?)(?:'|") (certificate authority|orderer)$/, asy
 	} else if (nodeType === 'orderer') {
 		try{
 			const tiles = getOrdererTiles();
+
+			let tile = tiles
+				.filter(_tile => {
+					return _tile
+						.element(by.tagName('h4'))
+						.getText()
+						.then(text => {
+							return text === name;
+						});
+				})
+				.first();
+
+			await browser.wait(ExpectedConditions.elementToBeClickable(tile), 15000);
+
+			let isRunning = tile.element(by.className('ibp-node-status-running'));
+			await browser.wait(ExpectedConditions.elementToBeClickable(isRunning), 30000);
+
+			await tile.click();
+
+		}catch (err) {
+			console.log('Error: %s', err);
+		}
+	} else if (nodeType === 'peer') {
+		try{
+			const tiles = getPeerTiles();
 
 			let tile = tiles
 				.filter(_tile => {

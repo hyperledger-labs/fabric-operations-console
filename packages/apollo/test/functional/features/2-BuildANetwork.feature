@@ -113,6 +113,9 @@ Feature: Build a network feature
         Then wait "2" seconds
         Then the 'admin' user with id 'OSadmin' should be enrolled
         And the 'orderer' user with id 'OS1' should be enrolled
+		Then wait "2" seconds
+        And I enroll TLS identity for OS1 with secret 'OS1pw' and name 'OS1_TLS'
+		Then wait "2" seconds
 
     Scenario: When creating an organization MSP definition for Ordering Service
         Given I go to the console
@@ -138,7 +141,7 @@ Feature: Build a network feature
         When I click the button with text 'Create MSP definition'
         Then I should see a success toast which says "MSP Ordering Service MSP has been created successfully."
 
-    Scenario: When creating an ordering service
+    Scenario: When creating an ordering service with system channel
         Given I go to the console
         And I am logged in
         And I am ready to get started
@@ -148,6 +151,7 @@ Feature: Build a network feature
         And I clicked the button with text 'Next'
         Then wait "3" seconds
         And I provided 'Ordering Service' for the 'Enter an ordering service display name' input
+        And I select radio button with text "With a system channel"
         Then wait "2" seconds
         And I clicked the button with text 'Next'
         Then wait "5" seconds

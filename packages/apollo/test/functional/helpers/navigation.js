@@ -25,6 +25,8 @@ async function clickButton(property, value) {
 		button = element(by.css(`button[title="${value}"]`));
 	} else if (property === 'id') {
 		button = element(by.id(value));
+	} else if (property === 'xpath'){
+		button = element(by.xpath(value));
 	} else {
 		throw new Error('Property not supported');
 	}

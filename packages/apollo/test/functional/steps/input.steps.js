@@ -78,10 +78,11 @@ Given(/^I selected (?:'|")(.*?)(?:'|") matching value from the (?:'|")(.*?)(?:'|
 		await browser.wait(ExpectedConditions.visibilityOf(dropdown), 10000);
 		await browser.wait(ExpectedConditions.elementToBeClickable(dropdown), 10000);
 		await dropdown.click();
-		await browser.sleep(2000);
+		await browser.sleep(1000);
 		let chosenOption = element(by.xpath("//div[contains(text(),'" + textToselect + "')]"));
 		await browser.wait(ExpectedConditions.elementToBeClickable(chosenOption), 10000);
 		await chosenOption.click();
+		await browser.sleep(1000);
 	} catch (err) {
 		console.log('Exception thrown while selecting value from dropdown: %s', err);
 	}
