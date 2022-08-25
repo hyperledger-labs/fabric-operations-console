@@ -36,3 +36,14 @@ Given(/^I clicked on the (?:'|")(.*?)(?:'|") channel$/, async channelName => {
 Given(/^I clicked the (?:'|")(.*?)(?:'|") role for (?:'|")(.*?)(?:'|")$/, async(role, mspId) => {
 	await clickCheckboxWithId(`ibp-add-orgs-msp-${mspId}-role-${role}`);
 });
+
+Then(/^I should see Create Genesis screen with message to to join orderer$/, async() => {
+	await browser.sleep(1000);
+	let createGenesisTitle = element(by.xpath('//div[@class="ibp-channel-section-genesis"]'));
+	await browser.wait(ExpectedConditions.visibilityOf(createGenesisTitle), 60000);
+});
+
+Then(/^the channel tile with name (?:'|")(.*?)(?:'|") should be available$/, async channelName => {
+	let channel = element(by.cssContainingText('.ibp-tile-content-title', channelName));
+	await browser.wait(ExpectedConditions.elementToBeClickable(channel), 60000);
+});

@@ -113,6 +113,9 @@ Feature: Build a network feature
         Then wait "2" seconds
         Then the 'admin' user with id 'OSadmin' should be enrolled
         And the 'orderer' user with id 'OS1' should be enrolled
+		Then wait "2" seconds
+        And I enroll TLS identity for OS1 with secret 'OS1pw' and name 'OS1_TLS'
+		Then wait "2" seconds
 
     Scenario: When creating an organization MSP definition for Ordering Service
         Given I go to the console
@@ -148,7 +151,7 @@ Feature: Build a network feature
         And I clicked the button with text 'Next'
         Then wait "3" seconds
         And I provided 'Ordering Service' for the 'Enter an ordering service display name' input
-		And I select radio button with text 'With a system channel'
+        And I select radio button with text "With a system channel"
         Then wait "2" seconds
         And I clicked the button with text 'Next'
         Then wait "5" seconds

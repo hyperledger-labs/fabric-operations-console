@@ -31,7 +31,7 @@ Given(/^I clicked the Associate identity button$/, async() => {
 
 Given(/^the CA admin is set as (?:'|")(.*?)(?:'|")$/, async identityName => {
 	const adminInfo = element(by.css('div.ibp-identity-information'));
-	await browser.wait(ExpectedConditions.textToBePresentInElement(adminInfo, identityName), 15000);
+	await browser.wait(ExpectedConditions.textToBePresentInElement(adminInfo, identityName), 5 * 60000);
 	await browser.sleep(2000);
 });
 
@@ -66,4 +66,18 @@ Then(/^the (?:'|")(.*?)(?:'|") user with id (?:'|")(.*?)(?:'|") should be enroll
 			break;
 		}
 	}
+});
+
+When(/^I enroll TLS identity for OS1 with secret (?:'|")(.*?)(?:'|") and name (?:'|")(.*?)(?:'|")$/, async(enrollSecret, enrollName) => {
+	await clickButton('xpath', '//*[@id="root-ca-row-0"]/td[4]/div/button');
+	await browser.sleep(2000);
+	await clickButton('xpath', '//div[text()="Enroll identity"]');
+	await browser.sleep(2000);
+	await selectDropdownOption('TLS Certificate Authority', 'div#generateCertificate-selected_ca');
+	await enterInput(enrollSecret, 'Enter a secret');
+	await clickButton('text', 'Next');
+	await browser.sleep(5000);
+	await enterInput(enrollName, 'Enter a name');
+	await clickButton('id', 'submit'); //Add identity to Wallet
+	await browser.sleep(2000);
 });

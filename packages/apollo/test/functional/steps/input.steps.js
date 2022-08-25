@@ -41,7 +41,7 @@ Given(/^I provided a name for the service$/, async() => {
 });
 
 Given(/^I selected (?:'|")(.*?)(?:'|") from the (?:'|")(.*?)(?:'|") dropdown$/, async(element, selector) => {
-	await browser.sleep(2000);
+	await browser.sleep(5000);
 	try {
 		await selectDropdownOption(element, selector);
 	} catch (e) {
@@ -78,10 +78,11 @@ Given(/^I selected (?:'|")(.*?)(?:'|") matching value from the (?:'|")(.*?)(?:'|
 		await browser.wait(ExpectedConditions.visibilityOf(dropdown), 10000);
 		await browser.wait(ExpectedConditions.elementToBeClickable(dropdown), 10000);
 		await dropdown.click();
-		await browser.sleep(2000);
+		await browser.sleep(1000);
 		let chosenOption = element(by.xpath("//div[contains(text(),'" + textToselect + "')]"));
 		await browser.wait(ExpectedConditions.elementToBeClickable(chosenOption), 10000);
 		await chosenOption.click();
+		await browser.sleep(1000);
 	} catch (err) {
 		console.log('Exception thrown while selecting value from dropdown: %s', err);
 	}
