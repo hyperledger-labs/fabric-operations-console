@@ -577,7 +577,7 @@ export class CAModal extends React.Component {
 										{this.props.ca.display_name}
 									</CodeSnippet>
 								),
-							  })
+							})
 							: translate('remove_ca_desc', {
 								name: (
 									<CodeSnippet
@@ -589,7 +589,7 @@ export class CAModal extends React.Component {
 										{this.props.ca.display_name}
 									</CodeSnippet>
 								),
-							  })}
+							})}
 					</p>
 				</div>
 				<div className="ibp-remove-ca-confirm">{translate('remove_ca_confirm')}</div>
@@ -1166,22 +1166,42 @@ export class CAModal extends React.Component {
 
 	async updateTLSCertificate() {
 		const api_calls = [];
+		const restart_api_calls = [];
+		let last_error = null;
+
 		this.props.nodes_to_update.forEach(item => {
 			if (item.update) {
 				api_calls.push(NodeRestApi.updateTLSCertificate(item.node, this.props.original_tls_cert));
+				restart_api_calls.push(NodeRestApi.restartNode(item.node));
 			}
 		});
+
 		if (api_calls.length) {
 			try {
+				// update each node with the new tls cert
 				await Promise.all(api_calls);
 			} catch (error) {
 				Log.error(error);
-				const err = new Error();
-				err.title = 'error_update_tls_cert';
-				err.details = error;
-				throw err;
+				last_error = new Error();
+				last_error.title = 'error_update_tls_cert';
+				last_error.details = error;
+				// don't throw this error yet, let the restarts occur first
+			}
+
+			try {
+				// restart each node
+				if (restart_api_calls.length) {
+					await Promise.all(restart_api_calls);
+				}
+			} catch (error) {
+				Log.error(error);
+			}
+
+			if (last_error) {
+				throw last_error;
 			}
 		}
+
 		const updated = { ...this.props.ca };
 		_.set(updated, 'msp.component.tls_cert', this.props.original_tls_cert);
 		this.props.onComplete(updated, true);
