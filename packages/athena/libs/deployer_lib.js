@@ -787,6 +787,7 @@ module.exports = function (logger, ev, t) {
 					OPERATION: 'update_component',
 					debug_tx_id: t.ot_misc.buildTxId(req),
 				};
+				req.body.id = req.body.id || doc.dep_component_id;
 				logger.debug('[deployer lib]', parsed.debug_tx_id, 'updating component. iid', parsed.iid, 'component_type', parsed.component_type);
 				const fmt_body = t.comp_fmt.fmt_body_athena_to_dep(req, null);					// translate athena spec to deployer here
 				delete fmt_body.dep_component_id;												// delete artifacts from build that are for provision component
@@ -1668,9 +1669,7 @@ module.exports = function (logger, ev, t) {
 							return cb(fmt_err, fmt_ret);											// error already logged
 						} else {
 							logger.debug('[deployer lib]', debug_tx_id, 'made', obj.changes_made, 'admin cert changes');
-							auto_restart(req, () => {
-								return cb(null, add_cert_details(obj));
-							});
+							return cb(null, add_cert_details(obj));
 						}
 					});
 				}
@@ -2168,6 +2167,7 @@ module.exports = function (logger, ev, t) {
 	};
 
 	// send a restart action api for the same component in api to athena
+	/* Removed b/c of issue 4841
 	function auto_restart(req2athena, cb_action) {
 		if (!req2athena) {
 			logger.error('[deployer lib] problem with the code... auto restart wasn\'t passed a request.');	// should not happen, comp to restart is not known!
@@ -2186,7 +2186,7 @@ module.exports = function (logger, ev, t) {
 				return cb_action();
 			});
 		}
-	}
+	}*/
 
 	return exports;
 };
