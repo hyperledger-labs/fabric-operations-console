@@ -577,7 +577,10 @@ class ChannelApi {
 		if (addresses.length === 0) {
 			const orderer_grp = _.get(config, 'channel_group.groups_map.Orderer.groups_map');
 			for (let ordererMSP in orderer_grp) {
-				addresses.push(...orderer_grp[ordererMSP].values_map.Endpoints.value.addresses);
+				const org_addresses = _.get(orderer_grp[ordererMSP], 'values_map.Endpoints.value.addresses');
+				if (Array.isArray(org_addresses)) {
+					addresses.push(...org_addresses);
+				}
 			}
 		}
 		return addresses;
