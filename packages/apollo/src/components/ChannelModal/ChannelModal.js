@@ -453,7 +453,7 @@ class ChannelModal extends Component {
 							label: 'ordering_service_organization',
 							onClick: () => this.showStep('ordering_service_organization', 2, 6),
 							isLink: false,
-							disabled: true,
+							disabled: false,
 						},
 						{
 							label: 'channel_acls',
@@ -956,9 +956,13 @@ class ChannelModal extends Component {
 								: this.showStep('organization_creating_channel', group_prerequisites, step_org_signature);
 				next = () => {
 					if (canModifyConsenters) {
-						(isChannelUpdate && !use_osnadmin)
-							? this.showStep('orderer_admin_set', group_advanced, step_orderer_admin_set)
-							: this.showStep('consenter_set', group_advanced, step_consenters);
+						if (isChannelUpdate && !use_osnadmin) {
+							this.showStep('orderer_admin_set', group_advanced, step_orderer_admin_set);
+						} else if (isChannelUpdate && use_osnadmin && isOrdererSignatureNeeded) {
+							this.showStep('ordering_service_organization', group_advanced, step_orderer_admin_set);
+						} else {
+							this.showStep('consenter_set', group_advanced, step_consenters);
+						}
 					} else {
 						isOrdererSignatureNeeded
 							? this.showStep('ordering_service_organization', group_advanced, step_orderer_signature)
@@ -996,7 +1000,7 @@ class ChannelModal extends Component {
 			case 'ordering_service_organization':
 				isComplete = this.isStepCompleted('ordering_service_organization');
 				back = () => {
-					if (canModifyConsenters) {
+					if (isChannelUpdate && !use_osnadmin) {
 						this.showStep('consenter_set', group_advanced, step_consenters);
 					} else {
 						this.showStep('block_cutting_params', group_advanced, step_block_parameters);
@@ -1089,7 +1093,7 @@ class ChannelModal extends Component {
 
 	updateTimeSteps = (noHigherCapabilities, isChannelUpdate) => {
 		let removeSteps = [];
-		if (!this.canModifyConsenters()) {
+		if (!this.canModifyConsenters() && !isChannelUpdate) {
 			removeSteps.push('consenter_set');
 			removeSteps.push('channel_orderer_organizations');
 		}
@@ -1438,7 +1442,11 @@ class ChannelModal extends Component {
 				if (this.props.osnadmin_feats_enabled && orderer && orderer.osnadmin_url && orderer.systemless) {
 					this.props.updateState(SCOPE, { use_osnadmin: true });				// change the menu options
 					this.showStepsInTimeline(['osn_join_channel', 'channel_orderer_organizations']);
-					this.hideStepsInTimeline(['ordering_service_organization', 'organization_creating_channel']);	// but hide these
+					if (this.props.isChannelUpdate) {
+						this.hideStepsInTimeline(['organization_creating_channel']);	// but hide these
+					} else {
+						this.hideStepsInTimeline(['ordering_service_organization', 'organization_creating_channel']);	// but hide these
+					}
 
 					// get all ordering groups
 					this.getAllOrderers().then(possible_consenters => {
@@ -2161,7 +2169,7 @@ class ChannelModal extends Component {
 			this.isConsenterSetModified() ||
 			this.isAdminsModified() ||
 			this.isAnyRaftParamModified()
-		) && !this.props.use_osnadmin;		// when using the osnadmin endpoints we don't need a classical orderer signature
+		) && (!this.props.use_osnadmin || this.props.isChannelUpdate);		// when using the osnadmin endpoints we don't need a classical orderer signature
 	};
 
 	// render this step's content (only 1 step)
@@ -2196,7 +2204,7 @@ class ChannelModal extends Component {
 				)}
 				{viewing === 'channel_update_policy' && <Policy />}
 				{viewing === 'channel_orderer_organizations' && (
-					<OrdererOrganizations/>
+					<OrdererOrganizations />
 				)}
 				{(viewing === 'organization_creating_channel' || viewing === 'organization_updating_channel') && <OrgSignature editLoading={this.props.editLoading} />}
 				{viewing === 'capabilities' && <Capabilities existingCapabilities={existingCapabilities}
