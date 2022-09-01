@@ -24,6 +24,8 @@ For more Information see the [documentation for the current IBM production offer
 
 [AMA](https://youtu.be/HGThtz5A6S8)
 
+[Manage orderers without system channel](https://youtu.be/qlR_56I3E7U)
+
 # Running Fabric Operations Console
 
 You can use the following steps to provision a network using Fabric test-network, add grpc-web proxy on that of that and import components into Console so that you can manage the test network.
