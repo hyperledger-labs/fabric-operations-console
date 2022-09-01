@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withLocalize } from 'react-localize-redux';
@@ -28,7 +28,6 @@ import SVGs from '../Svgs/Svgs';
 import TranslateLink from '../TranslateLink/TranslateLink';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
-import { triggers, triggerSurvey } from '../../utils/medallia';
 
 const SCOPE = 'installChaincode';
 const CHAINCODE_LIMIT_MB = 25;
@@ -220,7 +219,6 @@ class InstallChaincodeModal extends Component {
 						.then(resp => {
 							Log.debug('Install chaincode on ', peer.id, ' response: ', resp);
 							this.props.onComplete(this.props.uploadedFileDetails.name, this.props.uploadedFileDetails.version);
-							triggerSurvey(triggers.INSTALL_OR_COMMIT_SMART_CONTRACT);
 							if (window.trackEvent) {
 								window.trackEvent('Started Process', {
 									processType: 'Smart Contract',
@@ -310,26 +308,17 @@ class InstallChaincodeModal extends Component {
 				)}
 				{this.props.uploadedFileDetails && (
 					<div className="ibp-json-file-details">
-						<div className="ibp-json-file-name"
-							id="chaincode-filename"
-						>
+						<div className="ibp-json-file-name" id="chaincode-filename">
 							{this.props.uploadedFileDetails.name}
 						</div>
 						<div className="ibp-json-file-other-details">
 							{this.props.uploadedFileDetails.version && (
-								<div className="ibp-json-file-version"
-									id="chaincode-version"
-								>
+								<div className="ibp-json-file-version" id="chaincode-version">
 									{this.props.uploadedFileDetails.version}
 								</div>
 							)}
-							<button className="ibp-json-file-remove-icon"
-								onClick={this.removeUploadedFile}
-							>
-								<SVGs type={'close'}
-									width="10px"
-									height="10px"
-								/>
+							<button className="ibp-json-file-remove-icon" onClick={this.removeUploadedFile}>
+								<SVGs type={'close'} width="10px" height="10px" />
 							</button>
 						</div>
 					</div>
@@ -347,11 +336,7 @@ class InstallChaincodeModal extends Component {
 		}
 		if (this.isMultiPeerInstall) {
 			return (
-				<WizardStep title={translate('select_peers')}
-					tooltip={translate('select_peers_tooltip')}
-					type="WizardStep"
-					disableSubmit={this.props.disableInstall}
-				>
+				<WizardStep title={translate('select_peers')} tooltip={translate('select_peers_tooltip')} type="WizardStep" disableSubmit={this.props.disableInstall}>
 					<div className="ibp-install-peer-container">
 						{this.props.peers.length > 0 && (
 							<div>

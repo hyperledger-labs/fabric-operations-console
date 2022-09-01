@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -29,7 +29,6 @@ import Logger from '../Log/Logger';
 import NodeStatus from '../../utils/status';
 import emptyPeerImage from '../../assets/images/empty_nodes.svg';
 import ItemTileLabels from '../ItemContainerTile/ItemTileLabels/ItemTileLabels';
-import { triggers, triggerSurvey } from '../../utils/medallia';
 import * as constants from '../../utils/constants';
 
 const SCOPE = 'peers';
@@ -67,7 +66,6 @@ class Peers extends Component {
 		this.props.updateState(SCOPE, { loading: true });
 		PeerRestApi.getPeers()
 			.then(peerList => {
-
 				// loop slowly on peer status forever to keep status icon up to date...
 				clearInterval(secondaryPeerStatusCheck);
 				secondaryPeerStatusCheck = setInterval(() => {
@@ -118,10 +116,7 @@ class Peers extends Component {
 		return (
 			<div className="ibp-node-peer-tile">
 				<p className="ibp-node-peer-tile-msp">{peer.msp_id}</p>
-				<ItemTileLabels location={peer.location}
-					isPatchAvailable={isPatchAvailable}
-					certificateWarning={peer.certificateWarning}
-				/>
+				<ItemTileLabels location={peer.location} isPatchAvailable={isPatchAvailable} certificateWarning={peer.certificateWarning} />
 				{this.getPeerStatus(peer)}
 			</div>
 		);
@@ -142,16 +137,12 @@ class Peers extends Component {
 		const translate = this.props.translate;
 		return peer && status ? (
 			<div className="ibp-node-status-container">
-				<span className={`ibp-node-status ${className}`}
-					tabIndex="0"
-				/>
+				<span className={`ibp-node-status ${className}`} tabIndex="0" />
 				<span className="ibp-node-status-label">{translate(peer.operations_url ? status : 'status_undetected')}</span>
 			</div>
 		) : (
 			<div className="ibp-node-status-container">
-				<span className="ibp-node-status ibp-node-status-skeleton"
-					tabIndex="0"
-				/>
+				<span className="ibp-node-status ibp-node-status-skeleton" tabIndex="0" />
 				<span className="ibp-node-status-label">{translate('status_pending')}</span>
 			</div>
 		);
@@ -242,7 +233,6 @@ class Peers extends Component {
 		this.props.updateState(SCOPE, data);
 		NodeStatus.getStatus(newPeers, SCOPE, 'peerList');
 		this.props.clearNotifications(SCOPE + '_HELP');
-		triggerSurvey(triggers.CREATE_PEER);
 	};
 
 	getButtons() {
@@ -266,13 +256,8 @@ class Peers extends Component {
 		}
 		return (
 			<div>
-				<div>{this.props.showImportPeer && <ImportPeerModal onClose={this.closeImportPeerModal}
-					onComplete={this.showNewPeers}
-					parentScope={SCOPE}
-				/>}</div>
-				<div id="peers-container"
-					className="ibp__peers--container"
-				>
+				<div>{this.props.showImportPeer && <ImportPeerModal onClose={this.closeImportPeerModal} onComplete={this.showNewPeers} parentScope={SCOPE} />}</div>
+				<div id="peers-container" className="ibp__peers--container">
 					<ItemContainer
 						containerTitle={!this.props.isMspDetailsView ? 'peers' : ''}
 						containerTooltip={!this.props.isMspDetailsView ? 'peers_tooltip' : ''}

@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 import TrashCan20 from '@carbon/icons-react/lib/trash-can/20';
 import { Button, CodeSnippet, ContentSwitcher, InlineLoading, Switch } from 'carbon-components-react';
 import _ from 'lodash';
@@ -36,7 +36,6 @@ import Logger from '../Log/Logger';
 import SidePanel from '../SidePanel/SidePanel';
 import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import Timeline from '../Timeline/Timeline';
-import { triggers, triggerSurvey } from '../../utils/medallia';
 
 const SCOPE = 'generateMSP';
 const Log = new Logger(SCOPE);
@@ -418,7 +417,6 @@ class GenerateMSPModal extends Component {
 			if (resp && resp.id) {
 				this.props.onComplete(this.props.msp_name);
 				this.sidePanel.closeSidePanel();
-				triggerSurvey(triggers.CREATE_MSP_DEF);
 			} else {
 				this.props.updateState(SCOPE, {
 					submitting: false,
@@ -465,8 +463,8 @@ class GenerateMSPModal extends Component {
 					error: error.title
 						? error
 						: {
-							title: 'error_add_identity',
-							details: error.details ? error.details : error,
+								title: 'error_add_identity',
+								details: error.details ? error.details : error,
 						  },
 					loadingCert: false,
 				});
@@ -747,18 +745,14 @@ class GenerateMSPModal extends Component {
 							]}
 							onChange={this.onSelectRootCA}
 						/>
-						{this.props.notAvailable && <SidePanelWarning title="ca_not_available_title"
-							subtitle="ca_not_available_text"
-						/>}
+						{this.props.notAvailable && <SidePanelWarning title="ca_not_available_title" subtitle="ca_not_available_text" />}
 						<div className="ibp-generate-msp-cert-section">
 							{!loading && this.props.selectedRootCA && this.props.selectedRootCA.type === 'fabric-ca' && this.renderRootCerts(translate)}
 							{!loading && this.props.selectedRootCA && this.props.selectedRootCA.type === 'fabric-ca' && this.renderTLSRootCerts(translate)}
 						</div>
 						{this.props.duplicateMspError && (
 							<div className="ibp-root-cert-details">
-								<SidePanelWarning title="duplicate_mspid_error_title"
-									subtitle={translate('duplicate_mspid_error_desc')}
-								/>
+								<SidePanelWarning title="duplicate_mspid_error_title" subtitle={translate('duplicate_mspid_error_desc')} />
 							</div>
 						)}
 					</div>
@@ -776,9 +770,7 @@ class GenerateMSPModal extends Component {
 				<div>
 					{this.props.rootCerts.map((rootCert, i) => {
 						return (
-							<div key={'rootCert_' + i}
-								className="ibp-msp-row"
-							>
+							<div key={'rootCert_' + i} className="ibp-msp-row">
 								<div className="ibp-msp-input">
 									<input
 										id={'ibp-root-cert-' + i}
@@ -828,9 +820,7 @@ class GenerateMSPModal extends Component {
 				<div>
 					{this.props.tlsRootCerts.map((tlsRootCert, i) => {
 						return (
-							<div key={'tlsRootCert_' + i}
-								className="ibp-msp-row"
-							>
+							<div key={'tlsRootCert_' + i} className="ibp-msp-row">
 								<div className="ibp-msp-input">
 									<input
 										id={'ibp-tls-root-cert-' + i}
@@ -938,16 +928,10 @@ class GenerateMSPModal extends Component {
 						<div>
 							{!this.props.generatedCert.isDownloaded && (
 								<div className="ibp-error-panel">
-									<SidePanelWarning title="please_note"
-										subtitle="download_cert_first"
-									/>
+									<SidePanelWarning title="please_note" subtitle="download_cert_first" />
 								</div>
 							)}
-							<Button id="btn-export-certificate"
-								kind="secondary"
-								className="ibp-generate-certificate"
-								onClick={this.onDownloadCert}
-							>
+							<Button id="btn-export-certificate" kind="secondary" className="ibp-generate-certificate" onClick={this.onDownloadCert}>
 								{translate('export_node_config')}
 							</Button>
 						</div>
@@ -972,10 +956,10 @@ class GenerateMSPModal extends Component {
 		} else {
 			const generatedCertAdmin = this.props.generatedCert.certificate
 				? [
-					{
-						cert: this.props.generatedCert.certificate,
-						isReadOnly: true,
-					},
+						{
+							cert: this.props.generatedCert.certificate,
+							isReadOnly: true,
+						},
 				  ]
 				: [];
 			this.props.updateState(SCOPE, {
@@ -999,16 +983,8 @@ class GenerateMSPModal extends Component {
 					onChange={() => this.toggleIdentityType(translate)}
 					selectedIndex={identityType === 'existing' ? 1 : 0}
 				>
-					<Switch kind="button"
-						id="ibp-use-new-identity"
-						name="new"
-						text={translate('use_new_identity')}
-					/>
-					<Switch kind="button"
-						id="ibp-use-existing-identity"
-						name="existing"
-						text={translate('use_existing_identity')}
-					/>
+					<Switch kind="button" id="ibp-use-new-identity" name="new" text={translate('use_new_identity')} />
+					<Switch kind="button" id="ibp-use-existing-identity" name="existing" text={translate('use_existing_identity')} />
 				</ContentSwitcher>
 				{identityType === 'new' ? (
 					this.renderGenerateCertificate(translate)
@@ -1056,9 +1032,7 @@ class GenerateMSPModal extends Component {
 						<div>
 							{admins.map((admin, i) => {
 								return (
-									<div key={'admin_' + i}
-										className="ibp-msp-row"
-									>
+									<div key={'admin_' + i} className="ibp-msp-row">
 										<div className="ibp-msp-input">
 											<input
 												id={'ibp-msp-admin-' + i}
@@ -1125,9 +1099,7 @@ class GenerateMSPModal extends Component {
 						<div className="ibp-summary-section-array-value">
 							{value.map((item, i) => {
 								return (
-									<div key={'item_' + i}
-										className="ibp-summary-section-value"
-									>
+									<div key={'item_' + i} className="ibp-summary-section-value">
 										{isCert && item.cert.length ? (
 											<input
 												id={`ibp-msp-admin-${key}-${i}`}

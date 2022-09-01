@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 import { ContentSwitcher, SkeletonText, Switch, TextArea, TextInput, Toggle } from 'carbon-components-react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -27,7 +27,6 @@ import { PeerRestApi } from '../../rest/PeerRestApi';
 import SignatureRestApi from '../../rest/SignatureRestApi';
 import StitchApi from '../../rest/StitchApi';
 import Helper from '../../utils/helper';
-import { triggers, triggerSurvey } from '../../utils/medallia';
 import MspHelper from '../../utils/msp';
 import FileUploader from '../FileUploader/FileUploader';
 import Form from '../Form/Form';
@@ -296,9 +295,7 @@ export class ChaincodeModal extends React.Component {
 					},
 					'status'
 				)}
-				{(committed || ready_to_commit) && orgs2sign && number_of_signatures < orgs2sign.length && <SidePanelWarning title=""
-					subtitle="not_all_approved"
-				/>}
+				{(committed || ready_to_commit) && orgs2sign && number_of_signatures < orgs2sign.length && <SidePanelWarning title="" subtitle="not_all_approved" />}
 				<table>
 					<tbody>
 						{orgs2sign &&
@@ -443,7 +440,7 @@ export class ChaincodeModal extends React.Component {
 		return verified;
 	}
 
-	onCommit = async() => {
+	onCommit = async () => {
 		let orderer = null;
 		for (let o = 0; o < this.props.channel.orderers.length && !orderer; o++) {
 			if (this.props.channel.orderers[o].msp_id === this.props.commit_org.msp_id) {
@@ -501,7 +498,6 @@ export class ChaincodeModal extends React.Component {
 		if (this.props.onComplete) {
 			this.props.onComplete();
 		}
-		triggerSurvey(triggers.INSTALL_OR_COMMIT_SMART_CONTRACT);
 		return;
 	};
 
@@ -564,7 +560,7 @@ export class ChaincodeModal extends React.Component {
 		return installed;
 	}
 
-	onApprove = async() => {
+	onApprove = async () => {
 		let package_id = this.props.selected.package_id;
 		let selected_peers = this.props.selected_peers;
 		const cc_pkg = await this.getSelectedChaincodePackage();
@@ -680,10 +676,7 @@ export class ChaincodeModal extends React.Component {
 				/>
 				{!peers.length && (
 					<div className="ibp-error-panel">
-						<SidePanelWarning title=""
-							kind="error"
-							subtitle="approve_no_peers"
-						/>
+						<SidePanelWarning title="" kind="error" subtitle="approve_no_peers" />
 					</div>
 				)}
 			</WizardStep>
@@ -734,9 +727,7 @@ export class ChaincodeModal extends React.Component {
 								this.props.updateState(SCOPE, { pkg: null });
 							}}
 						>
-							<SVGs type="close"
-								extendClass={{ 'ibp-pkg-delete-icon': true }}
-							/>
+							<SVGs type="close" extendClass={{ 'ibp-pkg-delete-icon': true }} />
 						</button>
 					</div>
 				)}
@@ -886,9 +877,7 @@ export class ChaincodeModal extends React.Component {
 				{pkg && (
 					<div className="summary-section">
 						<p className="summary-label">{this.props.translate('chaincode_package')}</p>
-						<p className="summary-value"
-							title={pkg.tooltip}
-						>
+						<p className="summary-value" title={pkg.tooltip}>
 							{pkg.name}
 						</p>
 					</div>
@@ -933,16 +922,8 @@ export class ChaincodeModal extends React.Component {
 							}}
 							selectedIndex={this.props.upload_pkg ? 0 : 1}
 						>
-							<Switch kind="button"
-								id="propose-upload"
-								name="upload"
-								text={this.props.translate('upload')}
-							/>
-							<Switch kind="button"
-								id="propose-existing"
-								name="existing"
-								text={this.props.translate('existing_package')}
-							/>
+							<Switch kind="button" id="propose-upload" name="upload" text={this.props.translate('upload')} />
+							<Switch kind="button" id="propose-existing" name="existing" text={this.props.translate('existing_package')} />
 						</ContentSwitcher>
 						{this.props.upload_pkg ? this.renderUploadPackage() : this.renderExistingPackage(pkg)}
 					</>
@@ -977,15 +958,9 @@ export class ChaincodeModal extends React.Component {
 		}
 
 		return (
-			<WizardStep type="WizardStep"
-				title="install_chaincode"
-				disableSubmit={disableSubmit}
-			>
+			<WizardStep type="WizardStep" title="install_chaincode" disableSubmit={disableSubmit}>
 				<p className="ibp-modal-text">{this.props.translate('propose_install_desc')}</p>
-				<ImportantBox kind="informational"
-					text="propose_install_important"
-					link="propose_install_important_link"
-				/>
+				<ImportantBox kind="informational" text="propose_install_important" link="propose_install_important_link" />
 				{!!installed_peers.length && (
 					<div className="summary-section">
 						<p className="summary-label">{this.props.translate('peers_installed_on')}</p>
@@ -1064,9 +1039,7 @@ export class ChaincodeModal extends React.Component {
 			return;
 		}
 		return (
-			<WizardStep type="WizardStep"
-				title="summary"
-			>
+			<WizardStep type="WizardStep" title="summary">
 				<div className="ibp-propose-chaincode-summary">
 					{Helper.renderFieldSummary(this.props.translate, this.props, 'approve_org', 'selected.msp_id')}
 					{Helper.renderFieldSummary(this.props.translate, this.props, 'approve_identity', 'approve_identity.name')}
@@ -1092,8 +1065,8 @@ export class ChaincodeModal extends React.Component {
 					onSubmit = this.props.show_commit
 						? this.onCommit
 						: () => {
-							this.props.updateState(SCOPE, { show_commit: true });
-							return Promise.reject();
+								this.props.updateState(SCOPE, { show_commit: true });
+								return Promise.reject();
 						  };
 				}
 			}
@@ -1103,10 +1076,7 @@ export class ChaincodeModal extends React.Component {
 			onSubmit = this.onApprove;
 		}
 		return (
-			<Wizard onClose={this.props.onClose}
-				onSubmit={onSubmit}
-				submitButtonLabel={button}
-			>
+			<Wizard onClose={this.props.onClose} onSubmit={onSubmit} submitButtonLabel={button}>
 				{this.renderDetails()}
 				{this.renderCommit()}
 				{this.renderApprove()}

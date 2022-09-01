@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -28,7 +28,6 @@ import Logger from '../Log/Logger';
 import NodeStatus from '../../utils/status';
 import emptyOrdererImage from '../../assets/images/empty_nodes.svg';
 import ItemTileLabels from '../ItemContainerTile/ItemTileLabels/ItemTileLabels';
-import { triggers, triggerSurvey } from '../../utils/medallia';
 import * as constants from '../../utils/constants';
 
 const SCOPE = 'orderers';
@@ -84,8 +83,6 @@ class Orderers extends Component {
 		this.props.updateState(SCOPE, { loading: true });
 		OrdererRestApi.getOrderers()
 			.then(ordererList => {
-
-
 				// loop slowly on orderer status forever to keep status icon up to date...
 				clearInterval(secondaryOsStatusCheck);
 				secondaryOsStatusCheck = setInterval(() => {
@@ -155,7 +152,6 @@ class Orderers extends Component {
 		this.props.updateState(SCOPE, { ordererList });
 		NodeStatus.getStatus(newOrderers, SCOPE, 'ordererList');
 		this.props.clearNotifications(SCOPE + '_HELP');
-		triggerSurvey(triggers.CREATE_ORDERING_SERVICE);
 	};
 
 	openOrdererDetails = orderer => {
@@ -201,20 +197,14 @@ class Orderers extends Component {
 			className = 'ibp-node-status-unretrievable';
 		}
 
-		return (orderer && status) ? (
-			<div className="ibp-node-status-container"
-				tabIndex="0"
-			>
-				<span className={`ibp-node-status ${className}`}
-					tabIndex="0"
-				/>
+		return orderer && status ? (
+			<div className="ibp-node-status-container" tabIndex="0">
+				<span className={`ibp-node-status ${className}`} tabIndex="0" />
 				<span className="ibp-node-status-label">{translate(orderer.operations_url ? status : 'status_undetected')}</span>
 			</div>
 		) : (
 			<div className="ibp-node-status-container">
-				<span className="ibp-node-status ibp-node-status-skeleton"
-					tabIndex="0"
-				/>
+				<span className="ibp-node-status ibp-node-status-skeleton" tabIndex="0" />
 				<span className="ibp-node-status-label">{translate('status_pending')}</span>
 			</div>
 		);
@@ -241,12 +231,8 @@ class Orderers extends Component {
 		}
 		return (
 			<div>
-				<div>{this.props.showImportOrderer && <ImportOrdererModal onClose={this.closeImportOrdererModal}
-					onComplete={this.showNewsOrderers}
-				/>}</div>
-				<div id="orderers-container"
-					className="ibp__orderers--container"
-				>
+				<div>{this.props.showImportOrderer && <ImportOrdererModal onClose={this.closeImportOrdererModal} onComplete={this.showNewsOrderers} />}</div>
+				<div id="orderers-container" className="ibp__orderers--container">
 					<ItemContainer
 						containerTitle={!this.props.isMspDetailsView ? 'orderers' : ''}
 						containerTooltip={!this.props.isMspDetailsView ? 'orderers_tooltip' : ''}

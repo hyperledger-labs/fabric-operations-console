@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 // Uses the B2B survey style with Trigger Intercepts
 const OFFERING_ID = 'offeringId'; // Required for aggregate reporting of NPS scores
 const OFFERING_NAME = 'Blockchain Platform'; // Required to identify the product to customer - used in the "How likely..." question
@@ -46,23 +46,6 @@ export const triggers = {
 	CREATE_CHANNEL: 5,
 	JOIN_CHANNEL: 6,
 	INSTALL_OR_COMMIT_SMART_CONTRACT: 7,
-};
-
-export const triggerSurvey = triggerNumber => {
-	const triggerName = `trigger${triggerNumber}`;
-	if (!VALID_TRIGGERS.includes(triggerName)) {
-		console.warn(`Medaillia triggerSurvey called with unknown trigger (${triggerName})`);
-		return;
-	}
-
-	if (window.KAMPYLE_ONSITE_SDK && typeof window.KAMPYLE_ONSITE_SDK.updatePageView === 'function') {
-		window.IBM_Meta[triggerName] = true;
-		// As we're a React app we need to call updatePageView on each trigger
-		window.KAMPYLE_ONSITE_SDK.updatePageView();
-		delete window.IBM_Meta[triggerName];
-	} else {
-		console.warn('Medallia script not found while attempting to trigger a survey.'); // eslint-disable-line no-console
-	}
 };
 
 const sanitiseLanguage = activeLanguage => {
