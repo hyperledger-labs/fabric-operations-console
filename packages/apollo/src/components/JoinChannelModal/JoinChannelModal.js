@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 import { ToggleSmall } from 'carbon-components-react';
 import ToggleSmallSkeleton from 'carbon-components-react/lib/components/ToggleSmall/ToggleSmall.Skeleton';
 import _ from 'lodash';
@@ -237,6 +237,9 @@ class JoinChannelModal extends React.Component {
 			Log.error('An error occurred getting config', e);
 			this.props.updateState(SCOPE, { submitting: false });
 			let title = e.message_key ? e.message_key : null;
+			if (e.grpc_resp && e.grpc_resp.status === 404) {
+				title = 'error_join_channel_not_found';
+			}
 			return Promise.reject({
 				details: e,
 				title,
@@ -424,7 +427,7 @@ class JoinChannelModal extends React.Component {
 				error.grpc_resp &&
 				error.grpc_resp.statusMessage &&
 				(error.grpc_resp.statusMessage.indexOf('This identity is not an admin') !== -1 ||
-					error.grpc_resp.statusMessage.indexOf('Failed verifying that proposal\'s creator satisfies local MSP principal') !== -1)
+					error.grpc_resp.statusMessage.indexOf("Failed verifying that proposal's creator satisfies local MSP principal") !== -1)
 			) {
 				msg = 'error_join_failed1';
 			}
@@ -537,9 +540,7 @@ class JoinChannelModal extends React.Component {
 						<p>{translate('peer_mapping_saas')}</p>
 						{saas.map(peer => {
 							return (
-								<div className="ibp-peer-mapping"
-									key={peer.id}
-								>
+								<div className="ibp-peer-mapping" key={peer.id}>
 									{peer.name}
 								</div>
 							);
@@ -551,9 +552,7 @@ class JoinChannelModal extends React.Component {
 						<p>{translate('peer_mapping_imported')}</p>
 						{imported.map(peer => {
 							return (
-								<div className="ibp-peer-mapping"
-									key={peer.id}
-								>
+								<div className="ibp-peer-mapping" key={peer.id}>
 									{peer.name}
 								</div>
 							);
@@ -562,10 +561,7 @@ class JoinChannelModal extends React.Component {
 				)}
 				<div className="ibp-address-override-section">
 					<p>{translate('address_override_example')}</p>
-					<ConfigOverride id="ibp-address-override"
-						config_override={config_override}
-						readOnly={true}
-					/>
+					<ConfigOverride id="ibp-address-override" config_override={config_override} readOnly={true} />
 				</div>
 			</WizardStep>
 		);
@@ -593,8 +589,8 @@ class JoinChannelModal extends React.Component {
 					this.props.isPending
 						? translate('join_channel_step3_direct_desc', { channelName: this.props.channel })
 						: this.props.isAddingNode
-							? translate('add_node_to_channel_desc', { channelName: this.props.channel })
-							: translate('join_channel_step3_desc', { channelName: this.props.channel })
+						? translate('add_node_to_channel_desc', { channelName: this.props.channel })
+						: translate('join_channel_step3_desc', { channelName: this.props.channel })
 				}
 				headerLink={translate('_JOIN_CHANNEL_LINK', { DOC_PREFIX: this.props.docPrefix })}
 				headerLinkText={translate('find_out_more')}
@@ -678,9 +674,7 @@ class JoinChannelModal extends React.Component {
 								</div>
 							</div>
 						)}
-						{!this.props.loading && !this.props.channel_warning_20 && <ImportantBox text="join_peer_imp_message"
-							link="join_peer_imp_link"
-						/>}
+						{!this.props.loading && !this.props.channel_warning_20 && <ImportantBox text="join_peer_imp_message" link="join_peer_imp_link" />}
 					</>
 				) : (
 					<ImportantBox text="no_more_peers_to_join" />
@@ -741,7 +735,7 @@ class JoinChannelModal extends React.Component {
 						{
 							name: 'channel',
 							specialRules: Helper.SPECIAL_RULES_CHANNEL_NAME,
-							required: true
+							required: true,
 						},
 					]}
 					onChange={this.onChannelChange}
