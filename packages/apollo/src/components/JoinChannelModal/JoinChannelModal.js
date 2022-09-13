@@ -236,8 +236,10 @@ class JoinChannelModal extends React.Component {
 		} catch (e) {
 			Log.error('An error occurred getting config', e);
 			this.props.updateState(SCOPE, { submitting: false });
-			let title = e.message_key ? e.message_key : null;
-			if (e.grpc_resp && e.grpc_resp.status === 404) {
+			let title = null;
+			if (e.message_key) {
+				title = e.message_key;
+			} else if (e.grpc_resp && e.grpc_resp.status === 404) {
 				title = 'error_join_channel_not_found';
 			}
 			return Promise.reject({
