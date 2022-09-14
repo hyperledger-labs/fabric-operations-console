@@ -35,7 +35,6 @@ import Logger from '../Log/Logger';
 import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
-import { triggers, triggerSurvey } from '../../utils/medallia';
 
 const SCOPE = 'joinChannelModal';
 const Log = new Logger(SCOPE);
@@ -401,7 +400,6 @@ class JoinChannelModal extends React.Component {
 					await this.addAnchorPeers(peers, orderer);
 					await new Promise(resolve => setTimeout(resolve, 3000));
 					this.props.onComplete(this.props.channel);
-					triggerSurvey(triggers.JOIN_CHANNEL);
 				} catch (error) {
 					this.props.onComplete(this.props.channel);
 					return Promise.reject({
@@ -411,7 +409,6 @@ class JoinChannelModal extends React.Component {
 				}
 			} else {
 				this.props.onComplete(this.props.channel);
-				triggerSurvey(triggers.JOIN_CHANNEL);
 				// return after 3 seconds so that the peer has enough time to catchup
 				await new Promise(resolve => setTimeout(resolve, 3000));
 				return;

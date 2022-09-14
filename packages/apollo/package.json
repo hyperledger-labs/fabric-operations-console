@@ -54,7 +54,7 @@
 		"lint": "eslint src",
 		"lint-fix": "eslint src --fix",
 		"jestCli": "jest --watch",
-		"dev:apollo": "npm run dev",
+		"dev:apollo": "npm run start",
 		"detect-secrets": "detect-secrets-hook --baseline .secrets.baseline -v",
 		"detect-secrets-create": "detect-secrets scan --update .secrets.baseline"
 	},

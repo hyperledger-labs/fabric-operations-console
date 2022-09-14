@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 import TrashCan20 from '@carbon/icons-react/lib/trash-can/20';
 import { Button, CodeSnippet, ContentSwitcher, InlineLoading, Switch } from 'carbon-components-react';
 import _ from 'lodash';
@@ -36,7 +36,6 @@ import Logger from '../Log/Logger';
 import SidePanel from '../SidePanel/SidePanel';
 import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import Timeline from '../Timeline/Timeline';
-import { triggers, triggerSurvey } from '../../utils/medallia';
 
 const SCOPE = 'generateMSP';
 const Log = new Logger(SCOPE);
@@ -418,7 +417,6 @@ class GenerateMSPModal extends Component {
 			if (resp && resp.id) {
 				this.props.onComplete(this.props.msp_name);
 				this.sidePanel.closeSidePanel();
-				triggerSurvey(triggers.CREATE_MSP_DEF);
 			} else {
 				this.props.updateState(SCOPE, {
 					submitting: false,
@@ -467,7 +465,7 @@ class GenerateMSPModal extends Component {
 						: {
 							title: 'error_add_identity',
 							details: error.details ? error.details : error,
-						  },
+						},
 					loadingCert: false,
 				});
 			});
@@ -976,7 +974,7 @@ class GenerateMSPModal extends Component {
 						cert: this.props.generatedCert.certificate,
 						isReadOnly: true,
 					},
-				  ]
+				]
 				: [];
 			this.props.updateState(SCOPE, {
 				identityType: 'new',
