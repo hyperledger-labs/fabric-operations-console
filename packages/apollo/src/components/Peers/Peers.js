@@ -116,7 +116,10 @@ class Peers extends Component {
 		return (
 			<div className="ibp-node-peer-tile">
 				<p className="ibp-node-peer-tile-msp">{peer.msp_id}</p>
-				<ItemTileLabels location={peer.location} isPatchAvailable={isPatchAvailable} certificateWarning={peer.certificateWarning} />
+				<ItemTileLabels location={peer.location}
+					isPatchAvailable={isPatchAvailable}
+					certificateWarning={peer.certificateWarning}
+				/>
 				{this.getPeerStatus(peer)}
 			</div>
 		);
@@ -137,12 +140,16 @@ class Peers extends Component {
 		const translate = this.props.translate;
 		return peer && status ? (
 			<div className="ibp-node-status-container">
-				<span className={`ibp-node-status ${className}`} tabIndex="0" />
+				<span className={`ibp-node-status ${className}`}
+					tabIndex="0"
+				/>
 				<span className="ibp-node-status-label">{translate(peer.operations_url ? status : 'status_undetected')}</span>
 			</div>
 		) : (
 			<div className="ibp-node-status-container">
-				<span className="ibp-node-status ibp-node-status-skeleton" tabIndex="0" />
+				<span className="ibp-node-status ibp-node-status-skeleton"
+					tabIndex="0"
+				/>
 				<span className="ibp-node-status-label">{translate('status_pending')}</span>
 			</div>
 		);
@@ -256,8 +263,13 @@ class Peers extends Component {
 		}
 		return (
 			<div>
-				<div>{this.props.showImportPeer && <ImportPeerModal onClose={this.closeImportPeerModal} onComplete={this.showNewPeers} parentScope={SCOPE} />}</div>
-				<div id="peers-container" className="ibp__peers--container">
+				<div>{this.props.showImportPeer && <ImportPeerModal onClose={this.closeImportPeerModal}
+					onComplete={this.showNewPeers}
+					parentScope={SCOPE}
+				/>}</div>
+				<div id="peers-container"
+					className="ibp__peers--container"
+				>
 					<ItemContainer
 						containerTitle={!this.props.isMspDetailsView ? 'peers' : ''}
 						containerTooltip={!this.props.isMspDetailsView ? 'peers_tooltip' : ''}

@@ -341,7 +341,9 @@ class App extends Component {
 
 		if (this.state.authScheme === null || this.props.userInfo === null) {
 			return (
-				<LoadingWithContent withOverlay description={translate('loading')}>
+				<LoadingWithContent withOverlay
+					description={translate('loading')}
+				>
 					<h3>{translate('loading')}</h3>
 				</LoadingWithContent>
 			);
@@ -363,7 +365,10 @@ class App extends Component {
 						!(admin_list.includes(email.toLowerCase()) || access_list.includes(email.toLowerCase())))
 				)
 					return (
-						<RequestAccess adminContact={this.state.authScheme.admin_contact_email} userInfo={this.props.userInfo} host_url={this.state.authScheme.host_url} />
+						<RequestAccess adminContact={this.state.authScheme.admin_contact_email}
+							userInfo={this.props.userInfo}
+							host_url={this.state.authScheme.host_url}
+						/>
 					);
 			}
 		}
@@ -374,7 +379,9 @@ class App extends Component {
 		}
 
 		if (this.state.authScheme.type === 'couchdb' && this.props.userInfo && this.props.userInfo.logged && this.props.userInfo.password_type === 'default') {
-			return <Login hostUrl={this.state.authScheme.host_url} changePassword={true} />;
+			return <Login hostUrl={this.state.authScheme.host_url}
+				changePassword={true}
+			/>;
 		}
 
 		if (this.props.userInfo && !this.props.userInfo.logged && !this.disableAuth) {
@@ -384,10 +391,14 @@ class App extends Component {
 		if ((this.props && this.props.userInfo && this.props.userInfo.logged) || this.disableAuth) {
 			Log.info('Starting application!');
 			this.setupRemoteLogging(); // setup the remote logging after the user has logged in to avoid hitting api lockout
-			return <Main userInfo={this.props.userInfo} host_url={this.state.authScheme.host_url} />;
+			return <Main userInfo={this.props.userInfo}
+				host_url={this.state.authScheme.host_url}
+			/>;
 		} else {
 			return (
-				<LoadingWithContent withOverlay description={translate('redirecting_login')}>
+				<LoadingWithContent withOverlay
+					description={translate('redirecting_login')}
+				>
 					<h3>{translate('redirecting_login')}</h3>
 				</LoadingWithContent>
 			);

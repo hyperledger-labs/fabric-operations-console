@@ -139,7 +139,10 @@ export class CertificateAuthority extends Component {
 		}
 		return (
 			<div className="ibp-node-peer-tile">
-				<ItemTileLabels location={ca.location} isPatchAvailable={isPatchAvailable} certificateWarning={ca.certificateWarning} />
+				<ItemTileLabels location={ca.location}
+					isPatchAvailable={isPatchAvailable}
+					certificateWarning={ca.certificateWarning}
+				/>
 				{this.getCAStatus(ca)}
 			</div>
 		);
@@ -155,12 +158,16 @@ export class CertificateAuthority extends Component {
 		const translate = this.props.translate;
 		return ca && ca.status !== undefined ? (
 			<div className="ibp-node-status-container">
-				<span className={`ibp-node-status	${className}`} tabIndex="0" />
+				<span className={`ibp-node-status	${className}`}
+					tabIndex="0"
+				/>
 				<span className="ibp-node-status-label">{translate(ca.status)}</span>
 			</div>
 		) : (
 			<div className="ibp-node-status-container">
-				<span className="ibp-node-status ibp-node-status-skeleton" tabIndex="0" />
+				<span className="ibp-node-status ibp-node-status-skeleton"
+					tabIndex="0"
+				/>
 				<span className="ibp-node-status-label">{translate('status_pending')}</span>
 			</div>
 		);
@@ -181,8 +188,13 @@ export class CertificateAuthority extends Component {
 	render() {
 		return (
 			<div>
-				<div>{this.props.showImportCA && <ImportCAModal onClose={this.closeImportCAModal} onComplete={this.handleComplete} parentScope={SCOPE} />}</div>
-				<div id="cas-container" className="ibp__cas--container">
+				<div>{this.props.showImportCA && <ImportCAModal onClose={this.closeImportCAModal}
+					onComplete={this.handleComplete}
+					parentScope={SCOPE}
+				/>}</div>
+				<div id="cas-container"
+					className="ibp__cas--container"
+				>
 					<ItemContainer
 						containerTitle="cas"
 						containerTooltip="cas_tooltip"

@@ -198,13 +198,19 @@ class Orderers extends Component {
 		}
 
 		return orderer && status ? (
-			<div className="ibp-node-status-container" tabIndex="0">
-				<span className={`ibp-node-status ${className}`} tabIndex="0" />
+			<div className="ibp-node-status-container"
+				tabIndex="0"
+			>
+				<span className={`ibp-node-status ${className}`}
+					tabIndex="0"
+				/>
 				<span className="ibp-node-status-label">{translate(orderer.operations_url ? status : 'status_undetected')}</span>
 			</div>
 		) : (
 			<div className="ibp-node-status-container">
-				<span className="ibp-node-status ibp-node-status-skeleton" tabIndex="0" />
+				<span className="ibp-node-status ibp-node-status-skeleton"
+					tabIndex="0"
+				/>
 				<span className="ibp-node-status-label">{translate('status_pending')}</span>
 			</div>
 		);
@@ -231,8 +237,12 @@ class Orderers extends Component {
 		}
 		return (
 			<div>
-				<div>{this.props.showImportOrderer && <ImportOrdererModal onClose={this.closeImportOrdererModal} onComplete={this.showNewsOrderers} />}</div>
-				<div id="orderers-container" className="ibp__orderers--container">
+				<div>{this.props.showImportOrderer && <ImportOrdererModal onClose={this.closeImportOrdererModal}
+					onComplete={this.showNewsOrderers}
+				/>}</div>
+				<div id="orderers-container"
+					className="ibp__orderers--container"
+				>
 					<ItemContainer
 						containerTitle={!this.props.isMspDetailsView ? 'orderers' : ''}
 						containerTooltip={!this.props.isMspDetailsView ? 'orderers_tooltip' : ''}

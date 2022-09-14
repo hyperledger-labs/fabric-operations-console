@@ -688,10 +688,10 @@ class ChannelModal extends Component {
 				(use_osnadmin ||
 					(!use_osnadmin &&
 						selectedIdentity &&
-							selectedIdentity !== 'select_identity' &&
-							selectedIdentity.private_key &&
-							selectedChannelCreator &&
-							selectedChannelCreator !== 'selectedChannelCreator')) &&
+						selectedIdentity !== 'select_identity' &&
+						selectedIdentity.private_key &&
+						selectedChannelCreator &&
+						selectedChannelCreator !== 'selectedChannelCreator')) &&
 				(!isChannelUpdate || updatedConsenterCount < 2) &&
 				(!isOrdererSignatureNeeded || (selectedOrdererMsp && selectedOrdererMsp !== 'selectedChannelCreator')) &&
 				_.size(aclErrors) === 0 &&
@@ -932,8 +932,8 @@ class ChannelModal extends Component {
 					isHigherCapabilityAvailable
 						? this.showStep('capabilities', group_advanced, step_capabilities)
 						: isChannelUpdate
-						? this.showStep('channel_update_policy', group_required, step_policy)
-						: this.showStep('organization_creating_channel', group_prerequisites, step_org_signature);
+							? this.showStep('channel_update_policy', group_required, step_policy)
+							: this.showStep('organization_creating_channel', group_prerequisites, step_org_signature);
 				};
 				next = () => {
 					if (isComplete) {
@@ -956,10 +956,10 @@ class ChannelModal extends Component {
 					isChannel2_0
 						? this.showStep('endorsement_policy', group_advanced, step_endorsement_policy)
 						: isHigherCapabilityAvailable
-						? this.showStep('capabilities', group_advanced, step_capabilities)
-						: isChannelUpdate
-						? this.showStep('channel_update_policy', group_required, step_policy)
-						: this.showStep('organization_creating_channel', group_prerequisites, step_org_signature);
+							? this.showStep('capabilities', group_advanced, step_capabilities)
+							: isChannelUpdate
+								? this.showStep('channel_update_policy', group_required, step_policy)
+								: this.showStep('organization_creating_channel', group_prerequisites, step_org_signature);
 				next = () => {
 					if (canModifyConsenters) {
 						if (isChannelUpdate && !use_osnadmin) {
@@ -1025,8 +1025,8 @@ class ChannelModal extends Component {
 					isOrdererSignatureNeeded
 						? this.showStep('ordering_service_organization', group_advanced, step_orderer_signature)
 						: !canModifyConsenters
-						? this.showStep('block_cutting_params', group_advanced, step_block_parameters)
-						: this.showStep('consenter_set', group_advanced, step_consenters);
+							? this.showStep('block_cutting_params', group_advanced, step_block_parameters)
+							: this.showStep('consenter_set', group_advanced, step_consenters);
 				next = () => {
 					if (isComplete) {
 						this.showStep('review_channel_info', group_review, step_review);
@@ -1040,21 +1040,21 @@ class ChannelModal extends Component {
 				back = advanced
 					? () => this.showStep('channel_acls', group_advanced, step_acl)
 					: isChannelUpdate
-					? () => this.showStep('channel_update_policy', group_required, step_policy)
-					: () => {
+						? () => this.showStep('channel_update_policy', group_required, step_policy)
+						: () => {
 							if (use_osnadmin) {
 								this.showStep('channel_orderer_organizations', group_required, step_org_signature);
 							} else {
 								this.showStep('organization_creating_channel', group_prerequisites, step_org_signature);
 							}
-					  };
+						};
 				next = () => {
 					if (isComplete) {
 						use_osnadmin && !this.props.isChannelUpdate
 							? this.showStep('osn_join_channel', group_review, osnadmin_join_channel)
 							: this.props.isChannelUpdate
-							? this.updateChannel()
-							: this.createChannel();
+								? this.updateChannel()
+								: this.createChannel();
 					}
 				};
 				type = use_osnadmin ? '' : 'submit';
@@ -1322,12 +1322,12 @@ class ChannelModal extends Component {
 		}
 		let init_policy = this.props.nOutOf
 			? {
-					name: this.props.translate('channel_specific_policy', {
-						count: this.props.nOutOf.n,
-						total: this.props.nOutOf.outOf,
-					}),
-					id: this.props.nOutOf.n,
-			  }
+				name: this.props.translate('channel_specific_policy', {
+					count: this.props.nOutOf.n,
+					total: this.props.nOutOf.outOf,
+				}),
+				id: this.props.nOutOf.n,
+			}
 			: {};
 		this.props.updateState(SCOPE, {
 			memberCounts: specificPolicyDropdown,
@@ -2003,20 +2003,20 @@ class ChannelModal extends Component {
 		}
 		let selectedOrdererCapability =
 			this.props.selectedOrdererCapability &&
-			typeof this.props.selectedOrdererCapability === 'object' &&
-			this.props.selectedOrdererCapability.id !== 'use_default'
+				typeof this.props.selectedOrdererCapability === 'object' &&
+				this.props.selectedOrdererCapability.id !== 'use_default'
 				? this.props.selectedOrdererCapability.id
 				: null;
 		let selectedChannelCapability =
 			this.props.selectedChannelCapability &&
-			typeof this.props.selectedChannelCapability === 'object' &&
-			this.props.selectedChannelCapability.id !== 'use_default'
+				typeof this.props.selectedChannelCapability === 'object' &&
+				this.props.selectedChannelCapability.id !== 'use_default'
 				? this.props.selectedChannelCapability.id
 				: null;
 		let selectedApplicationCapability =
 			this.props.selectedApplicationCapability &&
-			typeof this.props.selectedApplicationCapability === 'object' &&
-			this.props.selectedApplicationCapability.id !== 'use_default'
+				typeof this.props.selectedApplicationCapability === 'object' &&
+				this.props.selectedApplicationCapability.id !== 'use_default'
 				? this.props.selectedApplicationCapability.id
 				: null;
 		let isAdmin = false;
@@ -2200,10 +2200,15 @@ class ChannelModal extends Component {
 					/>
 				)}
 				{viewing === 'channel_details' && (
-					<Details channelOrderer={channelOrderer} getOrderingServiceDetails={this.getOrderingServiceDetails} checkHealth={this.checkHealth} />
+					<Details channelOrderer={channelOrderer}
+						getOrderingServiceDetails={this.getOrderingServiceDetails}
+						checkHealth={this.checkHealth}
+					/>
 				)}
 				{viewing === 'channel_organizations' && (
-					<Organizations updatePolicyDropdown={this.updatePolicyDropdown} verifyACLPolicyValidity={this.verifyACLPolicyValidity} />
+					<Organizations updatePolicyDropdown={this.updatePolicyDropdown}
+						verifyACLPolicyValidity={this.verifyACLPolicyValidity}
+					/>
 				)}
 				{viewing === 'channel_update_policy' && <Policy />}
 				{viewing === 'channel_orderer_organizations' && <OrdererOrganizations />}
@@ -2232,7 +2237,9 @@ class ChannelModal extends Component {
 					/>
 				)}
 				{viewing === 'block_cutting_params' && <BlockCuttingParams existingBlockParams={existingBlockParams} />}
-				{viewing === 'orderer_admin_set' && <Admins isAdminsModified={isAdminsModified} existingOrdererOrgs={existingOrdererOrgs} />}
+				{viewing === 'orderer_admin_set' && <Admins isAdminsModified={isAdminsModified}
+					existingOrdererOrgs={existingOrdererOrgs}
+				/>}
 				{viewing === 'consenter_set' && (
 					<Consenters
 						existingConsenters={existingConsenters}
@@ -2241,7 +2248,9 @@ class ChannelModal extends Component {
 					/>
 				)}
 				{viewing === 'ordering_service_organization' && (
-					<OrdererSignature isOrdererSignatureNeeded={isOrdererSignatureNeeded} isCapabilityModified={isCapabilityModified} />
+					<OrdererSignature isOrdererSignatureNeeded={isOrdererSignatureNeeded}
+						isCapabilityModified={isCapabilityModified}
+					/>
 				)}
 				{viewing === 'channel_acls' && <ACL verifyACLPolicyValidity={this.verifyACLPolicyValidity} />}
 				{viewing === 'review_channel_info' && (
