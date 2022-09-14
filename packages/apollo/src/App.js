@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -208,7 +208,7 @@ class App extends Component {
 		}
 		let platform = '';
 		if (settings.INFRASTRUCTURE === 'openshift') {
-			platform = '-sw-253';			// doc link that software uses hardcoded.... 2.5.3
+			platform = '-sw-253'; // doc link that software uses hardcoded.... 2.5.3
 		}
 		const modifiedCrnString = settings.CRN_STRING && settings.CRN_STRING.indexOf('::') !== -1 && settings.CRN_STRING.slice(0, -1);
 		const doc_prefix = bmix_url + '/docs/services/blockchain' + platform + '?topic=blockchain' + platform + '-';
@@ -238,12 +238,6 @@ class App extends Component {
 
 		// use setPlatform() after setInfrastructure() to make sure "platform" is set correctly
 		// b/c we trust settings.INFRASTRUCTURE and don't trust FEATURE_FLAGS.infra_import_options.platform
-		if (settings.INFRASTRUCTURE) {
-			Helper.setPlatform(settings.INFRASTRUCTURE);
-			if (settings.INFRASTRUCTURE === 'ibmcloud' || settings.INFRASTRUCTURE === 'cloud') {
-				this.initializeSegment(segment_key);
-			}
-		}
 		if (features.cluster_data.type === null) {
 			let serviceInfo = null;
 			try {
@@ -381,9 +375,7 @@ class App extends Component {
 
 		Log.debug('Current auth scheme and user info:', this.state.authScheme.type, this.props.userInfo);
 		if (this.state.authScheme.type === 'couchdb' && this.props.userInfo && !this.props.userInfo.logged) {
-			return <Login
-				hostUrl={this.state.authScheme.host_url}
-			/>;
+			return <Login hostUrl={this.state.authScheme.host_url} />;
 		}
 
 		if (this.state.authScheme.type === 'couchdb' && this.props.userInfo && this.props.userInfo.logged && this.props.userInfo.password_type === 'default') {

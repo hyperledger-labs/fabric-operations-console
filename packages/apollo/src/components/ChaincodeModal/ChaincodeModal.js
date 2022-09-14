@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 import { ContentSwitcher, SkeletonText, Switch, TextArea, TextInput, Toggle } from 'carbon-components-react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -27,7 +27,6 @@ import { PeerRestApi } from '../../rest/PeerRestApi';
 import SignatureRestApi from '../../rest/SignatureRestApi';
 import StitchApi from '../../rest/StitchApi';
 import Helper from '../../utils/helper';
-import { triggers, triggerSurvey } from '../../utils/medallia';
 import MspHelper from '../../utils/msp';
 import FileUploader from '../FileUploader/FileUploader';
 import Form from '../Form/Form';
@@ -443,7 +442,7 @@ export class ChaincodeModal extends React.Component {
 		return verified;
 	}
 
-	onCommit = async() => {
+	onCommit = async () => {
 		let orderer = null;
 		for (let o = 0; o < this.props.channel.orderers.length && !orderer; o++) {
 			if (this.props.channel.orderers[o].msp_id === this.props.commit_org.msp_id) {
@@ -501,7 +500,6 @@ export class ChaincodeModal extends React.Component {
 		if (this.props.onComplete) {
 			this.props.onComplete();
 		}
-		triggerSurvey(triggers.INSTALL_OR_COMMIT_SMART_CONTRACT);
 		return;
 	};
 
@@ -564,7 +562,7 @@ export class ChaincodeModal extends React.Component {
 		return installed;
 	}
 
-	onApprove = async() => {
+	onApprove = async () => {
 		let package_id = this.props.selected.package_id;
 		let selected_peers = this.props.selected_peers;
 		const cc_pkg = await this.getSelectedChaincodePackage();
@@ -910,7 +908,7 @@ export class ChaincodeModal extends React.Component {
 										pkg: null,
 									});
 								}}
-								onChange={() => {}}
+								onChange={() => { }}
 								aria-label={this.props.translate('approve_with_install')}
 								labelA={this.props.translate('no')}
 								labelB={this.props.translate('yes')}
@@ -1009,7 +1007,7 @@ export class ChaincodeModal extends React.Component {
 								}
 								this.props.updateState(SCOPE, data);
 							}}
-							onChange={() => {}}
+							onChange={() => { }}
 							aria-label={this.props.translate('propose_install_all_peers')}
 							labelA={this.props.translate('no')}
 							labelB={this.props.translate('yes')}
@@ -1094,7 +1092,7 @@ export class ChaincodeModal extends React.Component {
 						: () => {
 							this.props.updateState(SCOPE, { show_commit: true });
 							return Promise.reject();
-						  };
+						};
 				}
 			}
 		}

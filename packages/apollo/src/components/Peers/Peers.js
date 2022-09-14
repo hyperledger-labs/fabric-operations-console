@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -29,7 +29,6 @@ import Logger from '../Log/Logger';
 import NodeStatus from '../../utils/status';
 import emptyPeerImage from '../../assets/images/empty_nodes.svg';
 import ItemTileLabels from '../ItemContainerTile/ItemTileLabels/ItemTileLabels';
-import { triggers, triggerSurvey } from '../../utils/medallia';
 import * as constants from '../../utils/constants';
 
 const SCOPE = 'peers';
@@ -67,7 +66,6 @@ class Peers extends Component {
 		this.props.updateState(SCOPE, { loading: true });
 		PeerRestApi.getPeers()
 			.then(peerList => {
-
 				// loop slowly on peer status forever to keep status icon up to date...
 				clearInterval(secondaryPeerStatusCheck);
 				secondaryPeerStatusCheck = setInterval(() => {
@@ -242,7 +240,6 @@ class Peers extends Component {
 		this.props.updateState(SCOPE, data);
 		NodeStatus.getStatus(newPeers, SCOPE, 'peerList');
 		this.props.clearNotifications(SCOPE + '_HELP');
-		triggerSurvey(triggers.CREATE_PEER);
 	};
 
 	getButtons() {

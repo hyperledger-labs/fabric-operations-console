@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -28,7 +28,6 @@ import Logger from '../Log/Logger';
 import NodeStatus from '../../utils/status';
 import emptyCAImage from '../../assets/images/empty_nodes.svg';
 import ItemTileLabels from '../ItemContainerTile/ItemTileLabels/ItemTileLabels';
-import { triggerSurvey, triggers } from '../../utils/medallia';
 import * as constants from '../../utils/constants';
 
 const SCOPE = 'cas';
@@ -57,7 +56,6 @@ export class CertificateAuthority extends Component {
 		this.props.updateState(SCOPE, { loading: true });
 		CertificateAuthorityRestApi.getCAs()
 			.then(caList => {
-
 				// loop slowly on ca status forever to keep status icon up to date...
 				clearInterval(secondaryCaStatusCheck);
 				secondaryCaStatusCheck = setInterval(() => {
@@ -131,7 +129,6 @@ export class CertificateAuthority extends Component {
 		this.props.updateState(SCOPE, { caList });
 		NodeStatus.getStatus(newCAs, SCOPE, 'caList');
 		this.props.clearNotifications('orderers_HELP');
-		triggerSurvey(triggers.CREATE_CA);
 	};
 
 	buildCustomTile(ca) {

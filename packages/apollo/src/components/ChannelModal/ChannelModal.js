@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 
 import _ from 'lodash';
 import parse from 'parse-duration';
@@ -47,7 +47,6 @@ import Logger from '../Log/Logger';
 import SidePanel from '../SidePanel/SidePanel';
 import Timeline from '../Timeline/Timeline';
 import ChaincodePolicy from './Wizard/ChaincodePolicy/ChaincodePolicy';
-import { triggers, triggerSurvey } from '../../utils/medallia';
 
 const acl_resources = require('../../utils/acl/resources.json');
 const bytes = require('bytes');
@@ -93,8 +92,8 @@ class ChannelModal extends Component {
 			submitting: false,
 			timelineSteps: this.timelineSteps,
 			selectedTimelineStep: {
-				currentStepIndex: 0,				// which step group to highlight
-				currentStepInsideOfGroupIndex: 0,	// which step in the group to highlight
+				currentStepIndex: 0, // which step group to highlight
+				currentStepInsideOfGroupIndex: 0, // which step in the group to highlight
 			},
 			viewing: viewing_step,
 			channelName: this.props.channelId ? this.props.channelId : '',
@@ -103,8 +102,8 @@ class ChannelModal extends Component {
 			selectedOrderer: _.size(this.props.channelOrderer) === 1 ? this.props.channelOrderer[0] : null,
 			orgs: [],
 			original_orgs: [],
-			ordering_orgs: [],									// osnadmin step - holds all orderer orgs
-			orderer_orgs: this.props.existingOrdererOrgs,		// legacy step - holds only administrator orderer orgs
+			ordering_orgs: [], // osnadmin step - holds all orderer orgs
+			orderer_orgs: this.props.existingOrdererOrgs, // legacy step - holds only administrator orderer orgs
 			msps: [],
 			selectedOrg: null,
 			memberCounts: [],
@@ -144,7 +143,7 @@ class ChannelModal extends Component {
 			availableAdmins: [],
 			invalid_consenter: false,
 			use_default_consenters: !isChannelUpdate,
-			use_osnadmin: use_osnadmin,				// true if ordering node has the osnadmin endpoint
+			use_osnadmin: use_osnadmin, // true if ordering node has the osnadmin endpoint
 			lifecycle_policy: {
 				type: 'MAJORITY',
 				members: [],
@@ -232,9 +231,9 @@ class ChannelModal extends Component {
 						{
 							label: 'prerequisites',
 							onClick: () => this.showStep('prerequisites', 0, 0),
-							isLink: true,					// "isLink" controls if the step is clickable
-							disabled: false,				// "disabled" controls the step's text opacity...
-							hidden: false,					// "hidden" controls if the step is displayed or not (use hideStepsInTimeline() to hide steps)
+							isLink: true, // "isLink" controls if the step is clickable
+							disabled: false, // "disabled" controls the step's text opacity...
+							hidden: false, // "hidden" controls if the step is displayed or not (use hideStepsInTimeline() to hide steps)
 						},
 					],
 				},
@@ -496,7 +495,7 @@ class ChannelModal extends Component {
 				});
 			});
 		});
-	}
+	};
 
 	showStep = (name, group, step) => {
 		this.props.updateState(SCOPE, {
@@ -614,12 +613,18 @@ class ChannelModal extends Component {
 			endorsement_policy,
 			genesis_block_doc,
 			use_osnadmin,
-			loadingConsenters
+			loadingConsenters,
 		} = this.props;
 		let updatedConsenterCount = this.consenterUpdateCount();
 		if (step === 'channel_details') {
-			complete = channelName && !channelNameError && !isOrdererUnavailable && !checkingOrdererStatus &&
-				selectedOrderer && selectedOrderer !== 'select_orderer' && !loadingConsenters;
+			complete =
+				channelName &&
+				!channelNameError &&
+				!isOrdererUnavailable &&
+				!checkingOrdererStatus &&
+				selectedOrderer &&
+				selectedOrderer !== 'select_orderer' &&
+				!loadingConsenters;
 		}
 		if (step === 'channel_organizations') {
 			complete = !noOperatorError && !duplicateMSPError && !missingDefinitionError && orgs && !orgs.find(org => org.msp === '');
@@ -680,31 +685,32 @@ class ChannelModal extends Component {
 				!orgs.find(org => org.msp === '') &&
 				customPolicy &&
 				customPolicy !== 'select_policy' &&
-				(use_osnadmin || (
-					!use_osnadmin && (
+				(use_osnadmin ||
+					(!use_osnadmin &&
 						selectedIdentity &&
 						selectedIdentity !== 'select_identity' &&
 						selectedIdentity.private_key &&
 						selectedChannelCreator &&
-						selectedChannelCreator !== 'selectedChannelCreator'
-					)
-				)) &&
+						selectedChannelCreator !== 'selectedChannelCreator')) &&
 				(!isChannelUpdate || updatedConsenterCount < 2) &&
 				(!isOrdererSignatureNeeded || (selectedOrdererMsp && selectedOrdererMsp !== 'selectedChannelCreator')) &&
 				_.size(aclErrors) === 0 &&
 				(!isChannelUpdate ||
-					(selectedOrdererCapability && selectedOrdererCapability !== 'use_default' &&
-						selectedChannelCapability && selectedChannelCapability !== 'use_default' &&
-						selectedApplicationCapability && selectedApplicationCapability !== 'use_default')
-				);
+					(selectedOrdererCapability &&
+						selectedOrdererCapability !== 'use_default' &&
+						selectedChannelCapability &&
+						selectedChannelCapability !== 'use_default' &&
+						selectedApplicationCapability &&
+						selectedApplicationCapability !== 'use_default'));
 		}
 
 		if (step === 'channel_orderer_organizations') {
-			complete = !noAdminError && !duplicateMSPError && !noOrderersError && !missingDefinitionError && ordering_orgs && !ordering_orgs.find(org => org.msp === '');
+			complete =
+				!noAdminError && !duplicateMSPError && !noOrderersError && !missingDefinitionError && ordering_orgs && !ordering_orgs.find(org => org.msp === '');
 		}
 
 		if (step === 'osn_join_channel') {
-			complete = genesis_block_doc ? true : false;		// needs the block data to exist
+			complete = genesis_block_doc ? true : false; // needs the block data to exist
 		}
 
 		if (complete && !this.completedSteps.includes(step)) {
@@ -991,7 +997,6 @@ class ChannelModal extends Component {
 						isOrdererSignatureNeeded
 							? this.showStep('ordering_service_organization', group_advanced, step_orderer_signature)
 							: this.showStep('channel_acls', group_advanced, step_acl);
-
 					}
 				};
 				break;
@@ -1045,9 +1050,11 @@ class ChannelModal extends Component {
 						};
 				next = () => {
 					if (isComplete) {
-						(use_osnadmin && !this.props.isChannelUpdate)
+						use_osnadmin && !this.props.isChannelUpdate
 							? this.showStep('osn_join_channel', group_review, osnadmin_join_channel)
-							: (this.props.isChannelUpdate ? this.updateChannel() : this.createChannel());
+							: this.props.isChannelUpdate
+								? this.updateChannel()
+								: this.createChannel();
 					}
 				};
 				type = use_osnadmin ? '' : 'submit';
@@ -1119,7 +1126,7 @@ class ChannelModal extends Component {
 			group.forEach(subGroup => {
 				subGroup.groupSteps.forEach(step => {
 					if (removeSteps.includes(step.label)) {
-						step.hidden = true;									// step won't show up if "hidden" is true
+						step.hidden = true; // step won't show up if "hidden" is true
 					}
 				});
 			});
@@ -1138,7 +1145,7 @@ class ChannelModal extends Component {
 			group.forEach(subGroup => {
 				subGroup.groupSteps.forEach(step => {
 					if (showSteps.includes(step.label)) {
-						step.hidden = false;								// step won't show up if "hidden" is true
+						step.hidden = false; // step won't show up if "hidden" is true
 						if (typeof enable === 'boolean') {
 							step.enabled = enable;
 						}
@@ -1160,7 +1167,6 @@ class ChannelModal extends Component {
 		this.timelineSteps.forEach(group => {
 			group.forEach(subGroup => {
 				subGroup.groupSteps.forEach(step => {
-
 					// these steps should not be clickable
 					if (!keepSteps.includes(step.label)) {
 						if (step.isLink !== false || step.disabled !== true) {
@@ -1198,7 +1204,7 @@ class ChannelModal extends Component {
 		this.timelineSteps.forEach(group => {
 			group.forEach(subGroup => {
 				subGroup.groupSteps.forEach(step => {
-					step.label = step._label;			// reset each step to its defaults
+					step.label = step._label; // reset each step to its defaults
 					step.isLink = step._isLink;
 					step.disabled = step._disabled;
 					step.hidden = step._hidden;
@@ -1408,7 +1414,7 @@ class ChannelModal extends Component {
 				type,
 				members: type === 'SPECIFIC' ? [] : members,
 				n: type === 'SPECIFIC' ? '' : n,
-			}
+			},
 		});
 	};
 
@@ -1440,12 +1446,12 @@ class ChannelModal extends Component {
 
 				// [PATH 1] - using OSN Admin features in create channel wizard
 				if (this.props.osnadmin_feats_enabled && orderer && orderer.osnadmin_url && orderer.systemless) {
-					this.props.updateState(SCOPE, { use_osnadmin: true });				// change the menu options
+					this.props.updateState(SCOPE, { use_osnadmin: true }); // change the menu options
 					this.showStepsInTimeline(['osn_join_channel', 'channel_orderer_organizations']);
 					if (this.props.isChannelUpdate) {
-						this.hideStepsInTimeline(['organization_creating_channel']);	// but hide these
+						this.hideStepsInTimeline(['organization_creating_channel']); // but hide these
 					} else {
-						this.hideStepsInTimeline(['ordering_service_organization', 'organization_creating_channel']);	// but hide these
+						this.hideStepsInTimeline(['ordering_service_organization', 'organization_creating_channel']); // but hide these
 					}
 
 					// get all ordering groups
@@ -1453,7 +1459,7 @@ class ChannelModal extends Component {
 						this.props.updateState(SCOPE, {
 							raftNodes: possible_consenters,
 							loadingConsenters: false,
-							loading: false
+							loading: false,
 						});
 					});
 				}
@@ -1462,7 +1468,7 @@ class ChannelModal extends Component {
 				else {
 					this.props.updateState(SCOPE, { use_osnadmin: false });
 					this.showStepsInTimeline(['ordering_service_organization', 'organization_creating_channel']);
-					this.hideStepsInTimeline(['osn_join_channel', 'channel_orderer_organizations']);	// but hide these
+					this.hideStepsInTimeline(['osn_join_channel', 'channel_orderer_organizations']); // but hide these
 
 					if (getCertsFromDeployer) {
 						NodeRestApi.getTLSSignedCertFromDeployer(orderer.raft)
@@ -1511,17 +1517,18 @@ class ChannelModal extends Component {
 
 		for (let i in orderers) {
 			const node = orderers[i];
-			let urlObj = (typeof node.backend_addr === 'string') ? url.parse(node.backend_addr.toLowerCase()) : null;
+			let urlObj = typeof node.backend_addr === 'string' ? url.parse(node.backend_addr.toLowerCase()) : null;
 			const tls_cert = _.get(node, 'msp.component.tls_cert');
 
 			// consenters must have a tls certificate and host/port data
 			if (urlObj && urlObj.hostname && urlObj.port && tls_cert) {
-				possible_consenters.push({				// leading underscores denote field is not used by fabric
+				possible_consenters.push({
+					// leading underscores denote field is not used by fabric
 					name: node.display_name,
 					msp_id: node.msp_id,
-					_consenter: false,					// defaults false, flips to true once selected
-					_cluster_id: node.cluster_id,		// pass data for the OSNJoin panel
-					_cluster_name: node.cluster_name,	// pass data for the OSNJoin panel
+					_consenter: false, // defaults false, flips to true once selected
+					_cluster_id: node.cluster_id, // pass data for the OSNJoin panel
+					_cluster_name: node.cluster_name, // pass data for the OSNJoin panel
 					_systemless: node.systemless,
 					_id: node.id,
 					host: urlObj.hostname,
@@ -1554,10 +1561,13 @@ class ChannelModal extends Component {
 			let availableOrdererCapabilities = this.props.capabilities ? Helper.getFormattedCapabilities(this.props.capabilities.orderer) : [];
 			let availableApplicationCapabilities = this.props.capabilities ? Helper.getFormattedCapabilities(this.props.capabilities.application) : [];
 			if (this.props.channelId && this.props.existingCapabilities) {
-
 				// When editing, allow capabilities that are higher than current capability
-				let currentChannelCapability = this.props.existingCapabilities.channel ? semver.coerce(this.props.existingCapabilities.channel.replace(/_/g, '.')).version : null;
-				let currentOrdererCapability = this.props.existingCapabilities.orderer ? semver.coerce(this.props.existingCapabilities.orderer.replace(/_/g, '.')).version : null;
+				let currentChannelCapability = this.props.existingCapabilities.channel
+					? semver.coerce(this.props.existingCapabilities.channel.replace(/_/g, '.')).version
+					: null;
+				let currentOrdererCapability = this.props.existingCapabilities.orderer
+					? semver.coerce(this.props.existingCapabilities.orderer.replace(/_/g, '.')).version
+					: null;
 				let currentApplicationCapability = this.props.existingCapabilities.application
 					? semver.coerce(this.props.existingCapabilities.application.replace(/_/g, '.')).version
 					: null;
@@ -1609,7 +1619,8 @@ class ChannelModal extends Component {
 
 	canModifyConsenters = () => {
 		const { existingCapabilities, scaleRaftNodesEnabled, isChannelUpdate, use_osnadmin } = this.props;
-		if (use_osnadmin) {				// whenever we are using the osnadmin feature the consenter set can be changed
+		if (use_osnadmin) {
+			// whenever we are using the osnadmin feature the consenter set can be changed
 			return true;
 		}
 		const ordererCapability =
@@ -1735,7 +1746,7 @@ class ChannelModal extends Component {
 	};
 
 	// get the default fabric capability string
-	getDefaultCap = (type) => {
+	getDefaultCap = type => {
 		if (type === 'application') {
 			return this.props.use_osnadmin ? constants.DEFAULT_APPLICATION_CAPABILITY_OSNADMIN : constants.DEFAULT_APPLICATION_CAPABILITY;
 		}
@@ -1746,7 +1757,7 @@ class ChannelModal extends Component {
 			return this.props.use_osnadmin ? constants.DEFAULT_CHANNEL_CAPABILITY_OSNADMIN : constants.DEFAULT_CHANNEL_CAPABILITY;
 		}
 		return null;
-	}
+	};
 
 	// format input data for the create-channel api
 	// (general format, works on osnadmin and legacy create channel)
@@ -1826,8 +1837,8 @@ class ChannelModal extends Component {
 			raft_params: raft_params,
 			consenters: this.decideConsenters(),
 			application_capabilities: this.setCapValue(this.props.selectedApplicationCapability, 'application') || [constants.DEFAULT_APPLICATION_CAPABILITY],
-			orderer_capabilities: this.setCapValue(this.props.selectedOrdererCapability, 'orderer'),					// this is sometimes null
-			channel_capabilities: this.setCapValue(this.props.selectedChannelCapability, 'channel'),					// this is sometimes null
+			orderer_capabilities: this.setCapValue(this.props.selectedOrdererCapability, 'orderer'), // this is sometimes null
+			channel_capabilities: this.setCapValue(this.props.selectedChannelCapability, 'channel'), // this is sometimes null
 		};
 
 		if (options.application_capabilities && options.application_capabilities.includes('V2_0')) {
@@ -1836,24 +1847,23 @@ class ChannelModal extends Component {
 		}
 
 		return options;
-	}
+	};
 
 	// only set the capability if using osnadmin OR if a non-default cap was chosen, else return null.
 	// - its important to return null (and not the default) b/c otherwise we will think an orderer-signature is needed downstream, even on a legacy create-channel-call
 	//	 which is wrong and leads to errors.
 	setCapValue = (selectedCapField, defaultCapFieldName) => {
 		// set this variable if one was selected, if using a default set null
-		let selectedCapability =
-			(selectedCapField && typeof selectedCapField === 'object' && selectedCapField.id !== 'use_default') ? selectedCapField.id : null;
+		let selectedCapability = selectedCapField && typeof selectedCapField === 'object' && selectedCapField.id !== 'use_default' ? selectedCapField.id : null;
 
 		if (selectedCapability) {
-			return [selectedCapability];						// return the selected capability (as an array) iff we have a selected one
+			return [selectedCapability]; // return the selected capability (as an array) iff we have a selected one
 		} else if (this.props.use_osnadmin) {
-			return [this.getDefaultCap(defaultCapFieldName)];	// return the default capability (as array) iff using the osnadmin feature
+			return [this.getDefaultCap(defaultCapFieldName)]; // return the default capability (as array) iff using the osnadmin feature
 		} else {
 			return null;
 		}
-	}
+	};
 
 	// runs the legacy create channel api
 	createChannel = () => {
@@ -1884,7 +1894,6 @@ class ChannelModal extends Component {
 				});
 				this.sidePanel.closeSidePanel();
 				this.props.onComplete(this.props.channelName, resp ? resp.isOrdererSignatureNeeded : null);
-				triggerSurvey(triggers.CREATE_CHANNEL);
 			})
 			.catch(error => {
 				Log.error(error);
@@ -1913,7 +1922,7 @@ class ChannelModal extends Component {
 					},
 				});
 			});
-	}
+	};
 
 	updateChannel = async () => {
 		let existing_msps = {};
@@ -2068,7 +2077,6 @@ class ChannelModal extends Component {
 				Log.debug('Channel was updated successfully: ', resp);
 				this.sidePanel.closeSidePanel();
 				this.props.onComplete(this.props.channelName);
-				triggerSurvey(triggers.CREATE_CHANNEL);
 			})
 			.catch(error => {
 				Log.error(error);
@@ -2113,7 +2121,6 @@ class ChannelModal extends Component {
 				// use the selected consenters if there are any, when using osnadmin
 				return this.props.consenters;
 			} else {
-
 				// select all orderers that are owned by any selected orderer orgs, when using osnadmin
 				const defaults = this.props.raftNodes.filter(x => {
 					let found = this.props.ordering_orgs.find(y => x.msp_id === y.msp_id);
@@ -2122,13 +2129,13 @@ class ChannelModal extends Component {
 
 				const default_arr = [];
 				for (const msp_id in defaults) {
-					defaults[msp_id]._consenter = true;				// all default nodes are consenters
+					defaults[msp_id]._consenter = true; // all default nodes are consenters
 					default_arr.push(defaults[msp_id]);
 				}
 				return default_arr;
 			}
 		}
-	}
+	};
 
 	buildChaincodePolicyOptions = (options, policy) => {
 		let type = this.props[policy].type;
@@ -2164,12 +2171,13 @@ class ChannelModal extends Component {
 	// are we going to sign this tx with an orderer org signature?
 	calcIfOrdererSignatureNeeded = () => {
 		return (
-			this.isAnyCapabilityModified() ||
-			this.isAnyBlockParamModified() ||
-			this.isConsenterSetModified() ||
-			this.isAdminsModified() ||
-			this.isAnyRaftParamModified()
-		) && (!this.props.use_osnadmin || this.props.isChannelUpdate);		// when using the osnadmin endpoints we don't need a classical orderer signature
+			(this.isAnyCapabilityModified() ||
+				this.isAnyBlockParamModified() ||
+				this.isConsenterSetModified() ||
+				this.isAdminsModified() ||
+				this.isAnyRaftParamModified()) &&
+			(!this.props.use_osnadmin || this.props.isChannelUpdate)
+		); // when using the osnadmin endpoints we don't need a classical orderer signature
 	};
 
 	// render this step's content (only 1 step)
@@ -2203,14 +2211,15 @@ class ChannelModal extends Component {
 					/>
 				)}
 				{viewing === 'channel_update_policy' && <Policy />}
-				{viewing === 'channel_orderer_organizations' && (
-					<OrdererOrganizations />
-				)}
+				{viewing === 'channel_orderer_organizations' && <OrdererOrganizations />}
 				{(viewing === 'organization_creating_channel' || viewing === 'organization_updating_channel') && <OrgSignature editLoading={this.props.editLoading} />}
-				{viewing === 'capabilities' && <Capabilities existingCapabilities={existingCapabilities}
-					channelPeers={this.props.channelPeers}
-					isOrdererSignatureNeeded={isOrdererSignatureNeeded}
-				/>}
+				{viewing === 'capabilities' && (
+					<Capabilities
+						existingCapabilities={existingCapabilities}
+						channelPeers={this.props.channelPeers}
+						isOrdererSignatureNeeded={isOrdererSignatureNeeded}
+					/>
+				)}
 				{viewing === 'lifecycle_policy' && (
 					<ChaincodePolicy
 						policy={'lifecycle_policy'}
@@ -2255,7 +2264,8 @@ class ChannelModal extends Component {
 					/>
 				)}
 				{viewing === 'osn_join_channel' && (
-					<OSNJoin buildCreateChannelOpts={this.buildCreateChannelOpts}
+					<OSNJoin
+						buildCreateChannelOpts={this.buildCreateChannelOpts}
 						b_genesis_block={this.props.b_genesis_block}
 						genesis_block_doc={this.props.genesis_block_doc}
 					/>
