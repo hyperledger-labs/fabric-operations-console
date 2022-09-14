@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 import { ToggleSmall } from 'carbon-components-react';
 import ToggleSmallSkeleton from 'carbon-components-react/lib/components/ToggleSmall/ToggleSmall.Skeleton';
 import _ from 'lodash';
@@ -236,7 +236,12 @@ class JoinChannelModal extends React.Component {
 		} catch (e) {
 			Log.error('An error occurred getting config', e);
 			this.props.updateState(SCOPE, { submitting: false });
-			let title = e.message_key ? e.message_key : null;
+			let title = null;
+			if (e.message_key) {
+				title = e.message_key;
+			} else if (e.grpc_resp && e.grpc_resp.status === 404) {
+				title = 'error_join_channel_not_found';
+			}
 			return Promise.reject({
 				details: e,
 				title,
@@ -632,7 +637,7 @@ class JoinChannelModal extends React.Component {
 										onToggle={() => {
 											this.toggleAnchorPeer();
 										}}
-										onChange={() => {}}
+										onChange={() => { }}
 										aria-label={translate('make_anchor_peers')}
 										labelA={translate('no')}
 										labelB={translate('yes')}
@@ -670,7 +675,7 @@ class JoinChannelModal extends React.Component {
 										onToggle={() => {
 											this.toggleAnchorPeer();
 										}}
-										onChange={() => {}}
+										onChange={() => { }}
 										aria-label={translate('make_anchor_peers')}
 										labelA={translate('no')}
 										labelB={translate('yes')}
@@ -741,7 +746,7 @@ class JoinChannelModal extends React.Component {
 						{
 							name: 'channel',
 							specialRules: Helper.SPECIAL_RULES_CHANNEL_NAME,
-							required: true
+							required: true,
 						},
 					]}
 					onChange={this.onChannelChange}
