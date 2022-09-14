@@ -216,7 +216,12 @@ class TitleBar extends Component {
 				>
 					<Header aria-label={translate(productLabel)}>
 						<SkipToContent />
-						<HeaderName prefix="" onClick={this.goHome} onKeyPress={event => this.onKeyPressGoHome(event)} className="ibp-carbon-product-name" tabIndex="0">
+						<HeaderName prefix=""
+							onClick={this.goHome}
+							onKeyPress={event => this.onKeyPressGoHome(event)}
+							className="ibp-carbon-product-name"
+							tabIndex="0"
+						>
 							{translate(productLabel)}
 						</HeaderName>
 						{this.props.logged && showHeaderButtons && (
@@ -251,7 +256,9 @@ class TitleBar extends Component {
 						)}
 						{showHeaderButtons && (
 							<HeaderGlobalBar>
-								<HeaderGlobalAction aria-label={translate('help')} onClick={() => this.props.history.push('/support')}>
+								<HeaderGlobalAction aria-label={translate('help')}
+									onClick={() => this.props.history.push('/support')}
+								>
 									<Help20 />
 								</HeaderGlobalAction>
 								{this.props.logged && (
@@ -263,7 +270,9 @@ class TitleBar extends Component {
 									>
 										{needsAttention ? (
 											<div className="ibp-pending-notifications-container">
-												<NotificationFilled20 className="ibp-signature-header-icon" title={translate('notifications')} />
+												<NotificationFilled20 className="ibp-signature-header-icon"
+													title={translate('notifications')}
+												/>
 												<Tag
 													className="ibp-needs-attention-notification-icon"
 													title={translate('notification_count')}
@@ -276,7 +285,10 @@ class TitleBar extends Component {
 												</Tag>
 											</div>
 										) : (
-											<SVGs type="notification" extendClass={{ 'ibp-signature-header-icon': true }} title={translate('notifications')} />
+											<SVGs type="notification"
+												extendClass={{ 'ibp-signature-header-icon': true }}
+												title={translate('notifications')}
+											/>
 										)}
 									</HeaderGlobalAction>
 								)}
@@ -298,15 +310,28 @@ class TitleBar extends Component {
 						)}
 					</Header>
 					{this.props.logged && showHeaderButtons && this.props.showSignatureCollection && (
-						<SignatureCollection onWelcomeClose={this.closeWelcomeBanner} onClose={this.closeSignatureCollections} showRequests />
+						<SignatureCollection onWelcomeClose={this.closeWelcomeBanner}
+							onClose={this.closeSignatureCollections}
+							showRequests
+						/>
 					)}
 					{this.props.logged && showHeaderButtons && this.props.details && !this.props.details.ccd && (
-						<SignatureDetailModal request={this.props.details} msps={this.props.msps} closed={this.hideDetails} onComplete={this.onComplete} />
+						<SignatureDetailModal request={this.props.details}
+							msps={this.props.msps}
+							closed={this.hideDetails}
+							onComplete={this.onComplete}
+						/>
 					)}
 					{this.props.logged && showHeaderButtons && this.props.details && this.props.details.ccd && (
-						<ChaincodeModal channelId={this.props.details.channel} ccd={this.props.details.ccd} onClose={this.hideDetails} onComplete={this.onComplete} />
+						<ChaincodeModal channelId={this.props.details.channel}
+							ccd={this.props.details.ccd}
+							onClose={this.hideDetails}
+							onComplete={this.onComplete}
+						/>
 					)}
-					{this.props.showWelcomeBanner && <WelcomeBannerContent onClose={this.closeWelcomeBanner} closeWelcome={this.props.closeWelcome} />}
+					{this.props.showWelcomeBanner && <WelcomeBannerContent onClose={this.closeWelcomeBanner}
+						closeWelcome={this.props.closeWelcome}
+					/>}
 					{this.props.showUserInfo && (
 						<UserProfile
 							closeUserProfile={this.closeUserProfile}
@@ -319,14 +344,13 @@ class TitleBar extends Component {
 						/>
 					)}
 				</div>
-				{this.props.showMigrationNotification && (
+				{this.props.logged && showHeaderButtons && this.props.showMigrationNotification && (
 					<div className="ibp-migration-banner-content">
 						<InlineNotification
 							kind="info"
 							hideCloseButton
 							actions={<NotificationActionButton onClick={this.openMigrationDetails}>Migrate</NotificationActionButton>}
-							subtitle="Migrate to IBP Support for Hyperledger Fabric"
-							title="Migration Available"
+							title={translate('migration_title')}
 						/>
 					</div>
 				)}
