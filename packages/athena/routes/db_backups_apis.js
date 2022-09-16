@@ -46,7 +46,7 @@ module.exports = function (logger, ev, t) {
 	}
 
 	//-----------------------------------------------------------------------------
-	//  Start a database restore by sending the backup data
+	// Start a database restore by sending the backup data
 	//-----------------------------------------------------------------------------
 	app.put('/api/v[123]/backups', t.middleware.verify_settings_action_session, (req, res) => {
 		restore(req, res);

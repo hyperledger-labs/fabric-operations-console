@@ -272,5 +272,7 @@
 		}
 	},
 	"trust_unknown_certs": false,
-	"type": "settings"
+	"type": "settings",
+	"migrated_console_url": null,
+	"migration_link_apikey": "open"
 }
