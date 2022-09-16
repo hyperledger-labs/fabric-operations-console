@@ -352,6 +352,9 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 					FAB_UP_LOCK_NAME: 'auto_fabric_upgrade',
 					PASS_IS_CUSTOM: 'custom',
 					PASS_IS_DEFAULT: 'default',
+					STATUS_IN_PROGRESS: 'in-progress',
+					STATUS_DONE: 'done',
+					WALLET_MIGRATION: 'wallet_migration',
 				};
 
 				// manager - must match what is defined in RMC (this section ONLY applies to stand alone)

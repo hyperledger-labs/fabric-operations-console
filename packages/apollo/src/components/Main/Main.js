@@ -166,6 +166,7 @@ class Main extends Component {
 										path="/orderer/:ordererId/:nodeId"
 										component={OrdererDetails}
 									/>
+									{/* /debug is a debugging route that exposes a link in the left pane to download the config block of the channel */ }
 									<Route exact
 										path="/debug/orderer/:ordererId/:channelId?"
 										component={OrdererDetails}
@@ -185,6 +186,7 @@ class Main extends Component {
 										component={ChannelDetails}
 										exact
 									/>
+									{/* /debug is a debugging route that exposes a link in the left pane to download the config block of the channel */ }
 									<Route path="/debug/peer/:peerId/channel/:channelId"
 										component={ChannelDetails}
 										exact
