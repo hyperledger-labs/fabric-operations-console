@@ -48,7 +48,7 @@ RUN chown -R 1001:0 .
 RUN ls -ld .
 USER 1001
 RUN cp $STITCH_DIR/dist/* $APOLLO_DIR/public/
-RUN npm ci && npm run build
+RUN npm ci --legacy-peer-deps && npm run build
 
 # look at apollo output...
 RUN ls -l $APOLLO_DIR/build
