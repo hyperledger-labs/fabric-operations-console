@@ -1100,8 +1100,8 @@ class ChannelDetails extends Component {
 		const groups = [
 			{
 				label: 'orderer',
-				value: this.props.ordererList && this.props.ordererList.length ? this.props.ordererList[0].cluster_name : '',
-				loadingData: this.props.ordererList && !this.props.ordererList.length,
+				value: this.props.ordererList && this.props.ordererList.length ? this.props.ordererList[0].cluster_name : 'Not Found / Deleted',
+				loadingData: !this.props.ordererList.length && this.props.ordererList ?  !this.props.capabilities : false,
 			},
 			{
 				label: 'app_capability_version',
