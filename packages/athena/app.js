@@ -427,6 +427,7 @@ function setup_routes_and_start() {
 	tools.lock_lib = require('./libs/lochness.js')(logger, ev, tools);
 	tools.lockout = require('./libs/lockout.js')(logger, ev, tools);
 	tools.config_blocks_lib = require('./libs/config_blocks_lib.js')(logger, ev, tools);
+	tools.migration_lib = require('./libs/migration_lib.js')(logger, ev, tools);
 
 	update_settings_doc(() => {
 		setup_pillow_talk();
@@ -492,6 +493,7 @@ function setup_routes_and_start() {
 	app.use('/', require('./routes/performance_apis.js')(logger, ev, tools));
 	app.use('/', require('./routes/db_backups_apis.js')(logger, ev, tools));
 	app.use('/', require('./routes/config_block_apis.js')(logger, ev, tools));
+	app.use('/', require('./routes/migration_apis.js')(logger, ev, tools));
 
 	// setup http metrics and build metrics route
 	tools.http_metrics.set_wildcard_routes(build_wildcard_routes(app));

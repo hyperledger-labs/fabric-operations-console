@@ -759,7 +759,7 @@ function decode_payload_data(b_data: any, type: number) {
 			return transaction;
 		}
 	} else {									// ?
-		logger.error('[stitch] unknown payload type:', type);
+		logger.error('[stitch] cannot decode, this block contains an unsupported payload type:', type);
 	}
 
 	return ret;
