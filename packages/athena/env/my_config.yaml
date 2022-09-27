@@ -4,7 +4,10 @@ app_port: 4000
 auth_scheme: couchdb
 initial_admin: admin
 configtxlator_url_original: http://localhost:7059
-host_url: http://localhost:4002
-proxy_tls_ws_url: http://localhost:4000
+host_url: http://localhost:4000
 default_user_password_initial: password
 cookie_name: com.ibm.cloud.console.blockchain.optools.dev
+feature_flags:
+    read_only_enabled: false
+    import_only_enabled: false
+    osnadmin_feats_enabled: true
