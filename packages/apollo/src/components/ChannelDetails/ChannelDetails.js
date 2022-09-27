@@ -97,6 +97,7 @@ class ChannelDetails extends Component {
 			deleteConsenter: null,
 			updateConsenter: null,
 			ordererMSPs: [],
+			ordererCheck: true,
 		});
 		this.capabilities = {};
 		this.consenters = [];
@@ -418,6 +419,12 @@ class ChannelDetails extends Component {
 							});
 							this.allOrderers = orderers;
 							this.consenters = l_consenters;
+							if (this.props.ordererList.length < 1)
+							{
+								this.props.updateState(SCOPE, {
+									ordererCheck: false,
+								});
+							}
 							return isTLSCertMismatchFound;
 						})
 						.then(isTLSCertMismatchFound => {
@@ -1100,8 +1107,8 @@ class ChannelDetails extends Component {
 		const groups = [
 			{
 				label: 'orderer',
-				value: this.props.ordererList && this.props.ordererList.length ? this.props.ordererList[0].cluster_name : '',
-				loadingData: this.props.ordererList && !this.props.ordererList.length,
+				value: this.props.ordererList && this.props.ordererList.length ? this.props.ordererList[0].cluster_name : 'Not Found / Deleted',
+				loadingData: this.props.ordererCheck && !this.props.ordererList.length,
 			},
 			{
 				label: 'app_capability_version',
@@ -1362,6 +1369,7 @@ const dataProps = {
 	editLoading: PropTypes.bool,
 	deleteConsenter: PropTypes.object,
 	updateConsenter: PropTypes.object,
+	ordererCheck: PropTypes.bool,
 };
 
 ChannelDetails.propTypes = {
