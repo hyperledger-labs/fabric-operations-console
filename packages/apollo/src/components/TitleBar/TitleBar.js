@@ -330,7 +330,6 @@ const dataProps = {
 	showAnnouncement: PropTypes.bool,
 	showAnnouncementButton: PropTypes.bool,
 	closeAnnouncement: PropTypes.bool,
-	showMigrationNotification: PropTypes.bool,
 	showSignatureCollection: PropTypes.bool,
 	closeWelcome: PropTypes.bool,
 	details: PropTypes.object,
