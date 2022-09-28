@@ -186,7 +186,6 @@ class App extends Component {
 		if (!log_level) {
 			log_level = 'warn';
 		}
-		let segment_key = 'non-prod'; // non-prod
 		Log.setLogLevel(log_level);
 		Log.info('Current debug level: ' + Log.getLogLevel());
 		// Log.debug('Application settings: ', settings);
@@ -198,26 +197,22 @@ class App extends Component {
 				bmix_url = 'https://test.cloud.ibm.com';
 				break;
 			case 'bluemix':
-				if (crn.service_name === 'blockchain') {
-					segment_key = 'prod'; //prod
-				}
 				bmix_url = 'https://cloud.ibm.com';
 				break;
 			default:
 				break;
 		}
-		let platform = '';
+		let docPrefix = 'https://www.ibm.com/docs/en/blockchain-platform/2.5.3';
 		if (settings.INFRASTRUCTURE === 'openshift') {
-			platform = '-sw-253'; // doc link that software uses hardcoded.... 2.5.3
+			docPrefix = 'https://www.ibm.com/docs/en/hlf-support/1.0.0';
 		}
 		const modifiedCrnString = settings.CRN_STRING && settings.CRN_STRING.indexOf('::') !== -1 && settings.CRN_STRING.slice(0, -1);
-		const doc_prefix = bmix_url + '/docs/services/blockchain' + platform + '?topic=blockchain' + platform + '-';
 		let features = {
 			feature_flags: settings.FEATURE_FLAGS,
 			CRN: crn,
 			crn_string: modifiedCrnString,
 			bmixUrl: bmix_url,
-			docPrefix: doc_prefix,
+			docPrefix: docPrefix,
 			cluster_data: settings.CLUSTER_DATA,
 			host_url: settings.HOST_URL,
 			version: settings.VERSION,
