@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { InlineNotification } from 'carbon-components-react';
+import { InlineNotification, NotificationActionButton } from 'carbon-components-react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { updateState } from '../../redux/commonActions';
 import { NodeRestApi } from '../../rest/NodeRestApi';
+import { MigrationApi } from '../../rest/MigrationApi';
 import ServiceInstanceRestApi from '../../rest/ServiceInstanceApi';
 import Helper from '../../utils/helper';
 import { getFromStorage, removeFromStorage, setInStorage } from '../../utils/localStorage';
@@ -42,6 +44,10 @@ export class PageHeader extends Component {
 			await this.displayAnnouncements();
 		}
 	}
+
+	openMigrationDetails = () => {
+		this.props.history.push('/migration');
+	};
 
 	async displayClusterWarning() {
 		if (!this.props.supportedVersion) return false;
@@ -75,6 +81,21 @@ export class PageHeader extends Component {
 		}
 		return isClusterWarning;
 	}
+
+	async displayMigrationWarning() {
+		let isMigrationInfo = false;
+		try {
+			// Check the response.migration_status
+			const migrationStatusResp = await MigrationApi.getStatus();
+			// If its null or in-progress, then show Migration Notification
+			if (migrationStatusResp.migration_status === 'null' || migrationStatusResp.migration_status === 'in-progress') {
+				isMigrationInfo = true;
+			}
+		} catch (e) {
+			console.log('Announcement Error displayMigrationWarning', e);
+		}
+		return isMigrationInfo;
+	};
 
 	async displayCertWarning() {
 		let certs = [];
@@ -145,8 +166,9 @@ export class PageHeader extends Component {
 	async displayAnnouncements() {
 		let isClusterWarning = await this.displayClusterWarning();
 		let isCertWarning = await this.displayCertWarning();
+		let isMigrationInfo = await this.displayMigrationWarning();
 		let stateUpdate = {};
-		if (isClusterWarning || isCertWarning) {
+		if (isClusterWarning || isCertWarning || isMigrationInfo) {
 			const showAnnouncementFlag = getFromStorage('showAnnouncement');
 			if (!showAnnouncementFlag || showAnnouncementFlag === null) {
 				stateUpdate = {
@@ -168,6 +190,7 @@ export class PageHeader extends Component {
 		}
 		stateUpdate.isClusterWarning = isClusterWarning;
 		stateUpdate.isCertWarning = isCertWarning;
+		stateUpdate.isMigrationInfo = isMigrationInfo;
 		this.props.updateState(SCOPE, stateUpdate);
 	}
 
@@ -265,7 +288,7 @@ export class PageHeader extends Component {
 
 		// sort by expiring first
 		if (parsed_certs.length > 0) {
-			parsed_certs.sort(function(a, b) {
+			parsed_certs.sort(function (a, b) {
 				return a.not_after_ts - b.not_after_ts;
 			});
 		}
@@ -324,6 +347,14 @@ export class PageHeader extends Component {
 						}}
 					/>
 				)}
+				{this.props.showAnnouncement && this.props.isMigrationInfo && (
+					<InlineNotification
+						kind="info"
+						hideCloseButton
+						actions={<NotificationActionButton onClick={this.openMigrationDetails}>Migrate</NotificationActionButton>}
+						title={translate('migration_title')}
+					/>
+				)}
 				{this.props.showCertNotice && created_parsed_certs.length > 0 && (
 					<InlineNotification
 						kind="warning"
@@ -379,6 +410,7 @@ const dataProps = {
 	showAnnouncementButton: PropTypes.bool,
 	isClusterWarning: PropTypes.bool,
 	isCertWarning: PropTypes.bool,
+	isMigrationInfo: PropTypes.bool,
 	headerTooltip: PropTypes.string,
 	staticHeader: PropTypes.bool,
 	subtext: PropTypes.string,
@@ -403,4 +435,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(PageHeader));
+)(withRouter(withLocalize(PageHeader)));

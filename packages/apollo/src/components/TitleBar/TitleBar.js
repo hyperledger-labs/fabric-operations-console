@@ -24,7 +24,6 @@ import {
 	HeaderNavigation,
 	SkipToContent,
 } from 'carbon-components-react/lib/components/UIShell';
-import { InlineNotification, NotificationActionButton } from 'carbon-components-react/lib/components/Notification/';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withLocalize } from 'react-localize-redux';
@@ -49,7 +48,6 @@ class TitleBar extends Component {
 			showWelcomeBanner: false,
 			closeWelcome: false,
 		});
-		await this.displayMigrationNotification();
 	}
 
 	componentDidUpdate(prevProps) {
@@ -169,30 +167,6 @@ class TitleBar extends Component {
 			} else {
 				window.open(translate('mainDocs', { DOC_PREFIX: this.props.docPrefix }));
 			}
-		}
-	};
-
-	openMigrationDetails = () => {
-		this.props.history.push('/migration');
-	};
-
-	displayMigrationNotification = async () => {
-		let isMigrated = false;
-
-		// Check the response.migration_status
-		// let migrationStatus = this.MigrationAPI.getStatus()
-		// isMigrated = migrationStatus.migration_status
-
-		// If its null or in-progress, then show Migration Notification
-		if (isMigrated) {
-			this.props.updateState(SCOPE, {
-				showMigrationNotification: false,
-			});
-		} else {
-			// Otherwise we don't show it
-			this.props.updateState(SCOPE, {
-				showMigrationNotification: true,
-			});
 		}
 	};
 
@@ -344,16 +318,6 @@ class TitleBar extends Component {
 						/>
 					)}
 				</div>
-				{this.props.logged && showHeaderButtons && this.props.showMigrationNotification && (
-					<div className="ibp-migration-banner-content">
-						<InlineNotification
-							kind="info"
-							hideCloseButton
-							actions={<NotificationActionButton onClick={this.openMigrationDetails}>Migrate</NotificationActionButton>}
-							title={translate('migration_title')}
-						/>
-					</div>
-				)}
 			</>
 		);
 	}
