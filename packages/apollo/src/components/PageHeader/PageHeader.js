@@ -83,17 +83,17 @@ export class PageHeader extends Component {
 	}
 
 	async displayMigrationWarning() {
-		let isMigrationInfo = false;
-		try {
-			// Check the response.migration_status
-			const migrationStatusResp = await MigrationApi.getStatus();
-			// If its null or in-progress, then show Migration Notification
-			if (migrationStatusResp.migration_status === 'null' || migrationStatusResp.migration_status === 'in-progress') {
-				isMigrationInfo = true;
-			}
-		} catch (e) {
-			console.log('Announcement Error displayMigrationWarning', e);
-		}
+		let isMigrationInfo = true;
+		// try {
+		// 	// Check the response.migration_status
+		// 	const migrationStatusResp = await MigrationApi.getStatus();
+		// 	// If its null or in-progress, then show Migration Notification
+		// 	if (migrationStatusResp.migration_status === 'null' || migrationStatusResp.migration_status === 'in-progress') {
+		// 		isMigrationInfo = true;
+		// 	}
+		// } catch (e) {
+		// 	console.log('Announcement Error displayMigrationWarning', e);
+		// }
 		return isMigrationInfo;
 	};
 
@@ -351,7 +351,9 @@ export class PageHeader extends Component {
 					<InlineNotification
 						kind="info"
 						hideCloseButton
-						actions={<NotificationActionButton onClick={this.openMigrationDetails}>Migrate</NotificationActionButton>}
+						actions={<NotificationActionButton onClick={this.openMigrationDetails}>
+							{translate('migration_action_button')}
+						</NotificationActionButton>}
 						title={translate('migration_title')}
 					/>
 				)}

@@ -2680,5 +2680,6 @@
 	"not_joined": "Not joined",
 	"failed_join": "Failed to join",
 	"restarting": "Restarting...",
-	"migration_title": "Migration to IBP Support for Hyperledger Fabric is available"
+	"migration_title": "Migration to IBP Support for Hyperledger Fabric is available",
+	"migration_action_button": "Migrate"
 }
