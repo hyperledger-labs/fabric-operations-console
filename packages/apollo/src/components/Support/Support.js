@@ -143,7 +143,9 @@ class Support extends Component {
 		const translate = this.props.translate;
 		return (
 			<PageContainer>
-				<PageHeader headerName="support"
+				<PageHeader
+					history={this.props.history}
+					headerName="support"
 					staticHeader
 				/>
 				<div className="bx--row">

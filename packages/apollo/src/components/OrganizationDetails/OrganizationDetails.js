@@ -284,7 +284,9 @@ class OrganizationDetails extends Component {
 					<div className="bx--col-lg-4">
 						<div className="ibp-node-details-panel">
 							<div className="ibp-node-details-header">
-								{mspName && <PageHeader headerName={translate('msp_details_title', { mspName: mspName })} />}
+								{mspName && <PageHeader history={this.props.history}
+									headerName={translate('msp_details_title', { mspName: mspName })}
+								/>}
 								{mspNameSkeleton}
 								<StickySection
 									openSettings={type => this.openMSPSettings(type)}

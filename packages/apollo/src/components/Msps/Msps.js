@@ -147,7 +147,9 @@ class Msps extends Component {
 			<PageContainer>
 				<div className="bx--row">
 					<div className="bx--col-lg-13">
-						<PageHeader headerName="msp_heading"
+						<PageHeader
+							history={this.props.history}
+							headerName="msp_heading"
 							staticHeader
 						/>
 						<div id="msps-container"

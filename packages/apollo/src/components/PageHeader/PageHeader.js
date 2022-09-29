@@ -19,7 +19,6 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { updateState } from '../../redux/commonActions';
 import { NodeRestApi } from '../../rest/NodeRestApi';
 import { MigrationApi } from '../../rest/MigrationApi';
@@ -437,4 +436,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withRouter(withLocalize(PageHeader)));
+)(withLocalize(PageHeader));

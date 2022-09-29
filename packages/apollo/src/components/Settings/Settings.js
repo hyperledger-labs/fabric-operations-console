@@ -553,7 +553,9 @@ export class Settings extends Component {
 			<PageContainer>
 				<div className="bx--row">
 					<div className="bx--col-lg-13">
-						<PageHeader headerName="settings"
+						<PageHeader
+							history={this.props.history}
+							headerName="settings"
 							staticHeader
 						/>
 						<div>

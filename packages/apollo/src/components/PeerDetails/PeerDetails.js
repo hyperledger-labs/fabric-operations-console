@@ -525,7 +525,9 @@ class PeerDetails extends Component {
 		const notAvailable = this.props.notAvailable || (details && details.status === 'unknown');
 		return (
 			<PageContainer>
-				<PageHeader headerName={peerName ? translate('peer_details_title', { peerName: peerName }) : ''} />
+				<PageHeader history={this.props.history}
+					headerName={peerName ? translate('peer_details_title', { peerName: peerName }) : ''}
+				/>
 				{peerNameSkeleton}
 				<div className="ibp-peer-details bx--row">
 					<div className="bx--col-lg-4">

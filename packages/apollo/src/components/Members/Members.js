@@ -227,6 +227,7 @@ export class Members extends Component {
 							authScheme={this.props.auth_scheme}
 							onConfigure={this.openEditAuthModal}
 							isManager={this.props.isManager}
+							history={this.props.history}
 							translate={translate}
 						/>
 						{!isIam && (
@@ -388,7 +389,9 @@ export function AuthenticationServices(props) {
 	return (
 		<div className="bx--row">
 			<div className="bx--col-lg-13">
-				<PageHeader headerName="users"
+				<PageHeader
+					history={props.history}
+					headerName="users"
 					staticHeader
 				/>
 				<div className="ipb-members-row">
@@ -434,6 +437,7 @@ AuthenticationServices.propTypes = {
 	isManager: PropTypes.bool,
 	authScheme: PropTypes.string,
 	translate: PropTypes.func, // Provided by Members
+	history: PropTypes.object
 };
 
 export function AuthenticatedUsers(props) {
@@ -508,7 +512,7 @@ export function AuthenticatedUsers(props) {
 										text: 'add_new_users',
 										fn: props.onAdd,
 									},
-								  ]
+								]
 								: []
 						}
 						selectItem={

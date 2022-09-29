@@ -207,7 +207,9 @@ class Identities extends Component {
 			<PageContainer>
 				<div className="bx--row">
 					<div className="bx--col-lg-13">
-						<PageHeader headerName="wallet"
+						<PageHeader
+							history={this.props.history}
+							headerName="wallet"
 							staticHeader
 						/>
 						{this.props.showAddIdentity && <AddIdentityModal onClose={this.closeAddIdenity}

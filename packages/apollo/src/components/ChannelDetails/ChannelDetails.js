@@ -1203,6 +1203,7 @@ class ChannelDetails extends Component {
 				<div className="bx--row">
 					<div className="bx--col-lg-4">
 						<PageHeader
+							history={this.props.history}
 							headerName={
 								match.params.channelId ? (
 									translate('channel_title', { channelName: this.props.match.params.channelId })

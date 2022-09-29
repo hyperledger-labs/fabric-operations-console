@@ -154,7 +154,9 @@ class ChaincodesPage extends Component {
 			<PageContainer setFocus={!this.props.loading}>
 				<div className="bx--row">
 					<div className="bx--col-lg-13">
-						<PageHeader headerName="chaincode"
+						<PageHeader
+							history={this.props.history}
+							headerName="chaincode"
 							staticHeader
 						/>
 						<div className="lifecycle-20-notice">

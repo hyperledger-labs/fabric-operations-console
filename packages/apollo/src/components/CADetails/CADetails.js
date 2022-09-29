@@ -329,7 +329,7 @@ export class CADetails extends Component {
 		}
 	};
 
-	refreshCerts = async() => {
+	refreshCerts = async () => {
 		try {
 			const resp = await NodeRestApi.getUnCachedDataWithDeployerAttrs(this.props.details.id);
 			Log.debug('Refresh cert response:', resp);
@@ -594,7 +594,10 @@ export class CADetails extends Component {
 						<div className="ibp-node-details-panel">
 							<div className="ibp-node-tags" />
 							<div className="ibp-node-details-header">
-								<PageHeader headerName={caName ? translate('ca_details_title', { caName: caName }) : ''} />
+								<PageHeader
+									history={this.props.history}
+									headerName={caName ? translate('ca_details_title', { caName: caName }) : ''}
+								/>
 								{caNameSkeleton}
 								<StickySection
 									openSettings={this.openCASettings}
@@ -628,18 +631,18 @@ export class CADetails extends Component {
 									id="ibp-ca-usage"
 									className={
 										this.props.details &&
-										this.props.details.isUpgradeAvailable &&
-										this.props.details.location === 'ibm_saas' &&
-										ActionsHelper.canCreateComponent(this.props.userInfo)
+											this.props.details.isUpgradeAvailable &&
+											this.props.details.location === 'ibm_saas' &&
+											ActionsHelper.canCreateComponent(this.props.userInfo)
 											? 'ibp-patch-available-tab'
 											: ''
 									}
 									label={translate('usage_info', {
 										patch:
 											this.props.details &&
-											this.props.details.isUpgradeAvailable &&
-											this.props.details.location === 'ibm_saas' &&
-											ActionsHelper.canCreateComponent(this.props.userInfo) ? (
+												this.props.details.isUpgradeAvailable &&
+												this.props.details.location === 'ibm_saas' &&
+												ActionsHelper.canCreateComponent(this.props.userInfo) ? (
 													<div className="ibp-details-patch-container">
 														<div className="ibp-patch-available-tag ibp-node-details"
 															onClick={() => this.openCASettings('upgrade')}

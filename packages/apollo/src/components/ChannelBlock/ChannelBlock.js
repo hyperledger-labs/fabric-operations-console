@@ -156,7 +156,9 @@ class ChannelBlock extends Component {
 						<div id="channel-block-container"
 							className="ibp-channel-block"
 						>
-							<PageHeader headerName={translate('block_title', { number: this.props.match.params.blockNumber })} />
+							<PageHeader history={this.props.history}
+								headerName={translate('block_title', { number: this.props.match.params.blockNumber })}
+							/>
 							<div>
 								{this.props.block ? (
 									<p>{translate('block_created', { date: this.props.block.created })}</p>
