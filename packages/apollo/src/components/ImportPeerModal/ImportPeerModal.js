@@ -634,7 +634,7 @@ class ImportPeerModal extends React.Component {
 					{translate('zone_desc')}
 					<a
 						className="ibp-peer-zone-link ibp-link"
-						href={translate('zone_desc_link', { DOC_PREFIX: this.props.docPrefix })}
+						href={translate('zone_desc_link2', { DOC_PREFIX: this.props.docPrefix })}
 						target="_blank"
 						rel="noopener noreferrer"
 					>

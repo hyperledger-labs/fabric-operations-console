@@ -333,3 +333,10 @@ osnadmin
 esbuild
 outfile
 svgr
+medallia
+coremetrics
+bmix
+backoff
+svgs
+growresources
+grownetwork

@@ -25,7 +25,6 @@ import developSCIcon from '../../assets/images/developSCIcon.svg';
 import governanceIcon from '../../assets/images/getting_started_governance.svg';
 import growNetworkIcon from '../../assets/images/getting_started_grownetwork.svg';
 import growResourcesIcon from '../../assets/images/getting_started_growresources.svg';
-import monitorIcon from '../../assets/images/getting_started_monitor.svg';
 import joinIcon from '../../assets/images/joinIcon.svg';
 import { updateState } from '../../redux/commonActions';
 import Helper from '../../utils/helper';
@@ -51,13 +50,11 @@ class WelcomeBannerContent extends Component {
 		} else if (type === 'join') {
 			window.open(translate('1joinDocs', { DOC_PREFIX: this.props.docPrefix }));
 		} else if (type === 'developSm') {
-			window.open(translate('develop_vs_code_link', { DOC_PREFIX: this.props.docPrefix }));
+			window.open(translate('develop_vs_code_link'));
 		} else if (type === 'deploySm') {
 			window.open(translate('2deployDocs', { DOC_PREFIX: this.props.docPrefix }));
 		} else if (type === 'goFurther') {
 			window.open(translate('apiDocs', { BMIX_URL: this.props.bmixUrl }));
-		} else if (type === 'monitorDocs') {
-			window.open(translate('monitorDocs', { DOC_PREFIX: this.props.docPrefix }));
 		} else if (type === 'channelDocs') {
 			window.open(translate('channelDocs', { DOC_PREFIX: this.props.docPrefix }));
 		} else if (type === 'growDocs') {
@@ -140,14 +137,6 @@ class WelcomeBannerContent extends Component {
 						</div>
 						<div className="ibp-welcome-banner-row">
 							<WelcomeBannerGroup header={translate('operate_and_govern')}>
-								{this.props.platform && this.props.platform !== 'openshift' && (
-									<WelcomeBannerTile
-										description={translate('getting_started_monitor_desc')}
-										header={translate('getting_started_monitor_title')}
-										mainTileIcon={monitorIcon}
-										tileClick={event => this.openDocLink(event, 'monitorDocs', translate)}
-									/>
-								)}
 								<WelcomeBannerTile
 									description={translate('getting_started_channel_docs_desc')}
 									header={translate('getting_started_channel_docs_title')}

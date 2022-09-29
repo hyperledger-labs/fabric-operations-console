@@ -241,10 +241,6 @@ export class Members extends Component {
 								authScheme={this.props.auth_scheme}
 							/>
 						)}
-						{isIam && <IAMInfoPanel bmixUrl={this.props.bmixUrl}
-							docPrefix={this.props.docPrefix}
-							translate={translate}
-						/>}
 					</div>
 					<div>
 						{this.props.showEditSettingsModal && (
@@ -331,7 +327,6 @@ export default connect(
 	state => {
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['userInfo'] = state['userInfo'];
-		newProps['bmixUrl'] = state['settings'] ? state['settings']['bmixUrl'] : null;
 		newProps['docPrefix'] = state['settings'] ? state['settings']['docPrefix'] : null;
 		return newProps;
 	},
@@ -343,42 +338,6 @@ export default connect(
 		updateState,
 	}
 )(withLocalize(Members));
-
-export function IAMInfoPanel(props) {
-	const translate = props.translate;
-	return (
-		<div className="ibp-page-container">
-			<h2 className="ibp-members-auth-services-label"> {translate('authenticated_users')}</h2>
-			<div className="ibp-members-iam-info-container">
-				<p className="ibp-members-iam-title">{translate('access_iam_title')}</p>
-				<p className="ibp-members-iam-desc">
-					{translate('access_iam_desc')}
-					<a className="ibp-iam-learn-more"
-						href={translate('iam_find_more', { DOC_PREFIX: props.docPrefix })}
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						{translate('find_more_here')}
-					</a>
-				</p>
-				<a href={translate('iam_invite_users', { BMIX_HOST: props.bmixUrl })}
-					target="_new"
-					className="ibp-nodes-iam-invite-users"
-				>
-					{translate('iam_assign_access')}
-					<SVGs type="launch"
-						extendClass={{ 'ibp-iam-launch-icon': true }}
-					/>
-				</a>
-			</div>
-		</div>
-	);
-}
-IAMInfoPanel.propTypes = {
-	bmixUrl: PropTypes.string,
-	docPrefix: PropTypes.string,
-	translate: PropTypes.func, // Provided by Members
-};
 
 export function AuthenticationServices(props) {
 	const isIbmId = props.authScheme === 'ibmid';

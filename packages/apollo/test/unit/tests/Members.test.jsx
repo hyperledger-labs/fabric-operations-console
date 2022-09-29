@@ -21,7 +21,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import { AuthenticatedUsers, AuthenticationServices, DeleteButton, IAMInfoPanel, Members } from '../../../src/components/Members/Members';
+import { AuthenticatedUsers, AuthenticationServices, DeleteButton, Members } from '../../../src/components/Members/Members';
 import store from '../../../src/redux/Store';
 chai.should();
 chai.use(sinonChai);
@@ -162,35 +162,9 @@ describe('Members component', () => {
 		props.editMode = false;
 		const component = mount(<WrappedMembers {...props} />);
 		component.find('#ItemContainer').should.have.lengthOf(0);
-		component.find('.ibp-members-iam-info-container').should.have.lengthOf(1);
 		component.find('#EditAuthSettingsModal').should.have.lengthOf(1);
 		component.find('#AddUserModal').should.have.lengthOf(1);
 		component.find('#ResetPasswordModal').should.have.lengthOf(1);
-	});
-});
-
-describe('IAMInfoPanel function', () => {
-	let mySandBox;
-	let props;
-
-	beforeEach(async() => {
-		mySandBox = sinon.createSandbox();
-		props = {
-			bmixUrl: 'bmixUrl',
-			docPrefix: 'docPrefix',
-			translate: mySandBox.stub(),
-		};
-	});
-
-	afterEach(async() => {
-		mySandBox.restore();
-	});
-
-	it('should return IAMInfoPanel', () => {
-		const component = mount(<IAMInfoPanel {...props} />);
-		sinon.assert.callCount(props.translate, 7);
-		component.find('a').should.have.lengthOf(2);
-		component.find('SVGs').should.have.lengthOf(1);
 	});
 });
 
