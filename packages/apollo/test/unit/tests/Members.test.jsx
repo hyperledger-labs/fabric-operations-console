@@ -162,7 +162,6 @@ describe('Members component', () => {
 		props.editMode = false;
 		const component = mount(<WrappedMembers {...props} />);
 		component.find('#ItemContainer').should.have.lengthOf(0);
-		component.find('.ibp-members-iam-info-container').should.have.lengthOf(1);
 		component.find('#EditAuthSettingsModal').should.have.lengthOf(1);
 		component.find('#AddUserModal').should.have.lengthOf(1);
 		component.find('#ResetPasswordModal').should.have.lengthOf(1);
