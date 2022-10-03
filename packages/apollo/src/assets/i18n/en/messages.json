@@ -2041,7 +2041,7 @@
 	"osn-join-desc": "Select the ordering clusters that should join right now. The selected orderers from each selected cluster will join this channel. <br/><br/>Any orderers that are not selected can still join at a later date.",
 	"osn-join-desc2": "Select the orderers that should join this channel. Each orderer will join as a consenter or follower depending on the channels latest config block. <br/><br/>Any orderers that are not selected can still join at a later date.",
 	"osn-join-desc3": "Select the \"Continue\" button if you want to join orderers now.",
-	"osn-join-config-block":"Success, the genesis block for the channel \"${channel}\" was created and stored.<br/>Next join orderer nodes to this channel. You can either do that right now or on a later date.",
+	"osn-join-config-block": "Success, the genesis block for the channel \"${channel}\" was created and stored.<br/>Next join orderer nodes to this channel. You can either do that right now or on a later date.",
 	"osn-join-creating-block": "Creating genesis block...",
 	"osn-join-loading-desc": "Loading config block...",
 	"update_channel_consenter_set_desc": "The ordering nodes that form the ordering service of a channel is known as the consenter set of that channel. While the consenter set can be comprised of all of the nodes available in the ordering service, it is possible to add nodes that are a part of the ordering service to the consenter set. Before adding a node to the consenter set, make sure the organization that owns the node has been added as an administrator of the ordering service of this channel.",
@@ -2613,5 +2613,7 @@
 	"already_joined": "Already joined",
 	"not_joined": "Not joined",
 	"failed_join": "Failed to join",
-	"restarting": "Restarting..."
+	"restarting": "Restarting...",
+	"migration_title": "Migration to IBP Support for Hyperledger Fabric is available",
+	"migration_action_button": "Migrate"
 }

@@ -1278,7 +1278,9 @@ class OrdererDetails extends Component {
 		return (
 			<PageContainer>
 				<div>
-					<PageHeader headerName={ordererName ? translate('orderer_details_title', { ordererName: ordererName }) : ''} />
+					<PageHeader history={this.props.history}
+						headerName={ordererName ? translate('orderer_details_title', { ordererName: ordererName }) : ''}
+					/>
 					{ordererNameSkeleton}
 					<div className="ibp-orderer-details bx--row">
 						{this.props.showAddNode && (

@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 import { ChevronDown16, Help20, NotificationFilled20 } from '@carbon/icons-react/es';
 import { Tag } from 'carbon-components-react';
 import {
@@ -43,7 +43,7 @@ import WelcomeBannerContent from '../WelcomeBanner/WelcomeBannerContent';
 const SCOPE = 'titleBar';
 
 class TitleBar extends Component {
-	componentDidMount() {
+	async componentDidMount() {
 		this.props.updateState(SCOPE, {
 			showWelcomeBanner: false,
 			closeWelcome: false,
@@ -181,142 +181,144 @@ class TitleBar extends Component {
 		const needsAttentionStrLength = needsAttention ? needsAttention.toString().length : 0;
 		const productLabel = 'product_label'; // may or may not contain "IBM"
 		return (
-			<div
-				role="banner"
-				id="title_bar"
-				className={`ibp-title-bar ${showHeaderButtons ? 'ibp-user-logged-in' : 'ibp-user-logged-out'}`}
-				aria-label={translate(productLabel)}
-			>
-				<Header aria-label={translate(productLabel)}>
-					<SkipToContent />
-					<HeaderName prefix=""
-						onClick={this.goHome}
-						onKeyPress={event => this.onKeyPressGoHome(event)}
-						className="ibp-carbon-product-name"
-						tabIndex="0"
-					>
-						{translate(productLabel)}
-					</HeaderName>
-					{this.props.logged && showHeaderButtons && (
-						<HeaderNavigation aria-label={translate(productLabel)}>
-							<HeaderMenuItem
-								onKeyPress={event => this.onKeyPressGetStarted(event, this.props.showWelcomeBanner)}
-								onClick={this.props.showWelcomeBanner ? this.closeWelcomeBanner : this.showWelcomeBanner}
-								className={`ibp-get-started-button ${this.props.showWelcomeBanner ? 'ibp-get-started-showing' : ''}`}
-								id="ibp-get-started-menu-button"
-							>
-								{translate('get_started')}
-								<ChevronDown16 className={`ibp-getting-started-button-icon ${this.props.showWelcomeBanner ? 'ibp-getting-started-button-icon-open' : ''}`} />
-							</HeaderMenuItem>
-							<HeaderMenuItem
-								onKeyPress={event => this.goToDocs(event, translate, 'keypress')}
-								onClick={event => this.goToDocs(event, translate, 'click')}
-								className="ibp-header-menu-item"
-							>
-								{translate('documentation')}
-							</HeaderMenuItem>
-							{this.props.showAnnouncementButton && (
+			<>
+				<div
+					role="banner"
+					id="title_bar"
+					className={`ibp-title-bar ${showHeaderButtons ? 'ibp-user-logged-in' : 'ibp-user-logged-out'}`}
+					aria-label={translate(productLabel)}
+				>
+					<Header aria-label={translate(productLabel)}>
+						<SkipToContent />
+						<HeaderName prefix=""
+							onClick={this.goHome}
+							onKeyPress={event => this.onKeyPressGoHome(event)}
+							className="ibp-carbon-product-name"
+							tabIndex="0"
+						>
+							{translate(productLabel)}
+						</HeaderName>
+						{this.props.logged && showHeaderButtons && (
+							<HeaderNavigation aria-label={translate(productLabel)}>
 								<HeaderMenuItem
-									onKeyPress={this.showAnnouncement}
-									onClick={this.showAnnouncement}
-									className={`ibp-announcement-button ${this.props.showAnnouncement ? 'ibp-announcement-showing' : ''}`}
-									id="ibp-announcement-button"
+									onKeyPress={event => this.onKeyPressGetStarted(event, this.props.showWelcomeBanner)}
+									onClick={this.props.showWelcomeBanner ? this.closeWelcomeBanner : this.showWelcomeBanner}
+									className={`ibp-get-started-button ${this.props.showWelcomeBanner ? 'ibp-get-started-showing' : ''}`}
+									id="ibp-get-started-menu-button"
 								>
-									{translate('alert')}
+									{translate('get_started')}
+									<ChevronDown16 className={`ibp-getting-started-button-icon ${this.props.showWelcomeBanner ? 'ibp-getting-started-button-icon-open' : ''}`} />
 								</HeaderMenuItem>
-							)}
-						</HeaderNavigation>
-					)}
-					{showHeaderButtons && (
-						<HeaderGlobalBar>
-							<HeaderGlobalAction aria-label={translate('help')}
-								onClick={() => this.props.history.push('/support')}
-							>
-								<Help20 />
-							</HeaderGlobalAction>
-							{this.props.logged && (
-								<HeaderGlobalAction
-									className="ibp-header-signature-button"
-									onClick={this.openSignatureCollections}
-									id="ibp-header-signature-collection-icon"
-									aria-label="Toggle notifications"
+								<HeaderMenuItem
+									onKeyPress={event => this.goToDocs(event, translate, 'keypress')}
+									onClick={event => this.goToDocs(event, translate, 'click')}
+									className="ibp-header-menu-item"
 								>
-									{needsAttention ? (
-										<div className="ibp-pending-notifications-container">
-											<NotificationFilled20 className="ibp-signature-header-icon"
+									{translate('documentation')}
+								</HeaderMenuItem>
+								{this.props.showAnnouncementButton && (
+									<HeaderMenuItem
+										onKeyPress={this.showAnnouncement}
+										onClick={this.showAnnouncement}
+										className={`ibp-announcement-button ${this.props.showAnnouncement ? 'ibp-announcement-showing' : ''}`}
+										id="ibp-announcement-button"
+									>
+										{translate('alert')}
+									</HeaderMenuItem>
+								)}
+							</HeaderNavigation>
+						)}
+						{showHeaderButtons && (
+							<HeaderGlobalBar>
+								<HeaderGlobalAction aria-label={translate('help')}
+									onClick={() => this.props.history.push('/support')}
+								>
+									<Help20 />
+								</HeaderGlobalAction>
+								{this.props.logged && (
+									<HeaderGlobalAction
+										className="ibp-header-signature-button"
+										onClick={this.openSignatureCollections}
+										id="ibp-header-signature-collection-icon"
+										aria-label="Toggle notifications"
+									>
+										{needsAttention ? (
+											<div className="ibp-pending-notifications-container">
+												<NotificationFilled20 className="ibp-signature-header-icon"
+													title={translate('notifications')}
+												/>
+												<Tag
+													className="ibp-needs-attention-notification-icon"
+													title={translate('notification_count')}
+													type="red"
+													style={{
+														right: needsAttentionStrLength >= 3 ? '-1rem' : needsAttentionStrLength === 2 ? '-0.75rem' : '-0.25rem',
+													}}
+												>
+													{needsAttentionStrLength >= 3 ? translate('max_notification_count') : needsAttention}
+												</Tag>
+											</div>
+										) : (
+											<SVGs type="notification"
+												extendClass={{ 'ibp-signature-header-icon': true }}
 												title={translate('notifications')}
 											/>
-											<Tag
-												className="ibp-needs-attention-notification-icon"
-												title={translate('notification_count')}
-												type="red"
-												style={{
-													right: needsAttentionStrLength >= 3 ? '-1rem' : needsAttentionStrLength === 2 ? '-0.75rem' : '-0.25rem',
-												}}
-											>
-												{needsAttentionStrLength >= 3 ? translate('max_notification_count') : needsAttention}
-											</Tag>
-										</div>
-									) : (
-										<SVGs type="notification"
-											extendClass={{ 'ibp-signature-header-icon': true }}
-											title={translate('notifications')}
-										/>
-									)}
+										)}
+									</HeaderGlobalAction>
+								)}
+								<HeaderGlobalAction
+									aria-label={translate('user_info')}
+									onClick={this.props.showUserInfo ? this.closeUserProfile : this.openUserInfo}
+									className={`${this.props.showUserInfo ? 'ibp-header-active-item' : ''}`}
+									id="ibp-header-user-profile-icon"
+								>
+									<UserInfo
+										userInfo={this.props.userInfo}
+										host_url={this.props.host_url}
+										closeWelcome={this.props.closeWelcome}
+										onWelcomeClose={this.closeWelcomeBanner}
+										closeUserProfile={this.closeUserProfile}
+									/>
 								</HeaderGlobalAction>
-							)}
-							<HeaderGlobalAction
-								aria-label={translate('user_info')}
-								onClick={this.props.showUserInfo ? this.closeUserProfile : this.openUserInfo}
-								className={`${this.props.showUserInfo ? 'ibp-header-active-item' : ''}`}
-								id="ibp-header-user-profile-icon"
-							>
-								<UserInfo
-									userInfo={this.props.userInfo}
-									host_url={this.props.host_url}
-									closeWelcome={this.props.closeWelcome}
-									onWelcomeClose={this.closeWelcomeBanner}
-									closeUserProfile={this.closeUserProfile}
-								/>
-							</HeaderGlobalAction>
-						</HeaderGlobalBar>
+							</HeaderGlobalBar>
+						)}
+					</Header>
+					{this.props.logged && showHeaderButtons && this.props.showSignatureCollection && (
+						<SignatureCollection onWelcomeClose={this.closeWelcomeBanner}
+							onClose={this.closeSignatureCollections}
+							showRequests
+						/>
 					)}
-				</Header>
-				{this.props.logged && showHeaderButtons && this.props.showSignatureCollection && (
-					<SignatureCollection onWelcomeClose={this.closeWelcomeBanner}
-						onClose={this.closeSignatureCollections}
-						showRequests
-					/>
-				)}
-				{this.props.logged && showHeaderButtons && this.props.details && !this.props.details.ccd && (
-					<SignatureDetailModal request={this.props.details}
-						msps={this.props.msps}
-						closed={this.hideDetails}
-						onComplete={this.onComplete}
-					/>
-				)}
-				{this.props.logged && showHeaderButtons && this.props.details && this.props.details.ccd && (
-					<ChaincodeModal channelId={this.props.details.channel}
-						ccd={this.props.details.ccd}
-						onClose={this.hideDetails}
-						onComplete={this.onComplete}
-					/>
-				)}
-				{this.props.showWelcomeBanner && <WelcomeBannerContent onClose={this.closeWelcomeBanner}
-					closeWelcome={this.props.closeWelcome}
-				/>}
-				{this.props.showUserInfo && (
-					<UserProfile
-						closeUserProfile={this.closeUserProfile}
-						email={email}
-						role={this.props.userInfo && this.props.userInfo.role ? translate(this.props.userInfo.role) : null}
-						canLogout={canLogout}
-						canChangePassword={canChangePassword}
-						logout_url={logout_url}
-						name={name}
-					/>
-				)}
-			</div>
+					{this.props.logged && showHeaderButtons && this.props.details && !this.props.details.ccd && (
+						<SignatureDetailModal request={this.props.details}
+							msps={this.props.msps}
+							closed={this.hideDetails}
+							onComplete={this.onComplete}
+						/>
+					)}
+					{this.props.logged && showHeaderButtons && this.props.details && this.props.details.ccd && (
+						<ChaincodeModal channelId={this.props.details.channel}
+							ccd={this.props.details.ccd}
+							onClose={this.hideDetails}
+							onComplete={this.onComplete}
+						/>
+					)}
+					{this.props.showWelcomeBanner && <WelcomeBannerContent onClose={this.closeWelcomeBanner}
+						closeWelcome={this.props.closeWelcome}
+					/>}
+					{this.props.showUserInfo && (
+						<UserProfile
+							closeUserProfile={this.closeUserProfile}
+							email={email}
+							role={this.props.userInfo && this.props.userInfo.role ? translate(this.props.userInfo.role) : null}
+							canLogout={canLogout}
+							canChangePassword={canChangePassword}
+							logout_url={logout_url}
+							name={name}
+						/>
+					)}
+				</div>
+			</>
 		);
 	}
 }

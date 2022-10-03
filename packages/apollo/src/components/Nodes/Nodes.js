@@ -67,7 +67,9 @@ class Nodes extends Component {
 				<div className="bx--row">
 					<div className="bx--col-lg-13">
 						<WelcomeMessage />
-						<PageHeader headerName="nodes"
+						<PageHeader
+							history={this.props.history}
+							headerName="nodes"
 							showCertNotice={this.props.showCertNotice}
 							createdArr={this.props.createdArr}
 							staticHeader
