@@ -108,4 +108,4 @@ RUN ls -l $SERVER_HOME
 # Fin
 EXPOSE 3000
 USER 1001
-CMD [ "npm", "start" ]
+CMD [ "node", "server_watcher.js" ]
