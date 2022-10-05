@@ -203,8 +203,8 @@ class JoinOSNChannelModal extends React.Component {
 			let urlObj = (typeof node.backend_addr === 'string') ? url.parse(node.backend_addr.toLowerCase()) : null;
 			const tls_cert = _.get(node, 'msp.component.tls_cert');
 
-			// consenters must have a tls certificate and host/port data
-			if (urlObj && urlObj.hostname && urlObj.port && tls_cert) {
+			// consenters must have a tls certificate, host/port data and no system channel
+			if (urlObj && urlObj.hostname && urlObj.port && tls_cert && node.systemless) {
 				possible_consenters.push({				// leading underscores denote field is not used by fabric
 					name: node.display_name,
 					msp_id: node.msp_id,
