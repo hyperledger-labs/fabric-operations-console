@@ -48,6 +48,10 @@ export class PageHeader extends Component {
 		this.props.history.push('/migration');
 	};
 
+	openMigrationCompletion = () => {
+		this.props.history.push('/so-long-and-thanks-for-all-the-fish');
+	};
+
 	async displayClusterWarning() {
 		if (!this.props.supportedVersion) return false;
 		let clusterVersion;
@@ -82,17 +86,49 @@ export class PageHeader extends Component {
 	}
 
 	async displayMigrationWarning() {
+		let migrationState={};
 		let isMigrationInfo = true;
+		//let isMigrationInfo = false;
 		// try {
 		// 	// Check the response.migration_status
 		// 	const migrationStatusResp = await MigrationApi.getStatus();
-		// 	// If its null or in-progress, then show Migration Notification
-		// 	if (migrationStatusResp.migration_status === 'null' || migrationStatusResp.migration_status === 'in-progress') {
+		// 	if(migrationStatusResp.migration_status)
+		// 	{
 		// 		isMigrationInfo = true;
+		// 		// If its done, then show Completion Notification
+		// 		if (migrationStatusResp.migration_status === 'done')
+		// 		{
+		// 			migrationState = {
+		// 				isMigrationInfo: false,
+		// 				isMigrationDone: true,
+		// 			};
+		// 		}
+		// 		// If its in-progress, then show Migration Notification
+		// 		else{
+		// 			migrationState = {
+		// 				isMigrationInfo: true,
+		// 				isMigrationDone: false,
+		// 			};
+		// 		}
+
 		// 	}
+		// 	//If its null, then show Migration Notification
+		// 	else{
+		// 		isMigrationInfo = true;
+		// 		migrationState = {
+		// 			isMigrationInfo: true,
+		// 			isMigrationDone: false,
+		// 		};
+		// 	}
+		// 	this.props.updateState(SCOPE, migrationState);
 		// } catch (e) {
-		// 	console.log('Announcement Error displayMigrationWarning', e);
+		// 	console.log('Announcement Error displayMigrationCompletion', e);
 		// }
+		migrationState = {
+						isMigrationInfo: true,
+						isMigrationDone: true,
+					};
+		this.props.updateState(SCOPE, migrationState);
 		return isMigrationInfo;
 	};
 
@@ -189,7 +225,6 @@ export class PageHeader extends Component {
 		}
 		stateUpdate.isClusterWarning = isClusterWarning;
 		stateUpdate.isCertWarning = isCertWarning;
-		stateUpdate.isMigrationInfo = isMigrationInfo;
 		this.props.updateState(SCOPE, stateUpdate);
 	}
 
@@ -356,6 +391,16 @@ export class PageHeader extends Component {
 						title={translate('migration_title')}
 					/>
 				)}
+				{this.props.showAnnouncement && this.props.isMigrationDone && (
+					<InlineNotification
+						kind="info"
+						hideCloseButton
+						actions={<NotificationActionButton onClick={this.openMigrationCompletion}>
+							{translate('migration_completion_button')}
+						</NotificationActionButton>}
+						title={translate('migration_completion_title')}
+					/>
+				)}
 				{this.props.showCertNotice && created_parsed_certs.length > 0 && (
 					<InlineNotification
 						kind="warning"
@@ -412,6 +457,7 @@ const dataProps = {
 	isClusterWarning: PropTypes.bool,
 	isCertWarning: PropTypes.bool,
 	isMigrationInfo: PropTypes.bool,
+	isMigrationDone: PropTypes.bool,
 	headerTooltip: PropTypes.string,
 	staticHeader: PropTypes.bool,
 	subtext: PropTypes.string,
