@@ -86,48 +86,60 @@ export class PageHeader extends Component {
 	}
 
 	async displayMigrationWarning() {
-		let migrationState={};
+		let migrationState = {};
 		let isMigrationInfo = true;
-		//let isMigrationInfo = false;
-		// try {
-		// 	// Check the response.migration_status
-		// 	const migrationStatusResp = await MigrationApi.getStatus();
-		// 	if(migrationStatusResp.migration_status)
-		// 	{
-		// 		isMigrationInfo = true;
-		// 		// If its done, then show Completion Notification
-		// 		if (migrationStatusResp.migration_status === 'done')
-		// 		{
-		// 			migrationState = {
-		// 				isMigrationInfo: false,
-		// 				isMigrationDone: true,
-		// 			};
-		// 		}
-		// 		// If its in-progress, then show Migration Notification
-		// 		else{
-		// 			migrationState = {
-		// 				isMigrationInfo: true,
-		// 				isMigrationDone: false,
-		// 			};
-		// 		}
+		let migrationStatusResp = null;
 
-		// 	}
-		// 	//If its null, then show Migration Notification
-		// 	else{
-		// 		isMigrationInfo = true;
-		// 		migrationState = {
-		// 			isMigrationInfo: true,
-		// 			isMigrationDone: false,
-		// 		};
-		// 	}
-		// 	this.props.updateState(SCOPE, migrationState);
-		// } catch (e) {
-		// 	console.log('Announcement Error displayMigrationWarning', e);
-		// }
+		try {
+			// Check the response.migration_status
+			migrationStatusResp = await MigrationApi.getStatus();
+			console.log('dsh99 migration status', migrationStatusResp);
+		} catch (e) {
+			console.log('Announcement Error displayMigrationWarning', e);
+		}
+
+		// If its null, then show Migration Notification
+		if (!migrationStatusResp || !migrationStatusResp.migration_status) {
+			isMigrationInfo = true;
+			migrationState = {
+				isMigrationInfo: true,
+				isMigrationDone: false,
+			};
+		} else {
+
+			isMigrationInfo = true;
+
+			// If its done, then show Completion Notification
+			if (migrationStatusResp.migration_status === 'done') {
+				migrationState = {
+					isMigrationInfo: false,
+					isMigrationDone: true,
+				};
+			}
+
+			// If its in-progress, then show Migration Notification
+			else {
+				migrationState = {
+					isMigrationInfo: true,
+					isMigrationDone: false,
+				};
+			}
+		}
+
+		// don't show the banner if we are on the migration page
+		if (window.location.pathname === '/migration') {
+			migrationState = {
+				isMigrationInfo: false,
+				isMigrationDone: false,
+			};
+		}
+
+		// for now, don't show either, dsh todo uncomment when ready
 		migrationState = {
-			isMigrationInfo: true,
-			isMigrationDone: true,
+			isMigrationInfo: false,
+			isMigrationDone: false,
 		};
+
 		this.props.updateState(SCOPE, migrationState);
 		return isMigrationInfo;
 	};

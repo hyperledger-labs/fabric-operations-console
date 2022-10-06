@@ -1,0 +1,44 @@
+.migrationPanel {
+	background: #202529;
+	margin: 2rem 0;
+	padding: 1.5rem;
+
+	.twistyWrapper {
+		padding: 1rem;
+		margin-bottom: 1rem;
+		font-size: 1.5rem;
+		background: #21272a;
+	}
+
+	.twistyTitle {
+		background: #0353e9;
+		padding: 1rem;
+		cursor: pointer;
+	}
+
+	.twistyContent {
+		font-size: 1rem;
+		margin-top: 0.5rem;
+		margin-left: 1rem;
+	}
+
+	.diagramWrap {
+		width: 50rem;
+		height: 20rem;
+		border: 1px #fff solid;
+		margin: auto;
+		margin-bottom: 1rem;
+		margin-top: 2rem;
+	}
+
+	.centerText {
+		width: 100%;
+		text-align: center;
+		font-weight: 500;
+	}
+
+	.infoTitle{
+		font-weight: 500;
+		margin-top: 1.5rem;
+	}
+}

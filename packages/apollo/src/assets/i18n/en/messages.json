@@ -2616,6 +2616,7 @@
 	"restarting": "Restarting...",
 	"migration_title": "Migration to IBP Support for Hyperledger Fabric is available",
 	"migration_action_button": "Migrate",
+	"migration_header": "Migration",
 	"migration_completion_title": "Congratulations! You have Migrated to IBP Support for Hyperledger Fabric",
 	"migration_completion_button": "Know more"
 }
