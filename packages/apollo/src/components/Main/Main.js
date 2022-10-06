@@ -46,6 +46,7 @@ import ScrollToTop from '../ScrollToTop/ScrollToTop';
 import Settings from '../Settings/Settings';
 import Support from '../Support/Support';
 import TitleBar from '../TitleBar/TitleBar';
+import MigrationPage from '../MigrationPage/MigrationPage';
 
 const SCOPE = 'main';
 const Log = new Logger(SCOPE);
@@ -229,6 +230,10 @@ class Main extends Component {
 									/>
 									<Route path="/export-identities"
 										component={Settings}
+										exact
+									/>
+									<Route path="/migration"
+										component={MigrationPage}
 										exact
 									/>
 									<Route path="*"
