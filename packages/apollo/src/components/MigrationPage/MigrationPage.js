@@ -21,7 +21,7 @@ import PageContainer from '../PageContainer/PageContainer';
 import PageHeader from '../PageHeader/PageHeader';
 //import SkeletonPlaceholder from 'carbon-components-react/lib/components/SkeletonPlaceholder';
 //import { Tab, Tabs } from 'carbon-components-react';
-const SCOPE = 'MigrationPage';
+//const SCOPE = 'MigrationPage';
 //const Log = new Logger(SCOPE);
 
 class MigrationPage extends Component {
@@ -97,7 +97,7 @@ class MigrationPage extends Component {
 									Your new console will be hosted on your kubernetes cluster.
 								</p>
 								<p>
-									- The login credentials you used to get here are from an IBM-ID which uses IBM Cloud's IAM service.
+									- The login credentials you used to get here are from an IBM-ID which uses IBM Cloud&apos;s IAM service.
 									The new credentials will be local users to the console, using an email/password you define during migration.
 								</p>
 								<p>
@@ -118,7 +118,7 @@ class MigrationPage extends Component {
 									<br />
 								</p>
 								<p>
-									It's estimated that a migrated console will require x CPU, x MB of memory, and x GB of storage.
+									It&apos;s estimated that a migrated console will require x CPU, x MB of memory, and x GB of storage.
 									However consoles with many components will require more resources.
 									We suggest to start off with these minimum requirements and increases them if you notice slow UI performance.
 
