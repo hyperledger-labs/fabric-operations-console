@@ -93,7 +93,7 @@ export class PageHeader extends Component {
 		try {
 			// Check the response.migration_status
 			migrationStatusResp = await MigrationApi.getStatus();
-			console.log('dsh99 migration status', migrationStatusResp);
+			// console.log('dsh99 migration status', migrationStatusResp);
 		} catch (e) {
 			console.log('Announcement Error displayMigrationWarning', e);
 		}
