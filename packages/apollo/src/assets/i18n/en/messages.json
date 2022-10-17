@@ -2617,6 +2617,8 @@
 	"migration": "Migration",
 	"migration_title": "Migration to IBP Support for Hyperledger Fabric is available",
 	"migration_action_button": "Migrate",
-	"migration_completion_title": "Congratulations! You have Migrated to IBP Support for Hyperledger Fabric",
-	"migration_completion_button": "Know more"
+	"migration_done_title": "Congratulations! You have Migrated to IBP Support for Hyperledger Fabric",
+	"migration_done_button": "Know more",
+	"migration_completion_title": "Console is in read only mode",
+	"migration_completion_subtitle": "This console has been migrated and is now in read only mode. You are no longer able to manage your components using this console. To manage your components use your new console: "
 }
