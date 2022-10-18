@@ -53,6 +53,10 @@ export class PageHeader extends Component {
 		this.props.history.push('/so-long-and-thanks-for-all-the-fish');
 	};
 
+	openNewConsole = () => {
+		window.open(this.props.migratedConsoleUrl);
+	}
+
 	async displayClusterWarning() {
 		if (!this.props.supportedVersion) return false;
 		let clusterVersion;
@@ -116,6 +120,7 @@ export class PageHeader extends Component {
 					isMigrationComplete: false,
 				};
 
+				// TODO: uncomment when the values can be extracted from the settings response
 				// if (!settingsResp || !settingsResp.FEATURE_FLAGS.migration_complete) {
 				// 	migrationState = {
 				// 		isMigrationAvailable: false,
@@ -128,7 +133,7 @@ export class PageHeader extends Component {
 				// 		isMigrationAvailable: false,
 				// 		isMigrationDone: true,
 				// 		isMigrationComplete: true,
-				// 		migratedConsoleUrl: settingsResp.migrated_console_url
+				// 		migratedConsoleUrl: settingsResp.MIGRATED_CONSOLE_URL
 				// 	};
 				// }
 
@@ -154,13 +159,13 @@ export class PageHeader extends Component {
 		// for now, don't show either, dsh todo uncomment when ready
 		migrationState = {
 			isMigrationAvailable: false,
-			isMigrationDone: true,
+			isMigrationDone: false,
 			isMigrationComplete: true,
-			migratedConsoleUrl: 'some-url-here.com'
+			migratedConsoleUrl: 'https://www.new-console-url.com'
 		};
 
 		this.props.updateState(SCOPE, migrationState);
-		return migrationState.isMigrationAvailable || migrationState.isMigrationDone;
+		return migrationState.isMigrationAvailable || migrationState.isMigrationDone || migrationState.isMigrationComplete;
 	};
 
 	async displayCertWarning() {
@@ -436,8 +441,14 @@ export class PageHeader extends Component {
 					<InlineNotification
 						kind="warning"
 						hideCloseButton
+						actions={
+							<NotificationActionButton
+								onClick={this.openNewConsole}
+							>
+								{translate('migration_completion_action')}
+							</NotificationActionButton>}
 						title={translate('migration_completion_title')}
-						subtitle={translate('migration_completion_subtitle') + this.props.migratedConsoleUrl}
+						subtitle={translate('migration_completion_subtitle')}
 					/>
 				)}
 				{this.props.showCertNotice && created_parsed_certs.length > 0 && (
