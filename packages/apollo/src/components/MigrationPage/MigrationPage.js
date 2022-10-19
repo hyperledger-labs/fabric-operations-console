@@ -18,7 +18,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
-import { updateState } from '../../redux/commonActions';
+import { showBreadcrumb, updateState } from '../../redux/commonActions';
 import { MigrationApi } from '../../rest/MigrationApi';
 import {
 	Accordion,
@@ -35,11 +35,13 @@ import { CheckmarkFilled16, Incomplete16, CircleDash16 } from '@carbon/icons-rea
 import Helper from '../../utils/helper';
 import PageContainer from '../PageContainer/PageContainer';
 import Logger from '../Log/Logger';
+import PageHeader from '../PageHeader/PageHeader';
 const SCOPE = 'MigrationPage';
 const Log = new Logger(SCOPE);
 
 class MigrationPage extends Component {
 	componentDidMount() {
+		this.props.showBreadcrumb('settings', {}, this.props.history.location.pathname, true);
 		this.getComponentsStatus();
 	}
 
@@ -155,7 +157,12 @@ class MigrationPage extends Component {
 			<PageContainer>
 				<div className="bx--row">
 					<div className="bx--col-lg-13 migrationPanel">
-						<h1 className='pageTitle'>{translate('migration')}</h1>
+						{/* <h1 className='pageTitle'>{translate('migration')}</h1> */}
+						<PageHeader
+							history={this.props.history}
+							headerName="migration"
+							staticHeader
+						/>
 						<Accordion align='start'>
 							<AccordionItem title={translate('migration_info')}
 								open={true}
@@ -290,4 +297,7 @@ MigrationPage.propTypes = {
 
 export default connect(state => {
 	return Helper.mapStateToProps(state[SCOPE], dataProps);
-}, { updateState })(withLocalize(MigrationPage));
+}, {
+	updateState,
+	showBreadcrumb
+})(withLocalize(MigrationPage));

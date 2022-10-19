@@ -32,6 +32,7 @@ import StitchApi from '../../rest/StitchApi';
 const SCOPE = 'titleBar';
 const semver = require('semver');
 import * as constants from '../../utils/constants';
+import SettingsApi from '../../rest/SettingsApi';
 
 export class PageHeader extends Component {
 	async componentDidMount() {
@@ -48,9 +49,13 @@ export class PageHeader extends Component {
 		this.props.history.push('/migration');
 	};
 
-	openMigrationCompletion = () => {
+	openMigrationDone = () => {
 		this.props.history.push('/so-long-and-thanks-for-all-the-fish');
 	};
+
+	openNewConsole = () => {
+		window.open(this.props.migratedConsoleUrl);
+	}
 
 	async displayClusterWarning() {
 		if (!this.props.supportedVersion) return false;
@@ -85,63 +90,82 @@ export class PageHeader extends Component {
 		return isClusterWarning;
 	}
 
-	async displayMigrationWarning() {
+	async displayMigrationBanner() {
 		let migrationState = {};
-		let isMigrationInfo = true;
+
 		let migrationStatusResp = null;
+		let settingsResp = null;
 
 		try {
-			// Check the response.migration_status
 			migrationStatusResp = await MigrationApi.getStatus();
-			// console.log('dsh99 migration status', migrationStatusResp);
+			settingsResp = await SettingsApi.getSettings();
+			console.log('Nik', settingsResp);
 		} catch (e) {
-			console.log('Announcement Error displayMigrationWarning', e);
+			console.log('Announcement Error displayMigrationBanner', e);
 		}
 
 		// If its null, then show Migration Notification
 		if (!migrationStatusResp || !migrationStatusResp.migration_status) {
-			isMigrationInfo = true;
 			migrationState = {
-				isMigrationInfo: true,
+				isMigrationAvailable: true,
 				isMigrationDone: false,
 			};
 		} else {
-
-			isMigrationInfo = true;
-
-			// If its done, then show Completion Notification
+			// If its done, then show Deletion Notification
 			if (migrationStatusResp.migration_status === 'done') {
+
 				migrationState = {
-					isMigrationInfo: false,
+					isMigrationAvailable: false,
 					isMigrationDone: true,
+					isMigrationComplete: false,
 				};
+
+				// TODO: uncomment when the values can be extracted from the settings response
+				// if (!settingsResp || !settingsResp.FEATURE_FLAGS.migration_complete) {
+				// 	migrationState = {
+				// 		isMigrationAvailable: false,
+				// 		isMigrationDone: true,
+				// 		isMigrationComplete: false,
+				// 	};
+				// } else {
+				// 	// If its completed as per the settings api, then show Completion Notification
+				// 	migrationState = {
+				// 		isMigrationAvailable: false,
+				// 		isMigrationDone: true,
+				// 		isMigrationComplete: true,
+				// 		migratedConsoleUrl: settingsResp.MIGRATED_CONSOLE_URL
+				// 	};
+				// }
+
 			}
 
 			// If its in-progress, then show Migration Notification
 			else {
 				migrationState = {
-					isMigrationInfo: true,
+					isMigrationAvailable: true,
 					isMigrationDone: false,
 				};
 			}
 		}
 
-		// don't show the banner if we are on the migration page
+		// don't show any migration related banner if we are on the migration page
 		if (window.location.pathname === '/migration') {
 			migrationState = {
-				isMigrationInfo: false,
+				isMigrationAvailable: false,
 				isMigrationDone: false,
 			};
 		}
 
 		// for now, don't show either, dsh todo uncomment when ready
 		migrationState = {
-			isMigrationInfo: false,
+			isMigrationAvailable: false,
 			isMigrationDone: false,
+			isMigrationComplete: true,
+			migratedConsoleUrl: 'https://www.new-console-url.com'
 		};
 
 		this.props.updateState(SCOPE, migrationState);
-		return isMigrationInfo;
+		return migrationState.isMigrationAvailable || migrationState.isMigrationDone || migrationState.isMigrationComplete;
 	};
 
 	async displayCertWarning() {
@@ -213,9 +237,9 @@ export class PageHeader extends Component {
 	async displayAnnouncements() {
 		let isClusterWarning = await this.displayClusterWarning();
 		let isCertWarning = await this.displayCertWarning();
-		let isMigrationInfo = await this.displayMigrationWarning();
+		let isMigrationRelated = await this.displayMigrationBanner();
 		let stateUpdate = {};
-		if (isClusterWarning || isCertWarning || isMigrationInfo) {
+		if (isClusterWarning || isCertWarning || isMigrationRelated) {
 			const showAnnouncementFlag = getFromStorage('showAnnouncement');
 			if (!showAnnouncementFlag || showAnnouncementFlag === null) {
 				stateUpdate = {
@@ -393,7 +417,7 @@ export class PageHeader extends Component {
 						}}
 					/>
 				)}
-				{this.props.showAnnouncement && this.props.isMigrationInfo && (
+				{this.props.showAnnouncement && this.props.isMigrationAvailable && (
 					<InlineNotification
 						kind="info"
 						hideCloseButton
@@ -407,10 +431,24 @@ export class PageHeader extends Component {
 					<InlineNotification
 						kind="info"
 						hideCloseButton
-						actions={<NotificationActionButton onClick={this.openMigrationCompletion}>
-							{translate('migration_completion_button')}
+						actions={<NotificationActionButton onClick={this.openMigrationDone}>
+							{translate('migration_done_button')}
 						</NotificationActionButton>}
+						title={translate('migration_done_title')}
+					/>
+				)}
+				{this.props.showAnnouncement && this.props.isMigrationComplete && (
+					<InlineNotification
+						kind="warning"
+						hideCloseButton
+						actions={
+							<NotificationActionButton
+								onClick={this.openNewConsole}
+							>
+								{translate('migration_completion_action')}
+							</NotificationActionButton>}
 						title={translate('migration_completion_title')}
+						subtitle={translate('migration_completion_subtitle')}
 					/>
 				)}
 				{this.props.showCertNotice && created_parsed_certs.length > 0 && (
@@ -468,8 +506,10 @@ const dataProps = {
 	showAnnouncementButton: PropTypes.bool,
 	isClusterWarning: PropTypes.bool,
 	isCertWarning: PropTypes.bool,
-	isMigrationInfo: PropTypes.bool,
-	isMigrationDone: PropTypes.bool,
+	isMigrationAvailable: PropTypes.bool,
+	isMigrationDone: PropTypes.bool, 		// This is retrieved from the migration API
+	isMigrationComplete: PropTypes.bool, 	// This is retrieved from the settings API
+	migratedConsoleUrl: PropTypes.string,
 	headerTooltip: PropTypes.string,
 	staticHeader: PropTypes.bool,
 	subtext: PropTypes.string,
