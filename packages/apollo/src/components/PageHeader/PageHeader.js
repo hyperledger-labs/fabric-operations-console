@@ -160,7 +160,7 @@ export class PageHeader extends Component {
 		migrationState = {
 			isMigrationAvailable: false,
 			isMigrationDone: false,
-			isMigrationComplete: true,
+			isMigrationComplete: false,
 			migratedConsoleUrl: 'https://www.new-console-url.com'
 		};
 
@@ -439,7 +439,7 @@ export class PageHeader extends Component {
 				)}
 				{this.props.showAnnouncement && this.props.isMigrationComplete && (
 					<InlineNotification
-						kind="warning"
+						kind="error"
 						hideCloseButton
 						actions={
 							<NotificationActionButton
