@@ -25,6 +25,7 @@
 		"async": "^3.2.2",
 		"bn.js": "5.1.*",
 		"buffer": "^6.0.3",
+		"fs-extra": "^10.1.0",
 		"google-protobuf": "3.19.*",
 		"protobufjs": "^6.11.*",
 		"safer-buffer": "2.1.*",

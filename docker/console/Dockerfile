@@ -23,7 +23,7 @@ USER 0
 RUN chown -R 1001:0 .
 RUN ls -ld .
 USER 1001
-RUN npm ci --omit dev && npm run build_all
+RUN npm ci --legacy-peer-deps --omit dev && npm run build_all
 
 # look at stitch output...
 RUN ls -l $STITCH_DIR/dist
@@ -84,7 +84,7 @@ COPY --chown=1001:0 ./athena $SERVER_HOME
 
 USER 0
 RUN (dnf update || true)\
-	&& npm ci \
+	&& npm ci --omit dev \
 	# Make sure we can see what packages are getting installed
 	&& npm ls --production > npm_ls_prod.txt \
 	&& (dnf clean all || true)
