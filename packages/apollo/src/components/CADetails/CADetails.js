@@ -589,16 +589,16 @@ export class CADetails extends Component {
 		const translate = this.props.translate;
 		return (
 			<PageContainer>
+				<PageHeader
+					history={this.props.history}
+					headerName={caName ? translate('ca_details_title', { caName: caName }) : ''}
+				/>
+				{caNameSkeleton}
 				<div className="ibp-ca-details bx--row">
 					<div className="bx--col-lg-4">
 						<div className="ibp-node-details-panel">
 							<div className="ibp-node-tags" />
 							<div className="ibp-node-details-header">
-								<PageHeader
-									history={this.props.history}
-									headerName={caName ? translate('ca_details_title', { caName: caName }) : ''}
-								/>
-								{caNameSkeleton}
 								<StickySection
 									openSettings={this.openCASettings}
 									details={this.props.details}
@@ -643,16 +643,16 @@ export class CADetails extends Component {
 												this.props.details.isUpgradeAvailable &&
 												this.props.details.location === 'ibm_saas' &&
 												ActionsHelper.canCreateComponent(this.props.userInfo) ? (
-													<div className="ibp-details-patch-container">
-														<div className="ibp-patch-available-tag ibp-node-details"
-															onClick={() => this.openCASettings('upgrade')}
-														>
-															{translate('patch_available')}
-														</div>
+												<div className="ibp-details-patch-container">
+													<div className="ibp-patch-available-tag ibp-node-details"
+														onClick={() => this.openCASettings('upgrade')}
+													>
+														{translate('patch_available')}
 													</div>
-												) : (
-													''
-												),
+												</div>
+											) : (
+												''
+											),
 									})}
 								>
 									{this.renderUsage(translate)}
