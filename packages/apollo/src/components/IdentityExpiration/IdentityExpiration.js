@@ -91,6 +91,10 @@ class IdentityExpiration extends Component {
 				}
 			});
 		}
+		// If component is a ca, set admin to true so non-admin message doesn't appear
+		if (this.props.details && this.props.details.node_type === 'fabric-ca') {
+			admin = true;
+		}
 		this.props.updateState(scope, { admin });
 	}
 
