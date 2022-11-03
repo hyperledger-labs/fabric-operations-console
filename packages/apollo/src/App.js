@@ -233,6 +233,9 @@ class App extends Component {
 
 		// use setPlatform() after setInfrastructure() to make sure "platform" is set correctly
 		// b/c we trust settings.INFRASTRUCTURE and don't trust FEATURE_FLAGS.infra_import_options.platform
+		if (settings.INFRASTRUCTURE) {
+			Helper.setPlatform(settings.INFRASTRUCTURE);
+		}
 		if (features.cluster_data.type === null) {
 			let serviceInfo = null;
 			try {
