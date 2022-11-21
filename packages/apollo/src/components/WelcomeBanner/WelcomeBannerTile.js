@@ -15,6 +15,7 @@
 */
 import PropTypes from 'prop-types';
 import React from 'react';
+import SVGs from '../Svgs/Svgs';
 import launch from '../../assets/images/launch.svg';
 
 const WelcomeBannerTile = props => {
@@ -36,10 +37,7 @@ const WelcomeBannerTile = props => {
 					{props.linkText}
 				</button>
 			)}
-			{!props.internalLink && <img src={launch}
-				alt="Launch icon"
-				className="ibp-welcome-tile-launch-icon"
-			/>}
+			{!props.internalLink && <SVGs extendClass={{ 'ibp-welcome-tile-launch-icon': true }} type={'launch'}/>}
 		</button>
 	);
 };
