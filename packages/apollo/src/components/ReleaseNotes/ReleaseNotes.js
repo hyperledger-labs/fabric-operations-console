@@ -38,11 +38,6 @@ const ReleaseNotes = props => {
 							<SkeletonText />
 						</div>
 					)}
-					{!loading && (
-						<div>
-							<div className="ibp-note-current-version">{translate('product_running_on', { platform: translate(Helper.getPlatform()) })}</div>
-						</div>
-					)}
 				</div>
 			</div>
 			<div className="ibp-note-table-container">
