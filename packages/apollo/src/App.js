@@ -202,7 +202,7 @@ class App extends Component {
 			default:
 				break;
 		}
-		let docPrefix = 'https://www.ibm.com/docs/en/blockchain-platform/2.5.3';
+		let docPrefix = 'https://www.ibm.com/docs/en/hlf-support/1.0.0';
 		if (settings.INFRASTRUCTURE === 'openshift') {
 			docPrefix = 'https://www.ibm.com/docs/en/hlf-support/1.0.0';
 		}

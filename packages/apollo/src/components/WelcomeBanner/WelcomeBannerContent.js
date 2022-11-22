@@ -50,7 +50,7 @@ class WelcomeBannerContent extends Component {
 		} else if (type === 'join') {
 			window.open(translate('1joinDocs', { DOC_PREFIX: this.props.docPrefix }));
 		} else if (type === 'developSm') {
-			window.open(translate('develop_vs_code_link'));
+			window.open(translate('develop_vs_code_link', { DOC_PREFIX: this.props.docPrefix }));
 		} else if (type === 'deploySm') {
 			window.open(translate('2deployDocs', { DOC_PREFIX: this.props.docPrefix }));
 		} else if (type === 'goFurther') {
