@@ -575,7 +575,7 @@ dsh note to self:
 	/* the rest of the config tx doc */
 }
 
-// code 205 - happens if 0 re-sends were needed
+// code 215 - happens if 0 re-sends were needed
 {
 	"tx_id": "<transaction id here>",
 	"message": "there is nothing to resend. 0 tx errors."

@@ -1669,7 +1669,7 @@ module.exports = function (logger, ev, t) {
 		function decide_code() {
 			const resend_errors = resend_attempts - resend_successes;
 			if (resend_attempts === 0) {
-				return 205;															// nothing was done
+				return 215;															// nothing was done
 			}
 			if (resend_successes > 0 && resend_errors > 0) {
 				return 207;															// partial success

@@ -1,5 +1,39 @@
 [
 	{
+		"version": "1.0.3-42",
+		"date": "07 Dec 2022",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
+		"version": "1.0.3-40",
+		"date": "21 Nov 2022",
+		"description": [
+			{
+				"title": "Fixed icons",
+				"details": "Fixed icons on the getting started page."
+			},
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
+		"version": "1.0.3-39",
+		"date": "08 Nov 2022",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
 		"version": "1.0.3-28",
 		"date": "8 Aug 2022",
 		"description": [

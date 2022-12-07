@@ -1051,7 +1051,7 @@ describe('Signature Collection APIs', () => {
 				{
 					arrayOfInfoToTest: [
 						{
-							itStatement: 'should return an success w/205 - test_id=yvpjsn',
+							itStatement: 'should return an success w/215 - test_id=yvpjsn',
 							callFunction: (routeInfo) => {
 								tools.stubs.getDoc.callsArgWith(1, null, JSON.parse(JSON.stringify(signature_collection_objects.single_signature_collection_response)));
 								tools.stubs.repeatWriteSafe.callsFake((opts, mod, cb) => {	// use sinon to make a passthrough - stub, pass argument to response
@@ -1060,7 +1060,7 @@ describe('Signature Collection APIs', () => {
 								tools.stubs.retry_req.callsArgWith(1, null, { statusCode: 200, body: {} });
 							},
 							expectBlock: (res) => {
-								expect(res.status).to.equal(205);
+								expect(res.status).to.equal(215);
 								expect(res.body).to.deep.equal({ msg: 'there is nothing to resend. 0 tx errors.', tx_id: 'transaction1' });
 							}
 						},
