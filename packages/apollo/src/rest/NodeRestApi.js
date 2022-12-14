@@ -852,7 +852,8 @@ class NodeRestApi {
 			} else {
 				Log.debug('Updating admin certs for peer ', node.id, ' to ', addAdminCerts);
 				try {
-					const resp = await NodeRestApi.uploadAdminCerts(node.id, addAdminCerts, node.admin_certs);
+					const better_node = await NodeRestApi.getUnCachedDataWithDeployerAttrs(node.id);
+					const resp = await NodeRestApi.uploadAdminCerts(node.id, addAdminCerts, better_node.admin_certs);
 					Log.debug('Update admin cert response:', resp);
 				} catch (error) {
 					Log.error('An error occurred when updating admin cert for peer ', node);
