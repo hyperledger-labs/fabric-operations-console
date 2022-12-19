@@ -664,12 +664,12 @@ class InstantiateChaincodeModal extends Component {
 							!this.props.showOrdererDropdown &&
 							!_.has(this.props.selectedOrderer, 'url2use') &&
 							!this.props.error && (
-								<div className="ibp-modal-desc">
-									<SidePanelWarning title={translate('channel_orderer_not_found')}
-										subtitle={translate('channel_orderer_not_imported_desc')}
-									/>
-								</div>
-							)}
+							<div className="ibp-modal-desc">
+								<SidePanelWarning title={translate('channel_orderer_not_found')}
+									subtitle={translate('channel_orderer_not_imported_desc')}
+								/>
+							</div>
+						)}
 					</div>
 				)}
 			</WizardStep>
@@ -1064,7 +1064,7 @@ class InstantiateChaincodeModal extends Component {
 				onSubmit={this.onSubmit}
 				submitButtonLabel={this.props.isUpgrade ? translate('upgrade_smc') : translate('instantiate_smc')}
 				error={this.props.error}
-			//loading={this.props.loading}
+				//loading={this.props.loading}
 			>
 				<p className="ibp-modal-desc">
 					{this.props.isUpgrade ? (
