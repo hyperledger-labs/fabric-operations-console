@@ -332,8 +332,14 @@ class InstantiateChaincodeModal extends Component {
 				};
 				ChannelApi.getChaincodeDetailsFromPeer(opts.peerId, opts.orderer_host, opts.channel_id, opts.chaincode_id)
 					.then(resp => {
-						let policyIdentities = _.get(resp, 'instantiationPolicy.value.identitiesList');
-						let policyMembers = policyIdentities && policyIdentities.length ? policyIdentities.map(identity => identity.principal.mspIdentifier) : [];
+						let policyIdentities = _.get(resp, 'instantiationPolicy.identities');
+						let policyMembers = policyIdentities && policyIdentities.length ? policyIdentities.map(identity => {
+							// identity.principal returns a Uint8Array
+							let decodedIdentity = new TextDecoder().decode(identity.principal);
+							// regex to just keep the plaintext id from the decodedIdentity since it includes unicode characters
+							let rx = /\w+/g;
+							return rx.exec(decodedIdentity)[0];
+						}) : [];
 						let filtered_peers = [];
 						installed_channel_peers.forEach(peer => {
 							if (policyMembers.includes(peer.msp_id)) {
@@ -658,12 +664,12 @@ class InstantiateChaincodeModal extends Component {
 							!this.props.showOrdererDropdown &&
 							!_.has(this.props.selectedOrderer, 'url2use') &&
 							!this.props.error && (
-							<div className="ibp-modal-desc">
-								<SidePanelWarning title={translate('channel_orderer_not_found')}
-									subtitle={translate('channel_orderer_not_imported_desc')}
-								/>
-							</div>
-						)}
+								<div className="ibp-modal-desc">
+									<SidePanelWarning title={translate('channel_orderer_not_found')}
+										subtitle={translate('channel_orderer_not_imported_desc')}
+									/>
+								</div>
+							)}
 					</div>
 				)}
 			</WizardStep>
@@ -1058,7 +1064,7 @@ class InstantiateChaincodeModal extends Component {
 				onSubmit={this.onSubmit}
 				submitButtonLabel={this.props.isUpgrade ? translate('upgrade_smc') : translate('instantiate_smc')}
 				error={this.props.error}
-				//loading={this.props.loading}
+			//loading={this.props.loading}
 			>
 				<p className="ibp-modal-desc">
 					{this.props.isUpgrade ? (
