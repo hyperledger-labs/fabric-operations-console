@@ -94,12 +94,9 @@ export class PageHeader extends Component {
 		let migrationState = {};
 
 		let migrationStatusResp = null;
-		let settingsResp = null;
 
 		try {
 			migrationStatusResp = await MigrationApi.getStatus();
-			settingsResp = await SettingsApi.getSettings();
-			console.log('Nik', settingsResp);
 		} catch (e) {
 			console.log('Announcement Error displayMigrationBanner', e);
 		}
