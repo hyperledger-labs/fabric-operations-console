@@ -20,12 +20,20 @@ class UserSettingsRestApi {
 		return RestApi.get('/api/v2/users/info?preventCache=' + new Date().getTime());
 	}
 
+	static async getUsersIAMInfo() {
+		return RestApi.get('/api/v3/users/iam/info');
+	}
+
 	static async getApplicationSettings() {
 		return RestApi.get('/api/v2/settings');
 	}
 
 	static async getDefaultPassword() {
 		return RestApi.get('/api/v2/private-settings');
+	}
+
+	static async recordIdentityExport() {
+		return RestApi.post('/api/v3/exported/identities');
 	}
 }
 

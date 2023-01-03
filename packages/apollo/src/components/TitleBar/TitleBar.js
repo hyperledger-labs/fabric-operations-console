@@ -188,7 +188,10 @@ class TitleBar extends Component {
 					className={`ibp-title-bar ${showHeaderButtons ? 'ibp-user-logged-in' : 'ibp-user-logged-out'}`}
 					aria-label={translate(productLabel)}
 				>
-					<Header aria-label={translate(productLabel)}>
+					<Header aria-label={translate(productLabel)}
+						className={this.props.inReadOnlyMode ? 'bx--header-read-only' : ''}
+						title={this.props.inReadOnlyMode ? translate('migration_completion_title') : ''}
+					>
 						<SkipToContent />
 						<HeaderName prefix=""
 							onClick={this.goHome}
@@ -333,6 +336,7 @@ const dataProps = {
 	showSignatureCollection: PropTypes.bool,
 	closeWelcome: PropTypes.bool,
 	details: PropTypes.object,
+	inReadOnlyMode: PropTypes.bool,
 };
 
 TitleBar.propTypes = {

@@ -465,6 +465,11 @@ module.exports = function (logger, ev, t) {
 			};
 			logger.debug('[deployer lib]', req._tx_id, 'sending deployer api w/route:', opts.url);
 			send_dep_req(opts, (err, depRespBody) => {
+				/*depRespBody = {
+					location: 'ibm-saas'
+				};
+				const fmt_ret = {};
+				const fmt_err = null;*/
 				const { fmt_err, fmt_ret } = handle_dep_response(parsed, err, depRespBody);
 				if (fmt_err) {																// error is already logged
 					if (t.ot_misc.get_code(fmt_err) === 409) {								// don't call clean up on a 409 error code
@@ -1851,6 +1856,7 @@ module.exports = function (logger, ev, t) {
 			'admin_certs', 'resources', 'storage', 'version', 'zone', 'state_db', 'region', 'dep_component_id',
 			'ca_name', 'tlsca_name', 'api_url', 'grpcwp_url', 'operations_url', 'tls_cert', 'config_override',
 			'node_ou', 'ecert', 'tls_ca_root_certs', 'ca_root_certs', 'crypto',
+			'api_url_saas', 'grpcwp_url_saas', 'operations_url_saas', 'osnadmin_url_saas'
 			// do not check admin_certs_parsed, or tls_cert_parsed b/c we don't want that stuff stored in the db
 			// do not check cr_status, resource_warnings, we don't want to store a temporary status in the db
 		];
@@ -2187,6 +2193,54 @@ module.exports = function (logger, ev, t) {
 			});
 		}
 	}*/
+
+	// ------------------------------------------
+	// get the kubernetes version
+	// ------------------------------------------
+	exports.get_k8s_version = function (cb) {
+		const parsed = {
+			iid: (ev.CRN && ev.CRN.instance_id) ? ev.CRN.instance_id : 'iid-not-set',
+			debug_tx_id: 'k8s',
+		};
+		const opts = {
+			method: 'GET',
+			baseUrl: t.misc.format_url(ev.DEPLOYER_URL),
+			uri: '/api/v3/instance/' + parsed.iid + '/k8s/cluster/version',
+			timeout: ev.DEPLOYER_TIMEOUT,
+			headers: {
+				'Accept': 'application/json'
+			},
+			_tx_id: parsed.debug_tx_id,
+		};
+		send_dep_req(opts, (err, depRespBody) => {
+			let { fmt_err, fmt_ret } = handle_dep_response(parsed, err, depRespBody);
+			/*fmt_ret = {
+				major: '1',
+				minor: '23',
+				gitVersion: 'v1.23.15+IKS',
+				gitCommit: '452b6c54695f1f57e7a4625e10068840c4ca6263',
+				gitTreeState: 'clean',
+				buildDate: '2022 - 12 - 09T02: 45:24Z',
+				goVersion: 'go1.17.13',
+				compiler: 'gc',
+				platform: 'linux/amd64',
+			};*/
+			if (!fmt_ret) {
+				logger.warn('[k8s version] unable to get version, communication error');
+				return cb(fmt_err, fmt_ret);
+			} else {
+				if (fmt_ret.gitVersion && fmt_ret.gitVersion.length >= 5) {
+					let pos = fmt_ret.gitVersion.indexOf('+');
+					if (pos === -1) { pos = undefined; }
+					fmt_ret._version = fmt_ret.gitVersion.substring(1, pos);
+				} else {
+					logger.warn('[k8s version] unable to get version, missing data');
+					fmt_ret = { _version: 'unknown' };
+				}
+				return cb(null, fmt_ret);
+			}
+		});
+	};
 
 	return exports;
 };

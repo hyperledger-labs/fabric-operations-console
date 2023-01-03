@@ -59,6 +59,7 @@ const _ecdsaCurve = elliptic.curves['p256'];
 let server_settings = {};
 let sessionMiddleware = null;
 let couch_interval = null;
+let migration_interval = null;
 const http_metrics_route = '/api/v[123]/http_metrics/:days?';
 const healthcheck_route = '/api/v3/healthcheck';
 const metric_opts = {
@@ -447,7 +448,7 @@ function setup_routes_and_start() {
 	//---------------------------------------------------------------------------------------------
 	// Most routes here (routes that need a session/user context)
 	//---------------------------------------------------------------------------------------------
-	app.get(['/', '/index.html'], (req, res, next) => {								// serve apollo's output file
+	app.get(['/', '/index.html'], tools.middleware.public, (req, res, next) => {	// serve apollo's output file
 		return serve_index(req, res, next);
 	});
 	app.get(['/package-lock.json', '/package.json', '/npm_ls_prod.txt'], tools.middleware.verify_settings_action_session, (req, res) => {
@@ -534,8 +535,8 @@ function setup_routes_and_start() {
 		return res.status(404).json({ statusCode: 404, msg: 'route not found' });
 	});
 
-	// 404 on GET reqs - have apollo handle it
-	app.get('*', function (req, res, next) {									// any other request gets caught here... apollo will deal with it
+	// all other GET reqs happen here - serve react app & have apollo handle it
+	app.get('*', tools.middleware.public, function (req, res, next) {			// any other request gets caught here... apollo will deal with it
 		const file_extensions = ['.js', '.html', '.css', '.map', '.png', '.svg', '.ico', '.jpg', '.jpeg', '.txt', '.json', '.scss', '.woff2'];
 		for (let i in file_extensions) {
 			if (req.path.indexOf(file_extensions[i]) >= 0) {					// if its a file request and we made it this far..
@@ -664,6 +665,8 @@ function update_settings_doc(cb) {
 				field.push('configtxlator_url');
 			} else if (settings_doc.cookie_name !== ev.COOKIE_NAME) {
 				field.push('cookie_name');
+			} else if (settings_doc.migration_api_key !== ev.MIGRATED_API_KEY) {
+				field.push('migration_api_key');
 			}
 
 			if (field.length === 0) {									// if no changes, skip update
@@ -681,6 +684,7 @@ function update_settings_doc(cb) {
 				settings_doc.configtxlator_url_original = ev.CONFIGTXLATOR_URL_ORIGINAL;
 				settings_doc.configtxlator_url = ev.CONFIGTXLATOR_URL;
 				settings_doc.cookie_name = ev.COOKIE_NAME;
+				settings_doc.migration_api_key = ev.MIGRATED_API_KEY;
 
 				tools.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, settings_doc, (err) => {
 					if (err) {
@@ -791,6 +795,21 @@ function setup_pillow_talk() {
 		if (doc.message_type === 'rec_http_metrics') {
 			logger.debug('[pillow] - received access log data from process id:', (doc.process_id || '?'));
 			tools.http_metrics.append_aggregated_metrics(doc);
+		}
+
+		// --- Receiving Migration Monitoring Start Doc --- //
+		if (doc.message_type === 'monitor_migration') {
+			logger.debug('[pillow] - received message to start monitoring migration progress, interval:', ev.MIGRATION_MON_INTER_SECS);
+			clearInterval(migration_interval);
+			migration_interval = setInterval(() => {
+				tools.migration_lib.check_migration_status();
+			}, ev.MIGRATION_MON_INTER_SECS * 1000);
+		}
+
+		// --- Receiving Migration Monitoring Stop Doc --- //
+		if (doc.message_type === 'monitor_migration_stop') {
+			logger.debug('[pillow] - received message to stop monitoring migration progress');
+			clearInterval(migration_interval);
 		}
 	});
 }
@@ -1119,17 +1138,19 @@ function setup_tls_and_start_app(attempt) {
 	}
 
 	if (ev.ENFORCE_BACKEND_SSL === false) {											// allow self signed certs?
-		logger.info('[tls] Not enforcing backend http requests to have valid TLS certs!');
+		logger.info('[tls] not enforcing backend http requests to have valid TLS certs!');
 		process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 	} else {
-		logger.info('[tls] Enforcing backend http requests to have valid TLS certs');
+		logger.info('[tls] enforcing backend http requests to have valid TLS certs');
 	}
 
 	// if external url has https... try loading our tls cert/key
 	useHTTPS = tools.ot_misc.use_tls_webserver(ev);
 	if (!useHTTPS) {
+		logger.debug('[tls] webserver is not configured to use tls, using http. see setting HOST_URL to modify');
 		start_app();
 	} else {
+		logger.debug('[tls] webserver is configured to use tls, using https. see setting HOST_URL to modify');
 		logger.debug('[tls] looking for tls private key pem in:', process.env.KEY_FILE_PATH);
 		logger.debug('[tls] looking for tls cert in:', process.env.PEM_FILE_PATH);
 		if (!process.env.KEY_FILE_PATH || !process.env.PEM_FILE_PATH) {

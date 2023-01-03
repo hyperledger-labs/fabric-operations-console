@@ -484,5 +484,18 @@ module.exports = function (logger, ev, t) {
 		return res.status(200).json({ message: 'ok', details: 'started' });
 	}
 
+	//-----------------------------------------------------------------------------
+	// Record wallet(identities) export
+	//-----------------------------------------------------------------------------
+	app.post('/api/v[3]/exported/identities', t.middleware.verify_settings_action_session, (req, res) => {;
+		t.other_apis_lib.record_export(req, 'identities', (err, ret) => {
+			if (err) {
+				return res.status(t.ot_misc.get_code(err)).json(err);
+			} else {
+				return res.status(200).json(ret);
+			}
+		});
+	});
+
 	return app;
 };

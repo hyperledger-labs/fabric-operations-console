@@ -115,6 +115,9 @@ module.exports = function (logger, ev, t) {
 			DISABLED_COMPACTION: ev.DISABLED_COMPACTION, 		// false is valid, don't make this a question mark
 			IMPORT_ONLY: ev.IMPORT_ONLY,						// false is valid, don't make this a question mark
 			READ_ONLY: ev.READ_ONLY, 							// false is valid, don't make this a question mark
+			MIGRATED_CONSOLE_URL: ev.MIGRATED_CONSOLE_URL,
+			MIGRATION_MIN_VERSIONS: ev.MIGRATION_MIN_VERSIONS,
+			MIGRATION_STATUS: ev.MIGRATION_STATUS || {},
 		};
 		return t.misc.sortItOut(ret);
 	};
@@ -773,6 +776,32 @@ module.exports = function (logger, ev, t) {
 				} else {
 					logger.info('[openapi] added swagger file - restart required to take effect');
 					return cb(null, { message: 'ok', id: json._id, details: 'restart IBP to use this file' });
+				}
+			});
+		}
+	};
+
+	//-----------------------------------------------------------------------------
+	// Record that a user exported their identities/wallet - used during migration
+	//-----------------------------------------------------------------------------
+	exports.record_export = (req, type, cb) => {
+		if (type !== 'identities') {
+			return cb({ statusCode: 400, msg: 'unable to record export of this type.' });
+		} else {
+			const wallet_doc = {
+				email: t.middleware.getEmail(req),
+				uuid: t.middleware.getUuid(req),
+				timestamp: Date.now(),
+				type: ev.STR.WALLET_MIGRATION,
+			};
+			t.otcc.createNewDoc({ db_name: ev.DB_SYSTEM }, wallet_doc, (err, doc) => {
+				if (err) {
+					const err_code = t.ot_misc.get_code(err);
+					logger.error('[export] unable to write wallet doc:', err_code, err, doc);
+					return cb({ statusCode: 500, err: err });
+				} else {
+					logger.info('[export] recorded wallet export via wallet doc');
+					return cb(null, { message: 'ok', username: wallet_doc.username, details: 'recorded export' });
 				}
 			});
 		}

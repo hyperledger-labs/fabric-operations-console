@@ -110,7 +110,8 @@
 		"import_only_enabled": true,
 		"mustgather_enabled": false,
 		"read_only_enabled": false,
-		"osnadmin_feats_enabled": true
+		"osnadmin_feats_enabled": true,
+		"migration_enabled": false
 	},
 	"file_logging": {
 		"client": {
@@ -167,6 +168,30 @@
 	"max_components": 75,
 	"memory_cache_enabled": true,
 	"message_type": "settings_doc_update",
+	"migration_api_key": null,
+	"migrated_console_url": null,
+	"migration_min_versions": {
+		"fabric-ca": "1.5.5",
+		"fabric-peer": "2.2.9",
+		"fabric-orderer": "2.2.9",
+		"kubernetes": "1.22"
+	},
+	"migration_mon_inter_secs": 25,
+	"migration_status": {
+		"deadline": 1690844400000,
+		"timeout_min": 15,
+		"attempt": 0,
+		"ingress_start_ts": null,
+		"ingress_finish_ts": null,
+		"comp_start_ts": null,
+		"comp_finish_ts": null,
+		"console_start_ts": null,
+		"console_finish_ts": null,
+		"db_start_ts": null,
+		"db_finish_ts": null,
+		"error_msg": "",
+		"migration_complete": false
+	},
 	"proxy_tls_fabric_reqs": "always",
 	"proxy_tls_http_url": null,
 	"proxy_tls_ws_url": null,
@@ -272,7 +297,5 @@
 		}
 	},
 	"trust_unknown_certs": false,
-	"type": "settings",
-	"migrated_console_url": null,
-	"migration_link_apikey": "open"
+	"type": "settings"
 }

@@ -129,7 +129,26 @@ module.exports = function (logger, ev, t) {
 					doc.issued_by_ca_id = find_ca_id();
 				}
 			}
+
+			// legacy ingress URL handling (switch urls for legacy component compatibility)
+			// if component is migrated from IBP, return the SaaS operator style URLs, else return OS operator style
+			if (doc.migrated_from === ev.STR.LOCATION_IBP_SAAS) {
+				doc.api_url = doc.api_url_saas || undefined;
+				doc.operations_url = doc.operations_url_saas || undefined;
+				doc.osnadmin_url = doc.osnadmin_url_saas || undefined;
+
+				// grpcwp_url is different, since console controls it entirely, we should always use the OS operator style (the new style)
+				// b/c there is no good reason not to transition, and this makes 1 less corner case to worry about going forward
+				// doc.grpcwp_url = doc.grpcwp_url_saas || undefined;		// don't uncomment, use this field as is
+			}
+
+			// remove legacy ingress routes from output, the URL switching was handled above (if applicable)
+			delete doc.api_url_saas;
+			delete doc.operations_url_saas;
+			delete doc.osnadmin_url_saas;
+			delete doc.grpcwp_url_saas;
 		}
+
 		return doc;										// don't sort here, sort right before responding
 
 
@@ -977,6 +996,12 @@ module.exports = function (logger, ev, t) {
 			const dep_operations_url = t.misc.safe_dot_nav(dep_data, ['dep_data.endpoints.operations']);
 			const dep_osnadmin_url = t.misc.safe_dot_nav(dep_data, ['dep_data.endpoints.admin']);
 
+			// legacy saas style URLs
+			const dep_api_url_saas = t.misc.safe_dot_nav(dep_data, ['dep_data.endpoints.api_saas']);
+			const dep_grpcwp_url_saas = t.misc.safe_dot_nav(dep_data, ['dep_data.endpoints.grpcweb_saas']);
+			const dep_operations_url_saas = t.misc.safe_dot_nav(dep_data, ['dep_data.endpoints.operations_saas']);
+			const dep_osnadmin_url_saas = t.misc.safe_dot_nav(dep_data, ['dep_data.endpoints.admin_saas']);
+
 			const dep_tls_ca_root_certs = t.misc.safe_dot_nav(dep_data, ['dep_data.msp.tls.cacerts']);		// array
 			const dep_ca_root_certs = t.misc.safe_dot_nav(dep_data, ['dep_data.msp.component.cacerts']);	// array
 			const dep_admin_certs = t.misc.safe_dot_nav(dep_data, ['dep_data.msp.component.admincerts', 'dep_data.admincerts']);
@@ -1026,6 +1051,12 @@ module.exports = function (logger, ev, t) {
 			if (dep_grpcwp_url) { ret.grpcwp_url = dep_grpcwp_url; }
 			if (dep_operations_url) { ret.operations_url = dep_operations_url; }
 			if (dep_osnadmin_url) { ret.osnadmin_url = dep_osnadmin_url; }
+
+			if (dep_api_url_saas) { ret.api_url_saas = dep_api_url_saas; }
+			if (dep_grpcwp_url_saas) { ret.grpcwp_url_saas = dep_grpcwp_url_saas; }
+			if (dep_operations_url_saas) { ret.operations_url_saas = dep_operations_url_saas; }
+			if (dep_osnadmin_url_saas) { ret.osnadmin_url_saas = dep_osnadmin_url_saas; }
+
 			if (dep_tls_cert) { ret.tls_cert = dep_tls_cert; }
 		}
 

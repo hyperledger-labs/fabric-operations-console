@@ -21,6 +21,7 @@ module.exports = function (logger, ev, t) {
 	const exports = {};
 	// dsh todo doc the new settings
 	// dsh todo internal doc the new apis
+	// dsh todo set migration_status.migration_complete field in settings doc when done
 
 	//-------------------------------------------------------------
 	// Get the overall status from status docs in db
@@ -28,30 +29,20 @@ module.exports = function (logger, ev, t) {
 	exports.get_status = (req, cb) => {
 		const ret = {
 			migration_status: null, 		//'in-progress' || 'done' || null,
-
-			// dsh todo api to set these
 			migrated_console_url: null, 	//'https://something.goes.here.com' || null,
-
-			// dsh todo api to set these
-			databases: null, 				//'in-progress' || 'done' || null,
-
-			// dsh todo api to set these
 			components: [
 				/*{
 					"id": <id here>,
 					"migration_status" : "in-progress" || "done" || null
 				}*/
 			],
-
-			// dsh todo api to set these
 			wallets: [
 				/*{
-					"username": <username here>,
-					"migration_status" : "done"
+					"email": <email here>,
+					"timestamp" : "done"
 				}*/
 			]
 		};
-
 
 		t.async.parallel([
 
@@ -74,11 +65,11 @@ module.exports = function (logger, ev, t) {
 					_id: '_design/athena-v1',
 					view: '_doc_types',
 					SKIP_CACHE: true,
-					query: t.misc.formatObjAsQueryParams({ include_docs: true, keys: [ev.STR.STATUS_IN_PROGRESS] }),
+					query: t.misc.formatObjAsQueryParams({ include_docs: true, keys: [ev.STR.WALLET_MIGRATION], reduce: false }),
 				};
 				t.otcc.getDesignDocView(view_opts, (err_getDoc, resp) => {
 					if (err_getDoc || !resp) {
-						logger.error('[migration lib] unable to load existing component ids:', err_getDoc, resp);
+						logger.error('[migration lib] unable to load wallet export records:', err_getDoc, resp);
 					}
 					join(null, resp ? resp.rows : []);
 				});
@@ -108,19 +99,89 @@ module.exports = function (logger, ev, t) {
 			const settings_doc = results[0];
 			const wallet_docs = results[1];
 			const component_docs = results[2];
+			const mig_status_data = settings_doc ? settings_doc.migration_status : {};
+			const last_step_status = (mig_status_data && mig_status_data.db_finish_ts) ? ev.STR.STATUS_DONE : null;
 
 			ret.migrated_console_url = settings_doc.migrated_console_url || null;
-			ret.databases = settings_doc.migration_database_status || null;
 			ret.wallets = format_wallet_status_docs(wallet_docs);
 			ret.components = format_comp_status_docs(component_docs);
 
+			ret.elapsed_ms = Date.now() - mig_status_data.ingress_start_ts;
+			ret.timeout_ms = mig_status_data.timeout_min * 60 * 1000;
+			ret.time_left_ms = ret.timeout_ms - ret.elapsed_ms;
+			ret.migration_enabled = settings_doc.feature_flags ? settings_doc.feature_flags.migration_enabled : false;
+			ret.deadline = mig_status_data.deadline;
+
 			// overall migration status
 			ret.migration_status = null;
-			if (all_comps_have_migrated(component_docs) && (ret.wallets.length > 0) && (ret.databases === ev.STR.STATUS_DONE)) {
+			if ((last_step_status === ev.STR.STATUS_DONE) && (ret.wallets.length > 0)) {
 				ret.migration_status = ev.STR.STATUS_DONE;
-			} else if (some_comps_have_migrated(component_docs) || (ret.wallets.length > 0) || (ret.databases === ev.STR.STATUS_DONE)) {
+			} else if (ret.time_left_ms >= 0 || last_step_status === ev.STR.STATUS_DONE) {	// still show in-progress if ran out of time on last step (wallet)
 				ret.migration_status = ev.STR.STATUS_IN_PROGRESS;
+			} else if (ret.time_left_ms < 0) {
+				ret.migration_status = ev.STR.STATUS_TIMEOUT;
 			}
+
+			// any error message overrides the normal status conditions
+			if (mig_status_data.error_msg) {
+				ret.migration_status = ev.STR.STATUS_FAILED;
+				ret.error_msg = t.misc.safe_str(mig_status_data.error_msg, true);
+			} else {
+				ret.error_msg = '';
+			}
+
+			// find the step we are on, it has a start timestamp but no finish timestamp
+			let on_step = 0;
+			const step_field_names = ['ingress', 'comp', 'console', 'db'];	// the prefix of the step, must match value in settings doc
+			for (let i in step_field_names) {
+				const startFieldName = step_field_names[i] + '_start_ts';
+				const finFieldName = step_field_names[i] + '_finish_ts';
+				if (mig_status_data[startFieldName]) {
+					on_step = Number(i);
+				}
+
+				if (mig_status_data[finFieldName]) {
+					on_step = Number(i) + 1;
+				}
+			}
+
+			// steps are either not-started, in-progress, done, or failed (a timeout and error are treated the same way for the step diagram)
+			ret.on_step = on_step;
+			ret.steps = [];
+			for (let i = 0; i <= 4; i++) {
+				if (i < on_step) {
+					ret.steps[i] = {
+						status: ev.STR.STATUS_DONE
+					};
+				} else if (i === on_step) {
+					ret.steps[i] = {
+						status: (ret.migration_status === ev.STR.STATUS_FAILED || ret.migration_status === ev.STR.STATUS_TIMEOUT)
+							? ev.STR.STATUS_FAILED : ev.STR.STATUS_IN_PROGRESS
+					};
+				} else {
+					ret.steps[i] = {
+						status: ''
+					};
+				}
+			}
+
+			// the wallet step is done when we are on it and we have exported at least 1 wallet recently
+			if (on_step === 4 && ret.wallets.length > 0) {
+				ret.steps[4] = {
+					status: ev.STR.STATUS_DONE
+				};
+			}
+
+			// estimate of how long migration will take
+			const deployed_comps = (ret && ret.components) ? ret.components.filter(x => {
+				return !x.imported;
+			}) : [];
+			const ingress_mins = 10;
+			const component_base_mins = 2;
+			const cost_per_component_sec = 45;
+			const console_mins = 1.5;
+			ret.estimate_mins = Number(Math.ceil((ingress_mins + console_mins + component_base_mins + (deployed_comps.length * cost_per_component_sec) / 60)));
+			ret.estimate_mins = Number(Math.ceil(ret.estimate_mins / 5) * 5);
 
 			return cb(null, ret);
 		});
@@ -132,8 +193,9 @@ module.exports = function (logger, ev, t) {
 			for (let i in wallet_docs) {
 				if (wallet_docs[i].doc) {
 					docs.push({
-						username: wallet_docs[i].doc.username,
-						migration_status: ev.STR.STATUS_DONE,
+						email: wallet_docs[i].doc.email,
+						uuid: wallet_docs[i].doc.uuid,
+						timestamp: wallet_docs[i].doc.timestamp,
 					});
 				}
 			}
@@ -149,36 +211,72 @@ module.exports = function (logger, ev, t) {
 						id: comp_docs[i].doc._id,
 						type: comp_docs[i].doc.type,
 						migration_status: comp_docs[i].doc.migration_status || null,
+						imported: !(comp_docs[i].doc.location === ev.STR.LOCATION_IBP_SAAS),
 					});
 				}
 			}
 			return docs;
 		}
-
-		// returns true if every component doc has migrated
-		function all_comps_have_migrated(comp_docs) {
-			for (let i in comp_docs) {
-				if (comp_docs[i].doc) {
-					if (comp_docs[i].doc.migration_status !== ev.STR.STATUS_DONE) {
-						return false;
-					}
-				}
-			}
-			return true;
-		}
-
-		// returns true if at least one component doc has migrated
-		function some_comps_have_migrated(comp_docs) {
-			for (let i in comp_docs) {
-				if (comp_docs[i].doc) {
-					if (comp_docs[i].doc.migration_status === ev.STR.STATUS_DONE) {
-						return true;
-					}
-				}
-			}
-			return false;
-		}
 	};
+
+	// -----------------------------------------------------
+	// Migrate components (this is a jupiter call)
+	// -----------------------------------------------------
+	exports.migrate_components = (req, cb) => {
+		// 1. get lock
+		const l_opts = {
+			lock: 'migration',
+			max_locked_sec: 5 * 60, 		// dsh todo calc decent value for lock
+		};
+		t.lock_lib.apply(l_opts, (lock_err) => {
+			if (lock_err) {
+				logger.error('[migration lib] did not get migration lock, try again later');
+				return cb({ statusCode: 400, msg: 'unable to get migration lock', details: lock_err }, null);
+			} else {
+
+				// 2. reset/clear the migration status
+				clear_migration_status(() => {
+
+					// 3. mark the component migration as in progress
+					change_comp_migration_status(ev.STR.STATUS_IN_PROGRESS, (err, new_console_url) => {
+						if (err) {
+							return cb(err);											// error already logged
+						} else {
+
+							// 4. send migration call to jupiter
+							req.path2use = '/api/v1/$iid/migrate/all';				// $iid replaced later
+							req.body.migration_api_key = ev.MIGRATED_API_KEY;		// this is the key to use on the new console
+							t.proxy_lib.jupiter_proxy_call(req, (ret) => {
+								if (!ret) {
+									logger.error('[jupiter] - comm error in response', err);
+									return cb({ statusCode: 500, response: 'empty' });
+								} else if (t.ot_misc.is_error_code(ret.statusCode)) {
+									logger.error('[jupiter] - error response code from jupiter', ret.statusCode);
+									return cb(ret);
+								} else {
+									let json = null;
+									try {
+										json = JSON.parse(ret.response);
+									} catch (e) {
+
+									}
+
+									const msg = {
+										message_type: 'monitor_migration',
+										message: 'migration has begun',
+									};
+									t.pillow.broadcast(msg);			// send signal to console to start looking for migration status updates
+
+									return cb(null, json);
+								}
+							});
+						}
+					});
+				});
+			}
+		});
+	};
+
 
 	//-------------------------------------------------------------
 	// Migrate our databases
@@ -199,15 +297,77 @@ module.exports = function (logger, ev, t) {
 		});
 	};
 
+	// edit settings doc to clear the migration status
+	function clear_migration_status(cb) {
+		t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, (err, settings_doc) => {
+			if (err || !settings_doc) {
+				logger.error('[migration lib] could not get settings doc to clear migration status', err);
+				return cb({ statusCode: 500, msg: 'could get settings doc to clear migration status', details: err }, null);
+			} else {
+
+				settings_doc.migration_status.ingress_start_ts = Date.now();
+				settings_doc.migration_status.ingress_finish_ts = null;
+				settings_doc.migration_status.comp_start_ts = null;
+				settings_doc.migration_status.comp_finish_ts = null;
+				settings_doc.migration_status.console_start_ts = null;
+				settings_doc.migration_status.console_finish_ts = null;
+				settings_doc.migration_status.db_start_ts = null;
+				settings_doc.migration_status.db_finish_ts = null;
+
+				// update the settings doc
+				t.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, settings_doc, (err_writeDoc, doc) => {
+					if (err_writeDoc) {
+						logger.error('[migration lib] cannot edit settings doc to clear migration status:', err_writeDoc);
+						cb({ statusCode: 500, msg: 'could not update settings doc to clear migration status', details: err_writeDoc }, null);
+					} else {
+						return cb(null, settings_doc);
+					}
+				});
+			}
+		});
+	}
+
+	// edit settings doc to change component migration status
+	function change_comp_migration_status(status, cb) {
+		t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, (err, settings_doc) => {
+			if (err || !settings_doc) {
+				logger.error('[migration lib] could not get settings doc to update comp migration status', err);
+				return cb({ statusCode: 500, msg: 'could get settings doc for component migration status', details: err }, null);
+			} else {
+
+				if (status === ev.STR.STATUS_IN_PROGRESS) {
+					settings_doc.migration_status.comp_start_ts = Date.now();
+					settings_doc.migration_status.attempt++;
+				} else {
+					settings_doc.migration_status.comp_finish_ts = Date.now();
+				}
+
+				// update the settings doc
+				t.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, settings_doc, (err_writeDoc, doc) => {
+					if (err_writeDoc) {
+						logger.error('[migration lib] cannot edit settings doc to update comp migration status:', err_writeDoc);
+						cb({ statusCode: 500, msg: 'could not update settings doc for component migration status', details: err_writeDoc }, null);
+					} else {
+						return cb(null, settings_doc.migrated_console_url);
+					}
+				});
+			}
+		});
+	}
+
 	// edit settings doc to change db migration status
 	function change_db_migration_status(status, cb) {
-		// get the Athena settings doc first
 		t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, (err, settings_doc) => {
 			if (err || !settings_doc) {
 				logger.error('[migration lib] could not get settings doc to update db migration status', err);
 				return cb({ statusCode: 500, msg: 'could get settings doc for db migration', details: err }, null);
 			} else {
-				settings_doc.migration_database_status = status; //ev.STR.STATUS_IN_PROGRESS;
+
+				if (status === ev.STR.STATUS_IN_PROGRESS) {
+					settings_doc.migration_status.db_start_ts = Date.now();
+				} else {
+					settings_doc.migration_status.db_finish_ts = Date.now();
+				}
 
 				// update the settings doc
 				t.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, settings_doc, (err_writeDoc, doc) => {
@@ -241,7 +401,7 @@ module.exports = function (logger, ev, t) {
 		// 1. get lock
 		const l_opts = {
 			lock: 'migration',
-			max_locked_sec: 1, //4 * 60,
+			max_locked_sec: 1 * 60,		// dsh todo calc decent value for lock
 		};
 		t.lock_lib.apply(l_opts, (lock_err) => {
 			if (lock_err) {
@@ -284,8 +444,8 @@ module.exports = function (logger, ev, t) {
 									} else {
 
 										// dsh todo remove this test code
-										delete backup.dbs.athena_components;
-										delete backup.dbs.athena_system;
+										//delete backup.dbs.athena_components;
+										//delete backup.dbs.athena_system;
 
 										// 5. call restore api on other console
 										send_restore(new_console_url, backup, (restore_err, rest_resp) => {
@@ -298,7 +458,6 @@ module.exports = function (logger, ev, t) {
 											} else {
 
 												// 6. wait for restore api to be done
-												console.log('!!! restore api resp', rest_resp);
 												wait_for_restore(rest_resp.url, (stalled_err2) => {
 													if (stalled_err2) {
 														return cb({						// error already logged
@@ -395,7 +554,7 @@ module.exports = function (logger, ev, t) {
 						url: webhook_url,
 						headers: {
 							'Content-Type': 'application/json',
-							'Authorization': 'Basic ' + t.misc.b64('migration_link_apikey' + ':' + 'open'),		// dsh todo replace
+							'Authorization': 'Basic ' + t.misc.b64('migration_api_key' + ':' + 'open'),		// dsh todo replace
 						}
 					};
 					t.misc.retry_req(web_opts, (web_err, web_resp) => {
@@ -431,7 +590,7 @@ module.exports = function (logger, ev, t) {
 		// call restore api on the other console
 		//--------------------------------------------------
 		function send_restore(new_console_url, backup, cb) {
-			backup.client_webhook_url = 'http://localhost:3000/api/v3/testing';							// dsh todo rethink this, placeholder
+			backup.client_webhook_url = 'http://localhost:3000/api/v3/testing';						// dsh todo rethink this, placeholder
 			const res_opts = {
 				_name: 'migration-restore',
 				_max_attempts: 1,
@@ -441,7 +600,7 @@ module.exports = function (logger, ev, t) {
 				body: JSON.stringify(backup),
 				headers: {
 					'Content-Type': 'application/json',
-					'Authorization': 'Basic ' + t.misc.b64('migration_link_apikey' + ':' + 'open'),		// dsh todo figure out migration_key
+					'Authorization': 'Basic ' + t.misc.b64('migration_api_key' + ':' + 'open'),		// dsh todo figure out migration_key
 				}
 			};
 
@@ -454,6 +613,138 @@ module.exports = function (logger, ev, t) {
 			});
 		}
 	}
+
+	//-------------------------------------------------------------
+	// Validate every node's fabric version (is it migratable?)
+	//-------------------------------------------------------------
+	exports.validate_fabric_versions = (req, cb) => {
+		req._skip_cache = true;
+		req._include_deployment_attributes = true;
+		t.component_lib.get_all_runnable_components(req, (err, resp) => {
+			if (err) {
+				logger.error('[migrate] error getting all runnable components:', err);
+				return cb({ statusCode: 500, errors: err });
+			} else {
+				const ret = {
+					components: [],
+					all_valid: true										// default true
+				};
+				for (let i in resp) {
+					const comp = t.comp_fmt.fmt_component_resp(req, resp[i]);
+					const node_type_lc = resp[i].type ? resp[i].type.toLowerCase() : '';
+					const min_version = node_type_lc ? ev.MIGRATION_MIN_VERSIONS[node_type_lc] : null;
+					comp._migratable = true;							// default true
+					comp._imported = true;
+					comp._min_version = min_version;
+
+					if (comp.location === ev.STR.LOCATION_IBP_SAAS) {	// if its a saas component, we don't care about imported ones
+						comp._imported = false;
+						if (!t.misc.is_version_b_greater_than_a(min_version, resp[i].version, true)) {
+							comp._migratable = false;
+							ret.all_valid = false;
+						}
+					}
+
+					ret.components.push(comp);
+				}
+				return cb(null, t.misc.sortKeys(ret));
+			}
+		});
+	};
+
+	//-------------------------------------------------------------
+	// Validate the cluster's kubernetes version(is it migratable?)
+	//-------------------------------------------------------------
+	exports.validate_k8s_versions = (req, cb) => {
+		req._skip_cache = true;
+		t.deployer.get_k8s_version((err, resp) => {
+			if (err) {
+				logger.error('[migrate] error getting kubernetes version:', err);
+				return cb({ statusCode: 500, errors: err });
+			} else {
+				const k8s_version = resp ? resp._version : '';
+				logger.debug('[migrate] received kubernetes version:', k8s_version);
+				const ret = {
+					k8s: {
+						migratable: t.misc.is_version_b_greater_than_a(ev.MIGRATION_MIN_VERSIONS.kubernetes, k8s_version, true),
+						version: k8s_version,
+						min_version: ev.MIGRATION_MIN_VERSIONS.kubernetes.toString(),
+					}
+				};
+				return cb(null, t.misc.sortKeys(ret));
+			}
+		});
+	};
+
+	//-------------------------------------------------------------
+	// Check on migration status
+	//-------------------------------------------------------------
+	exports.check_migration_status = (cb) => {
+		logger.info('[migration] - monitoring migration status - looking for updates');
+
+		// first check if we are still within the estimated time
+		t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, (err, settings_doc) => {
+			if (err || !settings_doc) {
+				logger.error('[migration watchdog] could not get settings doc to check migration status', err);
+				return cb({ statusCode: 500, msg: 'could get settings doc to clear migration status', details: err }, null);
+			} else {
+
+				// if its been too long, kill the migration monitor interval
+				const elapsed_ms = Date.now() - settings_doc.migration_status.comp_start_ts;
+				const timeout_ms = settings_doc.migration_status.timeout_min * 60 * 1000;
+				logger.debug('[migration watchdog] elapsed time:', t.misc.friendly_ms(elapsed_ms) +
+					'. timeout after:', t.misc.friendly_ms(timeout_ms));
+
+				if (elapsed_ms >= timeout_ms) {
+					logger.error('[migration watchdog] timeout exceeded, migration has failed');
+
+					const msg = {
+						message_type: 'monitor_migration_stop',
+						message: 'migration timeout exceeded',
+					};
+					t.pillow.broadcast(msg);
+				} else {
+					logger.debug('[migration watchdog] migration is still progressing');
+
+					// dsh todo fill in the checking part
+					//change_comp_migration_status(ev.STR.STATUS_DONE, (err) => {		// if success, mark migration as complete
+					//	logger.info('[migration lib] comp migration was successful');
+					//});
+				}
+			}
+		});
+	};
+
+	//-------------------------------------------------------------
+	// Set the migration_enabled feature flag in the settings doc
+	//-------------------------------------------------------------
+	exports.set_migration_feature_flag = (value, cb) => {
+		t.couch_lib.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, function (err, doc) {
+			if (err) {
+				logger.error('[migration lib] an error occurred obtaining the "' + process.env.SETTINGS_DOC_ID + '" db:', ev.DB_SYSTEM, err, doc);
+				cb({ statusCode: 500, err: err }, doc);
+			} else {
+				if (!doc) {
+					cb({ statusCode: 500, err: 'settings doc is missing' }, doc);	// this should be impossible
+				}
+				if (!doc.feature_flags) {
+					doc.feature_flags = {};
+				}
+				doc.feature_flags.migration_enabled = value;
+
+				t.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, doc, (err_writeDoc, doc) => {
+					if (err_writeDoc) {
+						logger.error('[migration lib] cannot edit settings doc to edit migration_enabled:', err_writeDoc);
+						cb({ statusCode: 500, msg: 'could not update settings doc to edit migration_enabled', details: err_writeDoc }, null);
+					} else {
+						const ret = JSON.parse(JSON.stringify(ev.API_SUCCESS_RESPONSE));
+						ret.migration_enabled = value;
+						cb(null, ret);
+					}
+				});
+			}
+		});
+	};
 
 	return exports;
 };
