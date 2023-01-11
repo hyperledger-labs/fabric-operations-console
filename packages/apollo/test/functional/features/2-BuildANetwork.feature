@@ -70,13 +70,14 @@ Feature: Build a network feature
         And I selected 'peer1' from the 'div#saasCA-enroll_id' dropdown
         And I provided 'peer1pw' for the 'Enter a secret' input
         And I selected 'Org1 MSP' from the 'div#saasCA-admin_msp' dropdown
-        And I selected '2.4' matching value from the 'div#importPeerModal-version-version' dropdown
+        And I selected '2.2' matching value from the 'div#importPeerModal-version-version' dropdown
         And I clicked the button with text 'Next'
         And I selected 'Org1 MSP Admin' from the 'div#importPeerModal-identity-identity' dropdown
         And I clicked the button with text 'Next'
         When I click the button with text 'Add peer'
         Then I should see a success toast which says "Congratulations! You have successfully created 'Peer Org1'"
         And the peer with name 'Peer Org1' should have started successfully
+
 
     Scenario: When creating a certificate authority for the Ordering Service
         Given I go to the console
@@ -160,7 +161,7 @@ Feature: Build a network feature
         And I selected 'OS1' from the 'div#saasCA-enroll_id' dropdown
         And I provided 'OS1pw' for the 'Enter a secret' input
         And I selected 'Ordering Service MSP' value from the 'div#saasCA-admin_msp' dropdown
-        And I selected '2.4' matching value from the 'div#importOrdererModal-version-version' dropdown
+        And I selected '2.2' matching value from the 'div#importOrdererModal-version-version' dropdown
         And I clicked the button with text 'Next'
         Then wait "5" seconds
         And I selected 'Ordering Service MSP Admin' value from the 'div#importOrdererModal-identity' dropdown
@@ -181,3 +182,4 @@ Feature: Build a network feature
         When I click the button with text 'Add organization'
         Then wait "10" seconds
         Then a tile with title 'Org1 MSP' should have been created
+
