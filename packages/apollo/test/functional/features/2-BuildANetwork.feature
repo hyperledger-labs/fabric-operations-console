@@ -76,6 +76,7 @@ Feature: Build a network feature
         And I clicked the button with text 'Next'
         When I click the button with text 'Add peer'
         Then I should see a success toast which says "Congratulations! You have successfully created 'Peer Org1'"
+        Then wait "30" seconds
         And the peer with name 'Peer Org1' should have started successfully
 
 
