@@ -1,7 +1,37 @@
 @saas @software @saas-minimal
 Feature: Build a network without system channel
 
-	Scenario: When creating an ordering service without system channel
+
+  Scenario: Upgrading Peer and Ordering Service node to v2.4.x
+      Given I go to the console
+      And I am logged in
+      And I am ready to get started
+      And I am on the 'nodes' page
+      And I clicked the 'Peer Org1' peer
+      And I clicked the button with id 'ibp-peer-usage'
+      And I clicked the button with id 'patch_node'
+      And I clicked the checkbox with text 'I understand this is a potentially breaking change. Upgrade anyway.'
+      And I clicked the button with text 'Next'
+      And I provided 'Peer Org1' for the 'Type node name here' input
+      And I clicked the button with text 'Upgrade Fabric version'
+      Then wait "20" seconds
+      And I am on the 'nodes' page
+      And the peer with name 'Peer Org1' should have started successfully
+      And I am on the 'nodes' page
+      And I clicked the 'Ordering Service' orderer
+      Then wait "10" seconds
+      And I clicked the button with id 'ibp-orderer-nodes'
+      And I clicked the button with id 'ibp-tile-Ordering Service_1'
+      And I clicked the button with text 'Upgrade version'
+      And I clicked the button with text 'Next'
+      And I provided 'Ordering Service_1' for the 'Type node name here' input
+      And I clicked the button with text 'Upgrade Fabric version'
+      Then wait "10" seconds
+      And I am on the 'nodes' page
+      And the orderer with name 'Ordering Service' should have started successfully
+
+
+  Scenario: When creating an ordering service without system channel
         Given I go to the console
         And I am logged in
         And I am ready to get started

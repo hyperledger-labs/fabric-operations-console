@@ -53,8 +53,11 @@ Then(/^the (certificate authority|peer|orderer) with name (?:'|")(.*?)(?:'|") sh
 		await browser.wait(ExpectedConditions.elementToBeClickable(isRunning), 10 * 60 * 1000);
 	}
 
+    // Sometimes peer node takes little longer - so added extra 2 minutes of wait for Peer and Ordering service node to come up
+    if (nodeType != 'certificate authority') {
     console.log('Wait for 2 minutes...');
     await browser.sleep(120000);
+    }
 	await tile.click();
 });
 
