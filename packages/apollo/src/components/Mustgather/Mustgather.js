@@ -256,7 +256,7 @@ export class Mustgather extends Component {
 	}
 
 	renderButtonSection(translate) {
-		if (this.state.status) {
+		if (this.state) {
 			return (
 				<div className="mustgather-buttons">
 					{this.getActionButtons(translate)}
