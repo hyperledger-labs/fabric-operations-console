@@ -427,6 +427,7 @@ class PeerRestApi {
 				grpcwp_url: Helper.normalizeHttpURL(some_peer_record.grpcwp_url),
 				msp_id: some_peer_record.msp_id,
 				msp: some_peer_record.msp,
+				migrated_from: some_peer_record.migrated_from ? some_peer_record.migrated_from : undefined,
 			};
 			if (!_.get(exportedPeer, 'msp.component.tls_cert')) {
 				_.set(exportedPeer, 'msp.component.tls_cert', some_peer_record.tls_cert);

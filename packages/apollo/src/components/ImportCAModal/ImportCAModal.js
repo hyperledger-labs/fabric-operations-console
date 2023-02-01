@@ -521,6 +521,10 @@ class ImportCAModal extends React.Component {
 							validate: Helper.isCertificate,
 						},
 						{
+							name: 'migrated_from',
+							required: false,
+						},
+						{
 							name: 'msp',
 							required: false,
 							validate: msp => {

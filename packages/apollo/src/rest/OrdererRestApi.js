@@ -127,6 +127,7 @@ class OrdererRestApi {
 					cluster_id: node.cluster_id,
 					cluster_name: node.cluster_name,
 					msp: node.msp,
+					migrated_from: node.migrated_from ? node.migrated_from : undefined,
 				};
 				if (!_.get(newOrderer, 'msp.component.tls_cert')) {
 					_.set(newOrderer, 'msp.component.tls_cert', node.tls_cert || node.server_tls_cert);
