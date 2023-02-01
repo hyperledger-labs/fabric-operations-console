@@ -11429,6 +11429,11 @@ components:
       x-validate_illegal_values:
         - '.'
         - '..'
+    migrated_from:
+      type: string
+      example: ibm_saas
+      description: This is an internal field to reference if a component came from a different console. It can be left blank.
+      maxLength: 128
     api_url_ca:
       type: string
       description: The URL for the CA. Typically, client applications would send requests to this URL. Include the protocol, hostname/ip and port.
@@ -14906,6 +14911,8 @@ components:
           $ref: '#/components/schemas/location_saas'
         api_url:
           $ref: '#/components/schemas/api_url_ca'
+        migrated_from:
+          $ref: '#/components/schemas/migrated_from'
         operations_url:
           $ref: '#/components/schemas/operations_url_ca'
         tags:
@@ -15000,6 +15007,8 @@ components:
           $ref: '#/components/schemas/osnadmin_url_orderer'
         location:
           $ref: '#/components/schemas/location_saas'
+        migrated_from:
+          $ref: '#/components/schemas/migrated_from'
         msp:
           $ref: '#/components/schemas/msp_crypto_field'
         msp_id:
@@ -15033,6 +15042,8 @@ components:
           $ref: '#/components/schemas/grpcwp_url_peer'
         location:
           $ref: '#/components/schemas/location_saas'
+        migrated_from:
+          $ref: '#/components/schemas/migrated_from'
         msp:
           $ref: '#/components/schemas/msp_crypto_field'
         msp_id:

@@ -82,6 +82,47 @@ const Helper = {
 		};
 	},
 
+	//------------------------------------------------------------
+	// Sort an object's key fields, RECURSIVE! (Order: Symbols, Numbers, Upper Case, Lower Case)
+	//------------------------------------------------------------
+	sortKeys(unsorted, iter, max) {
+		let ordered = {};
+		iter = iter || 0;
+		max = max || 1000;
+		if (iter > max) {														// our watch dog
+			return unsorted;
+		}
+
+		if (isObject(unsorted)) {
+			Object.keys(unsorted).sort(compareStrings).forEach(function (key) {
+				ordered[key] = unsorted[key];									// sort all the object's keys
+			});
+		} else {
+			return unsorted;
+		}
+
+		for (let i in ordered) {
+			if (isObject(ordered[i])) {
+				ordered[i] = Helper.sortKeys(ordered[i], ++iter, max);				// sort all the object's object's keys
+			} else if (Array.isArray(ordered[i])) {
+				for (let z in ordered[i]) {
+					if (ordered[i][z] && isObject(ordered[i][z])) {
+						ordered[i][z] = Helper.sortKeys(ordered[i][z], ++iter, max); // sort the inner object
+					}
+				}
+			}
+		}
+		return ordered;
+
+		function compareStrings(a, b) {
+			return a.localeCompare(b, { usage: 'sort', numeric: true, caseFirst: 'upper' });
+		}
+
+		function isObject(o) {
+			return o instanceof Object && o.constructor === Object;
+		};
+	},
+
 	getExportedNode(node, zipExport) {
 		if (node.raft) {
 			const data = [];
@@ -134,6 +175,10 @@ const Helper = {
 				organizational_unit_identifiers: node.organizational_unit_identifiers,
 				fabric_node_ous: node.fabric_node_ous,
 				host_url: node.host_url,
+				id: node.id,
+				scheme_version: node.scheme_version,
+				migrated_from: node.migrated_from ? node.migrated_from : undefined,
+
 				// legacy fields needed for import on older systems
 				name: node.display_name,
 			};
@@ -150,6 +195,8 @@ const Helper = {
 				delete node.client_tls_cert;
 				delete node.server_tls_cert;
 			}
+
+			// this is the format of an exported node
 			exportNode = {
 				display_name: node.display_name,
 				grpcwp_url: node.grpcwp_url,
@@ -166,6 +213,10 @@ const Helper = {
 				client_tls_cert: node.client_tls_cert,
 				server_tls_cert: node.server_tls_cert,
 				location: node.location === 'ibm_saas' ? this.getPlatform() : node.location,
+				id: node.id,
+				scheme_version: node.scheme_version,
+				migrated_from: node.migrated_from ? node.migrated_from : undefined,
+
 				// legacy fields needed for import on older systems
 				name: node.display_name,
 				pem: node.tls_ca_root_cert || _.get(node, 'msp.component.tls_cert'),
@@ -180,7 +231,7 @@ const Helper = {
 				exportNode.associatedIdentityName = node.associatedIdentityName;
 			}
 		}
-		return exportNode;
+		return Helper.sortKeys(exportNode);
 	},
 
 	normalizeClusterId(id) {

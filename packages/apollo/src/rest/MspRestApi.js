@@ -80,6 +80,7 @@ class MspRestApi {
 			organizational_unit_identifiers: exported_msp.organizational_unit_identifiers,
 			fabric_node_ous: exported_msp.fabric_node_ous,
 			host_url: exported_msp.host_url,
+			migrated_from: exported_msp.migrated_from ? exported_msp.migrated_from : undefined,
 		};
 		return NodeRestApi.importComponent(exportedMSP);
 	}

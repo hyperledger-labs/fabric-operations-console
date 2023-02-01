@@ -443,6 +443,10 @@ module.exports = function (logger, ev, t) {
 		}
 		component_doc.tags = t.component_lib.fmt_tags(component_doc.tags);			// format and remove duplicates
 
+		if (incoming_body.migrated_from) {
+			component_doc.migrated_from = incoming_body.migrated_from;
+		}
+
 		// capture other body fields
 		if (outgoing_body) {
 			if (outgoing_body.cluster_name) {
