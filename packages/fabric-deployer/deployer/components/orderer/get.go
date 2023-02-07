@@ -19,7 +19,9 @@
 package orderer
 
 import (
+	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/common"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/orderer/api"
@@ -185,6 +187,21 @@ func (o *Orderer) getConfig(originalCR *current.IBPOrderer, response *api.Respon
 	response.Config = ordererYaml
 }
 
+func updateEndpoints(ep interface{}, name, namespace, domain string) {
+	endoints := ep.(map[string]interface{})
+	if strings.Contains(endoints["api"].(string), ":7050") {
+		endoints["api_saas"] = fmt.Sprintf("grpcs://%s-%s-orderer.%s:443", namespace, name, domain)
+		endoints["operations_saas"] = fmt.Sprintf("https://%s-%s-operations.%s:443", namespace, name, domain)
+		endoints["grpcweb_saas"] = fmt.Sprintf("https://%s-%s-grpcweb.%s:443", namespace, name, domain)
+		endoints["admin_saas"] = fmt.Sprintf("https://%s-%s-admin.%s:443", namespace, name, domain)
+	} else {
+		endoints["api_saas"] = fmt.Sprintf("grpcs://%s-%s.%s:7050", namespace, name, domain)
+		endoints["operations_saas"] = fmt.Sprintf("https://%s-%s.%s:8443", namespace, name, domain)
+		endoints["grpcweb_saas"] = fmt.Sprintf("https://%s-%s-proxy.%s:443", namespace, name, domain)
+		endoints["admin_saas"] = fmt.Sprintf("https://%s-%s.%s:9443", namespace, name, domain)
+	}
+}
+
 func (o *Orderer) getEndpoints(originalCR *current.IBPOrderer, response *api.Response, statusCode *int) {
 	connectionProfile, err := o.GetConnectionProfile(originalCR.Name, originalCR.Namespace)
 	if err != nil {
@@ -193,7 +210,9 @@ func (o *Orderer) getEndpoints(originalCR *current.IBPOrderer, response *api.Res
 	}
 	if connectionProfile != nil {
 		if connectionProfile.Endpoints != nil {
-			response.Endpoints = connectionProfile.Endpoints
+			endPoints := connectionProfile.Endpoints
+			updateEndpoints(endPoints, originalCR.Name, originalCR.Namespace, originalCR.Spec.Domain)
+			response.Endpoints = endPoints
 		} else {
 			o.Logger.Warnf("Connection profile is missing fields endpoints")
 			*statusCode = common.StatusCode500
