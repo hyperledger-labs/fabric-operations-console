@@ -21,7 +21,6 @@ package orderer
 import (
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/common"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/orderer/api"
@@ -189,17 +188,10 @@ func (o *Orderer) getConfig(originalCR *current.IBPOrderer, response *api.Respon
 
 func updateEndpoints(ep interface{}, name, namespace, domain string) {
 	endoints := ep.(map[string]interface{})
-	if strings.Contains(endoints["api"].(string), ":7050") {
-		endoints["api_saas"] = fmt.Sprintf("grpcs://%s-%s-orderer.%s:443", namespace, name, domain)
-		endoints["operations_saas"] = fmt.Sprintf("https://%s-%s-operations.%s:443", namespace, name, domain)
-		endoints["grpcweb_saas"] = fmt.Sprintf("https://%s-%s-grpcweb.%s:443", namespace, name, domain)
-		endoints["admin_saas"] = fmt.Sprintf("https://%s-%s-admin.%s:443", namespace, name, domain)
-	} else {
-		endoints["api_saas"] = fmt.Sprintf("grpcs://%s-%s.%s:7050", namespace, name, domain)
-		endoints["operations_saas"] = fmt.Sprintf("https://%s-%s.%s:8443", namespace, name, domain)
-		endoints["grpcweb_saas"] = fmt.Sprintf("https://%s-%s-proxy.%s:443", namespace, name, domain)
-		endoints["admin_saas"] = fmt.Sprintf("https://%s-%s.%s:9443", namespace, name, domain)
-	}
+	endoints["api_saas"] = fmt.Sprintf("grpcs://%s-%s.%s:7050", namespace, name, domain)
+	endoints["operations_saas"] = fmt.Sprintf("https://%s-%s.%s:8443", namespace, name, domain)
+	endoints["grpcweb_saas"] = fmt.Sprintf("https://%s-%s-proxy.%s:443", namespace, name, domain)
+	endoints["admin_saas"] = fmt.Sprintf("https://%s-%s.%s:9443", namespace, name, domain)
 }
 
 func (o *Orderer) getEndpoints(originalCR *current.IBPOrderer, response *api.Response, statusCode *int) {

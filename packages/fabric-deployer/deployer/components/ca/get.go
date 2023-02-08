@@ -22,7 +22,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/ca/api"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/common"
@@ -175,13 +174,8 @@ func (ca *CA) getConfig(originalCR *current.IBPCA, response *api.Response, statu
 
 func updateEndpoints(ep interface{}, name, namespace, domain string) {
 	endoints := ep.(map[string]interface{})
-	if strings.Contains(endoints["api"].(string), ":7054") {
-		endoints["api_saas"] = fmt.Sprintf("https://%s-%s-ca.%s:443", namespace, name, domain)
-		endoints["operations_saas"] = fmt.Sprintf("https://%s-%s-operations.%s:443", namespace, name, domain)
-	} else {
-		endoints["api_saas"] = fmt.Sprintf("https://%s-%s.%s:7054", namespace, name, domain)
-		endoints["operations_saas"] = fmt.Sprintf("https://%s-%s.%s:9443", namespace, name, domain)
-	}
+	endoints["api_saas"] = fmt.Sprintf("https://%s-%s.%s:7054", namespace, name, domain)
+	endoints["operations_saas"] = fmt.Sprintf("https://%s-%s.%s:9443", namespace, name, domain)
 }
 
 func (ca *CA) getEndpoints(originalCR *current.IBPCA, response *api.Response, statusCode *int) {
