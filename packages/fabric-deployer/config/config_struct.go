@@ -34,6 +34,7 @@ const (
 	DefaultDeploymentTimeout   = 90 * 1000
 	DefaultAPIServerTimeout    = 120 * 1000
 	DefaultOrdererFailureCount = 10
+	DefaultMustgatherLabel     = "mustgather"
 )
 
 // Options holds the options specified by the broker's code on the command
@@ -311,6 +312,8 @@ type OrdererImages struct {
 }
 
 type OtherImages struct {
+	MustgatherImage string `json:"mustgatherImage"`
+	MustgatherTag   string `json:"mustgatherTag"`
 }
 
 type DeployerDefaults struct {

@@ -20,6 +20,7 @@ package deployer
 
 import (
 	"context"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -36,6 +37,7 @@ import (
 	"github.com/IBM-Blockchain/fabric-deployer/config"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/ca"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/common"
+	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/mustgather"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/operator"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/orderer"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/peer"
@@ -62,10 +64,11 @@ type Deployer struct {
 	IBPOperatorClient *ibpoperator.Client
 	K8SClient         *kube.Kube
 
-	CA       *ca.CA
-	Peer     *peer.Peer
-	Orderer  *orderer.Orderer
-	Operator *operator.Operator
+	CA         *ca.CA
+	Peer       *peer.Peer
+	Orderer    *orderer.Orderer
+	Operator   *operator.Operator
+	Mustgather *mustgather.Mustgather
 
 	httpServer *http.Server
 }
@@ -159,6 +162,7 @@ func (d *Deployer) Init() error {
 	d.Peer = peer.New(d.LocalConfig.Logger, d.K8SClient, d.IBPOperatorClient, d.Config)
 	d.Orderer = orderer.New(d.LocalConfig.Logger, d.K8SClient, d.IBPOperatorClient, d.Config)
 	d.Operator = operator.New(d.LocalConfig.Logger, d.K8SClient)
+	d.Mustgather = mustgather.New(d.LocalConfig.Logger, d.K8SClient, d.Config, &http.Client{})
 
 	d.registerEndpoints()
 	return nil
@@ -231,6 +235,12 @@ func (d *Deployer) registerEndpoints() {
 
 	// k8s
 	r.Get("/api/v3/instance/{serviceInstanceID}/k8s/cluster/version", d.K8sVersionEndpoint())
+
+	// mustgather
+	r.Get("/api/v3/instance/{serviceInstanceID}/mustgather", d.GetMustgatherEndpoint())
+	r.Post("/api/v3/instance/{serviceInstanceID}/mustgather", d.StartMustgatherEndpoint())
+	r.Delete("/api/v3/instance/{serviceInstanceID}/mustgather", d.StopMustgatherEndpoint())
+	r.Get("/api/v3/instance/{serviceInstanceID}/mustgather/download", d.DownloadMustgatherHandler())
 
 }
 
@@ -543,4 +553,58 @@ func (d *Deployer) ClusterVersionHandler(w http.ResponseWriter, r *http.Request)
 	}
 
 	return version, 0, nil
+}
+
+func (d *Deployer) GetMustgatherEndpoint() func(http.ResponseWriter, *http.Request) {
+	return NewEndpoint(d.GetMustgatherStatus, d.LocalConfig.Logger).ServeHTTP
+}
+
+func (d *Deployer) StartMustgatherEndpoint() func(http.ResponseWriter, *http.Request) {
+	return NewEndpoint(d.StartMustgather, d.LocalConfig.Logger).ServeHTTP
+}
+
+func (d *Deployer) StopMustgatherEndpoint() func(http.ResponseWriter, *http.Request) {
+	return NewEndpoint(d.StopMustgather, d.LocalConfig.Logger).ServeHTTP
+}
+
+func (d *Deployer) DownloadMustgatherHandler() func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Essentially proxy the request through to download
+		resp, respErr := d.Mustgather.Download()
+		if respErr != nil {
+			http.Error(w, respErr.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		defer func() {
+			if err := resp.Body.Close(); err != nil {
+				return
+			}
+		}()
+
+		w.Header().Set("Content-Disposition", "attachment; filename=ibpmustgather.tar.gz")
+		w.Header().Set("Content-Type", "application/x-gzip")
+		w.Header().Set("Content-Length", r.Header.Get("Content-Length"))
+		w.WriteHeader(resp.StatusCode)
+
+		_, writeErr := io.Copy(w, resp.Body)
+		if writeErr != nil {
+			http.Error(w, writeErr.Error(), http.StatusInternalServerError)
+		}
+	}
+}
+
+func (d *Deployer) GetMustgatherStatus(w http.ResponseWriter, r *http.Request) (interface{}, int, error) {
+	status, err := d.Mustgather.Status()
+	return status, 200, err
+}
+
+func (d *Deployer) StartMustgather(w http.ResponseWriter, r *http.Request) (interface{}, int, error) {
+	err := d.Mustgather.Create()
+	return nil, 201, err
+}
+
+func (d *Deployer) StopMustgather(w http.ResponseWriter, r *http.Request) (interface{}, int, error) {
+	err := d.Mustgather.Delete()
+	return nil, 200, err
 }
