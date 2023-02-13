@@ -1,0 +1,7 @@
+{
+    "kubeconfigNamespace": "test-namespace",
+    "basicAuth": {
+        "username": "username",
+        "password": "password"
+    }
+}
