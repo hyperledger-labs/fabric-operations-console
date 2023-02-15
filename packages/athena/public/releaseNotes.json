@@ -1,6 +1,40 @@
 [
 	{
-		"version": "1.0.3-42",
+		"version": "1.0.4-4",
+		"date": "31 Jan 2023",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			},
+			{
+				"title": "Localization fix",
+				"details": "Improved stability of the console when the preferred language is not english."
+			}
+		]
+	},
+	{
+		"version": "1.0.4-3",
+		"date": "17 Jan 2023",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
+		"version": "1.0.4-2",
+		"date": "19 Dec 2022",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
+		"version": "1.0.4-1",
 		"date": "07 Dec 2022",
 		"description": [
 			{

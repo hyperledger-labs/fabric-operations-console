@@ -50,10 +50,12 @@ const Localization = {
 	onMissingTranslation: function (data) {
 		if (data.translationId === 'ibm_saas') {
 			const ibm_saas = Helper.getPlatform();
-			if (this.loaded[data.languageCode][ibm_saas]) {
-				return this.loaded[data.languageCode][ibm_saas];
+			if (this.loaded) {			// this seems like a crazy way to handle a string change, todo - remove it
+				if (data.languageCode && this.loaded[data.languageCode] && this.loaded[data.languageCode][ibm_saas]) {
+					return this.loaded[data.languageCode][ibm_saas];
+				}
+				return this.loaded['en'][ibm_saas];
 			}
-			return this.loaded['en'][ibm_saas];
 		}
 		return data.translationId;
 	},

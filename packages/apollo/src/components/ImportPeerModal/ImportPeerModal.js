@@ -914,6 +914,10 @@ class ImportPeerModal extends React.Component {
 							required: false,
 						},
 						{
+							name: 'migrated_from',
+							required: false,
+						},
+						{
 							name: 'type',
 							required: false,
 							validate: value => {
