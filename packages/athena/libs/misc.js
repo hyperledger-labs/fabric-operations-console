@@ -1303,7 +1303,7 @@ module.exports = function (logger, t) {
 			} else if (version_parts_b[i] === version_parts_a[i]) {
 				// equal numbers at this level... keep going
 				if (Number(i) === version_parts_a.length - 1) {		// if we are on the last digit then these are equal
-					return equal_ok;
+					return equal_ok ? true: false;
 				}
 			} else {
 				break;
