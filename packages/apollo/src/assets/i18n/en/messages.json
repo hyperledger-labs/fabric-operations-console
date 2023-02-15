@@ -2616,7 +2616,7 @@
 	"restarting": "Restarting...",
 	"migration": "Migration",
 	"migration_why1": "IBM Blockchain Platform as a Service is being sunset end of July 2023. Users must migrate to [[IBM Support for Hyperledger Fabric]](https://www.ibm.com/docs/en/hlf-support/1.0.0) or unrecoverable data loss could occur.",
-	"migration_what1": "The migration process will copy this console's data to a new console deployed on your Kubernetes cluster and update the base image of your Fabric nodes. The new console will have 100% feature parity to this existing console.",
+	"migration_what1": "The migration process will copy this console's data to a new console deployed on your Kubernetes cluster and update the base image of your Fabric nodes. There are no limitations or functional losses to your environment or capabilities.",
 	"migration_details1": "The console you are using right now is hosted by the IBM Blockchain Platform service. The new console will be hosted on your kubernetes cluster. The same cluster that is hosting your CAs, Peers and/or Orderers.",
 	"migration_details2": "The login credentials used to get to this console are from an IBM ID. The new credentials will be local users to the console, using an email/password you define during migration.",
 	"migration_details2.1": "- Similar to the login credentials any IBM IAM api keys or bearer tokens used to authenticate console APIs will need to change to [[local api keys]](https://www.ibm.com/docs/en/blockchain-platform/2.5.3?topic=how-administering-your-console) or local bearer tokens.",
@@ -2627,7 +2627,7 @@
 	"migration_resources1": "The new console will consume CPU, memory and storage from your kubernetes cluster. It's estimated that your cluster will need to have 0.6 CPU, 2 GB of memory, and 25 GB of storage available. However consoles with many nodes may require more resources to perform smoothly.",
 	"migration_resources2": "We strongly recommend to manually check if your cluster has enough free cpu, memory and storage before starting migration.",
 	"migration_min_versions_title": "Minimum Versions:",
-	"migration_min_versions": "All Fabric component levels & the kubernetes version must be equal to or higher than the versions listed below. These versions will be checked before migration begins. Note that Fabric nodes that were *imported* to this console are exempt.",
+	"migration_min_versions": "All Fabric versions and the kubernetes version must be equal to or higher than the versions listed below. These versions will be checked before migration begins. Note that Fabric nodes that were *imported* to this console are exempt.",
 	"migration_fabric_ca": "Hyperledger Fabric CA",
 	"migration_fabric_peer": "Hyperledger Fabric Peer",
 	"migration_fabric_orderer": "Hyperledger Fabric Orderer",
@@ -2716,5 +2716,5 @@
 	"mig_complete_txt2": "Check out your new console at ",
 	"mig_exported_wallets": "Usernames that have exported their wallet:",
 	"mig_test_txt": "2. To see if the new console is working well, open a new tab to the new console and click on each of the node tiles. Compare the Fabric related content seen there with the content seen on this console, it should be identical. If it isn't, try exporting and importing your wallet again, and double check the identity that is associated on each node.",
-	"mig_delete_txt": "3. If the new console is working well and all wallets have been transferred, its time to delete the service instance. Go to your [[IBM Cloud resources]](https://cloud.ibm.com/resources) dashboard, find this service instance, and delete it."
+	"mig_delete_txt": "3. If the new console is working well and all wallets have been transferred, its time to delete the service instance. Go to your [[IBM Cloud resources]](https://cloud.ibm.com/resources) dashboard, find this service instance, and open it. If you see the text \"This console has been migrated!\" on the welcome page, then it is safe to delete the service instance. Click the \"Actions...\" dropdown menu and select \"Delete service\"."
 }

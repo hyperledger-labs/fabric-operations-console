@@ -297,7 +297,19 @@ module.exports = function (logger, ev, t) {
 					}
 				}
 
-				// [2] - check if using user's basic auth
+				// [2] - check if using migration key
+				else if (user.name === ev.STR.MIGRATION_KEY) {
+					if (!validMigrationKey(req)) {									// check the migration key
+						return exports.unauthorized(res);
+					} else if (!validMigrationKeyAction(req)) {						// check the support key
+						return exports.forbidden(req, res);
+					} else {
+						logger.debug('[middle] valid basic auth key/secret [3]');
+						return cb();
+					}
+				}
+
+				// [3] - check if using user's basic auth
 				else if (ev.ACCESS_LIST && ev.ACCESS_LIST[lc_username]) {
 					if (!validUserBasicAuth(lc_username, user.pass)) {
 						return exports.unauthorized(res);
@@ -349,12 +361,46 @@ module.exports = function (logger, ev, t) {
 			}
 		}
 
+		// Check basic authorization username/password for the migration api key
+		function validMigrationKey(req) {
+			const user = parsed_auth;
+			if (user && user.name && user.pass && user.name === ev.STR.MIGRATION_KEY && user.pass === ev.MIGRATION_API_KEY) {
+				return true;
+			} else {
+				logger.error('[middle] invalid migration api key:', req.actions);
+				return false;
+			}
+		}
+
 		// Check support api key has permissions to do these actions/roles
 		function validSupportKeyAction(req) {
 			let valid = true;
 			const lc_actions = [				// list of actions the support key can do
 				ev.STR.RESTART_ACTION, ev.STR.LOGS_ACTION, ev.STR.VIEW_ACTION, ev.STR.SETTINGS_ACTION,
 				ev.STR.NOTIFICATIONS_ACTION, ev.STR.SIG_COLLECTION_ACTION, ev.STR.C_MANAGE_ACTION
+			];
+			for (let i in req.actions) {
+				if (typeof req.actions[i] === 'string') {
+					if (!lc_actions.includes(req.actions[i].toLowerCase())) {
+						valid = false;
+						break;
+					}
+				}
+			}
+
+			if (!valid) {						// not a permitted action for user
+				logger.error('[middle] invalid action for api key, desired actions:', req.actions);
+				return false;
+			} else {
+				return true;
+			}
+		}
+
+		// Check support api key has permissions to do these actions/roles
+		function validMigrationKeyAction(req) {
+			let valid = true;
+			const lc_actions = [				// list of actions the migration key can do
+				ev.STR.VIEW_ACTION, ev.STR.SETTINGS_ACTION
 			];
 			for (let i in req.actions) {
 				if (typeof req.actions[i] === 'string') {

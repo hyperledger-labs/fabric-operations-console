@@ -241,10 +241,6 @@ class Main extends Component {
 										component={MigrationPage}
 										exact
 									/>
-									<Route path="/so-long-and-thanks-for-all-the-fish"
-										component={MigrationPage}
-										exact
-									/>
 									<Route path="*"
 										component={NotFound}
 									/>

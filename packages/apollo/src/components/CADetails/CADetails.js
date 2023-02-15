@@ -642,17 +642,15 @@ export class CADetails extends Component {
 											this.props.details &&
 												this.props.details.isUpgradeAvailable &&
 												this.props.details.location === 'ibm_saas' &&
-												ActionsHelper.canCreateComponent(this.props.userInfo) ? (
-												<div className="ibp-details-patch-container">
+												ActionsHelper.canCreateComponent(this.props.userInfo) ?
+												(<div className="ibp-details-patch-container">
 													<div className="ibp-patch-available-tag ibp-node-details"
 														onClick={() => this.openCASettings('upgrade')}
 													>
 														{translate('patch_available')}
 													</div>
 												</div>
-											) : (
-												''
-											),
+												) : (''),
 									})}
 								>
 									{this.renderUsage(translate)}
