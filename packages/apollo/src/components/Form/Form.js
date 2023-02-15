@@ -317,6 +317,7 @@ class Form extends Component {
 					invalid={error ? true : false}
 					labelText={translate(field.label || field.name, field.labelOptions)}
 					hideLabel={true}
+					onFocus={field.onFocus}
 				/>
 				{field.type === 'password' && <VisibilityToggle idToToggle={this.props.id + '-' + field.name} />}
 			</div>

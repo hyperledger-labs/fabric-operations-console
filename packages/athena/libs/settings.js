@@ -159,6 +159,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 				settings.FILE_LOGGING = athena.file_logging;						// file logging settings are here, object
 				settings.LANDING_URL = athena.landing_url || settings.HOST_URL;		// use host url if landing url dne
 				settings.DEPLOYER_URL = athena.deployer_url;						// url to use for a SaaS deployer
+				settings.JUPITER_URL = athena.jupiter_url;							// url to use for a SaaS jupiter
 				settings.SUPPORT_KEY = athena.support_key || 'ibpsupport';
 				settings.SUPPORT_PASSWORD = athena.support_password || t.misc.generateRandomString(16).toLowerCase();
 				settings.PROXY_TLS_HTTP_URL = fmt_url(athena.proxy_tls_http_url || settings.HOST_URL);	// the external url to proxy http fabric traffic to
@@ -220,6 +221,11 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 				settings.IMPORT_ONLY = athena.feature_flags ? athena.feature_flags.import_only_enabled : false;
 				settings.READ_ONLY = athena.feature_flags ? athena.feature_flags.read_only_enabled : false;
 				settings.ALLOW_DEFAULT_PASSWORD = athena.allow_default_password ? true : false;
+				settings.MIGRATED_CONSOLE_URL = athena.migrated_console_url || '';
+				settings.MIGRATED_API_KEY = athena.migration_api_key || t.misc.generateRandomString(64).toLowerCase();
+				settings.MIGRATION_MIN_VERSIONS = athena.migration_min_versions || {};
+				settings.MIGRATION_MON_INTER_SECS = !isNaN(athena.migration_mon_inter_secs) ? Number(athena.migration_mon_inter_secs) : 25;
+				settings.MIGRATION_STATUS = athena.migration_status;
 
 				// allow integration test to be ran from the provided UI
 				settings.integration_test_enabled = athena.integration_test_enabled ? athena.integration_test_enabled : false;
@@ -354,6 +360,8 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 					PASS_IS_DEFAULT: 'default',
 					STATUS_IN_PROGRESS: 'in-progress',
 					STATUS_DONE: 'done',
+					STATUS_TIMEOUT: 'timeout',
+					STATUS_FAILED: 'failed',
 					WALLET_MIGRATION: 'wallet_migration',
 				};
 

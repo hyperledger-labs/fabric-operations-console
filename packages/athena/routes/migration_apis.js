@@ -43,16 +43,108 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Start database migration
 	//--------------------------------------------------
-	app.post('/api/v[3]/migration/databases', t.middleware.verify_view_action_session, (req, res) => {
+	app.post('/api/v[3]/migration/databases', t.middleware.verify_manage_action_session, (req, res) => {
 		migrate_dbs(req, res);
 	});
 
-	app.post('/ak/api/v[3]/migration/databases', t.middleware.verify_view_action_ak, (req, res) => {
+	app.post('/ak/api/v[3]/migration/databases', t.middleware.verify_manage_action_ak, (req, res) => {
 		migrate_dbs(req, res);
 	});
 
 	function migrate_dbs(req, res) {
 		t.migration_lib.migrate_dbs(req, (err, ret) => {
+			if (err) {
+				return res.status(t.ot_misc.get_code(err)).json(err);
+			} else {
+				return res.status(200).json(ret);
+			}
+		});
+	}
+
+	//--------------------------------------------------
+	// Validate every node's fabric version
+	//--------------------------------------------------
+	app.get('/api/v[3]/migration/fabric/versions', t.middleware.verify_view_action_session, (req, res) => {
+		validate_fabric_versions(req, res);
+	});
+
+	app.get('/ak/api/v[3]/migration/fabric/versions', t.middleware.verify_view_action_ak, (req, res) => {
+		validate_fabric_versions(req, res);
+	});
+
+	function validate_fabric_versions(req, res) {
+		t.migration_lib.validate_fabric_versions(req, (err, ret) => {
+			if (err) {
+				return res.status(t.ot_misc.get_code(err)).json(err);
+			} else {
+				return res.status(200).json(ret);
+			}
+		});
+	}
+
+	//--------------------------------------------------
+	// Validate the cluster's kubernetes version
+	//--------------------------------------------------
+	app.get('/api/v[3]/migration/kubernetes/versions', t.middleware.verify_view_action_session, (req, res) => {
+		validate_k8s_versions(req, res);
+	});
+
+	app.get('/ak/api/v[3]/migration/kubernetes/versions', t.middleware.verify_view_action_ak, (req, res) => {
+		validate_k8s_versions(req, res);
+	});
+
+	function validate_k8s_versions(req, res) {
+		t.migration_lib.validate_k8s_versions(req, (err, ret) => {
+			if (err) {
+				return res.status(t.ot_misc.get_code(err)).json(err);
+			} else {
+				return res.status(200).json(ret);
+			}
+		});
+	}
+
+	//--------------------------------------------------
+	// Start the migration!
+	//--------------------------------------------------
+	app.post('/api/v[3]/migration/start', t.middleware.verify_manage_action_session_dep, (req, res) => {
+		proxy_migration_start_api(req, res);
+	});
+
+	app.post('/ak/api/v[3]/migration/start', t.middleware.verify_manage_action_ak_dep, (req, res) => {
+		proxy_migration_start_api(req, res);
+	});
+
+	function proxy_migration_start_api(req, res) {
+		t.migration_lib.migrate_components(req, (err, ret) => {
+			if (err) {
+				return res.status(t.ot_misc.get_code(err)).json(err);
+			} else {
+				return res.status(200).json(ret);
+			}
+		});
+	}
+
+	//--------------------------------------------------
+	// Toggle if migration is enabled (the feature flag) - OK these really shouldn't be GETs, but it makes it easier - todo remove these apis
+	//--------------------------------------------------
+	app.get('/api/v[3]/migration/enabled', t.middleware.verify_settings_action_session, (req, res) => {
+		set_migration_feature_flag(req, res, true);
+	});
+
+	app.get('/ak/api/v[3]/migration/enabled', t.middleware.verify_settings_action_ak, (req, res) => {
+		set_migration_feature_flag(req, res, true);
+	});
+
+	app.get('/api/v[3]/migration/disabled', t.middleware.verify_settings_action_session, (req, res) => {
+		set_migration_feature_flag(req, res, false);
+	});
+
+	app.get('/ak/api/v[3]/migration/disabled', t.middleware.verify_settings_action_ak, (req, res) => {
+		set_migration_feature_flag(req, res, false);
+	});
+
+	function set_migration_feature_flag(req, res, value) {
+		t.migration_lib.set_migration_feature_flag(value, (err, ret) => {
 			if (err) {
 				return res.status(t.ot_misc.get_code(err)).json(err);
 			} else {

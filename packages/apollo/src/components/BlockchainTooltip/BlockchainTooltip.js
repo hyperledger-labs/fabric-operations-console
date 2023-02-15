@@ -41,6 +41,7 @@ const BlockchainTooltip = ({
 			renderIcon: customIcon,
 		}),
 	};
+	tooltipText = tooltipText ? tooltipText : triggerText;
 
 	return (
 		<div className={`${className ? className + ' ' : ''} ibp-tooltip-container ${withCheckbox ? 'ibp-tooltip-container-with-checkbox' : ''}`}>
@@ -50,9 +51,6 @@ const BlockchainTooltip = ({
 				 * be the label that shows for the tooltip
 				 */
 				<>
-					<TooltipDefinition tabIndex="-1"
-						className="ibp-hide-tooltip"
-					></TooltipDefinition>
 					<TooltipDefinition tooltipText={tooltipText}
 						direction={direction ? direction : 'top'}
 					>

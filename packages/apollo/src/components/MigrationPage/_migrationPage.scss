@@ -70,19 +70,6 @@
 		}
 	}
 
-	.diagramWrap {
-		display:none; // dsh todo undo when diagram is better
-		width: 35rem;
-		height: 15rem;
-		margin: auto;
-		margin-bottom: 1rem;
-		margin-top: 2rem;
-	}
-
-	.diagram {
-		width: 100%;
-	}
-
 	.centerText {
 		width: 100%;
 		text-align: center;
@@ -134,4 +121,181 @@
 		font-size: .7rem;
 		line-height: 0.8rem;
 	}
+
+	.tinyText {
+		font-size: 0.8rem;
+		color: #f44a4a;
+	}
+
+	.migration-progress-spinner {
+		display: inline-block;
+		margin-left: 1rem;
+		opacity: 0.5;
+		margin-right: 0;
+		padding: 0;
+
+		svg {
+			fill: none !important;
+		}
+	}
+
+	.mig-button {
+		padding-right: 2rem;
+	}
+
+	.progressWrap {
+		text-align: center;
+		width: 100%;
+		margin-top: 7rem;
+		min-width: 38rem;
+	}
+
+	.stepBubble {
+		background-color: #0353e9;
+		color: #fff;
+		border-radius: 5%;
+		border: 3px #0353e9 solid;
+		width: 3rem;
+		display: inline-block;
+		height: 3rem;
+		line-height: 2.7rem;
+		text-align: center;
+		position: relative;
+		font-weight: 500;
+	}
+
+	.stepBubble.step-inactive {
+		background-color: #bbb;
+		border-color: #4d5358;
+		color: #4d5358;
+	}
+
+	.stepBubble.step-active {
+		background-color: #fff;
+		color: #0353e9;
+	}
+
+	.stepBubble.step-error {
+		background-color: #f44a4a;
+		border-color: #f44a4a;
+		color: #fff;
+	}
+
+	.stepLine {
+		border-top: 3px #0353e9 solid;
+		width: 10%;
+		height: 0.5rem;
+		display: inline-block;
+		min-width: 5.2rem;
+	}
+
+	.stepLine.step-inactive {
+		border-color: #3a3d3f;
+	}
+
+	.stepLine.step-error {
+		border-color: #f44a4a;
+	}
+
+	.stepIndicator {
+		position: absolute;
+		top: 2.5rem;
+		left: 1.1rem;
+		display: none;
+		color: #fff;
+		font-size: 1rem;
+
+		-webkit-animation-duration: 2s;
+		animation-duration: 2s;
+		animation-iteration-count: infinite;
+	}
+
+	.stepDescription {
+		position: absolute;
+		top: -2rem;
+		left: 0rem;
+		color: #fff;
+		font-size: .8rem;
+		line-height: 1rem;
+		width: 9rem;
+		text-align: center;
+		margin-left: -3rem;
+		font-weight: 400;
+	}
+
+	.statusSummary {
+		color: #fff;
+		margin-top: 1.5rem;
+		font-weight: 500;
+		font-size: 1.2rem;
+	}
+
+	.bounce {
+		animation-name: bounce;
+		animation-timing-function: cubic-bezier(0.27, 0.84, 0.42, 1.00);
+		display: block;
+	}
+
+	@keyframes bounce {
+		0% {
+			transform: scale(1, 1) translateY(0);
+		}
+
+		10% {
+			transform: scale(1.1, .9) translateY(0);
+		}
+
+		30% {
+			transform: scale(.8, 1.1) translateY(-6px);
+		}
+
+		50% {
+			transform: scale(1.05, .95) translateY(0);
+		}
+
+		100% {
+			transform: scale(1, 1) translateY(0);
+		}
+	}
+}
+
+.errorTxt,
+.invalidVersionText {
+	color: #f44a4a;
+}
+
+.checking_text {
+	color: #81a4ec;
+}
+
+.checking_text2 {
+	margin-bottom: 2rem;
+}
+
+.mig_version_wrap {
+	margin-top: 1rem;
+
+	.mig_version_label,
+	.mig_version_value,
+	.mig_min_version_value {
+		font-size: 0.8rem;
+		display: inline-block;
+	}
+
+	.mig_version_label {
+		font-size: 0.8rem;
+		min-width: 40%;
+	}
+
+	.mig_min_version_value {
+		margin-left: 0.5rem;
+	}
+}
+
+.leftParagraph {
+	margin-left: 2rem;
+}
+
+.tinyTextWhite {
+	font-size: 0.8rem;
 }

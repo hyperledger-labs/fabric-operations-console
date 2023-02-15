@@ -228,6 +228,20 @@
 			stroke: $text;
 		}
 	}
+
+	.warnText {
+		font-size: .8rem;
+		top: -1.5rem;
+		position: absolute;
+		color: #f44a4a;
+		font-weight: 500;
+		margin: 0;
+		left: 0rem;
+		background: #121619;
+		padding-left: 3.5rem;
+		padding-bottom: 0.5rem;
+		width: 100%;
+	}
 }
 
 .ibp-panel--close-icon-button {

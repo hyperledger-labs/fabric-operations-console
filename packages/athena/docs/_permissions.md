@@ -115,6 +115,7 @@ All actions are defined below:
     - can view ca root enroll id/secret in deployer proxy route on a get-ca-details api
     - can run the component /actions api (such as restart, re-enroll, enroll
     - can create/delete config-block docs
+    - can migrate a console to another cluster
   - `blockchain.instance.link` - hyperion action
     - can create a resource, associating it with a cluster
   - `blockchain.instance.view` - hyperion action

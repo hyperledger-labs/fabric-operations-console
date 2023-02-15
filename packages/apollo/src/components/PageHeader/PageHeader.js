@@ -21,7 +21,6 @@ import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import { NodeRestApi } from '../../rest/NodeRestApi';
-import { MigrationApi } from '../../rest/MigrationApi';
 import ServiceInstanceRestApi from '../../rest/ServiceInstanceApi';
 import Helper from '../../utils/helper';
 import { getFromStorage, removeFromStorage, setInStorage } from '../../utils/localStorage';
@@ -32,7 +31,7 @@ import StitchApi from '../../rest/StitchApi';
 const SCOPE = 'titleBar';
 const semver = require('semver');
 import * as constants from '../../utils/constants';
-import SettingsApi from '../../rest/SettingsApi';
+import { MigrationApi } from '../../rest/MigrationApi';
 
 export class PageHeader extends Component {
 	async componentDidMount() {
@@ -49,12 +48,17 @@ export class PageHeader extends Component {
 		this.props.history.push('/migration');
 	};
 
-	openMigrationDone = () => {
-		this.props.history.push('/so-long-and-thanks-for-all-the-fish');
+	openDeleteBanner = () => {
+		this.props.history.push('/migration');
 	};
 
+	// open a new tab to the migrated console if it exists
 	openNewConsole = () => {
-		window.open(this.props.migratedConsoleUrl);
+		if (this.props.migratedConsoleUrl) {
+			window.open(this.props.migratedConsoleUrl);
+		} else {
+			console.error('[migration] the migrated console url is not known. populate console setting "MIGRATED_CONSOLE_URL"');
+		}
 	}
 
 	async displayClusterWarning() {
@@ -92,78 +96,51 @@ export class PageHeader extends Component {
 
 	async displayMigrationBanner() {
 		let migrationState = {};
-
-		let migrationStatusResp = null;
+		let resp = null;
 
 		try {
-			migrationStatusResp = await MigrationApi.getStatus();
+			resp = await MigrationApi.getStatus();
+			console.log('[migration] received migration status data', resp);
 		} catch (e) {
 			console.log('Announcement Error displayMigrationBanner', e);
 		}
 
-		// If its null, then show Migration Notification
-		if (!migrationStatusResp || !migrationStatusResp.migration_status) {
-			migrationState = {
-				isMigrationAvailable: true,
-				isMigrationDone: false,
-			};
-		} else {
-			// If its done, then show Deletion Notification
-			if (migrationStatusResp.migration_status === 'done') {
-
-				migrationState = {
-					isMigrationAvailable: false,
-					isMigrationDone: true,
-					isMigrationComplete: false,
-				};
-
-				// TODO: uncomment when the values can be extracted from the settings response
-				// if (!settingsResp || !settingsResp.FEATURE_FLAGS.migration_complete) {
-				// 	migrationState = {
-				// 		isMigrationAvailable: false,
-				// 		isMigrationDone: true,
-				// 		isMigrationComplete: false,
-				// 	};
-				// } else {
-				// 	// If its completed as per the settings api, then show Completion Notification
-				// 	migrationState = {
-				// 		isMigrationAvailable: false,
-				// 		isMigrationDone: true,
-				// 		isMigrationComplete: true,
-				// 		migratedConsoleUrl: settingsResp.MIGRATED_CONSOLE_URL
-				// 	};
-				// }
-
-			}
-
-			// If its in-progress, then show Migration Notification
-			else {
-				migrationState = {
-					isMigrationAvailable: true,
-					isMigrationDone: false,
-				};
-			}
+		migrationState = {
+			showMigrationBanner: resp ? resp.migration_enabled : false,
+			isMigrationComplete: resp ? resp.migration_status === constants.STATUS_DONE : false,
+			migratedConsoleUrl: resp ? resp.migrated_console_url : '',
+			showDeleteBanner: false,
+			migrationType: this.detectBannerType(resp ? resp.deadline : 0),
+		};
+		migrationState.showDeleteBanner = migrationState.isMigrationComplete;
+		migrationState.showReadOnlyBanner = migrationState.isMigrationComplete;
+		if (migrationState.showDeleteBanner) {
+			migrationState.showMigrationBanner = false;			// don't show both
 		}
 
 		// don't show any migration related banner if we are on the migration page
 		if (window.location.pathname === '/migration') {
-			migrationState = {
-				isMigrationAvailable: false,
-				isMigrationDone: false,
-			};
+			migrationState.showMigrationBanner = false;
+			migrationState.showDeleteBanner = false;
+			migrationState.showReadOnlyBanner = false;
 		}
 
-		// for now, don't show either, dsh todo uncomment when ready
-		migrationState = {
-			isMigrationAvailable: false,
-			isMigrationDone: false,
-			isMigrationComplete: false,
-			migratedConsoleUrl: 'https://www.new-console-url.com'
-		};
-
 		this.props.updateState(SCOPE, migrationState);
-		return migrationState.isMigrationAvailable || migrationState.isMigrationDone || migrationState.isMigrationComplete;
+		return migrationState.showMigrationBanner || migrationState.showDeleteBanner || migrationState.isMigrationComplete;
 	};
+
+	// change the color/type of the migration banner based on how much time is left
+	detectBannerType(deadline_timestamp_ms) {
+		const time_left_ms = deadline_timestamp_ms - Date.now();
+		console.log('[migration] time remaining', Helper.friendly_ms(time_left_ms, this.props.translate));
+		if (time_left_ms <= 1000 * 60 * 60 * 24 * 30) {				// <= 30 days
+			return 'error';
+		} else if (time_left_ms <= 1000 * 60 * 60 * 24 * 90) {		// <= 90 days
+			return 'warning';
+		} else {
+			return 'info';
+		}
+	}
 
 	async displayCertWarning() {
 		let certs = [];
@@ -414,29 +391,30 @@ export class PageHeader extends Component {
 						}}
 					/>
 				)}
-				{this.props.showAnnouncement && this.props.isMigrationAvailable && (
+				{this.props.showAnnouncement && this.props.showMigrationBanner && (
 					<InlineNotification
-						kind="info"
+						kind={this.props.migrationType}
 						hideCloseButton
 						actions={<NotificationActionButton onClick={this.openMigrationDetails}>
 							{translate('migration_action_button')}
 						</NotificationActionButton>}
-						title={translate('migration_title')}
+						title={translate(this.props.migrationType === 'error' ? 'migration_title_error' :
+							this.props.migrationType === 'warning' ? 'migration_title_warn' : 'migration_title')}
 					/>
 				)}
-				{this.props.showAnnouncement && this.props.isMigrationDone && (
+				{this.props.showAnnouncement && this.props.showDeleteBanner && (
 					<InlineNotification
 						kind="info"
 						hideCloseButton
-						actions={<NotificationActionButton onClick={this.openMigrationDone}>
+						actions={<NotificationActionButton onClick={this.openDeleteBanner}>
 							{translate('migration_done_button')}
 						</NotificationActionButton>}
 						title={translate('migration_done_title')}
 					/>
 				)}
-				{this.props.showAnnouncement && this.props.isMigrationComplete && (
+				{this.props.showAnnouncement && this.props.showReadOnlyBanner && (
 					<InlineNotification
-						kind="error"
+						kind="warning"
 						hideCloseButton
 						actions={
 							<NotificationActionButton
@@ -503,8 +481,8 @@ const dataProps = {
 	showAnnouncementButton: PropTypes.bool,
 	isClusterWarning: PropTypes.bool,
 	isCertWarning: PropTypes.bool,
-	isMigrationAvailable: PropTypes.bool,
-	isMigrationDone: PropTypes.bool, 		// This is retrieved from the migration API
+	showMigrationBanner: PropTypes.bool,
+	showDeleteBanner: PropTypes.bool, 		// This is retrieved from the migration API
 	isMigrationComplete: PropTypes.bool, 	// This is retrieved from the settings API
 	migratedConsoleUrl: PropTypes.string,
 	headerTooltip: PropTypes.string,
@@ -514,6 +492,7 @@ const dataProps = {
 	showCertNotice: PropTypes.bool,
 	showCertUpdateNotice: PropTypes.bool,
 	upCompList: PropTypes.string,
+	migrationType: PropTypes.string,
 };
 
 PageHeader.propTypes = {
