@@ -2061,6 +2061,13 @@ module.exports = function (logger, ev, t) {
 			});*/
 			send_dep_req(opts, (err, depRespBody) => {									// then get deployer's docs
 				let { fmt_err, fmt_ret } = handle_dep_response(parsed, err, depRespBody);
+				if (fmt_ret && fmt_ret.versions && fmt_ret.versions.peer) {				// blacklisted versions, don't let these versions be options
+					delete fmt_ret.versions.peer['2.2.8-3'];
+					delete fmt_ret.versions.peer['2.2.9-1'];
+					delete fmt_ret.versions.peer['2.2.9-2'];
+					delete fmt_ret.versions.peer['2.2.9-3'];
+					delete fmt_ret.versions.peer['2.2.9-4'];
+				}
 				if (fmt_err === null && fmt_ret && ev.PROXY_CACHE_ENABLED === true) {	// only cache success responses
 					const data2cache = {
 						error: fmt_err,
