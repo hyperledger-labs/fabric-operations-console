@@ -904,7 +904,7 @@ module.exports = function (logger, ev, t) {
 				} else {
 					found_valid_token = true;
 					logger.debug('[migration] IAM access token is still valid for id:', session_user_id,
-						'time left:', t.mis.friendly_ms(time_left_ms));
+						'time left:', t.misc.friendly_ms(time_left_ms));
 				}
 			}
 
