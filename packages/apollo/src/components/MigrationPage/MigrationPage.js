@@ -53,16 +53,26 @@ class MigrationPage extends Component {
 			showInfo: false,
 			readOnly: true,
 		});
-		await this.getMigrationStatus();
-		console.log('[migration] received overall migration status', this.props.overallMigrationStatus);
-		const userData = await UserSettingsRestApi.getUsersIAMInfo();
-		const settings = await UserSettingsRestApi.getApplicationSettings();
-		console.log('[migration] userData:', userData);
-		this.props.updateState(SCOPE, {
-			userData: userData,
-			loading: false,
-			settings: settings,
-		});
+		try {
+			await this.getMigrationStatus();
+			console.log('[migration] received overall migration status', this.props.overallMigrationStatus);
+			const userData = await UserSettingsRestApi.getUsersIAMInfo();
+			const settings = await UserSettingsRestApi.getApplicationSettings();
+			console.log('[migration] userData:', userData);
+			this.props.updateState(SCOPE, {
+				userData: userData,
+				loading: false,
+				settings: settings,
+			});
+		} catch (e) {
+			console.error('[migration] error getting data from api:');
+			console.error(e);
+			this.props.updateState(SCOPE, {
+				userData: null,
+				loading: false,
+				settings: null,
+			});
+		}
 
 		if (this.props.overallMigrationStatus === constants.STATUS_IN_PROGRESS) {
 			this.createPoll();
@@ -218,7 +228,7 @@ class MigrationPage extends Component {
 			};
 			const body = {
 				//migration_api_key: 'populated-later',			// filled in later
-				login_username: this.props.userData.loggedInAs.email,
+				login_username: this.props.userData ? this.props.userData.loggedInAs.email : '',
 				login_password: this.props.newConsolePassword
 			};
 			result = await RestApi.post('/api/v3/migration/start', body, headers);
@@ -587,6 +597,7 @@ class MigrationPage extends Component {
 		const passwords_good = this.props.newPasswordError === '' && this.props.confirmPasswordError === '';
 		const freeCluster = (this.props.settings && this.props.settings.cluster_data) ? this.props.settings.cluster_data.type === 'free' : false;
 		const valid_preqs = hasValidFabricVersions && hasValidK8s && hasIamTokens && !freeCluster;
+		const usingOpenShift = (this.props.settings && this.props.settings.INFRASTRUCTURE === 'openshift') ? true : false;
 
 		const deployed_comps = this.props.components ? this.props.components.filter(x => {
 			return !x._imported;
@@ -685,7 +696,7 @@ class MigrationPage extends Component {
 					{
 						// -------------------- Migration Version Error Details here --------------------
 					}
-					{!migration_check_loader && !valid_preqs &&
+					{!migration_check_loader && (!hasValidFabricVersions || !hasValidK8s) &&
 						<div className='mig_version_wrap'>
 							<h4>{translate('cluster')}</h4>
 							<div className='mig_version_label'>
@@ -698,6 +709,16 @@ class MigrationPage extends Component {
 								{translate('migration_required_version_txt',
 									{ min: this.props.kubernetes ? this.conform_version(this.props.kubernetes.min_version) : '-' })}
 							</div>
+							{hasValidK8s &&
+								<div className='mig_valid_txt'>
+									{translate('migration_version_valid_txt')}
+								</div>
+							}
+							{usingOpenShift &&
+								<div className='mig_version_label checking_text'>
+									(via {translate('openshift')})
+								</div>
+							}
 							<br />
 							<br />
 							<br />
@@ -717,10 +738,20 @@ class MigrationPage extends Component {
 												<div className='mig_min_version_value'>
 													{translate('migration_required_version_txt', { min: comp._min_version ? this.conform_version(comp._min_version) : '-' })}
 												</div>
+												{comp._migratable &&
+													<div className='mig_valid_txt'>
+														{translate('migration_version_valid_txt')}
+													</div>
+												}
 											</div>
 										</div>
 									);
 								})
+							}
+							{(!deployed_comps || deployed_comps.length === 0) &&
+								<div className='mig_version_label'>
+									{translate('migration_nodes_not_found')}
+								</div>
 							}
 						</div>
 					}

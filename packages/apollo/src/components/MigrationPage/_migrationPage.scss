@@ -277,7 +277,8 @@
 
 	.mig_version_label,
 	.mig_version_value,
-	.mig_min_version_value {
+	.mig_min_version_value,
+	.mig_valid_txt {
 		font-size: 0.8rem;
 		display: inline-block;
 	}
@@ -289,6 +290,13 @@
 
 	.mig_min_version_value {
 		margin-left: 0.5rem;
+	}
+
+	.mig_valid_txt {
+		background: #81a4ec;
+		margin-left: .5rem;
+		padding: 0.2rem 0.5rem;
+		border-radius: 1rem;
 	}
 }
 

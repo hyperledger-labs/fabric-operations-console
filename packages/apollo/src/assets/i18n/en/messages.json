@@ -2701,6 +2701,8 @@
 	"cluster": "Cluster",
 	"deployed_nodes_title": "Deployed nodes",
 	"migration_required_version_txt": "-> requires ${min}+",
+	"migration_version_valid_txt": "valid",
+	"migration_nodes_not_found": "No deployed nodes were found",
 	"checking_txt": "Checking migration compatibility...",
 	"checking_txt_valid": "Pre-requisites are met!",
 	"checking_txt_valid2": "There's one more step before migrating. Choose a new password.",
