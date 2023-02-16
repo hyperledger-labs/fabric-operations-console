@@ -2674,7 +2674,7 @@
 	"mig_missing_perms": "You do not have permission to initiate migration. The IBM Cloud role of \"manager\" is needed on this service instance.",
 	"mig_timed_out": "The migration attempt has timed out. Try again. Contact support if this message persists.",
 	"mig_error": "The migration was not successful. You may try again. Contact support if this message persists.",
-	"mig_error_msg": "Error: ${migration_error_msg}",
+	"mig_error_msg": "Error<br/>    ${migration_error_msg} <br/>    ${jupiter_error_msg}",
 	"mig_elapsed_msg": "Migration started ${time} ago",
 	"mig_in_progress": "Migration is in progress. It can take up to ${estimate} minutes.",
 	"start_migration_txt": "Start Migration (~${estimate} mins)",

@@ -49,7 +49,6 @@ class MigrationPage extends Component {
 			openSidePanel: false,
 			migFeatureFlagEnabled: false,
 			submitting: false,
-			showProgress: false,
 			showInfo: false,
 			readOnly: true,
 		});
@@ -368,6 +367,17 @@ class MigrationPage extends Component {
 		const walletStepStatus = (steps && steps[4]) ? steps[4].css_class : '';
 		const usingOpenShift = (this.props.settings && this.props.settings.INFRASTRUCTURE === constants.OPENSHIFT_NAME) ? true : false;
 
+		// split up the error message into the console part and the jupiter part if we can detect them
+		let console_msg = this.props.errorMsg;
+		let jupiter_msg = '';						// leave blank if we didn't get one or could not parse it
+		if (typeof this.props.errorMsg === 'string') {
+			const pos = this.props.errorMsg.lastIndexOf('Details -');
+			if (pos >= 0) {
+				console_msg = this.props.errorMsg.substring(0, pos);
+				jupiter_msg = this.props.errorMsg.substring(pos);
+			}
+		}
+
 		return (
 			<PageContainer>
 				<div className="bx--row">
@@ -570,7 +580,7 @@ class MigrationPage extends Component {
 											{migrationStatusStr === constants.STATUS_FAILED && this.props.migFeatureFlagEnabled &&
 												<div className="tinyText">
 													{translate('mig_error')}
-													<p className="tinyText">{translate('mig_error_msg', { migration_error_msg: this.props.errorMsg })}</p>
+													<p className="tinyText errorTxt">{translate('mig_error_msg', { migration_error_msg: console_msg, jupiter_error_msg: jupiter_msg })}</p>
 												</div>
 											}
 											{migrationStatusStr === constants.STATUS_IN_PROGRESS && this.props.migFeatureFlagEnabled && walletStepStatus !== constants.STEP_IN_PROGRESS &&
@@ -623,7 +633,7 @@ class MigrationPage extends Component {
 					</div>
 				</div >
 				{this.props.openSidePanel && this.renderSidePanel()}
-				{!this.props.loading && migrationStatusStr === constants.STATUS_DONE && this.renderDeleteContent()}
+				{!this.props.loading && migrationStatusStr === constants.STATUS_DONE && this.props.migFeatureFlagEnabled && this.renderDeleteContent()}
 			</PageContainer >
 		);
 	}
@@ -949,7 +959,6 @@ class MigrationPage extends Component {
 
 const dataProps = {
 	showInfo: PropTypes.bool,
-	showProgress: PropTypes.bool,
 	migFeatureFlagEnabled: PropTypes.bool,
 	componentList: PropTypes.array,
 	overallMigrationStatus: PropTypes.string,

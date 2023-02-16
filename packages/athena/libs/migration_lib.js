@@ -248,7 +248,7 @@ module.exports = function (logger, ev, t) {
 				t.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, settings_doc, (err_writeDoc, doc) => {
 					if (err_writeDoc) {
 						logger.error('[migration lib] cannot edit settings doc to clear migration status:', err_writeDoc);
-						cb({ statusCode: 500, msg: 'could not update settings doc to clear migration status', details: err_writeDoc }, null);
+						return cb({ statusCode: 500, msg: 'could not update settings doc to clear migration status', details: err_writeDoc }, null);
 					} else {
 						return cb(null, settings_doc);
 					}
@@ -262,7 +262,7 @@ module.exports = function (logger, ev, t) {
 		t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, (err, settings_doc) => {
 			if (err || !settings_doc) {
 				logger.error('[migration lib] could not get settings doc to update ' + step_prefix + ' migration status', err);
-				return cb({ statusCode: 500, msg: 'could get settings doc for ' + step_prefix + ' migration status', details: err }, null);
+				return cb('Console issue - could get settings doc to update ' + step_prefix + ' migration status', null);
 			} else {
 				const step_field_name_start = step_prefix + '_start_ts';
 				const step_field_name_finish = step_prefix + '_finish_ts';
@@ -281,7 +281,7 @@ module.exports = function (logger, ev, t) {
 				t.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, settings_doc, (err_writeDoc, doc) => {
 					if (err_writeDoc) {
 						logger.error('[migration lib] cannot edit settings doc to update ' + step_prefix + ' migration status:', err_writeDoc);
-						cb({ statusCode: 500, msg: 'could not update settings doc for ' + step_prefix + ' migration status', details: err_writeDoc }, null);
+						return cb(null);
 					} else {
 						return cb(null, settings_doc.migrated_console_url);
 					}
@@ -307,7 +307,7 @@ module.exports = function (logger, ev, t) {
 				t.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, settings_doc, (err_writeDoc, doc) => {
 					if (err_writeDoc) {
 						logger.error('[migration lib] cannot edit settings doc to mark migration as done:', err_writeDoc);
-						cb({ statusCode: 500, msg: 'could not update settings doc to mark migration as done', details: err_writeDoc }, null);
+						return cb({ statusCode: 500, msg: 'could not update settings doc to mark migration as done', details: err_writeDoc }, null);
 					} else {
 						return cb(null, settings_doc);
 					}
@@ -342,7 +342,7 @@ module.exports = function (logger, ev, t) {
 				t.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, settings_doc, (err_writeDoc, doc) => {
 					if (err_writeDoc) {
 						logger.error('[migration lib] cannot edit settings doc to add migration error:', err_writeDoc);
-						cb({ statusCode: 500, msg: 'could not update settings doc to add migration error', details: err_writeDoc }, null);
+						return cb({ statusCode: 500, msg: 'could not update settings doc to add migration error', details: err_writeDoc }, null);
 					} else {
 						return cb(null, settings_doc);
 					}
@@ -464,10 +464,10 @@ module.exports = function (logger, ev, t) {
 		t.couch_lib.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, function (err, doc) {
 			if (err) {
 				logger.error('[migration lib] an error occurred obtaining the "' + process.env.SETTINGS_DOC_ID + '" db:', ev.DB_SYSTEM, err, doc);
-				cb({ statusCode: 500, err: err }, doc);
+				return cb({ statusCode: 500, err: err }, doc);
 			} else {
 				if (!doc) {
-					cb({ statusCode: 500, err: 'settings doc is missing' }, doc);	// this should be impossible
+					return cb({ statusCode: 500, err: 'settings doc is missing' }, doc);	// this should be impossible
 				}
 				if (!doc.feature_flags) {
 					doc.feature_flags = {};
@@ -477,11 +477,11 @@ module.exports = function (logger, ev, t) {
 				t.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, doc, (err_writeDoc, doc) => {
 					if (err_writeDoc) {
 						logger.error('[migration lib] cannot edit settings doc to edit migration_enabled:', err_writeDoc);
-						cb({ statusCode: 500, msg: 'could not update settings doc to edit migration_enabled', details: err_writeDoc }, null);
+						return cb({ statusCode: 500, msg: 'could not update settings doc to edit migration_enabled', details: err_writeDoc }, null);
 					} else {
 						const ret = JSON.parse(JSON.stringify(ev.API_SUCCESS_RESPONSE));
 						ret.migration_enabled = value;
-						cb(null, ret);
+						return cb(null, ret);
 					}
 				});
 			}
@@ -495,10 +495,10 @@ module.exports = function (logger, ev, t) {
 		t.couch_lib.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, function (err, doc) {
 			if (err) {
 				logger.error('[migration lib] an error occurred obtaining the "' + process.env.SETTINGS_DOC_ID + '" db:', ev.DB_SYSTEM, err, doc);
-				cb({ statusCode: 500, err: err }, doc);
+				return cb({ statusCode: 500, err: err }, doc);
 			} else {
 				if (!doc) {
-					cb({ statusCode: 500, err: 'settings doc is missing' }, doc);	// this should be impossible
+					return cb({ statusCode: 500, err: 'settings doc is missing' }, doc);	// this should be impossible
 				}
 
 				doc.migrated_console_url = value;
@@ -507,9 +507,9 @@ module.exports = function (logger, ev, t) {
 				t.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, doc, (err_writeDoc, doc) => {
 					if (err_writeDoc) {
 						logger.error('[migration lib] cannot edit settings doc to store new console url:', err_writeDoc);
-						cb({ statusCode: 500, msg: 'could not update settings doc to store new console url', details: err_writeDoc }, null);
+						return cb({ statusCode: 500, msg: 'could not update settings doc to store new console url', details: err_writeDoc }, null);
 					} else {
-						cb(null);
+						return cb(null);
 					}
 				});
 			}
@@ -532,13 +532,13 @@ module.exports = function (logger, ev, t) {
 		// 1. get lock
 		const l_opts = {
 			lock: MIGRATION_LOCK,
-			max_locked_sec: 10 * 60,
+			max_locked_sec: 6 * 60,
 			force: true,
 		};
 		t.lock_lib.apply(l_opts, (lock_err) => {
 			if (lock_err) {
-				logger.error('[migration lib] did not get migration lock, try again later');
-				return cb({ statusCode: 400, msg: 'unable to get migration lock', details: lock_err }, null);
+				logger.error('[migration lib] did not get migration lock for ingress', lock_err);
+				return cb('Console issue - unable to own lock to start migration', null);
 			} else {
 
 				// 2. reset/clear the migration status
@@ -566,7 +566,8 @@ module.exports = function (logger, ev, t) {
 									return cb('Communication error, no response to the migrate ingress api');
 								} else if (t.ot_misc.is_error_code(t.ot_misc.get_code(ret))) {
 									logger.error('[jupiter-ingress] - error response code from jupiter', ret);
-									return cb('Internal issue - the response code from ingress api has an error code of ' + t.ot_misc.get_code(ret));
+									const msg = t.jupiter_lib.make_jupiter_msg(ret);
+									return cb('Internal issue - received an error code in response to the ingress api: ' + t.ot_misc.get_code(ret) + msg);
 								} else {
 									const msg = {
 										message_type: 'monitor_migration',
@@ -641,12 +642,12 @@ module.exports = function (logger, ev, t) {
 		// 1. get lock
 		const l_opts = {
 			lock: MIGRATION_LOCK,
-			max_locked_sec: 5 * 60,
+			max_locked_sec: 4 * 60,
 		};
 		t.lock_lib.apply(l_opts, (lock_err) => {
 			if (lock_err) {
-				logger.error('[migration lib] did not get migration lock, try again later');
-				return cb({ statusCode: 400, msg: 'unable to get migration lock', details: lock_err }, null);
+				logger.warn('[migration lib] did not get migration lock for component step, the other instances must have it');
+				return cb(null);
 			} else {
 
 				// 2. mark the component migration as in progress
@@ -667,7 +668,8 @@ module.exports = function (logger, ev, t) {
 								return cb('Communication error, no response to the migrate all nodes api');
 							} else if (t.ot_misc.is_error_code(t.ot_misc.get_code(ret))) {
 								logger.error('[jupiter-comps] - error response code from jupiter', ret);
-								return cb('Internal issue - received an error code in response to the migrate all components api: ' + t.ot_misc.get_code(ret));
+								const msg = t.jupiter_lib.make_jupiter_msg(ret);
+								return cb('Internal issue - received an error code in response to the all components api: ' + t.ot_misc.get_code(ret) + msg);
 							} else {
 								const msg = {
 									message_type: 'monitor_migration',
@@ -746,8 +748,8 @@ module.exports = function (logger, ev, t) {
 		};
 		t.lock_lib.apply(l_opts, (lock_err) => {
 			if (lock_err) {
-				logger.error('[migration lib] did not get migration lock, try again later');
-				return cb({ statusCode: 400, msg: 'unable to get migration lock', details: lock_err }, null);
+				logger.warn('[migration lib] did not get migration lock for console step, the other instances must have it');
+				return cb(null);
 			} else {
 
 				// 2. mark the console migration as in progress
@@ -773,10 +775,11 @@ module.exports = function (logger, ev, t) {
 								return cb('Communication error, no response to the deploy console api');
 							} else if (t.ot_misc.is_error_code(t.ot_misc.get_code(ret))) {
 								logger.error('[jupiter-console] - error response code from jupiter', ret);
-								return cb('Internal issue - received an error code in response to the deploy console api: ' + t.ot_misc.get_code(ret));
+								const msg = t.jupiter_lib.make_jupiter_msg(ret);
+								return cb('Internal issue - received an error code in response to the deploy console api: ' + t.ot_misc.get_code(ret) + msg);
 							} else if (!ret || !ret.response || !ret.response.url) {
 								logger.error('[jupiter-console] - missing new console url from jupiter response', ret);
-								return cb('Internal issue - the new console url is missing from the api response.');
+								return cb('Internal issue - the new console url is missing from the deploy console api response.');
 							} else {
 								logger.info('[jupiter-console] rec url of new console', ret.response.url);
 								store_console_url(ret.response.url, () => {
@@ -895,8 +898,8 @@ module.exports = function (logger, ev, t) {
 		};
 		t.lock_lib.apply(l_opts, (lock_err) => {
 			if (lock_err) {
-				logger.error('[migration-console-db] did not get migration lock, try again later');
-				return cb({ statusCode: 400, msg: 'unable to get migration lock', details: lock_err }, null);
+				logger.warn('[migration lib] did not get migration lock for db step, the other instances must have it');
+				return cb(null);
 			} else {
 
 				// 2. mark the database migration as in progress
