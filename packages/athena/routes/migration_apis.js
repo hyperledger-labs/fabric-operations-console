@@ -40,26 +40,6 @@ module.exports = (logger, ev, t) => {
 		});
 	}
 
-	//--------------------------------------------------
-	// Start database migration
-	//--------------------------------------------------
-	app.post('/api/v[3]/migration/databases', t.middleware.verify_manage_action_session, (req, res) => {
-		migrate_dbs(req, res);
-	});
-
-	app.post('/ak/api/v[3]/migration/databases', t.middleware.verify_manage_action_ak, (req, res) => {
-		migrate_dbs(req, res);
-	});
-
-	function migrate_dbs(req, res) {
-		t.migration_lib.migrate_dbs(req, (err, ret) => {
-			if (err) {
-				return res.status(t.ot_misc.get_code(err)).json(err);
-			} else {
-				return res.status(200).json(ret);
-			}
-		});
-	}
 
 	//--------------------------------------------------
 	// Validate every node's fabric version
@@ -107,15 +87,15 @@ module.exports = (logger, ev, t) => {
 	// Start the migration!
 	//--------------------------------------------------
 	app.post('/api/v[3]/migration/start', t.middleware.verify_manage_action_session_dep, (req, res) => {
-		proxy_migration_start_api(req, res);
+		start_migration(req, res);
 	});
 
 	app.post('/ak/api/v[3]/migration/start', t.middleware.verify_manage_action_ak_dep, (req, res) => {
-		proxy_migration_start_api(req, res);
+		start_migration(req, res);
 	});
 
-	function proxy_migration_start_api(req, res) {
-		t.migration_lib.migrate_components(req, (err, ret) => {
+	function start_migration(req, res) {
+		t.migration_lib.migrate_ingress(req, (err, ret) => {
 			if (err) {
 				return res.status(t.ot_misc.get_code(err)).json(err);
 			} else {
@@ -149,6 +129,23 @@ module.exports = (logger, ev, t) => {
 				return res.status(t.ot_misc.get_code(err)).json(err);
 			} else {
 				return res.status(200).json(ret);
+			}
+		});
+	}
+
+	//--------------------------------------------------
+	// For debug - reset migration steps
+	//--------------------------------------------------
+	app.get('/api/v[3]/migration/reset', t.middleware.verify_settings_action_session, (req, res) => {
+		reset_steps(req, res);
+	});
+
+	function reset_steps(req, res) {
+		t.migration_lib.clear_migration_status((err, ret) => {
+			if (err) {
+				return res.status(t.ot_misc.get_code(err)).json(err);
+			} else {
+				return res.status(200).json(ev.API_SUCCESS_RESPONSE);
 			}
 		});
 	}

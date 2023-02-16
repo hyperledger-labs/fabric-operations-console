@@ -158,10 +158,10 @@ module.exports = function (logger, ev, t) {
 	};
 
 	// ------------------------------------------
-	// get a webhook formated response, also expire it if its old
+	// get a webhook formatted response, also expire it if its old
 	// ------------------------------------------
 	exports.get_webhook = function (req, cb) {
-		t.webhook.get_webhook_doc({ tx_id: req.params.tx_id, SKIP_CACHE: (req.query.skip_cache === 'yes') }, (err, doc) => {
+		t.webhook.get_webhook_doc({ tx_id: req.params.tx_id, SKIP_CACHE: true }, (err, doc) => {
 			if (err) {
 				logger.error('[webhook lib] - could not find webhook doc', t.webhook.build_webhook_id(req.params.tx_id), err);
 				return cb(err, null);
@@ -572,7 +572,7 @@ module.exports = function (logger, ev, t) {
 	// send the webhook request to the client
 	// ------------------------------------------
 	exports.finish_webhook = function (wh_doc, cb) {
-		const base_url = wh_doc ? t.misc.format_url(wh_doc.client_webhook_url) : null;
+		const base_url = (wh_doc && wh_doc.client_webhook_url) ? t.misc.format_url(wh_doc.client_webhook_url) : null;
 		if (!base_url) {
 			logger.debug('[webhook lib] no url to finish web hook. url was not provided for this tx:', wh_doc.tx_id);
 			return cb(null);

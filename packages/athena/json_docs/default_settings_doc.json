@@ -176,7 +176,7 @@
 		"fabric-orderer": "2.2.9",
 		"kubernetes": "1.22"
 	},
-	"migration_mon_inter_secs": 25,
+	"migration_mon_inter_secs": 15,
 	"migration_status": {
 		"deadline": 1690844400000,
 		"timeout_min": 15,

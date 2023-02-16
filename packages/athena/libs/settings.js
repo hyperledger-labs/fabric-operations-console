@@ -222,7 +222,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 				settings.READ_ONLY = athena.feature_flags ? athena.feature_flags.read_only_enabled : false;
 				settings.ALLOW_DEFAULT_PASSWORD = athena.allow_default_password ? true : false;
 				settings.MIGRATED_CONSOLE_URL = athena.migrated_console_url || '';
-				settings.MIGRATED_API_KEY = athena.migration_api_key || t.misc.generateRandomString(64).toLowerCase();
+				settings.MIGRATION_API_KEY = athena.migration_api_key || t.misc.generateRandomString(64).toLowerCase();
 				settings.MIGRATION_MIN_VERSIONS = athena.migration_min_versions || {};
 				settings.MIGRATION_MON_INTER_SECS = !isNaN(athena.migration_mon_inter_secs) ? Number(athena.migration_mon_inter_secs) : 25;
 				settings.MIGRATION_STATUS = athena.migration_status;
@@ -363,6 +363,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 					STATUS_TIMEOUT: 'timeout',
 					STATUS_FAILED: 'failed',
 					WALLET_MIGRATION: 'wallet_migration',
+					MIGRATION_KEY: 'migration_api_key',
 				};
 
 				// manager - must match what is defined in RMC (this section ONLY applies to stand alone)
@@ -490,7 +491,9 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 
 					for (let ver in settings.OPEN_API_DOCS) {
 						if (settings.OPEN_API_DOCS[ver] && settings.OPEN_API_DOCS[ver].info && settings.OPEN_API_DOCS[ver].info.version) {
-							logger.debug('[settings] using open api (swagger) file version:', settings.OPEN_API_DOCS[ver].info.version);
+							if (options && options.exitIfError) {
+								logger.debug('[settings] using open api (swagger) file version:', settings.OPEN_API_DOCS[ver].info.version);
+							}
 						}
 					}
 				}

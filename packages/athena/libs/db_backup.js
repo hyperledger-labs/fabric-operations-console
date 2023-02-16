@@ -442,7 +442,7 @@ module.exports = function (logger, ev, t) {
 	dbs.athena_restore = function (req, backup_data, cb_early, cb_done) {
 		const options = {
 			req: req,
-			db_names: [ev.DB_COMPONENTS, ev.DB_SESSIONS, ev.DB_SYSTEM],
+			db_names: Object.keys(backup_data.dbs),
 			backup: backup_data,
 			BATCH: 512,
 		};
@@ -480,7 +480,7 @@ module.exports = function (logger, ev, t) {
 		} else {														// start the restore
 			restore_in_progress = true;
 			restore_successes = 0;
-			logger.info('[restore] starting db restore. ', opts.backup._id, 'dbs:', opts.db_names);
+			logger.info('[restore] starting db restore. ', (opts.backup._id || '[no-id]'), 'dbs:', opts.db_names);
 
 			// create a webhook doc
 			const tx_id = t.misc.simpleRandomString(32, true);
@@ -512,7 +512,7 @@ module.exports = function (logger, ev, t) {
 				restore_in_progress = false;
 				let end_timestamp = Date.now();
 				let elapsed = t.misc.friendly_ms(end_timestamp - restore_start_timestamp);
-				logger.info('[restore] completed restore, docs:', restore_successes, elapsed, opts.backup._id);
+				logger.info('[restore] restore ending, docs:', restore_successes, elapsed, opts.backup._id);
 
 				logger.debug('[restore] updating component white list');
 				t.component_lib.rebuildWhiteList(opts.req, () => {

@@ -917,7 +917,10 @@ module.exports = function (logger, t) {
 			// if provided will use this function to calculate the timeout of the next retry, ms
 			_calc_retry_timeout: (options, resp) => {
 				return Number(options.timeout) + 10000 * (options._attempt + 1);
-			}
+			},
+
+			// if true will not print debug logs
+			_quiet: true || false,
 		}
 
 	*/
@@ -942,8 +945,10 @@ module.exports = function (logger, t) {
 
 		// --- Send the Request --- //
 		const redacted_url = exports.redact_basic_auth(options.baseUrl ? (options.baseUrl + options.url) : options.url);
-		logger.debug('[' + options._name + ' ' + options._tx_id + '] sending ' + options.method + ' outgoing-req-timeout:',
-			exports.friendly_ms(options.timeout), 'url:', redacted_url, options._attempt);
+		if (!options._quiet) {
+			logger.debug('[' + options._name + ' ' + options._tx_id + '] sending ' + options.method + ' outgoing-req-timeout:',
+				exports.friendly_ms(options.timeout), 'url:', redacted_url, options._attempt);
+		}
 		t.request(options, (req_e, resp) => {
 			if (req_e) {																// detect timeout request error
 				logger.error('[' + options._name + ' ' + options._tx_id + '] unable to reach destination. error:', req_e);
@@ -1303,7 +1308,7 @@ module.exports = function (logger, t) {
 			} else if (version_parts_b[i] === version_parts_a[i]) {
 				// equal numbers at this level... keep going
 				if (Number(i) === version_parts_a.length - 1) {		// if we are on the last digit then these are equal
-					return equal_ok ? true: false;
+					return equal_ok ? true : false;
 				}
 			} else {
 				break;

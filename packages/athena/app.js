@@ -429,6 +429,7 @@ function setup_routes_and_start() {
 	tools.lockout = require('./libs/lockout.js')(logger, ev, tools);
 	tools.config_blocks_lib = require('./libs/config_blocks_lib.js')(logger, ev, tools);
 	tools.migration_lib = require('./libs/migration_lib.js')(logger, ev, tools);
+	tools.jupiter_lib = require('./libs/jupiter_lib.js')(logger, ev, tools);
 
 	update_settings_doc(() => {
 		setup_pillow_talk();
@@ -665,7 +666,7 @@ function update_settings_doc(cb) {
 				field.push('configtxlator_url');
 			} else if (settings_doc.cookie_name !== ev.COOKIE_NAME) {
 				field.push('cookie_name');
-			} else if (settings_doc.migration_api_key !== ev.MIGRATED_API_KEY) {
+			} else if (settings_doc.migration_api_key !== ev.MIGRATION_API_KEY) {
 				field.push('migration_api_key');
 			}
 
@@ -684,7 +685,7 @@ function update_settings_doc(cb) {
 				settings_doc.configtxlator_url_original = ev.CONFIGTXLATOR_URL_ORIGINAL;
 				settings_doc.configtxlator_url = ev.CONFIGTXLATOR_URL;
 				settings_doc.cookie_name = ev.COOKIE_NAME;
-				settings_doc.migration_api_key = ev.MIGRATED_API_KEY;
+				settings_doc.migration_api_key = ev.MIGRATION_API_KEY;
 
 				tools.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, settings_doc, (err) => {
 					if (err) {
@@ -799,16 +800,16 @@ function setup_pillow_talk() {
 
 		// --- Receiving Migration Monitoring Start Doc --- //
 		if (doc.message_type === 'monitor_migration') {
-			logger.debug('[pillow] - received message to start monitoring migration progress, interval:', ev.MIGRATION_MON_INTER_SECS);
+			logger.debug('[pillow] - received message to start monitoring ' + doc.sub_type + ' progress, interval: ', ev.MIGRATION_MON_INTER_SECS, 'secs');
 			clearInterval(migration_interval);
 			migration_interval = setInterval(() => {
-				tools.migration_lib.check_migration_status();
+				tools.migration_lib.check_migration_status(doc);
 			}, ev.MIGRATION_MON_INTER_SECS * 1000);
 		}
 
 		// --- Receiving Migration Monitoring Stop Doc --- //
 		if (doc.message_type === 'monitor_migration_stop') {
-			logger.debug('[pillow] - received message to stop monitoring migration progress');
+			logger.debug('[pillow] - received message to stop or pause monitoring migration progress');
 			clearInterval(migration_interval);
 		}
 	});

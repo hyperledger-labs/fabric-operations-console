@@ -49,7 +49,8 @@ module.exports = function (logger, ev, t) {
 					const options = {
 						doc: lock_doc,
 						max_locked_sec: opts.max_locked_sec,
-						meta: opts.meta
+						meta: opts.meta,
+						force: opts.force,
 					};
 					apply_for_lock(options, (e) => {
 						t.couch_lib.deleteConflicts({ db_name: ev.DB_SYSTEM, _id: lock_id });		// always clean up our mess (very important!)
@@ -83,7 +84,7 @@ module.exports = function (logger, ev, t) {
 					});
 				}
 			} else {
-				logger.debug('[lock] lock doc was found', r_doc._id, uuid);
+				//logger.debug('[lock] lock doc was found', r_doc._id, uuid);
 				return cb_lock_doc(null, r_doc);										// all good
 			}
 		});
@@ -97,22 +98,25 @@ module.exports = function (logger, ev, t) {
 		if (!doc.history) { doc.history = []; }
 
 		// ---- Check if lock is taken ---- //
-		const elapsed_ms = Date.now() - doc.prev_owner.ts_watchdog;
-		if (elapsed_ms <= doc.prev_owner.watchdog_limit) {
-			if (doc.prev_owner.ts_released === 0) {
-				if (doc.prev_owner.uuid !== uuid) {
-					logger.warn('[lock] lock taken and valid', doc._id, 'last activity:', t.misc.friendly_ms(elapsed_ms),
-						'ago, limit:', t.misc.friendly_ms(doc.prev_owner.watchdog_limit));
-					return cb_apply('do not own lock');
-				} else {
-					logger.warn('[lock] lock taken (be me) and valid', doc._id, uuid);
-					return cb_apply('other task has lock');
+		if (!opts.force) {
+			const elapsed_ms = Date.now() - doc.prev_owner.ts_watchdog;
+			if (elapsed_ms <= doc.prev_owner.watchdog_limit) {
+				if (doc.prev_owner.ts_released === 0) {
+					if (doc.prev_owner.uuid !== uuid) {
+						logger.warn('[lock] lock taken and valid', doc._id, 'last activity:', t.misc.friendly_ms(elapsed_ms),
+							'ago, limit:', t.misc.friendly_ms(doc.prev_owner.watchdog_limit));
+						return cb_apply('do not own lock');
+					} else {
+						logger.warn('[lock] lock taken (be me) and valid', doc._id, uuid);
+						return cb_apply('other task has lock');
+					}
 				}
 			}
 		}
 
 		// ---- Apply for the lock ---- //
-		logger.debug('[lock] nobody owns the lock - applying for lock', doc._id, uuid);
+		if (!opts.force) { logger.debug('[lock] nobody owns the lock - applying for lock', doc._id, uuid); }
+		else { logger.debug('[lock] force applying for lock', doc._id, uuid); }
 		doc.history.push(doc.prev_owner);									// copy the last entry here
 		doc.history.splice(0, doc.history.length - 8);						// keep the last 8 runs
 		doc.prev_owner = {
@@ -141,7 +145,7 @@ module.exports = function (logger, ev, t) {
 	lockLib.release = function (lock, cb) {
 		if (!cb) { cb = function () { }; }
 		const lock_id = build_lock_id(lock);
-		logger.debug('[lock] releasing the lock', lock_id, uuid);
+		//logger.debug('[lock] releasing the lock', lock_id, uuid);
 
 		t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: lock_id, SKIP_CACHE: true }, (err, doc) => {
 			if (err || !doc) {
@@ -154,31 +158,31 @@ module.exports = function (logger, ev, t) {
 				if (!doc.prev_owner.ts_watchdog) { doc.prev_owner.ts_watchdog = 0; }
 				const elapsed_ms = Date.now() - doc.prev_owner.ts_watchdog;
 				if (elapsed_ms > doc.prev_owner.watchdog_limit) {
-					logger.debug('[lock] ' + lock_id + ' - releasing - lock already expired...', t.misc.friendly_ms(elapsed_ms));
+					logger.debug('[lock] releasing lock ' + lock_id + ' - lock already expired...', t.misc.friendly_ms(elapsed_ms));
 				} else {
-					logger.debug('[lock] ' + lock_id + ' - releasing - lock\'s watchdog is still okay', t.misc.friendly_ms(elapsed_ms));
+					logger.debug('[lock] releasing lock ' + lock_id + ' - lock\'s watchdog is still okay', t.misc.friendly_ms(elapsed_ms));
 				}
 
 				// ---- Do we still own it? ---- //
-				if (doc.prev_owner.uuid !== uuid) {
+				/*if (doc.prev_owner.uuid !== uuid) {
 					logger.warn('[lock] ' + lock_id + ' I do not own the lock to release it');
 					return cb(null);
-				} else {
+				} else {*/
 
-					// ---- Release the lock ---- //
-					logger.debug('[lock] ' + lock_id + ' still have valid lock, releasing it, last activity:', t.misc.friendly_ms(elapsed_ms));
-					doc.prev_owner.ts_released = Date.now();
-					doc.prev_owner.elapsed = t.misc.friendly_ms(elapsed_ms);
-					t.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, doc, (err2, doc2) => {
-						if (err2) {
-							logger.warn('[lock] ' + lock_id + ' cannot write lock doc for release');	// likely don't care, someone else got the lock
-							return cb('cannot write doc');
-						} else {
-							logger.info('[lock] ' + lock_id + ' I released the lock!');
-							return cb(null);
-						}
-					});
-				}
+				// ---- Release the lock ---- //
+				//logger.debug('[lock] ' + lock_id + ' still have valid lock, releasing it, last activity:', t.misc.friendly_ms(elapsed_ms));
+				doc.prev_owner.ts_released = Date.now();
+				doc.prev_owner.elapsed = t.misc.friendly_ms(elapsed_ms);
+				t.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, doc, (err2, doc2) => {
+					if (err2) {
+						logger.warn('[lock] ' + lock_id + ' cannot write lock doc for release');	// likely don't care, someone else got the lock
+						return cb('cannot write doc');
+					} else {
+						logger.debug('[lock] ' + lock_id + ' I released the lock!');
+						return cb(null);
+					}
+				});
+				//}
 			}
 		});
 	};

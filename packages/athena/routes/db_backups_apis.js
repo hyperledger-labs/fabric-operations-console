@@ -60,14 +60,13 @@ module.exports = function (logger, ev, t) {
 			logger.debug('[pre-flight] setting validate route:', req._validate_path);
 		}
 
-		t.validate.request(req, res, null, () => {
-			t.dbs.athena_restore(req, req.body, (err, ret) => {
-				if (err) {
-					return res.status(t.ot_misc.get_code(err)).json(err);
-				} else {
-					return res.status(202).json(ret);
-				}
-			});
+		// don't validate this route, data is too large
+		t.dbs.athena_restore(req, req.body, (err, ret) => {
+			if (err) {
+				return res.status(t.ot_misc.get_code(err)).json(err);
+			} else {
+				return res.status(202).json(ret);
+			}
 		});
 	}
 

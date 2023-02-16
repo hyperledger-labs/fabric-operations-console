@@ -486,7 +486,7 @@ class MigrationPage extends Component {
 									</div>
 								}
 
-								{migrationAttempted && this.props.migFeatureFlagEnabled &&
+								{migrationAttempted && this.props.migFeatureFlagEnabled && !this.props.submitting &&
 									<div className='progressWrap'>
 										{steps.map((step, i) => {
 											return (
@@ -508,7 +508,7 @@ class MigrationPage extends Component {
 											);
 										})}
 
-										<p className='statusSummary'>
+										{!this.props.submitting && <p className='statusSummary'>
 											{migrationProgress === constants.STATUS_TIMEOUT && this.props.migFeatureFlagEnabled &&
 												<div className="tinyText">
 													{translate('mig_timed_out')}
@@ -535,7 +535,7 @@ class MigrationPage extends Component {
 													{translate('mig_complete')}
 												</div>
 											}
-										</p>
+										</p>}
 
 										{migrationProgress === constants.STATUS_IN_PROGRESS && this.props.migFeatureFlagEnabled && walletStepStatus === constants.STEP_IN_PROGRESS &&
 											<div>
@@ -610,7 +610,7 @@ class MigrationPage extends Component {
 						id: 'open_migration',
 						text: translate('start_migration_txt', { estimate: this.props.estimateInMins }),
 						onClick: this.onSubmit,
-						disabled: !(hasValidFabricVersions && hasValidK8s && passwords_good),
+						disabled: !(hasValidFabricVersions && hasValidK8s && passwords_good) || this.props.submitting,
 						type: 'submit',
 					},
 				]}

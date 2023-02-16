@@ -361,47 +361,6 @@ module.exports = function (logger, ev, t) {
 		}
 	};
 
-	//--------------------------------------------------
-	// Proxy a request to jupiter
-	//--------------------------------------------------
-	exports.jupiter_proxy_call = (req, cb) => {
-		const jupiter_parts = t.misc.break_up_url(ev.JUPITER_URL);
-		//return cb({ statusCode: 200, response: '{}' });
-
-		if (!jupiter_parts) {
-			logger.error('[jupiter proxy] - invalid settings. will not send jupiter request to url:', ev.JUPITER_URL);
-			return cb({ statusCode: 400, response: 'invalid jupiter setting. will not send request' });
-		} else {
-			req.path2use = req.path2use.replace(/\$iid/gi, (ev.CRN.instance_id || 'iid-not-set'));	// replace placeholder iid with the real iid
-			logger.info('[jupiter proxy] - attempting a jupiter proxy request', req.method, t.misc.get_host(ev.JUPITER_URL), req.path2use);
-
-			const opts = {
-				method: req.method,
-				baseUrl: encodeURI(jupiter_parts.hostname),								// url to proxy
-				url: encodeURI(req.path2use),
-				body: (req.method === 'POST' || req.method === 'PUT') ? sanitize_object(req.body) : null,	// body for proxy (send plain text)
-				headers: exports.copy_headers(req.headers),
-				timeout: ev.DEPLOYER_TIMEOUT,
-			};
-			//opts.headers['x-iam-token'] = ;
-			//opts.headers['x-refresh-token'] = ;
-
-			t.request(opts, (err, resp) => {
-				let response = resp ? resp.body : null;
-				let code = t.ot_misc.get_code(resp);
-
-				if (!t.ot_misc.is_error_code(code)) {									// errors are logged in retry req()
-					logger.info('[jupiter proxy] - successful proxy response', code);
-				}
-
-				if (!response) {
-					return cb({ statusCode: code });
-				} else {
-					return cb({ statusCode: code, response: response });
-				}
-			});
-		}
-	};
 
 	return exports;
 };
