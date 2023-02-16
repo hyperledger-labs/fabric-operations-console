@@ -117,6 +117,8 @@ module.exports = function (logger, ev, t) {
 			// debug code
 			/*setTimeout(() => {
 				console.log('[simulation] sim jupiter response for req:', options);
+				//return cb({ statusCode: 500, response: { message: 'hello there' } });
+				//return cb({ statusCode: 500 });
 				return cb({ statusCode: 200, response: { url: 'http://localhost:3000' } });
 			}, 2000);*/
 		}
@@ -130,6 +132,19 @@ module.exports = function (logger, ev, t) {
 			}
 			return account_id;
 		}
+	};
+
+	//--------------------------------------------------
+	// Pass jupiter error along if present
+	//--------------------------------------------------
+	exports.make_jupiter_msg = (resp) => {
+		let jupiter_msg = '';
+		if (resp && resp.response && resp.response.message && typeof resp.response.message === 'string') {
+			jupiter_msg = '. Details - "' + resp.response.message + '"';
+		} else if (resp && resp.message && typeof resp.message === 'string') {
+			jupiter_msg = '. Details - "' + resp.message + '"';
+		}
+		return jupiter_msg;
 	};
 
 	return exports;

@@ -160,6 +160,7 @@ module.exports = function (logger, ev, t) {
 	exports.get_private_settings = () => {
 		const ret = {											// compile the list of private settings
 			DEPLOYER_URL: ev.DEPLOYER_URL || '?',				// for OpTools developers show the un-redacted url
+			JUPITER_URL: ev.JUPITER_URL || '?',					// for OpTools developers show the un-redacted url
 			//DEFAULT_USER_PASSWORD: ev.DEFAULT_USER_PASSWORD,	// for debug
 			SESSION_SECRET: ev.SESSION_SECRET,					// for debug
 			HOST_WHITE_LIST: ev.HOST_WHITE_LIST || [],			// for debug, moved this here from get_ev_settings so we don't leak component addresses

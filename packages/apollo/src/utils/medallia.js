@@ -18,7 +18,7 @@ const OFFERING_ID = 'offeringId'; // Required for aggregate reporting of NPS sco
 const OFFERING_NAME = 'Blockchain Platform'; // Required to identify the product to customer - used in the "How likely..." question
 const HIGH_LEVEL_NAME = 'Fabric Operations Console'; // Overall offering group name for high-level aggregation
 const TRIGGER_INTERCEPT = 'heavy'; // Desired intercept rate. Options: 'light' (15%), 'medium' (50%), 'heavy' (100%).
-const VALID_TRIGGERS = [1, 2, 3, 4, 5, 6, 7, 8].map(num => `trigger${num}`); // array of valid triggers (trigger1, trigget2, ...)
+//const VALID_TRIGGERS = [1, 2, 3, 4, 5, 6, 7, 8].map(num => `trigger${num}`); // array of valid triggers (trigger1, trigget2, ...)
 
 // prettier-ignore
 const VALID_MEDALLIA_LANGUAGES = [

@@ -16,7 +16,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import SVGs from '../Svgs/Svgs';
-import launch from '../../assets/images/launch.svg';
+//import launch from '../../assets/images/launch.svg';
 
 const WelcomeBannerTile = props => {
 	const TileIcon = props.mainTileIcon;
@@ -26,7 +26,7 @@ const WelcomeBannerTile = props => {
 			className="ibp-welcome-tile-item"
 			aria-label={`${props.header} ${props.description} ${props.videoTile ? props.linkText : ''}`}
 		>
-			<TileIcon/>
+			<TileIcon />
 			<h4 className="ibp-welcome-tile-header">{props.header}</h4>
 			<p>{props.description}</p>
 			{props.videoTile && (
@@ -37,7 +37,11 @@ const WelcomeBannerTile = props => {
 					{props.linkText}
 				</button>
 			)}
-			{!props.internalLink && <SVGs extendClass={{ 'ibp-welcome-tile-launch-icon': true }} type={'launch'}/>}
+			{!props.internalLink &&
+				<SVGs
+					extendClass={{ 'ibp-welcome-tile-launch-icon': true }}
+					type={'launch'}
+				/>}
 		</button>
 	);
 };
