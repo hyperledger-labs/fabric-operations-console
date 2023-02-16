@@ -2055,6 +2055,13 @@ describe('Misc', () => {
 								expect(misc.safe_str({})).to.equal('[-string redacted-]');
 								done();
 							}
+						},
+						{
+							itStatement: 'should return a safe string - test_id=fucwch',
+							expectBlock: (done) => {
+								expect(misc.safe_str('this . sentence. had. dots. and "quotes" \'!\'', true)).to.equal('this . sentence. had. dots. and "quotes" !');
+								done();
+							}
 						}
 					]
 				}

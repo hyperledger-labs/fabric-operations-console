@@ -1231,7 +1231,7 @@ module.exports = function (logger, t) {
 	// make a string that is safe to log (str came from user input)
 	// -----------------------------------------------------
 	exports.safe_str = (input, unlimitedLength) => {
-		const regex_id = new RegExp(/[^a-zA-Z0-9-_*!@$%&()\s"/.:]/g);			// this might be overly restrictive but its a place to start
+		const regex_id = new RegExp(/[^a-zA-Z0-9-_*!@$%&()\s".:]/g);			// this might be overly restrictive but its a place to start
 		try {
 			if (typeof input === 'string') {
 				if (unlimitedLength) {
