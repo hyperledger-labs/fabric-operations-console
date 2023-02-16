@@ -153,7 +153,7 @@
 	.stepBubble {
 		background-color: #0353e9;
 		color: #fff;
-		border-radius: 5%;
+		border-radius: 25%;
 		border: 3px #0353e9 solid;
 		width: 3rem;
 		display: inline-block;
@@ -301,7 +301,8 @@
 }
 
 .leftParagraph {
-	margin-left: 2rem;
+	margin-left: 1rem;
+	line-height: 1.2rem;
 }
 
 .tinyTextWhite {
