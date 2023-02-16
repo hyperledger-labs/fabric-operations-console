@@ -97,7 +97,9 @@ module.exports = (logger, ev, t) => {
 	function start_migration(req, res) {
 		t.migration_lib.migrate_ingress(req, (err, ret) => {
 			if (err) {
-				return res.status(t.ot_misc.get_code(err)).json(err);
+				t.migration_lib.record_error(err, () => {
+					return res.status(t.ot_misc.get_code(err)).json(err);
+				});
 			} else {
 				return res.status(200).json(ret);
 			}
