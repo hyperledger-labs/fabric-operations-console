@@ -53,7 +53,7 @@ class MigrationPage extends Component {
 			readOnly: true,
 		});
 		try {
-			await this.getMigrationStatus();
+			await this.getMigrationStatus(true);
 			console.log('[migration] received overall migration status', this.props.overallMigrationStatus);
 			const userData = await UserSettingsRestApi.getUsersIAMInfo();
 			const settings = await UserSettingsRestApi.getApplicationSettings();
@@ -78,7 +78,7 @@ class MigrationPage extends Component {
 		}
 	}
 
-	async getMigrationStatus() {
+	async getMigrationStatus(calledOnPageLoad) {
 		let res = null;
 		try {
 			res = await MigrationApi.getStatus();
@@ -113,6 +113,10 @@ class MigrationPage extends Component {
 
 		if (migrationStatusStr !== constants.STATUS_IN_PROGRESS) {	// if we aren't in progress, kill the interval
 			clearInterval(this.monitorInterval);
+
+			/*if (!calledOnPageLoad && migrationStatusStr === constants.STATUS_DONE) {	// reload it to reflect new settings
+				window.location.reload();
+			}*/
 		}
 	}
 
@@ -263,19 +267,26 @@ class MigrationPage extends Component {
 					submitting: false,
 					openSidePanel: false,
 				});
-			}, 2000);
+			}, 3 * 1000);
 		}
 
 		// poll on the migration status and reflect status on the page
 		this.createPoll();
+
+		// get the 1st status fairly quickly after submit
+		if (!error) {
+			setTimeout(async () => {
+				await this.getMigrationStatus();
+			}, 5 * 1000);
+		}
 	}
 
 	// poll on the migration status and reflect status on the page
-	createPoll() {
+	async createPoll() {
 		clearInterval(this.monitorInterval);
 		this.monitorInterval = setInterval(async () => {
 			await this.getMigrationStatus();
-		}, 10 * 1000);
+		}, 15 * 1000);
 	}
 
 	// add leading 'v' like '1.4.5' -> 'v1.4.5
@@ -563,15 +574,19 @@ class MigrationPage extends Component {
 														</div>
 														<div className={'stepDescription'}>{step.txt}</div>
 													</span>
-													{
-														(i < steps.length - 1) &&
-														<span className={'stepLine ' + steps[i + 1].css_class}></span>
+													{(i < steps.length - 1) &&
+														<span className="stepLineWrap">
+															<span className={'stepLine ' + steps[i + 1].css_class}></span>
+															{steps[i + 1].css_class === constants.STEP_IN_PROGRESS &&
+																<span className={'stepLineMotion'}></span>
+															}
+														</span>
 													}
 												</span>
 											);
 										})}
 
-										{!this.props.submitting && <p className='statusSummary'>
+										{!this.props.submitting && <div className='statusSummary'>
 											{migrationStatusStr === constants.STATUS_TIMEOUT && this.props.migFeatureFlagEnabled &&
 												<div className="tinyText">
 													{translate('mig_timed_out')}
@@ -598,7 +613,7 @@ class MigrationPage extends Component {
 													{translate('mig_complete')}
 												</div>
 											}
-										</p>}
+										</div>}
 
 										{migrationStatusStr === constants.STATUS_IN_PROGRESS && this.props.migFeatureFlagEnabled && walletStepStatus === constants.STEP_IN_PROGRESS &&
 											<div>

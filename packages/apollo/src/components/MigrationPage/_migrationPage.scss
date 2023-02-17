@@ -197,6 +197,26 @@
 		border-color: #f44a4a;
 	}
 
+	.stepLineWrap {
+		position: relative;
+	}
+
+	.stepLineMotion {
+		position: absolute;
+		border-top: 3px #3d7cf0  solid;
+		width: 0.5rem;
+		left: 0rem;
+		top: 0.4rem;
+		padding: 0;
+		margin: 0;
+		min-width: 1px;
+
+		animation-duration: 1s;
+		animation-iteration-count: infinite;
+		animation-name: stepLineMotion;
+		transition-timing-function: linear;
+	}
+
 	.stepIndicator {
 		position: absolute;
 		top: 2.5rem;
@@ -265,6 +285,16 @@
 
 		100% {
 			transform: scale(1, 1) translateY(0);
+		}
+	}
+
+	@keyframes stepLineMotion {
+		0% {
+			transform: translate(0rem, 0rem);
+		}
+
+		100% {
+			transform: translate(8rem, 0rem);
 		}
 	}
 }
