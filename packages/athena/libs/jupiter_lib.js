@@ -143,6 +143,8 @@ module.exports = function (logger, ev, t) {
 			jupiter_msg = '. Details - "' + resp.response.message + '"';
 		} else if (resp && resp.message && typeof resp.message === 'string') {
 			jupiter_msg = '. Details - "' + resp.message + '"';
+		} else if (resp && resp.response && typeof resp.response === 'string') {
+			jupiter_msg = '. Details - "' + resp.response + '"';
 		}
 		return jupiter_msg;
 	};
