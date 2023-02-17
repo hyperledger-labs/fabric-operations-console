@@ -184,19 +184,10 @@ module.exports = function (logger, ev, t) {
 			}
 
 			// estimate of how long migration will take
-			const deployed_comps = (ret && ret.components) ? ret.components.filter(x => {
-				return !x.imported;
-			}) : [];
-			const ingress_mins = 10;
-			const component_base_mins = 2;
-			const cost_per_component_sec = 45;
-			const console_mins = 1.5;
-			ret.estimate_mins = Number(Math.ceil((ingress_mins + console_mins + component_base_mins + (deployed_comps.length * cost_per_component_sec) / 60)));
-			ret.estimate_mins = Number(Math.ceil(ret.estimate_mins / 5) * 5);
+			ret.estimate_mins = calc_timeout(mig_status_data.timeout_min, ret.components);
 
 			return cb(null, ret);
 		});
-
 
 		// format the wallet migration status response part
 		function format_wallet_status_docs(wallet_docs) {
@@ -212,23 +203,23 @@ module.exports = function (logger, ev, t) {
 			}
 			return docs;
 		}
-
-		// format the component migration status response part
-		function format_comp_status_docs(comp_docs) {
-			const docs = [];
-			for (let i in comp_docs) {
-				if (comp_docs[i].doc) {
-					docs.push({
-						id: comp_docs[i].doc._id,
-						type: comp_docs[i].doc.type,
-						migration_status: comp_docs[i].doc.migration_status || null,
-						imported: !(comp_docs[i].doc.location === ev.STR.LOCATION_IBP_SAAS),
-					});
-				}
-			}
-			return docs;
-		}
 	};
+
+	// format the component migration status response part
+	function format_comp_status_docs(comp_docs) {
+		const docs = [];
+		for (let i in comp_docs) {
+			if (comp_docs[i].doc) {
+				docs.push({
+					id: comp_docs[i].doc._id,
+					type: comp_docs[i].doc.type,
+					migration_status: comp_docs[i].doc.migration_status || null,
+					imported: !(comp_docs[i].doc.location === ev.STR.LOCATION_IBP_SAAS),
+				});
+			}
+		}
+		return docs;
+	}
 
 	//-------------------------------------------------------------
 	// Edit settings doc to clear the migration status
@@ -297,6 +288,24 @@ module.exports = function (logger, ev, t) {
 				});
 			}
 		});
+	}
+
+	// returns estimate of how long migration will take in minutes
+	function calc_timeout(timeout_setting_minutes, components) {
+		const deployed_comps = components ? components.filter(x => {
+			return !x.imported;
+		}) : [];
+		const ingress_mins = 7;
+		const component_base_mins = 1;
+		const cost_per_component_sec = 45;
+		const console_mins = 2;
+		let estimate_mins = Number(Math.ceil((ingress_mins + console_mins + component_base_mins + (deployed_comps.length * cost_per_component_sec) / 60)));
+		estimate_mins = Number(Math.ceil(estimate_mins / 5) * 5);
+		if (estimate_mins > timeout_setting_minutes) {		// return whatever is greater, lets us take control via db setting if we need to
+			return Number(estimate_mins);
+		} else {
+			return Number(timeout_setting_minutes);
+		}
 	}
 
 	//-------------------------------------------------------------
@@ -432,40 +441,51 @@ module.exports = function (logger, ev, t) {
 		if (!cb) { cb = function () { }; }
 		logger.info('[migration] - monitoring migration status - looking for updates');
 
-		// first check if we are still within the estimated time
-		t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, (err, settings_doc) => {
-			if (err || !settings_doc) {
-				logger.error('[migration watchdog] could not get settings doc to check migration status', err);
-				return cb({ statusCode: 500, msg: 'could get settings doc to clear migration status', details: err }, null);
-			} else {
+		// 1. first get the component docs
+		const opts = {
+			db_name: ev.DB_COMPONENTS,		// db for peers/cas/orderers/msps/etc docs
+			_id: '_design/athena-v1',		// name of design doc
+			view: '_doc_types',
+			SKIP_CACHE: true,
+			query: t.misc.formatObjAsQueryParams({ include_docs: true, keys: [ev.STR.CA, ev.STR.ORDERER, ev.STR.PEER] }),
+		};
+		t.otcc.getDesignDocView(opts, (err, resp) => {
+			const components = format_comp_status_docs(resp ? resp.rows : []);
 
-				// if its been too long, kill the migration monitor interval
-				const elapsed_ms = Date.now() - settings_doc.migration_status.ingress_start_ts;
-				const timeout_ms = settings_doc.migration_status.timeout_min * 60 * 1000;
-				logger.debug('[migration watchdog] elapsed time:', t.misc.friendly_ms(elapsed_ms) +
-					'. timeout after:', t.misc.friendly_ms(timeout_ms));
-
-				if (elapsed_ms >= timeout_ms) {
-					logger.error('[migration watchdog] timeout exceeded, migration has failed');
-
-					const msg = {
-						message_type: 'monitor_migration_stop',
-						message: 'migration timeout exceeded',
-					};
-					t.pillow.broadcast(msg);
+			// 2. next get  the settings doc
+			t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, (err, settings_doc) => {
+				if (err || !settings_doc) {
+					logger.error('[migration watchdog] could not get settings doc to check migration status', err);
+					return cb({ statusCode: 500, msg: 'could get settings doc to clear migration status', details: err }, null);
 				} else {
-					const subtype = pillow_doc ? pillow_doc.sub_type : '-';
-					logger.debug('[migration watchdog] migration is still progressing... checking step', subtype);
+					const timeout_minutes = calc_timeout(settings_doc.migration_status.timeout_min, components);
+					const elapsed_ms = Date.now() - settings_doc.migration_status.ingress_start_ts;
+					const timeout_ms = timeout_minutes * 60 * 1000;
+					logger.debug('[migration watchdog] elapsed time:', t.misc.friendly_ms(elapsed_ms) + '. timeout after:', t.misc.friendly_ms(timeout_ms));
 
-					if (subtype === 'ingress') {
-						exports.check_ingress(pillow_doc);
-					} else if (subtype === 'comps') {
-						exports.check_components(pillow_doc);
-					} else if (subtype === 'console') {
-						exports.check_console(pillow_doc);
+					// if its been too long, kill the migration monitor interval
+					if (elapsed_ms >= timeout_ms) {
+						logger.error('[migration watchdog] timeout exceeded, migration has failed');
+
+						const msg = {
+							message_type: 'monitor_migration_stop',
+							message: 'migration timeout exceeded',
+						};
+						t.pillow.broadcast(msg);
+					} else {
+						const subtype = pillow_doc ? pillow_doc.sub_type : '-';
+						logger.debug('[migration watchdog] migration is still progressing... checking step', subtype);
+
+						if (subtype === 'ingress') {
+							exports.check_ingress(pillow_doc);
+						} else if (subtype === 'comps') {
+							exports.check_components(pillow_doc);
+						} else if (subtype === 'console') {
+							exports.check_console(pillow_doc);
+						}
 					}
 				}
-			}
+			});
 		});
 	};
 
@@ -544,7 +564,7 @@ module.exports = function (logger, ev, t) {
 		// 1. get lock
 		const l_opts = {
 			lock: MIGRATION_LOCK,
-			max_locked_sec: 6 * 60,
+			max_locked_sec: 4 * 60,
 			force: true,
 		};
 		t.lock_lib.apply(l_opts, (lock_err) => {
@@ -676,7 +696,7 @@ module.exports = function (logger, ev, t) {
 		// 1. get lock
 		const l_opts = {
 			lock: MIGRATION_LOCK,
-			max_locked_sec: 4 * 60,
+			max_locked_sec: 2 * 60,
 		};
 		t.lock_lib.apply(l_opts, (lock_err) => {
 			if (lock_err) {
@@ -799,7 +819,7 @@ module.exports = function (logger, ev, t) {
 		// 1. get lock
 		const l_opts = {
 			lock: MIGRATION_LOCK,
-			max_locked_sec: 2 * 60,
+			max_locked_sec: 1 * 60,
 		};
 		t.lock_lib.apply(l_opts, (lock_err) => {
 			if (lock_err) {
@@ -896,13 +916,16 @@ module.exports = function (logger, ev, t) {
 
 						// release old lock
 						t.lock_lib.release(MIGRATION_LOCK, (lock_err) => {
-							exports.migrate_dbs(pillow_doc, cb, (err2, ret) => {
+							exports.migrate_dbs(pillow_doc, (err2, ret) => {
 								if (err2) {
 									exports.record_error(err2, () => {
 										return cb(err2, ret);
 									});
 								} else {
-									return cb(err2, ret);
+									exports.finish_migration(() => {
+										logger.info('[migration lib] migration is finished');
+										return cb(null, response);
+									});
 								}
 							});
 						});
@@ -923,11 +946,7 @@ module.exports = function (logger, ev, t) {
 			} else {
 				change_migration_step_status('db', ev.STR.STATUS_DONE, (err) => {		// if success, mark migration as complete
 					logger.info('[migration-console-db] db migration was successful');
-
-					exports.finish_migration(() => {
-						logger.info('[migration lib] migration is finished');
-						return cb(error, response);
-					});
+					return cb(null);
 				});
 			}
 		});
@@ -937,18 +956,6 @@ module.exports = function (logger, ev, t) {
 	// the actual db migration work gets done here
 	// -----------------------------------------------------
 	function migrate_dbs_inner(pillow_doc, cb) {
-		const ret = {
-			databases: {}
-		};
-		ret.databases[ev.DB_SYSTEM] = {
-			migrated: 0,
-			errors: []
-		};
-		ret.databases[ev.DB_COMPONENTS] = {
-			migrated: 0,
-			errors: []
-		};
-
 		// 1. get lock
 		const l_opts = {
 			lock: MIGRATION_LOCK,
@@ -966,33 +973,25 @@ module.exports = function (logger, ev, t) {
 					if (err) {
 						return cb(err);									// error already logged
 					} else if (!new_console_url || !t.misc.format_url(new_console_url)) {
-						logger.error('[migration-console-db] the new console url is not defined in settings doc, cannot migrate');
-						return cb({ statusCode: 400, msg: 'the new console url is not defined, cannot migrate', migrated_console_url: new_console_url }, null);
+						logger.error('[migration-console-db] the new console url is not defined in settings doc, cannot migrate', new_console_url);
+						return cb('Internal issue - the new console url is not defined, cannot migrate data', null);
 					} else {
 
 						// 3. call backup api
 						t.dbs.athena_backup({}, (back_err, back_resp) => {
 							if (back_err) {
 								logger.error('[migration-console-db] error with backup before db migration', back_err);
-								return cb({
-									statusCode: back_err.statusCode ? back_err.statusCode : 500,
-									msg: 'unable to backup database prior to db migration - 1', details: back_err
-								});
+								return cb('Console issue - unable to backup database prior to db migration');
 							} else if (!back_resp || !back_resp.id) {
 								logger.error('[migration-console-db] error with backup response for db migration. no id', back_resp);
-								return cb({
-									statusCode: 500,
-									msg: 'unable to backup database prior to db migration - 2', details: back_resp
-								}, null);
+								return cb('Console issue - unexpected backup format, cannot migrate console data');
 							} else {
 
 								// 4. wait for backup api to be done
 								wait_for_backup(back_resp.id, (stalled_err, backup) => {
 									if (stalled_err) {
-										return cb({						// error already logged
-											statusCode: 500,
-											msg: 'unable to backup database prior to db migration - 3', details: back_resp
-										}, null);
+										// error already logged
+										return cb('Console issue - timed out waiting for backup to complete, cannot migrate console data');
 									} else {
 
 										// edit the settings doc in the backup so the migrated console has the correct settings for IBP support
@@ -1000,27 +999,25 @@ module.exports = function (logger, ev, t) {
 										backup = edit_docs_in_backup(pillow_doc.login_username, password, backup);
 
 										// 5. call restore api on other console
+										//return cb(null, null);
 										send_restore(new_console_url, backup, (restore_err, rest_resp) => {
 											if (restore_err) {
 												logger.error('[migration-console-db] unable to send restore-database api for db migration', restore_err);
-												return cb({
-													statusCode: 500,
-													msg: 'unable to migrate database - 1', details: back_resp
-												}, null);
+												const msg = t.jupiter_lib.make_jupiter_msg(restore_err);
+												return cb('Console issue - error response when trying to copy data to the new consol: ' +
+													t.ot_misc.get_code(restore_err) + msg);
 											} else {
 
 												// 6. wait for restore api to be done
 												wait_for_restore(rest_resp.url, (stalled_err2) => {
 													if (stalled_err2) {
-														return cb({						// error already logged
-															statusCode: 500,
-															msg: 'unable to migrate database - 2', details: stalled_err2
-														}, null);
+														// error already logged
+														return cb('Console issue - timed out waiting for console data to migrate');
 													} else {
 
 														// 7. all done!
 														logger.info('[migration-console-db] database migration via restore completed');
-														return cb(null, { testing: 'all done', ret: ret });
+														return cb(null, rest_resp);
 													}
 												});
 											}
@@ -1087,7 +1084,7 @@ module.exports = function (logger, ev, t) {
 		// wait for the restore to complete
 		//--------------------------------------------------
 		function wait_for_restore(webhook_url, cb) {
-			const interval_ms = 4 * 1000;				// it wants ms
+			const interval_ms = 5 * 1000;				// it wants ms
 			const desired_max_ms = 5 * 60 * 1000;
 			const started = Date.now();
 			const attempts = Math.ceil(desired_max_ms / interval_ms);
