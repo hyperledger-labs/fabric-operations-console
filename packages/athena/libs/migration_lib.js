@@ -387,6 +387,8 @@ module.exports = function (logger, ev, t) {
 					if (comp.location === ev.STR.LOCATION_IBP_SAAS) {	// if its a saas component, we don't care about imported ones
 						comp._imported = false;
 						if (!t.misc.is_version_b_greater_than_a(min_version, resp[i].version, true)) {
+							logger.warn('[migrate] found node we cannot migrate, version is too old.', t.misc.safe_str(comp.id),
+								t.misc.safe_str(resp[i].version));
 							comp._migratable = false;
 							ret.all_valid = false;
 						}
@@ -615,7 +617,7 @@ module.exports = function (logger, ev, t) {
 				message_type: 'monitor_migration',
 				sub_type: 'ingress',
 				message: 'ingress migration has begun',
-				quick: quick ? true: false,
+				quick: quick ? true : false,
 				login_username: req.body.login_username,
 				login_password: t.misc.encrypt(req.body.login_password, ev.MIGRATION_API_KEY),
 			};
@@ -738,7 +740,7 @@ module.exports = function (logger, ev, t) {
 				message_type: 'monitor_migration',
 				sub_type: 'comps',
 				message: 'node migration has begun',
-				quick: quick ? true: false,
+				quick: quick ? true : false,
 				login_username: pillow_doc.login_username,
 				login_password: pillow_doc.login_password,
 			};

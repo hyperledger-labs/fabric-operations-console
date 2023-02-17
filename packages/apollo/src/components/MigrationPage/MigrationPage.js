@@ -267,14 +267,18 @@ class MigrationPage extends Component {
 					submitting: false,
 					openSidePanel: false,
 				});
-			}, 2000);
+			}, 3 * 1000);
 		}
 
 		// poll on the migration status and reflect status on the page
 		this.createPoll();
-		setTimeout(async () => {
-			await this.getMigrationStatus();		// get the 1st status fairly quickly after submit
-		}, 5 * 1000);
+
+		// get the 1st status fairly quickly after submit
+		if (!error) {
+			setTimeout(async () => {
+				await this.getMigrationStatus();
+			}, 5 * 1000);
+		}
 	}
 
 	// poll on the migration status and reflect status on the page

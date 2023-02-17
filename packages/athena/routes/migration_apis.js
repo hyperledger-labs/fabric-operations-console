@@ -97,10 +97,13 @@ module.exports = (logger, ev, t) => {
 	function start_migration(req, res) {
 		t.migration_lib.validate_fabric_versions(req, (err2, ret_ver) => {
 			if (err2) {
+				logger.error('[migration ingress] cannot start ingress migration b/c unable to check on fabric versions');
+				logger.error(err2);
 				t.migration_lib.record_error('Internal issue - not able to check node versions', () => {
 					return res.status(500).json(err2);
 				});
 			} else if (!ret_ver || !ret_ver.all_valid) {
+				logger.error('[migration ingress] cannot start ingress migration b/c 2nd check on fabric versions failed');
 				t.migration_lib.record_error('Version issue - incompatible node versions detected', () => {
 					if (!ret_ver) { ret_ver = {}; }
 					ret_ver.message = 'version check failed';
