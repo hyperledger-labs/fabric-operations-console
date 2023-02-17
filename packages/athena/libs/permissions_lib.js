@@ -478,7 +478,7 @@ module.exports = function (logger, ev, t) {
 
 					// check results of the password
 					if (input_errors.length >= 1) {
-						logger.error('[pass] cannot change password. input errors:', input_errors);
+						logger.error('[pass] not a viable password. rule failures');
 						cb({ statusCode: 400, msg: input_errors, }, null);
 					} else if (req._dry_run === true) {
 						logger.info('[pass] detected dry-run password change. password would be valid.');	// dry run doesn't edit the pass or check existing

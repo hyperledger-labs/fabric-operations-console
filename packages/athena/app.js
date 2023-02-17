@@ -802,9 +802,15 @@ function setup_pillow_talk() {
 		if (doc.message_type === 'monitor_migration') {
 			logger.debug('[pillow] - received message to start monitoring ' + doc.sub_type + ' progress, interval: ', ev.MIGRATION_MON_INTER_SECS, 'secs');
 			clearInterval(migration_interval);
-			migration_interval = setInterval(() => {
-				tools.migration_lib.check_migration_status(doc);
-			}, ev.MIGRATION_MON_INTER_SECS * 1000);
+			setTimeout(() => {
+				if (doc.quick) {
+					tools.migration_lib.check_migration_status(doc);			// call it now if its a quick step
+				}
+
+				migration_interval = setInterval(() => {
+					tools.migration_lib.check_migration_status(doc);
+				}, ev.MIGRATION_MON_INTER_SECS * 1000);							// start poll for watching the migration status
+			}, (doc.quick ? 2 : 10) * 1000 * Math.random());					// stagger the polling so multiple athenas don't ask at the exact same time
 		}
 
 		// --- Receiving Migration Monitoring Stop Doc --- //

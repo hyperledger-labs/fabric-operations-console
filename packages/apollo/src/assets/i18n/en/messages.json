@@ -2642,11 +2642,11 @@
 	"migration_start_details3": "- Redeploying Fabric nodes (CAs, orderers, and peers)",
 	"migration_start_details4": "- Deploying a new console & copying console data",
 	"migration_start_details5": "- Exporting your wallet and importing it on the new console",
-	"migration_title": "Migration to IBP Support for Hyperledger Fabric is available",
-	"migration_title_warn": "Time is running out to migrate to IBP Support for Hyperledger Fabric",
-	"migration_title_error": "Migrate to IBP Support for Hyperledger Fabric *now* to avoid unrecoverable losses",
+	"migration_title": "Migration to IBM Support for Hyperledger Fabric is available",
+	"migration_title_warn": "Time is running out to migrate to IBM Support for Hyperledger Fabric",
+	"migration_title_error": "Migrate to IBM Support for Hyperledger Fabric *now* to avoid unrecoverable losses",
 	"migration_action_button": "Migrate",
-	"migration_done_title": "Congratulations! You have Migrated to IBP Support for Hyperledger Fabric",
+	"migration_done_title": "Congratulations! You have Migrated to IBM Support for Hyperledger Fabric",
 	"migration_done_button": "Migration Details",
 	"migration_console_title": "Console",
 	"migration_completion_title": "Console is in read only mode",
@@ -2717,6 +2717,6 @@
 	"mig_warn_txt": "1. Verify that you and any users of your console have exported their wallets from this console and imported them to the new console. Below is a list of usernames that have exported their wallet. <strong>This console cannot tell if they are imported in the new console</strong>. It is a manual step you must take before deletion. Once this console is deleted, all wallets held within it will be unrecoverable.",
 	"mig_complete_txt2": "Check out your new console at ",
 	"mig_exported_wallets": "Usernames that have exported their wallet:",
-	"mig_test_txt": "2. To see if the new console is working well, open a new tab to the new console and click on each of the node tiles. Compare the Fabric related content seen there with the content seen on this console, it should be identical. If it isn't, try exporting and importing your wallet again, and double check the identity that is associated on each node.",
-	"mig_delete_txt": "3. If the new console is working well and all wallets have been transferred, its time to delete the service instance. Go to your [[IBM Cloud resources]](https://cloud.ibm.com/resources) dashboard, find this service instance, and open it. If you see the text \"This console has been migrated!\" on the welcome page, then it is safe to delete the service instance. Click the \"Actions...\" dropdown menu and select \"Delete service\"."
+	"mig_test_txt": "2. Next check if the new console is working. Open a new tab to the new console and click on each of the node tiles. Compare the Fabric related content seen there with the content seen on this console, it should be identical. If it isn't, try exporting and importing your wallet again, and double check the identity that is associated on each node.",
+	"mig_delete_txt": "3. If the new console is working well and all wallets have been transferred, it's time to delete the service instance. Go to your [[IBM Cloud resources]](https://cloud.ibm.com/resources) dashboard, find this service instance, and open it. If you see the text \"This console has been migrated!\" on the welcome page, then it is safe to delete the service instance. Towards the top right of the screen there is an \"Actions...\" dropdown menu. Click it and select \"Delete service\"."
 }

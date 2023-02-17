@@ -206,7 +206,8 @@ class TitleBar extends Component {
 								<HeaderMenuItem
 									onKeyPress={event => this.onKeyPressGetStarted(event, this.props.showWelcomeBanner)}
 									onClick={this.props.showWelcomeBanner ? this.closeWelcomeBanner : this.showWelcomeBanner}
-									className={`ibp-get-started-button ${this.props.showWelcomeBanner ? 'ibp-get-started-showing' : ''}`}
+									className={'ibp-get-started-button' + (this.props.showWelcomeBanner ? ' ibp-get-started-showing ' : '') +
+										(this.props.inReadOnlyMode ? ' bx--header__menu-item-read-only ' : '')}
 									id="ibp-get-started-menu-button"
 								>
 									{translate('get_started')}
@@ -215,7 +216,7 @@ class TitleBar extends Component {
 								<HeaderMenuItem
 									onKeyPress={event => this.goToDocs(event, translate, 'keypress')}
 									onClick={event => this.goToDocs(event, translate, 'click')}
-									className="ibp-header-menu-item"
+									className={'ibp-header-menu-item' + (this.props.inReadOnlyMode ? ' bx--header__menu-item-read-only ' : '')}
 								>
 									{translate('documentation')}
 								</HeaderMenuItem>

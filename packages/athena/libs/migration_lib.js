@@ -23,6 +23,14 @@ module.exports = function (logger, ev, t) {
 	// dsh todo internal doc the new apis
 	// dsh todo change atlas to reference the new position of migration_complete
 	const MIGRATION_LOCK = 'migration';
+	const CHECK_INGRESS_API_OPTS = {
+		method: 'GET',
+		path: '/api/v1/$iid/$account/ingress',	// $iid & $account get replaced later
+	};
+	const CHECK_NODE_API_OPTS = {
+		method: 'GET',
+		path: '/api/v1/$iid/verify/all',		// $iid gets replaced later
+	};
 
 	//-------------------------------------------------------------
 	// Get the overall status from status docs in db
@@ -243,6 +251,7 @@ module.exports = function (logger, ev, t) {
 
 				settings_doc.migration_status.migration_complete = false;
 				settings_doc.migration_status.error_msg = '';
+				settings_doc.feature_flags.read_only_enabled = false;
 
 				// update the settings doc
 				t.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, settings_doc, (err_writeDoc, doc) => {
@@ -302,6 +311,7 @@ module.exports = function (logger, ev, t) {
 			} else {
 
 				settings_doc.migration_status.migration_complete = true;
+				settings_doc.feature_flags.read_only_enabled = true;
 
 				// update the settings doc
 				t.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, settings_doc, (err_writeDoc, doc) => {
@@ -550,34 +560,21 @@ module.exports = function (logger, ev, t) {
 							return cb(err);											// error already logged
 						} else {
 
-							// 4. send ingress migration call to jupiter
-							logger.info('[jupiter-ingress] sending ingress migration request');
-							const opts = {
-								method: 'POST',
-								path: '/api/v1/$iid/$account/ingress',				// $iid & $account get replaced later
-								headers: {
-									'x-iam-token': req.headers['x-iam-token'],
-									'x-refresh-token': req.headers['x-refresh-token'],
-								}
-							};
-							t.jupiter_lib.request(opts, (ret) => {
-								if (!ret) {
-									logger.error('[jupiter-ingress] communication error, no response');
-									return cb('Communication error, no response to the migrate ingress api');
-								} else if (t.ot_misc.is_error_code(t.ot_misc.get_code(ret))) {
-									logger.error('[jupiter-ingress] - error response code from jupiter', ret);
-									const msg = t.jupiter_lib.make_jupiter_msg(ret);
-									return cb('Internal issue - received an error code in response to the ingress api: ' + t.ot_misc.get_code(ret) + msg);
+							// 4 check if we have already migrated the ingress from a prev attempt
+							t.jupiter_lib.request(CHECK_INGRESS_API_OPTS, (ret) => {
+								if (!ret || t.ot_misc.is_error_code(t.ot_misc.get_code(ret))) {
+									logger.debug('[jupiter-ingress-check] - not migrated yet');
+
+									// 5. send ingress migration call to jupiter
+									migrate_ingress_api((error, response) => {
+										return cb(error, response);
+									});
 								} else {
-									const msg = {
-										message_type: 'monitor_migration',
-										sub_type: 'ingress',
-										message: 'ingress migration has begun',
-										login_username: req.body.login_username,
-										login_password: t.misc.encrypt(req.body.login_password, ev.MIGRATION_API_KEY),
-									};
-									t.pillow.broadcast(msg);			// send signal to console to start looking for migration status updates
-									return cb(null, ret.response);
+									logger.info('[jupiter-ingress-check] - good response, ingress already migrated. skipping ingress step.');
+
+									// 5. skip ingress migration call to jupiter, jump to monitor step which will instantly validate
+									monitor_ingress_migration(true);
+									return cb(null, { message: 'ingress already migrated' });
 								}
 							});
 						}
@@ -585,6 +582,45 @@ module.exports = function (logger, ev, t) {
 				});
 			}
 		});
+
+		// call the migrate ingress api on jupiter
+		function migrate_ingress_api(cb_in) {
+			logger.info('[jupiter-ingress] sending ingress migration request');
+			const opts = {
+				method: 'POST',
+				path: '/api/v1/$iid/$account/ingress',			// $iid & $account get replaced later
+				headers: {
+					'x-iam-token': req.headers['x-iam-token'],
+					'x-refresh-token': req.headers['x-refresh-token'],
+				}
+			};
+			t.jupiter_lib.request(opts, (ret) => {
+				if (!ret) {
+					logger.error('[jupiter-ingress] communication error, no response');
+					return cb_in('Communication error, no response to the migrate ingress api');
+				} else if (t.ot_misc.is_error_code(t.ot_misc.get_code(ret))) {
+					logger.error('[jupiter-ingress] - error response code from jupiter', ret);
+					const msg = t.jupiter_lib.make_jupiter_msg(ret);
+					return cb_in('Internal issue - received an error code in response to the ingress api: ' + t.ot_misc.get_code(ret) + msg);
+				} else {
+					monitor_ingress_migration();
+					return cb_in(null, ret.response);
+				}
+			});
+		}
+
+		// use pillow talk to start polling on the ingress migration status
+		function monitor_ingress_migration(quick) {
+			const msg = {
+				message_type: 'monitor_migration',
+				sub_type: 'ingress',
+				message: 'ingress migration has begun',
+				quick: quick ? true: false,
+				login_username: req.body.login_username,
+				login_password: t.misc.encrypt(req.body.login_password, ev.MIGRATION_API_KEY),
+			};
+			t.pillow.broadcast(msg);			// send signal to console to start looking for migration status updates
+		}
 	};
 
 	// -----------------------------------------------------
@@ -592,11 +628,7 @@ module.exports = function (logger, ev, t) {
 	// -----------------------------------------------------
 	exports.check_ingress = (pillow_doc, cb) => {
 		if (!cb) { cb = function () { }; }
-		const opts = {
-			method: 'GET',
-			path: '/api/v1/$iid/$account/ingress',	// $iid & $account get replaced later
-		};
-		t.jupiter_lib.request(opts, (ret) => {
+		t.jupiter_lib.request(CHECK_INGRESS_API_OPTS, (ret) => {
 			if (!ret) {
 				logger.error('[jupiter-ingress-check] - communication error, no response');
 				return cb('Communication error, no response to the check ingress api');
@@ -656,37 +688,62 @@ module.exports = function (logger, ev, t) {
 						return cb(err);										// error already logged
 					} else {
 
-						// 3. send node migration call to jupiter
-						logger.info('[jupiter-comps] sending component migration request');
-						const opts = {
-							method: 'POST',
-							path: '/api/v1/$iid/migrate/all',				// $iid gets replaced later
-						};
-						t.jupiter_lib.request(opts, (ret) => {
-							if (!ret) {
-								logger.error('[jupiter-comps] communication error, no response');
-								return cb('Communication error, no response to the migrate all nodes api');
-							} else if (t.ot_misc.is_error_code(t.ot_misc.get_code(ret))) {
-								logger.error('[jupiter-comps] - error response code from jupiter', ret);
-								const msg = t.jupiter_lib.make_jupiter_msg(ret);
-								return cb('Internal issue - received an error code in response to the all components api: ' + t.ot_misc.get_code(ret) + msg);
+						// 3 check if we have already migrated the nodes from a prev attempt
+						t.jupiter_lib.request(CHECK_NODE_API_OPTS, (ret) => {
+							if (!ret || t.ot_misc.is_error_code(t.ot_misc.get_code(ret))) {
+								logger.debug('[jupiter-node-check] - not migrated yet');
+
+								// 4. send nodes migration call to jupiter
+								migrate_nodes_api((error, response) => {
+									return cb(error, response);
+								});
 							} else {
-								const msg = {
-									message_type: 'monitor_migration',
-									sub_type: 'comps',
-									message: 'node migration has begun',
-									login_username: pillow_doc.login_username,
-									login_password: pillow_doc.login_password,
-								};
-								t.pillow.broadcast(msg);			// send signal to console to start looking for migration status updates
-								return cb(null, ret.response);
+								logger.info('[jupiter-node-check] - good response, nodes already migrated. skipping node step.');
+
+								// 4. skip nodes migration call to jupiter, jump to monitor step which will instantly validate
+								monitor_nodes_migration(true);
+								return cb(null, { message: 'nodes already migrated' });
 							}
 						});
 					}
 				});
-
 			}
 		});
+
+		// call the migrate nodes api on jupiter
+		function migrate_nodes_api(cb_nodes) {
+			logger.info('[jupiter-comps] sending component migration request');
+			const opts = {
+				method: 'POST',
+				path: '/api/v1/$iid/migrate/all',				// $iid gets replaced later
+			};
+			t.jupiter_lib.request(opts, (ret) => {
+				if (!ret) {
+					logger.error('[jupiter-comps] communication error, no response');
+					return cb_nodes('Communication error, no response to the migrate all nodes api');
+				} else if (t.ot_misc.is_error_code(t.ot_misc.get_code(ret))) {
+					logger.error('[jupiter-comps] - error response code from jupiter', ret);
+					const msg = t.jupiter_lib.make_jupiter_msg(ret);
+					return cb_nodes('Internal issue - received an error code in response to the all components api: ' + t.ot_misc.get_code(ret) + msg);
+				} else {
+					monitor_nodes_migration();
+					return cb_nodes(null, ret.response);
+				}
+			});
+		}
+
+		// use pillow talk to start polling on the ingress migration status
+		function monitor_nodes_migration(quick) {
+			const msg = {
+				message_type: 'monitor_migration',
+				sub_type: 'comps',
+				message: 'node migration has begun',
+				quick: quick ? true: false,
+				login_username: pillow_doc.login_username,
+				login_password: pillow_doc.login_password,
+			};
+			t.pillow.broadcast(msg);			// send signal to console to start looking for migration status updates
+		}
 	};
 
 	// -----------------------------------------------------
@@ -694,11 +751,7 @@ module.exports = function (logger, ev, t) {
 	// -----------------------------------------------------
 	exports.check_components = (pillow_doc, cb) => {
 		if (!cb) { cb = function () { }; }
-		const opts = {
-			method: 'GET',
-			path: '/api/v1/$iid/verify/all',	// $iid gets replaced later
-		};
-		t.jupiter_lib.request(opts, (ret) => {
+		t.jupiter_lib.request(CHECK_NODE_API_OPTS, (ret) => {
 			if (!ret) {
 				logger.error('[jupiter-node-check] - communication error, no response');
 				return cb('Communication error, no response to the check nodes api');
@@ -755,14 +808,14 @@ module.exports = function (logger, ev, t) {
 				// 2. mark the console migration as in progress
 				change_migration_step_status('console', ev.STR.STATUS_IN_PROGRESS, (err) => {
 					if (err) {
-						return cb(err);										// error already logged
+						return cb(err);											// error already logged
 					} else {
 
 						// 3. send console migration call to jupiter
 						logger.info('[jupiter-console] sending console migration request');
 						const opts = {
 							method: 'POST',
-							path: '/api/v1/$iid/console',					// $iid gets replaced later
+							path: '/api/v1/$iid/console',						// $iid gets replaced later
 							body: {
 								migration_api_key: ev.MIGRATION_API_KEY,		// this is the key to use on the new console
 								login_username: pillow_doc.login_username,
@@ -783,21 +836,24 @@ module.exports = function (logger, ev, t) {
 							} else {
 								logger.info('[jupiter-console] rec url of new console', ret.response.url);
 								store_console_url(ret.response.url, () => {
-									const msg = {
-										message_type: 'monitor_migration',
-										sub_type: 'console',
-										message: 'console migration has begun',
-										login_username: pillow_doc.login_username,
-										login_password: pillow_doc.login_password,
-									};
-									t.pillow.broadcast(msg);			// send signal to console to start looking for migration status updates
+									// delay console polling b/c if there was an old console (from a prev migration attempt), it needs to be
+									// deleted before we poll on the next (new) console
+									setTimeout(() => {
+										const msg = {
+											message_type: 'monitor_migration',
+											sub_type: 'console',
+											message: 'console migration has begun',
+											login_username: pillow_doc.login_username,
+											login_password: pillow_doc.login_password,
+										};
+										t.pillow.broadcast(msg);			// send signal to console to start looking for migration status updates
+									}, 1000 * 15);
 									return cb(null, ret.response);
 								});
 							}
 						});
 					}
 				});
-
 			}
 		});
 	};

@@ -172,7 +172,7 @@
 	"migrated_console_url": null,
 	"migration_min_versions": {
 		"fabric-ca": "1.5.5",
-		"fabric-peer": "2.2.9",
+		"fabric-peer": "2.2.8",
 		"fabric-orderer": "2.2.9",
 		"kubernetes": "1.22"
 	},
