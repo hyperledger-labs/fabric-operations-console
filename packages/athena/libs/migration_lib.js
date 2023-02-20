@@ -22,6 +22,7 @@ module.exports = function (logger, ev, t) {
 	// dsh todo doc the new settings
 	// dsh todo internal doc the new apis
 	// dsh todo change atlas to reference the new position of migration_complete
+
 	const MIGRATION_LOCK = 'migration';
 	const CHECK_INGRESS_API_OPTS = {
 		method: 'GET',
@@ -150,7 +151,6 @@ module.exports = function (logger, ev, t) {
 				if (mig_status_data[startFieldName]) {
 					on_step = Number(i);
 				}
-
 				if (mig_status_data[finFieldName]) {
 					on_step = Number(i) + 1;
 				}
@@ -701,7 +701,7 @@ module.exports = function (logger, ev, t) {
 		t.lock_lib.apply(l_opts, (lock_err) => {
 			if (lock_err) {
 				logger.warn('[migration lib] did not get migration lock for component step, the other instances must have it');
-				return cb(null);
+				return;								// if we didn't get the lock, don't call cb, just return
 			} else {
 
 				// 2. mark the component migration as in progress
@@ -824,7 +824,7 @@ module.exports = function (logger, ev, t) {
 		t.lock_lib.apply(l_opts, (lock_err) => {
 			if (lock_err) {
 				logger.warn('[migration lib] did not get migration lock for console step, the other instances must have it');
-				return cb(null);
+				return;								// if we didn't get the lock, don't call cb, just return
 			} else {
 
 				// 2. mark the console migration as in progress
@@ -945,7 +945,7 @@ module.exports = function (logger, ev, t) {
 				return cb(error, response);
 			} else {
 				change_migration_step_status('db', ev.STR.STATUS_DONE, (err) => {		// if success, mark migration as complete
-					logger.info('[migration-console-db] db migration was successful');
+					logger.info('[migration-console-db] marked db migration as successful');
 					return cb(null);
 				});
 			}
@@ -964,17 +964,18 @@ module.exports = function (logger, ev, t) {
 		t.lock_lib.apply(l_opts, (lock_err) => {
 			if (lock_err) {
 				logger.warn('[migration lib] did not get migration lock for db step, the other instances must have it');
-				return cb(null);
+				return;								// if we didn't get the lock, don't call cb, just return
 			} else {
 
 				// 2. mark the database migration as in progress
 				change_migration_step_status('db', ev.STR.STATUS_IN_PROGRESS, (err) => {
 					const new_console_url = ev.MIGRATED_CONSOLE_URL;
 					if (err) {
-						return cb(err);									// error already logged
+						// error already logged
+						return cb('DB issue - unable to mark the migration db step as in progress. see server logs.');
 					} else if (!new_console_url || !t.misc.format_url(new_console_url)) {
 						logger.error('[migration-console-db] the new console url is not defined in settings doc, cannot migrate', new_console_url);
-						return cb('Internal issue - the new console url is not defined, cannot migrate data', null);
+						return cb('Internal issue - the new console url is not defined, cannot migrate data');
 					} else {
 
 						// 3. call backup api
@@ -1016,7 +1017,7 @@ module.exports = function (logger, ev, t) {
 													} else {
 
 														// 7. all done!
-														logger.info('[migration-console-db] database migration via restore completed');
+														logger.debug('[migration-console-db] database migration via restore completed');
 														return cb(null, rest_resp);
 													}
 												});
