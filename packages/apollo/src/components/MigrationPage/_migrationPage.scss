@@ -203,7 +203,7 @@
 
 	.stepLineMotion {
 		position: absolute;
-		border-top: 3px #3d7cf0  solid;
+		border-top: 3px #3d7cf0 solid;
 		width: 0.5rem;
 		left: 0rem;
 		top: 0.4rem;
@@ -297,6 +297,19 @@
 			transform: translate(8rem, 0rem);
 		}
 	}
+
+	.newConsoleWrap {
+		background: #3b3d3e;
+		padding: 0.6rem 1.5rem;
+		display: inline-block;
+		margin-bottom: 0.5rem;
+	}
+
+	.leftParagraphMore {
+		margin-left: 3rem;
+		line-height: 1.2rem;
+	}
+
 }
 
 .errorTxt,

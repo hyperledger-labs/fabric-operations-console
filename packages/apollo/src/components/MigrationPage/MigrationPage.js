@@ -391,8 +391,8 @@ class MigrationPage extends Component {
 
 		return (
 			<PageContainer>
-				<div className="bx--row">
-					<div className="bx--col-lg-13 migrationPanel">
+				<div className="bx--row migrationPanel">
+					<div className="bx--col-lg-13">
 						<PageHeader
 							history={this.props.history}
 							headerName="migration"
@@ -646,9 +646,9 @@ class MigrationPage extends Component {
 							</div>
 						}
 					</div>
+					{!this.props.loading && migrationStatusStr === constants.STATUS_DONE && this.props.migFeatureFlagEnabled && this.renderDeleteContent()}
 				</div >
 				{this.props.openSidePanel && this.renderSidePanel()}
-				{!this.props.loading && migrationStatusStr === constants.STATUS_DONE && this.props.migFeatureFlagEnabled && this.renderDeleteContent()}
 			</PageContainer >
 		);
 	}
@@ -932,24 +932,26 @@ class MigrationPage extends Component {
 		const translate = this.props.translate;
 		return (
 			<div>
-				<div className="ibp-modal-title">
-					<h3 className="ibm-light">{translate('migration_cleanup')}</h3>
+				<div className="ibp-modal-title twistyContent">
+					<p className="infoTitle">
+						{translate('migration_cleanup')}
+					</p>
 					<br />
 					<p>{translate('mig_complete_txt')}</p>
 					<br />
-					<p>
+					<p className="newConsoleWrap leftParagraphMore">
 						{translate('mig_complete_txt2')}
 						<a href={this.props.newConsoleURL}
 							target="_blank"
 							rel="noreferrer"
 						>
 							{this.props.newConsoleURL}
-						</a>.
+						</a>
 					</p>
 					<br />
 					<p>{translate('mig_warn_txt')}</p>
 					<br />
-					<div className="leftParagraph">
+					<div className="leftParagraphMore">
 						<h4>{translate('mig_exported_wallets')}</h4>
 						{this.props.exportedWallets.map((wallet, i) => {
 							return (
@@ -957,7 +959,10 @@ class MigrationPage extends Component {
 									key={'wallet_' + i}
 									className="leftParagraph"
 								>
-									- <span className="checking_text">{wallet.email}</span> - <span className="tinyTextWhite">exported on {new Date(wallet.timestamp).toLocaleDateString()}</span>
+									- <span className="checking_text">{wallet.email}</span> -
+									<span className="tinyTextWhite">
+										exported on {new Date(wallet.timestamp).toLocaleDateString()}
+									</span>
 								</p>
 							);
 						})}
@@ -967,7 +972,7 @@ class MigrationPage extends Component {
 					<br />
 					<TranslateLink text="mig_delete_txt" />
 				</div>
-			</div>
+			</div >
 		);
 	}
 }
