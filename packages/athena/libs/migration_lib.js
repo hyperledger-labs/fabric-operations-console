@@ -191,17 +191,25 @@ module.exports = function (logger, ev, t) {
 
 		// format the wallet migration status response part
 		function format_wallet_status_docs(wallet_docs) {
-			const docs = [];
+			const docs = {};
 			for (let i in wallet_docs) {
 				if (wallet_docs[i].doc) {
-					docs.push({
-						email: wallet_docs[i].doc.email,
-						uuid: wallet_docs[i].doc.uuid,
-						timestamp: wallet_docs[i].doc.timestamp,
-					});
+					const email = wallet_docs[i].doc.email;
+
+					// if dne, make it, if we already have one, keep the most recent one
+					if (!docs[email] || docs[email].timestamp < wallet_docs[i].doc.timestamp) {
+						docs[email] = {
+							email: email,
+							uuid: wallet_docs[i].doc.uuid,
+							timestamp: wallet_docs[i].doc.timestamp,
+						};
+					}
 				}
 			}
-			return docs;
+
+			const wallets = [];
+			for (let i in docs) { wallets.push(docs[i]); }
+			return wallets;
 		}
 	};
 

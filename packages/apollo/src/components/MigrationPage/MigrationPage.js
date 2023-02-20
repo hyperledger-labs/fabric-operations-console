@@ -959,9 +959,9 @@ class MigrationPage extends Component {
 									key={'wallet_' + i}
 									className="leftParagraph"
 								>
-									- <span className="checking_text">{wallet.email}</span> -
+									-&nbsp;<span className="checking_text">{wallet.email}</span>&nbsp;-&nbsp;
 									<span className="tinyTextWhite">
-										exported on {new Date(wallet.timestamp).toLocaleDateString()}
+										{translate('mig_exported_txt')} {new Date(wallet.timestamp).toLocaleDateString()}
 									</span>
 								</p>
 							);

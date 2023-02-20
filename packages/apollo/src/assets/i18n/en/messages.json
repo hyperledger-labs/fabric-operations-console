@@ -2620,7 +2620,7 @@
 	"migration_details1": "The console you are using right now is hosted by the IBM Blockchain Platform service. The new console will be hosted on your cluster. The same cluster that is hosting your CAs, Peers and/or Orderers.",
 	"migration_details2": "The login credentials used to get to this console are from an IBM ID. The new credentials will be local users to the console, using an email/password you define during migration.",
 	"migration_details2.1": "- Similar to the login credentials any IBM IAM api keys or bearer tokens used to authenticate console APIs will need to change to [[local api keys]](https://www.ibm.com/docs/en/blockchain-platform/2.5.3?topic=how-administering-your-console) or local bearer tokens.",
-	"migration_details4": "After migration the existing console will be put into a read-only state and you will be prompted to delete this service instance. Once in the read only state you will be unable to create/manage nodes on this console.",
+	"migration_details4": "After migration the existing console will be put into a read-only state and you will be prompted to delete this console. Once in the read only state you will be unable to create/manage nodes on this console.",
 	"migration_details3": "The new console will use a self-signed TLS certificate when communicating with your web browser. The first time you view the new console your browser will display a TLS warning. Follow the browser prompts to accept the new TLS certificate.",
 	"migration_details5": "- The documentation to reference will move from IBM Cloud to [[IBM]](https://www.ibm.com/docs/en/hlf-support/1.0.0)",
 	"migration_resources": "600 mCPU - 2 GB memory - 25 GB storage",
@@ -2671,7 +2671,7 @@
 	"mig_description": "Migration for your IBM Blockchain Platform console is enabled. Proceed when ready.",
 	"mig_description2": "Migration for your IBM Blockchain Platform console is not yet enabled. This feature is coming soon. Contact support if you have any questions.",
 	"mig_complete": "Migration is complete",
-	"mig_missing_perms": "You do not have permission to initiate migration. The IBM Cloud role of \"manager\" is needed on this service instance.",
+	"mig_missing_perms": "You do not have permission to initiate migration. The IBM Cloud role of \"manager\" is needed on this resource.",
 	"mig_timed_out": "The migration attempt has timed out. Try again. Contact support if this message persists.",
 	"mig_error": "The migration was not successful. You may try again. Contact support if this message persists.",
 	"mig_error_msg": "Error<br/>    ${migration_error_msg} <br/>    ${jupiter_error_msg}",
@@ -2713,10 +2713,11 @@
 	"mig_wallet_instructions2": "1. Go to the Settings tab on this console and click the blue \"Export\" button. Select the `Identities` checkbox and unselect all others. Click \"Export\" and save this file somewhere safe.",
 	"mig_wallet_instructions3": "2. Next open a tab to your new console, login with your <strong>new</strong> username/password, and import the wallet from the Settings tab.",
 	"migration_cleanup": "Migration Cleanup",
-	"mig_complete_txt": "Thank you for completing migration! Next is to verify the existing console is working and then to delete this service instance.",
+	"mig_complete_txt": "Thank you for completing migration! Next is to verify the existing console is working and then to delete this console.",
 	"mig_warn_txt": "1. Verify that you and any users of your console have exported their wallets from this console and imported them to the new console. Below is a list of usernames that have exported their wallet. <strong>This console cannot tell if they are imported in the new console</strong>. Ask the users of your console if they have imported their wallet. All wallet imports must complete before console deletion. Once this console is deleted, all wallets held within will be unrecoverable.",
 	"mig_complete_txt2": "Visit your new console at ",
 	"mig_exported_wallets": "Usernames that have exported their wallet:",
+	"mig_exported_txt": "exported on",
 	"mig_test_txt": "2. Next check if the new console is working. Open a new tab to the new console and click on each of the node tiles. Compare the Fabric related content seen there with the content seen on this console, it should be identical. If it isn't, try exporting and importing your wallet again, and double check the identity that is associated on each node.",
-	"mig_delete_txt": "3. If the new console is working well and all wallets have been transferred, it's time to delete the service instance. Go to your [[IBM Cloud resources]](https://cloud.ibm.com/resources) dashboard, find this service instance, and open it. If you see the text \"This console has been migrated!\" on the welcome page, then it is safe to delete the service instance."
+	"mig_delete_txt": "3. If the new console is working well and all wallets have been transferred, it's time to delete this console. Go to your [[IBM Cloud resources]](https://cloud.ibm.com/resources) dashboard, under \"Blockchain\" find the row for this console, and open it. The page that launches the console should have the text \"This console has been migrated!\". If so then it is safe to delete by using the \"Actions...\" dropdown and the \"Delete service\" option."
 }
