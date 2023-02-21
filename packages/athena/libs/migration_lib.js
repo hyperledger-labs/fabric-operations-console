@@ -21,7 +21,6 @@ module.exports = function (logger, ev, t) {
 	const exports = {};
 	// dsh todo doc the new settings
 	// dsh todo internal doc the new apis
-	// dsh todo change atlas to reference the new position of migration_complete
 
 	const MIGRATION_LOCK = 'migration';
 	const CHECK_INGRESS_API_OPTS = {

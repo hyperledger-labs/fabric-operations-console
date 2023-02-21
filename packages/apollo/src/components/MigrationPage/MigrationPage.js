@@ -348,7 +348,7 @@ class MigrationPage extends Component {
 			},
 			{
 				css_class: constants.STEP_NOT_STARTED,
-				txt: 'Migrating wallet',
+				txt: 'Migrate wallet',
 			}
 		];
 
@@ -430,15 +430,14 @@ class MigrationPage extends Component {
 											</p>
 											<p>{translate('migration_what1')}</p>
 											<br />
-											<br />
 											<div className="leftParagraph">
 												<p><strong>{translate('mig_details_title')}</strong></p>
 												<p>- {translate('migration_details1')}</p>
 												<p>- {translate('migration_details2')}</p>
 												<TranslateLink text="migration_details2.1" />
 												<p>- {translate('migration_details3')}</p>
-												<TranslateLink text="migration_details5" />
 												<p>- {translate('migration_details4')}</p>
+												<TranslateLink text="migration_details5" />
 											</div>
 
 											<p className="infoTitle">
@@ -531,7 +530,11 @@ class MigrationPage extends Component {
 										</h3>
 										{migrationStatusStr !== constants.STATUS_DONE &&
 											<p>
-												{translate(this.props.migFeatureFlagEnabled ? 'mig_description' : 'mig_description2')}
+												{
+													translate(this.props.migFeatureFlagEnabled ? (
+														migrationStatusStr === constants.STATUS_IN_PROGRESS ? 'mig_description_in_progress' : 'mig_description'
+													) : 'mig_description_disabled')
+												}
 											</p>
 										}
 										<br />
