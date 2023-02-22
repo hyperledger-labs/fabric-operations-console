@@ -999,7 +999,7 @@ module.exports = function (logger, ev, t) {
 								wait_for_backup(back_resp.id, (stalled_err, backup) => {
 									if (stalled_err) {
 										// error already logged
-										return cb('Console issue - timed out waiting for backup to complete, cannot migrate console data');
+										return cb(stalled_err);
 									} else {
 
 										// edit the settings doc in the backup so the migrated console has the correct settings for IBP support
@@ -1050,22 +1050,33 @@ module.exports = function (logger, ev, t) {
 
 			logger.debug('[migration-console-db] starting polling to wait for backup to complete... max attempts:', attempts);
 			let on_attempt = 0;
+			const CONTINUE_STR = 'backup in progress';
 
 			// delay retry a bit for initial backup doc to be created
 			setTimeout(() => {
 				t.async.retry({
 					times: attempts,
 					interval: interval_ms,				// it wants ms
+					errorFilter: (error) => {
+						if (error === CONTINUE_STR) {
+							return true;
+						} else {
+							return false;				// return false to stop retry, like on an error
+						}
+					}
 				}, (done) => {
 					const log_attempts = 'on attempt: ' + (++on_attempt) + '/' + attempts;
 
 					t.dbs.get_backup(backup_id, (get_err, resp) => {
 						if (get_err || !resp) {
-							logger.debug('[migration-console-db] - backup response is unexpected: ', get_err, 'resp:', resp);
-							return done('backup error');
+							logger.error('[migration-console-db] - backup response is unexpected: ', get_err, 'resp:', resp);
+							return done(CONTINUE_STR);
+						} else if (resp.error) {
+							logger.error('[migration-console-db] - backup doc has error set');
+							return done('Console issue - backup error - ' + resp.error);
 						} else if (resp.in_progress) {
 							logger.debug('[migration-console-db] - backup has not completed yet...', log_attempts);
-							return done('backup in progress');
+							return done(CONTINUE_STR);
 						} else {
 							logger.info('[migration-console-db] - backup has completed, can migrate dbs now', log_attempts);
 							return done(null, resp);
@@ -1075,8 +1086,11 @@ module.exports = function (logger, ev, t) {
 					if (err) {
 						const elapsed = Date.now() - started;
 						const log_attempts = 'attempt: ' + on_attempt + '/' + attempts;
-						logger.warn('[migration-console-db] - could not backup dbs prior to migration. giving up after',
-							t.misc.friendly_ms(elapsed), log_attempts);
+						if (err === CONTINUE_STR) {
+							logger.warn('[migration-console-db] - could not backup dbs prior to migration. giving up after',
+								t.misc.friendly_ms(elapsed), log_attempts);
+							err = 'Console issue - timed out waiting for backup to complete, cannot migrate console data';
+						}
 					}
 					return cb(err, backup_doc);
 				});
