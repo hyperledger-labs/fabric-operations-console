@@ -593,6 +593,9 @@ module.exports = function (logger, ev, t) {
 			if (docs2overwrite.length === 0) {											// looks like we are done
 				return cb_outer(null);
 			} else {
+				for (let i in docs2overwrite) {
+					delete docs2overwrite[i]._rev;										// remove all _revs, if doc already exist the inner loop will fix it
+				}
 				bulk_doc_overwrite(docs2overwrite, 0, () => {							// overwrite these docs
 					logger.debug('[restore] finished outer loop: ' + outer_iter + ', db: "' + db_name + '" - ' + db_type,
 						'total doc successes:', restore_successes);
@@ -627,9 +630,10 @@ module.exports = function (logger, ev, t) {
 						// [2] find doc update errors
 						const ids_with_errors = find_errors(resp);
 						if (ids_with_errors.length === 0) {
+							logger.warn('[restore] all docs in this loop have been restored. db: "' + db_name + '" - ' + db_type);
 							return cb_replaced(null);									// all done
 						} else {
-							logger.debug('[restore] some docs had errors, will update again.', ids_with_errors.length);
+							logger.warn('[restore] some docs had errors, will update them again.', ids_with_errors.length);
 
 							// [3] of the docs that had an error, get the current contents
 							const inner_opts = {
@@ -696,6 +700,7 @@ module.exports = function (logger, ev, t) {
 			const ret = [];
 			for (let i in response) {
 				if (!response[i].ok) {
+					logger.warn('[restore] error writing doc to: "' + db_name + '" (will try again) id:', response[i].id, 'reason:', response[i].reason);
 					ret.push(response[i].id);
 				} else {
 					restore_successes++;								// keep track of doc write successes
