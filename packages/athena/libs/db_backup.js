@@ -119,7 +119,7 @@ module.exports = function (logger, ev, t) {
 		const options = {
 			req: req,
 			db_types: ['DB_COMPONENTS', 'DB_SESSIONS', 'DB_SYSTEM'],
-			blacklisted_doc_types: [BACKUP_DOC_TYPE, 'session_athena', 'pillow_talk_doc'],	// don't backup other backups or session docs
+			blacklisted_doc_types: [BACKUP_DOC_TYPE, 'session_athena', 'pillow_talk_doc', 'json_validation'],	// don't backup other backups or session docs
 			BATCH: 512,
 		};
 		dbs.async_backup(options, cb_early, cb_done);
@@ -173,8 +173,14 @@ module.exports = function (logger, ev, t) {
 				the_backup.in_progress = false;
 				the_backup.end_timestamp = Date.now();
 				the_backup.elapsed = t.misc.friendly_ms(the_backup.end_timestamp - the_backup.start_timestamp);
-				update_backup_doc(opts, () => {					// update one more time to flip "in_progress"
+				update_backup_doc(opts, () => {						// update one more time to flip "in_progress"
 					logger.info('[backup] completed backup, docs:', the_backup.doc_count, the_backup.elapsed, the_backup._id);
+
+					try {
+						const str = JSON.stringify(the_backup);
+						logger.info('[backup] estimated size of backup:', t.misc.friendly_bytes(str.length, 0));
+					} catch (e) { }
+
 					return cb_done();
 				});
 			});
@@ -197,6 +203,7 @@ module.exports = function (logger, ev, t) {
 		function outer_loop(since, outer_iter, cb_outer) {
 			if (outer_iter > 3) {			// watch dog, do not loop forever
 				logger.error('[backup] too many outer loop iterations, quitting', outer_iter, db_name);
+				record_error({ reason: 'too many outer loop iterations' });
 				return cb_outer(null);
 			}
 
@@ -301,6 +308,7 @@ module.exports = function (logger, ev, t) {
 			}, (errorCode, wrote_doc) => {
 				if (errorCode) {
 					logger.error('[backup] unable write backup doc', errorCode, wrote_doc);
+					record_error(errorCode);
 				}
 				return cb_wrote_db();
 			});
@@ -313,6 +321,31 @@ module.exports = function (logger, ev, t) {
 			t.misc.check_dir_sync({ file_path: file_path, create: true });
 			t.fs.writeFileSync(file_path, JSON.stringify(the_backup, null, '\t'));
 		}
+	}
+
+	// record that an error happened in the backup doc
+	function record_error(error, cb_error) {
+		if (!cb_error) { cb_error = function () { }; }
+		t.couch_lib.getDoc({ db_name: ev.DB_SYSTEM, _id: the_backup._id, SKIP_CACHE: true }, function (err, doc) {
+			if (err) {
+				logger.error('[backup-error] unable to write backup-doc to record that an error occurred...hopeless 1', err);
+				return cb_error();
+			} else {
+
+				try {
+					doc.error = error.reason || JSON.stringify(error);
+				} catch (e) { }
+
+				t.couch_lib.writeDoc({ db_name: ev.DB_SYSTEM }, doc, (err_writeDoc, doc) => {
+					if (err_writeDoc) {
+						logger.error('[backup-error] unable to write backup-doc to record that an error occurred...hopeless 2', err);
+						return cb_error();
+					} else {
+						return cb_error();
+					}
+				});
+			}
+		});
 	}
 
 	//------------------------------------------------------------
