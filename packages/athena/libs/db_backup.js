@@ -73,7 +73,7 @@ module.exports = function (logger, ev, t) {
 				dbs.prune_backups();													// clean up old backups
 			} else {
 				const opts = {
-					db_names: [ev.DB_COMPONENTS, ev.DB_SESSIONS, ev.DB_SYSTEM],
+					db_types: ['DB_COMPONENTS', 'DB_SESSIONS', 'DB_SYSTEM'],
 					blacklisted_doc_types: [BACKUP_DOC_TYPE, 'session_athena'],
 					BATCH: 512,
 				};
@@ -118,8 +118,8 @@ module.exports = function (logger, ev, t) {
 	dbs.athena_backup = function (req, cb_early, cb_done) {
 		const options = {
 			req: req,
-			db_names: [ev.DB_COMPONENTS, ev.DB_SESSIONS, ev.DB_SYSTEM],
-			blacklisted_doc_types: [BACKUP_DOC_TYPE, 'session_athena'],					// don't backup other backups or session docs
+			db_types: ['DB_COMPONENTS', 'DB_SESSIONS', 'DB_SYSTEM'],
+			blacklisted_doc_types: [BACKUP_DOC_TYPE, 'session_athena', 'pillow_talk_doc'],	// don't backup other backups or session docs
 			BATCH: 512,
 		};
 		dbs.async_backup(options, cb_early, cb_done);
@@ -131,7 +131,7 @@ module.exports = function (logger, ev, t) {
 	/*
 	opts: {
 		req: {},
-		db_names: [""],							// [required] array of database names to backup
+		db_types: [""],							// [required] array of database setting names to backup
 		blacklisted_doc_types: [""],			// [optional] array of strings, docs with this "type" field will not be backed up
 		BATCH: 512,								// [optional] max number of full docs to pull at once (bulk get), defaults 1000
 		use_fs: false							// [optional] if true the local file system will store the backup instead of the systems db (defaults false)
@@ -157,7 +157,7 @@ module.exports = function (logger, ev, t) {
 			the_backup._id = DOC_ID_BASE + the_backup.start_timestamp;
 			the_backup.in_progress = true;
 			the_backup.ibp_versions = t.ot_misc.parse_versions();
-			logger.info('[backup] starting db backup. ', the_backup._id, 'dbs:', opts.db_names);
+			logger.info('[backup] starting db backup. ', the_backup._id, 'dbs:', opts.db_types);
 
 			// build a notification doc
 			t.notifications.procrastinate(opts.req, { message: 'starting db backup \'' + the_backup._id + '\'' });
@@ -165,8 +165,8 @@ module.exports = function (logger, ev, t) {
 			// do not return here, calling callback early so api can respond before this is done
 			cb_early(null, { message: 'in-progress', id: the_backup._id, url: ev.HOST_URL + '/ak/api/v3/backups/' + the_backup._id });
 
-			t.async.eachLimit(opts.db_names, 1, (db_name, cb_backup) => {
-				backup_db(db_name, opts, () => {
+			t.async.eachLimit(opts.db_types, 1, (db_type, cb_backup) => {
+				backup_db(db_type, opts, () => {
 					return cb_backup();
 				});
 			}, () => {												// backup done
@@ -184,8 +184,9 @@ module.exports = function (logger, ev, t) {
 	//------------------------------------------------------------
 	// back up all docs in this db
 	//------------------------------------------------------------
-	function backup_db(db_name, orig_opts, cb) {
+	function backup_db(db_type, orig_opts, cb) {
 		const db_start_timestamp = Date.now();
+		const db_name = ev[db_type];
 		outer_loop(null, 0, () => {
 			return cb(null);
 		});
@@ -205,7 +206,7 @@ module.exports = function (logger, ev, t) {
 					// error already logged
 					return cb_outer(null);
 				} else {
-					logger.debug('[backup] there are', resp1.ids2lookup.length, 'docs to backup in db: "' + db_name + '"');
+					logger.debug('[backup] there are', resp1.ids2lookup.length, 'docs in db: "' + db_name + '" - ' + db_type);
 
 					// [2] get each doc's contents
 					const inner_opts = {
@@ -222,11 +223,11 @@ module.exports = function (logger, ev, t) {
 							// error already logged
 							return cb_outer(null);
 						} else {
+							logger.debug('[backup] there are', bulk_docs.length, 'docs to backup in db: "' + db_name + '" - ' + db_type);
 
 							// [3] write/update the backup doc
 							update_backup_obj(resp1.last_sequence, bulk_docs);
 							update_backup_doc(orig_opts, () => {
-								//logger.debug('[backup] backed up db: "' + db_name + '" with', the_backup.dbs[db_name].docs.length, 'docs');
 
 								// [4] check if there have been updates since we started the backup
 								get_doc_ids(db_name, resp1.last_sequence, (error3, resp2) => {
@@ -252,23 +253,23 @@ module.exports = function (logger, ev, t) {
 
 		// update the backup object
 		function update_backup_obj(last_sequence, docs_arr) {
-			if (!the_backup.dbs[db_name]) {
-				the_backup.dbs[db_name] = {};							// safe init
+			if (!the_backup.dbs[db_type]) {
+				the_backup.dbs[db_type] = {};							// safe init
 			}
-			if (!Array.isArray(the_backup.dbs[db_name].docs)) {			// safe init
-				the_backup.dbs[db_name].docs = [];
+			if (!Array.isArray(the_backup.dbs[db_type].docs)) {			// safe init
+				the_backup.dbs[db_type].docs = [];
 			}
 
 			if (Array.isArray(docs_arr)) {
 				the_backup.doc_count += docs_arr.length;				// keep count of all docs
 			}
 			const db_finish_timestamp = Date.now();
-			the_backup.dbs[db_name] = {
+			the_backup.dbs[db_type] = {
 				start_timestamp: db_start_timestamp,
 				finish_timestamp: db_finish_timestamp,
 				elapsed: t.misc.friendly_ms(db_finish_timestamp - db_start_timestamp),
 				last_sequence: last_sequence,
-				docs: the_backup.dbs[db_name].docs.concat(docs_arr),
+				docs: the_backup.dbs[db_type].docs.concat(docs_arr),
 			};
 		}
 	}
@@ -379,14 +380,21 @@ module.exports = function (logger, ev, t) {
 			} else {
 				//logger.debug('[bulk get] bulk doc results', opts.start + '-' + stop, 'for db: "' + opts.db_name + '"');
 
+				let skip_count = 0;
 				for (let i in resp.results) {
 					if (!resp.results[i].docs || !resp.results[i].docs[0] || !resp.results[i].docs[0].ok) {
 						logger.error('[bulk get] failed to get a doc:', resp.results[i].docs);
 					} else {
 						if (!opts.blacklisted_doc_types.includes(resp.results[i].docs[0].ok.type)) {		// skip doc w/type in blacklist
 							opts.ret.push(t.misc.sortKeys(resp.results[i].docs[0].ok));
+						} else {
+							skip_count++;
 						}
 					}
+				}
+
+				if (skip_count > 0) {
+					logger.debug('[backup] skipping ' + skip_count + ' docs in ' + opts.db_name + ' b/c of doc type');
 				}
 
 				opts.start = ++stop;
@@ -442,7 +450,7 @@ module.exports = function (logger, ev, t) {
 	dbs.athena_restore = function (req, backup_data, cb_early, cb_done) {
 		const options = {
 			req: req,
-			db_names: Object.keys(backup_data.dbs),
+			db_types: Object.keys(backup_data.dbs),
 			backup: backup_data,
 			BATCH: 512,
 		};
@@ -461,7 +469,7 @@ module.exports = function (logger, ev, t) {
 			}
 			...
 		},
-		db_names: [""],							// [required] array of database names to restore
+		db_types: [""],							// [required] array of database setting names to restore
 		backup: {},								// [required] the backup data to use during restore
 		BATCH: 512,								// [optional] max number of full docs to write & read at once (bulk docs), defaults 1000
 	}
@@ -480,7 +488,7 @@ module.exports = function (logger, ev, t) {
 		} else {														// start the restore
 			restore_in_progress = true;
 			restore_successes = 0;
-			logger.info('[restore] starting db restore. ', (opts.backup._id || '[no-id]'), 'dbs:', opts.db_names);
+			logger.info('[restore] starting db restore. ', (opts.backup._id || '[no-id]'), 'dbs:', opts.db_types);
 
 			// create a webhook doc
 			const tx_id = t.misc.simpleRandomString(32, true);
@@ -504,8 +512,8 @@ module.exports = function (logger, ev, t) {
 			});
 
 			// work over each db name
-			t.async.eachLimit(opts.db_names, 1, (db_name, cb_restore) => {
-				restore_db(db_name, opts, () => {
+			t.async.eachLimit(opts.db_types, 1, (db_type, cb_restore) => {
+				restore_db(db_type, opts, () => {
 					return cb_restore();
 				});
 			}, () => {													// backup done
@@ -526,13 +534,14 @@ module.exports = function (logger, ev, t) {
 	//------------------------------------------------------------
 	// restore all docs in this db
 	//------------------------------------------------------------
-	function restore_db(db_name, orig_opts, cb) {
-		if (!orig_opts || !orig_opts.backup || !orig_opts.backup.dbs || !orig_opts.backup.dbs[db_name]) {
-			logger.error('[restore] cannot restore. the restore data does not have this db:', db_name);
+	function restore_db(db_type, orig_opts, cb) {
+		const db_name = ev[db_type];
+		if (!orig_opts || !orig_opts.backup || !orig_opts.backup.dbs || !orig_opts.backup.dbs[db_type]) {
+			logger.error('[restore] cannot restore. the restore data does not have this db:', db_type, db_type);
 			return cb({ statusCode: 400, message: 'cannot restore. the restore data does not have this db: ' + db_name });
 		} else {
-			outer_loop(orig_opts.backup.dbs[db_name].docs, 0, 0, () => {
-				logger.debug('[restore] finished restore of db: "' + db_name + '"');
+			outer_loop(orig_opts.backup.dbs[db_type].docs, 0, 0, () => {
+				logger.debug('[restore] finished restore of db: "' + db_name + '" - ' + db_type);
 				return cb(null);
 			});
 		}
@@ -552,7 +561,8 @@ module.exports = function (logger, ev, t) {
 				return cb_outer(null);
 			} else {
 				bulk_doc_overwrite(docs2overwrite, 0, () => {							// overwrite these docs
-					logger.debug('[restore] finished outer loop: ' + outer_iter + ', db: "' + db_name + '"', 'total doc successes:', restore_successes);
+					logger.debug('[restore] finished outer loop: ' + outer_iter + ', db: "' + db_name + '" - ' + db_type,
+						'total doc successes:', restore_successes);
 					return outer_loop(all_backup_docs, ++stop, ++outer_iter, cb_outer);	// recursive
 				});
 			}
@@ -573,7 +583,7 @@ module.exports = function (logger, ev, t) {
 				logger.warn('[restore] 0 docs to restore in this iteration', iter);
 				return cb_replaced(null);
 			} else {
-				logger.debug('[restore] inner iter: ' + iter + ', restoring ' + bulk_docs.docs.length + ' docs in db: "' + db_name + '"');
+				logger.debug('[restore] inner iter: ' + iter + ', restoring ' + bulk_docs.docs.length + ' docs in db: "' + db_name + '" - ' + db_type);
 
 				t.couch_lib.bulkDatabase({ db_name: db_name }, bulk_docs, (err, resp) => {	// perform the bulk operation
 					if (err != null) {
@@ -605,7 +615,7 @@ module.exports = function (logger, ev, t) {
 								} else {
 
 									// [4] copy doc's rev and repeat
-									const fixed_revs = copy_rev(orig_opts.backup.dbs[db_name].docs, get_bulk_docs);
+									const fixed_revs = copy_rev(orig_opts.backup.dbs[db_type].docs, get_bulk_docs);
 									return bulk_doc_overwrite(fixed_revs, ++iter, cb_replaced);
 								}
 							});
@@ -617,11 +627,11 @@ module.exports = function (logger, ev, t) {
 
 		// remove docs that have ids found in the query parameter
 		function filter_skip_docs(docs_array) {
-			if (db_name === ev.DB_SYSTEM) {					// if we are working the system db, look at the `skip_system` param
+			if (db_type === 'DB_SYSTEM') {					// if we are working the system db, look at the `skip_system` param
 				if (orig_opts && orig_opts.req && orig_opts.req.query.skip_system) {
 					generic_skip(orig_opts.req.query.skip_system);
 				}
-			} else if (db_name === ev.DB_COMPONENTS) {		// if we are working the components db, look at the `skip_components` param
+			} else if (db_type === 'DB_COMPONENTS') {		// if we are working the components db, look at the `skip_components` param
 				if (orig_opts && orig_opts.req && orig_opts.req.query.skip_components) {
 					generic_skip(orig_opts.req.query.skip_components);
 				}

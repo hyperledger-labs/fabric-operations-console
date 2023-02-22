@@ -59,7 +59,7 @@ module.exports = function (logger, ev, t) {
 			(join) => {
 				t.couch_lib.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, function (err, athena) {
 					if (err) {
-						logger.error('[migration lib] an error occurred obtaining the "' + process.env.SETTINGS_DOC_ID + '" db:', ev.DB_SYSTEM, err, athena);
+						logger.error('[migration-status] an error occurred obtaining the "' + process.env.SETTINGS_DOC_ID + '" db:', ev.DB_SYSTEM, err, athena);
 						join(err, athena);
 					} else {
 						join(null, athena);
@@ -78,7 +78,7 @@ module.exports = function (logger, ev, t) {
 				};
 				t.otcc.getDesignDocView(view_opts, (err_getDoc, resp) => {
 					if (err_getDoc || !resp) {
-						logger.error('[migration lib] unable to load wallet export records:', err_getDoc, resp);
+						logger.error('[migration-status] unable to load wallet export records:', err_getDoc, resp);
 					}
 					join(null, resp ? resp.rows : []);
 				});
@@ -96,7 +96,7 @@ module.exports = function (logger, ev, t) {
 
 				t.otcc.getDesignDocView(opts, (err, resp) => {
 					if (err) {
-						logger.error('[migration lib] error getting all deployed components:', err);
+						logger.error('[migration-status] error getting all deployed components:', err);
 						join(null, []);
 					} else {
 						join(null, resp ? resp.rows : []);
@@ -385,7 +385,7 @@ module.exports = function (logger, ev, t) {
 		req._include_deployment_attributes = true;
 		t.component_lib.get_all_runnable_components(req, (err, resp) => {
 			if (err) {
-				logger.error('[migrate] error getting all runnable components:', err);
+				logger.error('[migration lib] error getting all runnable components:', err);
 				return cb({ statusCode: 500, errors: err });
 			} else {
 				const ret = {
@@ -403,7 +403,7 @@ module.exports = function (logger, ev, t) {
 					if (comp.location === ev.STR.LOCATION_IBP_SAAS) {	// if its a saas component, we don't care about imported ones
 						comp._imported = false;
 						if (!t.misc.is_version_b_greater_than_a(min_version, resp[i].version, true)) {
-							logger.warn('[migrate] found node we cannot migrate, version is too old.', t.misc.safe_str(comp.id),
+							logger.warn('[migration] found node we cannot migrate, version is too old.', t.misc.safe_str(comp.id),
 								t.misc.safe_str(resp[i].version));
 							comp._migratable = false;
 							ret.all_valid = false;
@@ -424,11 +424,11 @@ module.exports = function (logger, ev, t) {
 		req._skip_cache = true;
 		t.deployer.get_k8s_version((err, resp) => {
 			if (err) {
-				logger.error('[migrate] error getting kubernetes version:', err);
+				logger.error('[migration lib] error getting kubernetes version:', err);
 				return cb({ statusCode: 500, errors: err });
 			} else {
 				const k8s_version = resp ? resp._version : '';
-				logger.debug('[migrate] received kubernetes version:', k8s_version);
+				logger.debug('[migration lib] received kubernetes version:', k8s_version);
 				const ret = {
 					k8s: {
 						migratable: t.misc.is_version_b_greater_than_a(ev.MIGRATION_MIN_VERSIONS.kubernetes, k8s_version, true),
@@ -446,7 +446,7 @@ module.exports = function (logger, ev, t) {
 	//-------------------------------------------------------------
 	exports.check_migration_status = (pillow_doc, cb) => {
 		if (!cb) { cb = function () { }; }
-		logger.info('[migration] - monitoring migration status - looking for updates');
+		logger.info('[migration watchdog] - monitoring migration status - looking for updates');
 
 		// 1. first get the component docs
 		const opts = {
@@ -576,7 +576,7 @@ module.exports = function (logger, ev, t) {
 		};
 		t.lock_lib.apply(l_opts, (lock_err) => {
 			if (lock_err) {
-				logger.error('[migration lib] did not get migration lock for ingress', lock_err);
+				logger.error('[migration-ingress] did not get migration lock for ingress', lock_err);
 				return cb('Console issue - unable to own lock to start migration', null);
 			} else {
 
@@ -592,14 +592,14 @@ module.exports = function (logger, ev, t) {
 							// 4 check if we have already migrated the ingress from a prev attempt
 							t.jupiter_lib.request(CHECK_INGRESS_API_OPTS, (ret) => {
 								if (!ret || t.ot_misc.is_error_code(t.ot_misc.get_code(ret))) {
-									logger.debug('[jupiter-ingress-check] - not migrated yet');
+									logger.debug('[migration-ingress-check] - not migrated yet');
 
 									// 5. send ingress migration call to jupiter
 									migrate_ingress_api((error, response) => {
 										return cb(error, response);
 									});
 								} else {
-									logger.info('[jupiter-ingress-check] - good response, ingress already migrated. skipping ingress step.');
+									logger.info('[migration-ingress-check] - good response, ingress already migrated. skipping ingress step.');
 
 									// 5. skip ingress migration call to jupiter, jump to monitor step which will instantly validate
 									monitor_ingress_migration(true);
@@ -614,7 +614,7 @@ module.exports = function (logger, ev, t) {
 
 		// call the migrate ingress api on jupiter
 		function migrate_ingress_api(cb_in) {
-			logger.info('[jupiter-ingress] sending ingress migration request');
+			logger.info('[migration-ingress] sending ingress migration request');
 			const opts = {
 				method: 'POST',
 				path: '/api/v1/$iid/$account/ingress',			// $iid & $account get replaced later
@@ -707,7 +707,7 @@ module.exports = function (logger, ev, t) {
 		};
 		t.lock_lib.apply(l_opts, (lock_err) => {
 			if (lock_err) {
-				logger.warn('[migration lib] did not get migration lock for component step, the other instances must have it');
+				logger.warn('[migration-node-check] did not get migration lock for component step, the other instances must have it');
 				return;								// if we didn't get the lock, don't call cb, just return
 			} else {
 
@@ -720,14 +720,14 @@ module.exports = function (logger, ev, t) {
 						// 3 check if we have already migrated the nodes from a prev attempt
 						t.jupiter_lib.request(CHECK_NODE_API_OPTS, (ret) => {
 							if (!ret || t.ot_misc.is_error_code(t.ot_misc.get_code(ret))) {
-								logger.debug('[jupiter-node-check] - not migrated yet');
+								logger.debug('[migration-node-check] - not migrated yet');
 
 								// 4. send nodes migration call to jupiter
 								migrate_nodes_api((error, response) => {
 									return cb(error, response);
 								});
 							} else {
-								logger.info('[jupiter-node-check] - good response, nodes already migrated. skipping node step.');
+								logger.info('[migration-node-check] - good response, nodes already migrated. skipping node step.');
 
 								// 4. skip nodes migration call to jupiter, jump to monitor step which will instantly validate
 								monitor_nodes_migration(true);
@@ -741,17 +741,17 @@ module.exports = function (logger, ev, t) {
 
 		// call the migrate nodes api on jupiter
 		function migrate_nodes_api(cb_nodes) {
-			logger.info('[jupiter-comps] sending component migration request');
+			logger.info('[migration-nodes] sending component migration request');
 			const opts = {
 				method: 'POST',
 				path: '/api/v1/$iid/migrate/all',				// $iid gets replaced later
 			};
 			t.jupiter_lib.request(opts, (ret) => {
 				if (!ret) {
-					logger.error('[jupiter-comps] communication error, no response');
+					logger.error('[jupiter-nodes] communication error, no response');
 					return cb_nodes('Communication error, no response to the migrate all nodes api');
 				} else if (t.ot_misc.is_error_code(t.ot_misc.get_code(ret))) {
-					logger.error('[jupiter-comps] - error response code from jupiter', ret);
+					logger.error('[jupiter-nodes] - error response code from jupiter', ret);
 					const msg = t.jupiter_lib.make_jupiter_msg(ret);
 					return cb_nodes('Internal issue - received an error code in response to the all components api: ' + t.ot_misc.get_code(ret) + msg);
 				} else {
@@ -830,7 +830,7 @@ module.exports = function (logger, ev, t) {
 		};
 		t.lock_lib.apply(l_opts, (lock_err) => {
 			if (lock_err) {
-				logger.warn('[migration lib] did not get migration lock for console step, the other instances must have it');
+				logger.warn('[migration-console] did not get migration lock for console step, the other instances must have it');
 				return;								// if we didn't get the lock, don't call cb, just return
 			} else {
 
@@ -841,7 +841,7 @@ module.exports = function (logger, ev, t) {
 					} else {
 
 						// 3. send console migration call to jupiter
-						logger.info('[jupiter-console] sending console migration request');
+						logger.info('[migration-console] sending console migration request');
 						const opts = {
 							method: 'POST',
 							path: '/api/v1/$iid/console',						// $iid gets replaced later
@@ -902,13 +902,13 @@ module.exports = function (logger, ev, t) {
 			let code = t.ot_misc.get_code(resp);
 
 			if (err || !resp) {
-				logger.warn('[migrated-console-check] - communication error, no response. will try again. err:', err);
+				logger.warn('[migration-console-check] - communication error, no response. will try again. err:', err);
 				return cb('Communication error, no response to the check on new console api');
 			} else if (t.ot_misc.is_error_code(code)) {
-				logger.warn('[migrated-console-check] - error response code from other console. will try again.', response);
+				logger.warn('[migration-console-check] - error response code from other console. will try again.', response);
 				return cb(null);					// don't pass an error, it simply might not be up yet
 			} else {
-				logger.info('[migrated-console-check] - good response, new console is up');
+				logger.info('[migration-console-check] - good response, new console is up');
 				pause_checking();
 
 				// -------------------------------------------------------------------------
@@ -970,7 +970,7 @@ module.exports = function (logger, ev, t) {
 		};
 		t.lock_lib.apply(l_opts, (lock_err) => {
 			if (lock_err) {
-				logger.warn('[migration lib] did not get migration lock for db step, the other instances must have it');
+				logger.warn('[migration-console-db] did not get migration lock for db step, the other instances must have it');
 				return;								// if we didn't get the lock, don't call cb, just return
 			} else {
 
@@ -1120,7 +1120,8 @@ module.exports = function (logger, ev, t) {
 						}
 					};
 					t.misc.retry_req(web_opts, (web_err, web_resp) => {
-						if (t.ot_misc.is_error_code(t.ot_misc.get_code(web_resp))) {
+						const code = t.ot_misc.get_code(web_resp);
+						if (t.ot_misc.is_error_code(code)) {
 							logger.error('[migration-console-db] - restore api could not be completed');
 							return done('restore error');
 						} else {
@@ -1132,7 +1133,7 @@ module.exports = function (logger, ev, t) {
 								logger.debug('[migration-console-db] - restore has not completed yet...', log_attempts);
 								return done('restore in progress');
 							} else {
-								logger.info('[migration-console-db] - restore has completed, migration nearly complete', log_attempts);
+								logger.info('[migration-console-db] - restore has completed, migration nearly complete', log_attempts, 'code:', code);
 								return done(null, web_resp);
 							}
 						}
@@ -1165,11 +1166,11 @@ module.exports = function (logger, ev, t) {
 					'Authorization': build_migration_auth(),
 				}
 			};
-
 			t.misc.retry_req(res_opts, (restore_err, rest_resp) => {
 				if (t.ot_misc.is_error_code(t.ot_misc.get_code(rest_resp))) {
 					return cb(t.ot_misc.formatResponse(rest_resp), null);
 				} else {
+					logger.debug('[migration-console-db] restore api accepted, code', t.ot_misc.get_code(rest_resp));
 					return cb(null, t.ot_misc.formatResponse(rest_resp));
 				}
 			});
@@ -1178,14 +1179,14 @@ module.exports = function (logger, ev, t) {
 
 	// edit docs in the backup prior to migrating them
 	function edit_docs_in_backup(username, password, backup) {
-		if (backup && backup.dbs && backup.dbs.athena_system) {
-			if (backup.dbs.athena_system.docs) {
-				for (let i in backup.dbs.athena_system.docs) {
-					const doc = backup.dbs.athena_system.docs[i];
+		if (backup && backup.dbs && backup.dbs['DB_SYSTEM']) {
+			if (backup.dbs['DB_SYSTEM'].docs) {
+				for (let i in backup.dbs['DB_SYSTEM'].docs) {
+					const doc = backup.dbs['DB_SYSTEM'].docs[i];
 
 					// edit the settings doc
 					if (doc._id === process.env.SETTINGS_DOC_ID) {
-						logger.info('[migration lib] found settings doc. editing...');
+						logger.info('[migration-console-db] found settings doc. editing...');
 						doc.auth_scheme = 'couchdb';				// change the auth scheme, this console will use local users
 						doc.allow_default_password = true;			// less painful ux
 						doc.access_list = {};						// clear
@@ -1195,8 +1196,6 @@ module.exports = function (logger, ev, t) {
 						doc.support_key = null;						// clear
 						doc.support_password = null;				// clear
 						doc.jupiter_url = null;						// clear
-						//doc.initial_admin = '';
-						//doc.default_user_password_initial = '';
 
 						if (doc.feature_flags) {
 							doc.feature_flags.migration_enabled = false;
@@ -1213,9 +1212,6 @@ module.exports = function (logger, ev, t) {
 							ts_changed_password: Date.now(),
 						};
 
-						// debug code
-						//doc._id = '00_settings_athena_edited';
-						//delete doc._rev;
 						break;
 					}
 				}
