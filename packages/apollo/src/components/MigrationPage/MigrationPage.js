@@ -779,54 +779,55 @@ class MigrationPage extends Component {
 					{!migration_check_loader && (!hasValidFabricVersions || !hasValidK8s) &&
 						<div className='mig_version_wrap'>
 							<h4>{translate('cluster')}</h4>
-							<div className='mig_version_label'>
-								{translate('migration_node_k8s_version_txt')}
-							</div>
-							<div className={'mig_version_value ' + (hasValidK8s ? '' : 'invalidVersionText')}>
-								{this.props.kubernetes ? this.conform_version(this.props.kubernetes.version) : '-'}
-							</div>
-							<div className='mig_min_version_value'>
-								{translate('migration_required_version_txt',
-									{ min: this.props.kubernetes ? this.conform_version(this.props.kubernetes.min_version) : '-' })}
-							</div>
-							{hasValidK8s &&
-								<div className='mig_valid_txt'>
-									{translate('migration_version_valid_txt')}
+							<div className='versionRowWrap'>
+								<div className='mig_version_label'>
+									{translate('migration_node_k8s_version_txt')}
 								</div>
-							}
-							{usingOpenShift &&
-								<div className='mig_version_label checking_text'>
-									({translate('via_openshift_txt')} {this.getOpenShiftVersionFromK8s(this.props.kubernetes.version)})
+								<div className={'mig_version_value ' + (hasValidK8s ? '' : 'invalidVersionText')}>
+									{this.props.kubernetes ? this.conform_version(this.props.kubernetes.version) : '-'}
 								</div>
-							}
-							<br />
-							<br />
+								<div className='mig_min_version_value'>
+									{translate('migration_required_version_txt',
+										{ min: this.props.kubernetes ? this.conform_version(this.props.kubernetes.min_version) : '-' })}
+								</div>
+								{hasValidK8s &&
+									<div className='mig_valid_txt'>
+										{translate('migration_version_valid_txt')}
+									</div>
+								}
+								{usingOpenShift &&
+									<div className='mig_version_label checking_text'>
+										({translate('via_openshift_txt')} {this.getOpenShiftVersionFromK8s(this.props.kubernetes.version)})
+									</div>
+								}
+							</div>
 							<br />
 
 							<h4>{translate('deployed_nodes_title')}</h4>
 							{deployed_comps &&
 								deployed_comps.map((comp, i) => {
 									return (
-										<div key={'comp_' + i}>
-											<div>
-												<div
-													className='mig_version_label'
-													title={comp.full_name}
-												>
-													{comp.display_name}
-												</div>
-												<div className={'mig_version_value ' + (comp._migratable ? '' : 'invalidVersionText')}>
-													&nbsp;{this.conform_version(comp.version)}
-												</div>
-												<div className='mig_min_version_value'>
-													{translate('migration_required_version_txt', { min: comp._min_version ? this.conform_version(comp._min_version) : '-' })}
-												</div>
-												{comp._migratable &&
-													<div className='mig_valid_txt'>
-														{translate('migration_version_valid_txt')}
-													</div>
-												}
+										<div
+											key={'comp_' + i}
+											className='versionRowWrap'
+										>
+											<div
+												className='mig_version_label'
+												title={comp.full_name}
+											>
+												{comp.display_name}
 											</div>
+											<div className={'mig_version_value ' + (comp._migratable ? '' : 'invalidVersionText')}>
+												&nbsp;{this.conform_version(comp.version)}
+											</div>
+											<div className='mig_min_version_value'>
+												{translate('migration_required_version_txt', { min: comp._min_version ? this.conform_version(comp._min_version) : '-' })}
+											</div>
+											{comp._migratable &&
+												<div className='mig_valid_txt'>
+													{translate('migration_version_valid_txt')}
+												</div>
+											}
 										</div>
 									);
 								})
