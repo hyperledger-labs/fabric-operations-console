@@ -1252,9 +1252,8 @@ module.exports = function (logger, ev, t) {
 							}
 						}
 
-						// dsh todo remove me
-						logger.silly('settings doc:', JSON.stringify(doc, null, 2));
-
+						logger.silly('built settings "db_custom_names":', JSON.stringify(doc.db_custom_names, null, 2));
+						logger.silly('built settings "db_defaults":', JSON.stringify(doc.db_defaults, null, 2));
 						break;
 					}
 				}

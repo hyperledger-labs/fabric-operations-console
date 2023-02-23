@@ -34,7 +34,7 @@ __Example:__
 "DB_CONNECTION_STRING": "https://username:password@localhost:5984", // required
 
 // The name of the database that contains the settings doc
-"DB_SYSTEM": "athena-systems",     // required unless "db_custom_names" is used in config file
+"DB_SYSTEM": "athena-system",     // required unless "db_custom_names" is used in config file
 
 
 // ****** Optional Fields ******
@@ -328,7 +328,7 @@ __default_settings_doc.json:__
 "db_custom_names": {
   "DB_COMPONENTS": "athena-components",
   "DB_SESSIONS": "athena-sessions",
-  "DB_SYSTEM": "athena-systems"
+  "DB_SYSTEM": "athena-system"
 },
 
 // default database configuration - do not modify
@@ -359,7 +359,7 @@ __default_settings_doc.json:__
 			"../json_docs/default_settings_doc.json",
 					"../json_docs/system_design_doc.json"
 		],
-		"name": "athena-systems"
+		"name": "athena-system"
 	}
 },
 

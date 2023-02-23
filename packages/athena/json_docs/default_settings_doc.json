@@ -36,7 +36,7 @@
 	"db_custom_names": {
 		"DB_COMPONENTS": "athena-components",
 		"DB_SESSIONS": "athena-sessions",
-		"DB_SYSTEM": "athena-systems"
+		"DB_SYSTEM": "athena-system"
 	},
 	"db_defaults": {
 		"DB_COMPONENTS": {
