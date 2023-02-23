@@ -1210,7 +1210,6 @@ module.exports = function (logger, ev, t) {
 						doc.support_key = null;						// clear
 						doc.support_password = null;				// clear
 						doc.jupiter_url = null;						// clear
-						doc.db_custom_names = null;					// clear
 						doc.default_user_password = null;			// clear
 						doc.host_url = new_console_url;
 						doc.iam_api_key = null;						// clear
@@ -1235,12 +1234,15 @@ module.exports = function (logger, ev, t) {
 						// some fields we want to reset to the default settings file.
 						// we don't want to copy the saas settings to the migrated console.
 						let defaults = null;
+						const settings_path = t.path.join(__dirname, '../json_docs/default_settings_doc.json');
 						try {
-							defaults = JSON.parse(t.fs.readFileSync('./json_docs/default_settings_doc.json', 'utf8'));
-						} catch (e) { }
+							defaults = JSON.parse(t.fs.readFileSync(settings_path, 'utf8'));
+						} catch (e) {
+							logger.error('[migration-console-db] unable to read', settings_path, e);
+						}
 						if (defaults) {
 							const overwrite_fields = [
-								'activity_tracker_path', 'db_defaults', 'default_user_password_initial',
+								'activity_tracker_path', 'db_custom_names', 'db_defaults', 'default_user_password_initial',
 								'dynamic_tls', 'ibmid', 'migration_status', 'infrastructure', 'max_components',
 								'max_req_per_min', 'max_req_per_min_ak', 'the_default_resources_map'
 							];
@@ -1249,6 +1251,9 @@ module.exports = function (logger, ev, t) {
 								doc[field] = defaults[field];
 							}
 						}
+
+						// dsh todo remove me
+						logger.silly('settings doc:', JSON.stringify(doc, null, 2));
 
 						break;
 					}

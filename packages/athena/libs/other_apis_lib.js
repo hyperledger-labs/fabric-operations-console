@@ -32,6 +32,8 @@ module.exports = function (logger, ev, t) {
 			PORT: Number(ev.PORT) || '?',
 			DEPLOYER_URL: t.misc.redact_basic_auth(ev.DEPLOYER_URL) || '?',
 			DB_SYSTEM: ev.DB_SYSTEM || '?',
+			DB_COMPONENTS: ev.DB_COMPONENTS || '?',
+			DB_SESSIONS: ev.DB_SESSIONS || '?',
 			HOST_URL: ev.HOST_URL || '?',
 			CONFIGTXLATOR_URL: ev.CONFIGTXLATOR_URL || '?',
 			LANDING_URL: ev.LANDING_URL || '?',
