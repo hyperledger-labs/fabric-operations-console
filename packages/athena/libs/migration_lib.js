@@ -1004,7 +1004,7 @@ module.exports = function (logger, ev, t) {
 
 										// edit the settings doc in the backup so the migrated console has the correct settings for IBP support
 										const password = t.misc.decrypt(pillow_doc.login_password, ev.MIGRATION_API_KEY);
-										backup = edit_docs_in_backup(pillow_doc.login_username, password, backup);
+										backup = edit_docs_in_backup(pillow_doc.login_username, password, new_console_url, backup);
 
 										// 5. call restore api on other console
 										//return cb(null, null);
@@ -1192,7 +1192,7 @@ module.exports = function (logger, ev, t) {
 	}
 
 	// edit docs in the backup prior to migrating them
-	function edit_docs_in_backup(username, password, backup) {
+	function edit_docs_in_backup(username, password, new_console_url, backup) {
 		if (backup && backup.dbs && backup.dbs['DB_SYSTEM']) {
 			if (backup.dbs['DB_SYSTEM'].docs) {
 				for (let i in backup.dbs['DB_SYSTEM'].docs) {
@@ -1210,6 +1210,12 @@ module.exports = function (logger, ev, t) {
 						doc.support_key = null;						// clear
 						doc.support_password = null;				// clear
 						doc.jupiter_url = null;						// clear
+						doc.db_custom_names = null;					// clear
+						doc.default_user_password = null;			// clear
+						doc.host_url = new_console_url;
+						doc.iam_api_key = null;						// clear
+						doc.migrated_console_url = null;			// clear
+						doc.segment_write_key = null;				// clear
 
 						if (doc.feature_flags) {
 							doc.feature_flags.migration_enabled = false;
@@ -1225,6 +1231,24 @@ module.exports = function (logger, ev, t) {
 							hashed_secret: secret_details.hashed_secret,
 							ts_changed_password: Date.now(),
 						};
+
+						// some fields we want to reset to the default settings file.
+						// we don't want to copy the saas settings to the migrated console.
+						let defaults = null;
+						try {
+							defaults = JSON.parse(t.fs.readFileSync('./json_docs/default_settings_doc.json', 'utf8'));
+						} catch (e) { }
+						if (defaults) {
+							const overwrite_fields = [
+								'activity_tracker_path', 'db_defaults', 'default_user_password_initial',
+								'dynamic_tls', 'ibmid', 'migration_status', 'infrastructure', 'max_components',
+								'max_req_per_min', 'max_req_per_min_ak', 'the_default_resources_map'
+							];
+							for (let i in overwrite_fields) {
+								let field = overwrite_fields[i];
+								doc[field] = defaults[field];
+							}
+						}
 
 						break;
 					}
