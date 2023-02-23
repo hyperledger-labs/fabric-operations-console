@@ -23,7 +23,7 @@ module.exports = function (logger, ev, t) {
 	const exports = {};
 	const routes_2_ignore = prepare_routes_2_ignore();									// array of regular expressions of paths to ignore
 	const AT_FILENAME = 'audit.log';
-	const path2file = ev.ACTIVITY_TRACKER_PATH ? t.path.join(__dirname + '../' + ev.ACTIVITY_TRACKER_PATH, AT_FILENAME) : '';
+	const path2file = null; //ev.ACTIVITY_TRACKER_PATH ? t.path.join(__dirname + '../' + ev.ACTIVITY_TRACKER_PATH, AT_FILENAME) : '';
 	let atLogger = {};
 
 	// init the log file
