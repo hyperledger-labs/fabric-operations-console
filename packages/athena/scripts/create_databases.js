@@ -39,6 +39,19 @@ module.exports = (logger, t) => {
 					config_map[db].name = t.config_file.db_custom_names[db];
 				}
 			}
+
+			if (config_map && config_map.db_custom_names && config_map.db_custom_names[db] && typeof config_map.db_custom_names[db] === 'string') {
+				if (db === 'DB_SYSTEM') {								// if its not already set, stuff it into env too
+					if (!process.env['DB_SYSTEM']) {					// (env setting should override config)
+						logger.debug('[default file] custom db name:', db, '=', config_map.db_custom_names[db]);
+						process.env['DB_SYSTEM'] = config_map.db_custom_names[db];
+					}
+					config_map['DB_SYSTEM'].name = process.env['DB_SYSTEM'];
+				} else {
+					logger.debug('[default file] custom db name:', db, '=', config_map.db_custom_names[db]);
+					config_map[db].name = config_map.db_custom_names[db];
+				}
+			}
 		}
 
 		// ----- check/create each database ---------
