@@ -20,7 +20,7 @@ See public Optools configuration settings.
 	"CLUSTER_DATA": {
 		"type": "paid"
 	},
-	"DB_SYSTEM": "athena_system", // name of settings/tx database
+	"DB_SYSTEM": "athena-system", // name of settings/tx database
 	"DEPLOYER_TIMEOUT": 90000, // deployer http timeout in ms
 	"DEPLOYER_URL": "something",
 	"DOMAIN": null, // domain athena is using for cookies, should match url in browser
@@ -695,7 +695,7 @@ _Once shutoff, the process will respond to all apis with a `503` status code and
 }
 ```
 
-- **PillowTalk™ Doc**: A pillow talk doc can be used to trigger the same functionality. Write a doc to the `DB_SYSTEM` db aka `xyz_athena_system` with this format:
+- **PillowTalk™ Doc**: A pillow talk doc can be used to trigger the same functionality. Write a doc to the `DB_SYSTEM` db with this format:
 ```js
 // doc to stop
 {

@@ -34,7 +34,7 @@ __Example:__
 "DB_CONNECTION_STRING": "https://username:password@localhost:5984", // required
 
 // The name of the database that contains the settings doc
-"DB_SYSTEM": "athena_system",     // required unless "db_custom_names" is used in config file
+"DB_SYSTEM": "athena-system",     // required unless "db_custom_names" is used in config file
 
 
 // ****** Optional Fields ******

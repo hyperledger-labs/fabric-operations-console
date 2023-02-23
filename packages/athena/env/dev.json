@@ -1,5 +1,5 @@
 {
     "DB_CONNECTION_STRING": "http://admin:admin@localhost:5984",
-    "DB_SYSTEM": "athena_system",
+    "DB_SYSTEM": "athena-system",
     "CONFIGURE_FILE": "./env/my_config.yaml"
 }

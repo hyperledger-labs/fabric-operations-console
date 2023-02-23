@@ -40,12 +40,12 @@
 			"design_docs": [
 				"../json_docs/components_design_doc.json"
 			],
-			"name": "athena_components"
+			"name": "athena-components"
 		},
 		"DB_SESSIONS": {
 			"description": "db for browser sessions",
 			"design_docs": [],
-			"name": "athena_sessions"
+			"name": "athena-sessions"
 		},
 		"DB_SYSTEM": {
 			"description": "db to store internal settings and internal transactions",
@@ -55,7 +55,7 @@
 				"../json_docs/json_validation/ibp_openapi_v3.yaml",
 				"../json_docs/json_validation/ibp_openapi_v2.yaml"
 			],
-			"name": "athena_system"
+			"name": "athena-system"
 		}
 	},
 	"default_user_password": null,
