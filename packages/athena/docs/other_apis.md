@@ -20,7 +20,7 @@ See public Optools configuration settings.
 	"CLUSTER_DATA": {
 		"type": "paid"
 	},
-	"DB_SYSTEM": "athena-systems", // name of settings/tx database
+	"DB_SYSTEM": "athena-system", // name of settings/tx database
 	"DEPLOYER_TIMEOUT": 90000, // deployer http timeout in ms
 	"DEPLOYER_URL": "something",
 	"DOMAIN": null, // domain athena is using for cookies, should match url in browser

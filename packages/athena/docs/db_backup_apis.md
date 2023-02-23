@@ -140,7 +140,7 @@ Get the contents of a backup doc including attachments.
 			"last_sequence": "...",
 			"docs": []
 		},
-		"athena-systems": {
+		"athena-system": {
 			"start_timestamp": 1592922858740,
 			"finish_timestamp": 1592922861261,
 			"last_sequence": "...",

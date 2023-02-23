@@ -141,7 +141,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 				settings.HOST_URL = process.env.HOST_URL || athena.host_url;			// the external url to reach this application
 				settings.REGION = process.env.REGION || athena.region;
 				settings.db_defaults = athena.db_defaults;
-				load_database_names(athena.db_defaults);							// load all db names here
+				load_database_names(athena);										// load all db names here
 				settings.ENFORCE_BACKEND_SSL = athena.enforce_backend_ssl;			// should we check certs or not, server side
 				settings.ACCESS_LIST = lowercase_key_values(athena.access_list);	// athena access list
 				settings.INITIAL_ADMIN = athena.initial_admin;
@@ -561,12 +561,26 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 		}
 
 		// load each database name
-		function load_database_names(dbs) {
+		// this sets setting fields: DB_COMPONENTS, & DB_SESSIONS
+		function load_database_names(settings_doc) {
+			const dbs = settings_doc.db_defaults;
+			const db_custom_names = settings_doc.db_custom_names;
 			if (dbs) {
-				for (let db_const in dbs) {
-					if (dbs[db_const].name) {			// set it if if a db name is set
-						settings[db_const] = dbs[db_const].name;
-						db_names.push(dbs[db_const].name);
+				for (let db_name in dbs) {
+					if (db_name !== 'DB_SYSTEM') {				// the system db should be left driven by process.env.DB_SYSTEM
+						if (dbs[db_name].name) {
+							let name2use = dbs[db_name].name;
+							if (db_custom_names && db_custom_names[db_name] && typeof db_custom_names[db_name] === 'string') {
+								name2use = db_custom_names[db_name];
+							}
+
+							if (settings[db_name] !== name2use) {	// if its changed, log it
+								logger.debug('[settings] custom db name:', db_name, '->', db_custom_names[db_name]);
+							}
+
+							settings[db_name] = name2use;
+							db_names.push(name2use);
+						}
 					}
 				}
 			}
@@ -710,7 +724,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 			logger.error('---------------------------------------------------------\n');
 			return cb({ error: 'missing vars', details: errors });
 		} else {
-			logger.info('[settings] final env variables look good!');
+			//logger.info('[settings] final env variables look good!');
 			return cb(null);
 		}
 	}
