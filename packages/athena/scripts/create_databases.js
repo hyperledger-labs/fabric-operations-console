@@ -29,19 +29,8 @@ module.exports = (logger, t) => {
 
 		// check if config file db names are replacing names in the default file
 		for (let db in config_map) {									// copy config file setting -> default doc
-			if (t.config_file && t.config_file.db_custom_names && t.config_file.db_custom_names[db] && typeof t.config_file.db_custom_names[db] === 'string') {
-				if (db === 'DB_SYSTEM') {								// if its not already set, stuff it into env too
-					if (!process.env['DB_SYSTEM']) {					// (env setting should override config)
-						logger.debug('[config file] custom db name:', db, '=', t.config_file.db_custom_names[db]);
-						process.env['DB_SYSTEM'] = t.config_file.db_custom_names[db];
-					}
-					config_map['DB_SYSTEM'].name = process.env['DB_SYSTEM'];
-				} else {
-					logger.debug('[config file] custom db name:', db, '=', t.config_file.db_custom_names[db]);
-					config_map[db].name = t.config_file.db_custom_names[db];
-				}
-			}
 
+			// first load custom names from settings file
 			if (db_custom_names && db_custom_names[db] && typeof db_custom_names[db] === 'string') {
 				if (db === 'DB_SYSTEM') {								// if its not already set, stuff it into env too
 					if (!process.env['DB_SYSTEM']) {					// (env setting should override config)
@@ -52,6 +41,20 @@ module.exports = (logger, t) => {
 				} else {
 					logger.debug('[default file] custom db name:', db, '=', db_custom_names[db]);
 					config_map[db].name = db_custom_names[db];
+				}
+			}
+
+			// then config file
+			if (t.config_file && t.config_file.db_custom_names && t.config_file.db_custom_names[db] && typeof t.config_file.db_custom_names[db] === 'string') {
+				if (db === 'DB_SYSTEM') {								// if its not already set, stuff it into env too
+					if (!process.env['DB_SYSTEM']) {					// (env setting should override config)
+						logger.debug('[config file] custom db name:', db, '=', t.config_file.db_custom_names[db]);
+						process.env['DB_SYSTEM'] = t.config_file.db_custom_names[db];
+					}
+					config_map['DB_SYSTEM'].name = process.env['DB_SYSTEM'];
+				} else {
+					logger.debug('[config file] custom db name:', db, '=', t.config_file.db_custom_names[db]);
+					config_map[db].name = t.config_file.db_custom_names[db];
 				}
 			}
 		}
