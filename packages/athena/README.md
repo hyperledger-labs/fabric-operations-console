@@ -77,7 +77,7 @@ Create a file called `dev.json` in the `env` directory with the following conten
 ```json
 {
     "DB_CONNECTION_STRING": "http://localhost:5984",
-    "DB_SYSTEM": "athena_system",
+    "DB_SYSTEM": "athena-system",
     "CONFIGURE_FILE": "./env/my_config.yaml"
 }
 ```
@@ -426,7 +426,7 @@ are included in the Athena repository as git submodules.
     > cat env/dev.json
     {
         "DB_CONNECTION_STRING": "http://localhost:5984",
-        "DB_SYSTEM": "athena_system",
+        "DB_SYSTEM": "athena-system",
         "CONFIGURE_FILE": "./env/my_config.yaml"
     }
 

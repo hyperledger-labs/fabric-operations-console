@@ -61,7 +61,7 @@ const default_settings = require('../../json_docs/default_settings_doc.json');
 
 const ev = {
 	DB_COMPONENTS: 'athena_components',
-	DB_SYSTEM: DB_SYSTEM, //'athena_systems',
+	DB_SYSTEM: DB_SYSTEM,
 	DB_CONNECTION_STRING: DB_CONNECTION_STRING,
 	DESIGN_DOC: DESIGN_DOC,
 	AUTH_SCHEME: 'appid',
