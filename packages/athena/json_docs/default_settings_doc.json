@@ -33,19 +33,23 @@
 		"instance_id": "-"
 	},
 	"crn_string": "-",
-	"db_custom_names": null,
+	"db_custom_names": {
+		"DB_COMPONENTS": "athena-components",
+		"DB_SESSIONS": "athena-sessions",
+		"DB_SYSTEM": "athena-systems"
+	},
 	"db_defaults": {
 		"DB_COMPONENTS": {
 			"description": "db for peers/cas/orderers/collections/msps docs",
 			"design_docs": [
 				"../json_docs/components_design_doc.json"
 			],
-			"name": "athena-components"
+			"name": "athena_components"
 		},
 		"DB_SESSIONS": {
 			"description": "db for browser sessions",
 			"design_docs": [],
-			"name": "athena-sessions"
+			"name": "athena_sessions"
 		},
 		"DB_SYSTEM": {
 			"description": "db to store internal settings and internal transactions",
@@ -55,7 +59,7 @@
 				"../json_docs/json_validation/ibp_openapi_v3.yaml",
 				"../json_docs/json_validation/ibp_openapi_v2.yaml"
 			],
-			"name": "athena-systems"
+			"name": "athena_system"
 		}
 	},
 	"default_user_password": null,

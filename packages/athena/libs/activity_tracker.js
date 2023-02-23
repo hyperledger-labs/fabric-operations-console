@@ -23,7 +23,7 @@ module.exports = function (logger, ev, t) {
 	const exports = {};
 	const routes_2_ignore = prepare_routes_2_ignore();									// array of regular expressions of paths to ignore
 	const AT_FILENAME = 'audit.log';
-	const path2file = ev.ACTIVITY_TRACKER_PATH ? t.path.join(ev.ACTIVITY_TRACKER_PATH, AT_FILENAME) : '';
+	const path2file = ev.ACTIVITY_TRACKER_PATH ? t.path.join(__dirname + '../' + ev.ACTIVITY_TRACKER_PATH, AT_FILENAME) : '';
 	let atLogger = {};
 
 	// init the log file
@@ -66,7 +66,7 @@ module.exports = function (logger, ev, t) {
 	// build & track the event for activity tracker - (events are http requests but its not all requests, just the ones we want)
 	//-------------------------------------------------------------
 	exports.track_api = (req, res, json_resp) => {
-		if (ev.ACTIVITY_TRACKER_PATH) {
+		if (ev.ACTIVITY_TRACKER_PATH && path2file) {
 			const at_event = build_event(req, res, json_resp);	// create event, strict format!
 			logger.silly('[audit log] generated event for req:', t.ot_misc.buildTxId(req), path2file);
 			atLogger.debug(at_event);							// track the event by logging it to this file, logDNA will pick up file and send onward

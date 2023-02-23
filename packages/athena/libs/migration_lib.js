@@ -1210,7 +1210,6 @@ module.exports = function (logger, ev, t) {
 						doc.support_key = null;						// clear
 						doc.support_password = null;				// clear
 						doc.jupiter_url = null;						// clear
-						doc.db_custom_names = null;					// clear
 						doc.default_user_password = null;			// clear
 						doc.host_url = new_console_url;
 						doc.iam_api_key = null;						// clear
@@ -1243,7 +1242,7 @@ module.exports = function (logger, ev, t) {
 						}
 						if (defaults) {
 							const overwrite_fields = [
-								'activity_tracker_path', 'db_defaults', 'default_user_password_initial',
+								'activity_tracker_path', 'db_custom_names', 'db_defaults', 'default_user_password_initial',
 								'dynamic_tls', 'ibmid', 'migration_status', 'infrastructure', 'max_components',
 								'max_req_per_min', 'max_req_per_min_ak', 'the_default_resources_map'
 							];

@@ -418,10 +418,18 @@ module.exports = function (logger, ev, t) {
 					if (!resp.results[i].docs || !resp.results[i].docs[0] || !resp.results[i].docs[0].ok) {
 						logger.error('[bulk get] failed to get a doc:', resp.results[i].docs);
 					} else {
-						if (!opts.blacklisted_doc_types.includes(resp.results[i].docs[0].ok.type)) {		// skip doc w/type in blacklist
-							opts.ret.push(t.misc.sortKeys(resp.results[i].docs[0].ok));
-						} else {
-							skip_count++;
+						let last_ok_doc = null;
+						for (let x in resp.results[i].docs) {
+							if (resp.results[i].docs[x].ok) {
+								last_ok_doc = resp.results[i].docs[x].ok;
+							}
+						}
+						if (last_ok_doc) {
+							if (!opts.blacklisted_doc_types.includes(last_ok_doc.type)) {		// skip doc w/type in blacklist
+								opts.ret.push(t.misc.sortKeys(last_ok_doc));
+							} else {
+								skip_count++;
+							}
 						}
 					}
 				}
