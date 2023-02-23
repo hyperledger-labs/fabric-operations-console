@@ -484,6 +484,7 @@ function setup_routes_and_start() {
 	app.use('/', require('./routes/logging_apis.js')(logger, ev, tools));
 	app.use('/', require('./routes/other_apis.js')(logger, ev, tools));
 	app.use('/', require('./routes/component_apis.js')(logger, ev, tools));
+	app.use('/', require('./routes/vault_apis.js')(logger, ev, tools));
 	app.use('/', require('./routes/legacy/component_apis_v1.js')(logger, ev, tools));
 	app.use('/', require('./routes/proxy_apis.js')(logger, ev, tools));
 	app.use('/', require('./routes/deployer_apis.js')(logger, ev, tools));

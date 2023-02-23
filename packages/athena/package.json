@@ -38,6 +38,7 @@
 		"js-yaml": "^3.13.1",
 		"jsrsasign": "^10.5.25",
 		"node-cache": "5.1.*",
+		"node-vault": "^0.9.22",
 		"owasp-password-strength-test": "^1.3.0",
 		"passport": "^0.6.0",
 		"passport-idaas-openidconnect": "2.0.*",
@@ -47,6 +48,7 @@
 		"request": "2.88.*",
 		"selfsigned": "^1.10.8",
 		"uuid": "3.3.*",
+		"vault-node": "^2.2.2",
 		"winston": "2.4.*",
 		"ws": "7.4.*"
 	},
