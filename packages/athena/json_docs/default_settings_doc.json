@@ -55,7 +55,7 @@
 				"../json_docs/json_validation/ibp_openapi_v3.yaml",
 				"../json_docs/json_validation/ibp_openapi_v2.yaml"
 			],
-			"name": "athena-system"
+			"name": "athena-systems"
 		}
 	},
 	"default_user_password": null,
