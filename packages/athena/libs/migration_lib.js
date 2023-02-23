@@ -1235,9 +1235,12 @@ module.exports = function (logger, ev, t) {
 						// some fields we want to reset to the default settings file.
 						// we don't want to copy the saas settings to the migrated console.
 						let defaults = null;
+						const settings_path = t.path.join(__dirname, '../json_docs/default_settings_doc.json');
 						try {
-							defaults = JSON.parse(t.fs.readFileSync('./json_docs/default_settings_doc.json', 'utf8'));
-						} catch (e) { }
+							defaults = JSON.parse(t.fs.readFileSync(settings_path, 'utf8'));
+						} catch (e) {
+							logger.error('[migration-console-db] unable to read', settings_path, e);
+						}
 						if (defaults) {
 							const overwrite_fields = [
 								'activity_tracker_path', 'db_defaults', 'default_user_password_initial',
@@ -1249,6 +1252,9 @@ module.exports = function (logger, ev, t) {
 								doc[field] = defaults[field];
 							}
 						}
+
+						// dsh todo remove me
+						logger.silly('settings doc:', JSON.stringify(doc, null, 2));
 
 						break;
 					}
