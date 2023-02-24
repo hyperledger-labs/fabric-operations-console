@@ -1927,6 +1927,11 @@ describe('Misc', () => {
 								expect(misc.version_matches_pattern('v1.4.x-1', 'v1.4.1-2')).to.equal(true);
 								expect(misc.version_matches_pattern('v1.4.x-1', 'v1.4.20-2')).to.equal(true);
 								expect(misc.version_matches_pattern('v1.4.x-1', 'v1.4-2')).to.equal(true);
+								expect(misc.version_matches_pattern('2.2.x', '2.2.8-3')).to.equal(true);
+								expect(misc.version_matches_pattern('2.2.8-x', '2.2.8-3')).to.equal(true);
+								expect(misc.version_matches_pattern('2.2.8-3', '2.2.8-3')).to.equal(true);
+								expect(misc.version_matches_pattern('2.0.x', 2)).to.equal(true);
+								expect(misc.version_matches_pattern('2.2.x', 2.2)).to.equal(true);
 								done();
 							}
 						},
@@ -1939,6 +1944,7 @@ describe('Misc', () => {
 								expect(misc.version_matches_pattern('v1.4.x', 'v1.5.20')).to.equal(false);
 								expect(misc.version_matches_pattern('v1.4.x', 'v1.5')).to.equal(false);
 								expect(misc.version_matches_pattern('1.x.0', '2.0.0')).to.equal(false);
+								expect(misc.version_matches_pattern('2.2.x', 2.0)).to.equal(false);
 								done();
 							}
 						},

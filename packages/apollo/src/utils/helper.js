@@ -1590,6 +1590,42 @@ const Helper = {
 			ret = translate('friendly_ms_ms_ago', { millisecs: ms.toFixed(0) });
 		}
 		return ret;
+	},
+
+	// -----------------------------------------------------
+	// decide if version strings with wildcards match with the version - example: pattern="1.4.x", value="1.4.9" would return true
+	// -----------------------------------------------------
+	version_matches_pattern(pattern, value) {
+		pattern = (typeof pattern === 'number') ? pattern.toString() : pattern;							// safer...
+		value = (typeof value === 'number') ? value.toString() : value;
+		pattern = (typeof pattern === 'string') ? pattern.trim() : '';									// safer...
+		value = (typeof value === 'string') ? value.trim() : '';
+
+		pattern = (pattern[0].toLowerCase() === 'v') ? pattern.substring(1) : pattern;					// strip of leading V, like v1.4.9
+		value = (value[0].toLowerCase() === 'v') ? value.substring(1) : value;
+
+		let version_parts_pattern = pattern ? pattern.trim().replace(/-/g, '.').split('.') : null;		// treat 0.2.4-1 like 0.2.4.1
+		let version_parts_val = value ? value.trim().replace(/-/g, '.').split('.') : null;
+
+		if (version_parts_pattern === null || version_parts_val == null) {
+			return null;
+		}
+
+		// make them the same length
+		for (; version_parts_pattern.length < version_parts_val.length;) { version_parts_pattern.push('x'); }
+		for (; version_parts_val.length < version_parts_pattern.length;) { version_parts_val.push('0'); }
+
+		// iter on each digit
+		for (let i in version_parts_pattern) {
+			if (version_parts_pattern[i] === 'x') {										// if we made it to the 'x' then its a match
+				return true;
+			} else if (version_parts_pattern[i] !== version_parts_val[i]) {				// if these digits don't match, the versions do not match
+				return false;
+			} else {
+				// if these digits match, move to the next digit
+			}
+		}
+		return true;		// if all digits match... its a match
 	}
 };
 

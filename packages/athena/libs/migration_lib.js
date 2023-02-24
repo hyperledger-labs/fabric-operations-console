@@ -302,13 +302,15 @@ module.exports = function (logger, ev, t) {
 		const deployed_comps = components ? components.filter(x => {
 			return !x.imported;
 		}) : [];
-		const ingress_mins = 7;
-		const component_base_mins = 1;
-		const cost_per_component_sec = 45;
-		const console_mins = 2;
-		let estimate_mins = Number(Math.ceil((ingress_mins + console_mins + component_base_mins + (deployed_comps.length * cost_per_component_sec) / 60)));
-		estimate_mins = Number(Math.ceil(estimate_mins / 5) * 5);
-		if (estimate_mins > timeout_setting_minutes) {		// return whatever is greater, lets us take control via db setting if we need to
+		const ingress_mins = 7;									// _min stands for minutes, not minimum....
+		const component_base_mins = 0.5;						// _min stands for minutes, not minimum....
+		const cost_per_component_mins = 0.5;					// _min stands for minutes, not minimum....
+		const console_mins = 4;									// _min stands for minutes, not minimum....
+		const db_mins = 0.5;									// _min stands for minutes, not minimum....
+		let estimate_mins = Number(Math.ceil((
+			ingress_mins + console_mins + db_mins + component_base_mins + (deployed_comps.length * cost_per_component_mins))));
+		estimate_mins = Number(Math.ceil(estimate_mins / 5) * 5);	// round up to the closest 5 minutes
+		if (estimate_mins > timeout_setting_minutes) {			// return whatever is greater, this lets us take control via a db setting if we need to
 			return Number(estimate_mins);
 		} else {
 			return Number(timeout_setting_minutes);
@@ -826,7 +828,7 @@ module.exports = function (logger, ev, t) {
 		// 1. get lock
 		const l_opts = {
 			lock: MIGRATION_LOCK,
-			max_locked_sec: 1 * 60,
+			max_locked_sec: 2 * 60,
 		};
 		t.lock_lib.apply(l_opts, (lock_err) => {
 			if (lock_err) {
@@ -966,7 +968,7 @@ module.exports = function (logger, ev, t) {
 		// 1. get lock
 		const l_opts = {
 			lock: MIGRATION_LOCK,
-			max_locked_sec: 2 * 60,
+			max_locked_sec: 1 * 60,
 		};
 		t.lock_lib.apply(l_opts, (lock_err) => {
 			if (lock_err) {
