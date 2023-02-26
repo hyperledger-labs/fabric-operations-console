@@ -87,7 +87,8 @@ require('esbuild').build({
 	define: {
 		global: 'global',
 		process: 'process',
-		Buffer: 'Buffer'
+		Buffer: 'Buffer',
+		'process.env.REACT_APP_IDENTITY_STORE_TYPE': `"${process.env.REACT_APP_IDENTITY_STORE_TYPE}"`
 	},
 	plugins: [
 		sassPlugin.sassPlugin({ quietDeps: true }),

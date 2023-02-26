@@ -45,6 +45,8 @@ tags:
     description: APIs to get postman collections and swagger files.
   - name: IBP Software APIs
     description: APIs that are only available for IBP Software (OpenShift Container Platform or IBM Cloud Private)
+  - name: Manage identities in Vault
+    description: APIs to get, create, edit, or delete identities in Vault.
 #
 #
 #
@@ -4112,6 +4114,188 @@ paths:
               schema:
                 $ref: '#/components/schemas/Forbidden'
 
+  /ak/api/v2/vault/identity:
+    get:
+      tags:
+        - Manage identities in Vault
+      summary: Get all identities from Vault.
+      description: Get all identities stored in Vault.
+      operationId: get_identities
+      x-ibm-events:
+        events:
+          - name: blockchain.identities.read
+      responses:
+        200:
+          description: Request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdentitiesDto'
+        401:
+          description: Request is unauthorized (invalid credentials).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        403:
+          description: Request is forbidden (credentials lack permission).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '4XX':
+          description: Other error responses.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
+        '5XX':
+          description: Internal server error responses.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
+
+    put:
+      tags:
+        - Manage identities in Vault
+      summary: Create new or update existing identities in Vault.
+      description: Creates or updates all provided identities in Vault.
+      operationId: create_update_identities
+      requestBody:
+        description: Identies payload.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentitiesDto'
+      x-ibm-events:
+        events:
+          - name: blockchain.identity.save
+      responses:
+        204:
+          description: Request was successful. No content.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdentitiesDto'
+        401:
+          description: Request is unauthorized (invalid credentials).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        403:
+          description: Request is forbidden (credentials lack permission).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '4XX':
+          description: Other error responses.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
+        '5XX':
+          description: Internal server error responses.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
+
+  /ak/api/v2/vault/identity/{name}:
+    get:
+      tags:
+        - Manage identities in Vault
+      summary: Get identity data by secret name
+      description: Get the identity data by the name of the secret where the identity is stored.
+      operationId: get_identity
+      parameters:
+        - in: path
+          name: name
+          description: The name of the identity.
+          required: true
+          schema:
+            type: string
+      x-ibm-events:
+        events:
+          - name: blockchain.identities.read
+      responses:
+        200:
+          description: Request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdentitiesDto'
+        401:
+          description: Request is unauthorized (invalid credentials).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        403:
+          description: Request is forbidden (credentials lack permission).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '4XX':
+          description: Other error responses.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
+        '5XX':
+          description: Internal server error responses.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
+
+    delete:
+      tags:
+        - Manage identities in Vault
+      summary: Remove identity from Vault by name.
+      description: Remove single identity from Vault by secret name.
+      operationId: remove_identity
+      parameters:
+        - in: path
+          name: name
+          description: The name of the identity.
+          required: true
+          schema:
+            type: string
+      x-ibm-events:
+        events:
+          - name: blockchain.identity.remove
+      responses:
+        204:
+          description: Request was successful. No content.
+        401:
+          description: Request is unauthorized (invalid credentials).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        403:
+          description: Request is forbidden (credentials lack permission).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '4XX':
+          description: Other error responses.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
+        '5XX':
+          description: Internal server error responses.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
+
   #
   #
   #
@@ -7360,6 +7544,24 @@ components:
           type: string
           description: The Kubernetes zone of this component's deployment. [Available on ca/peer/orderer components w/query parameter 'deployment_attrs']
 
+    IdentitiesDto:
+      type: object
+      description: Contains identity objects. An identity object contains certificate and price key data.
+      additionalProperties:
+        type: object
+        $ref: '#/components/schemas/IdentityDto'
+
+    IdentityDto:
+      type: object
+      description: Identity object. Contains certificate and private key.
+      properties:
+        cert:
+          type: string
+          description: Contains the certificate.
+        private_key:
+          type: string
+          description: The private key of the identity
+
     PeerResponse:
       type: object
       description: Contains the details of a peer.
@@ -8754,6 +8956,20 @@ components:
           enum:
             - missing
             - deleted
+
+    BaseErrorResponse:
+      type: object
+      description: Base error response to be used for common errors.
+      properties:
+        statusCode:
+          type: number
+          example: 404
+        msg:
+          type: string
+          example: Error while deleting identity secret with name <secret name>.
+        reason:
+          type: string
+          description: The original error or some other clarifying information.
 
     EmptyArrayResponse:
       type: object
