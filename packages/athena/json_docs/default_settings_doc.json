@@ -178,7 +178,7 @@
 		"fabric-ca": "1.5.5",
 		"fabric-peer": "2.2.8",
 		"fabric-orderer": "2.2.9",
-		"kubernetes": "1.22"
+		"kubernetes": "1.23"
 	},
 	"migration_mon_inter_secs": 15,
 	"migration_status": {

@@ -87,6 +87,7 @@ class ImportPeerModal extends React.Component {
 			config_override: null,
 			editedConfigOverride: null,
 			version: null,
+			breaking_version: false,
 		});
 		this.getCAWithUsers();
 		if (!this.props.feature_flags.import_only_enabled) {
@@ -616,7 +617,7 @@ class ImportPeerModal extends React.Component {
 					id: `${zone}`,
 					label: zone,
 				};
-			  })
+			})
 			: [];
 		zones.unshift({
 			id: 'default',
@@ -1128,9 +1129,25 @@ class ImportPeerModal extends React.Component {
 							required: true,
 						},
 					]}
+					onChange={(data) => {
+						const breaking = this.showBreakingWarning((data && data.version) ? data.version.version : null);
+						this.props.updateState(SCOPE, {
+							breaking_version: breaking,
+						});
+					}}
 				/>
 			</>
 		);
+	}
+
+	// show the warning label if the selected peer version breaks node.js chaincode
+	showBreakingWarning(version) {
+		const bad_versions_patterns = ['2.2.8-3', '2.2.9', '2.4.x', '2.5.x'];
+		for (let i in bad_versions_patterns) {
+			const problem = Helper.version_matches_pattern(bad_versions_patterns[i], version);
+			if (problem) { return true; }
+		}
+		return false;
 	}
 
 	isVersionValid() {
@@ -1228,6 +1245,14 @@ class ImportPeerModal extends React.Component {
 							}}
 						/>
 						{this.renderSelectVersion(translate)}
+						{this.props.breaking_version &&
+							<div>
+								<SidePanelWarning
+									title='peer_breaking_title'
+									subtitle='peer_breaking'
+								/>
+							</div>
+						}
 					</div>
 				)}
 			</WizardStep>
@@ -1649,6 +1674,7 @@ const dataProps = {
 	editedConfigOverride: PropTypes.object,
 	versions: PropTypes.array,
 	version: PropTypes.object,
+	breaking_version: PropTypes.bool,
 };
 
 ImportPeerModal.propTypes = {

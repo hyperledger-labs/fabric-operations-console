@@ -91,8 +91,6 @@ module.exports = function (logger, ev, t) {
 				headers: exports.copy_headers(opts.headers),
 				timeout: ev.DEPLOYER_TIMEOUT,
 			};
-			//options.headers['x-iam-token'] = ;
-			//options.headers['x-refresh-token'] = ;
 
 			t.request(options, (err, resp) => {
 				let response = resp ? resp.body : null;
