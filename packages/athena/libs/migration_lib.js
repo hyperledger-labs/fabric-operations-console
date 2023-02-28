@@ -1006,7 +1006,10 @@ module.exports = function (logger, ev, t) {
 
 										// edit the settings doc in the backup so the migrated console has the correct settings for IBP support
 										const password = t.misc.decrypt(pillow_doc.login_password, ev.MIGRATION_API_KEY);
-										backup = edit_docs_in_backup(pillow_doc.login_username, password, new_console_url, backup);
+										backup = edit_settings_doc_in_backup(pillow_doc.login_username, password, new_console_url, backup);
+
+										// edit component docs
+										backup = edit_component_docs_in_backup(new_console_url, backup);
 
 										// 5. call restore api on other console
 										//return cb(null, null);
@@ -1194,7 +1197,7 @@ module.exports = function (logger, ev, t) {
 	}
 
 	// edit docs in the backup prior to migrating them
-	function edit_docs_in_backup(username, password, new_console_url, backup) {
+	function edit_settings_doc_in_backup(username, password, new_console_url, backup) {
 		if (backup && backup.dbs && backup.dbs['DB_SYSTEM']) {
 			if (backup.dbs['DB_SYSTEM'].docs) {
 				for (let i in backup.dbs['DB_SYSTEM'].docs) {
@@ -1208,7 +1211,6 @@ module.exports = function (logger, ev, t) {
 						doc.access_list = {};						// clear
 						doc.crn_string = '-';						// clear
 						doc.crn = { instance_id: '' };				// clear
-						doc.max_req_per_min = 1500;
 						doc.support_key = null;						// clear
 						doc.support_password = null;				// clear
 						doc.jupiter_url = null;						// clear
@@ -1257,6 +1259,32 @@ module.exports = function (logger, ev, t) {
 						logger.silly('built settings "db_custom_names":', JSON.stringify(doc.db_custom_names, null, 2));
 						logger.silly('built settings "db_defaults":', JSON.stringify(doc.db_defaults, null, 2));
 						break;
+					}
+				}
+			}
+		}
+		return backup;
+	}
+
+	// edit component docs in the backup prior to migrating them
+	function edit_component_docs_in_backup(new_console_url, backup) {
+		if (backup && backup.dbs && backup.dbs['DB_COMPONENTS']) {
+			if (backup.dbs['DB_COMPONENTS'].docs) {
+				for (let i in backup.dbs['DB_COMPONENTS'].docs) {
+					const doc = backup.dbs['DB_COMPONENTS'].docs[i];
+
+					// edit a MSP doc
+					if (doc.type === ev.STR.MSP) {
+						logger.info('[migration-console-db] found a msp doc. editing url');
+						doc.host_url = new_console_url;
+					}
+
+					// edit a signature collection doc
+					if (doc.type === ev.STR.SIG_COLLECTION) {
+						logger.info('[migration-console-db] found a signature collection doc. editing urls');
+						for (let x in doc.orgs2sign) {
+							doc.orgs2sign[x].optools_url = new_console_url;
+						}
 					}
 				}
 			}

@@ -201,6 +201,9 @@ class ExportModal extends React.Component {
 		return new Promise((resolve, reject) => {
 			this.getExportList(submit_type)
 				.then(async list => {
+					if (this.detectIdentity(list) || this.props.exportIdentity) {
+						await UserSettingsRestApi.recordIdentityExport();
+					}
 					const node = {
 						name: 'data',
 						raft: list,
@@ -208,9 +211,6 @@ class ExportModal extends React.Component {
 					Helper.exportNodesAsZip(node);
 					if (submit_type === EXPORT_IDS_NOW) {
 						this.props.history.push('/settings');		// move off this route, back to regular settings page
-					}
-					if (this.detectIdentity(list)) {
-						await UserSettingsRestApi.recordIdentityExport();
 					}
 					resolve();
 				})
