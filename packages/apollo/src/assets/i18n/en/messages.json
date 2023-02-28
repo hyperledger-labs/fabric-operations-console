@@ -2715,7 +2715,7 @@
 	"mig_wallet_instructions1.5": "The last step is to migrate your wallet (identities), which is a step you must do.",
 	"mig_wallet_instructions2": "1. Go to the Settings tab (gear icon) on this console and click the blue \"Export\" button. Then select the \"Identities\" checkbox and unselect all others. Click \"Export\" and save this file to a secure location.",
 	"mig_wallet_instructions3": "2. Next open a tab to your new console, login with your <strong>new</strong> username/password, go to the Settings tab and import the file from the previous step.",
-	"migration_cleanup": "Migration Cleanup",
+	"migration_cleanup": "Migration cleanup",
 	"mig_complete_txt": "Thank you for completing migration! Next is to verify the existing console is working and then to delete this console.",
 	"mig_warn_txt": "1. Verify that you and any users of your console have exported their wallets from this console and imported them to the new console. Below is a list of usernames that have exported their wallet. <strong>This console cannot tell if they are imported in the new console</strong>. Ask the users of your console if they have imported their wallet. All wallet imports must complete before console deletion. Once this console is deleted, all wallets held within will be unrecoverable.",
 	"mig_complete_txt2": "Visit your new console at ",
