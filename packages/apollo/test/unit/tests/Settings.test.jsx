@@ -82,6 +82,7 @@ jest.mock('../../../src/components/ImportModal/ImportModal', () => {
 jest.mock('../../../src/utils/actionsHelper', () => {
 	return {
 		canImportComponent: userInfo => !!(userInfo && userInfo.canImportComponent),
+		canEditComponent: () => true,
 	};
 });
 
