@@ -69,12 +69,14 @@ class Support extends Component {
 				const hide_transaction_input = settings.FEATURE_FLAGS.hide_transaction_input;
 				const hide_transaction_output = settings.FEATURE_FLAGS.hide_transaction_output;
 				const mustgather_enabled = settings.FEATURE_FLAGS.mustgather_enabled;
+				const auth_scheme = settings.AUTH_SCHEME;
 				this.props.updateState(SCOPE, {
 					loading: false,
 					settings,
 					hide_transaction_input,
 					hide_transaction_output,
 					mustgather_enabled,
+					auth_scheme,
 				});
 			})
 			.catch(error => {
@@ -153,11 +155,14 @@ class Support extends Component {
 						<div className="support-left-section">
 							<div className="ibp-support">{this.renderVersionInformation(translate)}</div>
 							<div>
-								<TranslateLink className="ibp-support2"
+								{(this.props.auth_scheme === 'ibmid') && <TranslateLink className="ibp-support2"
 									text="contact_support_2"
-								/>
+								/>}
+								{(this.props.auth_scheme !== 'ibmid') && <TranslateLink className="ibp-support2"
+									text="contact_support_3"
+								/>}
 							</div>
-							{this.renderSupportSection(translate)}
+							{(this.props.auth_scheme === 'ibmid') && this.renderSupportSection(translate)}
 							{this.props.mustgather_enabled && <Mustgather />}
 						</div>
 					</div>
@@ -181,6 +186,7 @@ const dataProps = {
 	mustgather_enabled: PropTypes.bool,
 	settings: PropTypes.object,
 	userInfo: PropTypes.object,
+	auth_scheme: PropTypes.string,
 };
 
 Support.propTypes = {
