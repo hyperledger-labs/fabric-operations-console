@@ -178,9 +178,10 @@ class ItemContainer extends Component {
 								<button
 									key={view}
 									id={`${this.props.id}-${view}-button`}
-									className={`ibp-container-button ${current === view ? 'ibp-active-view-mode' : 'ibp-inactive-view-mode'} ${
-										view === 'variableGrid' ? 'variableGridButton' : 'listViewButton'
-									}`}
+									className={'ibp-container-button ' +
+										(current === view) ? ' ibp-active-view-mode ' : ' ibp-inactive-view-mode ' +
+										(view === 'variableGrid') ? ' variableGridButton ' : ' listViewButton '
+									}
 									onClick={view === 'variableGrid' ? this.showGrid : this.showList}
 									aria-label={view === 'variableGrid' ? 'Toggle grid view' : 'Toggle list view'}
 								>
@@ -200,7 +201,7 @@ class ItemContainer extends Component {
 						</div>
 					</div>
 					<div className="ibp-title-desc-container">{this.props.containerDesc && <p>{translate(this.props.containerDesc)}</p>}</div>
-				</div>
+				</div >
 			);
 		}
 	}
@@ -466,7 +467,7 @@ class ItemContainer extends Component {
 							onClick={button.fn}
 							kind={button.kind || (i !== this.props.addItems.length - 1 ? 'secondary' : 'primary')}
 							title={!button.tooltip ? (button.title ? translate(button.title) : translate(button.text)) : ''}
-							disabled={this.props.disableAddItem || this.props.loading}
+							disabled={this.props.disableAddItem || this.props.loading || button.disabled}
 						>
 							{!button.tooltip && <span className="ibp__button-text bx--type-zeta">{translate(button.text)}</span>}
 							{button.tooltip && (

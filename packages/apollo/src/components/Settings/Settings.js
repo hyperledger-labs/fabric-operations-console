@@ -508,7 +508,7 @@ export class Settings extends Component {
 						>
 							{translate('export')}
 						</Button>
-						{ActionsHelper.canImportComponent(this.props.userInfo) && (
+						{ActionsHelper.canImportComponent(this.props.userInfo, this.props.feature_flags) && (
 							<Button
 								id="data_import_button"
 								disabled={this.props.saving}
@@ -618,6 +618,7 @@ export default connect(
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['isAdmin'] = state['settings'].isAdmin;
 		newProps['userInfo'] = state['userInfo'] ? state['userInfo'] : null;
+		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;
 		return newProps;
 	},
 	{

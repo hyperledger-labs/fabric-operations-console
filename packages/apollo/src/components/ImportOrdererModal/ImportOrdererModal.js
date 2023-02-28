@@ -563,7 +563,7 @@ class ImportOrdererModal extends React.Component {
 					valueSelected={this.props.location}
 					legend={translate(this.props.raftParent ? 'select_orderer_node_type' : 'select_orderer_type')}
 				>
-					{this.props.feature_flags.saas_enabled && ActionsHelper.canCreateComponent(this.props.userInfo) && (
+					{this.props.feature_flags.saas_enabled && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) && (
 						<RadioTile value="ibm_saas"
 							id="ibm_saas"
 							name="orderer_location"
@@ -573,7 +573,7 @@ class ImportOrdererModal extends React.Component {
 							<Add20 className="ibp-fill-color ibp-import-node-add-icon" />
 						</RadioTile>
 					)}
-					{ActionsHelper.canImportComponent(this.props.userInfo) && (
+					{ActionsHelper.canImportComponent(this.props.userInfo, this.props.feature_flags) && (
 						<RadioTile value={supported_orderers[0]}
 							id={supported_orderers[0]}
 							name="orderer_location"

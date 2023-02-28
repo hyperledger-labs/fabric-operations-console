@@ -505,7 +505,7 @@ class ImportPeerModal extends React.Component {
 					valueSelected={this.props.location}
 					legend={translate('select_peer_type')}
 				>
-					{this.props.feature_flags.saas_enabled && ActionsHelper.canCreateComponent(this.props.userInfo) && (
+					{this.props.feature_flags.saas_enabled && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) && (
 						<RadioTile value="ibm_saas"
 							id="ibm_saas"
 							name="peer_location"
@@ -515,7 +515,7 @@ class ImportPeerModal extends React.Component {
 							<Add20 className="ibp-fill-color ibp-import-node-add-icon" />
 						</RadioTile>
 					)}
-					{ActionsHelper.canImportComponent(this.props.userInfo) && (
+					{ActionsHelper.canImportComponent(this.props.userInfo, this.props.feature_flags) && (
 						<RadioTile value={supported_peers[0]}
 							id={supported_peers[0]}
 							name="peer_location"

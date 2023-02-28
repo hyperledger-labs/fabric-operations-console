@@ -16,20 +16,30 @@
 import * as constants from './constants';
 
 const ActionsHelper = {
-	canCreateComponent(user) {
-		return ActionsHelper._actionCheck(user, constants.ACTION_COMPONENT_CREATE);
+	canEditComponent(feature_flags) {
+		const in_read_only_mode = feature_flags ? feature_flags.read_only_enabled : false;
+		return !in_read_only_mode;
 	},
 
-	canRemoveComponent(user) {
-		return ActionsHelper._actionCheck(user, constants.ACTION_COMPONENT_REMOVE);
+	canCreateComponent(user, feature_flags) {
+		const in_read_only_mode = feature_flags ? feature_flags.read_only_enabled : false;
+		return ActionsHelper._actionCheck(user, constants.ACTION_COMPONENT_CREATE) && !in_read_only_mode;
 	},
 
-	canDeleteComponent(user) {
-		return ActionsHelper._actionCheck(user, constants.ACTION_COMPONENT_DELETE);
+	// not in use
+	/*canRemoveComponent(user, feature_flags) {
+		const in_read_only_mode = feature_flags ? feature_flags.read_only_enabled : false;
+		return ActionsHelper._actionCheck(user, constants.ACTION_COMPONENT_REMOVE) && !in_read_only_mode;
+	},*/
+
+	canDeleteComponent(user, feature_flags) {
+		const in_read_only_mode = feature_flags ? feature_flags.read_only_enabled : false;
+		return ActionsHelper._actionCheck(user, constants.ACTION_COMPONENT_DELETE) && !in_read_only_mode;
 	},
 
-	canImportComponent(user) {
-		return ActionsHelper._actionCheck(user, constants.ACTION_COMPONENT_IMPORT);
+	canImportComponent(user, feature_flags) {
+		const in_read_only_mode = feature_flags ? feature_flags.read_only_enabled : false;
+		return ActionsHelper._actionCheck(user, constants.ACTION_COMPONENT_IMPORT) && !in_read_only_mode;
 	},
 
 	canExportComponent(user) {

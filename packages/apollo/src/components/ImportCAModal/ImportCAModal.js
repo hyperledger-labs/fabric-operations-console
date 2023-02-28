@@ -619,7 +619,7 @@ class ImportCAModal extends React.Component {
 					valueSelected={this.props.location}
 					legend={translate('select_ca_type')}
 				>
-					{this.props.feature_flags.saas_enabled && ActionsHelper.canCreateComponent(this.props.userInfo) && (
+					{this.props.feature_flags.saas_enabled && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) && (
 						<RadioTile value="ibm_saas"
 							id="ibm_saas"
 							name="ca_location"
@@ -629,7 +629,7 @@ class ImportCAModal extends React.Component {
 							<Add20 className="ibp-fill-color ibp-import-node-add-icon" />
 						</RadioTile>
 					)}
-					{ActionsHelper.canImportComponent(this.props.userInfo) && (
+					{ActionsHelper.canImportComponent(this.props.userInfo, this.props.feature_flags) && (
 						<RadioTile value={supported_cas[0]}
 							id={supported_cas[0]}
 							name="ca_location"

@@ -18,7 +18,7 @@
 	"allow_default_password": false,
 	"auth_scheme": "initial",
 	"backend_address_timeout_ms": 3000,
-	"ca_proxy_timeout": 10000,
+	"ca_proxy_timeout": 5000,
 	"cluster_data": {
 		"type": null
 	},
@@ -176,8 +176,8 @@
 	"migrated_console_url": null,
 	"migration_min_versions": {
 		"fabric-ca": "1.5.5",
-		"fabric-peer": "2.2.8",
-		"fabric-orderer": "2.2.9",
+		"fabric-peer": "2.2.10",
+		"fabric-orderer": "2.2.10",
 		"kubernetes": "1.23"
 	},
 	"migration_mon_inter_secs": 15,

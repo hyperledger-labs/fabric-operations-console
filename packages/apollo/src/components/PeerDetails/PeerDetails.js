@@ -188,7 +188,7 @@ class PeerDetails extends Component {
 		Helper.exportNode(this.props.details);
 	};
 
-	refreshCerts = async() => {
+	refreshCerts = async () => {
 		try {
 			const resp = await NodeRestApi.getUnCachedDataWithDeployerAttrs(this.props.details.id);
 			this.refresh();
@@ -226,7 +226,7 @@ class PeerDetails extends Component {
 	}
 
 	renderNodeVersion(translate) {
-		if (!this.props.details || this.props.details.location !== 'ibm_saas' || !ActionsHelper.canCreateComponent(this.props.userInfo)) {
+		if (!this.props.details || this.props.details.location !== 'ibm_saas' || !ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)) {
 			return;
 		}
 		// Do not show HSM for now
@@ -397,6 +397,7 @@ class PeerDetails extends Component {
 									{
 										text: 'reallocate_resources',
 										fn: this.showUsageModal,
+										disabled: !ActionsHelper.canEditComponent(this.props.feature_flags)
 									},
 								]}
 							/>
@@ -545,6 +546,8 @@ class PeerDetails extends Component {
 									groups={this.getStickySectionGroups(translate)}
 									refreshCerts={this.refreshCerts}
 									hideRefreshCerts={this.props.details && this.props.details.location !== 'ibm_saas'}
+									feature_flags={this.props.feature_flags}
+									userInfo={this.props.userInfo}
 								/>
 							</div>
 						</div>
@@ -591,6 +594,7 @@ class PeerDetails extends Component {
 												peer={this.props.details}
 												history={this.props.history}
 												parentLoading={this.props.loading}
+												feature_flags={this.props.feature_flags}
 											/>
 											<PeerChaincode match={this.props.match}
 												peer={this.props.details}
@@ -602,13 +606,13 @@ class PeerDetails extends Component {
 								<Tab
 									id="ibp-peer-usage"
 									className={
-										details.isUpgradeAvailable && details.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo)
+										details.isUpgradeAvailable && details.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)
 											? 'ibp-patch-available-tab'
 											: ''
 									}
 									label={translate('usage_info', {
 										patch:
-											details.isUpgradeAvailable && details.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo) ? (
+											details.isUpgradeAvailable && details.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) ? (
 												<div className="ibp-details-patch-container">
 													<div className="ibp-patch-available-tag ibp-node-details"
 														onClick={() => this.openPeerSettings('upgrade')}
