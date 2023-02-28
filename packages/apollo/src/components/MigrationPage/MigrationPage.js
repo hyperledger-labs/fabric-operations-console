@@ -56,20 +56,30 @@ class MigrationPage extends Component {
 			await this.getMigrationStatus(true);
 			console.log('[migration] received overall migration status', this.props.overallMigrationStatus);
 			const userData = await UserSettingsRestApi.getUsersIAMInfo();
-			const settings = await UserSettingsRestApi.getApplicationSettings();
 			console.log('[migration] userData:', userData);
 			this.props.updateState(SCOPE, {
 				userData: userData,
-				loading: false,
-				settings: settings,
 			});
 		} catch (e) {
-			console.error('[migration] error getting data from api:');
+			console.error('[migration] error getting data from status or user api:');
 			console.error(e);
 			this.props.updateState(SCOPE, {
 				userData: null,
+			});
+		}
+
+		try {
+			const settings = await UserSettingsRestApi.getApplicationSettings();
+			this.props.updateState(SCOPE, {
+				settings: settings,
 				loading: false,
+			});
+		} catch (e) {
+			console.error('[migration] error getting data from settings api:');
+			console.error(e);
+			this.props.updateState(SCOPE, {
 				settings: null,
+				loading: false,
 			});
 		}
 
