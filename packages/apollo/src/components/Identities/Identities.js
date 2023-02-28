@@ -23,8 +23,6 @@ import emptyImage from '../../assets/images/empty_identities.svg';
 import { clearNotifications, showBreadcrumb, showError, updateState } from '../../redux/commonActions';
 import { CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';
 import IdentityApi from '../../rest/IdentityApi';
-import { OrdererRestApi } from '../../rest/OrdererRestApi';
-import { PeerRestApi } from '../../rest/PeerRestApi';
 import StitchApi from '../../rest/StitchApi';
 import Helper from '../../utils/helper';
 import AddIdentityModal from '../AddIdentityModal/AddIdentityModal';
@@ -33,6 +31,8 @@ import ItemContainer from '../ItemContainer/ItemContainer';
 import Logger from '../Log/Logger';
 import PageContainer from '../PageContainer/PageContainer';
 import PageHeader from '../PageHeader/PageHeader';
+import ActionsHelper from '../../utils/actionsHelper';
+import { NodeRestApi } from '../../rest/NodeRestApi';
 
 const SCOPE = 'identities';
 const Log = new Logger(SCOPE);
@@ -66,9 +66,8 @@ class Identities extends Component {
 		identity.connected = connected.join(', ');
 	}
 
-	async getCAsWithRootCerts() {
+	async getCAsWithRootCerts(cas) {
 		const list = [];
-		const cas = await CertificateAuthorityRestApi.getCAs();
 		for (let i = 0; i < cas.length; i++) {
 			const ca = cas[i];
 			const rootCert = await CertificateAuthorityRestApi.getRootCertificate(ca);
@@ -84,57 +83,43 @@ class Identities extends Component {
 
 	async getIdentities() {
 		this.props.updateState(SCOPE, { loading: true });
-		IdentityApi.getIdentities()
-			.then(ids => {
-				PeerRestApi.getPeers()
-					.then(peers => {
-						OrdererRestApi.getOrderers()
-							.then(orderers => {
-								this.getCAsWithRootCerts()
-									.then(async cas => {
-										for (let id of ids) {
-											for (let ca of cas) {
-												const data = {
-													certificate_b64pem: id.cert,
-													root_certs_b64pems: ca.rootCerts,
-												};
-												let match = await StitchApi.isIdentityFromRootCert(data);
-												if (match) {
-													if (id.from_ca === undefined) {
-														id.from_ca = [];
-													}
-													id.from_ca.push(ca.name);
-												}
-											}
-											this.resolveConnectedNodes(id, [...peers, ...orderers, ...cas]);
-										}
-										this.identities = [...ids];
-										this.props.updateState(SCOPE, { loading: false });
-									})
-									.catch(error => {
-										// unable to show ca names
-										this.identities = [...ids];
-										this.props.updateState(SCOPE, { loading: false });
-									});
-							})
-							.catch(error => {
-								// unable to show orderer names
-								this.identities = [...ids];
-								this.props.updateState(SCOPE, { loading: false });
-							});
-					})
-					.catch(error => {
-						// unable to show peer names
-						this.identities = [...ids];
-						this.props.updateState(SCOPE, { loading: false });
-					});
-			})
-			.catch(error => {
-				Log.error(error);
-				this.identities = [];
-				this.props.updateState(SCOPE, { loading: false });
-				this.props.showError('error_identities', {}, SCOPE);
-			});
+		let ids = [];
+
+		try {
+			ids = await IdentityApi.getIdentities();
+			const nodes = await NodeRestApi.getNodes();
+
+			let cas = nodes.filter((x) => { return x.type === 'fabric-ca'; });
+			const peers = nodes.filter((x) => { return x.type === 'fabric-peer'; });
+			const orderers = nodes.filter((x) => { return x.type === 'fabric-orderer'; });
+			cas = await this.getCAsWithRootCerts(cas);
+
+			for (let id of ids) {
+				for (let ca of cas) {
+					const data = {
+						certificate_b64pem: id.cert,
+						root_certs_b64pems: ca.rootCerts,
+					};
+					let match = await StitchApi.isIdentityFromRootCert(data);
+					if (match) {
+						if (id.from_ca === undefined) {
+							id.from_ca = [];
+						}
+						id.from_ca.push(ca.name);
+					}
+				}
+				this.resolveConnectedNodes(id, [...peers, ...orderers, ...cas]);
+			}
+			this.identities = [...ids];
+			this.props.updateState(SCOPE, { loading: false });
+		} catch (error) {
+			Log.error(error);
+
+			// unable to show ca names
+			this.identities = [...ids];
+			this.props.updateState(SCOPE, { loading: false });
+			this.props.showError('error_identities', {}, SCOPE);
+		}
 	}
 
 	openAddIdentity = () => {
@@ -263,6 +248,7 @@ class Identities extends Component {
 									{
 										text: 'add_identity',
 										fn: this.openAddIdentity,
+										disabled: !ActionsHelper.canEditComponent(this.props.feature_flags),
 									},
 								]}
 								select={this.openIdentity}

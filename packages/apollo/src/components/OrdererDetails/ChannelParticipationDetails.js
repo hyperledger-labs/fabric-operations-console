@@ -30,6 +30,7 @@ import ChannelParticipationUnjoinModal from './ChannelParticipationUnjoinModal';
 import JoinOSNChannelModal from '../JoinOSNChannelModal/JoinOSNChannelModal';
 import _ from 'lodash';
 import emptyImage from '../../assets/images/empty_channels.svg';
+import ActionsHelper from '../../utils/actionsHelper';
 
 const naturalSort = require('javascript-natural-sort');
 const SCOPE = 'ChannelParticipationDetails';
@@ -175,7 +176,8 @@ class ChannelParticipationDetails extends Component {
 									text: 'join_channel',
 									fn: () => {
 										this.joinChannel(null);
-									}
+									},
+									disabled: !ActionsHelper.canEditComponent(this.props.feature_flags)
 								}]
 
 								: []

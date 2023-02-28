@@ -27,6 +27,7 @@ import ItemContainer from '../ItemContainer/ItemContainer';
 import ItemTileLabels from '../ItemContainerTile/ItemTileLabels/ItemTileLabels';
 import MspDeleteModal from '../MspDeleteModal/MspDeleteModal';
 import SVGs from '../Svgs/Svgs';
+import ActionsHelper from '../../utils/actionsHelper';
 
 const SCOPE = 'ordererMembers';
 
@@ -147,6 +148,7 @@ class OrdererMembers extends Component {
 								fn: this.openAddMSPModal,
 								label: 'add_organization',
 								text: 'add_organization',
+								disabled: !ActionsHelper.canEditComponent(this.props.feature_flags),
 							},
 						]}
 						tileMapping={{

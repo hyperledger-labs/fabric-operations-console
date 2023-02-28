@@ -34,9 +34,9 @@ import LoginApi from '../../rest/LoginApi';
 import { RestApi } from '../../rest/RestApi';
 import TranslateLink from '../TranslateLink/TranslateLink';
 import * as constants from '../../utils/constants';
-
 const SCOPE = 'MigrationPage';
 const Log = new Logger(SCOPE);
+const url = require('url');
 
 class MigrationPage extends Component {
 	debounce = null;
@@ -124,9 +124,22 @@ class MigrationPage extends Component {
 		if (migrationStatusStr !== constants.STATUS_IN_PROGRESS) {	// if we aren't in progress, kill the interval
 			clearInterval(this.monitorInterval);
 
-			/*if (!calledOnPageLoad && migrationStatusStr === constants.STATUS_DONE) {	// reload it to reflect new settings
-				window.location.reload();
-			}*/
+			// reload it to reflect new settings
+			const url_parts = url.parse(window.location.href, true);
+			if (migrationStatusStr === constants.STATUS_DONE) {
+				if (!url_parts || !url_parts.query || !url_parts.query.fin) {
+					setTimeout(() => {
+						this.props.updateState(SCOPE, {
+							loading: true,
+						});
+						setTimeout(() => {
+							window.location.href = '/migration?fin=true';
+						}, 1000);
+					}, 500);
+				}
+			} else if (url_parts && url_parts.query && url_parts.query.fin) {
+				window.location.href = '/migration';
+			}
 		}
 	}
 

@@ -1229,6 +1229,8 @@ class ChannelDetails extends Component {
 							hideExport
 							hideDelete
 							hideRefreshCerts
+							feature_flags
+							userInfo
 						/>
 					</div>
 					<div className="bx--col-lg-12">

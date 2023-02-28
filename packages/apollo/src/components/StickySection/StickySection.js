@@ -23,6 +23,7 @@ import React from 'react';
 import { withLocalize } from 'react-localize-redux';
 import SVGs from '../Svgs/Svgs';
 import IdentityExpiration from '../IdentityExpiration/IdentityExpiration';
+import ActionsHelper from '../../utils/actionsHelper';
 
 const StickySection = ({
 	associateIdentityLabel,
@@ -44,6 +45,8 @@ const StickySection = ({
 	calloutGroups,
 	quickActions,
 	custom,
+	feature_flags,
+	userInfo,
 }) => {
 	const renderAssociation = (identity, msp_id) => {
 		if (!identity) {
@@ -166,8 +169,8 @@ const StickySection = ({
 			<div className="ibp--node-details-sticky-header">
 				<p className="ibp-node-detail-title">{translate(title)}</p>
 				<div className="ibp-node-detail-icons">
-					{details && (details.id || details.name) && !loading ? (
-						<Button
+					{(details && (details.id || details.name) && !loading) ? (
+						ActionsHelper.canEditComponent(feature_flags) && <Button
 							id={`${details.id || details.name}-sticky-settings-button`}
 							className="ibp-detail-page-icon-button"
 							kind="secondary"
@@ -189,8 +192,8 @@ const StickySection = ({
 						/>
 					)}
 					{!hideRefreshCerts &&
-						(details && (details.id || details.name) ? (
-							<Button
+						((details && (details.id || details.name) && !loading) ? (
+							ActionsHelper.canEditComponent(feature_flags) && <Button
 								id={`${details.id || details.name}-sticky-refresh-button`}
 								className="ibp-detail-page-icon-button"
 								kind="secondary"
@@ -235,8 +238,8 @@ const StickySection = ({
 							/>
 						))}
 					{!hideDelete &&
-						(details && (details.id || details.name) ? (
-							<Button
+						((details && (details.id || details.name) && !loading) ? (
+							ActionsHelper.canDeleteComponent(userInfo, feature_flags) && <Button
 								id={`${details.id || details.name}-sticky-delete-button`}
 								className="ibp-detail-page-icon-button"
 								kind="secondary"
@@ -365,6 +368,8 @@ StickySection.propTypes = {
 	type: PropTypes.string,
 	quickActions: PropTypes.array,
 	custom: PropTypes.func,
+	userInfo: PropTypes.object,
+	feature_flags: PropTypes.object,
 	translate: PropTypes.func, // Provided by withLocalize
 };
 

@@ -200,6 +200,7 @@ class TitleBar extends Component {
 							tabIndex="0"
 						>
 							{translate(productLabel)}
+							{this.props.inReadOnlyMode && <span className="readOnlyWrap">{translate('readOnlyTxt')}</span>}
 						</HeaderName>
 						{this.props.logged && showHeaderButtons && (
 							<HeaderNavigation aria-label={translate(productLabel)}>

@@ -132,7 +132,7 @@ export class CertificateAuthority extends Component {
 	};
 
 	buildCustomTile(ca) {
-		const isPatchAvailable = ca.isUpgradeAvailable && ca.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo);
+		const isPatchAvailable = ca.isUpgradeAvailable && ca.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags);
 		let status = ca.status;
 		if (status !== 'stopped' && status !== 'running') {
 			status = 'unknown';
@@ -175,13 +175,11 @@ export class CertificateAuthority extends Component {
 
 	getButtons() {
 		let buttons = [];
-		let importOption = ActionsHelper.canImportComponent(this.props.userInfo) || ActionsHelper.canCreateComponent(this.props.userInfo);
-		if (importOption) {
-			buttons.push({
-				text: this.props.feature_flags?.import_only_enabled ? 'import_only_ca' : 'add_ca',
-				fn: this.openImportCAModal,
-			});
-		}
+		buttons.push({
+			text: this.props.feature_flags?.import_only_enabled ? 'import_only_ca' : 'add_ca',
+			fn: this.openImportCAModal,
+			disabled: !ActionsHelper.canImportComponent(this.props.userInfo, this.props.feature_flags) && !ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags),
+		});
 		return buttons;
 	}
 

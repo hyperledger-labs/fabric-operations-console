@@ -159,7 +159,7 @@ class Orderers extends Component {
 	};
 
 	buildCustomTile(orderer) {
-		const isPatchAvailable = orderer.isUpgradeAvailable && orderer.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo);
+		const isPatchAvailable = orderer.isUpgradeAvailable && orderer.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags);
 		let status = orderer.status;
 		if (status !== 'stopped' && status !== 'running' && status !== 'running_partial') {
 			status = 'unknown';
@@ -218,13 +218,11 @@ class Orderers extends Component {
 
 	getButtons() {
 		let buttons = [];
-		let importOption = ActionsHelper.canImportComponent(this.props.userInfo) || ActionsHelper.canCreateComponent(this.props.userInfo);
-		if (importOption) {
-			buttons.push({
-				text: this.props.feature_flags?.import_only_enabled ? 'import_only_orderer' : 'add_orderer',
-				fn: this.openImportOrdererModal,
-			});
-		}
+		buttons.push({
+			text: this.props.feature_flags?.import_only_enabled ? 'import_only_orderer' : 'add_orderer',
+			fn: this.openImportOrdererModal,
+			disabled: !ActionsHelper.canImportComponent(this.props.userInfo, this.props.feature_flags) && !ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags),
+		});
 		return buttons;
 	}
 

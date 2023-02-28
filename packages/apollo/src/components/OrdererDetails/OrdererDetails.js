@@ -582,7 +582,7 @@ class OrdererDetails extends Component {
 	};
 
 	renderNodeVersion(translate) {
-		if (!this.props.selectedNode || this.props.selectedNode.location !== 'ibm_saas' || !ActionsHelper.canCreateComponent(this.props.userInfo)) {
+		if (!this.props.selectedNode || this.props.selectedNode.location !== 'ibm_saas' || !ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)) {
 			return;
 		}
 		// Do not show HSM for now
@@ -713,6 +713,7 @@ class OrdererDetails extends Component {
 							{
 								text: 'reallocate_resources',
 								fn: this.showUsageModal,
+								disabled: !ActionsHelper.canEditComponent(this.props.feature_flags),
 							},
 						]}
 					/>
@@ -722,7 +723,7 @@ class OrdererDetails extends Component {
 	}
 
 	buildNodeTile(node) {
-		const isPatchAvailable = !node.pending && node.isUpgradeAvailable && node.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo);
+		const isPatchAvailable = !node.pending && node.isUpgradeAvailable && node.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags);
 		const associatedMSP = node.msp_id;
 		const tls_root_certs = _.get(node, 'msp.tlsca.root_certs') || [];
 		const ecert = _.get(node, 'msp.component.ecert');
@@ -1262,12 +1263,12 @@ class OrdererDetails extends Component {
 		const canDelete = canDeleteLegacy || canDeleteSystemless;
 
 		const buttonsOnTheNodesTab = [];
-		if (isScalingNodesAllowed && ActionsHelper.canCreateComponent(this.props.userInfo) && !free) {
+		if (isScalingNodesAllowed && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) && !free) {
 			buttonsOnTheNodesTab.push({
 				text: 'add_orderer_node',
 				fn: this.openAddOrdererNode,
 			});
-		} else if (ActionsHelper.canCreateComponent(this.props.userInfo) && this.isSystemLess(this.props.details)) {
+		} else if (ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) && this.isSystemLess(this.props.details)) {
 			buttonsOnTheNodesTab.push({
 				text: 'add_orderer_node',
 				fn: this.openAddOrdererNode,
@@ -1409,6 +1410,8 @@ class OrdererDetails extends Component {
 											hideDelete={this.props.selectedNode ? !canDelete : false}
 											refreshCerts={this.refreshCerts}
 											hideRefreshCerts={!this.props.selectedNode || (this.props.selectedNode && this.props.selectedNode.location !== 'ibm_saas')}
+											feature_flags={this.props.feature_flags}
+											userInfo={this.props.userInfo}
 										/>
 									</FocusComponent>
 								</div>
@@ -1490,6 +1493,7 @@ class OrdererDetails extends Component {
 																ordererId={this.props.match.params.ordererId}
 																loading={this.props.sysChLoading}
 																disableAddItem={this.props.disabled}
+																feature_flags={this.props.feature_flags}
 															/>
 															<OrdererMembers
 																admins={this.props.admins}
@@ -1499,6 +1503,7 @@ class OrdererDetails extends Component {
 																onClose={this.onClose}
 																loading={this.props.sysChLoading}
 																disableAddItem={this.props.disabled}
+																feature_flags={this.props.feature_flags}
 															/>
 															{this.renderConsenters(translate)}
 														</div>
@@ -1535,7 +1540,7 @@ class OrdererDetails extends Component {
 													className={
 														this.props.selectedNode.isUpgradeAvailable &&
 															this.props.selectedNode.location === 'ibm_saas' &&
-															ActionsHelper.canCreateComponent(this.props.userInfo)
+															ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)
 															? 'ibp-patch-available-tab'
 															: ''
 													}
@@ -1543,7 +1548,7 @@ class OrdererDetails extends Component {
 														patch:
 															this.props.selectedNode.isUpgradeAvailable &&
 																this.props.selectedNode.location === 'ibm_saas' &&
-																ActionsHelper.canCreateComponent(this.props.userInfo) ?
+																ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) ?
 																(
 																	<div className="ibp-details-patch-container">
 																		<div className="ibp-patch-available-tag ibp-node-details"
