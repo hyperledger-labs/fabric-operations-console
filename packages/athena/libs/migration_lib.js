@@ -1286,6 +1286,13 @@ module.exports = function (logger, ev, t) {
 							doc.orgs2sign[x].optools_url = new_console_url;
 						}
 					}
+
+					// edit a component doc
+					const nodes = [ev.STR.PEER, ev.STR.CA, ev.STR.ORDERER];
+					if (nodes.includes(doc.type)) {
+						logger.info('[migration-console-db] found a component doc. added migration flag.');
+						doc.migrated_from = ev.STR.LOCATION_IBP_SAAS;
+					}
 				}
 			}
 		}
