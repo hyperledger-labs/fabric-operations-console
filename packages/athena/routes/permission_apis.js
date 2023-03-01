@@ -250,7 +250,7 @@ module.exports = function (logger, ev, t) {
 	//-----------------------------------------------------------------------------
 	// Get the current users's iam information
 	//-----------------------------------------------------------------------------
-	app.get('/api/v[123]/users/iam/info', t.middleware.verify_apiKey_action_session, function (req, res, next) {
+	app.get('/api/v[123]/users/iam/info', t.middleware.verify_view_action_session, function (req, res, next) {
 		t.permissions_lib.get_users_iam_info(req, (_, data) => {
 			res.status(data.statusCode).json(data);
 		});

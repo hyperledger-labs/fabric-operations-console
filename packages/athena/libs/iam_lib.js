@@ -414,7 +414,16 @@ module.exports = (logger, ev, t, nodejsCache) => {
 					const sub = body.responses[i].subjectId ? body.responses[i].subjectId.userId : null;
 
 					for (let x in body.responses[i].roleActions) {							// this is an array of objects
-						const role_name = body.responses[i].roleActions[x].role ? body.responses[i].roleActions[x].role.displayName : null;
+						let role_name = body.responses[i].roleActions[x].role ? body.responses[i].roleActions[x].role.displayName : null;	// old name location
+						if (!role_name) {
+							const crn = body.responses[i].roleActions[x].role ? body.responses[i].roleActions[x].role.crn : null;	// new role name location
+							if (crn && typeof crn === 'string') {
+								const parts = crn.split(':');
+								if (parts.length > 2) {
+									role_name = parts[parts.length - 1];			// grab the last string after the last colon
+								}
+							}
+						}
 						logger.debug('[iam lib] subject', sub, 'has role:', role_name, 'on', ENTRY_DESCRIPTION[i % 2], tx_id);
 
 						for (let y in body.responses[i].roleActions[x].actions) {			// finally loop over actions
