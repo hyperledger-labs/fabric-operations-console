@@ -32,7 +32,7 @@ export class ProposalResponseLib {
 	// 	\_Response
 	//		\_Payload
 	b_deserialize_payload(grpc_web_message: ProposalResponse_ProposalResponse) {
-		logger.info('[stitch - deserialize payload] going to parse the proposal response for the payload');
+		logger.debug('[stitch - deserialize payload] going to parse the proposal response for the payload');
 		const p_proposal_response = ProposalResponse_ProposalResponse.deserializeBinary(grpc_web_message.serializeBinary());
 		logger.debug('[stitch - deserialize payload] p_proposal_response:', p_proposal_response.toObject());
 
@@ -56,7 +56,7 @@ export class ProposalResponseLib {
 	// ProposalResponse
 	//	\_Payload
 	b_alt_deserialize_payload(grpc_web_message: ProposalResponse_ProposalResponse) {
-		logger.info('[stitch - deserialize payload] going to parse the proposal response for the payload');
+		logger.debug('[stitch - deserialize payload] going to parse the proposal response for the payload');
 		const bin = grpc_web_message ? grpc_web_message.serializeBinary() : null;
 		const ProposalResponse = __pb_root.lookupType('protos.ProposalResponse');
 		const p_proposalResponse = ProposalResponse.decode(bin);

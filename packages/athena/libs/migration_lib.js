@@ -1275,22 +1275,22 @@ module.exports = function (logger, ev, t) {
 
 					// edit a MSP doc
 					if (doc.type === ev.STR.MSP) {
-						logger.info('[migration-console-db] found a msp doc. editing url');
+						logger.info('[migration-console-db] found a msp doc. editing url.', doc._id);
 						doc.host_url = new_console_url;
 					}
 
 					// edit a signature collection doc
 					if (doc.type === ev.STR.SIG_COLLECTION) {
-						logger.info('[migration-console-db] found a signature collection doc. editing urls');
+						logger.info('[migration-console-db] found a signature collection doc. editing urls.');
 						for (let x in doc.orgs2sign) {
 							doc.orgs2sign[x].optools_url = new_console_url;
 						}
 					}
 
 					// edit a component doc
-					const nodes = [ev.STR.PEER, ev.STR.CA, ev.STR.ORDERER];
+					const nodes = [ev.STR.MSP, ev.STR.MSP_EXTERNAL, ev.STR.CA, ev.STR.ORDERER, ev.STR.PEER];
 					if (nodes.includes(doc.type)) {
-						logger.info('[migration-console-db] found a component doc. added migration flag.');
+						logger.info('[migration-console-db] found a component doc. adding migration flag.', doc._id);
 						doc.migrated_from = ev.STR.LOCATION_IBP_SAAS;
 					}
 				}
