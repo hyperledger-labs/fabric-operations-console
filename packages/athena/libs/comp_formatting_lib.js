@@ -43,13 +43,9 @@ module.exports = function (logger, ev, t) {
 			doc.name = doc.name || doc.display_name || doc.short_name;	// "name" is another legacy field
 			doc.display_name = doc.display_name || doc.name;
 			doc.short_name = doc.short_name || doc.id;	// copy doc id to short name, [04/22/2019 short name and doc id are the same now]
-
 			doc.tls_cert = doc.tls_cert || doc.pem;		// "pem" is legacy, tls_cert is the TLS certificate as b64 pem, needed for apollo
-			doc.backend_addr = doc.api_url;				// build legacy field for apollo
 
 			if (doc.type === ev.STR.CA) {
-				doc.ca_url = doc.api_url || doc.ca_url;	// build legacy field for apollo
-
 				if (t.ot_misc.is_v2plus_route(req) && t.component_lib.include_ca_data(req)) {
 					if (all_ca_info && doc.id) {			// overwrite or append data that came from the CA
 						const ca_info = all_ca_info[doc.id];
@@ -74,14 +70,6 @@ module.exports = function (logger, ev, t) {
 			if (doc.type === ev.STR.ORDERER) {
 				doc.consenter_proposal_fin = (doc.consenter_proposal_fin === false) ? false : true;	// legacy docs should be set to `true`
 				doc.system_channel_id = (typeof doc.system_channel_id === 'string') ? doc.system_channel_id : ev.SYSTEM_CHANNEL_ID;
-			}
-
-			if (t.ot_misc.detect_ak_route(req)) {
-				if (doc.configoverride) {
-					doc.config_override = JSON.parse(JSON.stringify(doc.configoverride));	// copy to rename it
-					delete doc.configoverride;			// remove legacy name
-				}
-				doc = exports.redact_ak(req, doc);
 			}
 
 			// redact enroll id/secret (legacy code stored these fields, new code does not)
@@ -133,9 +121,9 @@ module.exports = function (logger, ev, t) {
 			// legacy ingress URL handling (switch urls for legacy component compatibility)
 			// if component is migrated from IBP, return the SaaS operator style URLs, else return OS operator style
 			if (doc.migrated_from === ev.STR.LOCATION_IBP_SAAS) {
-				doc.api_url = doc.api_url_saas || undefined;
-				doc.operations_url = doc.operations_url_saas || undefined;
-				doc.osnadmin_url = doc.osnadmin_url_saas || undefined;
+				doc.api_url = doc.api_url_saas || doc.api_url;
+				doc.operations_url = doc.operations_url_saas || doc.operations_url;
+				doc.osnadmin_url = doc.osnadmin_url_saas || doc.osnadmin_url;
 
 				// grpcwp_url is different, since console controls it entirely, we should always use the OS operator style (the new style)
 				// b/c there is no good reason not to transition, and this makes 1 less corner case to worry about going forward
@@ -147,6 +135,19 @@ module.exports = function (logger, ev, t) {
 			delete doc.operations_url_saas;
 			delete doc.osnadmin_url_saas;
 			delete doc.grpcwp_url_saas;
+
+			doc.backend_addr = doc.api_url;				// build legacy field for apollo
+			if (doc.type === ev.STR.CA) {
+				doc.ca_url = doc.api_url || doc.ca_url;	// build legacy field for apollo
+			}
+
+			if (t.ot_misc.detect_ak_route(req)) {
+				if (doc.configoverride) {
+					doc.config_override = JSON.parse(JSON.stringify(doc.configoverride));	// copy to rename it
+					delete doc.configoverride;			// remove legacy name
+				}
+				doc = exports.redact_ak(req, doc);
+			}
 		}
 
 		return doc;										// don't sort here, sort right before responding
