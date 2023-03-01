@@ -1100,6 +1100,15 @@ module.exports = function (logger, ev, t) {
 				if (comp_doc.osnadmin_url) {
 					urls2add[t.misc.get_host(comp_doc.osnadmin_url)] = true;
 				}
+				if (comp_doc.api_url_saas) {
+					urls2add[t.misc.get_host(comp_doc.api_url_saas)] = true;
+				}
+				if (comp_doc.operations_url_saas) {
+					urls2add[t.misc.get_host(comp_doc.operations_url_saas)] = true;
+				}
+				if (comp_doc.osnadmin_url_saas) {
+					urls2add[t.misc.get_host(comp_doc.osnadmin_url_saas)] = true;
+				}
 			}
 
 			for (let i in sig_docs) {								// also add hostnames from signature collection docs
