@@ -507,7 +507,7 @@ export class CADetails extends Component {
 									{
 										text: 'reallocate_resources',
 										fn: this.showUsageModal,
-										disabled: !ActionsHelper.canEditComponent(this.props.feature_flags)
+										disabled: !ActionsHelper.canEditComponent(this.props.feature_flags),
 									},
 								]}
 							/>

@@ -25,6 +25,7 @@ import Helper from '../../utils/helper';
 import InstallChaincodeModal from '../InstallChaincodeModal/InstallChaincodeModal';
 import ItemContainer from '../ItemContainer/ItemContainer';
 import Logger from '../Log/Logger';
+import ActionsHelper from '../../utils/actionsHelper';
 
 const SCOPE = 'peerChaincode';
 const Log = new Logger(SCOPE);
@@ -209,6 +210,7 @@ class PeerChaincode extends Component {
 							text: 'install_chaincode',
 							fn: this.openInstallChaincodeModal,
 							label: 'install_chaincode',
+							disabled: !ActionsHelper.canEditComponent(this.props.feature_flags)
 						},
 					]}
 					disableAddItem={this.props.empty || this.props.parentLoading || this.props.state !== STATES.READY}
