@@ -599,6 +599,7 @@ class PeerDetails extends Component {
 											<PeerChaincode match={this.props.match}
 												peer={this.props.details}
 												parentLoading={this.props.loading}
+												feature_flags={this.props.feature_flags}
 											/>
 										</div>
 									)}

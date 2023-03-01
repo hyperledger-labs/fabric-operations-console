@@ -24,6 +24,7 @@ import Helper from '../../utils/helper';
 import InstallChaincodeModal from '../InstallChaincodeModal/InstallChaincodeModal';
 import InstantiateChaincodeModal from '../InstantiateChaincodeModal/InstantiateChaincodeModal';
 import ItemContainer from '../ItemContainer/ItemContainer';
+import ActionsHelper from '../../utils/actionsHelper';
 
 const SCOPE = 'chaincodes';
 
@@ -143,6 +144,7 @@ class Chaincodes extends Component {
 								text: 'install_chaincode',
 								fn: this.openInstallChaincodeModal,
 								label: 'install_chaincode',
+								disabled: !ActionsHelper.canEditComponent(this.props.feature_flags)
 							},
 						]}
 						disableAddItem={!this.props.peers || this.props.peers.length === 0}

@@ -29,6 +29,7 @@ import ChaincodeModal from '../ChaincodeModal/ChaincodeModal';
 import ItemContainer from '../ItemContainer/ItemContainer';
 import Logger from '../Log/Logger';
 import ProposeChaincodeModal from '../ProposeChaincodeModal/ProposeChaincodeModal';
+import ActionsHelper from '../../utils/actionsHelper';
 
 const SCOPE = 'channelChaincode';
 const Log = new Logger(SCOPE);
@@ -250,6 +251,7 @@ class ChannelChaincode extends Component {
 						{
 							text: 'chaincode_propose',
 							fn: this.openProposeChaincodeModal,
+							disabled: !ActionsHelper.canEditComponent(this.props.feature_flags)
 						},
 					]}
 					select={this.openChaincodeModal}
@@ -310,6 +312,7 @@ export default connect(
 	state => {
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['docPrefix'] = state['settings'] ? state['settings']['docPrefix'] : null;
+		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;
 		return newProps;
 	},
 	{
