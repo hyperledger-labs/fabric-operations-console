@@ -26,6 +26,7 @@ import (
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/common"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/peer/api"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/util"
+	"github.com/IBM-Blockchain/fabric-deployer/offering"
 	current "github.com/IBM-Blockchain/fabric-operator/api/v1beta1"
 	"github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"
@@ -198,7 +199,10 @@ func (peer *Peer) getEndpoints(originalCR *current.IBPPeer, response *api.Respon
 	if connectionProfile != nil {
 		if connectionProfile.Endpoints != nil {
 			endPoints := connectionProfile.Endpoints
-			updateEndpoints(endPoints, originalCR.Name, originalCR.Namespace, originalCR.Spec.Domain)
+			// Update endpoints for k8s clusters only
+			if peer.Kube.ClusterType(originalCR.Namespace) == offering.K8S {
+				updateEndpoints(endPoints, originalCR.Name, originalCR.Namespace, originalCR.Spec.Domain)
+			}
 			response.Endpoints = endPoints
 		} else {
 			peer.Logger.Warnf("Connection profile is missing fields endpoints")

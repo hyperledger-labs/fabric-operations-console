@@ -66,6 +66,7 @@ type Kube interface {
 	GetConfigMap(namespace, name string) (*corev1.ConfigMap, error)
 	GetPort(namespace, name string) (int32, error)
 	GetPorts(namespace, name string) ([]corev1.ServicePort, error)
+	ClusterType(namespace string) string
 }
 
 //go:generate counterfeiter -o mocks/ibp_client.go -fake-name IBPOperatorClient . IBPOperatorClient

@@ -9,6 +9,17 @@ import (
 )
 
 type Kube struct {
+	ClusterTypeStub        func(string) string
+	clusterTypeMutex       sync.RWMutex
+	clusterTypeArgsForCall []struct {
+		arg1 string
+	}
+	clusterTypeReturns struct {
+		result1 string
+	}
+	clusterTypeReturnsOnCall map[int]struct {
+		result1 string
+	}
 	GetConfigMapStub        func(string, string) (*v1.ConfigMap, error)
 	getConfigMapMutex       sync.RWMutex
 	getConfigMapArgsForCall []struct {
@@ -67,6 +78,67 @@ type Kube struct {
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
+}
+
+func (fake *Kube) ClusterType(arg1 string) string {
+	fake.clusterTypeMutex.Lock()
+	ret, specificReturn := fake.clusterTypeReturnsOnCall[len(fake.clusterTypeArgsForCall)]
+	fake.clusterTypeArgsForCall = append(fake.clusterTypeArgsForCall, struct {
+		arg1 string
+	}{arg1})
+	stub := fake.ClusterTypeStub
+	fakeReturns := fake.clusterTypeReturns
+	fake.recordInvocation("ClusterType", []interface{}{arg1})
+	fake.clusterTypeMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *Kube) ClusterTypeCallCount() int {
+	fake.clusterTypeMutex.RLock()
+	defer fake.clusterTypeMutex.RUnlock()
+	return len(fake.clusterTypeArgsForCall)
+}
+
+func (fake *Kube) ClusterTypeCalls(stub func(string) string) {
+	fake.clusterTypeMutex.Lock()
+	defer fake.clusterTypeMutex.Unlock()
+	fake.ClusterTypeStub = stub
+}
+
+func (fake *Kube) ClusterTypeArgsForCall(i int) string {
+	fake.clusterTypeMutex.RLock()
+	defer fake.clusterTypeMutex.RUnlock()
+	argsForCall := fake.clusterTypeArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *Kube) ClusterTypeReturns(result1 string) {
+	fake.clusterTypeMutex.Lock()
+	defer fake.clusterTypeMutex.Unlock()
+	fake.ClusterTypeStub = nil
+	fake.clusterTypeReturns = struct {
+		result1 string
+	}{result1}
+}
+
+func (fake *Kube) ClusterTypeReturnsOnCall(i int, result1 string) {
+	fake.clusterTypeMutex.Lock()
+	defer fake.clusterTypeMutex.Unlock()
+	fake.ClusterTypeStub = nil
+	if fake.clusterTypeReturnsOnCall == nil {
+		fake.clusterTypeReturnsOnCall = make(map[int]struct {
+			result1 string
+		})
+	}
+	fake.clusterTypeReturnsOnCall[i] = struct {
+		result1 string
+	}{result1}
 }
 
 func (fake *Kube) GetConfigMap(arg1 string, arg2 string) (*v1.ConfigMap, error) {
@@ -332,6 +404,8 @@ func (fake *Kube) GetServiceReturnsOnCall(i int, result1 *v1.Service, result2 er
 func (fake *Kube) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
+	fake.clusterTypeMutex.RLock()
+	defer fake.clusterTypeMutex.RUnlock()
 	fake.getConfigMapMutex.RLock()
 	defer fake.getConfigMapMutex.RUnlock()
 	fake.getPortMutex.RLock()

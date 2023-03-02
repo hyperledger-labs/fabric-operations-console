@@ -76,6 +76,7 @@ type Kube interface {
 	GetPort(namespace, name string) (int32, error)
 	GetPorts(namespace, name string) ([]corev1.ServicePort, error)
 	CreateSecret(namespace string, secret *corev1.Secret) (*corev1.Secret, error)
+	ClusterType(namespace string) string
 }
 
 //go:generate counterfeiter -o mocks/ibp_client.go -fake-name IBPOperatorClient . IBPOperatorClient
