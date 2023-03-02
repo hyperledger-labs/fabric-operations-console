@@ -119,13 +119,13 @@ module.exports = function (logger, ev, t) {
 			}
 
 			// legacy ingress URL handling (switch urls for legacy component compatibility)
-			// if component is migrated from IBP, return the SaaS operator style URLs, else return OS operator style
+			// if component is migrated from IBP under IKS, return the IKS SaaS operator style URLs, else return open source operator style
 			if (doc.migrated_from === ev.STR.LOCATION_IBP_SAAS) {
 				doc.api_url = doc.api_url_saas || doc.api_url;
 				doc.operations_url = doc.operations_url_saas || doc.operations_url;
 				doc.osnadmin_url = doc.osnadmin_url_saas || doc.osnadmin_url;
 
-				// grpcwp_url is different, since console controls it entirely, we should always use the OS operator style (the new style)
+				// grpcwp_url is different, since console controls it entirely, we should always use the open source operator style (the new style)
 				// b/c there is no good reason not to transition, and this makes 1 less corner case to worry about going forward
 				// doc.grpcwp_url = doc.grpcwp_url_saas || undefined;		// don't uncomment, use this field as is
 			}
