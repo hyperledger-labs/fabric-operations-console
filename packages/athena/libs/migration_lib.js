@@ -305,7 +305,7 @@ module.exports = function (logger, ev, t) {
 		const ingress_mins = 7;									// _min stands for minutes, not minimum....
 		const component_base_mins = 0.5;						// _min stands for minutes, not minimum....
 		const cost_per_component_mins = 0.5;					// _min stands for minutes, not minimum....
-		const console_mins = 4;									// _min stands for minutes, not minimum....
+		const console_mins = 5;									// _min stands for minutes, not minimum....
 		const db_mins = 0.5;									// _min stands for minutes, not minimum....
 		let estimate_mins = Number(Math.ceil((
 			ingress_mins + console_mins + db_mins + component_base_mins + (deployed_comps.length * cost_per_component_mins))));
@@ -397,16 +397,19 @@ module.exports = function (logger, ev, t) {
 				for (let i in resp) {
 					const comp = t.comp_fmt.fmt_component_resp(req, resp[i]);
 					const node_type_lc = resp[i].type ? resp[i].type.toLowerCase() : '';
-					const min_version = node_type_lc ? ev.MIGRATION_MIN_VERSIONS[node_type_lc] : null;
+					let min_version = node_type_lc ? ev.MIGRATION_MIN_VERSIONS[node_type_lc] : null;
+					if (Array.isArray(min_version)) {					// if there are multiple options, find the one that matches this comp's major.minor
+						min_version = find_minimum_version(min_version, comp.version);
+					}
 					comp._migratable = true;							// default true
 					comp._imported = true;
 					comp._min_version = min_version;
 
 					if (comp.location === ev.STR.LOCATION_IBP_SAAS) {	// if its a saas component, we don't care about imported ones
 						comp._imported = false;
-						if (!t.misc.is_version_b_greater_than_a(min_version, resp[i].version, true)) {
-							logger.warn('[migration] found node we cannot migrate, version is too old.', t.misc.safe_str(comp.id),
-								t.misc.safe_str(resp[i].version));
+						if (!t.misc.is_version_b_greater_than_a(min_version, comp.version, true)) {
+							logger.warn('[migration] found node we cannot migrate, version is too old.', t.misc.safe_str(comp.id), 'at:',
+								t.misc.safe_str(comp.version), 'needs:', min_version);
 							comp._migratable = false;
 							ret.all_valid = false;
 						}
@@ -417,6 +420,44 @@ module.exports = function (logger, ev, t) {
 				return cb(null, t.misc.sortKeys(ret));
 			}
 		});
+
+		// find the minimum version to use from the array of minimum "streams"
+		// such as use "2.4.8" if comp is at 2.4.3
+		// or use "2.2.10" if comp is 1.4.3, or 2.2.1, or w/e
+		function find_minimum_version(min_versions, comps_version) {
+			if (Array.isArray(min_versions)) {
+				for (let i in min_versions) {
+					let min2test = min_versions[i];
+					if (min2test && comps_version) {
+
+						// if it comes in as a number.. convert
+						min2test = (typeof min2test === 'number') ? min2test.toString() : min2test;
+						comps_version = (typeof comps_version === 'number') ? comps_version.toString() : comps_version;
+
+						// strip of leading V, like v1.4.9
+						min2test = (min2test[0].toLowerCase() === 'v') ? min2test.substring(1) : min2test;
+						comps_version = (comps_version[0].toLowerCase() === 'v') ? comps_version.substring(1) : comps_version;
+
+						if (get_major(min2test) === get_major(comps_version) && get_minor(min2test) === get_minor(comps_version)) {
+							return min2test;					// found the matching stream
+						}
+					}
+				}
+				return min_versions[0];						// default to using the first position
+			}
+		}
+
+		// get the first number off the version, the major digits
+		function get_major(version) {
+			const parts = (version && typeof version === 'string') ? version.split('.') : [];
+			return parts.length > 0 ? Number(parts[0]) : null;
+		}
+
+		// get the second number off the version, the minor digits
+		function get_minor(version) {
+			const parts = (version && typeof version === 'string') ? version.split('.') : [];
+			return parts.length > 1 ? Number(parts[1]) : null;
+		}
 	};
 
 	//-------------------------------------------------------------
@@ -828,7 +869,7 @@ module.exports = function (logger, ev, t) {
 		// 1. get lock
 		const l_opts = {
 			lock: MIGRATION_LOCK,
-			max_locked_sec: 2 * 60,
+			max_locked_sec: 3 * 60,
 		};
 		t.lock_lib.apply(l_opts, (lock_err) => {
 			if (lock_err) {
@@ -975,6 +1016,7 @@ module.exports = function (logger, ev, t) {
 				logger.warn('[migration-console-db] did not get migration lock for db step, the other instances must have it');
 				return;								// if we didn't get the lock, don't call cb, just return
 			} else {
+				pause_checking();
 
 				// 2. mark the database migration as in progress
 				change_migration_step_status('db', ev.STR.STATUS_IN_PROGRESS, (err) => {

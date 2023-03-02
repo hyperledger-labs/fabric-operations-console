@@ -392,6 +392,11 @@ class MigrationPage extends Component {
 		return steps;
 	}
 
+	// format the min version text from "1.2.4" to "v1.2.3+"
+	formatMinVersion(version) {
+		return 'needs v' + version + '+';
+	}
+
 	// --------------------------------------------------------------------------
 	// Main Migration Content
 	// --------------------------------------------------------------------------
@@ -498,30 +503,48 @@ class MigrationPage extends Component {
 													<strong>
 														{translate('migration_k8s')}
 													</strong>
-													&nbsp;- v{minK8sVersion}+
-													{usingOpenShift &&
-														<span className="checking_text">
-															&nbsp;&nbsp;({translate('via_openshift_txt')} {this.getOpenShiftVersionFromK8s(minK8sVersion)}+)
-														</span>
-													}
+													<p>
+														&nbsp;- {this.formatMinVersion(minK8sVersion)}
+														{usingOpenShift &&
+															<span className="checking_text">
+																&nbsp;&nbsp;({translate('via_openshift_txt')} {this.getOpenShiftVersionFromK8s(minK8sVersion)}+)
+															</span>
+														}
+													</p>
 												</p>
 												<p>
 													<strong>
 														{translate('migration_fabric_ca')}
 													</strong>
-													&nbsp;- v{minCaVersion}+
+													<p>
+														&nbsp;- {this.formatMinVersion(minCaVersion)}
+													</p>
 												</p>
 												<p>
 													<strong>
 														{translate('migration_fabric_peer')}
 													</strong>
-													&nbsp;- v{minPeerVersion}+
+													<p>
+														&nbsp;- {translate('migration_fabric_2.2')}
+														&nbsp;- {this.formatMinVersion(minPeerVersion[0])}
+													</p>
+													<p>
+														&nbsp;- {translate('migration_fabric_2.4')}
+														&nbsp;- {this.formatMinVersion(minPeerVersion[1])}
+													</p>
 												</p>
 												<p>
 													<strong>
 														{translate('migration_fabric_orderer')}
 													</strong>
-													&nbsp;- v{minOrdererVersion}+
+													<p>
+														&nbsp;- {translate('migration_fabric_2.2')}
+														&nbsp;- {this.formatMinVersion(minOrdererVersion[0])}
+													</p>
+													<p>
+														&nbsp;- {translate('migration_fabric_2.4')}
+														&nbsp;- {this.formatMinVersion(minOrdererVersion[1])}
+													</p>
 												</p>
 											</div>
 

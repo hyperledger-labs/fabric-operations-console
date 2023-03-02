@@ -11767,6 +11767,8 @@ components:
               $ref: '#/components/schemas/ConfigCACreate'
             tlsca:
               $ref: '#/components/schemas/ConfigCACreate'
+        migrated_from:
+          $ref: '#/components/schemas/migrated_from'
         replicas:
           $ref: '#/components/schemas/replicas'
         tags:
@@ -13779,6 +13781,8 @@ components:
           x-validate_matching_lengths: config
           items:
             $ref: '#/components/schemas/ConfigOrdererCreate'
+        migrated_from:
+          $ref: '#/components/schemas/migrated_from'
         resources:
           type: object
           description: CPU and memory properties. This feature is not available if using a free Kubernetes cluster.
@@ -13847,6 +13851,8 @@ components:
           $ref: '#/components/schemas/CryptoObject'
         config_override:
           $ref: '#/components/schemas/ConfigPeerCreate'
+        migrated_from:
+          $ref: '#/components/schemas/migrated_from'
         resources:
           $ref: '#/components/schemas/PeerResources'
         storage:
