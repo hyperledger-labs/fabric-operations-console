@@ -331,7 +331,9 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 					ARCHIVED_VIEW: 'active_notifications_by_ts',
 					ALL_NOTICES_VIEW: 'all_notifications_by_ts',
 					LOCATION_IBP_SAAS: 'ibm_saas',						// indicates this node was created via our deployer from a IBP saas OpTools
-					INFRA_IBP_SAAS: 'ibmcloud',							// indicates that this siid is being hosted by the IBP saas service
+					INFRA_IBP_SAAS: 'ibmcloud',							// indicates that deployed components will be hosted by IBM cloud using IKS
+					INFRA_OPENSHIFT: 'openshift',						// indicates that deployed components will be hosted by redhat openshift
+					INFRA_K8S: 'k8s',									// indicates that deployed components will be hosted by generic kubernetes
 					PAID_K8S: 'paid',
 					GET_ALL_COMPONENTS_KEY: 'GET /api/vx/instance/iid/type/all',
 					GET_FAB_VERSIONS_KEY: 'GET /api/vx/instance/iid/type/all/versions',

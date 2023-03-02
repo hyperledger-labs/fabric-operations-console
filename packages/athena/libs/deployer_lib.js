@@ -2250,5 +2250,73 @@ module.exports = function (logger, ev, t) {
 		});
 	};
 
+	// ------------------------------------------
+	// get the cluster type (openshift or iks)
+	// ------------------------------------------
+	exports.get_cluster_type = function (cb) {
+		const parsed = {
+			iid: (ev.CRN && ev.CRN.instance_id) ? ev.CRN.instance_id : 'iid-not-set',
+			debug_tx_id: 'k8s',
+		};
+		const opts = {
+			method: 'GET',
+			baseUrl: t.misc.format_url(ev.DEPLOYER_URL),
+			uri: '/api/v3/instance/' + parsed.iid + '/k8s/cluster/type',
+			timeout: ev.DEPLOYER_TIMEOUT,
+			headers: {
+				'Accept': 'application/json'
+			},
+			_tx_id: parsed.debug_tx_id,
+		};
+		send_dep_req(opts, (err, depRespBody) => {
+			err = null;
+			depRespBody = 'openshift';
+			if (err) {
+				logger.error('[cluster type] unable to get type from deployer, communication error', err);
+				return cb(err, { type: 'unknown' });
+			} else {
+				let type = 'k8s';				// defaults
+				if (depRespBody) {
+					type = depRespBody;
+					logger.debug('[cluster type] got cluster type from deployer:', typeof type, type);
+				}
+				return cb(null, { type: type });
+			}
+		});
+	};
+
+	// ------------------------------------------
+	// get and store the cluster type (iff openshift set it)
+	// ------------------------------------------
+	exports.store_cluster_type = function (cb) {
+		if (!cb) { cb = function () { }; }
+		exports.get_cluster_type((err, resp) => {
+			if (resp && resp.type) {
+
+				// overwrite the setting if this response says its openshift, otherwise leave it as is
+				if (resp.type === ev.STR.INFRA_OPENSHIFT && ev.INFRASTRUCTURE !== ev.STR.INFRA_OPENSHIFT) {
+					logger.debug('[startup - cluster type] detected a different value for the cluster type, storing in settings doc');
+
+					t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, (err, settings_doc) => {
+						if (err) {
+							logger.error('[startup - cluster type] an error occurred obtaining the "' + process.env.SETTINGS_DOC_ID + '"', err, settings_doc);
+							return cb();
+						} else {
+							settings_doc.infrastructure = ev.STR.INFRA_OPENSHIFT;
+
+							t.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, settings_doc, (err) => {
+								if (err) {
+									logger.error('[startup - cluster type] an error occurred updating the "' + process.env.SETTINGS_DOC_ID + '"',
+										err, settings_doc);
+								}
+								return cb();
+							});
+						}
+					});
+				}
+			}
+		});
+	};
+
 	return exports;
 };

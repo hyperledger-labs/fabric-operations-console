@@ -322,6 +322,9 @@ module.exports = function (logger, ev, t) {
 	//-------------------------------------------------------------
 	exports.finish_migration = (cb) => {
 		if (!cb) { cb = function () { }; }
+		logger.debug('[migration lib] migration is finishing');
+		pause_checking();
+
 		t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, (err, settings_doc) => {
 			if (err || !settings_doc) {
 				logger.error('[migration lib] could not get settings doc to mark migration as done', err);
@@ -350,6 +353,8 @@ module.exports = function (logger, ev, t) {
 	exports.record_error = (msg, cb) => {
 		if (!cb) { cb = function () { }; }
 		logger.error('[migration lib] recording migration error');
+		pause_checking();
+
 		if (typeof msg === 'object') {
 			try {
 				msg = JSON.stringify(msg);
@@ -372,6 +377,7 @@ module.exports = function (logger, ev, t) {
 						logger.error('[migration lib] cannot edit settings doc to add migration error:', err_writeDoc);
 						return cb({ statusCode: 500, msg: 'could not update settings doc to add migration error', details: err_writeDoc }, null);
 					} else {
+						t.lock_lib.release(MIGRATION_LOCK);
 						return cb(null, settings_doc);
 					}
 				});

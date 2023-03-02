@@ -1298,6 +1298,7 @@ function start_app() {
 		}
 	});
 
+	tools.deployer.store_cluster_type();	// get and store the cluster type in the settings doc on startup
 	start_ws_server();				// next run the webserver (httpServer must be defined first)
 	config_watcher();
 	setTimeout(() => { 				// not sure why, but cert file is getting written twice. once AFTER its generated during start up
