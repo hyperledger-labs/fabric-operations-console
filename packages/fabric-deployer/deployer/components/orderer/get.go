@@ -25,6 +25,7 @@ import (
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/common"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/orderer/api"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/util"
+	"github.com/IBM-Blockchain/fabric-deployer/offering"
 	current "github.com/IBM-Blockchain/fabric-operator/api/v1beta1"
 	"github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"
@@ -203,7 +204,10 @@ func (o *Orderer) getEndpoints(originalCR *current.IBPOrderer, response *api.Res
 	if connectionProfile != nil {
 		if connectionProfile.Endpoints != nil {
 			endPoints := connectionProfile.Endpoints
-			updateEndpoints(endPoints, originalCR.Name, originalCR.Namespace, originalCR.Spec.Domain)
+			// Update endpoints for k8s clusters only
+			if o.Kube.ClusterType(originalCR.Namespace) == offering.K8S {
+				updateEndpoints(endPoints, originalCR.Name, originalCR.Namespace, originalCR.Spec.Domain)
+			}
 			response.Endpoints = endPoints
 		} else {
 			o.Logger.Warnf("Connection profile is missing fields endpoints")

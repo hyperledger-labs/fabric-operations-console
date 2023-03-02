@@ -236,6 +236,9 @@ func (d *Deployer) registerEndpoints() {
 	// k8s
 	r.Get("/api/v3/instance/{serviceInstanceID}/k8s/cluster/version", d.K8sVersionEndpoint())
 
+	// cluster
+	r.Get("/api/v3/instance/{serviceInstanceID}/cluster/type", d.ClusterTypeEndpoint())
+
 	// mustgather
 	r.Get("/api/v3/instance/{serviceInstanceID}/mustgather", d.GetMustgatherEndpoint())
 	r.Post("/api/v3/instance/{serviceInstanceID}/mustgather", d.StartMustgatherEndpoint())
@@ -299,6 +302,12 @@ func (d *Deployer) healthCheck(w http.ResponseWriter, r *http.Request) {
 // getting kuberenetes cluster version
 func (d *Deployer) K8sVersionEndpoint() func(http.ResponseWriter, *http.Request) {
 	return NewEndpoint(d.ClusterVersionHandler, d.LocalConfig.Logger).ServeHTTP
+}
+
+// ClusterTypeEndpoint returns an endpoint type that is responsible for handling
+// getting the type of the cluster kubernetes or openshift
+func (d *Deployer) ClusterTypeEndpoint() func(http.ResponseWriter, *http.Request) {
+	return NewEndpoint(d.ClusterTypeHandler, d.LocalConfig.Logger).ServeHTTP
 }
 
 func (d *Deployer) VersionEndpoint() func(http.ResponseWriter, *http.Request) {
@@ -607,4 +616,9 @@ func (d *Deployer) StartMustgather(w http.ResponseWriter, r *http.Request) (inte
 func (d *Deployer) StopMustgather(w http.ResponseWriter, r *http.Request) (interface{}, int, error) {
 	err := d.Mustgather.Delete()
 	return nil, 200, err
+}
+
+// ClusterTypeHandler will handle returning the clustertype kubernetes cluster version
+func (d *Deployer) ClusterTypeHandler(w http.ResponseWriter, r *http.Request) (interface{}, int, error) {
+	return d.K8SClient.ClusterType(d.Config.Namespace), 0, nil
 }
