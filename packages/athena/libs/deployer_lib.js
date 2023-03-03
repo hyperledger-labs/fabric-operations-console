@@ -2269,8 +2269,6 @@ module.exports = function (logger, ev, t) {
 			_tx_id: parsed.debug_tx_id,
 		};
 		send_dep_req(opts, (err, depRespBody) => {
-			err = null;
-			depRespBody = 'openshift';
 			if (err) {
 				logger.error('[cluster type] unable to get type from deployer, communication error', err);
 				return cb(err, { type: 'unknown' });
