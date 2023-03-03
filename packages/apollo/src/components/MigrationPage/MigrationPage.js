@@ -36,7 +36,6 @@ import TranslateLink from '../TranslateLink/TranslateLink';
 import * as constants from '../../utils/constants';
 const SCOPE = 'MigrationPage';
 const Log = new Logger(SCOPE);
-const url = require('url');
 
 class MigrationPage extends Component {
 	debounce = null;

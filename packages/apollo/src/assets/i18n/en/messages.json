@@ -2621,7 +2621,7 @@
 	"migration_why1": "IBM Blockchain Platform as a Service is being sunset on July 31, 2023. Users must migrate to [[IBM Support for Hyperledger Fabric]](https://www.ibm.com/docs/en/hlf-support/1.0.0) or unrecoverable data loss could occur.",
 	"migration_what1": "The migration process will copy this console's data to a new console deployed on your cluster and update the base image of your Fabric nodes. There are no limitations or functional losses to your environment or capabilities.",
 	"migration_details1": "This console is hosted by IBM Blockchain Platform. The new console will be hosted on your cluster, which also hosts your peers, orderers, and CAs.",
-	"migration_details2": "You are currently logged into this console using IBM ID credentials. New (local) credentials will be created for the new console using a email/password you define.",
+	"migration_details2": "You are currently logged into this console using IBM ID credentials. New (local) credentials will be created for the new console using an email/password you define.",
 	"migration_details2.1": "- If you are using console APIs for custom integrations the IBM IAM API keys used to authenticate will need to be changed to use [[local API keys]](https://www.ibm.com/docs/en/hlf-support/1.0.0?topic=how-administering-your-console).",
 	"migration_details4": "Once migration is started this console will be put into a read-only state (this console will be unable to create or edit nodes/channels/chaincode).",
 	"migration_details3": "The new console will use a self-signed TLS certificate to communicate with your web browser. On your first visit the browser will display a TLS warning. Follow the browser prompts to accept the new TLS certificate.",
@@ -2726,6 +2726,6 @@
 	"mig_complete_txt2": "Visit your new console at ",
 	"mig_exported_wallets": "Usernames that have exported their wallet:",
 	"mig_exported_txt": "exported on",
-	"mig_test_txt": "2. Next check if the new console is working. Open a new tab to the new console and click on each of the node tiles. You will need to associate each node with an appropriate identity from your wallet. Compare the Fabric related content seen on the new console with the content seen on this console, it should be identical. If it isn't, try exporting and importing your wallet again and double check the correct identity was associated.",
+	"mig_test_txt": "2. Next check if the new console is working. Open a new tab to the new console and click on each of the node tiles. You will need to associate each node with an appropriate identity from your wallet. Compare the Fabric related content seen on the new console with the content seen on this console, it should be identical. If it isn't double check the correct identity was associated.",
 	"mig_delete_txt": "3. If the new console is working well it's time to delete this console. Go to your [[IBM Cloud resources]](https://cloud.ibm.com/resources) dashboard, under \"Blockchain\" find the row for this console, and open it. You should be on the page with the blue button that launches the console. This page should now have the text \"This console has been migrated!\". If so then it is safe to delete by using the \"Actions...\" dropdown and the \"Delete service\" option. If this text is missing contact support."
 }
