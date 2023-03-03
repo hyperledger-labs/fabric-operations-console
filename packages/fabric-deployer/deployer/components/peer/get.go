@@ -200,7 +200,7 @@ func (peer *Peer) getEndpoints(originalCR *current.IBPPeer, response *api.Respon
 		if connectionProfile.Endpoints != nil {
 			endPoints := connectionProfile.Endpoints
 			// Update endpoints for k8s clusters only
-			if peer.Kube.ClusterType(originalCR.Namespace) == offering.K8S {
+			if peer.Kube.ClusterType(originalCR.Namespace) == strings.ToLower((offering.K8S)) {
 				updateEndpoints(endPoints, originalCR.Name, originalCR.Namespace, originalCR.Spec.Domain)
 			}
 			response.Endpoints = endPoints
