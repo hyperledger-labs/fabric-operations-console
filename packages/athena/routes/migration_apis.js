@@ -86,11 +86,11 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Start the migration!
 	//--------------------------------------------------
-	app.post('/api/v[3]/migration/start', t.middleware.verify_manage_action_session_dep, (req, res) => {
+	app.post('/api/v[3]/migration/start', t.middleware.verify_migration_action_session_dep, (req, res) => {
 		start_migration(req, res);
 	});
 
-	app.post('/ak/api/v[3]/migration/start', t.middleware.verify_manage_action_ak_dep, (req, res) => {
+	app.post('/ak/api/v[3]/migration/start', t.middleware.verify_migration_action_ak_dep, (req, res) => {
 		start_migration(req, res);
 	});
 
@@ -156,11 +156,21 @@ module.exports = (logger, ev, t) => {
 	// For debug - reset migration steps
 	//--------------------------------------------------
 	app.get('/api/v[3]/migration/reset', t.middleware.verify_settings_action_session, (req, res) => {
-		reset_steps(req, res);
+		reset_steps(null, res);
+	});
+	app.get('/api/v[3]/migration/reset/all', t.middleware.verify_settings_action_session, (req, res) => {
+		reset_steps({ read_only_mode: false }, res);
 	});
 
-	function reset_steps(req, res) {
-		t.migration_lib.clear_migration_status((err, ret) => {
+	app.get('/ak/api/v[3]/migration/reset', t.middleware.verify_settings_action_ak, (req, res) => {
+		reset_steps(null, res);
+	});
+	app.get('/ak/api/v[3]/migration/reset/all', t.middleware.verify_settings_action_ak, (req, res) => {
+		reset_steps({ read_only_mode: false }, res);
+	});
+
+	function reset_steps(opts, res) {
+		t.migration_lib.clear_migration_status(opts, (err, ret) => {
 			if (err) {
 				return res.status(t.ot_misc.get_code(err)).json(err);
 			} else {

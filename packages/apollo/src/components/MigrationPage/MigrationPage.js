@@ -53,7 +53,7 @@ class MigrationPage extends Component {
 			readOnly: true,
 		});
 		try {
-			await this.getMigrationStatus(true);
+			await this.getMigrationStatus();
 			console.log('[migration] received overall migration status', this.props.overallMigrationStatus);
 		} catch (e) {
 			console.error('[migration] error getting data from status api:');
@@ -94,7 +94,8 @@ class MigrationPage extends Component {
 		}
 	}
 
-	async getMigrationStatus(calledOnPageLoad) {
+	// get data about the migration status
+	async getMigrationStatus() {
 		let res = null;
 		try {
 			res = await MigrationApi.getStatus();
@@ -129,23 +130,6 @@ class MigrationPage extends Component {
 
 		if (migrationStatusStr !== constants.STATUS_IN_PROGRESS) {	// if we aren't in progress, kill the interval
 			clearInterval(this.monitorInterval);
-
-			// reload it to reflect new settings
-			const url_parts = url.parse(window.location.href, true);
-			if (migrationStatusStr === constants.STATUS_DONE) {
-				if (!url_parts || !url_parts.query || !url_parts.query.fin) {
-					setTimeout(() => {
-						this.props.updateState(SCOPE, {
-							loading: true,
-						});
-						setTimeout(() => {
-							window.location.href = '/migration?fin=true';
-						}, 1000);
-					}, 500);
-				}
-			} else if (url_parts && url_parts.query && url_parts.query.fin) {
-				window.location.href = '/migration';
-			}
 		}
 	}
 
@@ -299,11 +283,12 @@ class MigrationPage extends Component {
 			}, 3 * 1000);
 		}
 
-		// poll on the migration status and reflect status on the page
-		this.createPoll();
 
-		// get the 1st status fairly quickly after submit
+		// if no error, reload the page to reflect the read-only setting that should now be on
 		if (!error) {
+			this.reloadPage();
+		} else {
+			this.createPoll();				// if there was an error setup the poll so we can get the official error and surface it on ui
 			setTimeout(async () => {
 				await this.getMigrationStatus();
 			}, 5 * 1000);
@@ -316,6 +301,16 @@ class MigrationPage extends Component {
 		this.monitorInterval = setInterval(async () => {
 			await this.getMigrationStatus();
 		}, 15 * 1000);
+	}
+
+	// reload page to reflect read-only mode
+	reloadPage = () => {
+		this.props.updateState(SCOPE, {
+			loading: true,
+		});
+		setTimeout(() => {
+			window.location.reload();
+		}, 1500);
 	}
 
 	// add leading 'v' like '1.4.5' -> 'v1.4.5
@@ -575,9 +570,9 @@ class MigrationPage extends Component {
 									<div className='migrationWizardModal'>
 										<h3 className="settings-label">
 											<BlockchainTooltip direction="right"
-												triggerText={translate('mig_header1')}
+												triggerText={translate((migrationStatusStr === constants.STATUS_IN_PROGRESS) ? 'mig_header_in_progress' : 'mig_header1')}
 											>
-												{translate('mig_tooltip1')}
+												{translate((migrationStatusStr === constants.STATUS_IN_PROGRESS) ? 'mig_tooltip_in_progress' : 'mig_tooltip1')}
 											</BlockchainTooltip>
 										</h3>
 										{migrationStatusStr !== constants.STATUS_DONE &&

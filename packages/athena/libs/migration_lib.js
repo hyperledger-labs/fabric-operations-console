@@ -231,7 +231,7 @@ module.exports = function (logger, ev, t) {
 	//-------------------------------------------------------------
 	// Edit settings doc to clear the migration status
 	//-------------------------------------------------------------
-	exports.clear_migration_status = (cb) => {
+	exports.clear_migration_status = (opts, cb) => {
 		t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, (err, settings_doc) => {
 			if (err || !settings_doc) {
 				logger.error('[migration lib] could not get settings doc to clear migration status', err);
@@ -249,7 +249,10 @@ module.exports = function (logger, ev, t) {
 
 				settings_doc.migration_status.migration_complete = false;
 				settings_doc.migration_status.error_msg = '';
-				settings_doc.feature_flags.read_only_enabled = false;
+
+				if (opts) {
+					settings_doc.feature_flags.read_only_enabled = opts.read_only_mode ? true : false;
+				}
 
 				// update the settings doc
 				t.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, settings_doc, (err_writeDoc, doc) => {
@@ -328,7 +331,7 @@ module.exports = function (logger, ev, t) {
 		t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, (err, settings_doc) => {
 			if (err || !settings_doc) {
 				logger.error('[migration lib] could not get settings doc to mark migration as done', err);
-				return cb({ statusCode: 500, msg: 'could get settings doc to mark migration as done', details: err }, null);
+				return cb({ statusCode: 500, msg: 'could not get settings doc to mark migration as done', details: err }, null);
 			} else {
 
 				settings_doc.migration_status.migration_complete = true;
@@ -630,7 +633,7 @@ module.exports = function (logger, ev, t) {
 			} else {
 
 				// 2. reset/clear the migration status
-				exports.clear_migration_status(() => {
+				exports.clear_migration_status({ read_only_mode: true }, () => {
 
 					// 3. mark the component migration as in progress
 					change_migration_step_status('ingress', ev.STR.STATUS_IN_PROGRESS, (err) => {
@@ -766,7 +769,7 @@ module.exports = function (logger, ev, t) {
 						return cb(err);										// error already logged
 					} else {
 
-						// 3 check if we have already migrated the nodes from a prev attempt
+						// 3. check if we have already migrated the nodes from a prev attempt
 						t.jupiter_lib.request(CHECK_NODE_API_OPTS, (ret) => {
 							if (!ret || t.ot_misc.is_error_code(t.ot_misc.get_code(ret))) {
 								logger.debug('[migration-node-check] - not migrated yet');
