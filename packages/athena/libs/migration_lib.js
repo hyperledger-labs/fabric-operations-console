@@ -589,6 +589,16 @@ module.exports = function (logger, ev, t) {
 					return cb({ statusCode: 500, err: 'settings doc is missing' }, doc);	// this should be impossible
 				}
 
+				// format/validate the new console url
+				const parts = t.misc.break_up_url(value);
+				if (parts && parts.hostname) {
+					let new_console_url = parts.protocol + '//' + parts.hostname;
+					if (Number(parts.port) !== 443 && Number(parts.port) !== 80) {		// if a non-standard port is used add it, else don't add the port
+						new_console_url += ':' + parts.port;
+					}
+					value = new_console_url;
+				}
+
 				doc.migrated_console_url = value;
 				ev.MIGRATED_CONSOLE_URL = value;
 
