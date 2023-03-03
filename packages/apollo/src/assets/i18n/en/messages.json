@@ -2674,7 +2674,7 @@
 	"mig_header_in_progress": "Status",
 	"mig_details_title": "Details:",
 	"mig_tooltip1": "Please read the migration information above before starting migration. There are important considerations before starting.",
-	"mig_tooltip_in_progress": "This page will report the status of your migration. You do not need to stay on this page or leave the browser open.",
+	"mig_tooltip_in_progress": "This page will report the status of your migration. You may leave this page or close your browser. Migration will continue in the background.",
 	"mig_description": "Migration for your IBM Blockchain Platform console is enabled. Proceed when ready.",
 	"mig_description_in_progress": "Migration of your IBM Blockchain Platform console is in progress.",
 	"mig_description_disabled": "Migration for your IBM Blockchain Platform console is not yet enabled. This feature is coming soon. Contact support if you have any questions.",
