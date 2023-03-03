@@ -235,9 +235,7 @@ func (d *Deployer) registerEndpoints() {
 
 	// k8s
 	r.Get("/api/v3/instance/{serviceInstanceID}/k8s/cluster/version", d.K8sVersionEndpoint())
-
-	// cluster
-	r.Get("/api/v3/instance/{serviceInstanceID}/cluster/type", d.ClusterTypeEndpoint())
+	r.Get("/api/v3/instance/{serviceInstanceID}/k8s/cluster/type", d.ClusterTypeEndpoint())
 
 	// mustgather
 	r.Get("/api/v3/instance/{serviceInstanceID}/mustgather", d.GetMustgatherEndpoint())
