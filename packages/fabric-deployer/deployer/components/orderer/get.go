@@ -206,7 +206,7 @@ func (o *Orderer) getEndpoints(originalCR *current.IBPOrderer, response *api.Res
 		if connectionProfile.Endpoints != nil {
 			endPoints := connectionProfile.Endpoints
 			// Update endpoints for k8s clusters only
-			if o.Kube.ClusterType(originalCR.Namespace) == strings.ToLower((offering.K8S)) {
+			if o.Kube.ClusterType(originalCR.Namespace) == strings.ToLower(string(offering.K8S)) {
 				updateEndpoints(endPoints, originalCR.Name, originalCR.Namespace, originalCR.Spec.Domain)
 			}
 			response.Endpoints = endPoints

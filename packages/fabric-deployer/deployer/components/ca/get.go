@@ -190,7 +190,7 @@ func (ca *CA) getEndpoints(originalCR *current.IBPCA, response *api.Response, st
 		if connectionProfile.Endpoints != nil {
 			endPoints := connectionProfile.Endpoints
 			// Update endpoints for k8s clusters only
-			if ca.Kube.ClusterType(originalCR.Namespace) == strings.ToLower((offering.K8S)) {
+			if ca.Kube.ClusterType(originalCR.Namespace) == strings.ToLower(string(offering.K8S)) {
 				updateEndpoints(endPoints, originalCR.Name, originalCR.Namespace, originalCR.Spec.Domain)
 			}
 			response.Endpoints = endPoints
