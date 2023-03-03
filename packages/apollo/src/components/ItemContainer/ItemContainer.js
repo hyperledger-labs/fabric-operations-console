@@ -178,10 +178,9 @@ class ItemContainer extends Component {
 								<button
 									key={view}
 									id={`${this.props.id}-${view}-button`}
-									className={'ibp-container-button ' +
-										(current === view) ? ' ibp-active-view-mode ' : ' ibp-inactive-view-mode ' +
-										(view === 'variableGrid') ? ' variableGridButton ' : ' listViewButton '
-									}
+									className={`ibp-container-button ${current === view ? 'ibp-active-view-mode' : 'ibp-inactive-view-mode'} ${
+										view === 'variableGrid' ? 'variableGridButton' : 'listViewButton'
+									}`}
 									onClick={view === 'variableGrid' ? this.showGrid : this.showList}
 									aria-label={view === 'variableGrid' ? 'Toggle grid view' : 'Toggle list view'}
 								>
@@ -921,7 +920,7 @@ const dataProps = {
 	page: PropTypes.number,
 	view: PropTypes.string,
 	searchAttributes: PropTypes.array,
-	searchSettings: PropTypes.object,
+	searchSettings: PropTypes.array,
 	searchQuery: PropTypes.string,
 	searchResults: PropTypes.array,
 };

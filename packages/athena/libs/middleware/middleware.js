@@ -53,10 +53,14 @@ module.exports = function (logger, ev, t) {
 	exports.verify_remove_action_ak = [eTrack, blockReadOnlyMode, needRemoveAction, allowAkToDoAction];
 
 	// manage a component
-	exports.verify_manage_action_session = [eTrack, needManageAction, checkAuthentication, permitAction];
-	exports.verify_manage_action_ak = [eTrack, needManageAction, allowAkToDoAction];
+	exports.verify_manage_action_session = [eTrack, blockReadOnlyMode, needManageAction, checkAuthentication, permitAction];
+	exports.verify_manage_action_ak = [eTrack, blockReadOnlyMode, needManageAction, allowAkToDoAction];
 	exports.verify_manage_action_session_dep = [eTrack, blockReadOnlyMode, isDeployerConfigured, needManageAction, checkAuthentication, permitAction];
 	exports.verify_manage_action_ak_dep = [eTrack, blockReadOnlyMode, isDeployerConfigured, needManageAction, allowAkToDoAction];
+
+	// manage migration (these are allowed during read only mode)
+	exports.verify_migration_action_session_dep = [eTrack, isDeployerConfigured, needManageAction, checkAuthentication, permitAction];
+	exports.verify_migration_action_ak_dep = [eTrack, isDeployerConfigured, needManageAction, allowAkToDoAction];
 
 	// restart athena
 	exports.verify_restart_action_session = [eTrack, needRestartAction, checkAuthentication, permitAction];

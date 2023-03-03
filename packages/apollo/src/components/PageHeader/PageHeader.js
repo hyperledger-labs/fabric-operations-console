@@ -49,7 +49,7 @@ export class PageHeader extends Component {
 	};
 
 	openDeleteBanner = () => {
-		this.props.history.push('/migration?fin=true');
+		this.props.history.push('/migration');
 	};
 
 	// open a new tab to the migrated console if it exists
