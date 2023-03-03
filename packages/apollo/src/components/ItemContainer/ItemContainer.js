@@ -920,7 +920,7 @@ const dataProps = {
 	page: PropTypes.number,
 	view: PropTypes.string,
 	searchAttributes: PropTypes.array,
-	searchSettings: PropTypes.object,
+	searchSettings: PropTypes.array,
 	searchQuery: PropTypes.string,
 	searchResults: PropTypes.array,
 };
