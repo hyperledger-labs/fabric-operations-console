@@ -90,7 +90,7 @@ class SignatureDetailModal extends React.Component {
 		}
 		for (let orgIdx in this.props.request.orgs2sign) {
 			let entry = this.props.request.orgs2sign[orgIdx];
-			if (entry.admin && entry.optools_url.indexOf(optools_url) === 0 && !entry.signature) {
+			if (entry.admin && Helper.urlsAreEqual(entry.optools_url, optools_url) && !entry.signature) {
 				const identities = await this.getIdentitiesForEntry(entry);
 				entry.identities = identities;
 				orgs2sign.push(entry);
@@ -103,7 +103,7 @@ class SignatureDetailModal extends React.Component {
 		if (this.props.request.orderers2sign) {
 			for (let orgIdx in this.props.request.orderers2sign) {
 				let entry = this.props.request.orderers2sign[orgIdx];
-				if (entry.optools_url.indexOf(optools_url) === 0 && !entry.signature) {
+				if (Helper.urlsAreEqual(entry.optools_url, optools_url) && !entry.signature) {
 					const identities = await this.getIdentitiesForEntry(entry);
 					entry.identities = identities;
 					orderers2sign.push(entry);
@@ -347,7 +347,7 @@ class SignatureDetailModal extends React.Component {
 							default: 'select_identity',
 						},
 					]}
-					onChange={async(data, valid) => {
+					onChange={async (data, valid) => {
 						if (data.submit_msp) {
 							const submit_identity_options = await IdentityApi.getIdentitiesForMsp(data.submit_msp);
 							this.props.updateState(SCOPE, {

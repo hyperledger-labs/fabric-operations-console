@@ -569,18 +569,38 @@ const Helper = {
 		return value && (value.indexOf('tcp://') !== -1 || value.indexOf('tls://') !== -1);
 	},
 
+	// get hostname from the url
 	getHostname(url) {
-		const parts = urlParser.parse(url);
-		return parts.hostname;
+		try {
+			const parts = urlParser.parse(url);
+			return parts.hostname;
+		} catch (e) {
+			console.error('cannot parse hostname from url:', url, e);
+			return '';
+		}
 	},
 
+	// get port from url, use standard ports if there is no port on url
 	getPort(url) {
-		const parts = urlParser.parse(url);
-		const protocol = parts.protocol ? parts.protocol : 'https:';
-		if (parts.port === null) {
-			parts.port = protocol === 'https:' ? '443' : '80';
+		try {
+			const parts = urlParser.parse(url);
+			const protocol = parts.protocol ? parts.protocol : 'https:';
+			if (parts.port === null) {
+				parts.port = protocol === 'https:' ? '443' : '80';
+			}
+			return parts.port;
+		} catch (e) {
+			console.error('cannot parse port from url:', url, e);
+			return null;
 		}
-		return parts.port;
+	},
+
+	// return true if these urls are equal in terms of their hostname and port
+	urlsAreEqual(url1, url2) {
+		return (
+			this.getHostname(url1) === this.getHostname(url2) &&
+			Number(this.getPort(url1)) === Number(this.getPort(url2))
+		);
 	},
 
 	normalizeHttpURL(http_url) {

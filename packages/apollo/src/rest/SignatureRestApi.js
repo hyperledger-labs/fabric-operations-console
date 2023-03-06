@@ -54,7 +54,8 @@ class SignatureRestApi {
 				if ((entry.admin || request.ccd) && entry.signature) {
 					signature_count++;
 				}
-				if ((entry.admin || request.ccd) && entry.optools_url === SignatureRestApi.optools_url && !entry.signature) {
+				if ((entry.admin || request.ccd) && Helper.urlsAreEqual(entry.optools_url, SignatureRestApi.optools_url) &&
+					!entry.signature) {
 					org_can_sign = true;
 				}
 			});
@@ -71,7 +72,7 @@ class SignatureRestApi {
 				if (entry.signature) {
 					orderer_signature_count++;
 				}
-				if (entry.optools_url === SignatureRestApi.optools_url && !entry.signature) {
+				if (Helper.urlsAreEqual(entry.optools_url, SignatureRestApi.optools_url) && !entry.signature) {
 					orderer_can_sign = true;
 				}
 			});
@@ -426,7 +427,7 @@ class SignatureRestApi {
 				const signer_certificate = opts.client_cert_b64pem;
 				const signer_private_key = opts.client_prv_key_b64pem;
 
-				window.stitch.signConfigUpdate(opts, async(err, resp) => {
+				window.stitch.signConfigUpdate(opts, async (err, resp) => {
 					if (err || !resp) {
 						error = err || 'signature failed';
 					} else {
@@ -572,7 +573,7 @@ class SignatureRestApi {
 			const submitter_msp = opts.msp_id;
 			const submitter_certificate = opts.client_cert_b64pem;
 			const submitter_private_key = opts.client_prv_key_b64pem;
-			window.stitch.submitConfigUpdate(opts, async(err, resp) => {
+			window.stitch.submitConfigUpdate(opts, async (err, resp) => {
 				if (err || !resp) {
 					reject(err);
 				} else {
