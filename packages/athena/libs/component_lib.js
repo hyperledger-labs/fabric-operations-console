@@ -999,6 +999,7 @@ module.exports = function (logger, ev, t) {
 		if (!doc) {
 			return doc;
 		} else {
+			doc = t.comp_fmt.fmt_component_resp({}, doc);		// reformat it to pickup the correct api_url value
 			doc.url2use = (doc.type === ev.STR.CA) ? doc.api_url : doc.grpcwp_url;	// copy the default
 
 			// override the component's api url with a proxy route url to avoid self-signed issues in the browser
