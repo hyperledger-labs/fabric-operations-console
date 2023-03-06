@@ -1283,6 +1283,7 @@ module.exports = function (logger, ev, t) {
 
 						if (doc.feature_flags) {
 							doc.feature_flags.migration_enabled = false;
+							doc.feature_flags.read_only_enabled = false;
 						}
 
 						// create the user login for the new console
