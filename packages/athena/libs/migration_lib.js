@@ -479,18 +479,44 @@ module.exports = function (logger, ev, t) {
 				logger.error('[migration lib] error getting kubernetes version:', err);
 				return cb({ statusCode: 500, errors: err });
 			} else {
-				const k8s_version = resp ? resp._version : '';
-				logger.debug('[migration lib] received kubernetes version:', k8s_version);
+				let at_k8s_version = resp ? resp._version : '';
+				logger.debug('[migration lib] received kubernetes version:', at_k8s_version);
+
+				logger.debug('[migration lib] INFRASTRUCTURE:', ev.INFRASTRUCTURE);
+				if (ev.INFRASTRUCTURE === ev.STR.INFRA_OPENSHIFT) {
+					at_k8s_version = getOpenShiftVersionFromK8s(at_k8s_version);
+					logger.debug('[migration lib] detected openshift env, on version:', at_k8s_version);
+				}
+
+				const min_k8s_version = (ev.INFRASTRUCTURE === ev.STR.INFRA_OPENSHIFT) ?
+					ev.MIGRATION_MIN_VERSIONS.openshift : ev.MIGRATION_MIN_VERSIONS.kubernetes;
+
 				const ret = {
 					k8s: {
-						migratable: t.misc.is_version_b_greater_than_a(ev.MIGRATION_MIN_VERSIONS.kubernetes, k8s_version, true),
-						version: k8s_version,
-						min_version: ev.MIGRATION_MIN_VERSIONS.kubernetes.toString(),
+						migratable: t.misc.is_version_b_greater_than_a(min_k8s_version, at_k8s_version, true),
+						version: at_k8s_version,
+						min_version: min_k8s_version.toString(),
 					}
 				};
 				return cb(null, t.misc.sortKeys(ret));
 			}
 		});
+
+		// attempt to build a redhat openshift version from the kubernetes version (this isn't great, but should work short term)
+		function getOpenShiftVersionFromK8s(k8s_version) {
+			if (typeof k8s_version === 'number') {
+				k8s_version = k8s_version.toString();
+			}
+			if (typeof k8s_version === 'string') {
+				const parts = k8s_version.split('.');
+				if (parts && parts[1]) {
+					const minor = Number(parts[1]);
+					const offset = 13;	// subtract 13 from the k8s minor version number to get to a redhat number, this works so far!
+					return 'v4.' + (minor - offset);
+				}
+			}
+			return 'v4.x';
+		}
 	};
 
 	//-------------------------------------------------------------

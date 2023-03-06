@@ -184,7 +184,8 @@
 			"2.2.10",
 			"2.4.8"
 		],
-		"kubernetes": "1.22"
+		"kubernetes": "1.23",
+		"openshift": "4.9"
 	},
 	"migration_mon_inter_secs": 15,
 	"migration_status": {

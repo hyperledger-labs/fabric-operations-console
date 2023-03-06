@@ -329,7 +329,7 @@ class MigrationPage extends Component {
 	}
 
 	// attempt to build a redhat openshift version from the kubernetes version (this isn't great, but should work short term)
-	getOpenShiftVersionFromK8s(k8s_version) {
+	/*getOpenShiftVersionFromK8s(k8s_version) {
 		if (typeof k8s_version === 'number') {
 			k8s_version = k8s_version.toString();
 		}
@@ -342,7 +342,7 @@ class MigrationPage extends Component {
 			}
 		}
 		return 'v4.x';
-	}
+	}*/
 
 	// build data that helps build the step progression diagram
 	buildStepProgressData(mig_steps) {
@@ -401,10 +401,14 @@ class MigrationPage extends Component {
 		const minCaVersion = (this.props.settings && this.props.settings.MIGRATION_MIN_VERSIONS) ? this.props.settings.MIGRATION_MIN_VERSIONS['fabric-ca'] : '-';
 		const minPeerVersion = (this.props.settings && this.props.settings.MIGRATION_MIN_VERSIONS) ? this.props.settings.MIGRATION_MIN_VERSIONS['fabric-peer'] : '-';
 		const minOrdererVersion = (this.props.settings && this.props.settings.MIGRATION_MIN_VERSIONS) ? this.props.settings.MIGRATION_MIN_VERSIONS['fabric-orderer'] : '-';
-		const minK8sVersion = (this.props.settings && this.props.settings.MIGRATION_MIN_VERSIONS) ? this.props.settings.MIGRATION_MIN_VERSIONS['kubernetes'] : '-';
+		let minK8sVersion = (this.props.settings && this.props.settings.MIGRATION_MIN_VERSIONS) ? this.props.settings.MIGRATION_MIN_VERSIONS['kubernetes'] : '-';
 		const steps = this.props.steps;
 		const walletStepStatus = (steps && steps[4]) ? steps[4].css_class : '';
 		const usingOpenShift = (this.props.settings && this.props.settings.INFRASTRUCTURE === constants.OPENSHIFT_NAME) ? true : false;
+
+		if (usingOpenShift) {
+			minK8sVersion = (this.props.settings && this.props.settings.MIGRATION_MIN_VERSIONS) ? this.props.settings.MIGRATION_MIN_VERSIONS['openshift'] : '-';
+		}
 
 		// split up the error message into the console part and the jupiter part if we can detect them
 		let console_msg = this.props.errorMsg;
@@ -495,15 +499,10 @@ class MigrationPage extends Component {
 												<br />
 												<p>
 													<strong>
-														{translate('migration_k8s')}
+														{translate(usingOpenShift ? 'openshift_txt' : 'migration_k8s')}
 													</strong>
 													<p>
 														&nbsp;- {this.formatMinVersion(minK8sVersion)}
-														{usingOpenShift &&
-															<span className="checking_text">
-																&nbsp;&nbsp;({translate('via_openshift_txt')} {this.getOpenShiftVersionFromK8s(minK8sVersion)}+)
-															</span>
-														}
 													</p>
 												</p>
 												<p>
@@ -827,7 +826,7 @@ class MigrationPage extends Component {
 							<h4>{translate('cluster')}</h4>
 							<div className='versionRowWrap'>
 								<div className='mig_version_label'>
-									{translate('migration_node_k8s_version_txt')}
+									{translate(usingOpenShift ? 'openshift_txt' : 'migration_node_k8s_version_txt')}
 								</div>
 								<div className={'mig_version_value ' + (hasValidK8s ? '' : 'invalidVersionText')}>
 									{this.props.kubernetes ? this.conform_version(this.props.kubernetes.version) : '-'}
@@ -839,11 +838,6 @@ class MigrationPage extends Component {
 								{hasValidK8s &&
 									<div className='mig_valid_txt'>
 										{translate('migration_version_valid_txt')}
-									</div>
-								}
-								{usingOpenShift &&
-									<div className='mig_version_label checking_text'>
-										({translate('via_openshift_txt')} {this.getOpenShiftVersionFromK8s(this.props.kubernetes.version)})
 									</div>
 								}
 							</div>
