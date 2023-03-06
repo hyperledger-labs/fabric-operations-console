@@ -999,22 +999,22 @@ module.exports = function (logger, ev, t) {
 		if (!doc) {
 			return doc;
 		} else {
-			doc = t.comp_fmt.fmt_component_resp({}, doc);		// reformat it to pickup the correct api_url value
-			doc.url2use = (doc.type === ev.STR.CA) ? doc.api_url : doc.grpcwp_url;	// copy the default
+			let doc_with_fmt_urls = t.comp_fmt.fmt_component_resp({}, JSON.parse(JSON.stringify(doc)));			// format it to pickup the correct api_url value
+			doc.url2use = (doc.type === ev.STR.CA) ? doc_with_fmt_urls.api_url : doc_with_fmt_urls.grpcwp_url;	// copy the default
 
 			// override the component's api url with a proxy route url to avoid self-signed issues in the browser
 			if (should_proxy_url(doc.url2use)) {
 				if (doc.type === ev.STR.ORDERER) {									// orderers use WS url
-					doc.url2use = ev.PROXY_TLS_WS_URL + '/grpcwp/' + encodeURIComponent(doc.grpcwp_url);
+					doc.url2use = ev.PROXY_TLS_WS_URL + '/grpcwp/' + encodeURIComponent(doc_with_fmt_urls.grpcwp_url);
 				} else if (doc.type === ev.STR.PEER) {								// peers use the http url
-					doc.url2use = ev.PROXY_TLS_HTTP_URL + '/grpcwp/' + encodeURIComponent(doc.grpcwp_url);
+					doc.url2use = ev.PROXY_TLS_HTTP_URL + '/grpcwp/' + encodeURIComponent(doc_with_fmt_urls.grpcwp_url);
 				}
 			}
 			if (doc.type === ev.STR.CA) {											// cas always proxy, use the http url w/its own route
 				if (doc.disable_ca_proxy === true) {								// unless component has override flag
-					doc.url2use = doc.api_url;
+					doc.url2use = doc_with_fmt_urls.api_url;
 				} else {
-					doc.url2use = ev.PROXY_TLS_HTTP_URL + '/caproxy/' + encodeURIComponent(doc.api_url);
+					doc.url2use = ev.PROXY_TLS_HTTP_URL + '/caproxy/' + encodeURIComponent(doc_with_fmt_urls.api_url);
 				}
 			}
 
