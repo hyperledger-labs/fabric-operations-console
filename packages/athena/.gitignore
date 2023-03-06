@@ -24,8 +24,6 @@ Thumbs.db
 /data/
 
 # Logs
-/logs/*.log
-logs
 *.log
 npm-debug.log*
 

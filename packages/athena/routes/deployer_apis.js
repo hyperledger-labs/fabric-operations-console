@@ -562,5 +562,45 @@ module.exports = (logger, ev, t) => {
 		});
 	}
 
+	//--------------------------------------------------
+	// Get kubernetes version data
+	//--------------------------------------------------
+	app.get('/api/saas/v[3]/kubernetes/version', t.middleware.verify_view_action_session_dep, (req, res) => {
+		get_k8s_versions(req, res);
+	});
+	app.get('/ak/api/v[3]/kubernetes/version', t.middleware.verify_view_action_ak_dep, (req, res) => {
+		get_k8s_versions(req, res);
+	});
+
+	function get_k8s_versions(req, res) {
+		t.deployer.get_k8s_version((err, ret) => {
+			if (err) {
+				return res.status(t.ot_misc.get_code(err)).json(err);
+			} else {
+				return res.status(200).json(ret);
+			}
+		});
+	}
+
+	//--------------------------------------------------
+	// Get cluster type (ibmcloud [aka iks] vs openshift)
+	//--------------------------------------------------
+	app.get('/api/saas/v[3]/kubernetes/type', t.middleware.verify_view_action_session_dep, (req, res) => {
+		get_cluster_type(req, res);
+	});
+	app.get('/ak/api/v[3]/kubernetes/type', t.middleware.verify_view_action_ak_dep, (req, res) => {
+		get_cluster_type(req, res);
+	});
+
+	function get_cluster_type(req, res) {
+		t.deployer.get_cluster_type((err, ret) => {
+			if (err) {
+				return res.status(t.ot_misc.get_code(err)).json(err);
+			} else {
+				return res.status(200).json(ret);
+			}
+		});
+	}
+
 	return app;
 };
