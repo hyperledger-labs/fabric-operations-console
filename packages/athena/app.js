@@ -1298,7 +1298,17 @@ function start_app() {
 		}
 	});
 
-	tools.deployer.store_cluster_type();	// get and store the cluster type in the settings doc on startup
+	// get and store the cluster type in the settings doc on startup
+	setTimeout(() => {
+		tools.deployer.store_cluster_type((err) => {
+			if (err) {
+				setTimeout(() => {		// try again in a bit
+					tools.deployer.store_cluster_type();
+				}, 30 * 1000);
+			}
+		});
+	}, 1000 * Math.random() * 10);	// delay call on start to scatter calls from multiple athenas starting at once
+
 	start_ws_server();				// next run the webserver (httpServer must be defined first)
 	config_watcher();
 	setTimeout(() => { 				// not sure why, but cert file is getting written twice. once AFTER its generated during start up

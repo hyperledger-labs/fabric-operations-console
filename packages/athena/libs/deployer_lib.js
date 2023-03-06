@@ -2208,7 +2208,7 @@ module.exports = function (logger, ev, t) {
 	exports.get_k8s_version = function (cb) {
 		const parsed = {
 			iid: (ev.CRN && ev.CRN.instance_id) ? ev.CRN.instance_id : 'iid-not-set',
-			debug_tx_id: 'k8s',
+			debug_tx_id: 'k8s-ver',
 		};
 		const opts = {
 			method: 'GET',
@@ -2256,7 +2256,7 @@ module.exports = function (logger, ev, t) {
 	exports.get_cluster_type = function (cb) {
 		const parsed = {
 			iid: (ev.CRN && ev.CRN.instance_id) ? ev.CRN.instance_id : 'iid-not-set',
-			debug_tx_id: 'k8s',
+			debug_tx_id: 'k8s-type',
 		};
 		const opts = {
 			method: 'GET',
@@ -2268,17 +2268,25 @@ module.exports = function (logger, ev, t) {
 			},
 			_tx_id: parsed.debug_tx_id,
 		};
-		send_dep_req(opts, (err, depRespBody) => {
-			if (err) {
-				logger.error('[cluster type] unable to get type from deployer, communication error', err);
-				return cb(err, { type: 'unknown' });
+		send_dep_req(opts, (statusCode, depRespBody) => {
+			//statusCode = 200;
+			//depRespBody = 'openshift';
+			if (t.ot_misc.is_error_code(statusCode)) {
+				logger.error('[cluster type] unable to get cluster type from deployer, communication error', depRespBody);
+				return cb({ statusCode: statusCode, error: depRespBody });
 			} else {
 				let type = 'k8s';				// defaults
-				if (depRespBody) {
+				if (!depRespBody) {
+					logger.warn('[cluster type] unable to get cluster type, deployer response is blank:', typeof depRespBody, depRespBody);
+					return cb({ statusCode: 500, error: depRespBody });
+				} else if (typeof depRespBody !== 'string') {
+					logger.warn('[cluster type] unexpected cluster type from deployer response is not a string:', typeof depRespBody, depRespBody);
+					return cb({ statusCode: 500, error: depRespBody });
+				} else {
 					type = depRespBody;
 					logger.debug('[cluster type] got cluster type from deployer:', typeof type, type);
+					return cb(null, { type: type, message: ev.STR.STATUS_ALL_GOOD });
 				}
-				return cb(null, { type: type });
 			}
 		});
 	};
@@ -2289,7 +2297,13 @@ module.exports = function (logger, ev, t) {
 	exports.store_cluster_type = function (cb) {
 		if (!cb) { cb = function () { }; }
 		exports.get_cluster_type((err, resp) => {
-			if (resp && resp.type) {
+			if (err) {
+				logger.warn('[startup - cluster type] unable to retrieve cluster type from deployer');
+				return cb(err);
+			} else if (!resp || !resp.type) {
+				logger.warn('[startup - cluster type] unexpected response when getting cluster type from deployer');
+				return cb({ statusCode: 500, error: 'missing cluster type in response' });
+			} else {
 
 				// overwrite the setting if this response says its openshift, otherwise leave it as is
 				if (resp.type === ev.STR.INFRA_OPENSHIFT && ev.INFRASTRUCTURE !== ev.STR.INFRA_OPENSHIFT) {
@@ -2311,6 +2325,9 @@ module.exports = function (logger, ev, t) {
 							});
 						}
 					});
+				} else {
+					logger.debug('[startup - cluster type] cluster type is already correct, no need to edit');
+					return cb();
 				}
 			}
 		});

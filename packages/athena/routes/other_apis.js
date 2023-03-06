@@ -98,6 +98,10 @@ module.exports = function (logger, ev, t) {
 	app.post('/ak/api/v[123]/restart', t.middleware.verify_restart_action_ak, function (req, res) {
 		restart(req, res);
 	});
+	app.get('/api/v[3]/restart/force', t.middleware.verify_restart_action_session, function (req, res) {
+		res.status(200).json({ message: 'you got it' });
+		t.ot_misc.restart_athena(t.middleware.getUuid(req));						// restart this instance right now, no db -> pillow talk
+	});
 	app.post('/ak/api/v[123]/restart/force', t.middleware.verify_restart_action_ak, function (req, res) {
 		res.status(200).json({ message: 'you got it' });
 		t.ot_misc.restart_athena(t.middleware.getUuid(req));						// restart this instance right now, no db -> pillow talk

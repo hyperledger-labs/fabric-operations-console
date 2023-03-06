@@ -2630,8 +2630,8 @@
 	"migration_resources1": "The new console will consume an estimated 0.6 CPU, 2GB memory and 25GB storage from your cluster. However consoles managing many nodes may require more resources to perform smoothly.",
 	"migration_resources2": "Before beginning the migration, verify that your cluster has enough free cpu, memory and storage.",
 	"migration_min_versions_title": "Minimum Versions:",
-	"migration_min_versions": "All Fabric versions and the kubernetes version must be equal to or higher than the versions listed below. These versions will be checked before migration begins. Note that Fabric nodes that were *imported* to this console are exempt.",
-	"via_openshift_txt": "via Red Hat OpenShift",
+	"migration_min_versions": "All Fabric versions and the cluster version must be equal to or higher than the versions listed below. These versions will be checked before migration begins. Note that Fabric nodes that were *imported* to this console are exempt.",
+	"openshift_txt": "Red Hat OpenShift",
 	"migration_fabric_ca": "Hyperledger Fabric CAs",
 	"migration_fabric_peer": "Hyperledger Fabric Peers",
 	"migration_fabric_2.2": "if at v2.2 or lower",
@@ -2727,5 +2727,5 @@
 	"mig_exported_wallets": "Usernames that have exported their wallet:",
 	"mig_exported_txt": "exported on",
 	"mig_test_txt": "2. Next check if the new console is working. Open a new tab to the new console and click on each of the node tiles. You will need to associate each node with an appropriate identity from your wallet. Compare the Fabric related content seen on the new console with the content seen on this console, it should be identical. If it isn't double check the correct identity was associated.",
-	"mig_delete_txt": "3. If the new console is working well it's time to delete this console. Go to your [[IBM Cloud resources]](https://cloud.ibm.com/resources) dashboard, under \"Blockchain\" find the row for this console, and open it. You should be on the page with the blue button that launches the console. This page should now have the text \"This console has been migrated!\". If so then it is safe to delete by using the \"Actions...\" dropdown and the \"Delete service\" option. If this text is missing contact support."
+	"mig_delete_txt": "3. If the new console is working well it's time to delete this console. Go to your [[IBM Cloud resources]](https://cloud.ibm.com/resources) dashboard, under \"Blockchain\" find the row for this console, and open it. You should be on the page which used to have the blue button that launches the console. This page should now have the text \"This console has been migrated!\". If so then it is safe to delete by using the \"Actions...\" dropdown and the \"Delete service\" option. If this text is missing contact support."
 }
