@@ -110,7 +110,7 @@ class SignatureCollection extends Component {
 	getReceivedBy(request) {
 		let received = null;
 		request.orgs2sign.forEach(entry => {
-			if (entry.optools_url === this.props.host_url + '/api/v1') {
+			if (Helper.urlsAreEqual(entry.optools_url, this.props.host_url)) {
 				if (!received || (received.signature && !entry.signature)) {
 					received = entry;
 				}
@@ -119,7 +119,7 @@ class SignatureCollection extends Component {
 		if (!received && request.orderers2sign) {
 			// When only orderer needs to sign
 			request.orderers2sign.forEach(entry => {
-				if (entry.optools_url === this.props.host_url + '/api/v1') {
+				if (Helper.urlsAreEqual(entry.optools_url, this.props.host_url)) {
 					if (!received || (received.signature && !entry.signature)) {
 						received = entry;
 					}
@@ -286,7 +286,7 @@ class SignatureCollection extends Component {
 
 	renderRequest(request) {
 		const originator = this.getOriginatorSignature(request);
-		const submitter = originator ? originator.optools_url === this.props.host_url + '/api/v1' : false;
+		const submitter = originator ? Helper.urlsAreEqual(originator.optools_url, this.props.host_url) : false;
 		const received_by = this.getReceivedBy(request);
 		const required = request.current_policy.number_of_signatures || request.orgs2sign.length;
 		const approved = request.signature_count >= required && (request.orderers2sign ? request.orderer_signature_count >= request.orderers2sign.length : true);
@@ -513,10 +513,10 @@ class SignatureCollection extends Component {
 										? this.props.recentArchiveData.visibility === 'archive'
 											? translate('archive_notification_confirmation_title_archive_plural', {
 												count: this.props.recentArchiveData.notificationCount,
-											  })
+											})
 											: translate('archive_notification_confirmation_title_inbox_plural', {
 												count: this.props.recentArchiveData.notificationCount,
-											  })
+											})
 										: this.props.recentArchiveData.visibility === 'inbox'
 											? translate('archive_notification_confirmation_title_inbox_single')
 											: translate('archive_notification_confirmation_title_archive_single')

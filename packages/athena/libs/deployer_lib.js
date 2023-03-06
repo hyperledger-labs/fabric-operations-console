@@ -2283,7 +2283,7 @@ module.exports = function (logger, ev, t) {
 					logger.warn('[cluster type] unexpected cluster type from deployer response is not a string:', typeof depRespBody, depRespBody);
 					return cb({ statusCode: 500, error: depRespBody });
 				} else {
-					type = depRespBody;
+					type = depRespBody.toLowerCase();
 					logger.debug('[cluster type] got cluster type from deployer:', typeof type, type);
 					return cb(null, { type: type, message: ev.STR.STATUS_ALL_GOOD });
 				}
@@ -2305,8 +2305,8 @@ module.exports = function (logger, ev, t) {
 				return cb({ statusCode: 500, error: 'missing cluster type in response' });
 			} else {
 
-				// overwrite the setting if this response says its openshift, otherwise leave it as is
-				if (resp.type === ev.STR.INFRA_OPENSHIFT && ev.INFRASTRUCTURE !== ev.STR.INFRA_OPENSHIFT) {
+				// overwrite the setting if its different
+				if (resp.type !== ev.INFRASTRUCTURE) {
 					logger.debug('[startup - cluster type] detected a different value for the cluster type, storing in settings doc');
 
 					t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, (err, settings_doc) => {
@@ -2326,7 +2326,7 @@ module.exports = function (logger, ev, t) {
 						}
 					});
 				} else {
-					logger.debug('[startup - cluster type] cluster type is already correct, no need to edit');
+					logger.debug('[startup - cluster type] cluster type is already correct, no need to edit. INFRASTRUCTURE:', ev.INFRASTRUCTURE);
 					return cb();
 				}
 			}
