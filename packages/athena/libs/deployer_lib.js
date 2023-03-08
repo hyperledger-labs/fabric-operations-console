@@ -2283,7 +2283,7 @@ module.exports = function (logger, ev, t) {
 					logger.warn('[cluster type] unexpected cluster type from deployer response is not a string:', typeof depRespBody, depRespBody);
 					return cb({ statusCode: 500, error: depRespBody });
 				} else {
-					type = depRespBody.toLowerCase();
+					type = depRespBody.toLowerCase().trim();
 					logger.debug('[cluster type] got cluster type from deployer:', typeof type, type);
 					return cb(null, { type: type, message: ev.STR.STATUS_ALL_GOOD });
 				}
