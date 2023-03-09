@@ -446,7 +446,7 @@ module.exports = function (logger, ev, t) {
 	// Change my own password
 	//--------------------------------------------------
 	exports.change_password = (req, cb) => {
-		if (ev.AUTH_SCHEME !== 'couchdb') {
+		if (ev.AUTH_SCHEME !== 'couchdb' && !req._dry_run) {
 			logger.error('[pass] cannot edit passwords when auth scheme is ', ev.AUTH_SCHEME);
 			return cb({ statusCode: 400, msg: 'cannot edit passwords when auth scheme is ' + ev.AUTH_SCHEME });
 		} else {
@@ -479,10 +479,10 @@ module.exports = function (logger, ev, t) {
 					// check results of the password
 					if (input_errors.length >= 1) {
 						logger.error('[pass] not a viable password. rule failures');
-						cb({ statusCode: 400, msg: input_errors, }, null);
+						return cb({ statusCode: 400, msg: input_errors, }, null);
 					} else if (req._dry_run === true) {
 						logger.info('[pass] detected dry-run password change. password would be valid.');	// dry run doesn't edit the pass or check existing
-						cb(null, { message: 'ok', details: 'password would be valid' });
+						return cb(null, { message: 'ok', details: 'password would be valid' });
 					}
 
 					// check if the current password was entered correctly
@@ -511,7 +511,7 @@ module.exports = function (logger, ev, t) {
 						// last minute escape
 						if (input_errors.length >= 1) {
 							logger.error('[pass] cannot change password. old password was wrong:', input_errors);
-							cb({ statusCode: 400, msg: input_errors, }, null);
+							return cb({ statusCode: 400, msg: input_errors, }, null);
 						} else {
 
 							// update the settings doc user password
@@ -525,7 +525,7 @@ module.exports = function (logger, ev, t) {
 							}, (err_writeDoc) => {
 								if (err_writeDoc) {
 									logger.error('[pass] cannot edit settings doc to change password:', err_writeDoc);
-									cb({ statusCode: 500, msg: 'could not update settings doc', details: err_writeDoc }, null);
+									return cb({ statusCode: 500, msg: 'could not update settings doc', details: err_writeDoc }, null);
 								} else {
 									logger.info('[pass] changing password - success');
 
@@ -534,9 +534,9 @@ module.exports = function (logger, ev, t) {
 											logger.error('error updating config settings', err);
 											return cb({ statusCode: 500, msg: 'could not update config settings' }, null);
 										} else {
-											req.session.destroy(() => {			// important to call destroy so express ask for new sid
-												cb(null, { message: 'ok', details: 'password updated' });	// all good
-											});
+											//req.session.destroy(() => {			// important to call destroy so express ask for new sid
+											return cb(null, { message: 'ok', details: 'password updated' });	// all good
+											//});
 										}
 									});
 								}
