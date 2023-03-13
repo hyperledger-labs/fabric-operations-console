@@ -465,7 +465,7 @@ module.exports = function (logger, ev, t) {
 					// validate the new password
 					const uuid = t.middleware.getUuid(req);
 					const email = find_users_email(uuid, settings_doc);
-					if (!email) {
+					if (!email && !req._dry_run) {
 						input_errors.push('user by uuid does not exist: ' + encodeURI(uuid));
 					} else {
 						req.body.desired_pass = typeof req.body.desired_pass === 'string' ? req.body.desired_pass.trim() : '';	// protect user from whitespace
