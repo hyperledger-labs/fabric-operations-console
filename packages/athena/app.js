@@ -73,7 +73,7 @@ const metric_opts = {
 	},
 	healthcheck_route: healthcheck_route
 };
-const maxSize = '25b';
+const maxSize = '25mb';
 const grpcMaxSize = '100mb';
 let load_cache_interval = null;
 let check_tls_interval = null;
