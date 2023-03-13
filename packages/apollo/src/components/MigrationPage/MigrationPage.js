@@ -471,7 +471,12 @@ class MigrationPage extends Component {
 												<p>- {translate('migration_details4')}</p>
 												<TranslateLink text="migration_details5" />
 											</div>
-
+											<p className="infoTitle">
+												{translate('mig_warnings')}
+											</p>
+											<p className="checking_text">{translate('mig_warning_txt')}</p>
+											<br/>
+											<p className="checking_text">{translate('mig_warning_txt2')}</p>
 											<p className="infoTitle">
 												{translate('what_prereq_title')}
 											</p>
