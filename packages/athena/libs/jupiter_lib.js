@@ -92,6 +92,10 @@ module.exports = function (logger, ev, t) {
 				timeout: ev.DEPLOYER_TIMEOUT,
 			};
 
+			// debug code
+			//return cb({ statusCode: 500 });
+			//return cb({ statusCode: 200, response: { url: 'http://localhost:3000' } });
+
 			t.request(options, (err, resp) => {
 				let response = resp ? resp.body : null;
 				let code = t.ot_misc.get_code(resp);
@@ -111,14 +115,6 @@ module.exports = function (logger, ev, t) {
 					return cb({ statusCode: code, response: response });
 				}
 			});
-
-			// debug code
-			/*setTimeout(() => {
-				console.log('[simulation] sim jupiter response for req:', options);
-				//return cb({ statusCode: 500, response: { message: 'hello there' } });
-				//return cb({ statusCode: 500 });
-				return cb({ statusCode: 200, response: { url: 'http://localhost:3000' } });
-			}, 2000);*/
 		}
 
 		function strip_account_prefix(account_id) {

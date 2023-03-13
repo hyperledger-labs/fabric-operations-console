@@ -1,5 +1,19 @@
 [
 	{
+		"version": "1.0.4-29",
+		"date": "13 March 2023",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			},
+			{
+				"title": "Improved logging",
+				"details": "Improved server logging around body parsing errors."
+			}
+		]
+	},
+	{
 		"version": "1.0.4-28",
 		"date": "08 March 2023",
 		"description": [
