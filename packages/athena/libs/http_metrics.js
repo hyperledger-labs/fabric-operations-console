@@ -194,6 +194,14 @@ module.exports = function (logger, t, opts) {
 	// log each http request and if enabled record metrics
 	// --------------------------------------------------
 	exports.start = (req, res, next) => {
+		return log_req(null, req, res, next);
+	};
+
+	exports.start_err = (err, req, res, next) => {
+		return log_req(err, req, res, next);
+	};
+
+	function log_req(err, req, res, next) {
 		req._start_time = Date.now();
 		req._orig_path = req.path;
 		req._orig_url = req.url;
@@ -240,7 +248,11 @@ module.exports = function (logger, t, opts) {
 				}
 			}
 		};
-		return next();
+		if (err) {
+			return next(err, req, res);		// pass the error on
+		} else {
+			return next();
+		}
 
 		// check path in request against wildcard paths - return wildcard if found
 		function find_wild_card_path(wildcard_paths) {
@@ -272,7 +284,7 @@ module.exports = function (logger, t, opts) {
 			}
 			return express_path;
 		}
-	};
+	}
 
 	// --------------------------------------------------
 	// parse app and get all express routes/methods that have a wildcard in it - preserves route order
