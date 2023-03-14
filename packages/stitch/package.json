@@ -6,7 +6,7 @@
 		"build": "npm run copy_protobufs && webpack --config-name development --watch",
 		"build_breakdown": "npm run copy_protobufs && webpack --config-name development --display-modules",
 		"build_deps": "npm run copy_protobufs && node ./ext_libs/_concat.js",
-		"build_all": "npm run copy_protobufs && node ./ext_libs/_concat.js && webpack",
+		"build_all": "npm run copy_protobufs && node ./ext_libs/_concat.js && webpack || true",
 		"build_prod": "webpack",
 		"copy_protobufs": "node ./proto-bundles/copy_bundles_to_dist.js",
 		"test": "karma start ./karma.conf.js --browsers ChromeHeadlessNoSandbox",

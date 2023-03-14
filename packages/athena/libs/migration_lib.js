@@ -1310,6 +1310,8 @@ module.exports = function (logger, ev, t) {
 						if (doc.feature_flags) {
 							doc.feature_flags.migration_enabled = false;
 							doc.feature_flags.read_only_enabled = false;
+							doc.feature_flags.mustgather_enabled = true;
+							doc.feature_flags.osnadmin_feats_enabled = true;
 						}
 
 						// create the user login for the new console
