@@ -60,6 +60,7 @@ let server_settings = {};
 let sessionMiddleware = null;
 let couch_interval = null;
 let migration_interval = null;
+let migration_timeout = null;
 const http_metrics_route = '/api/v[123]/http_metrics/:days?';
 const healthcheck_route = '/api/v3/healthcheck';
 const metric_opts = {
@@ -811,7 +812,8 @@ function setup_pillow_talk() {
 		if (doc.message_type === 'monitor_migration') {
 			logger.debug('[pillow] - received message to start monitoring ' + doc.sub_type + ' progress, interval: ', ev.MIGRATION_MON_INTER_SECS, 'secs');
 			clearInterval(migration_interval);
-			setTimeout(() => {
+			clearTimeout(migration_timeout);
+			migration_timeout = setTimeout(() => {
 				if (doc.quick) {
 					tools.migration_lib.check_migration_status(doc);			// call it now if its a quick step
 				}
@@ -826,6 +828,7 @@ function setup_pillow_talk() {
 		if (doc.message_type === 'monitor_migration_stop') {
 			logger.debug('[pillow] - received message to stop or pause monitoring migration progress');
 			clearInterval(migration_interval);
+			clearTimeout(migration_timeout);
 		}
 	});
 }

@@ -571,7 +571,7 @@ module.exports = function (logger, ev, t) {
 				};
 
 				// find if we already have a token doc (we only want to store 1, reuse the doc if its already here)
-				t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: doc._id }, (err, access_token_doc) => {
+				t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: doc._id, SKIP_CACHE: true }, (err, access_token_doc) => {
 					if (err || !access_token_doc) {
 						logger.debug('[migration] existing iam access token doc not found, will create it');
 					} else {

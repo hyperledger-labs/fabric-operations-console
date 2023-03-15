@@ -557,6 +557,7 @@ module.exports = function (logger, ev, t) {
 							message: 'migration timeout exceeded',
 						};
 						t.pillow.broadcast(msg);
+						return cb(null);
 					} else {
 						const subtype = pillow_doc ? pillow_doc.sub_type : '-';
 						logger.debug('[migration watchdog] migration is still progressing... checking step', subtype);
@@ -568,6 +569,7 @@ module.exports = function (logger, ev, t) {
 						} else if (subtype === 'console') {
 							exports.check_console(pillow_doc);
 						}
+						return cb(null);
 					}
 				}
 			});
