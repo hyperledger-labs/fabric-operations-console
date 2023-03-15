@@ -814,9 +814,9 @@ function setup_pillow_talk() {
 			clearInterval(migration_interval);
 			clearTimeout(migration_timeout);
 			migration_timeout = setTimeout(() => {
-				if (doc.quick) {
-					tools.migration_lib.check_migration_status(doc);			// call it now if its a quick step
-				}
+				//if (doc.quick) {
+				//	tools.migration_lib.check_migration_status(doc);			// call it now if its a quick step
+				//}
 
 				migration_interval = setInterval(() => {
 					tools.migration_lib.check_migration_status(doc);
