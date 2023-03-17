@@ -352,6 +352,7 @@ export default connect(
 	state => {
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;
+		newProps['authScheme'] = state['settings'] ? state['settings']['authScheme'] : null;
 		newProps['platform'] = state['settings'] ? state['settings']['platform'] : null;
 		newProps['opToolsVersion'] = state['settings'] ? state['settings']['version'] : null;
 		newProps['needsAttention'] = state['signatureCollection'] ? state['signatureCollection']['needsAttention'] : null;
