@@ -4,6 +4,7 @@
 	"license": "Apache-2.0",
 	"scripts": {
 		"start": "node server_watcher.js",
+		"audit": "better-npm-audit audit",
 		"lint": "./node_modules/.bin/eslint --no-eslintrc -c ./.eslintrc.json .",
 		"validate": "lint-openapi -s -c .validaterc.json ./json_docs/json_validation/ibp_openapi_v3.yaml",
 		"detect-secrets": "detect-secrets-hook --baseline .secrets.baseline -v",
@@ -25,6 +26,7 @@
 	},
 	"dependencies": {
 		"async": "3.2.*",
+		"better-npm-audit": "^3.7.3",
 		"bn.js": "4.11.*",
 		"body-parser": "^1.18.3",
 		"chokidar": "3.0.*",

@@ -1,0 +1,6 @@
+{
+	"1091410": {
+		"active": true,
+		"notes": "Ignored since we don't use ssrf-req-filter"
+	}
+}
