@@ -123,23 +123,22 @@ class Msps extends Component {
 
 	getButtons() {
 		let buttons = [];
-		if (ActionsHelper.canCreateComponent(this.props.userInfo)) {
-			buttons.push({
-				id: 'create_msp_definition',
-				text: 'create_msp_definition',
-				fn: this.createMSP,
-				icon: 'plus',
-			});
-		}
+		buttons.push({
+			id: 'create_msp_definition',
+			text: 'create_msp_definition',
+			fn: this.createMSP,
+			icon: 'plus',
+			disabled: !ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)
+		});
 
-		if (ActionsHelper.canImportComponent(this.props.userInfo)) {
-			buttons.push({
-				id: 'import_msp_definition_button',
-				text: 'import_msp_definition',
-				fn: this.importMSP,
-				icon: 'import',
-			});
-		}
+		buttons.push({
+			id: 'import_msp_definition_button',
+			text: 'import_msp_definition',
+			fn: this.importMSP,
+			icon: 'import',
+			disabled: !ActionsHelper.canImportComponent(this.props.userInfo, this.props.feature_flags)
+		});
+
 		return buttons;
 	}
 	render() {

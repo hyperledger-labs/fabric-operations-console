@@ -71,17 +71,21 @@ class Main extends Component {
 				const inactivity_timeouts_enabled = !!_.get(settings, 'INACTIVITY_TIMEOUTS.enabled');
 				const max_idle_time = _.get(settings, 'INACTIVITY_TIMEOUTS.max_idle_time');
 				const max_idle_warning_time = max_idle_time - Math.min(2 * 60 * 1000, Math.floor(max_idle_time * 0.2));
-
+				const in_read_only_mode = _.get(settings, 'FEATURE_FLAGS.read_only_enabled') ? true : false;
 				const enabled = inactivity_timeouts_enabled && max_idle_time >= Math.floor(30 * 1000);
 				Log.info(`Inactivity timeouts are ${enabled ? 'enabled' : 'disabled'} at ${max_idle_time} ms.`);
 				this.props.updateState(SCOPE, {
 					inactivity_timeouts_enabled: enabled,
 					max_idle_time: max_idle_time,
 					max_idle_warning_time: max_idle_warning_time,
+					in_read_only_mode: in_read_only_mode,
 				});
 			})
 			.catch(error => {
 				console.error(error);
+				this.props.updateState(SCOPE, {
+					in_read_only_mode: false,
+				});
 			});
 	}
 
@@ -139,6 +143,7 @@ class Main extends Component {
 				<div className="ibm ibp-main">
 					<TitleBar userInfo={this.props.userInfo}
 						host_url={this.props.host_url}
+						inReadOnlyMode={this.props.in_read_only_mode}
 					/>
 					<div role="main"
 						className="ibp-main-content"
@@ -167,7 +172,7 @@ class Main extends Component {
 										path="/orderer/:ordererId/:nodeId"
 										component={OrdererDetails}
 									/>
-									{/* /debug is a debugging route that exposes a link in the left pane to download the config block of the channel */ }
+									{/* /debug is a debugging route that exposes a link in the left pane to download the config block of the channel */}
 									<Route exact
 										path="/debug/orderer/:ordererId/:channelId?"
 										component={OrdererDetails}
@@ -187,7 +192,7 @@ class Main extends Component {
 										component={ChannelDetails}
 										exact
 									/>
-									{/* /debug is a debugging route that exposes a link in the left pane to download the config block of the channel */ }
+									{/* /debug is a debugging route that exposes a link in the left pane to download the config block of the channel */}
 									<Route path="/debug/peer/:peerId/channel/:channelId"
 										component={ChannelDetails}
 										exact
@@ -318,6 +323,7 @@ const dataProps = {
 	inactivity_timeouts_enabled: PropTypes.bool,
 	max_idle_time: PropTypes.number,
 	max_idle_warning_time: PropTypes.number,
+	in_read_only_mode: PropTypes.bool,
 };
 
 Main.propTypes = {

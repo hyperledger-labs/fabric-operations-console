@@ -188,7 +188,10 @@ class TitleBar extends Component {
 					className={`ibp-title-bar ${showHeaderButtons ? 'ibp-user-logged-in' : 'ibp-user-logged-out'}`}
 					aria-label={translate(productLabel)}
 				>
-					<Header aria-label={translate(productLabel)}>
+					<Header aria-label={translate(productLabel)}
+						className={this.props.inReadOnlyMode ? 'bx--header-read-only' : ''}
+						title={this.props.inReadOnlyMode ? translate('migration_completion_title') : ''}
+					>
 						<SkipToContent />
 						<HeaderName prefix=""
 							onClick={this.goHome}
@@ -197,13 +200,15 @@ class TitleBar extends Component {
 							tabIndex="0"
 						>
 							{translate(productLabel)}
+							{this.props.inReadOnlyMode && <span className="readOnlyWrap">{translate('readOnlyTxt')}</span>}
 						</HeaderName>
 						{this.props.logged && showHeaderButtons && (
 							<HeaderNavigation aria-label={translate(productLabel)}>
 								<HeaderMenuItem
 									onKeyPress={event => this.onKeyPressGetStarted(event, this.props.showWelcomeBanner)}
 									onClick={this.props.showWelcomeBanner ? this.closeWelcomeBanner : this.showWelcomeBanner}
-									className={`ibp-get-started-button ${this.props.showWelcomeBanner ? 'ibp-get-started-showing' : ''}`}
+									className={'ibp-get-started-button' + (this.props.showWelcomeBanner ? ' ibp-get-started-showing ' : '') +
+										(this.props.inReadOnlyMode ? ' bx--header__menu-item-read-only ' : '')}
 									id="ibp-get-started-menu-button"
 								>
 									{translate('get_started')}
@@ -212,7 +217,7 @@ class TitleBar extends Component {
 								<HeaderMenuItem
 									onKeyPress={event => this.goToDocs(event, translate, 'keypress')}
 									onClick={event => this.goToDocs(event, translate, 'click')}
-									className="ibp-header-menu-item"
+									className={'ibp-header-menu-item' + (this.props.inReadOnlyMode ? ' bx--header__menu-item-read-only ' : '')}
 								>
 									{translate('documentation')}
 								</HeaderMenuItem>
@@ -333,6 +338,7 @@ const dataProps = {
 	showSignatureCollection: PropTypes.bool,
 	closeWelcome: PropTypes.bool,
 	details: PropTypes.object,
+	inReadOnlyMode: PropTypes.bool,
 };
 
 TitleBar.propTypes = {
@@ -346,6 +352,7 @@ export default connect(
 	state => {
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;
+		newProps['authScheme'] = state['settings'] ? state['settings']['authScheme'] : null;
 		newProps['platform'] = state['settings'] ? state['settings']['platform'] : null;
 		newProps['opToolsVersion'] = state['settings'] ? state['settings']['version'] : null;
 		newProps['needsAttention'] = state['signatureCollection'] ? state['signatureCollection']['needsAttention'] : null;

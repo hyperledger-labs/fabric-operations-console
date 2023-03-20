@@ -128,19 +128,19 @@ Get the contents of a backup doc including attachments.
 	},
 	"doc_count": 0,
 	"dbs": {
-		"athena_components": {
+		"athena-components": {
 			"start_timestamp": 1592922855874,
 			"finish_timestamp": 1592922856926,
 			"last_sequence": "...",
 			"docs": []
 		},
-		"athena_sessions": {
+		"athena-sessions": {
 			"start_timestamp": 1592922857483,
 			"finish_timestamp": 1592922858237,
 			"last_sequence": "...",
 			"docs": []
 		},
-		"athena_system": {
+		"athena-system": {
 			"start_timestamp": 1592922858740,
 			"finish_timestamp": 1592922861261,
 			"last_sequence": "...",

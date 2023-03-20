@@ -53,6 +53,7 @@ module.exports = (logger, t, DB_CONNECTION_STRING) => {
 			'429': '429 rate limit exceeded aka too many reqs',
 			'408': '408 timeout',
 		};
+		options._quiet = true;
 		t.misc.retry_req(options, (req_e, resp) => {
 			return cb(req_e, resp);									// return error or success
 		});

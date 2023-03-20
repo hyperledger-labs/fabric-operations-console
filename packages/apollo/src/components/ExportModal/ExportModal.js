@@ -25,6 +25,7 @@ import { MspRestApi } from '../../rest/MspRestApi';
 import { NodeRestApi } from '../../rest/NodeRestApi';
 import { OrdererRestApi } from '../../rest/OrdererRestApi';
 import { PeerRestApi } from '../../rest/PeerRestApi';
+import UserSettingsRestApi from '../../rest/UserSettingsRestApi';
 import Helper from '../../utils/helper';
 import ImportantBox from '../ImportantBox/ImportantBox';
 import Logger from '../Log/Logger';
@@ -182,12 +183,27 @@ class ExportModal extends React.Component {
 		return [...identities, ...cas, ...orderers, ...peers, ...msps];
 	}
 
-	onSubmit = (who) => {
+	// figure out if the export has identities or not
+	detectIdentity(data) {
+		if (Array.isArray(data)) {
+			for (let i in data) {
+				if (data[i].type === 'identity') {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	onSubmit = async (who) => {
 		const submit_type = (who === EXPORT_IDS_NOW) ? EXPORT_IDS_NOW : 'regular';
 		Log.trace('export submit type:', submit_type);
 		return new Promise((resolve, reject) => {
 			this.getExportList(submit_type)
-				.then(list => {
+				.then(async list => {
+					if (this.detectIdentity(list) || this.props.exportIdentity) {
+						await UserSettingsRestApi.recordIdentityExport();
+					}
 					const node = {
 						name: 'data',
 						raft: list,
@@ -199,6 +215,7 @@ class ExportModal extends React.Component {
 					resolve();
 				})
 				.catch(error => {
+					console.error(error);
 					reject(error);
 				});
 		});

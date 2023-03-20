@@ -19,12 +19,14 @@
 package peer
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/common"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/peer/api"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/util"
+	"github.com/IBM-Blockchain/fabric-deployer/offering"
 	current "github.com/IBM-Blockchain/fabric-operator/api/v1beta1"
 	"github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"
@@ -181,6 +183,13 @@ func (peer *Peer) getConfig(originalCR *current.IBPPeer, response *api.Response,
 	response.Config = coreYaml
 }
 
+func updateEndpoints(ep interface{}, name, namespace, domain string) {
+	endoints := ep.(map[string]interface{})
+	endoints["api_saas"] = fmt.Sprintf("grpcs://%s-%s.%s:7051", namespace, name, domain)
+	endoints["operations_saas"] = fmt.Sprintf("https://%s-%s.%s:9443", namespace, name, domain)
+	endoints["grpcweb_saas"] = fmt.Sprintf("https://%s-%s-proxy.%s:443", namespace, name, domain)
+}
+
 func (peer *Peer) getEndpoints(originalCR *current.IBPPeer, response *api.Response, statusCode *int) {
 	connectionProfile, err := peer.GetConnectionProfile(originalCR.Name, originalCR.Namespace)
 	if err != nil {
@@ -189,7 +198,12 @@ func (peer *Peer) getEndpoints(originalCR *current.IBPPeer, response *api.Respon
 	}
 	if connectionProfile != nil {
 		if connectionProfile.Endpoints != nil {
-			response.Endpoints = connectionProfile.Endpoints
+			endPoints := connectionProfile.Endpoints
+			// Update endpoints for k8s clusters only
+			if peer.Kube.ClusterType(originalCR.Namespace) == strings.ToLower(string(offering.K8S)) {
+				updateEndpoints(endPoints, originalCR.Name, originalCR.Namespace, originalCR.Spec.Domain)
+			}
+			response.Endpoints = endPoints
 		} else {
 			peer.Logger.Warnf("Connection profile is missing fields endpoints")
 			*statusCode = common.StatusCode500

@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/IBM-Blockchain/fabric-deployer/offering"
 	"github.com/pkg/errors"
 
 	apiv1 "k8s.io/api/core/v1"
@@ -206,4 +207,15 @@ func (k *Kube) DeleteAndCreatePod(namespace string, podSpec *apiv1.Pod, label st
 	}
 
 	return pod, nil
+}
+
+func (k *Kube) ClusterType(namespace string) string {
+	var clusterType string
+	_, err := k.GetConfigMap(namespace, "openshift-service-ca.crt")
+	if err != nil {
+		clusterType = strings.ToLower(string(offering.K8S))
+	} else {
+		clusterType = strings.ToLower(string(offering.OPENSHIFT))
+	}
+	return clusterType
 }

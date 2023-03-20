@@ -59,6 +59,8 @@ const _ecdsaCurve = elliptic.curves['p256'];
 let server_settings = {};
 let sessionMiddleware = null;
 let couch_interval = null;
+let migration_interval = null;
+let migration_timeout = null;
 const http_metrics_route = '/api/v[123]/http_metrics/:days?';
 const healthcheck_route = '/api/v3/healthcheck';
 const metric_opts = {
@@ -73,6 +75,7 @@ const metric_opts = {
 	healthcheck_route: healthcheck_route
 };
 const maxSize = '25mb';
+const grpcMaxSize = '100mb';
 let load_cache_interval = null;
 let check_tls_interval = null;
 let load_cache_timer = null;
@@ -130,8 +133,8 @@ app.use(bodyParser.text({ type: 'text/html', limit: maxSize }));
 app.use(['/api/', '/ak/'], bodyParser.text({ type: 'text/plain', limit: maxSize }));
 app.use(bodyParser.json({ limit: maxSize }));
 app.use(bodyParser.urlencoded({ extended: true, limit: maxSize }));
-app.use(bodyParser.raw({ type: 'application/grpc-web+proto', limit: maxSize }));	// leave as buffer (w/o this line req.body is empty)
-app.use('/proxy/', bodyParser.raw({ type: 'multipart/form-data', limit: maxSize }));// leave as buffer (w/o this line req.body is empty)
+app.use(bodyParser.raw({ type: 'application/grpc-web+proto', limit: grpcMaxSize }));	// leave as buffer (w/o this line req.body is empty)
+app.use('/proxy/', bodyParser.raw({ type: 'multipart/form-data', limit: grpcMaxSize }));// leave as buffer (w/o this line req.body is empty)
 app.set('env', 'production');														// don't echo express errors to the client
 app.use(compression());
 look_for_couchdb(() => {
@@ -257,6 +260,7 @@ function setup_routes_and_start() {
 
 	// http_metrics needs to be one of the first app.use() instances, as soon as possible after ev.update()
 	app.use(tools.http_metrics.start);
+	app.use(tools.http_metrics.start_err);
 	app.use(setHeaders);
 
 	// --- Graceful Shutoff --- // - this route should be right after http_metrics
@@ -428,6 +432,7 @@ function setup_routes_and_start() {
 	tools.lockout = require('./libs/lockout.js')(logger, ev, tools);
 	tools.config_blocks_lib = require('./libs/config_blocks_lib.js')(logger, ev, tools);
 	tools.migration_lib = require('./libs/migration_lib.js')(logger, ev, tools);
+	tools.jupiter_lib = require('./libs/jupiter_lib.js')(logger, ev, tools);
 
 	update_settings_doc(() => {
 		setup_pillow_talk();
@@ -447,7 +452,7 @@ function setup_routes_and_start() {
 	//---------------------------------------------------------------------------------------------
 	// Most routes here (routes that need a session/user context)
 	//---------------------------------------------------------------------------------------------
-	app.get(['/', '/index.html'], (req, res, next) => {								// serve apollo's output file
+	app.get(['/', '/index.html'], tools.middleware.public, (req, res, next) => {	// serve apollo's output file
 		return serve_index(req, res, next);
 	});
 	app.get(['/package-lock.json', '/package.json', '/npm_ls_prod.txt'], tools.middleware.verify_settings_action_session, (req, res) => {
@@ -457,11 +462,18 @@ function setup_routes_and_start() {
 		res.send(tools.fs.readFileSync(tools.path.join(__dirname, req.path)));		// used to debug versions, only logged in users
 	});
 
-	// json parsing error
+	//---------------------------------------------------------------------------------------------
+	// [Handle body-parser errors]
+	//---------------------------------------------------------------------------------------------
+	// make sure to set 4 params here, the unusual one is the error param and this is to handle body parser errors
+	// otherwise they are silent/absorbed...!
 	app.use((error, req, res, next) => {
-		if (error && error.toString().includes('Unexpected token')) {				// body parser creates this error if given malformed json
-			logger.error('[body-parser.js] invalid json', error.toString());
+		if (error && error.toString().includes('Unexpected token')) {			// body parser creates this error if given malformed json
+			logger.error('[' + req._tx_id + '] bodyParser error - invalid json', error.toString());
 			return res.status(400).json({ statusCode: 400, msg: 'invalid json', details: error.toString() });
+		} else if (error) {
+			logger.error('[' + req._tx_id + '] req has error', error.toString());
+			return res.status(400).json({ statusCode: 400, msg: 'input error', details: error.toString() });
 		} else {
 			return next();
 		}
@@ -534,8 +546,8 @@ function setup_routes_and_start() {
 		return res.status(404).json({ statusCode: 404, msg: 'route not found' });
 	});
 
-	// 404 on GET reqs - have apollo handle it
-	app.get('*', function (req, res, next) {									// any other request gets caught here... apollo will deal with it
+	// all other GET reqs happen here - serve react app & have apollo handle it
+	app.get('*', tools.middleware.public, function (req, res, next) {			// any other request gets caught here... apollo will deal with it
 		const file_extensions = ['.js', '.html', '.css', '.map', '.png', '.svg', '.ico', '.jpg', '.jpeg', '.txt', '.json', '.scss', '.woff2'];
 		for (let i in file_extensions) {
 			if (req.path.indexOf(file_extensions[i]) >= 0) {					// if its a file request and we made it this far..
@@ -664,6 +676,8 @@ function update_settings_doc(cb) {
 				field.push('configtxlator_url');
 			} else if (settings_doc.cookie_name !== ev.COOKIE_NAME) {
 				field.push('cookie_name');
+			} else if (settings_doc.migration_api_key !== ev.MIGRATION_API_KEY) {
+				field.push('migration_api_key');
 			}
 
 			if (field.length === 0) {									// if no changes, skip update
@@ -681,6 +695,7 @@ function update_settings_doc(cb) {
 				settings_doc.configtxlator_url_original = ev.CONFIGTXLATOR_URL_ORIGINAL;
 				settings_doc.configtxlator_url = ev.CONFIGTXLATOR_URL;
 				settings_doc.cookie_name = ev.COOKIE_NAME;
+				settings_doc.migration_api_key = ev.MIGRATION_API_KEY;
 
 				tools.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, settings_doc, (err) => {
 					if (err) {
@@ -792,6 +807,29 @@ function setup_pillow_talk() {
 			logger.debug('[pillow] - received access log data from process id:', (doc.process_id || '?'));
 			tools.http_metrics.append_aggregated_metrics(doc);
 		}
+
+		// --- Receiving Migration Monitoring Start Doc --- //
+		if (doc.message_type === 'monitor_migration') {
+			logger.debug('[pillow] - received message to start monitoring ' + doc.sub_type + ' progress, interval: ', ev.MIGRATION_MON_INTER_SECS, 'secs');
+			clearInterval(migration_interval);
+			clearTimeout(migration_timeout);
+			migration_timeout = setTimeout(() => {
+				//if (doc.quick) {
+				//	tools.migration_lib.check_migration_status(doc);			// call it now if its a quick step
+				//}
+
+				migration_interval = setInterval(() => {
+					tools.migration_lib.check_migration_status(doc);
+				}, ev.MIGRATION_MON_INTER_SECS * 1000);							// start poll for watching the migration status
+			}, (doc.quick ? 2 : 10) * 1000 * Math.random());					// stagger the polling so multiple athenas don't ask at the exact same time
+		}
+
+		// --- Receiving Migration Monitoring Stop Doc --- //
+		if (doc.message_type === 'monitor_migration_stop') {
+			logger.debug('[pillow] - received message to stop or pause monitoring migration progress');
+			clearInterval(migration_interval);
+			clearTimeout(migration_timeout);
+		}
 	});
 }
 
@@ -835,7 +873,14 @@ function make_rate_limiter(log_msg, max_req) {
 // Debug Logs - fires on most routes
 //---------------------
 function setup_debug_log() {
-	app.use(function (req, res, next) {
+	app.use(function (err, req, res, next) {			// we have to register function with 4 inputs (has error)
+		return log_req(err, req, res, next);
+	});
+	app.use(function (req, res, next) {					// and we have to register function with 3 inputs (no error)
+		return log_req(null, req, res, next);
+	});
+
+	function log_req(err, req, res, next) {
 		req._tx_id = tools.ot_misc.buildTxId(req); 						// make an id that follows this requests journey, gets logged
 		req._orig_headers = JSON.parse(JSON.stringify(req.headers));	// store original headers, b/c we might rewrite the authorization header
 		req._notifications = [];										// create an array to store athena notifications generated by the request
@@ -849,17 +894,21 @@ function setup_debug_log() {
 			}
 		}
 
-		if (req.path.includes(healthcheck_route)) {						// avoid spamming logs with the healtcheck api
+		if (req.path.includes(healthcheck_route)) {						// avoid spamming logs with the healthcheck api
 			print_log = false;
 		}
 
 		if (print_log) {
-			const safe_url = req.path ? req.path : 'n/a';		// no longer need to encodeURI(path), automatically done
+			const safe_url = req.path ? req.path : 'n/a';				// no longer need to encodeURI(path), automatically done
 			logger.silly('--------------------------------- incoming request ---------------------------------');
 			logger.info('[' + req._tx_id + '] New ' + req.method + ' request for url:', safe_url);
 		}
-		next();
-	});
+		if (err) {
+			return next(err, req, res);									// pass the error on
+		} else {
+			return next();
+		}
+	}
 }
 
 //---------------------
@@ -1119,17 +1168,19 @@ function setup_tls_and_start_app(attempt) {
 	}
 
 	if (ev.ENFORCE_BACKEND_SSL === false) {											// allow self signed certs?
-		logger.info('[tls] Not enforcing backend http requests to have valid TLS certs!');
+		logger.info('[tls] not enforcing backend http requests to have valid TLS certs!');
 		process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 	} else {
-		logger.info('[tls] Enforcing backend http requests to have valid TLS certs');
+		logger.info('[tls] enforcing backend http requests to have valid TLS certs');
 	}
 
 	// if external url has https... try loading our tls cert/key
 	useHTTPS = tools.ot_misc.use_tls_webserver(ev);
 	if (!useHTTPS) {
+		logger.debug('[tls] webserver is not configured to use tls, using http. see setting HOST_URL to modify');
 		start_app();
 	} else {
+		logger.debug('[tls] webserver is configured to use tls, using https. see setting HOST_URL to modify');
 		logger.debug('[tls] looking for tls private key pem in:', process.env.KEY_FILE_PATH);
 		logger.debug('[tls] looking for tls cert in:', process.env.PEM_FILE_PATH);
 		if (!process.env.KEY_FILE_PATH || !process.env.PEM_FILE_PATH) {
@@ -1269,6 +1320,17 @@ function start_app() {
 			res.setHeader('Connection', 'close');
 		}
 	});
+
+	// get and store the cluster type in the settings doc on startup
+	setTimeout(() => {
+		tools.deployer.store_cluster_type((err) => {
+			if (err) {
+				setTimeout(() => {		// try again in a bit
+					tools.deployer.store_cluster_type();
+				}, 30 * 1000);
+			}
+		});
+	}, 1000 * Math.random() * 10);	// delay call on start to scatter calls from multiple athenas starting at once
 
 	start_ws_server();				// next run the webserver (httpServer must be defined first)
 	config_watcher();

@@ -775,7 +775,7 @@ class OrdererModal extends React.Component {
 			);
 		}
 		const buttons = [];
-		const saas = this.props.orderer.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo);
+		const saas = this.props.orderer.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags);
 		if (saas) {
 			if (this.props.clusterType !== 'free') {
 				buttons.push({

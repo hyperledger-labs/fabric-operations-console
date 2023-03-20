@@ -243,7 +243,7 @@ class OrganizationDetails extends Component {
 	}
 
 	buildNodeTile(node) {
-		const isPatchAvailable = !node.pending && node.isUpgradeAvailable && node.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo);
+		const isPatchAvailable = !node.pending && node.isUpgradeAvailable && node.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags);
 		const associatedMSP = node.msp_id;
 		const tls_root_certs = _.get(node, 'msp.tlsca.root_certs') || [];
 		const admin_certs = _.get(node, 'node_ou.enabled') ? [] : _.get(node, 'msp.component.admin_certs') || [];
@@ -296,6 +296,8 @@ class OrganizationDetails extends Component {
 									loading={this.props.loading}
 									groups={this.getStickySectionGroups(translate)}
 									hideRefreshCerts
+									feature_flags={this.props.feature_flags}
+									userInfo={this.props.userInfo}
 									custom={() => {
 										return (
 											<Button
@@ -429,6 +431,7 @@ OrganizationDetails.propTypes = {
 export default connect(
 	state => {
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
+		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;
 		newProps['userInfo'] = state['userInfo'] ? state['userInfo'] : null;
 		return newProps;
 	},

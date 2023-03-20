@@ -359,6 +359,11 @@
 	}
 }
 
+
+.ibp__item--button:disabled{
+	border-color: #121619 !important;
+}
+
 .ibp-item-container {
 	max-width: 100%;
 	position: relative;

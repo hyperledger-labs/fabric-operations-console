@@ -200,7 +200,7 @@ class ItemContainer extends Component {
 						</div>
 					</div>
 					<div className="ibp-title-desc-container">{this.props.containerDesc && <p>{translate(this.props.containerDesc)}</p>}</div>
-				</div>
+				</div >
 			);
 		}
 	}
@@ -466,7 +466,7 @@ class ItemContainer extends Component {
 							onClick={button.fn}
 							kind={button.kind || (i !== this.props.addItems.length - 1 ? 'secondary' : 'primary')}
 							title={!button.tooltip ? (button.title ? translate(button.title) : translate(button.text)) : ''}
-							disabled={this.props.disableAddItem || this.props.loading}
+							disabled={this.props.disableAddItem || this.props.loading || button.disabled}
 						>
 							{!button.tooltip && <span className="ibp__button-text bx--type-zeta">{translate(button.text)}</span>}
 							{button.tooltip && (
@@ -920,7 +920,7 @@ const dataProps = {
 	page: PropTypes.number,
 	view: PropTypes.string,
 	searchAttributes: PropTypes.array,
-	searchSettings: PropTypes.object,
+	searchSettings: PropTypes.array,
 	searchQuery: PropTypes.string,
 	searchResults: PropTypes.array,
 };

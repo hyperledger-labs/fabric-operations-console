@@ -20,11 +20,14 @@ package ca
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/ca/api"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/common"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/util"
+	"github.com/IBM-Blockchain/fabric-deployer/offering"
 	current "github.com/IBM-Blockchain/fabric-operator/api/v1beta1"
 	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -171,6 +174,12 @@ func (ca *CA) getConfig(originalCR *current.IBPCA, response *api.Response, statu
 	response.Configs = configs
 }
 
+func updateEndpoints(ep interface{}, name, namespace, domain string) {
+	endoints := ep.(map[string]interface{})
+	endoints["api_saas"] = fmt.Sprintf("https://%s-%s.%s:7054", namespace, name, domain)
+	endoints["operations_saas"] = fmt.Sprintf("https://%s-%s.%s:9443", namespace, name, domain)
+}
+
 func (ca *CA) getEndpoints(originalCR *current.IBPCA, response *api.Response, statusCode *int) {
 	connectionProfile, err := ca.GetConnectionProfile(originalCR.Name, originalCR.Namespace)
 	if err != nil {
@@ -179,7 +188,12 @@ func (ca *CA) getEndpoints(originalCR *current.IBPCA, response *api.Response, st
 	}
 	if connectionProfile != nil {
 		if connectionProfile.Endpoints != nil {
-			response.Endpoints = connectionProfile.Endpoints
+			endPoints := connectionProfile.Endpoints
+			// Update endpoints for k8s clusters only
+			if ca.Kube.ClusterType(originalCR.Namespace) == strings.ToLower(string(offering.K8S)) {
+				updateEndpoints(endPoints, originalCR.Name, originalCR.Namespace, originalCR.Spec.Domain)
+			}
+			response.Endpoints = endPoints
 		} else {
 			ca.Logger.Warnf("Connection profile is missing fields endpoints")
 			*statusCode = common.StatusCode500

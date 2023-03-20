@@ -52,6 +52,12 @@
 		}
 	}
 
+	.bx--header__menu-item-read-only {
+		a.bx--header__menu-item {
+			color: #fff;
+		}
+	}
+
 	.ibp-announcement-button {
 		background-color: $carbon--red-70;
 		color: $carbon--white-0;
@@ -118,6 +124,12 @@
 				}
 			}
 		}
+	}
+
+	.readOnlyWrap {
+		font-size: 0.7rem;
+		margin-left: 1rem;
+		font-weight: 400;
 	}
 }
 

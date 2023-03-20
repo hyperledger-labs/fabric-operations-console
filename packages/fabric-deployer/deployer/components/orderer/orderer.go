@@ -81,6 +81,7 @@ type Kube interface {
 	UpdateSecret(namespace, name, path string, data []byte) (*corev1.Secret, error)
 	DeleteDeployment(namespace string, depName string) error
 	GetPodsByLabel(namespace, name string) (*corev1.Pod, error)
+	ClusterType(namespace string) string
 }
 
 //go:generate counterfeiter -o mocks/ibp_client.go -fake-name IBPOperatorClient . IBPOperatorClient

@@ -39,6 +39,7 @@ import SVGs from '../Svgs/Svgs';
 import ConfigBlockApi from '../../rest/ConfigBlockApi';
 import { TrashCan20 } from '@carbon/icons-react/es';
 import JoinOSNChannelModal from '../JoinOSNChannelModal/JoinOSNChannelModal';
+import ActionsHelper from '../../utils/actionsHelper';
 
 const url = require('url');
 const SCOPE = 'channels';
@@ -628,6 +629,7 @@ class ChannelComponent extends Component {
 			id: 'join_channel',
 			text: 'join_channel',
 			fn: this.joinChannel,
+			disabled: !ActionsHelper.canEditComponent(this.props.feature_flags)
 		});
 
 		const osnadminFeatsEnabled = this.props.feature_flags ? this.props.feature_flags.osnadmin_feats_enabled : false;
@@ -648,7 +650,8 @@ class ChannelComponent extends Component {
 				text: 'create_channel',
 				fn: () => {
 					this.createChannel(null);
-				}
+				},
+				disabled: !ActionsHelper.canEditComponent(this.props.feature_flags)
 			});
 		}
 		return items;
@@ -683,7 +686,7 @@ class ChannelComponent extends Component {
 
 	render() {
 		let isCreateChannelFeatureAvailable = this.props.feature_flags ? this.props.feature_flags.create_channel_enabled : false;
-		Log.debug('Create channel feature flag is ', isCreateChannelFeatureAvailable, this.props.feature_flags);
+		//Log.debug('Create channel feature flag is ', isCreateChannelFeatureAvailable, this.props.feature_flags);
 
 		const osnadminFeatsEnabled = this.props.feature_flags ? this.props.feature_flags.osnadmin_feats_enabled : false;
 		return (

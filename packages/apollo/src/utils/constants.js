@@ -54,6 +54,7 @@ export const DEFAULT_CHANNEL_CAPABILITY = 'V1_4_2';
 export const DEFAULT_CHANNEL_CAPABILITY_OSNADMIN = 'V2_0';
 export const DEFAULT_ORDERER_CAPABILITY = 'V1_4_2';
 export const DEFAULT_ORDERER_CAPABILITY_OSNADMIN = 'V2_0';
+export const OPENSHIFT_NAME = 'openshift';
 
 export const BLOCK_HEIGHT_UPGRADE_THRESHOLD = 100 * 1000;
 export const CERTIFICATE_WARNING_DAYS = 30;
@@ -65,3 +66,15 @@ export const SECONDARY_STATUS_PERIOD = 1 * 60 * 1000;
 export const OSN_JOIN_SUCCESS = 'success';
 export const OSN_JOIN_PENDING = 'pending';
 export const OSN_JOIN_ERROR = 'failed';
+
+// migration status summary
+export const STATUS_IN_PROGRESS = 'in-progress';
+export const STATUS_DONE = 'done';
+export const STATUS_FAILED = 'failed';
+export const STATUS_TIMEOUT = 'timeout';
+
+// migration step css classes
+export const STEP_COMPLETE = '';
+export const STEP_IN_PROGRESS = 'step-active';
+export const STEP_NOT_STARTED = 'step-inactive';
+export const STEP_FAILED = 'step-error';

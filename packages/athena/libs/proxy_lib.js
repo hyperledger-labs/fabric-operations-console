@@ -270,7 +270,7 @@ module.exports = function (logger, ev, t) {
 				let code = t.ot_misc.get_code(resp);
 				let headers;
 
-				console.log('resp', resp.body ? resp.body.toString() : '-');
+				//console.log('resp', resp.body ? resp.body.toString() : '-');
 
 				if (!t.ot_misc.is_error_code(code)) {									// errors are logged in retry req()
 					logger.info('[general proxy] - successful proxy response', code);
@@ -360,6 +360,7 @@ module.exports = function (logger, ev, t) {
 			t.proxy_cache.set(key, data2cache, 2 * 60);				// expiration is in sec
 		}
 	};
+
 
 	return exports;
 };

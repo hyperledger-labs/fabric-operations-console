@@ -29,6 +29,7 @@ import ItemTileLabels from '../ItemContainerTile/ItemTileLabels/ItemTileLabels';
 import MspDeleteModal from '../MspDeleteModal/MspDeleteModal';
 import SVGs from '../Svgs/Svgs';
 import UpdateChannelMspModal from '../UpdateChannelMspModal/UpdateChannelMspModal';
+import ActionsHelper from '../../utils/actionsHelper';
 
 const SCOPE = 'ordererAdmins';
 
@@ -183,6 +184,7 @@ class OrdererAdmins extends Component {
 								fn: this.openAddMSPModal,
 								label: 'add_orderer_admin',
 								text: 'add_orderer_admin',
+								disabled: !ActionsHelper.canEditComponent(this.props.feature_flags),
 							},
 						]}
 						tileMapping={{

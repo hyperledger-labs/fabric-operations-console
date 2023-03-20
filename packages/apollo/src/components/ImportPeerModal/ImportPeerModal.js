@@ -87,6 +87,7 @@ class ImportPeerModal extends React.Component {
 			config_override: null,
 			editedConfigOverride: null,
 			version: null,
+			breaking_version: false,
 		});
 		this.getCAWithUsers();
 		if (!this.props.feature_flags.import_only_enabled) {
@@ -504,7 +505,7 @@ class ImportPeerModal extends React.Component {
 					valueSelected={this.props.location}
 					legend={translate('select_peer_type')}
 				>
-					{this.props.feature_flags.saas_enabled && ActionsHelper.canCreateComponent(this.props.userInfo) && (
+					{this.props.feature_flags.saas_enabled && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) && (
 						<RadioTile value="ibm_saas"
 							id="ibm_saas"
 							name="peer_location"
@@ -514,7 +515,7 @@ class ImportPeerModal extends React.Component {
 							<Add20 className="ibp-fill-color ibp-import-node-add-icon" />
 						</RadioTile>
 					)}
-					{ActionsHelper.canImportComponent(this.props.userInfo) && (
+					{ActionsHelper.canImportComponent(this.props.userInfo, this.props.feature_flags) && (
 						<RadioTile value={supported_peers[0]}
 							id={supported_peers[0]}
 							name="peer_location"
@@ -616,7 +617,7 @@ class ImportPeerModal extends React.Component {
 					id: `${zone}`,
 					label: zone,
 				};
-			  })
+			})
 			: [];
 		zones.unshift({
 			id: 'default',
@@ -914,6 +915,10 @@ class ImportPeerModal extends React.Component {
 							required: false,
 						},
 						{
+							name: 'migrated_from',
+							required: false,
+						},
+						{
 							name: 'type',
 							required: false,
 							validate: value => {
@@ -1124,9 +1129,25 @@ class ImportPeerModal extends React.Component {
 							required: true,
 						},
 					]}
+					onChange={(data) => {
+						const breaking = this.showBreakingWarning((data && data.version) ? data.version.version : null);
+						this.props.updateState(SCOPE, {
+							breaking_version: breaking,
+						});
+					}}
 				/>
 			</>
 		);
+	}
+
+	// show the warning label if the selected peer version breaks node.js chaincode
+	showBreakingWarning(version) {
+		const bad_versions_patterns = ['2.2.8-3', '2.2.9', '2.4.x', '2.5.x'];
+		for (let i in bad_versions_patterns) {
+			const problem = Helper.version_matches_pattern(bad_versions_patterns[i], version);
+			if (problem) { return true; }
+		}
+		return false;
 	}
 
 	isVersionValid() {
@@ -1224,6 +1245,14 @@ class ImportPeerModal extends React.Component {
 							}}
 						/>
 						{this.renderSelectVersion(translate)}
+						{this.props.breaking_version &&
+							<div>
+								<SidePanelWarning
+									title='peer_breaking_title'
+									subtitle='peer_breaking'
+								/>
+							</div>
+						}
 					</div>
 				)}
 			</WizardStep>
@@ -1645,6 +1674,7 @@ const dataProps = {
 	editedConfigOverride: PropTypes.object,
 	versions: PropTypes.array,
 	version: PropTypes.object,
+	breaking_version: PropTypes.bool,
 };
 
 ImportPeerModal.propTypes = {

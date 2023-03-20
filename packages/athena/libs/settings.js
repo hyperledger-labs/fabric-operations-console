@@ -141,7 +141,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 				settings.HOST_URL = process.env.HOST_URL || athena.host_url;			// the external url to reach this application
 				settings.REGION = process.env.REGION || athena.region;
 				settings.db_defaults = athena.db_defaults;
-				load_database_names(athena.db_defaults);							// load all db names here
+				load_database_names(athena);										// load all db names here
 				settings.ENFORCE_BACKEND_SSL = athena.enforce_backend_ssl;			// should we check certs or not, server side
 				settings.ACCESS_LIST = lowercase_key_values(athena.access_list);	// athena access list
 				settings.INITIAL_ADMIN = athena.initial_admin;
@@ -159,6 +159,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 				settings.FILE_LOGGING = athena.file_logging;						// file logging settings are here, object
 				settings.LANDING_URL = athena.landing_url || settings.HOST_URL;		// use host url if landing url dne
 				settings.DEPLOYER_URL = athena.deployer_url;						// url to use for a SaaS deployer
+				settings.JUPITER_URL = athena.jupiter_url;							// url to use for a SaaS jupiter
 				settings.SUPPORT_KEY = athena.support_key || 'ibpsupport';
 				settings.SUPPORT_PASSWORD = athena.support_password || t.misc.generateRandomString(16).toLowerCase();
 				settings.PROXY_TLS_HTTP_URL = fmt_url(athena.proxy_tls_http_url || settings.HOST_URL);	// the external url to proxy http fabric traffic to
@@ -173,7 +174,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 				settings.HTTP_STATUS_TIMEOUT = !isNaN(athena.http_status_timeout) ? Number(athena.http_status_timeout) : 1000;	// max time respond 2 status req
 				settings.HTTP_METRICS_WAIT = !isNaN(athena.http_metrics_wait) ? Number(athena.http_metrics_wait) : 3000;
 				settings.ENVIRONMENT = athena.environment;
-				settings.INFRASTRUCTURE = athena.infrastructure;
+				settings.INFRASTRUCTURE = athena.infrastructure || '';
 				settings.TRANSACTION_VISIBILITY = athena.transaction_visibility;											// brian wanted this to toggle tx
 				settings.IAM_API_KEY = process.env.IAM_API_KEY || athena.iam_api_key;										// ibp's api key for IAM
 				settings.BACKEND_ADDRESS_TIMEOUT_MS = !isNaN(athena.backend_address_timeout_ms) ? Number(athena.backend_address_timeout_ms) : 3000;
@@ -215,11 +216,16 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 				settings.THE_DEFAULT_RESOURCES_MAP = athena.the_default_resources_map;
 				settings.HTTP_METRICS_ENABLED = athena.http_metrics_enabled;
 				settings.SEGMENT_WRITE_KEY = athena.segment_write_key;
-				settings.ACTIVITY_TRACKER_PATH = athena.activity_tracker_path;
+				settings.ACTIVITY_TRACKER_PATH = null; //athena.activity_tracker_path;
 				settings.MAX_COMPONENTS = !isNaN(athena.max_components) ? Number(athena.max_components) : 75;
 				settings.IMPORT_ONLY = athena.feature_flags ? athena.feature_flags.import_only_enabled : false;
 				settings.READ_ONLY = athena.feature_flags ? athena.feature_flags.read_only_enabled : false;
 				settings.ALLOW_DEFAULT_PASSWORD = athena.allow_default_password ? true : false;
+				settings.MIGRATED_CONSOLE_URL = athena.migrated_console_url || '';
+				settings.MIGRATION_API_KEY = athena.migration_api_key || t.misc.generateRandomString(64).toLowerCase();
+				settings.MIGRATION_MIN_VERSIONS = athena.migration_min_versions || {};
+				settings.MIGRATION_MON_INTER_SECS = !isNaN(athena.migration_mon_inter_secs) ? Number(athena.migration_mon_inter_secs) : 25;
+				settings.MIGRATION_STATUS = athena.migration_status;
 
 				// allow integration test to be ran from the provided UI
 				settings.integration_test_enabled = athena.integration_test_enabled ? athena.integration_test_enabled : false;
@@ -325,7 +331,9 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 					ARCHIVED_VIEW: 'active_notifications_by_ts',
 					ALL_NOTICES_VIEW: 'all_notifications_by_ts',
 					LOCATION_IBP_SAAS: 'ibm_saas',						// indicates this node was created via our deployer from a IBP saas OpTools
-					INFRA_IBP_SAAS: 'ibmcloud',							// indicates that this siid is being hosted by the IBP saas service
+					INFRA_IBP_SAAS: 'ibmcloud',							// indicates that deployed components will be hosted by IBM cloud using IKS
+					INFRA_OPENSHIFT: 'openshift',						// indicates that deployed components will be hosted by redhat openshift
+					INFRA_K8S: 'k8s',									// indicates that deployed components will be hosted by generic kubernetes
 					PAID_K8S: 'paid',
 					GET_ALL_COMPONENTS_KEY: 'GET /api/vx/instance/iid/type/all',
 					GET_FAB_VERSIONS_KEY: 'GET /api/vx/instance/iid/type/all/versions',
@@ -354,7 +362,10 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 					PASS_IS_DEFAULT: 'default',
 					STATUS_IN_PROGRESS: 'in-progress',
 					STATUS_DONE: 'done',
+					STATUS_TIMEOUT: 'timeout',
+					STATUS_FAILED: 'failed',
 					WALLET_MIGRATION: 'wallet_migration',
+					MIGRATION_KEY: 'migration_api_key',
 				};
 
 				// manager - must match what is defined in RMC (this section ONLY applies to stand alone)
@@ -482,7 +493,9 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 
 					for (let ver in settings.OPEN_API_DOCS) {
 						if (settings.OPEN_API_DOCS[ver] && settings.OPEN_API_DOCS[ver].info && settings.OPEN_API_DOCS[ver].info.version) {
-							logger.debug('[settings] using open api (swagger) file version:', settings.OPEN_API_DOCS[ver].info.version);
+							if (options && options.exitIfError) {
+								logger.debug('[settings] using open api (swagger) file version:', settings.OPEN_API_DOCS[ver].info.version);
+							}
 						}
 					}
 				}
@@ -550,12 +563,26 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 		}
 
 		// load each database name
-		function load_database_names(dbs) {
+		// this sets setting fields: DB_COMPONENTS, & DB_SESSIONS
+		function load_database_names(settings_doc) {
+			const dbs = settings_doc.db_defaults;
+			const db_custom_names = settings_doc.db_custom_names;
 			if (dbs) {
-				for (let db_const in dbs) {
-					if (dbs[db_const].name) {			// set it if if a db name is set
-						settings[db_const] = dbs[db_const].name;
-						db_names.push(dbs[db_const].name);
+				for (let db_name in dbs) {
+					if (db_name !== 'DB_SYSTEM') {				// the system db should be left driven by process.env.DB_SYSTEM
+						if (dbs[db_name].name) {
+							let name2use = dbs[db_name].name;
+							if (db_custom_names && db_custom_names[db_name] && typeof db_custom_names[db_name] === 'string') {
+								name2use = db_custom_names[db_name];
+							}
+
+							if (settings[db_name] !== name2use) {	// if its changed, log it
+								logger.debug('[settings] custom db name:', db_name, '->', db_custom_names[db_name]);
+							}
+
+							settings[db_name] = name2use;
+							db_names.push(name2use);
+						}
 					}
 				}
 			}
@@ -699,7 +726,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 			logger.error('---------------------------------------------------------\n');
 			return cb({ error: 'missing vars', details: errors });
 		} else {
-			logger.info('[settings] final env variables look good!');
+			//logger.info('[settings] final env variables look good!');
 			return cb(null);
 		}
 	}

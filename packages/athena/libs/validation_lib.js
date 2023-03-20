@@ -770,22 +770,25 @@ module.exports = (logger, ev, t, opts) => {
 				logger.warn('[validate] skipping breaking version upgrade checks b/c "ignore_warnings" is true');
 			} else {
 				if (req._component_doc && req._component_doc.version) {
-					for (let from_version in body_spec['x-validate_breaking_version_upgrade']) {	// iter on each rule
-						const invalid_upgrade_version = body_spec['x-validate_breaking_version_upgrade'][from_version];
-						const comps_version_atm = req._component_doc.version;
-						const desired_version = input;
+					for (let from_version in body_spec['x-validate_breaking_version_upgrade']) {	// iter on each outer rule
+						const invalid_versions = body_spec['x-validate_breaking_version_upgrade'][from_version];
+						for (let z in invalid_versions) {											// iter on each sub rule
+							const invalid_upgrade_version = invalid_versions[z];
+							const comps_version_atm = req._component_doc.version;
+							const desired_version = input;
 
-						// first check if the version in use matches an incompatible upgrade rule
-						if (t.misc.version_matches_pattern(from_version, comps_version_atm)) {
+							// first check if the version in use matches an incompatible upgrade rule
+							if (t.misc.version_matches_pattern(from_version, comps_version_atm)) {
 
-							// next check if the desired version matches the incompatible upgrade rule
-							if (t.misc.version_matches_pattern(invalid_upgrade_version, desired_version)) {
-								const symbols = {
-									'$PROPERTY_NAME': path2field.join('.'),
-									'$VALUE': from_version,
-									'$VALUE2': invalid_upgrade_version,
-								};
-								errors.push({ key: 'invalid_fabric_upgrade', symbols: symbols });
+								// next check if the desired version matches the incompatible upgrade rule
+								if (t.misc.version_matches_pattern(invalid_upgrade_version, desired_version)) {
+									const symbols = {
+										'$PROPERTY_NAME': path2field.join('.'),
+										'$VALUE': from_version,
+										'$VALUE2': invalid_upgrade_version,
+									};
+									errors.push({ key: 'invalid_fabric_upgrade', symbols: symbols });
+								}
 							}
 						}
 					}

@@ -917,7 +917,10 @@ module.exports = function (logger, t) {
 			// if provided will use this function to calculate the timeout of the next retry, ms
 			_calc_retry_timeout: (options, resp) => {
 				return Number(options.timeout) + 10000 * (options._attempt + 1);
-			}
+			},
+
+			// if true will not print debug logs
+			_quiet: true || false,
 		}
 
 	*/
@@ -937,10 +940,15 @@ module.exports = function (logger, t) {
 		if (options.url) { options.url = encodeURI(options.url); }						// pen test require the encodeURI usage here
 		if (options.uri) { options.url = encodeURI(options.uri); }
 
+		//options._max_attempts = 1;		// dsh todo
+		//options.timeout = 2000;			// dsh todo
+
 		// --- Send the Request --- //
 		const redacted_url = exports.redact_basic_auth(options.baseUrl ? (options.baseUrl + options.url) : options.url);
-		logger.debug('[' + options._name + ' ' + options._tx_id + '] sending ' + options.method + ' outgoing-req-timeout:',
-			exports.friendly_ms(options.timeout), 'url:', redacted_url, options._attempt);
+		if (!options._quiet) {
+			logger.debug('[' + options._name + ' ' + options._tx_id + '] sending ' + options.method + ' outgoing-req-timeout:',
+				exports.friendly_ms(options.timeout), 'url:', redacted_url, options._attempt);
+		}
 		t.request(options, (req_e, resp) => {
 			if (req_e) {																// detect timeout request error
 				logger.error('[' + options._name + ' ' + options._tx_id + '] unable to reach destination. error:', req_e);
@@ -1222,11 +1230,15 @@ module.exports = function (logger, t) {
 	// -----------------------------------------------------
 	// make a string that is safe to log (str came from user input)
 	// -----------------------------------------------------
-	exports.safe_str = (input) => {
-		const regex_id = new RegExp(/[^a-zA-Z0-9-_*!@$%&()\s]/g);		// this might be overly restrictive but its a place to start
+	exports.safe_str = (input, unlimitedLength) => {
+		const regex_id = new RegExp(/[^a-zA-Z0-9-_*!@$%&()\s".:]/g);			// this might be overly restrictive but its a place to start
 		try {
 			if (typeof input === 'string') {
-				return input.replace(regex_id, '').trim().substring(0, 32);		// remove scary letters and limit length
+				if (unlimitedLength) {
+					return input.replace(regex_id, '').trim();					// remove scary letters
+				} else {
+					return input.replace(regex_id, '').trim().substring(0, 32);	// remove scary letters and limit length
+				}
 			}
 		} catch (e) { }
 		return '[-string redacted-]';
@@ -1268,10 +1280,20 @@ module.exports = function (logger, t) {
 	// -----------------------------------------------------
 	// decide if version b is higher than version a - example: B=0.2.3, A=0.1.9 would return true
 	// -----------------------------------------------------
-	exports.is_version_b_greater_than_a = (version_a, version_b) => {
+	exports.is_version_b_greater_than_a = (version_a, version_b, equal_ok) => {
+		version_a = (typeof version_a === 'number') ? version_a.toString() : version_a;
+		version_b = (typeof version_b === 'number') ? version_b.toString() : version_b;
+		version_a = (typeof version_a === 'string') ? version_a.trim() : null;
+		version_b = (typeof version_b === 'string') ? version_b.trim() : null;
+		if (version_a === null || version_b == null) {
+			return null;
+		}
+
+		version_a = (version_a[0].toLowerCase() === 'v') ? version_a.substring(1) : version_a;			// strip of leading V, like v1.4.9
+		version_b = (version_b[0].toLowerCase() === 'v') ? version_b.substring(1) : version_b;			// strip of leading V, like v1.4.9
+
 		let version_parts_a = version_a ? version_a.trim().replace(/-/g, '.').split('.') : null;		// treat 0.2.4-1 like 0.2.4.1
 		let version_parts_b = version_b ? version_b.trim().replace(/-/g, '.').split('.') : null;
-
 		if (version_parts_a === null || version_parts_b == null) {
 			return null;
 		}
@@ -1285,6 +1307,9 @@ module.exports = function (logger, t) {
 				return true;
 			} else if (version_parts_b[i] === version_parts_a[i]) {
 				// equal numbers at this level... keep going
+				if (Number(i) === version_parts_a.length - 1) {		// if we are on the last digit then these are equal
+					return equal_ok ? true : false;
+				}
 			} else {
 				break;
 			}
@@ -1315,8 +1340,10 @@ module.exports = function (logger, t) {
 	// decide if version strings with wildcards match with the version - example: pattern="1.4.x", value="1.4.9" would return true
 	// -----------------------------------------------------
 	exports.version_matches_pattern = (pattern, value) => {
-		pattern = (typeof pattern === 'string') ? pattern : '';											// safer...
-		value = (typeof value === 'string') ? value : '';
+		pattern = (typeof pattern === 'number') ? pattern.toString() : pattern;							// safer...
+		value = (typeof value === 'number') ? value.toString() : value;
+		pattern = (typeof pattern === 'string') ? pattern.trim() : '';									// safer...
+		value = (typeof value === 'string') ? value.trim() : '';
 
 		pattern = (pattern[0].toLowerCase() === 'v') ? pattern.substring(1) : pattern;					// strip of leading V, like v1.4.9
 		value = (value[0].toLowerCase() === 'v') ? value.substring(1) : value;
@@ -1328,15 +1355,15 @@ module.exports = function (logger, t) {
 			return null;
 		}
 
-		// make them the same length, defaults to 0
-		for (; version_parts_pattern.length < version_parts_val.length;) { version_parts_pattern.push('0'); }
+		// make them the same length
+		for (; version_parts_pattern.length < version_parts_val.length;) { version_parts_pattern.push('x'); }
 		for (; version_parts_val.length < version_parts_pattern.length;) { version_parts_val.push('0'); }
 
 		// iter on each digit
 		for (let i in version_parts_pattern) {
-			if (version_parts_pattern[i] === 'x') {		// if we made it to the 'x' then its a match
+			if (version_parts_pattern[i] === 'x') {										// if we made it to the 'x' then its a match
 				return true;
-			} else if (version_parts_pattern[i] !== version_parts_val[i]) {	// if these digits don't match, the versions do not match
+			} else if (version_parts_pattern[i] !== version_parts_val[i]) {				// if these digits don't match, the versions do not match
 				return false;
 			} else {
 				// if these digits match, move to the next digit

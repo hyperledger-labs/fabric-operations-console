@@ -105,6 +105,7 @@ export class JsonInput extends React.Component {
 
 	checkDefinition(json) {
 		// todo why can't we just pass this component a validation function?  What if I need something this definition format doesn't provide, like alternative sets of params?
+		// whoever wrote ^^, i agree! this flow bites
 		const check = {
 			key: json.key ? json.key : 'key_' + this.nextKey++,
 			error: null,
@@ -222,6 +223,8 @@ export class JsonInput extends React.Component {
 		return check;
 	}
 
+	// when used with the JsonInput component, this will parse the json file and set "this.props.data" to only
+	// have fields defined in the <JsonInput>'s "definition" field
 	onFileUpload = event => {
 		const all = [];
 		for (let i = 0; i < event.target.files.length; i++) {
@@ -245,6 +248,7 @@ export class JsonInput extends React.Component {
 						const raft = {};
 						result.json.forEach(entry => {
 							if (entry.cluster_id) {
+								// this only returns fields from "entry" that are defined in the react component's "definition" variable
 								const check = this.checkDefinition(entry);
 								if (raft[entry.cluster_id]) {
 									raft[entry.cluster_id].raft.push(entry);
@@ -260,10 +264,12 @@ export class JsonInput extends React.Component {
 									data.push(raft[entry.cluster_id]);
 								}
 							} else {
+								// this only returns fields from "entry" that are defined in the react component's "definition" variable
 								data.push(this.checkDefinition(entry));
 							}
 						});
 					} else {
+						/// this only returns fields from "entry" that are defined in the react component's "definition" variable
 						data.push(this.checkDefinition(result.json));
 					}
 				}

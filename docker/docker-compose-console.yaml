@@ -15,7 +15,7 @@ services:
         environment:
             - CONFIGURE_FILE=./env/config.yaml
             - DB_CONNECTION_STRING=http://admin:password@console-couchdb:5984
-            - DB_SYSTEM=athena_system
+            - DB_SYSTEM=athena-system
         networks:
             - test
 

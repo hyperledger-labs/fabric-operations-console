@@ -89,6 +89,9 @@ export class SidePanel extends React.Component {
 					${this.props.verticalPanel ? 'ibp-vertical-panel-button-container' : ''}
 				`}
 				>
+					{this.props.warningTxt &&
+						<p className='warnText'>{this.props.warningTxt}</p>
+					}
 					{this.props.buttons.map(button => {
 						return (
 							<button
@@ -143,23 +146,21 @@ export class SidePanel extends React.Component {
 		if (this.props.isOpening) {
 			className =
 				className +
-				`${
-					this.props.largePanel
-						? ' side__panel--large--transitioning--in'
-						: this.props.verticalPanel
-							? ' vertical__panel--transitioning--in'
-							: ' side__panel--transitioning--in'
+				`${this.props.largePanel
+					? ' side__panel--large--transitioning--in'
+					: this.props.verticalPanel
+						? ' vertical__panel--transitioning--in'
+						: ' side__panel--transitioning--in'
 				}`;
 		}
 		if (this.props.isClosing) {
 			className =
 				className +
-				`${
-					this.props.largePanel
-						? ' side__panel--large--transitioning--out'
-						: this.props.verticalPanel
-							? ' vertical__panel--transitioning--out'
-							: ' side__panel--transitioning--out'
+				`${this.props.largePanel
+					? ' side__panel--large--transitioning--out'
+					: this.props.verticalPanel
+						? ' vertical__panel--transitioning--out'
+						: ' side__panel--transitioning--out'
 				}`;
 		}
 		if (this.props.error) {
@@ -252,6 +253,7 @@ const dataProps = {
 	showRequests: PropTypes.bool,
 	clickAway: PropTypes.bool,
 	hideClose: PropTypes.bool,
+	warningTxt: PropTypes.string,
 };
 
 SidePanel.propTypes = {

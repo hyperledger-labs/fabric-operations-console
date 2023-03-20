@@ -34,7 +34,7 @@ module.exports = function (logger, ev, t) {
 	//----------------------------------------------------------------------------------------------------------------------
 
 	// create a middleware that only tracks the api, no auth
-	exports.public = t.event_tracker.trackViaIntercept;
+	exports.public = [storeIAMTokens, eTrack];
 
 	// create saas components
 	exports.verify_create_action_session = [eTrack, blockReadOnlyMode, isDeployerConfigured, needCreateAction, checkAuthentication, permitAction];
@@ -53,10 +53,14 @@ module.exports = function (logger, ev, t) {
 	exports.verify_remove_action_ak = [eTrack, blockReadOnlyMode, needRemoveAction, allowAkToDoAction];
 
 	// manage a component
-	exports.verify_manage_action_session = [eTrack, needManageAction, checkAuthentication, permitAction];
-	exports.verify_manage_action_ak = [eTrack, needManageAction, allowAkToDoAction];
+	exports.verify_manage_action_session = [eTrack, blockReadOnlyMode, needManageAction, checkAuthentication, permitAction];
+	exports.verify_manage_action_ak = [eTrack, blockReadOnlyMode, needManageAction, allowAkToDoAction];
 	exports.verify_manage_action_session_dep = [eTrack, blockReadOnlyMode, isDeployerConfigured, needManageAction, checkAuthentication, permitAction];
 	exports.verify_manage_action_ak_dep = [eTrack, blockReadOnlyMode, isDeployerConfigured, needManageAction, allowAkToDoAction];
+
+	// manage migration (these are allowed during read only mode)
+	exports.verify_migration_action_session_dep = [eTrack, isDeployerConfigured, needManageAction, checkAuthentication, permitAction];
+	exports.verify_migration_action_ak_dep = [eTrack, isDeployerConfigured, needManageAction, allowAkToDoAction];
 
 	// restart athena
 	exports.verify_restart_action_session = [eTrack, needRestartAction, checkAuthentication, permitAction];
@@ -297,7 +301,19 @@ module.exports = function (logger, ev, t) {
 					}
 				}
 
-				// [2] - check if using user's basic auth
+				// [2] - check if using migration key
+				else if (user.name === ev.STR.MIGRATION_KEY) {
+					if (!validMigrationKey(req)) {									// check the migration key
+						return exports.unauthorized(res);
+					} else if (!validMigrationKeyAction(req)) {						// check the support key
+						return exports.forbidden(req, res);
+					} else {
+						logger.debug('[middle] valid basic auth key/secret [3]');
+						return cb();
+					}
+				}
+
+				// [3] - check if using user's basic auth
 				else if (ev.ACCESS_LIST && ev.ACCESS_LIST[lc_username]) {
 					if (!validUserBasicAuth(lc_username, user.pass)) {
 						return exports.unauthorized(res);
@@ -349,12 +365,46 @@ module.exports = function (logger, ev, t) {
 			}
 		}
 
+		// Check basic authorization username/password for the migration api key
+		function validMigrationKey(req) {
+			const user = parsed_auth;
+			if (user && user.name && user.pass && user.name === ev.STR.MIGRATION_KEY && user.pass === ev.MIGRATION_API_KEY) {
+				return true;
+			} else {
+				logger.error('[middle] invalid migration api key:', req.actions);
+				return false;
+			}
+		}
+
 		// Check support api key has permissions to do these actions/roles
 		function validSupportKeyAction(req) {
 			let valid = true;
 			const lc_actions = [				// list of actions the support key can do
 				ev.STR.RESTART_ACTION, ev.STR.LOGS_ACTION, ev.STR.VIEW_ACTION, ev.STR.SETTINGS_ACTION,
 				ev.STR.NOTIFICATIONS_ACTION, ev.STR.SIG_COLLECTION_ACTION, ev.STR.C_MANAGE_ACTION
+			];
+			for (let i in req.actions) {
+				if (typeof req.actions[i] === 'string') {
+					if (!lc_actions.includes(req.actions[i].toLowerCase())) {
+						valid = false;
+						break;
+					}
+				}
+			}
+
+			if (!valid) {						// not a permitted action for user
+				logger.error('[middle] invalid action for api key, desired actions:', req.actions);
+				return false;
+			} else {
+				return true;
+			}
+		}
+
+		// Check support api key has permissions to do these actions/roles
+		function validMigrationKeyAction(req) {
+			let valid = true;
+			const lc_actions = [				// list of actions the migration key can do
+				ev.STR.VIEW_ACTION, ev.STR.SETTINGS_ACTION
 			];
 			for (let i in req.actions) {
 				if (typeof req.actions[i] === 'string') {
@@ -495,6 +545,51 @@ module.exports = function (logger, ev, t) {
 			return next();
 		} else {
 			return permitAction(req, res, next);
+		}
+	}
+
+	// --------------------------------------------------
+	// detect iam tokens for migration and store them - middleware
+	// --------------------------------------------------
+	function storeIAMTokens(req, res, next) {
+		if (!req || !req.query || !req.query.accessToken) {
+			return next();																// return to next middleware
+		} else {
+			logger.debug('[migration] found iam access token in request');
+
+			const parsed_access_token = t.permissions_lib.parse_ibp_token(req.query.accessToken);
+			if (!parsed_access_token) {
+				return next();															// return to next middleware
+			} else {
+				const doc = {
+					_id: parsed_access_token.iam_id,
+					type: 'iam_token',
+					timestamp: Date.now(),
+					accessToken: req.query.accessToken,
+					refreshToken: req.query.refreshToken,
+					parsedMetaData: parsed_access_token
+				};
+
+				// find if we already have a token doc (we only want to store 1, reuse the doc if its already here)
+				t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: doc._id, SKIP_CACHE: true }, (err, access_token_doc) => {
+					if (err || !access_token_doc) {
+						logger.debug('[migration] existing iam access token doc not found, will create it');
+					} else {
+						logger.debug('[migration] existing iam access token doc is found, will overwrite it');
+						doc._rev = access_token_doc._rev;											// copy rev so we can overwrite
+					}
+
+					// create new doc or edit existing doc
+					t.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, t.misc.sortKeys(doc), (err, wrote_doc) => {
+						if (err) {
+							logger.error('[migration] - could not write iam access token doc', err);
+						} else {
+							logger.debug('[migration] - created/edited iam access token doc', wrote_doc._id);
+						}
+						return next();																// always return to next middleware
+					});
+				});
+			}
 		}
 	}
 

@@ -18,7 +18,7 @@
 	"allow_default_password": false,
 	"auth_scheme": "initial",
 	"backend_address_timeout_ms": 3000,
-	"ca_proxy_timeout": 10000,
+	"ca_proxy_timeout": 5000,
 	"cluster_data": {
 		"type": null
 	},
@@ -33,7 +33,11 @@
 		"instance_id": "-"
 	},
 	"crn_string": "-",
-	"db_custom_names": null,
+	"db_custom_names": {
+		"DB_COMPONENTS": "athena-components",
+		"DB_SESSIONS": "athena-sessions",
+		"DB_SYSTEM": "athena-system"
+	},
 	"db_defaults": {
 		"DB_COMPONENTS": {
 			"description": "db for peers/cas/orderers/collections/msps docs",
@@ -110,7 +114,8 @@
 		"import_only_enabled": true,
 		"mustgather_enabled": false,
 		"read_only_enabled": false,
-		"osnadmin_feats_enabled": true
+		"osnadmin_feats_enabled": true,
+		"migration_enabled": false
 	},
 	"file_logging": {
 		"client": {
@@ -167,6 +172,37 @@
 	"max_components": 75,
 	"memory_cache_enabled": true,
 	"message_type": "settings_doc_update",
+	"migration_api_key": null,
+	"migrated_console_url": null,
+	"migration_min_versions": {
+		"fabric-ca": "1.5.5",
+		"fabric-peer": [
+			"2.2.10",
+			"2.4.8"
+		],
+		"fabric-orderer": [
+			"2.2.10",
+			"2.4.8"
+		],
+		"kubernetes": "1.23",
+		"openshift": "4.9"
+	},
+	"migration_mon_inter_secs": 15,
+	"migration_status": {
+		"deadline": 1690844400000,
+		"timeout_min": 15,
+		"attempt": 0,
+		"ingress_start_ts": null,
+		"ingress_finish_ts": null,
+		"comp_start_ts": null,
+		"comp_finish_ts": null,
+		"console_start_ts": null,
+		"console_finish_ts": null,
+		"db_start_ts": null,
+		"db_finish_ts": null,
+		"error_msg": "",
+		"migration_complete": false
+	},
 	"proxy_tls_fabric_reqs": "always",
 	"proxy_tls_http_url": null,
 	"proxy_tls_ws_url": null,
@@ -272,7 +308,5 @@
 		}
 	},
 	"trust_unknown_certs": false,
-	"type": "settings",
-	"migrated_console_url": null,
-	"migration_link_apikey": "open"
+	"type": "settings"
 }

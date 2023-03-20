@@ -446,7 +446,7 @@ module.exports = function (logger, ev, t) {
 	// Change my own password
 	//--------------------------------------------------
 	exports.change_password = (req, cb) => {
-		if (ev.AUTH_SCHEME !== 'couchdb') {
+		if (ev.AUTH_SCHEME !== 'couchdb' && !req._dry_run) {
 			logger.error('[pass] cannot edit passwords when auth scheme is ', ev.AUTH_SCHEME);
 			return cb({ statusCode: 400, msg: 'cannot edit passwords when auth scheme is ' + ev.AUTH_SCHEME });
 		} else {
@@ -465,7 +465,7 @@ module.exports = function (logger, ev, t) {
 					// validate the new password
 					const uuid = t.middleware.getUuid(req);
 					const email = find_users_email(uuid, settings_doc);
-					if (!email) {
+					if (!email && !req._dry_run) {
 						input_errors.push('user by uuid does not exist: ' + encodeURI(uuid));
 					} else {
 						req.body.desired_pass = typeof req.body.desired_pass === 'string' ? req.body.desired_pass.trim() : '';	// protect user from whitespace
@@ -478,11 +478,11 @@ module.exports = function (logger, ev, t) {
 
 					// check results of the password
 					if (input_errors.length >= 1) {
-						logger.error('[pass] cannot change password. input errors:', input_errors);
-						cb({ statusCode: 400, msg: input_errors, }, null);
+						logger.error('[pass] not a viable password. rule failures');
+						return cb({ statusCode: 400, msg: input_errors, }, null);
 					} else if (req._dry_run === true) {
 						logger.info('[pass] detected dry-run password change. password would be valid.');	// dry run doesn't edit the pass or check existing
-						cb(null, { message: 'ok', details: 'password would be valid' });
+						return cb(null, { message: 'ok', details: 'password would be valid' });
 					}
 
 					// check if the current password was entered correctly
@@ -511,7 +511,7 @@ module.exports = function (logger, ev, t) {
 						// last minute escape
 						if (input_errors.length >= 1) {
 							logger.error('[pass] cannot change password. old password was wrong:', input_errors);
-							cb({ statusCode: 400, msg: input_errors, }, null);
+							return cb({ statusCode: 400, msg: input_errors, }, null);
 						} else {
 
 							// update the settings doc user password
@@ -525,7 +525,7 @@ module.exports = function (logger, ev, t) {
 							}, (err_writeDoc) => {
 								if (err_writeDoc) {
 									logger.error('[pass] cannot edit settings doc to change password:', err_writeDoc);
-									cb({ statusCode: 500, msg: 'could not update settings doc', details: err_writeDoc }, null);
+									return cb({ statusCode: 500, msg: 'could not update settings doc', details: err_writeDoc }, null);
 								} else {
 									logger.info('[pass] changing password - success');
 
@@ -534,9 +534,9 @@ module.exports = function (logger, ev, t) {
 											logger.error('error updating config settings', err);
 											return cb({ statusCode: 500, msg: 'could not update config settings' }, null);
 										} else {
-											req.session.destroy(() => {			// important to call destroy so express ask for new sid
-												cb(null, { message: 'ok', details: 'password updated' });	// all good
-											});
+											//req.session.destroy(() => {			// important to call destroy so express ask for new sid
+											return cb(null, { message: 'ok', details: 'password updated' });	// all good
+											//});
 										}
 									});
 								}
@@ -843,6 +843,97 @@ module.exports = function (logger, ev, t) {
 	};
 
 	// dsh todo - auto remove expired docs
+
+	//--------------------------------------------------
+	// Get a valid iam token doc for current user (an expired token will not be returned)
+	//--------------------------------------------------
+	exports.get_valid_iam_token_doc = (req, cb) => {
+		const session_user_id = t.middleware.getUuid(req);
+		if (!session_user_id) {
+			logger.error('[migration] unable to get iam token b/c unable to find uuid for user in session');
+			return cb({ message: 'unable to get an iam token b/c unable to find the uuid for user in session' });
+		} else {
+
+			// first get the doc
+			t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: session_user_id, SKIP_CACHE: true }, (err, access_token_doc) => {
+				if (err || !access_token_doc) {
+					logger.warn('[migration] could not get IAM access token doc for id:', session_user_id, err);
+
+					// backup method - try using a view and grab the first iam token (this is only for dev!)
+					const opts = {
+						db_name: ev.DB_SYSTEM,
+						_id: '_design/athena-v1',
+						view: '_doc_types',
+						query: t.misc.formatObjAsQueryParams({ include_docs: true, key: 'iam_token', group: false, reduce: false }),
+					};
+					t.couch_lib.getDesignDocView(opts, (err2, resp) => {
+						let doc = null;
+						if (resp && resp.rows && resp.rows[0]) {
+							doc = resp.rows[0].doc;
+						}
+
+						if (doc) {
+							logger.debug('[migration] was able to get IAM access token from backup method');
+							return proceed(doc);
+						} else {
+							logger.error('[migration] could not get IAM access token via view');
+							return cb(err);
+						}
+					});
+				} else {
+					return proceed(access_token_doc);
+				}
+			});
+		}
+
+		function proceed(access_token_doc) {
+			// parse the access token
+			let found_valid_token = false;
+			const parsed_access_token = exports.parse_ibp_token(access_token_doc.accessToken);
+			if (!parsed_access_token) {
+				logger.error('[migration] unable to parse meta data of IAM access token for id:', session_user_id);
+			} else {
+				if (access_token_doc.testing === true) {								// a debug token will allow us to return an old token for testing
+					found_valid_token = true;
+				}
+
+				// check if its expired
+				const time_left_ms = (parsed_access_token.exp * 1000) - Date.now();		// exp is in seconds, make it ms
+				if (time_left_ms < 0) {
+					logger.error('[migration] IAM access token has expired for id:', session_user_id, Date.now(), parsed_access_token.exp);
+				} else {
+					found_valid_token = true;
+					logger.debug('[migration] IAM access token is still valid for id:', session_user_id,
+						'time left:', t.misc.friendly_ms(time_left_ms));
+				}
+			}
+
+			// return the whole doc we found if valid
+			if (!found_valid_token) {
+				logger.warn('[migration] did not find valid IAM access token for id:', session_user_id);
+				return cb({ message: 'user\'s iam token is invalid' });
+			} else {
+				logger.debug('[migration] found valid IAM access token for id:', session_user_id);
+				return cb(null, access_token_doc);
+			}
+		}
+	};
+
+	// ------------------------------------------
+	//  get user's IAM information - is async
+	// ------------------------------------------
+	exports.get_users_iam_info = function (req, cb) {
+		const ret = exports.get_user_info(req);
+		exports.get_valid_iam_token_doc(req, (err, iam_token_doc) => {
+			if (iam_token_doc) {
+				ret.iamId = iam_token_doc ? iam_token_doc._id : '';
+				ret.iamAccessToken = iam_token_doc ? iam_token_doc.accessToken : '';
+				ret.iamRefreshToken = iam_token_doc ? iam_token_doc.refreshToken : '';
+				ret.iamParsedMetaData = exports.parse_ibp_token(ret.iamAccessToken);
+			}
+			return cb(null, t.misc.sortKeys(ret));
+		});
+	};
 
 	return exports;
 };

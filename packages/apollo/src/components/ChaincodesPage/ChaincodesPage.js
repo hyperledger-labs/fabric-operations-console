@@ -200,6 +200,7 @@ class ChaincodesPage extends Component {
 								loading={this.props.loading}
 								installedChaincodeList={this.props.chaincodeList}
 								instantiatedChaincodeList={this.props.instantiated_array}
+								feature_flags={this.props.feature_flags}
 							/>
 						</div>
 
@@ -240,6 +241,7 @@ export default connect(
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['host_url'] = state['settings'] ? state['settings']['host_url'] : null;
 		newProps['docPrefix'] = state['settings'] ? state['settings']['docPrefix'] : null;
+		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;
 		return newProps;
 	},
 	{

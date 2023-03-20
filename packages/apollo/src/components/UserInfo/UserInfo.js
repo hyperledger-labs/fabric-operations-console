@@ -38,7 +38,7 @@ export class UserInfo extends Component {
 				role: this.props.userInfo
 					? ActionsHelper.canRestartOpTools(this.props.userInfo)
 						? 'manager'
-						: ActionsHelper.canImportComponent(this.props.userInfo)
+						: ActionsHelper.canImportComponent(this.props.userInfo, this.props.feature_flags)
 							? 'writer'
 							: 'reader'
 					: null,
@@ -85,6 +85,7 @@ export default connect(
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['userInfo'] = state['userInfo'] ? state['userInfo'] : null;
 		newProps['authScheme'] = state['settings'] ? state['settings']['authScheme'] : null;
+		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;
 		return newProps;
 	},
 	{

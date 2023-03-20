@@ -59,6 +59,7 @@ class CertificateAuthorityRestApi {
 						tls_cert: some_ca_record.tls_cert,
 					},
 				},
+				migrated_from: some_ca_record.migrated_from ? some_ca_record.migrated_from : undefined,
 			};
 			return NodeRestApi.importComponent(exported_ca);
 		});

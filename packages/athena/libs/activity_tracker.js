@@ -23,27 +23,29 @@ module.exports = function (logger, ev, t) {
 	const exports = {};
 	const routes_2_ignore = prepare_routes_2_ignore();									// array of regular expressions of paths to ignore
 	const AT_FILENAME = 'audit.log';
-	const path2file = ev.ACTIVITY_TRACKER_PATH ? t.path.join(ev.ACTIVITY_TRACKER_PATH, AT_FILENAME) : '';
-	let atLogger = {};
+	const path2file = ev.ACTIVITY_TRACKER_PATH ? t.path.join(__dirname + ev.ACTIVITY_TRACKER_PATH, AT_FILENAME) : '';
+	let atLogger = {
+		debug: () => { }
+	};
 
 	// init the log file
 	if (ev.ACTIVITY_TRACKER_PATH && path2file) {
-		t.misc.check_dir_sync({ file_path: path2file, create: true });					// check if the path exists, create it if not
+		/*t.misc.check_dir_sync({ file_path: path2file, create: true });					// check if the path exists, create it if not
 		if (!t.fs.existsSync(path2file)) {
 			try {
-				t.fs.writeFileSync(path2file, '');										// init file
+				t.fs.writeFileSync(path2file, '');											// init file
 				logger.debug('[audit log] init log file:', path2file);
 			} catch (e) {
 				logger.error('[audit log] unable to write log file:', path2file);
 				logger.error(e);
 			}
-		}
+		}*/
 
 		// build symbolic links if activity tracker log files are outside the athena log folder
 		build_sym_links();
 
 		// make a winston logger for the activity tracker logs
-		atLogger = new (t.winston.Logger)({
+		/*atLogger = new (t.winston.Logger)({
 			level: 'debug',
 			transports: [
 				new t.winston.transports.File({
@@ -59,14 +61,14 @@ module.exports = function (logger, ev, t) {
 					},
 				}),
 			]
-		});
+		});*/
 	}
 
 	//-------------------------------------------------------------
 	// build & track the event for activity tracker - (events are http requests but its not all requests, just the ones we want)
 	//-------------------------------------------------------------
 	exports.track_api = (req, res, json_resp) => {
-		if (ev.ACTIVITY_TRACKER_PATH) {
+		if (ev.ACTIVITY_TRACKER_PATH && path2file) {
 			const at_event = build_event(req, res, json_resp);	// create event, strict format!
 			logger.silly('[audit log] generated event for req:', t.ot_misc.buildTxId(req), path2file);
 			atLogger.debug(at_event);							// track the event by logging it to this file, logDNA will pick up file and send onward

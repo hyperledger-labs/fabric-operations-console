@@ -11209,11 +11209,29 @@ components:
       type: string
       example: 1.4.6-1
       description: The Hyperledger Fabric release version to update to.
+      # you cannot upgrade between some versions like 1.4.x to 2.4.x, unless you ignore err, it does not have node.js v12 only v16
+      # fabric's version compatibility matrix https://github.com/hyperledger/fabric-chaincode-node/blob/main/COMPATIBILITY.md
       x-validate_breaking_version_upgrade:
-        1.4.x: 2.4.x  # you cannot upgrade 1.4.x to 2.4.x, unless you ignore it
-        2.0.x: 2.4.x  # you cannot upgrade 2.0.x to 2.4.x, unless you ignore it
-        2.1.x: 2.4.x  # you cannot upgrade 2.1.x to 2.4.x, unless you ignore it
-        2.2.x: 2.4.x  # you cannot upgrade 2.2.x to 2.4.x, unless you ignore it
+        1.4.x:
+          - 2.2.8-3
+          - 2.2.9
+          - 2.4.x
+          - 2.5.x
+        2.0.x:
+          - 2.2.8-3
+          - 2.2.9
+          - 2.4.x
+          - 2.5.x
+        2.1.x:
+          - 2.2.8-3
+          - 2.2.9
+          - 2.4.x
+        2.2.x:
+          - 2.2.8-3
+          - 2.2.9
+          - 2.4.x
+          - 2.5.x
+
     ignore_warnings:
       type: boolean
       description: If true will ignore upgrade validation warnings.
@@ -11429,6 +11447,11 @@ components:
       x-validate_illegal_values:
         - '.'
         - '..'
+    migrated_from:
+      type: string
+      example: ibm_saas
+      description: This is an internal field to reference if a component came from a different console. It can be left blank.
+      maxLength: 128
     api_url_ca:
       type: string
       description: The URL for the CA. Typically, client applications would send requests to this URL. Include the protocol, hostname/ip and port.
@@ -11744,6 +11767,8 @@ components:
               $ref: '#/components/schemas/ConfigCACreate'
             tlsca:
               $ref: '#/components/schemas/ConfigCACreate'
+        migrated_from:
+          $ref: '#/components/schemas/migrated_from'
         replicas:
           $ref: '#/components/schemas/replicas'
         tags:
@@ -13756,6 +13781,8 @@ components:
           x-validate_matching_lengths: config
           items:
             $ref: '#/components/schemas/ConfigOrdererCreate'
+        migrated_from:
+          $ref: '#/components/schemas/migrated_from'
         resources:
           type: object
           description: CPU and memory properties. This feature is not available if using a free Kubernetes cluster.
@@ -13824,6 +13851,8 @@ components:
           $ref: '#/components/schemas/CryptoObject'
         config_override:
           $ref: '#/components/schemas/ConfigPeerCreate'
+        migrated_from:
+          $ref: '#/components/schemas/migrated_from'
         resources:
           $ref: '#/components/schemas/PeerResources'
         storage:
@@ -14906,6 +14935,8 @@ components:
           $ref: '#/components/schemas/location_saas'
         api_url:
           $ref: '#/components/schemas/api_url_ca'
+        migrated_from:
+          $ref: '#/components/schemas/migrated_from'
         operations_url:
           $ref: '#/components/schemas/operations_url_ca'
         tags:
@@ -15000,6 +15031,8 @@ components:
           $ref: '#/components/schemas/osnadmin_url_orderer'
         location:
           $ref: '#/components/schemas/location_saas'
+        migrated_from:
+          $ref: '#/components/schemas/migrated_from'
         msp:
           $ref: '#/components/schemas/msp_crypto_field'
         msp_id:
@@ -15033,6 +15066,8 @@ components:
           $ref: '#/components/schemas/grpcwp_url_peer'
         location:
           $ref: '#/components/schemas/location_saas'
+        migrated_from:
+          $ref: '#/components/schemas/migrated_from'
         msp:
           $ref: '#/components/schemas/msp_crypto_field'
         msp_id:

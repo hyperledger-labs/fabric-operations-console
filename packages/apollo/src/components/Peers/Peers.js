@@ -111,7 +111,7 @@ class Peers extends Component {
 	}
 
 	buildCustomTile(peer) {
-		const isPatchAvailable = peer.isUpgradeAvailable && peer.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo);
+		const isPatchAvailable = peer.isUpgradeAvailable && peer.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags);
 
 		return (
 			<div className="ibp-node-peer-tile">
@@ -244,13 +244,11 @@ class Peers extends Component {
 
 	getButtons() {
 		let buttons = [];
-		let importOption = ActionsHelper.canImportComponent(this.props.userInfo) || ActionsHelper.canCreateComponent(this.props.userInfo);
-		if (importOption) {
-			buttons.push({
-				text: this.props.feature_flags?.import_only_enabled ? 'import_only_peer' : 'add_peer',
-				fn: this.openImportPeerModal,
-			});
-		}
+		buttons.push({
+			text: this.props.feature_flags?.import_only_enabled ? 'import_only_peer' : 'add_peer',
+			fn: this.openImportPeerModal,
+			disabled: !ActionsHelper.canImportComponent(this.props.userInfo, this.props.feature_flags) && !ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags),
+		});
 		return buttons;
 	}
 

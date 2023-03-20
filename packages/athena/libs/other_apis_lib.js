@@ -32,6 +32,8 @@ module.exports = function (logger, ev, t) {
 			PORT: Number(ev.PORT) || '?',
 			DEPLOYER_URL: t.misc.redact_basic_auth(ev.DEPLOYER_URL) || '?',
 			DB_SYSTEM: ev.DB_SYSTEM || '?',
+			DB_COMPONENTS: ev.DB_COMPONENTS || '?',
+			DB_SESSIONS: ev.DB_SESSIONS || '?',
 			HOST_URL: ev.HOST_URL || '?',
 			CONFIGTXLATOR_URL: ev.CONFIGTXLATOR_URL || '?',
 			LANDING_URL: ev.LANDING_URL || '?',
@@ -115,6 +117,9 @@ module.exports = function (logger, ev, t) {
 			DISABLED_COMPACTION: ev.DISABLED_COMPACTION, 		// false is valid, don't make this a question mark
 			IMPORT_ONLY: ev.IMPORT_ONLY,						// false is valid, don't make this a question mark
 			READ_ONLY: ev.READ_ONLY, 							// false is valid, don't make this a question mark
+			MIGRATED_CONSOLE_URL: ev.MIGRATED_CONSOLE_URL,
+			MIGRATION_MIN_VERSIONS: ev.MIGRATION_MIN_VERSIONS,
+			MIGRATION_STATUS: ev.MIGRATION_STATUS || {},
 		};
 		return t.misc.sortItOut(ret);
 	};
@@ -157,11 +162,13 @@ module.exports = function (logger, ev, t) {
 	exports.get_private_settings = () => {
 		const ret = {											// compile the list of private settings
 			DEPLOYER_URL: ev.DEPLOYER_URL || '?',				// for OpTools developers show the un-redacted url
+			JUPITER_URL: ev.JUPITER_URL || '?',					// for OpTools developers show the un-redacted url
 			//DEFAULT_USER_PASSWORD: ev.DEFAULT_USER_PASSWORD,	// for debug
 			SESSION_SECRET: ev.SESSION_SECRET,					// for debug
 			HOST_WHITE_LIST: ev.HOST_WHITE_LIST || [],			// for debug, moved this here from get_ev_settings so we don't leak component addresses
 			CONFIGTXLATOR_URL_ORIGINAL: ev.CONFIGTXLATOR_URL_ORIGINAL || '?',
 			COOKIE_NAME: ev.COOKIE_NAME || '?',
+			MIGRATION_API_KEY: ev.MIGRATION_API_KEY,			// for debug
 		};
 		return t.misc.sortItOut(ret);
 	};
@@ -773,6 +780,32 @@ module.exports = function (logger, ev, t) {
 				} else {
 					logger.info('[openapi] added swagger file - restart required to take effect');
 					return cb(null, { message: 'ok', id: json._id, details: 'restart IBP to use this file' });
+				}
+			});
+		}
+	};
+
+	//-----------------------------------------------------------------------------
+	// Record that a user exported their identities/wallet - used during migration
+	//-----------------------------------------------------------------------------
+	exports.record_export = (req, type, cb) => {
+		if (type !== 'identities') {
+			return cb({ statusCode: 400, msg: 'unable to record export of this type.' });
+		} else {
+			const wallet_doc = {
+				email: t.middleware.getEmail(req),
+				uuid: t.middleware.getUuid(req),
+				timestamp: Date.now(),
+				type: ev.STR.WALLET_MIGRATION,
+			};
+			t.otcc.createNewDoc({ db_name: ev.DB_SYSTEM }, wallet_doc, (err, doc) => {
+				if (err) {
+					const err_code = t.ot_misc.get_code(err);
+					logger.error('[export] unable to write wallet doc:', err_code, err, doc);
+					return cb({ statusCode: 500, err: err });
+				} else {
+					logger.info('[export] recorded wallet export via wallet doc');
+					return cb(null, { message: 'ok', username: wallet_doc.username, details: 'recorded export' });
 				}
 			});
 		}

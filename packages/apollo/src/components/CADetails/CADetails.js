@@ -88,13 +88,13 @@ export class CADetails extends Component {
 				this.timestamp = new Date().getTime();
 				setTimeout(
 					() => {
-						// after 30 (or 10) seconds, if we do not have a response, show
+						// after 15 (or 5) seconds, if we do not have a response, show
 						// the not available message
 						if (this.timestamp) {
-							this.props.updateState(SCOPE, { notAvailable: true });
+							this.props.updateState(SCOPE, { notAvailable: true, loading: false, });
 						}
 					},
-					details.associatedIdentity ? 30000 : 10000
+					details.associatedIdentity ? 15000 : 5000
 				);
 				NodeStatus.getStatus(
 					{
@@ -241,11 +241,13 @@ export class CADetails extends Component {
 				fn: () => {
 					this.generateCertificate(null);
 				},
+				disabled: !ActionsHelper.canEditComponent(this.props.feature_flags)
 			});
 			buttons.push({
 				text: 'register_user',
 				fn: this.openAddUser,
 				icon: 'plus',
+				disabled: !ActionsHelper.canEditComponent(this.props.feature_flags)
 			});
 		}
 		return buttons;
@@ -373,7 +375,7 @@ export class CADetails extends Component {
 	renderNodeVersion(translate) {
 		// Do not show HSM for now
 		const show_hsm = false;
-		if (!this.props.details || this.props.details.location !== 'ibm_saas' || !ActionsHelper.canCreateComponent(this.props.userInfo)) {
+		if (!this.props.details || this.props.details.location !== 'ibm_saas' || !ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)) {
 			return;
 		}
 		const isUpgradeAvailable = this.props.details.isUpgradeAvailable;
@@ -505,6 +507,7 @@ export class CADetails extends Component {
 									{
 										text: 'reallocate_resources',
 										fn: this.showUsageModal,
+										disabled: !ActionsHelper.canEditComponent(this.props.feature_flags),
 									},
 								]}
 							/>
@@ -610,6 +613,8 @@ export class CADetails extends Component {
 									groups={this.getStickySectionGroups(translate, database)}
 									refreshCerts={this.refreshCerts}
 									hideRefreshCerts={this.props.details && this.props.details.location !== 'ibm_saas'}
+									feature_flags={this.props.feature_flags}
+									userInfo={this.props.userInfo}
 								/>
 							</div>
 						</div>
@@ -633,7 +638,7 @@ export class CADetails extends Component {
 										this.props.details &&
 											this.props.details.isUpgradeAvailable &&
 											this.props.details.location === 'ibm_saas' &&
-											ActionsHelper.canCreateComponent(this.props.userInfo)
+											ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)
 											? 'ibp-patch-available-tab'
 											: ''
 									}
@@ -642,17 +647,15 @@ export class CADetails extends Component {
 											this.props.details &&
 												this.props.details.isUpgradeAvailable &&
 												this.props.details.location === 'ibm_saas' &&
-												ActionsHelper.canCreateComponent(this.props.userInfo) ? (
-												<div className="ibp-details-patch-container">
+												ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) ?
+												(<div className="ibp-details-patch-container">
 													<div className="ibp-patch-available-tag ibp-node-details"
 														onClick={() => this.openCASettings('upgrade')}
 													>
 														{translate('patch_available')}
 													</div>
 												</div>
-											) : (
-												''
-											),
+												) : (''),
 									})}
 								>
 									{this.renderUsage(translate)}

@@ -43,6 +43,7 @@ import Logger from '../Log/Logger';
 import PageContainer from '../PageContainer/PageContainer';
 import PageHeader from '../PageHeader/PageHeader';
 import StickySection from '../StickySection/StickySection';
+import ActionsHelper from '../../utils/actionsHelper';
 
 const SCOPE = 'channelDetails';
 const Log = new Logger(SCOPE);
@@ -419,8 +420,7 @@ class ChannelDetails extends Component {
 							});
 							this.allOrderers = orderers;
 							this.consenters = l_consenters;
-							if (this.props.ordererList.length < 1)
-							{
+							if (this.props.ordererList.length < 1) {
 								this.props.updateState(SCOPE, {
 									ordererCheck: false,
 								});
@@ -956,6 +956,7 @@ class ChannelDetails extends Component {
 							id: 'add_node',
 							text: 'add_node',
 							fn: this.showJoinChannelModal,
+							disabled: !ActionsHelper.canEditComponent(this.props.feature_flags)
 						},
 					]}
 				/>
@@ -1229,6 +1230,8 @@ class ChannelDetails extends Component {
 							hideExport
 							hideDelete
 							hideRefreshCerts
+							feature_flags={this.props.feature_flags}
+							userInfo
 						/>
 					</div>
 					<div className="bx--col-lg-12">
@@ -1388,6 +1391,7 @@ export default connect(
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['settings'] = state['settings'];
 		newProps['configtxlator_url'] = state['settings']['configtxlator_url'];
+		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;
 		return newProps;
 	},
 	{

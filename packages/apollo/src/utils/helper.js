@@ -82,6 +82,47 @@ const Helper = {
 		};
 	},
 
+	//------------------------------------------------------------
+	// Sort an object's key fields, RECURSIVE! (Order: Symbols, Numbers, Upper Case, Lower Case)
+	//------------------------------------------------------------
+	sortKeys(unsorted, iter, max) {
+		let ordered = {};
+		iter = iter || 0;
+		max = max || 1000;
+		if (iter > max) {														// our watch dog
+			return unsorted;
+		}
+
+		if (isObject(unsorted)) {
+			Object.keys(unsorted).sort(compareStrings).forEach(function (key) {
+				ordered[key] = unsorted[key];									// sort all the object's keys
+			});
+		} else {
+			return unsorted;
+		}
+
+		for (let i in ordered) {
+			if (isObject(ordered[i])) {
+				ordered[i] = Helper.sortKeys(ordered[i], ++iter, max);				// sort all the object's object's keys
+			} else if (Array.isArray(ordered[i])) {
+				for (let z in ordered[i]) {
+					if (ordered[i][z] && isObject(ordered[i][z])) {
+						ordered[i][z] = Helper.sortKeys(ordered[i][z], ++iter, max); // sort the inner object
+					}
+				}
+			}
+		}
+		return ordered;
+
+		function compareStrings(a, b) {
+			return a.localeCompare(b, { usage: 'sort', numeric: true, caseFirst: 'upper' });
+		}
+
+		function isObject(o) {
+			return o instanceof Object && o.constructor === Object;
+		};
+	},
+
 	getExportedNode(node, zipExport) {
 		if (node.raft) {
 			const data = [];
@@ -134,6 +175,10 @@ const Helper = {
 				organizational_unit_identifiers: node.organizational_unit_identifiers,
 				fabric_node_ous: node.fabric_node_ous,
 				host_url: node.host_url,
+				id: node.id,
+				scheme_version: node.scheme_version,
+				migrated_from: node.migrated_from ? node.migrated_from : undefined,
+
 				// legacy fields needed for import on older systems
 				name: node.display_name,
 			};
@@ -150,6 +195,8 @@ const Helper = {
 				delete node.client_tls_cert;
 				delete node.server_tls_cert;
 			}
+
+			// this is the format of an exported node
 			exportNode = {
 				display_name: node.display_name,
 				grpcwp_url: node.grpcwp_url,
@@ -166,6 +213,10 @@ const Helper = {
 				client_tls_cert: node.client_tls_cert,
 				server_tls_cert: node.server_tls_cert,
 				location: node.location === 'ibm_saas' ? this.getPlatform() : node.location,
+				id: node.id,
+				scheme_version: node.scheme_version,
+				migrated_from: node.migrated_from ? node.migrated_from : undefined,
+
 				// legacy fields needed for import on older systems
 				name: node.display_name,
 				pem: node.tls_ca_root_cert || _.get(node, 'msp.component.tls_cert'),
@@ -180,7 +231,7 @@ const Helper = {
 				exportNode.associatedIdentityName = node.associatedIdentityName;
 			}
 		}
-		return exportNode;
+		return Helper.sortKeys(exportNode);
 	},
 
 	normalizeClusterId(id) {
@@ -518,18 +569,38 @@ const Helper = {
 		return value && (value.indexOf('tcp://') !== -1 || value.indexOf('tls://') !== -1);
 	},
 
+	// get hostname from the url
 	getHostname(url) {
-		const parts = urlParser.parse(url);
-		return parts.hostname;
+		try {
+			const parts = urlParser.parse(url);
+			return parts.hostname;
+		} catch (e) {
+			console.error('cannot parse hostname from url:', url, e);
+			return '';
+		}
 	},
 
+	// get port from url, use standard ports if there is no port on url
 	getPort(url) {
-		const parts = urlParser.parse(url);
-		const protocol = parts.protocol ? parts.protocol : 'https:';
-		if (parts.port === null) {
-			parts.port = protocol === 'https:' ? '443' : '80';
+		try {
+			const parts = urlParser.parse(url);
+			const protocol = parts.protocol ? parts.protocol : 'https:';
+			if (parts.port === null) {
+				parts.port = protocol === 'https:' ? '443' : '80';
+			}
+			return parts.port;
+		} catch (e) {
+			console.error('cannot parse port from url:', url, e);
+			return null;
 		}
-		return parts.port;
+	},
+
+	// return true if these urls are equal in terms of their hostname and port
+	urlsAreEqual(url1, url2) {
+		return (
+			this.getHostname(url1) === this.getHostname(url2) &&
+			Number(this.getPort(url1)) === Number(this.getPort(url2))
+		);
 	},
 
 	normalizeHttpURL(http_url) {
@@ -1539,6 +1610,42 @@ const Helper = {
 			ret = translate('friendly_ms_ms_ago', { millisecs: ms.toFixed(0) });
 		}
 		return ret;
+	},
+
+	// -----------------------------------------------------
+	// decide if version strings with wildcards match with the version - example: pattern="1.4.x", value="1.4.9" would return true
+	// -----------------------------------------------------
+	version_matches_pattern(pattern, value) {
+		pattern = (typeof pattern === 'number') ? pattern.toString() : pattern;							// safer...
+		value = (typeof value === 'number') ? value.toString() : value;
+		pattern = (typeof pattern === 'string') ? pattern.trim() : '';									// safer...
+		value = (typeof value === 'string') ? value.trim() : '';
+
+		pattern = (pattern[0].toLowerCase() === 'v') ? pattern.substring(1) : pattern;					// strip of leading V, like v1.4.9
+		value = (value[0].toLowerCase() === 'v') ? value.substring(1) : value;
+
+		let version_parts_pattern = pattern ? pattern.trim().replace(/-/g, '.').split('.') : null;		// treat 0.2.4-1 like 0.2.4.1
+		let version_parts_val = value ? value.trim().replace(/-/g, '.').split('.') : null;
+
+		if (version_parts_pattern === null || version_parts_val == null) {
+			return null;
+		}
+
+		// make them the same length
+		for (; version_parts_pattern.length < version_parts_val.length;) { version_parts_pattern.push('x'); }
+		for (; version_parts_val.length < version_parts_pattern.length;) { version_parts_val.push('0'); }
+
+		// iter on each digit
+		for (let i in version_parts_pattern) {
+			if (version_parts_pattern[i] === 'x') {										// if we made it to the 'x' then its a match
+				return true;
+			} else if (version_parts_pattern[i] !== version_parts_val[i]) {				// if these digits don't match, the versions do not match
+				return false;
+			} else {
+				// if these digits match, move to the next digit
+			}
+		}
+		return true;		// if all digits match... its a match
 	}
 };
 

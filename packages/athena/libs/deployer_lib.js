@@ -465,6 +465,11 @@ module.exports = function (logger, ev, t) {
 			};
 			logger.debug('[deployer lib]', req._tx_id, 'sending deployer api w/route:', opts.url);
 			send_dep_req(opts, (err, depRespBody) => {
+				/*depRespBody = {
+					location: 'ibm-saas'
+				};
+				const fmt_ret = {};
+				const fmt_err = null;*/
 				const { fmt_err, fmt_ret } = handle_dep_response(parsed, err, depRespBody);
 				if (fmt_err) {																// error is already logged
 					if (t.ot_misc.get_code(fmt_err) === 409) {								// don't call clean up on a 409 error code
@@ -1851,6 +1856,7 @@ module.exports = function (logger, ev, t) {
 			'admin_certs', 'resources', 'storage', 'version', 'zone', 'state_db', 'region', 'dep_component_id',
 			'ca_name', 'tlsca_name', 'api_url', 'grpcwp_url', 'operations_url', 'tls_cert', 'config_override',
 			'node_ou', 'ecert', 'tls_ca_root_certs', 'ca_root_certs', 'crypto',
+			'api_url_saas', 'grpcwp_url_saas', 'operations_url_saas', 'osnadmin_url_saas'
 			// do not check admin_certs_parsed, or tls_cert_parsed b/c we don't want that stuff stored in the db
 			// do not check cr_status, resource_warnings, we don't want to store a temporary status in the db
 		];
@@ -2039,6 +2045,14 @@ module.exports = function (logger, ev, t) {
 						'1.4.12-11': {
 							default: false,
 							version: '1.4.12-11'
+						},
+						'2.2.10': {
+							default: false,
+							version: '2.2.10'
+						},
+						'2.2.9-1': {
+							default: false,
+							version: '2.2.9-1'
 						}
 					},
 					orderer: {
@@ -2187,6 +2201,137 @@ module.exports = function (logger, ev, t) {
 			});
 		}
 	}*/
+
+	// ------------------------------------------
+	// get the kubernetes version
+	// ------------------------------------------
+	exports.get_k8s_version = function (cb) {
+		const parsed = {
+			iid: (ev.CRN && ev.CRN.instance_id) ? ev.CRN.instance_id : 'iid-not-set',
+			debug_tx_id: 'k8s-ver',
+		};
+		const opts = {
+			method: 'GET',
+			baseUrl: t.misc.format_url(ev.DEPLOYER_URL),
+			uri: '/api/v3/instance/' + parsed.iid + '/k8s/cluster/version',
+			timeout: ev.DEPLOYER_TIMEOUT,
+			headers: {
+				'Accept': 'application/json'
+			},
+			_tx_id: parsed.debug_tx_id,
+		};
+		send_dep_req(opts, (err, depRespBody) => {
+			let { fmt_err, fmt_ret } = handle_dep_response(parsed, err, depRespBody);
+			/*fmt_ret = {
+				major: '1',
+				minor: '23',
+				gitVersion: 'v1.23.15+IKS',
+				gitCommit: '452b6c54695f1f57e7a4625e10068840c4ca6263',
+				gitTreeState: 'clean',
+				buildDate: '2022 - 12 - 09T02: 45:24Z',
+				goVersion: 'go1.17.13',
+				compiler: 'gc',
+				platform: 'linux/amd64',
+			};*/
+			if (!fmt_ret) {
+				logger.warn('[k8s version] unable to get version, communication error');
+				return cb(fmt_err, fmt_ret);
+			} else {
+				if (fmt_ret.gitVersion && fmt_ret.gitVersion.length >= 5) {
+					let pos = fmt_ret.gitVersion.indexOf('+');
+					if (pos === -1) { pos = undefined; }
+					fmt_ret._version = fmt_ret.gitVersion.substring(1, pos);
+				} else {
+					logger.warn('[k8s version] unable to get version, missing data');
+					fmt_ret = { _version: 'unknown' };
+				}
+				return cb(null, fmt_ret);
+			}
+		});
+	};
+
+	// ------------------------------------------
+	// get the cluster type (openshift or iks)
+	// ------------------------------------------
+	exports.get_cluster_type = function (cb) {
+		const parsed = {
+			iid: (ev.CRN && ev.CRN.instance_id) ? ev.CRN.instance_id : 'iid-not-set',
+			debug_tx_id: 'k8s-type',
+		};
+		const opts = {
+			method: 'GET',
+			baseUrl: t.misc.format_url(ev.DEPLOYER_URL),
+			uri: '/api/v3/instance/' + parsed.iid + '/k8s/cluster/type',
+			timeout: ev.DEPLOYER_TIMEOUT,
+			headers: {
+				'Accept': 'application/json'
+			},
+			_tx_id: parsed.debug_tx_id,
+		};
+		send_dep_req(opts, (statusCode, depRespBody) => {
+			//statusCode = 200;
+			//depRespBody = 'openshift';
+			if (t.ot_misc.is_error_code(statusCode)) {
+				logger.error('[cluster type] unable to get cluster type from deployer, communication error', depRespBody);
+				return cb({ statusCode: statusCode, error: depRespBody });
+			} else {
+				let type = 'k8s';				// defaults
+				if (!depRespBody) {
+					logger.warn('[cluster type] unable to get cluster type, deployer response is blank:', typeof depRespBody, depRespBody);
+					return cb({ statusCode: 500, error: depRespBody });
+				} else if (typeof depRespBody !== 'string') {
+					logger.warn('[cluster type] unexpected cluster type from deployer response is not a string:', typeof depRespBody, depRespBody);
+					return cb({ statusCode: 500, error: depRespBody });
+				} else {
+					type = depRespBody.toLowerCase().trim();
+					logger.debug('[cluster type] got cluster type from deployer:', typeof type, type);
+					return cb(null, { type: type, message: ev.STR.STATUS_ALL_GOOD });
+				}
+			}
+		});
+	};
+
+	// ------------------------------------------
+	// get and store the cluster type (iff openshift set it)
+	// ------------------------------------------
+	exports.store_cluster_type = function (cb) {
+		if (!cb) { cb = function () { }; }
+		exports.get_cluster_type((err, resp) => {
+			if (err) {
+				logger.warn('[startup - cluster type] unable to retrieve cluster type from deployer');
+				return cb(err);
+			} else if (!resp || !resp.type) {
+				logger.warn('[startup - cluster type] unexpected response when getting cluster type from deployer');
+				return cb({ statusCode: 500, error: 'missing cluster type in response' });
+			} else {
+
+				// overwrite the setting if its different
+				if (resp.type !== ev.INFRASTRUCTURE) {
+					logger.debug('[startup - cluster type] detected a different value for the cluster type, storing in settings doc');
+
+					t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, (err, settings_doc) => {
+						if (err) {
+							logger.error('[startup - cluster type] an error occurred obtaining the "' + process.env.SETTINGS_DOC_ID + '"', err, settings_doc);
+							return cb();
+						} else {
+							settings_doc.infrastructure = ev.STR.INFRA_OPENSHIFT;
+
+							t.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, settings_doc, (err) => {
+								if (err) {
+									logger.error('[startup - cluster type] an error occurred updating the "' + process.env.SETTINGS_DOC_ID + '"',
+										err, settings_doc);
+								}
+								return cb();
+							});
+						}
+					});
+				} else {
+					logger.debug('[startup - cluster type] cluster type is already correct, no need to edit. INFRASTRUCTURE:', ev.INFRASTRUCTURE);
+					return cb();
+				}
+			}
+		});
+	};
 
 	return exports;
 };
