@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: 16.x
+          node-version: 18.x
       - name: Audit NPM
         run: npm audit --production
         working-directory: ./packages/${{ matrix.project }}
@@ -31,7 +31,7 @@ jobs:
           python-version: 3.11
       - uses: actions/setup-node@v2
         with:
-          node-version: 16.x
+          node-version: 18.x
       - name: Install detect-secrets
         run: pip install --upgrade git+https://github.com/ibm/detect-secrets.git@0.13.1+ibm.52.dss#egg=detect-secrets
       - name: Install Lerna
