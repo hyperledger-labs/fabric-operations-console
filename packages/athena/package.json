@@ -4,6 +4,7 @@
 	"license": "Apache-2.0",
 	"scripts": {
 		"start": "node server_watcher.js",
+		"audit": "better-npm-audit audit --production",
 		"lint": "./node_modules/.bin/eslint --no-eslintrc -c ./.eslintrc.json .",
 		"validate": "lint-openapi -s -c .validaterc.json ./json_docs/json_validation/ibp_openapi_v3.yaml",
 		"detect-secrets": "detect-secrets-hook --baseline .secrets.baseline -v",

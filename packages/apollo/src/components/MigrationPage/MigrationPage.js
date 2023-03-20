@@ -34,6 +34,7 @@ import LoginApi from '../../rest/LoginApi';
 import { RestApi } from '../../rest/RestApi';
 import TranslateLink from '../TranslateLink/TranslateLink';
 import * as constants from '../../utils/constants';
+import SVGs from '../Svgs/Svgs';
 const SCOPE = 'MigrationPage';
 const Log = new Logger(SCOPE);
 
@@ -464,6 +465,7 @@ class MigrationPage extends Component {
 											<br />
 											<div className="leftParagraph">
 												<p><strong>{translate('mig_details_title')}</strong></p>
+												<p>- {translate('migration_details6')}</p>
 												<p>- {translate('migration_details1')}</p>
 												<p>- {translate('migration_details2')}</p>
 												<TranslateLink text="migration_details2.1" />
@@ -475,7 +477,7 @@ class MigrationPage extends Component {
 												{translate('mig_warnings')}
 											</p>
 											<p className="checking_text">{translate('mig_warning_txt')}</p>
-											<br/>
+											<br />
 											<p className="checking_text">{translate('mig_warning_txt2')}</p>
 											<p className="infoTitle">
 												{translate('what_prereq_title')}
@@ -596,7 +598,12 @@ class MigrationPage extends Component {
 												disabled={!hasMigrationPerm || migrationStatusStr === constants.STATUS_IN_PROGRESS || !this.props.migFeatureFlagEnabled
 													|| migrationStatusStr === constants.STATUS_DONE}
 											>
-												{translate('review_mig_text')}
+												{translate('mig_button_text')}
+												{migrationStatusStr !== constants.STATUS_IN_PROGRESS &&
+													<SVGs extendClass={{ 'ibp-container-list-add-button-img': true }}
+														type="arrowRight"
+													/>
+												}
 												{migrationStatusStr === constants.STATUS_IN_PROGRESS &&
 													<Loading withOverlay={false}
 														small
@@ -761,7 +768,7 @@ class MigrationPage extends Component {
 			>
 				<div>
 					<div className="ibp-modal-title">
-						<h1 className="ibm-light">{translate('migration')}</h1>
+						<h1 className="ibm-light">{translate('migration_wiz_title')}</h1>
 					</div>
 
 					{migration_check_loader &&
@@ -1016,6 +1023,8 @@ class MigrationPage extends Component {
 							);
 						})}
 					</div>
+					<br />
+					<p>{translate('mig_users_text')}</p>
 					<br />
 					<p>{translate('mig_test_txt')}</p>
 					<br />
