@@ -31,7 +31,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16.x
-      - run: npm i -g better-npm-audit && npm audit --production
+      - run: npm audit --production
 
   build-code:
     name: Build code
