@@ -260,6 +260,7 @@ module.exports = function (logger, ev, t) {
 						logger.error('[migration lib] cannot edit settings doc to clear migration status:', err_writeDoc);
 						return cb({ statusCode: 500, msg: 'could not update settings doc to clear migration status', details: err_writeDoc }, null);
 					} else {
+						t.pillow.reconnect();					// make sure the couchdb stream is working by simply reconnecting now
 						return cb(null, settings_doc);
 					}
 				});
