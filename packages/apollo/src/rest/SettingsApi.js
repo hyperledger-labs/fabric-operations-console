@@ -95,12 +95,14 @@ class SettingsApi {
 		return promise;
 	}
 
+	// update w/e settings are in data, has input validation
 	static async updateSettings(data) {
-		return RestApi.put('/api/v2/settings', data);
+		return RestApi.put('/api/v3/settings', data);
 	}
 
-	static async updateSetting(key, value) {
-		return RestApi.put('/api/v2/authscheme/key', {
+	// will update one setting, no input validation, don't use unless you don't have a way
+	static async updateOneSetting(key, value) {
+		return RestApi.put('/api/v3/authscheme/key', {
 			[key]: value,
 		});
 	}

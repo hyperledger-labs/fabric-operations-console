@@ -39,11 +39,6 @@ class ConfigureAuthApi {
 	static async deleteUsers(body) {
 		return RestApi.delete(`/api/v2/permissions/users?uuids=[${body.uuids}]`);
 	}
-
-	// This API edits a single field in the settings doc
-	static async editSettings(body) {
-		return RestApi.put('/api/v2/authscheme/key', body);
-	}
 }
 
 export default ConfigureAuthApi;

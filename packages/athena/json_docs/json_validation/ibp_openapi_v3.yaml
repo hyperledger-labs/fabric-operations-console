@@ -100,6 +100,7 @@ x-validate_error_messages:
   regex_fail_host_and_port: The field '$PROPERTY_NAME' must be a url including the hostname/ip and port. Do not include the protocol.
   regex_fail_start_non_letter: The field '$PROPERTY_NAME' must start with a letter.
   regex_fail_valid_id: The field '$PROPERTY_NAME' must start with a letter, be lowercase and only contain letters, numbers, dashes or underscores.
+  regex_invalid_email: The field '$PROPERTY_NAME' is not a valid email address.
 
   # fall back regular expression failure (when the desired regex error message is not found, like I forgot to write one)
   regex_generic_error: "Parameter '$PROPERTY_NAME' is malformed."
@@ -13994,6 +13995,18 @@ components:
       type: object
       x-validate_no_extra_keys: true
       properties:
+        admin_contact_email:
+          type: string
+          example: no-reply@domain.com
+          description: The email address of the owner of this console.
+          x-validate_regex_must_pass: is_email # fabric-ca does not support these characters - (can't find source of claim)
+          x-validate_regex_error_msg: regex_invalid_email # fabric-ca does not support these characters - (can't find source of claim)
+        default_user_password:
+          type: string
+          example: password
+          description: This is the password a user would use when they login to the console for the first time.
+          minLength: 10
+          maxLength: 128
         inactivity_timeouts:
           type: object
           properties:
@@ -14007,6 +14020,15 @@ components:
               minimum: 60000 # 1 minute - a "large" minimum delay prevents immediate logout (which would be a lockout of sorts)
               maximum: 28800000 # 8 hours
               example: 90000
+        transaction_visibility:
+          type: object
+          properties:
+            hide_input:
+              type: boolean
+              example: false
+            hide_output:
+              type: boolean
+              example: false
         file_logging:
           $ref: '#/components/schemas/EditLogSettingsBody'
         max_req_per_min:

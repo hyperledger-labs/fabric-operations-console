@@ -288,7 +288,7 @@ describe('AuthenticationServices function', () => {
 		component
 			.find('Link .ibp-members-configure-label')
 			.text()
-			.should.equal('configure');
+			.should.equal('update_configuration');
 	});
 });
 

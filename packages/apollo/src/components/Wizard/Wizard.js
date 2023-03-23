@@ -38,6 +38,10 @@ class Wizard extends Component {
 	}
 
 	onCancel = () => {
+		this.props.updateState(SCOPE, {
+			error: '',		// clear/hide the error message on cancel
+		});
+
 		const steps = this.getWizardSteps();
 		const current_step = steps[this.props.step - 1];
 		if (this.props.submitting) {

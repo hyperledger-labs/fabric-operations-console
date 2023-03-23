@@ -208,6 +208,11 @@
 	"proxy_tls_ws_url": null,
 	"proxy_cache_enabled": true,
 	"regex": {
+		"is_email": {
+			"source": "^\\S+@\\S+\\.\\S+$",
+			"flags": "i",
+			"notes": "simple email addr validation, good enough for our purposes"
+		},
 		"is_grpc_url": {
 			"source": "^grpcs?://[\\w-._~]+:\\d{1,5}$",
 			"flags": "i",
