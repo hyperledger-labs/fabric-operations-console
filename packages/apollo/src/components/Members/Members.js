@@ -382,7 +382,7 @@ export function AuthenticationServices(props) {
 								href="#"
 								onClick={props.onConfigure}
 							>
-								{translate(props.isManager ? 'configure' : 'administrator_contact')}
+								{translate(props.isManager ? 'update_configuration' : 'administrator_contact')}
 							</Link>
 						</div>
 					</div>

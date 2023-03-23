@@ -19,6 +19,7 @@ import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { clearNotifications, showError, updateState } from '../../redux/commonActions';
 import ConfigureAuthApi from '../../rest/ConfigureAuthApi';
+import SettingsApi from '../../rest/SettingsApi';
 import UserSettingsRestApi from '../../rest/UserSettingsRestApi';
 import Helper from '../../utils/helper';
 import AuthDetails from '../AuthDetails/AuthDetails';
@@ -130,48 +131,26 @@ class EditAuthSettingsModal extends Component {
 		let body = {
 			admin_contact_email: this.props.adminContactEmail,
 		};
+		if (this.props.authScheme === 'couchdb' && this.props.newPassword === this.props.confirmPassword) {
+			body.default_user_password = this.props.newPassword;
+		}
+
 		return new Promise((resolve, reject) => {
-			ConfigureAuthApi.editSettings(body)
+			SettingsApi.updateSettings(body)
 				.then(resp => {
 					this.props.updateState(SCOPE, { submitting: false });
-					if (resp.message === 'ok') {
-						if (this.props.authScheme === 'couchdb' && this.props.newPassword === this.props.confirmPassword) {
-							let body2 = {
-								default_user_password: this.props.newPassword,
-							};
-							this.props.updateState(SCOPE, { submitting: true });
-							ConfigureAuthApi.editSettings(body2)
-								.then(resp => {
-									this.props.updateState(SCOPE, { submitting: false });
-									if (resp.message === 'ok') {
-										resolve();
-									} else {
-										reject({
-											title: 'error_default_password_edit',
-										});
-									}
-								})
-								.catch(error => {
-									Log.error('Error occurred while updating the default password', error);
-									reject({
-										title: 'error_default_password_edit',
-										details: error,
-									});
-								});
-						} else {
-							resolve();
-						}
-					} else {
-						reject({
-							title: 'error_auth_settings_edit',
-						});
-					}
+					resolve();
 				})
 				.catch(error => {
-					Log.error('Error occurred while updating admin contact email ', error);
+					this.props.updateState(SCOPE, { submitting: false });
+					Log.error('Error occurred while updating settings ', error);
+					let msg = error;
+					if (error && error.msgs) {
+						msg = error.msgs.join(',');
+					}
 					reject({
-						title: 'error_auth_settings_edit',
-						details: error,
+						title: 'error_console_settings_edit',
+						details: msg,
 					});
 				});
 		});
@@ -187,6 +166,18 @@ class EditAuthSettingsModal extends Component {
 	};
 
 	validateNewPassword = newPassword => {
+		let err = '';
+		if (newPassword.length < 10) {
+			err = 'password_invalid';
+		}
+		if (newPassword.length > 128) {
+			err = 'password_invalid';
+		}
+
+		this.props.updateState(SCOPE, {
+			newPasswordError: err,
+		});
+
 		if (newPassword && newPassword !== this.props.defaultPassword) {
 			this.validateConfirmPassword(newPassword, null);
 		} else {
@@ -322,7 +313,6 @@ class EditAuthSettingsModal extends Component {
 				title={this.props.isManager && this.props.authScheme !== 'iam' ? 'update_configuration' : 'administrator_contact'}
 				onClose={this.props.onClose}
 				onSubmit={this.props.isManager ? this.onSubmit : null}
-				submitButtonLabel={translate('update_configuration')}
 			>
 				<p className="ibp-modal-desc">
 					{this.props.isManager
