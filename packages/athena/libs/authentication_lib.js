@@ -63,10 +63,12 @@ module.exports = function (logger, ev, t) {
 
 					if (e != null) {
 						logger.error('[passport] error:', typeof e, e);
+
+						// don't reply with the iam error details to appease the pen-testers
 						if (url_parts && url_parts.query && url_parts.query.code) {
-							res.status(400).json({ oauth_error: 'could not exchange oauth code for a token', details: e });	// avoid redirect loop, show error
+							res.status(400).json({ oauth_error: 'could not exchange oauth code for a token' });	// avoid redirect loop, show error
 						} else {
-							res.status(500).json({ oauth_error: 'oauth flow encountered an error', details: e });	// avoid redirect loop, show error
+							res.status(500).json({ oauth_error: 'oauth flow encountered an error' });	// avoid redirect loop, show error
 						}
 					} else {
 						req.session.passport_profile = profile;			// store the passport data (including iam actions)
