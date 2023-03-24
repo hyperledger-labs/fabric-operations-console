@@ -50,7 +50,7 @@
 		"CSP_HEADER_VALUES": "?",
 		"CLUSTER_DATA": {},
 		"IGNORE_CONFIG_FILE": "?",
-		"HOST_WHITE_LIST": [],
+		"URL_SAFE_LIST": [],
 		"IBM_ID_CALLBACK_URL": "?",
 		"IBM_ID_URL": "?",
 		"VERSIONS": {},

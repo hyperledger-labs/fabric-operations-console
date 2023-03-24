@@ -45,6 +45,16 @@ module.exports = function (logger, ev, t) {
 			// the actual patch function/code
 			patch: auto_upgrade_orderers,
 		}*/
+
+		// name of the patch
+		'rebuild_safelist': {
+
+			// description of the patch, gets stored in patch doc
+			purpose: 'this patch rebuilds the hostname safe list to include ports',
+
+			// the actual patch function/code
+			patch: rebuild_safelist,
+		},
 	};
 
 	//--------------------------------------------------
@@ -603,6 +613,36 @@ module.exports = function (logger, ev, t) {
 			}, 10000);
 		}
 	};
+
+	// ----------------------------------------------------------------------------------
+	// Patch 3 - 03/24/2023
+	// this patch rebuilds the url whitelist to include ports
+	// ----------------------------------------------------------------------------------
+	function rebuild_safelist(cb) {
+		if (!cb) {
+			cb = function () { };
+		}
+		logger.debug('[patch] going to run "rebuild_safelist"');
+		t.component_lib.rebuildWhiteList({}, (rebuild_errors) => {
+
+			t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, (err, settings_doc) => {
+				if (err || !settings_doc) {
+					logger.error('[patch lib] could not get settings doc to clear old safe list', err);
+					return cb(rebuild_errors);
+				} else {
+
+					// update the settings doc
+					delete settings_doc.host_white_list;
+					t.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, settings_doc, (err_writeDoc, doc) => {
+						if (err_writeDoc) {
+							logger.error('[patch lib] cannot edit settings doc to clear old safe list:', err_writeDoc);
+						}
+						return cb(rebuild_errors);
+					});
+				}
+			});
+		});
+	}
 
 	return patch;
 };

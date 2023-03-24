@@ -1040,7 +1040,7 @@ module.exports = function (logger, ev, t) {
 	}
 
 	//-------------------------------------------------------------
-	// Rebuild ips/domains on whitelist aka safelist
+	// Rebuild ips/domains on whitelist aka safelist (legacy name was HOST_WHITE_LIST)
 	//-------------------------------------------------------------
 	exports.rebuildWhiteList = (req, cb) => {
 		req._skip_cache = true;
@@ -1051,7 +1051,7 @@ module.exports = function (logger, ev, t) {
 			(join) => {
 				exports.get_all_components(req, (err, resp) => {
 					if (err) {
-						logger.warn('[comp lib] could not get component docs to rebuild hostname safelist', err);
+						logger.warn('[comp lib] could not get component docs to rebuild url safelist', err);
 					}
 					join(err, resp);
 				});
@@ -1061,7 +1061,7 @@ module.exports = function (logger, ev, t) {
 			(join) => {
 				t.signature_collection_lib.getSignatureCollectionsDocs(req, (err, resp) => {
 					if (err) {
-						logger.warn('[comp lib] could not get signature collections to rebuild hostname safelist', err);
+						logger.warn('[comp lib] could not get signature collections to rebuild url safelist', err);
 					}
 					join(null, resp);						// don't care if we can't get these
 				});
@@ -1069,7 +1069,7 @@ module.exports = function (logger, ev, t) {
 
 		], (a_err, results) => {
 			if (a_err) {
-				logger.error('[comp lib] cannot update hostname safelist, could not get components'); // error details already logged
+				logger.error('[comp lib] cannot update url safelist, could not get components'); // error details already logged
 				return cb(a_err);
 			} else {
 				const components_arr = results[0] ? results[0].components : [];
@@ -1084,40 +1084,40 @@ module.exports = function (logger, ev, t) {
 		function process_data(components, sig_docs, cb_built) {
 			const urls2add = {};									// grab all the urls we might add for any component, use map to avoid duplicates
 
-			for (let i in components) {								// add hostnames from component docs
+			for (let i in components) {								// add urls from component docs
 				const comp_doc = components[i];
 				if (comp_doc.api_url) {
-					urls2add[t.misc.get_host(comp_doc.api_url)] = true;
+					urls2add[t.misc.fmt_url(comp_doc.api_url)] = true;
 				}
 				if (comp_doc.ca_url) {								// ca_url is legacy
-					urls2add[t.misc.get_host(comp_doc.ca_url)] = true;
+					urls2add[t.misc.fmt_url(comp_doc.ca_url)] = true;
 				}
 				if (comp_doc.grpcwp_url) {
-					urls2add[t.misc.get_host(comp_doc.grpcwp_url)] = true;
+					urls2add[t.misc.fmt_url(comp_doc.grpcwp_url)] = true;
 				}
 				if (comp_doc.operations_url) {
-					urls2add[t.misc.get_host(comp_doc.operations_url)] = true;
+					urls2add[t.misc.fmt_url(comp_doc.operations_url)] = true;
 				}
 				if (comp_doc.osnadmin_url) {
-					urls2add[t.misc.get_host(comp_doc.osnadmin_url)] = true;
+					urls2add[t.misc.fmt_url(comp_doc.osnadmin_url)] = true;
 				}
 				if (comp_doc.api_url_saas) {
-					urls2add[t.misc.get_host(comp_doc.api_url_saas)] = true;
+					urls2add[t.misc.fmt_url(comp_doc.api_url_saas)] = true;
 				}
 				if (comp_doc.operations_url_saas) {
-					urls2add[t.misc.get_host(comp_doc.operations_url_saas)] = true;
+					urls2add[t.misc.fmt_url(comp_doc.operations_url_saas)] = true;
 				}
 				if (comp_doc.osnadmin_url_saas) {
-					urls2add[t.misc.get_host(comp_doc.osnadmin_url_saas)] = true;
+					urls2add[t.misc.fmt_url(comp_doc.osnadmin_url_saas)] = true;
 				}
 			}
 
-			for (let i in sig_docs) {								// also add hostnames from signature collection docs
+			for (let i in sig_docs) {								// also add urls from signature collection docs
 				for (let x in sig_docs[i].orgs2sign) {
 					for (let y in sig_docs[i].orgs2sign[x].peers) {
-						const hostname = t.misc.get_host(sig_docs[i].orgs2sign[x].peers[y]);
-						if (hostname) {
-							urls2add[hostname] = true;
+						const url_str = t.misc.fmt_url(sig_docs[i].orgs2sign[x].peers[y]);
+						if (url_str) {
+							urls2add[url_str] = true;
 						}
 					}
 				}
@@ -1129,13 +1129,13 @@ module.exports = function (logger, ev, t) {
 			};
 			const new_list = Object.keys(urls2add);
 
-			if (t.misc.is_equal_arr(ev.HOST_WHITE_LIST, new_list)) {	// if its the same, don't make a new write, would be pointless churn
-				logger.debug('[comp lib] hostname safelist has not changed, skipping a settings doc update');
+			if (t.misc.is_equal_arr(ev.URL_SAFE_LIST, new_list)) {	// if its the same, don't make a new write, would be pointless churn
+				logger.debug('[comp lib] url safelist has not changed, skipping a settings doc update');
 				return cb_built(null, new_list);
 			} else {
-				ev.HOST_WHITE_LIST = new_list;
+				ev.URL_SAFE_LIST = new_list;
 				t.otcc.repeatWriteSafe(opts, (settings_doc) => {		// don't use wr_doc in callback, use "doc" passed into writeDoc
-					settings_doc.host_white_list = new_list;
+					settings_doc.url_safe_list = new_list;
 					return { doc: settings_doc };						// doc has the right _rev
 				}, (err) => {
 					if (err) {

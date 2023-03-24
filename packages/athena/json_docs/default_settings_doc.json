@@ -139,7 +139,7 @@
 		"style-src 'self' 'unsafe-inline' *.ibm.com *.medallia.eu"
 	],
 	"host_url": "http://localhost:3000",
-	"host_white_list": [
+	"url_safe_list": [
 		".*"
 	],
 	"hsm": null,
