@@ -585,7 +585,8 @@ __default_settings_doc.json:__
 // defaults to any host, eg: [".*"]
 // **note** this field overwrites itself as components are added, thus
 // it is not intended to be manually customized
-"host_white_list": [],
+// (the legacy name for this was host_white_list)
+"url_safe_list": [],
 
 // HSM image settings (hardware security module).
 // opaque field to athena. apollo consumes it.

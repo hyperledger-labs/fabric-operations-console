@@ -66,7 +66,7 @@ const ev = {
 	DESIGN_DOC: DESIGN_DOC,
 	AUTH_SCHEME: 'appid',
 	HOST_URL: 'http://localhost:3000',
-	HOST_WHITE_LIST: ['.*'],
+	URL_SAFE_LIST: ['.*'],
 	SESSION_CACHE_ENABLED: true,
 	CONFIGTXLATOR_URL_ORIGINAL: 'http://localhost:3000',
 	STR: {

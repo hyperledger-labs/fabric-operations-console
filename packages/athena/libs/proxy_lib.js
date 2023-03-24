@@ -40,7 +40,7 @@ module.exports = function (logger, ev, t) {
 		}
 
 		const base_url = parts.protocol + '//' + parts.hostname + ':' + parts.port;
-		const valid_url = t.ot_misc.validateUrl(base_url, ev.HOST_WHITE_LIST);	// see if its in our whitelist or not
+		const valid_url = t.ot_misc.validateUrl(base_url, ev.URL_SAFE_LIST);	// see if its in our whitelist or not
 		if (!valid_url) {
 			logger.error('[old proxy] - unsafe url. will not send request to url:', encodeURI(base_url));
 			return cb({ statusCode: 400, response: 'unsafe url. will not send request' });
@@ -104,7 +104,7 @@ module.exports = function (logger, ev, t) {
 	exports.grpc_proxy_proxy_call = (req, cb) => {
 		const parsed = t.ot_misc.parseProxyUrl(req.originalUrl, { default_proto: 'http', prefix: '/grpcwp/' });
 
-		const valid_url = t.ot_misc.validateUrl(parsed.base2use, ev.HOST_WHITE_LIST);	// see if its in our whitelist or not
+		const valid_url = t.ot_misc.validateUrl(parsed.base2use, ev.URL_SAFE_LIST);	// see if its in our whitelist or not
 		if (!valid_url) {
 			logger.error('[grpcwp] - unsafe url. will not send grpcwp request to url:', parsed.base2use);
 			return cb({ statusCode: 400, response: 'unsafe url. will not send grpcwp request' });
@@ -179,7 +179,7 @@ module.exports = function (logger, ev, t) {
 	//--------------------------------------------------
 	exports.ca_proxy_call = (req, cb) => {
 		const parsed = t.ot_misc.parseProxyUrl(req.originalUrl, { default_proto: 'http', prefix: '/caproxy/' });
-		const valid_url = t.ot_misc.validateUrl(parsed.base2use, ev.HOST_WHITE_LIST);	// see if its in our whitelist or not
+		const valid_url = t.ot_misc.validateUrl(parsed.base2use, ev.URL_SAFE_LIST);	// see if its in our whitelist or not
 		if (!valid_url) {
 			logger.error('[ca proxy] - unsafe url. will not send ca request to url:', parsed.base2use);
 			return cb({ statusCode: 400, response: 'unsafe url. will not send ca request' });
@@ -234,7 +234,7 @@ module.exports = function (logger, ev, t) {
 	//--------------------------------------------------
 	exports.proxy_call = (req, cb) => {
 		const parsed = t.ot_misc.parseProxyUrl(req.originalUrl, { default_proto: 'https', prefix: '/proxy/' });
-		const valid_url = t.ot_misc.validateUrl(parsed.base2use, ev.HOST_WHITE_LIST);	// see if its in our whitelist or not
+		const valid_url = t.ot_misc.validateUrl(parsed.base2use, ev.URL_SAFE_LIST);	// see if its in our whitelist or not
 		if (!valid_url) {
 			logger.error('[general proxy] - unsafe url. will not send request to url:', parsed.base2use);
 			return cb({ statusCode: 400, response: 'unsafe url. will not send request' });

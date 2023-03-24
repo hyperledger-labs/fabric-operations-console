@@ -703,6 +703,13 @@ module.exports = function (logger, t) {
 	};
 
 	// ------------------------------------------
+	// redact basic auth in url
+	// ------------------------------------------
+	exports.fmt_url = function (url) {
+		return exports.redact_basic_auth(url);
+	};
+
+	// ------------------------------------------
 	// parse query parameter as array of strings
 	// ------------------------------------------
 	exports.fmt_arr_of_strings_query_param = function (req, field_name) {
