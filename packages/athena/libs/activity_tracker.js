@@ -17,40 +17,45 @@
 //------------------------------------------------------------
 // activity_tracker_lib.js - Library functions for logging events
 // 11/10/2021 - repurposing this file to make an "audit log", it will no longer conform to the horrible "Activity Tracker" format
+// 02/23/2023 - disabled this feature
+// 03/29/2023 - enabled this feature
 //------------------------------------------------------------
 
 module.exports = function (logger, ev, t) {
 	const exports = {};
 	const routes_2_ignore = prepare_routes_2_ignore();									// array of regular expressions of paths to ignore
-	const AT_FILENAME = 'audit.log';
-	const path2file = ev.ACTIVITY_TRACKER_PATH ? t.path.join(__dirname + ev.ACTIVITY_TRACKER_PATH, AT_FILENAME) : '';
-	let atLogger = {
-		debug: () => { }
-	};
+
+	let filename = ev.ACTIVITY_TRACKER_FILENAME ? t.path.basename(ev.ACTIVITY_TRACKER_FILENAME) : null;
+	const AT_FILENAME = (filename && filename.indexOf('.')) ? filename : 'audit.log';
+	const path2file = ev.ACTIVITY_TRACKER_FILENAME ? t.path.join(__dirname, '../logs', AT_FILENAME) : '';
+	let atLogger = null;
+	const DATE_FMT = '%Y-%M-%dT%H:%m:%s.%R+0000';
 
 	// init the log file
-	if (ev.ACTIVITY_TRACKER_PATH && path2file) {
-		/*t.misc.check_dir_sync({ file_path: path2file, create: true });					// check if the path exists, create it if not
-		if (!t.fs.existsSync(path2file)) {
+	if (ev.ACTIVITY_TRACKER_FILENAME && path2file) {
+		t.misc.check_dir_sync({ file_path: path2file, create: true });					// check if the path exists, create it if not
+		if (t.fs.existsSync(path2file)) {
+			logger.silly('[activity] activity tracker logs is enabled, using location:', path2file);
+		} else {
 			try {
 				t.fs.writeFileSync(path2file, '');											// init file
-				logger.debug('[audit log] init log file:', path2file);
+				logger.debug('[activity] init log file:', path2file);
 			} catch (e) {
-				logger.error('[audit log] unable to write log file:', path2file);
+				logger.error('[activity] unable to write log file:', path2file);
 				logger.error(e);
 			}
-		}*/
+		}
 
 		// build symbolic links if activity tracker log files are outside the athena log folder
-		build_sym_links();
+		//build_sym_links();
 
 		// make a winston logger for the activity tracker logs
-		/*atLogger = new (t.winston.Logger)({
+		atLogger = new (t.winston.Logger)({
 			level: 'debug',
 			transports: [
 				new t.winston.transports.File({
 					filename: path2file,
-					maxsize: 1024 * 1024 * 2,		// unsure of size, we want it smaller than logDNA's rotate
+					maxsize: 1024 * 1024 * 2,		// unsure of size
 					maxFiles: 5,
 					tailable: true,
 					colorize: false,
@@ -61,17 +66,19 @@ module.exports = function (logger, ev, t) {
 					},
 				}),
 			]
-		});*/
+		});
+
+		atLogger.info({ eventTime: t.misc.formatDate(Date.now(), DATE_FMT), type: 'system', message: 'console has started' });
 	}
 
 	//-------------------------------------------------------------
 	// build & track the event for activity tracker - (events are http requests but its not all requests, just the ones we want)
 	//-------------------------------------------------------------
 	exports.track_api = (req, res, json_resp) => {
-		if (ev.ACTIVITY_TRACKER_PATH && path2file) {
+		if (ev.ACTIVITY_TRACKER_FILENAME && path2file) {
 			const at_event = build_event(req, res, json_resp);	// create event, strict format!
-			logger.silly('[audit log] generated event for req:', t.ot_misc.buildTxId(req), path2file);
-			atLogger.debug(at_event);							// track the event by logging it to this file, logDNA will pick up file and send onward
+			logger.silly('[activity] generated event for req:', t.ot_misc.buildTxId(req), path2file);
+			atLogger.debug(at_event);							// track the event by logging it to this file
 			return at_event;									// return it for tests
 		}
 		return null;
@@ -94,9 +101,11 @@ module.exports = function (logger, ev, t) {
 
 		// this object structure is a mess - the format is super strict, wordy, and dumb
 		const ret = {
-
 			// UTC time of the event - YYYY-MM-DDTHH:mm:ss.SS+0000
-			eventTime: t.misc.formatDate(Date.now(), '%Y-%M-%dT%H:%m:%s.%R+0000'),
+			eventTime: t.misc.formatDate(Date.now(), DATE_FMT),
+
+			// type of log
+			type: 'http',
 
 			// <service name>.<object descriptor>.<action verb>
 			action: formatAction(req),
@@ -250,7 +259,7 @@ module.exports = function (logger, ev, t) {
 						str = 'components.' + pickVerb(req);
 					}
 				} else {
-					logger.warn('[audit log] unknown iam action, please add it to activity_tracker_lib:', iam_action, req.actions);
+					logger.warn('[activity] unknown iam action, please add it to activity_tracker_lib:', iam_action, req.actions);
 					str = 'unknown.' + pickVerb(req);
 				}
 
@@ -258,7 +267,7 @@ module.exports = function (logger, ev, t) {
 				return (ev.STR.ALT_PRODUCT_NAME + '.' + str).toLowerCase();			// pre-append the service name and we are done
 			}
 		} catch (e) {
-			logger.warn('[audit log] error building audit log action', e);
+			logger.warn('[activity] error building activity log action', e);
 			let str = 'unknown.' + pickVerb(req);
 			return (ev.STR.ALT_PRODUCT_NAME + '.' + str).toLowerCase();			// pre-append the service name and we are done
 		}
@@ -293,6 +302,9 @@ module.exports = function (logger, ev, t) {
 
 			// ignore UI GET methods - sometimes
 			if (req.method === 'GET' && (req_path.indexOf('/api/') === 0 || req_path.indexOf('/deployer/') === 0)) {
+				if (res.statusCode === 401 || res.statusCode === 403 || res.statusCode === 400) {		// always log on some errors
+					return false;
+				}
 				if (!is_exception(req_path)) {
 					return true;								// ignore GET requests from the UI - too noisy
 				}
@@ -370,10 +382,11 @@ module.exports = function (logger, ev, t) {
 	//-------------------------------------------------------------
 	// build symbolic links in the log folder to the activity tracker files (iff the activity file is outside our log folder)
 	//-------------------------------------------------------------
+	/* no longer needed
 	function build_sym_links() {
 		const log_folder = t.log_lib.get_log_path();
 		if (!path2file.includes(log_folder)) {										// test if this file is outside the log folder
-			build_link(t.path.join(ev.ACTIVITY_TRACKER_PATH, AT_FILENAME));
+			build_link(t.path.join(ev.ACTIVITY_TRACKER_FILENAME, AT_FILENAME));
 		}
 
 		function build_link(pathToFile) {
@@ -382,15 +395,15 @@ module.exports = function (logger, ev, t) {
 				try {
 					const path2link = t.path.join(log_folder, file_name);
 					t.fs.symlink(pathToFile, path2link, 'file', err => {
-						logger.debug('[audit log] symbolic link created', path2link);
+						logger.debug('[activity] symbolic link created', path2link);
 					});
 				} catch (e) {
-					logger.error('[audit log] unable to create symbolic link:', pathToFile);
+					logger.error('[activity] unable to create symbolic link:', pathToFile);
 					logger.error(e);
 				}
 			}
 		}
-	}
+	}*/
 
 	return exports;
 };
