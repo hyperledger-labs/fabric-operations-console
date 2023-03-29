@@ -181,7 +181,7 @@
 		}
 	},
 	"ev_settings_keys_subset": [
-		"ACTIVITY_TRACKER_PATH",
+		"ACTIVITY_TRACKER_FILENAME",
 		"ATHENA_ID",
 		"AUTH_SCHEME",
 		"CALLBACK_URI",
