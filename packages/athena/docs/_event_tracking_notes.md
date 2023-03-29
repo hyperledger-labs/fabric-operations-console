@@ -47,22 +47,27 @@ The console still has code related to segment, but no segment events are sent/re
 ## Activity Tracker Logs
 
 Events are triggered from http requests to the Console (not all requests, see below).
-The events are written to the file `audit.log` at the path specified by system setting `activity_tracker_filename`.
+The events are written to the file `audit.log` in the [./packages/athena/logs/](../logs) folder, the setting `activity_tracker_filename` can be used to change the filename.
 See the [configuration options](../env/README.md#default) readme for more setting details.
 The log file is rotated by athena's winston lib once it reaches 2MB, up to 5 files.
 Meaning if 6MB of logging was generated, you would see the 3 files each with 2MB of data, named: `audit.log`, `audit1.log` and `audit2.log`.
 
 Note that since the logging is using the pod's filesystem all activity logs are wiped/reset when a pod restarts.
 
+You can easily see if activity tracker is enabled by finding the server side log during startup:
+
+- `[event tracker] enabled logging for activity tracker`
+- `[event tracker] disabled logging for activity tracker`
+
 **What is tracked:**
 
 In an effort to not overwhelm the logs, only "important" events are added to the log.
 - All http requests that start with `/ak/api/` will generate an event. (this covers all APIs that used an api key, bearer token or basic auth)
-- Console login and logout http requests
-- Component creation/deletion/updates http requests
+- Console login and logouts
+- All component creation/deletion/updates
 - Http requests that access the logs
 - Some Fabric operations like creating channels, joining channels, install/instantiate chaincode
-    - open an issue if you would like to add more events
+	- a complete list is not available
 - In general all console http requests with POST/PUT/PATCH/DELETE methods will generate an event except ones hard coded in the `ignore_routes` variable (in `activity_tracker.js`). Which as of 03/2023 is:
 	- `'/api/v[123]/proxy'` - (general proxy route used for comms with Peers and CAs) - **these are opaque calls & too noisy**
 	- `'/grpcwp/*'` - (grpc web proxy route used for comms with Orderers) - **these are opaque calls & too noisy**
@@ -74,10 +79,11 @@ In an effort to not overwhelm the logs, only "important" events are added to the
 
 A dev working on the console does not need to add anything to log new events from new server side http requests.
 All http requests that fit the criteria above are automatically logged.
-The logic for this is in our authentication scheme middleware (even for public/unprotected APIs).
+The logic for this is in our authentication scheme middleware (though it also works over public/unprotected APIs).
 
 If you need to add events the are from front end Fabric activity, see details below and if you are not a dev open an issue.
-	- client side Fabric operations (ones that occur in the browser) can be tracked by using [api #5](./logging_apis.md#client).
+
+- client side Fabric operations (ones that occur in the browser) can be tracked by using [api #5](./logging_apis.md#client).
 
 **What is in an event:**
 
@@ -148,4 +154,5 @@ The real logs will have each event on 1 line.
 **How to view events:**
 
 From your console's homepage, change the path in your browser to `/api/v3/logs`.
-Click the `audit.log` link to download the file.
+Click the `audit.log` link to view the file in your browser.
+Note that you are only viewing events from an individual console pod, if you have multiple, you will need to round robin through the other pods to get each file.
