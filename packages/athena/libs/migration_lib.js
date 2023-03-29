@@ -1339,7 +1339,7 @@ module.exports = function (logger, ev, t) {
 						}
 						if (defaults) {
 							const overwrite_fields = [
-								'activity_tracker_path', 'db_custom_names', 'db_defaults', 'default_user_password_initial',
+								'activity_tracker_filename', 'db_custom_names', 'db_defaults', 'default_user_password_initial',
 								'dynamic_tls', 'ibmid', 'migration_status', 'infrastructure', 'max_components',
 								'max_req_per_min', 'max_req_per_min_ak', 'the_default_resources_map'
 							];
