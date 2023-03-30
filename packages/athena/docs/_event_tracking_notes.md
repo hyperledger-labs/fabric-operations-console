@@ -94,7 +94,7 @@ The real logs will have each event on 1 line.
 // a single event - example
 {
 	// UTC date/time of the event
-	"eventTime": "2021-11-12T19:31:38.56+0000",
+	"eventTime": "2023/03/30-13:13:34.743Z",
 
 	// type
 	"type": "http", // indicates this is an event from an http request

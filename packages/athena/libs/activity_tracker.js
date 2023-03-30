@@ -29,7 +29,7 @@ module.exports = function (logger, ev, t) {
 	const AT_FILENAME = (filename && filename.indexOf('.')) ? filename : 'audit.log';
 	const path2file = ev.ACTIVITY_TRACKER_FILENAME ? t.path.join(__dirname, '../logs', AT_FILENAME) : '';
 	let atLogger = null;
-	const DATE_FMT = '%Y-%M-%dT%H:%m:%s.%R+0000';
+	const DATE_FMT = '%Y/%M/%d-%H:%m:%s.%rZ';
 
 	// init the log file
 	if (ev.ACTIVITY_TRACKER_FILENAME && path2file) {
@@ -68,7 +68,11 @@ module.exports = function (logger, ev, t) {
 			]
 		});
 
-		atLogger.info({ eventTime: t.misc.formatDate(Date.now(), DATE_FMT), type: 'system', message: 'console has started' });
+		atLogger.info({
+			eventTime: t.misc.formatDate(Date.now(), DATE_FMT),
+			type: 'system',
+			message: 'console has started - process id: ' + process.env.ATHENA_ID
+		});
 	}
 
 	//-------------------------------------------------------------
@@ -101,7 +105,7 @@ module.exports = function (logger, ev, t) {
 
 		// this object structure is a mess - the format is super strict, wordy, and dumb
 		const ret = {
-			// UTC time of the event - YYYY-MM-DDTHH:mm:ss.SS+0000
+			// UTC time of the event - YYYY/MM/DD-HH:mm:ss.SSZ
 			eventTime: t.misc.formatDate(Date.now(), DATE_FMT),
 
 			// type of log

@@ -50,7 +50,7 @@ const logger = new (winston.Logger)({
 			maxRetries: 20,
 			json: false,
 			timestamp: function () {
-				return formatDate(Date.now(), '%Y/%M/%d-%H:%m:%s.%r');	// logs are timestamp w/UTC
+				return formatDate(Date.now(), '%Y/%M/%d-%H:%m:%s.%rZ');	// logs are timestamp w/UTC
 			},
 		}),
 	]

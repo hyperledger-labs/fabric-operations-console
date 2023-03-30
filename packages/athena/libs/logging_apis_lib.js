@@ -112,7 +112,7 @@ module.exports = function (logger, ev, t) {
 		const path_name = t.log_lib.get_log_path();
 		const path_2_file = t.path.join(path_name, req.params.logFile);
 		let logs = 'instance_id - "' + process.env.ATHENA_ID + '"\n';
-		logs += t.misc.formatDate(Date.now(), '%Y/%M/%d-%H:%m:%s.%r') + ' - accessed logs (this is the current server time)\n';
+		logs += t.misc.formatDate(Date.now(), '%Y/%M/%d-%H:%m:%s.%rZ') + ' - accessed logs (this is the current server time)\n';
 		logs += '-------------------------------------------------------------------------\n\n';
 
 		try {
