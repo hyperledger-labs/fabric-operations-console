@@ -748,7 +748,7 @@ class NodeRestApi {
 				};
 			}
 		});
-		return RestApi.put(`/api/saas/v2/components/${node.id}`, data);
+		return RestApi.put(`/api/saas/v3/components/${node.id}`, data);
 	}
 
 	static getAllAvailableVersions() {

@@ -605,7 +605,7 @@ module.exports = (logger, ev, t, opts) => {
 
 		// check for valid cpu values
 		if (body_spec.type === 'string' && body_spec['x-validate_cpu'] === true) {
-			let error = t.misc.invalid_cpu_value(input, body_spec['maximum'], body_spec['minimum']);
+			let error = t.misc.invalid_cpu_value(input, body_spec['x-maximum'], body_spec['x-minimum']);
 			if (error) {
 				const symbols = {
 					'$PROPERTY_NAME': path2field.join('.'),
@@ -616,7 +616,7 @@ module.exports = (logger, ev, t, opts) => {
 
 		// check for valid memory values
 		if (body_spec.type === 'string' && body_spec['x-validate_memory'] === true) {
-			let error = t.misc.invalid_bytes_value(input, body_spec['maximum'], body_spec['minimum']);
+			let error = t.misc.invalid_bytes_value(input, body_spec['x-maximum'], body_spec['x-minimum']);
 			if (error) {
 				const symbols = {
 					'$PROPERTY_NAME': path2field.join('.'),
@@ -627,7 +627,7 @@ module.exports = (logger, ev, t, opts) => {
 
 		// check for valid storage values
 		if (body_spec.type === 'string' && body_spec['x-validate_storage'] === true) {
-			let error = t.misc.invalid_bytes_value(input, body_spec['maximum'], body_spec['minimum']);
+			let error = t.misc.invalid_bytes_value(input, body_spec['x-maximum'], body_spec['x-minimum']);
 			if (error) {
 				const symbols = {
 					'$PROPERTY_NAME': path2field.join('.'),

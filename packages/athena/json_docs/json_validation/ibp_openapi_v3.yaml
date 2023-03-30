@@ -83,9 +83,9 @@ x-validate_error_messages:
   invalid_certificate: "Expected parameter '$PROPERTY_NAME' to be a Base64 encoded PEM-string."
 
   # when the resource units are bad, OR the value is crazy (too high or negative)
-  invalid_cpu_units: "Parameter '$PROPERTY_NAME' must be a valid CPU value. Try values similar to '250m' or '0.25'."
-  invalid_memory_units: "Parameter '$PROPERTY_NAME' must be a valid memory value. Try values similar to '1GiB' or '1024MiB'."
-  invalid_storage_units: "Parameter '$PROPERTY_NAME' must be a valid storage value. Try values similar to '128GiB' or '131072MiB'."
+  invalid_cpu_units: "Parameter '$PROPERTY_NAME' is malformed or outside the acceptable range. Must be less than 100CPU but greater than 0.01CPU. A typical value is '200m' or '0.2'."
+  invalid_memory_units: "Parameter '$PROPERTY_NAME' is malformed or outside the acceptable range. Must be less than 32GB but greater than 1B. A typical value is '0.39GiB' or '400MiB'."
+  invalid_storage_units: "Parameter '$PROPERTY_NAME' is malformed or outside the acceptable range. Must be less than 10TB but greater than 1B. A typical value is '20GiB' or '20480MiB'."
 
   # when the deployment resource requests are less than the upper limits
   invalid_requests_for_limits: "Parameter '$PROPERTY_NAME' is invalid. 'requests' must be <= 'limits'. requests: '$REQUESTS', limits: '$LIMITS'."
@@ -15624,7 +15624,7 @@ components:
           example: 256MiB
           x-validate_memory: true
           x-minimum: 1
-          x-maximum: 107374182400
+          x-maximum: 34359738368 # dsh abuse limit of 32GB, just b/c
           description: Desired memory for subcomponent. [Resource details](/docs/blockchain?topic=blockchain-ibp-console-govern-components#ibp-console-govern-components-allocate-resources)
 
     ResourceLimits:
@@ -15642,7 +15642,7 @@ components:
           example: 256MiB
           x-validate_memory: true
           x-minimum: 1
-          x-maximum: 107374182400
+          x-maximum: 34359738368 # dsh abuse limit of 32GB, just b/c
           description: Maximum memory for subcomponent. Must be >= "requests.memory". Defaults to the same value in "requests.memory". [Resource details](/docs/blockchain?topic=blockchain-ibp-console-govern-components#ibp-console-govern-components-allocate-resources)
 
     StorageObject:
@@ -15652,7 +15652,7 @@ components:
           type: string
           example: 4GiB
           x-minimum: 1
-          x-maximum: 10995116277760
+          x-maximum: 10995116277760 # dsh abuse limit of 10TB, just b/c
           x-validate_storage: true
           description: Maximum disk space for subcomponent. [Resource details](/docs/blockchain?topic=blockchain-ibp-console-govern-components#ibp-console-govern-components-allocate-resources)
         class:
