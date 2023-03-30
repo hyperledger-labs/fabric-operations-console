@@ -756,7 +756,14 @@ module.exports = (logger, ev, t, opts) => {
 
 		// check if the hostname is in our whitelist or not
 		if (input && body_spec['x-validate_known_hostname'] === true) {
-			if (!t.ot_misc.validateUrl(input, req._whitelist || ev.URL_SAFE_LIST)) {
+			let url_str = input;
+			const regex = new RegExp(/:\d{1,5}$/, 'i');
+			if (!regex.test(input)) {														// if no port in input find "port" field in body
+				const path2parent = path2field.slice(0, path2field.length - 1).join('.');			// get path to the parent object
+				const port = t.misc.safe_dot_nav(req_body, 'req_body.' + path2parent + '.port');	// get the value of "port" in req body
+				url_str = input + ':' + port;
+			}
+			if (!t.ot_misc.validateUrl(url_str, req._whitelist || ev.URL_SAFE_LIST)) {
 				const symbols = {
 					'$PROPERTY_NAME': path2field.join('.'),
 				};

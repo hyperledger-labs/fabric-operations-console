@@ -703,10 +703,15 @@ module.exports = function (logger, t) {
 	};
 
 	// ------------------------------------------
-	// redact basic auth in url
+	// return hostname + port from url (no protocol, no basic auth)
 	// ------------------------------------------
 	exports.fmt_url = function (url) {
-		return exports.redact_basic_auth(url);
+		const parts = exports.break_up_url(url);
+		if (!parts || !parts.hostname) {
+			return null;				// error is logged elsewhere
+		} else {
+			return parts.hostname + ':' + parts.port;
+		}
 	};
 
 	// ------------------------------------------
@@ -840,8 +845,20 @@ module.exports = function (logger, t) {
 				const parts = path.split('.');
 
 				if (parts && parts.length >= 0) {
-					for (let i = 1; i < parts.length; i++) {	// skip the first key (ie start at 1)
-						prev = prev[parts[i]];
+					for (let i = 1; i < parts.length; i++) {		// skip the first key (ie start at 1)
+
+						// if this key has an array on it, such as "field[3]", index into the array
+						const matches = (typeof parts[i] === 'string') ? parts[i].match(/(\w+)\[(\d+)\]/) : null;
+						if (matches && matches[1] && matches[2]) {	// if its an array it'll have 2 matches
+							const key = matches[1];
+							const index = Number(matches[2]);
+							prev = prev[key][index];				// index into array
+						}
+
+						// else key is for a simple object, index into the child field
+						else {
+							prev = prev[parts[i]];
+						}
 					}
 					if (typeof prev !== 'undefined') {
 						return prev;							// found it, return

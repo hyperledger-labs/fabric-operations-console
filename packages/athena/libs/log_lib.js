@@ -77,7 +77,7 @@ module.exports = function (t) {
 					colorize: false,
 					maxRetries: 20,
 					timestamp: function () {
-						return exports.formatDate(Date.now(), '%Y/%M/%d-%H:%m:%s.%r');	// logs are timestamp w/UTC
+						return exports.formatDate(Date.now(), '%Y/%M/%d-%H:%m:%s.%rZ');	// logs are timestamp w/UTC
 					},
 					json: false,
 				})

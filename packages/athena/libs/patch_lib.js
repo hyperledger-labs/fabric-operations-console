@@ -47,7 +47,7 @@ module.exports = function (logger, ev, t) {
 		}*/
 
 		// name of the patch
-		'rebuild_safelist': {
+		'rebuild_safelist2': {
 
 			// description of the patch, gets stored in patch doc
 			purpose: 'this patch rebuilds the hostname safe list to include ports',
