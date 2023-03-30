@@ -321,7 +321,7 @@ describe('ot_misc.js', () => {
 						{
 							itStatement: 'should return true - ip is in safe list test_id=gtvvoj',
 							expectBlock: (done) => {
-								const list = ['https://169.51.206.63:31040'];
+								const list = ['169.51.206.63:31040'];
 								expect(ot_misc.validateUrl('https://169.51.206.63:31040/', list)).to.equal(true);
 								expect(ot_misc.validateUrl('https://169.51.206.63:31040', list)).to.equal(true);
 								expect(ot_misc.validateUrl('169.51.206.63:31040', list)).to.equal(true);
@@ -331,7 +331,7 @@ describe('ot_misc.js', () => {
 						{
 							itStatement: 'should return false - ip is NOT in safe list test_id=ovzapx',
 							expectBlock: (done) => {
-								const list = ['https://169.51.206.63:31040'];
+								const list = ['169.51.206.63:31040'];
 								expect(ot_misc.validateUrl('https://169.51.206.99:31040', list)).to.equal(false);
 								expect(ot_misc.validateUrl('https://169.51.206.63:31041', list)).to.equal(false);
 								done();
@@ -340,7 +340,7 @@ describe('ot_misc.js', () => {
 						{
 							itStatement: 'should return true - url is in safe list test_id=plfimy',
 							expectBlock: (done) => {
-								const list = ['https://n26da6a-ca1-ca.us-south.containers.appdomain.cloud:443'];
+								const list = ['n26da6a-ca1-ca.us-south.containers.appdomain.cloud:443'];
 								expect(ot_misc.validateUrl('https://n26da6a-ca1-ca.us-south.containers.appdomain.cloud:443/stuff', list)).to.equal(true);
 								expect(ot_misc.validateUrl('https://n26da6a-ca1-ca.us-south.containers.appdomain.cloud', list)).to.equal(true);
 								expect(ot_misc.validateUrl('n26da6a-ca1-ca.us-south.containers.appdomain.cloud', list)).to.equal(true);
@@ -350,7 +350,7 @@ describe('ot_misc.js', () => {
 						{
 							itStatement: 'should return false - url is NOT in safe list test_id=iscaye',
 							expectBlock: (done) => {
-								const list = ['https://n26da6a-ca1-ca.us-south.containers.appdomain.cloud:443'];
+								const list = ['n26da6a-ca1-ca.us-south.containers.appdomain.cloud:443'];
 								expect(ot_misc.validateUrl('https://xxx-ca1-ca.us-south.containers.appdomain.cloud:443/stuff', list)).to.equal(false);
 								expect(ot_misc.validateUrl('https://n26da6a-ca1-ca.us-south.containers.appdomain.cloud:8080', list)).to.equal(false);
 								expect(ot_misc.validateUrl('http://n26da6a-ca1-ca.us-south.containers.appdomain.cloud', list)).to.equal(false);
