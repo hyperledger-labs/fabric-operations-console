@@ -6157,7 +6157,7 @@ paths:
               examples:
                 response:
                   value:
-                    ACTIVITY_TRACKER_PATH: /logs
+                    ACTIVITY_TRACKER_FILENAME: /logs
                     ATHENA_ID: 17v7e
                     AUTH_SCHEME: iam
                     CALLBACK_URI: /auth/cb
@@ -6461,7 +6461,7 @@ paths:
               examples:
                 response:
                   value:
-                    ACTIVITY_TRACKER_PATH: /logs
+                    ACTIVITY_TRACKER_FILENAME: /logs
                     ATHENA_ID: 17v7e
                     AUTH_SCHEME: iam
                     CALLBACK_URI: /auth/cb
@@ -14681,7 +14681,7 @@ components:
       type: object
       description: Contains the details of all public settings for the UI
       properties:
-        ACTIVITY_TRACKER_PATH:
+        ACTIVITY_TRACKER_FILENAME:
           type: string
           description: The path to the activity tracker file. This file holds details of all activity. Defaults to '?' (disabled).
           example: '/logs'

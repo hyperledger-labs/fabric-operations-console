@@ -105,7 +105,7 @@ module.exports = function (logger, ev, t) {
 			},
 			THE_DEFAULT_RESOURCES_MAP: ev.THE_DEFAULT_RESOURCES_MAP || '?',
 			TRUST_PROXY: ev.TRUST_PROXY, 						// false is valid, don't make this a question mark
-			ACTIVITY_TRACKER_PATH: ev.ACTIVITY_TRACKER_PATH || '?',
+			ACTIVITY_TRACKER_FILENAME: ev.ACTIVITY_TRACKER_FILENAME || '?',
 			HSM: ev.HSM,										// false is valid, don't make this a question mark
 			LDAP: {
 				SEARCH_BASE: ev.LDAP.SEARCH_BASE || '?',

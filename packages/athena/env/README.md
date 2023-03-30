@@ -223,11 +223,11 @@ __default_settings_doc.json:__
   }
 },
 
-// path to the folder for IBM Activity Tracker event files
+// initial filename for the Activity Tracker event files
 // if null activity tracker is disabled
 // files will rotated by winston
-// defaults './logs/audit.log'
-"activity_tracker_path": './logs/audit.log'
+// defaults 'audit.log'
+"activity_tracker_filename": 'audit.log'
 
 // email address on the UI to surface to users for help
 "admin_contact_email": "ibm@us.ibm.com",

@@ -44,22 +44,22 @@ module.exports = (logger, ev, t) => {
 
 	// decide if activity tracker is enabled
 	function activity_tracker_enabled() {
-		return ev.ACTIVITY_TRACKER_PATH;
+		return ev.ACTIVITY_TRACKER_FILENAME;
 	}
 
 	//-------------------------------------------------------------
 	// build & send the event for each thing
 	//-------------------------------------------------------------
 	const track_event = (req, res, json_resp) => {
-
 		// send to segment lib to track w/api
+		/* even though this is already disabled in 2021, going to comment it out here...
 		if (ev.SEGMENT_WRITE_KEY) {
 			if (!t.ot_misc.is_error_code(res.statusCode)) {							// segment is only tracking success activity
 				if (req.path.indexOf('/components' >= 0)) {							// segment is only tracking component activity
 					t.segment_lib.track_api(req, res, json_resp, () => { });
 				}
 			}
-		}
+		}*/
 
 		// send to notification lib to track w/db doc
 		if (Array.isArray(req._notifications) && req._notifications.length > 0) {	// only build athena notifications for some events
@@ -78,13 +78,13 @@ module.exports = (logger, ev, t) => {
 	//-------------------------------------------------------------
 	// log the current state of event tracker
 	//-------------------------------------------------------------
-	if (ev.SEGMENT_WRITE_KEY) {
+	/*if (ev.SEGMENT_WRITE_KEY) {
 		logger.info('[event tracker] enabled segment tracking of APIs');
 	} else {
 		logger.info('[event tracker] disabled segment tracking of APIs');
-	}
+	}*/
 	if (activity_tracker_enabled()) {
-		logger.info('[event tracker] enabled logging for activity tracker:', ev.ACTIVITY_TRACKER_PATH);
+		logger.info('[event tracker] enabled logging for activity tracker:', ev.ACTIVITY_TRACKER_FILENAME);
 	} else {
 		logger.info('[event tracker] disabled logging for activity tracker');
 	}
