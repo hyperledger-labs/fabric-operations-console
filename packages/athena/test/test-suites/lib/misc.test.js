@@ -982,7 +982,7 @@ describe('Misc', () => {
 				{
 					arrayOfInfoToTest: [
 						{
-							itStatement: 'should return value from object - test_id=dqmgpn',
+							itStatement: 'should return value from complex object - test_id=dqmgpn',
 							expectBlock: (done) => {
 								const doc = {
 									'views': {
@@ -1071,6 +1071,18 @@ describe('Misc', () => {
 									}
 								};
 								expect(misc.safe_dot_nav(doc, ['doc.something', 'doc.views.arr.1.two'])).to.equal('here2');
+								done();
+							}
+						},
+						{
+							itStatement: 'should return value from object with array notation - test_id=ahppav',
+							expectBlock: (done) => {
+								const doc = {
+									'views': {
+										'arr': ['one', { 'two': 'here2' }]
+									}
+								};
+								expect(misc.safe_dot_nav(doc, ['doc.views.arr[1].two'])).to.equal('here2');
 								done();
 							}
 						},
