@@ -1,5 +1,19 @@
 [
 	{
+		"version": "1.0.5-6",
+		"date": "04 April 2023",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			},
+			{
+				"title": "Node v18",
+				"details": "Updated to use Node v18.5"
+			}
+		]
+	},
+	{
 		"version": "1.0.5-3",
 		"date": "15 March 2023",
 		"description": [
