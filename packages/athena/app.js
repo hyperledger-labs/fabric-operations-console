@@ -30,6 +30,7 @@ const tools = {										// stateless util libs should go here, ~8% faster start
 	NodeCache: require('node-cache'),
 	winston: require('winston'),
 	selfsigned: require('selfsigned'),
+	zlib: require('zlib'),
 };
 
 const bodyParser = require('body-parser');
