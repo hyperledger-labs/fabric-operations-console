@@ -349,3 +349,10 @@ multiregion
 checkmark
 unparseable
 preqs
+pentesters
+idaas
+sess
+ldapauth
+openidconnect
+soidc
+channelless

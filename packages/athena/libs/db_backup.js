@@ -20,7 +20,28 @@
 module.exports = function (logger, ev, t) {
 	const dbs = {};
 	const BACKUP_DOC_TYPE = 'athena_backup';
-	let the_backup = {};
+	let the_backup = {
+		/*
+			_id: '-',
+			backup_version: '1.0.0',
+			ibp_versions: {},
+			doc_count: 0,
+			in_progress: false,
+			type: "athena_backup",
+			start_timestamp: 0,
+			end_timestamp: 0,
+			elapsed: 0,
+			dbs: {
+				"DB_COMPONENTS": {
+					start_timestamp: 0,
+					finish_timestamp: 0,
+					elapsed: 0,
+					last_sequence: "",
+					docs: [],
+				},
+			}
+		*/
+	};
 	let restore_in_progress = false;
 	let restore_successes = 0;
 	const MAX_DOC_ITER = 100;
@@ -134,7 +155,6 @@ module.exports = function (logger, ev, t) {
 		db_types: [""],							// [required] array of database setting names to backup
 		blacklisted_doc_types: [""],			// [optional] array of strings, docs with this "type" field will not be backed up
 		BATCH: 512,								// [optional] max number of full docs to pull at once (bulk get), defaults 1000
-		use_fs: false							// [optional] if true the local file system will store the backup instead of the systems db (defaults false)
 		service_id: ''							// [optional] cosmetic name for the service instance, only used on the local file system backup file
 	}
 	*/
@@ -158,6 +178,7 @@ module.exports = function (logger, ev, t) {
 			the_backup.in_progress = true;
 			the_backup.ibp_versions = t.ot_misc.parse_versions();
 			logger.info('[backup] starting db backup. ', the_backup._id, 'dbs:', opts.db_types);
+			fs_write_backup_doc(opts);								// init the doc
 
 			// build a notification doc
 			t.notifications.procrastinate(opts.req, { message: 'starting db backup \'' + the_backup._id + '\'' });
@@ -173,7 +194,8 @@ module.exports = function (logger, ev, t) {
 				the_backup.in_progress = false;
 				the_backup.end_timestamp = Date.now();
 				the_backup.elapsed = t.misc.friendly_ms(the_backup.end_timestamp - the_backup.start_timestamp);
-				update_backup_doc(opts, () => {						// update one more time to flip "in_progress"
+				fs_write_backup_doc(opts);							// write backup to filesystem
+				couch_write_backup_doc(() => {
 					logger.info('[backup] completed backup, docs:', the_backup.doc_count, the_backup.elapsed, the_backup._id);
 
 					try {
@@ -232,25 +254,23 @@ module.exports = function (logger, ev, t) {
 						} else {
 							logger.debug('[backup] there are', bulk_docs.length, 'docs to backup in db: "' + db_name + '" - ' + db_type);
 
-							// [3] write/update the backup doc
+							// [3] update the backup obj in memory (do not write it yet, its not done)
 							update_backup_obj(resp1.last_sequence, bulk_docs);
-							update_backup_doc(orig_opts, () => {
 
-								// [4] check if there have been updates since we started the backup
-								get_doc_ids(db_name, resp1.last_sequence, (error3, resp2) => {
-									if (error || !resp2 || !Array.isArray(resp2.ids2lookup)) {
-										// error already logged
-										return cb_outer(null);
-									} else if (resp2.ids2lookup.length > 0) {
-										// keep going b/c docs were added/edited since we started backup. use last sequence so we start from where we left off
-										logger.debug('[backup] there are', resp2.ids2lookup.length, 'db changes since since backup started, continuing db: "' +
-											db_name + '"');
-										return outer_loop(resp1.last_sequence, ++outer_iter, cb_outer);
-									} else {
-										//logger.debug('[backup] there are 0 db changes since backup started, finished db: "' + db_name + '"');
-										return cb_outer(null);					// all done
-									}
-								});
+							// [4] check if there have been updates since we started the backup
+							get_doc_ids(db_name, resp1.last_sequence, (error3, resp2) => {
+								if (error || !resp2 || !Array.isArray(resp2.ids2lookup)) {
+									// error already logged
+									return cb_outer(null);
+								} else if (resp2.ids2lookup.length > 0) {
+									// keep going b/c docs were added/edited since we started backup. use last sequence so we start from where we left off
+									logger.debug('[backup] there are', resp2.ids2lookup.length, 'db changes since since backup started, continuing db: "' +
+										db_name + '"');
+									return outer_loop(resp1.last_sequence, ++outer_iter, cb_outer);
+								} else {
+									//logger.debug('[backup] there are 0 db changes since backup started, finished db: "' + db_name + '"');
+									return cb_outer(null);					// all done
+								}
 							});
 						}
 					});
@@ -282,45 +302,51 @@ module.exports = function (logger, ev, t) {
 	}
 
 	//------------------------------------------------------------
-	// write the backup to db or filesystem
+	// write the backup to cloudant
 	//------------------------------------------------------------
-	function update_backup_doc(orig_opts, cb_write) {
-		if (orig_opts && orig_opts.use_fs === true) {
-			update_backup_doc_fs();
+	function couch_write_backup_doc(cb_write) {
+		const options = {
+			db_name: ev.DB_SYSTEM,
+			doc: the_backup
+		};
+		t.couch_lib.repeatWriteSafe(options, (document) => {
+			if (document._rev) {
+				the_backup._rev = document._rev;			// copy existing rev, not merging docs on purpose
+			}
+			return { error: null, doc: the_backup };
+		}, (errorCode, wrote_doc) => {
+			if (errorCode) {
+				logger.error('[backup] unable write backup doc', errorCode, wrote_doc);
+				record_error(errorCode);
+			} else {
+				logger.debug('[backup] wrote backup doc to db. id:', wrote_doc._id);
+			}
 			return cb_write();
-		} else {
-			update_backup_doc_db(() => {
-				return cb_write();
-			});
+		});
+	}
+
+	//------------------------------------------------------------
+	// write the backup to filesystem
+	//------------------------------------------------------------
+	function fs_write_backup_doc(orig_opts) {
+
+		// compress the docs section for each database
+		for (let db_type in the_backup.dbs) {
+			if (Array.isArray(the_backup.dbs[db_type].docs) && the_backup.dbs[db_type].docs.length > 0) {
+				try {
+					the_backup.dbs[db_type].compressed_docs = t.zlib.deflateSync(JSON.stringify(the_backup.dbs[db_type].docs)).toString('base64');
+					delete the_backup.dbs[db_type].docs;		// remove the uncompressed version
+				} catch (e) {
+					logger.error('[backup] unable to compress docs for db', db_type, e);
+				}
+			}
 		}
 
-		// write it to the db
-		function update_backup_doc_db(cb_wrote_db) {
-			const options = {
-				db_name: ev.DB_SYSTEM,
-				doc: the_backup
-			};
-			t.couch_lib.repeatWriteSafe(options, (document) => {
-				if (document._rev) {
-					the_backup._rev = document._rev;			// copy existing rev, not merging docs on purpose
-				}
-				return { error: null, doc: the_backup };
-			}, (errorCode, wrote_doc) => {
-				if (errorCode) {
-					logger.error('[backup] unable write backup doc', errorCode, wrote_doc);
-					record_error(errorCode);
-				}
-				return cb_wrote_db();
-			});
-		}
-
-		// write it to the local filesystem
-		function update_backup_doc_fs() {
-			orig_opts.instance_id = orig_opts.instance_id || 'no-id';
-			const file_path = t.path.join(__dirname, '../_backups/' + orig_opts.instance_id + '/' + the_backup._id + '.json');
-			t.misc.check_dir_sync({ file_path: file_path, create: true });
-			t.fs.writeFileSync(file_path, JSON.stringify(the_backup, null, '\t'));
-		}
+		orig_opts.instance_id = orig_opts.instance_id || 'no-id';
+		const file_path = t.path.join(__dirname, '../_backups/', the_backup._id + '.json');
+		t.misc.check_dir_sync({ file_path: file_path, create: true });
+		t.fs.writeFileSync(file_path, JSON.stringify(the_backup, null, '\t'));
+		logger.info('[backup] wrote/edited backup doc on fs:', file_path);
 	}
 
 	// record that an error happened in the backup doc
@@ -418,7 +444,7 @@ module.exports = function (logger, ev, t) {
 					if (!resp.results[i].docs || !resp.results[i].docs[0] || !resp.results[i].docs[0].ok) {
 						logger.error('[bulk get] failed to get a doc:', resp.results[i].docs);
 					} else {
-						let last_ok_doc = null;
+						let last_ok_doc = null;			// get the last version of this one doc that is okay
 						for (let x in resp.results[i].docs) {
 							if (resp.results[i].docs[x].ok) {
 								last_ok_doc = resp.results[i].docs[x].ok;
@@ -449,6 +475,19 @@ module.exports = function (logger, ev, t) {
 	// get backup doc
 	//------------------------------------------------------------
 	dbs.get_backup = function (backup_id, cb) {
+		let fs_backup = null;
+
+		try {
+			const file_path = t.path.join(__dirname, '../_backups/', backup_id + '.json');
+			fs_backup = JSON.parse(t.fs.readFileSync(file_path, 'utf8'));
+		} catch (e) {
+			logger.warn('[backup] unable to find backup in fs, will try the database');
+		}
+
+		if (fs_backup) {
+			return cb(null, fs_backup);
+		}
+
 		const opts = {
 			db_name: ev.DB_SYSTEM,
 			_id: backup_id,
@@ -456,7 +495,12 @@ module.exports = function (logger, ev, t) {
 			SKIP_CACHE: true,
 		};
 		t.couch_lib.getDoc(opts, (err_get, backup_doc) => {
-			if (backup_doc) {
+			if (err_get) {
+				logger.error('[backup] unable to find backup in database [1]', err_get);
+			}
+			if (!backup_doc) {
+				logger.error('[backup] unable to find backup in database [2]', err_get);
+			} else {
 				backup_doc.id = backup_doc._id;		// format the doc for clients
 				delete backup_doc._rev;
 				delete backup_doc._id;
@@ -581,7 +625,17 @@ module.exports = function (logger, ev, t) {
 			logger.error('[restore] cannot restore. the restore data does not have this db:', db_type, db_type);
 			return cb({ statusCode: 400, message: 'cannot restore. the restore data does not have this db: ' + db_name });
 		} else {
-			outer_loop(orig_opts.backup.dbs[db_type].docs, 0, 0, () => {
+			let docs = orig_opts.backup.dbs[db_type].docs;
+			if (orig_opts.backup.dbs[db_type].compressed_docs) {
+				try {
+					docs = JSON.parse(t.zlib.inflateSync((Buffer.from(orig_opts.backup.dbs[db_type].compressed_docs, 'base64'))).toString());
+					logger.debug('[restore] decompressed docs from backup data', db_name);
+				} catch (e) {
+					logger.error('[restore] unable to decompress docs from backup data', db_name, e);
+				}
+			}
+
+			outer_loop(docs, 0, 0, () => {
 				logger.debug('[restore] finished restore of db: "' + db_name + '" - ' + db_type);
 				return cb(null);
 			});
@@ -615,7 +669,7 @@ module.exports = function (logger, ev, t) {
 		// overwrite or create the docs, repeat to handle conflicts - recursive!
 		// this "inner" loop handles doc write errors
 		function bulk_doc_overwrite(docs_arr, iter, cb_replaced) {
-			if (iter > 4) {																// watch dog, do not loop forever
+			if (iter > 3) {																// watch dog, do not loop forever
 				logger.error('[restore] too many inner iterations, quitting', iter, db_name);
 				return cb_replaced({ statusCode: 500, msg: 'too many inner loop iterations' }, null);
 			}
@@ -638,33 +692,67 @@ module.exports = function (logger, ev, t) {
 						// [2] find doc update errors
 						const ids_with_errors = find_errors(resp);
 						if (ids_with_errors.length === 0) {
-							logger.warn('[restore] all docs in this loop have been restored. db: "' + db_name + '" - ' + db_type);
+							logger.debug('[restore] all docs in this loop have been restored. db: "' + db_name + '" - ' + db_type);
 							return cb_replaced(null);									// all done
 						} else {
 							logger.warn('[restore] some docs had errors, will update them again.', ids_with_errors.length);
 
 							// [3] of the docs that had an error, get the current contents
 							const inner_opts = {
-								start: 0,
-								allIds: ids_with_errors,
+								ids2get: ids_with_errors,
 								db_name: db_name,
-								ret: [],
-								iter: 0,
-								blacklisted_doc_types: [],
-								BATCH: orig_opts.BATCH,
 							};
-							get_docs(inner_opts, (error2, get_bulk_docs) => {
+							simple_bulk_get(inner_opts, (error2, latest_docs) => {
 								if (error2) {
 									// error already logged
 									return cb_replaced({ statusCode: 500, msg: 'error getting docs during bulk restore, check logs', details: err });
 								} else {
 
 									// [4] copy doc's rev and repeat
-									const fixed_revs = copy_rev(orig_opts.backup.dbs[db_type].docs, get_bulk_docs);
+									const fixed_revs = copy_rev(docs_arr, latest_docs);
 									return bulk_doc_overwrite(fixed_revs, ++iter, cb_replaced);
 								}
 							});
 						}
+					}
+				});
+			}
+
+			//------------------------------------------------------------
+			// Get all docs in array via bulk doc - (does not recurse)
+			//------------------------------------------------------------
+			/*
+			opts: {
+				ids2get: ["doc id here"]
+				db_name: "db name",
+			}
+			*/
+			function simple_bulk_get(opts, get_cb) {
+				t.couch_lib.bulk_get(opts.db_name, opts.ids2get, (error, resp) => {
+					if (error) {
+						logger.error('[restore] error getting bulk docs', error, resp);
+						return get_cb({ statusCode: 500, msg: 'error getting docs' }, resp);
+					} else if (!resp.results) {
+						logger.warn('[restore] no results for bulk get docs', resp);
+						return get_cb(null);
+					} else {
+						const ret = [];
+						for (let i in resp.results) {
+							if (!resp.results[i].docs || !resp.results[i].docs[0] || !resp.results[i].docs[0].ok) {
+								logger.error('[restore] failed to get a doc:', resp.results[i].docs);
+							} else {
+								let last_ok_doc = null;			// get the last version of this one doc that is okay
+								for (let x in resp.results[i].docs) {
+									if (resp.results[i].docs[x].ok) {
+										last_ok_doc = resp.results[i].docs[x].ok;
+									}
+								}
+								if (last_ok_doc) {
+									ret.push(t.misc.sortKeys(last_ok_doc));
+								}
+							}
+						}
+						return get_cb(null, ret);
 					}
 				});
 			}
@@ -720,8 +808,8 @@ module.exports = function (logger, ev, t) {
 		// get doc ids of all update errors
 		function copy_rev(backup_docs, current_docs) {
 			const ret = [];
-			for (let i in backup_docs) {								// there will be a lot of docs here
-				for (let x in current_docs) {							// there should be fewer docs here
+			for (let x in current_docs) {								// there should be fewer docs here
+				for (let i in backup_docs) {							// there will be a lot of docs here
 					if (backup_docs[i]._id === current_docs[x]._id) {
 						backup_docs[i]._rev = current_docs[x]._rev;		// copy rev to overwrite the existing doc w/backup
 						ret.push(backup_docs[i]);
