@@ -175,36 +175,39 @@ function _load_config(file_name) {
 }
 
 //--------------------------------------------------------
-// Make sure CouchDB is running/reachable - gives CouchDB one minute to be found, otherwise terminates the process
+// Make sure CouchDB is running & reachable - gives CouchDB time to be found, otherwise terminates the process
 //--------------------------------------------------------
 function look_for_couchdb(cb) {
-	let startTime = new Date().getTime();
-	tools.couch_lib.checkIfCouchIsRunning((err) => {								// check for couchdb once before starting the interval
-		if (err) {
-			logger.debug('[couchdb loop] Pinging CouchDB. Will start server when we get a response from couchdb');
-			couch_interval = setInterval(() => {
-				if (new Date().getTime() - startTime > 1 * 60 * 1000) {
-					clearInterval(couch_interval);
-					logger.error('[couchdb loop] CouchDB was never found to be running');
-					process.exit();
-				}
-				tools.couch_lib.checkIfCouchIsRunning((err) => {					// couchdb wasn't found on the primer check. checking on interval
-					if (err) {
-						logger.debug('[couchdb loop] Pinging CouchDB. Will start server when we get a response from couchdb');
-					} else {
-						clearInterval(couch_interval);
-						logger.debug('[couchdb loop] CouchDB was found! Proceeding');
-						create_databases(() => {
-							return cb();
-						});
-					}
-				});
-			}, 3000);
-		} else {
-			logger.debug('[couchdb loop] CouchDB was found! Proceeding');
+	const startTime = Date.now();
+	logger.info('[couchdb loop] pinging couchdb - will start server when we get a good response from the database');
+	tools.couch_lib.checkIfCouchIsRunning((err) => {							// check for couchdb once before starting the interval
+		if (!err) {
+			logger.debug('[couchdb loop] couchdb was found! proceeding');
 			create_databases(() => {
 				return cb();
 			});
+		} else {
+			// couchdb was not found, start polling on it until its up or we timeout
+			clearInterval(couch_interval);
+			couch_interval = setInterval(() => {
+				if (Date.now() - startTime > 1.5 * 60 * 1000) {					// spin for 90 seconds
+					clearInterval(couch_interval);
+					logger.error('[couchdb loop] giving up on pinging couchdb - unable to connect. you should check on the couchdb container');
+					process.exit();
+				} else {
+					tools.couch_lib.checkIfCouchIsRunning((err) => {
+						if (err) {
+							logger.warn('[couchdb loop] unable to connect to couchdb, must not be up yet, will try again. err:', err);
+						} else {
+							clearInterval(couch_interval);
+							logger.debug('[couchdb loop] couchdb was found! proceeding');
+							create_databases(() => {
+								return cb();
+							});
+						}
+					});
+				}
+			}, 4000);
 		}
 	});
 }
