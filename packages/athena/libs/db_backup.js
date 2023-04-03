@@ -178,7 +178,13 @@ module.exports = function (logger, ev, t) {
 			the_backup.in_progress = true;
 			the_backup.ibp_versions = t.ot_misc.parse_versions();
 			logger.info('[backup] starting db backup. ', the_backup._id, 'dbs:', opts.db_types);
-			fs_write_backup_doc(opts);								// init the doc
+			try {
+				fs_write_backup_doc(opts);								// init the doc
+			} catch (e) {
+				logger.error('[backup] unable to write backup to file system [1]:', e);
+				cb_early({ statusCode: 400, message: 'failed to write backup to file system', id: the_backup._id });
+				return cb_done();
+			}
 
 			// build a notification doc
 			t.notifications.procrastinate(opts.req, { message: 'starting db backup \'' + the_backup._id + '\'' });
@@ -194,7 +200,11 @@ module.exports = function (logger, ev, t) {
 				the_backup.in_progress = false;
 				the_backup.end_timestamp = Date.now();
 				the_backup.elapsed = t.misc.friendly_ms(the_backup.end_timestamp - the_backup.start_timestamp);
-				fs_write_backup_doc(opts);							// write backup to filesystem
+				try {
+					fs_write_backup_doc(opts);							// write backup to filesystem
+				} catch (e) {
+					logger.error('[backup] unable to write backup to file system [2]:', e);
+				}
 				couch_write_backup_doc(() => {
 					logger.info('[backup] completed backup, docs:', the_backup.doc_count, the_backup.elapsed, the_backup._id);
 
@@ -326,7 +336,7 @@ module.exports = function (logger, ev, t) {
 	}
 
 	//------------------------------------------------------------
-	// write the backup to filesystem
+	// write the backup to filesystem - might throw fs errors
 	//------------------------------------------------------------
 	function fs_write_backup_doc(orig_opts) {
 
@@ -501,6 +511,7 @@ module.exports = function (logger, ev, t) {
 			if (!backup_doc) {
 				logger.error('[backup] unable to find backup in database [2]', err_get);
 			} else {
+				logger.debug('[backup] found backup in database');
 				backup_doc.id = backup_doc._id;		// format the doc for clients
 				delete backup_doc._rev;
 				delete backup_doc._id;
