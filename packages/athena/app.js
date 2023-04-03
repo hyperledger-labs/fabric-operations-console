@@ -1295,6 +1295,9 @@ function start_app() {
 		});
 	}
 	httpServer.timeout = ev.HTTP_TIMEOUT;
+	// node doc is here -> https://nodejs.org/api/http.html#serverkeepalivetimeout
+	httpServer.keepAliveTimeout = 0;					// pentesters want *incoming* keep alive connections disabled, a value of 0 disables it
+
 	logger.debug('[startup] using http timeout of', tools.misc.friendly_ms(httpServer.timeout));
 
 	// --- Print logging info --- //
@@ -1315,7 +1318,6 @@ function start_app() {
 	} else {
 		logger.info('[startup] Not storing client log files');
 	}
-	httpServer.timeout = 5 * 60 * 1000;
 
 	// --- Graceful Shutdown --- //
 	httpServer.on('request', (req, res) => {				// inform clients this is their last request
