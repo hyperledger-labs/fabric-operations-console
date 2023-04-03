@@ -144,7 +144,7 @@
 		".*"
 	],
 	"hsm": null,
-	"http_timeout": 120000,
+	"http_timeout": 300000,
 	"http_status_timeout": 1000,
 	"http_metrics_enabled": true,
 	"iam_api_key": null,
