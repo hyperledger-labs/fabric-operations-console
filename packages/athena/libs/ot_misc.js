@@ -71,9 +71,9 @@ module.exports = function (logger, t) {
 		const LOG_PATH = 'logs/athena_restart.log';							// must match what is in server_watcher.js
 		const restart_path = t.path.join(__dirname, '../' + LOG_PATH);
 
-		logger.debug('---------------------------- restart ----------------------------');
-		logger.info('Restarting Athena - imminent');
-		logger.debug('---------------------------- restart ----------------------------');
+		logger.silly('---------------------------- restart ----------------------------');
+		logger.info('Restarting Athena "' + process.env.ATHENA_ID + '" - imminent');
+		logger.silly('---------------------------- restart ----------------------------');
 
 		const message = date + ' - restarted via restart_athena() - uuid: ' + uuid;
 		const orig_file = t.fs.existsSync(restart_path) ? t.fs.readFileSync(restart_path) : '';
