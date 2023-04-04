@@ -38,7 +38,7 @@ module.exports = function (logger) {
 	// ------------------------------------------
 	exports.break_up_url = function (url, opts) {
 		if (url && typeof url === 'string' && !url.includes('://')) {			// if no protocol, assume https
-			if (opts && opts.default && typeof opts.default === 'string' && !parts.protocol) {
+			if (opts && opts.default && typeof opts.default === 'string') {
 				url = opts.default + '//' + url;								// default protocol was passed in
 			} else {
 				url = 'https://' + url;											// append https so we can parse it
