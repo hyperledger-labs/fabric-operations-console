@@ -39,6 +39,7 @@ const tools = {										// stateless util libs should go here
 	async: require('async'),
 	request: require('request'),
 };
+tools.root_misc = require('../../../libs/root_misc.js')(logger);
 tools.misc = require('../../../libs/misc.js')(logger, tools);
 
 let couch;

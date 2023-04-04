@@ -285,6 +285,7 @@ if (!tools.fs.existsSync(config_file_location)) {
 // ---------------
 // Add other libs to tools
 // ---------------
+tools.root_misc = require('../../libs/root_misc.js')(logger);
 tools.wss1_athena = {
 	broadcast: function () { }
 };
