@@ -218,7 +218,7 @@ module.exports = function (logger, t) {
 			}
 		}
 		settings.CONFIGTXLATOR_TIMEOUT = -1;
-		return settings.CONFIGTXLATOR_URL_ORIGINAL;
+		return t.misc.format_url(settings.CONFIGTXLATOR_URL_ORIGINAL, { useIpv4: true });
 	};
 
 	//-------------------------------------------------------------

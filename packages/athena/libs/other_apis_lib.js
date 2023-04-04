@@ -169,6 +169,7 @@ module.exports = function (logger, ev, t) {
 			CONFIGTXLATOR_URL_ORIGINAL: ev.CONFIGTXLATOR_URL_ORIGINAL || '?',
 			COOKIE_NAME: ev.COOKIE_NAME || '?',
 			MIGRATION_API_KEY: ev.MIGRATION_API_KEY,			// for debug
+			DB_CONNECTION_STRING: t.misc.redact_basic_auth(ev.DB_CONNECTION_STRING),	// for debug
 		};
 		return t.misc.sortItOut(ret);
 	};
