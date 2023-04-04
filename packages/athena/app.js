@@ -119,8 +119,15 @@ if (!process.env.CONFIGURE_FILE) {
 // setup Logger
 tools.log_lib = require('./libs/log_lib.js')(tools);
 process.env.ATHENA_ID = tools.log_lib.simpleRandomStringLC(5);		// unique id to see which instance we were load balanced to
-let logger = tools.log_lib.build_server_logger();					// this builds a winston logger
+
 // (if a lib consumes this logger, rebuild the lib once we get the db settings. this will pass the right log level to the lib)
+let logger = tools.log_lib.build_server_logger();					// this builds a winston logger
+tools.root_misc = require('./libs/root_misc.js')(logger);
+
+// edit db connection string to fix the ipv6 and ipv4 thing
+logger.debug('[couchdb] - env var DB_CONNECTION_STRING original:', tools.root_misc.redact_basic_auth(process.env.DB_CONNECTION_STRING));
+process.env.DB_CONNECTION_STRING = tools.root_misc.fix_localhost(process.env.DB_CONNECTION_STRING);
+logger.debug('[couchdb] - env var DB_CONNECTION_STRING edited:', tools.root_misc.redact_basic_auth(process.env.DB_CONNECTION_STRING));
 
 // setup base libs (only the libs we need to get settings from the db - the rest come later
 tools.ot_misc = require('./libs/ot_misc.js')(logger, tools);
@@ -259,7 +266,8 @@ function setup_routes_and_start() {
 
 	// rebuild tools with the log level from settings db (this logger will have the client's log level instead of the default log level)
 	tools.ot_misc = require('./libs/ot_misc.js')(logger, tools);
-	tools.couch_lib = require('./libs/couchdb.js')(logger, tools, process.env.DB_CONNECTION_STRING);
+	tools.couch_lib = require('./libs/couchdb.js')(logger, tools, ev.DB_CONNECTION_STRING);
+	tools.root_misc = require('./libs/root_misc.js')(logger);
 	tools.http_metrics = require('./libs/http_metrics.js')(logger, tools, metric_opts);
 
 	// http_metrics needs to be one of the first app.use() instances, as soon as possible after ev.update()

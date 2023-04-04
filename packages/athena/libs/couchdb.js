@@ -18,31 +18,9 @@
 //=======================================================================================================
 module.exports = (logger, t, DB_CONNECTION_STRING) => {
 	const couch = {};
-	const couch_url = build_couch_base_url(DB_CONNECTION_STRING);
-
-	// build the url to connect to couch
-	function build_couch_base_url(dbConnectionString) {
-		const parts = t.url.parse(dbConnectionString);
-		if (!parts) {
-			logger.error('[couchdb] - Could not parse dbConnectionString...', dbConnectionString);
-			return null;
-		} else {
-			if (!parts.protocol) {
-				parts.protocol = 'http:';				// no protocol, defaults to http
-			}
-			if (parts.protocol === 'https:') {
-				if (!parts.port) {						// no port for https, defaults 443
-					parts.port = 443;
-				}
-			} else {									// no port for http, defaults 80
-				if (!parts.port) {
-					parts.port = 80;
-				}
-			}
-			const auth_str = (parts.auth) ? parts.auth + '@' : '';	// defaults to no auth
-
-			return parts.protocol + '//' + auth_str + parts.hostname + ':' + parts.port;
-		}
+	const couch_url = t.root_misc.format_url(DB_CONNECTION_STRING, { default: 'http:', useIpv4: true });
+	if (!couch_url) {
+		logger.error('[couchdb] - Could not parse DB_CONNECTION_STRING, athena cannot start without a connection to the database...');
 	}
 
 	// wrapper function

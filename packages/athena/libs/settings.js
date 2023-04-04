@@ -40,6 +40,8 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 	if (!noAutoRun) {
 		check_starting_envs(process.env);
 	}
+
+	// sets ev.DB_CONNECTION_STRING and ev.DB_SYSTEM (and any other env var) from the env settings
 	for (const key in settings) {									// overwrite settings[key] with env[key] if env[key] exists
 		if (process.env[key]) { settings[key] = process.env[key]; }	// gets replaced here
 	}
@@ -138,7 +140,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 
 				// ---- pull from ATHENA settings doc ---- //
 				settings.AUTH_SCHEME = process.env.AUTH_SCHEME || athena.auth_scheme;	// if we are using appid or ibmid or something else
-				settings.HOST_URL = process.env.HOST_URL || athena.host_url;			// the external url to reach this application
+				settings.HOST_URL = t.misc.format_url(process.env.HOST_URL || athena.host_url);	// the external url to reach this application
 				settings.REGION = process.env.REGION || athena.region;
 				settings.db_defaults = athena.db_defaults;
 				load_database_names(athena);										// load all db names here
@@ -158,12 +160,12 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 				settings.FEATURE_FLAGS = athena.feature_flags;						// features needed conditionally, object
 				settings.FILE_LOGGING = athena.file_logging;						// file logging settings are here, object
 				settings.LANDING_URL = athena.landing_url || settings.HOST_URL;		// use host url if landing url dne
-				settings.DEPLOYER_URL = athena.deployer_url;						// url to use for a SaaS deployer
-				settings.JUPITER_URL = athena.jupiter_url;							// url to use for a SaaS jupiter
+				settings.DEPLOYER_URL = t.misc.format_url(athena.deployer_url, { useIpv4: true });	// url to use for a the deployer
+				settings.JUPITER_URL = t.misc.format_url(athena.jupiter_url, { useIpv4: true });	// url to use for a SaaS jupiter
 				settings.SUPPORT_KEY = athena.support_key || 'ibpsupport';
 				settings.SUPPORT_PASSWORD = athena.support_password || t.misc.generateRandomString(16).toLowerCase();
-				settings.PROXY_TLS_HTTP_URL = fmt_url(athena.proxy_tls_http_url || settings.HOST_URL);	// the external url to proxy http fabric traffic to
-				settings.PROXY_TLS_WS_URL = fmt_url(athena.proxy_tls_ws_url || settings.HOST_URL);		// the external url to proxy ws fabric traffic to
+				settings.PROXY_TLS_HTTP_URL = fmt_proxy_url(athena.proxy_tls_http_url) || settings.HOST_URL; // the external url to proxy http fabric traffic to
+				settings.PROXY_TLS_WS_URL = fmt_proxy_url(athena.proxy_tls_ws_url) || settings.HOST_URL;	 // the external url to proxy ws fabric traffic to
 				settings.PROXY_TLS_FABRIC_REQS = athena.proxy_tls_fabric_reqs;		// if athena should proxy fabric traffic or not
 				settings.HTTP_TIMEOUT = !isNaN(athena.http_timeout) ? Number(athena.http_timeout) : 2 * 60 * 1000;		// max time in ms for athena to respond
 				settings.WS_TIMEOUT = !isNaN(athena.ws_timeout) ? Number(athena.ws_timeout) : settings.HTTP_TIMEOUT;	// defaults to http timeout
@@ -542,12 +544,12 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 			});
 		}
 
-		// if user is attempting a relative/abs path of athena (no http://bla.com) then return blank
-		function fmt_url(url) {
+		// if user is attempting a relative/abs path of athena (no http://bla.com) then return blank (which will use the host_url instead)
+		function fmt_proxy_url(url) {
 			if (!url || url === '/' || url === './') {
 				return '';
 			} else {
-				return url;				// else leave it alone
+				return t.misc.format_url(url);				// else leave it alone
 			}
 		}
 

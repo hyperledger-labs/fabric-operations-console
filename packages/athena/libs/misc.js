@@ -647,71 +647,35 @@ module.exports = function (logger, t) {
 	// return the hostname from a url
 	// ------------------------------------------
 	exports.get_host = function (url) {
-		const parts = exports.break_up_url(url);
-		if (!parts) {
-			return null;					// error is logged elsewhere
-		} else {
-			return parts.hostname;
-		}
+		return t.root_misc.get_host(url);
 	};
 
 	// ------------------------------------------
 	// break up url in proto, basic auth, hostname, port, etc
 	// ------------------------------------------
-	exports.break_up_url = function (url) {
-		if (url && typeof url === 'string' && !url.includes('://')) {			// if no protocol, assume https
-			url = 'https://' + url;												// append https so we can parse it
-		}
-
-		const parts = typeof url === 'string' ? t.url.parse(url) : null;
-		if (!parts || !parts.hostname) {
-			logger.error('cannot parse url:', encodeURI(url));
-			return null;
-		} else {
-			const protocol = parts.protocol ? parts.protocol : 'https:';		// default protocol is https
-			if (parts.port === null) {
-				parts.port = protocol === 'https:' ? '443' : '80';				// match default ports to protocol
-			}
-			parts.auth_str = parts.auth ? parts.auth + '@' : '';				// defaults to no auth
-
-			return parts;
-		}
+	exports.break_up_url = function (url, opts) {
+		return t.root_misc.break_up_url(url, opts);
 	};
 
 	// ------------------------------------------
 	// parse url return proto + :basic_auth? + hostname + port
 	// ------------------------------------------
-	exports.format_url = function (url) {
-		const parts = exports.break_up_url(url);
-		if (!parts || !parts.hostname) {
-			return null;					// error is logged elsewhere
-		} else {
-			return parts.protocol + '//' + parts.auth_str + parts.hostname + ':' + parts.port;
-		}
+	exports.format_url = function (url, opts) {
+		return t.root_misc.format_url(url, opts);
 	};
 
 	// ------------------------------------------
 	// redact basic auth in url
 	// ------------------------------------------
 	exports.redact_basic_auth = function (url) {
-		const parts = exports.break_up_url(url);
-		if (!parts || !parts.hostname) {
-			return null;				// error is logged elsewhere
-		} else {
-			return parts.protocol + '//' + parts.hostname + ':' + parts.port;
-		}
+		return t.root_misc.redact_basic_auth(url);
 	};
 
 	// ------------------------------------------
 	// return hostname + port from url (no protocol, no basic auth)
 	// ------------------------------------------
 	exports.fmt_url = function (url) {
-		const parts = exports.break_up_url(url);
-		if (!parts || !parts.hostname) {
-			return null;				// error is logged elsewhere
-		} else {
-			return parts.hostname + ':' + parts.port;
-		}
+		return t.root_misc.fmt_url(url);
 	};
 
 	// ------------------------------------------
@@ -910,6 +874,14 @@ module.exports = function (logger, t) {
 		}
 	};
 
+	// ---------------------------------------------
+	// node 18 will translate "localhost" to ""::1" which is a IPv6 format, if the destination is not listening on IPv6 the connection will fail!
+	// we need to switch "localhost" to the ip version which will keep the connection as IPv4.
+	// ---------------------------------------------
+	exports.fix_localhost = function (url_str) {
+		return t.root_misc.fix_localhost(url_str);
+	};
+
 	// ------------------------------------------------------------
 	// wrapper on request module - does retries on some error codes
 	// -------------------------------------------------------------
@@ -960,7 +932,7 @@ module.exports = function (logger, t) {
 		if (!options._attempt) { options._attempt = 0; }								// keep track of attempts
 		options._attempt++;
 
-		if (options.baseUrl) { options.baseUrl = encodeURI(options.baseUrl); }			// pen test require the encodeURI usage here
+		if (options.baseUrl) { options.baseUrl = encodeURI(t.misc.fix_localhost(options.baseUrl)); }	// pen test require the encodeURI usage here
 		if (options.url) { options.url = encodeURI(options.url); }						// pen test require the encodeURI usage here
 		if (options.uri) { options.url = encodeURI(options.uri); }
 

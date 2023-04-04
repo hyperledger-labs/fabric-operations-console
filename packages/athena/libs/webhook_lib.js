@@ -488,7 +488,7 @@ module.exports = function (logger, ev, t) {
 	// ------------------------------------------
 	exports.fetch_webhook_status = function (tx_id, cb) {
 		const opts = {
-			baseUrl: encodeURI(t.misc.format_url(ev.DEPLOYER_URL)),						// url to deployer
+			baseUrl: encodeURI(t.misc.format_url(ev.DEPLOYER_URL, { useIpv4: true })),						// url to deployer
 			url: encodeURI('/api/v3/txs/' + tx_id),
 			method: 'GET',
 			headers: { 'Accept': 'application/json' }
