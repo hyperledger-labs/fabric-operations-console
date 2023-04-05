@@ -176,15 +176,13 @@ module.exports = function (logger, ev, t) {
 					} else {
 						req.session.save(() => {			// timing seems tricky w/ auto session saving, lets manually wait for the save before returning
 							logger.info('[auth] local login success', t.misc.censorEmail(lc_email));
-							setTimeout(() => {
-								const ret = {
-									message: 'ok',
-									name: req.session.couchdb_profile.name,
-									email: lc_email,
-									roles: ev.ACCESS_LIST[lc_email].roles
-								};
-								res.status(200).json(ret);
-							}, 500);
+							const ret = {
+								message: 'ok',
+								name: req.session.couchdb_profile.name,
+								email: lc_email,
+								roles: ev.ACCESS_LIST[lc_email].roles
+							};
+							res.status(200).json(ret);
 						});
 					}
 				}
