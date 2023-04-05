@@ -56,7 +56,7 @@ bundle.js
 public/legacy/
 public/js/jsrsasign-all-min.js
 scripts/one_time_fixes/dup_fixes
-_backups
+_backups/*.json
 scripts/reports
 
 # AppScan
