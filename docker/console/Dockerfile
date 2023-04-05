@@ -89,6 +89,7 @@ RUN (dnf update || true)\
 	&& npm ls --production > npm_ls_prod.txt \
 	&& (dnf clean all || true)
 RUN chmod -R 777 ./logs
+RUN chmod -R 777 ./_backups
 
 
 # -------------------------------------------------
