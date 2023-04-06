@@ -692,7 +692,7 @@ module.exports = function (logger, ev, t) {
 				logger.warn('[restore] 0 docs to restore in this iteration', iter);
 				return cb_replaced(null);
 			} else {
-				logger.debug('[restore] inner iter: ' + iter + ', restoring ' + bulk_docs.docs.length + ' docs in db: "' + db_name + '" - ' + db_type);
+				logger.debug('[restore] inner loop: ' + iter + ', restoring ' + bulk_docs.docs.length + ' docs in db: "' + db_name + '" - ' + db_type);
 
 				t.couch_lib.bulkDatabase({ db_name: db_name }, bulk_docs, (err, resp) => {	// perform the bulk operation
 					if (err != null) {
@@ -703,10 +703,11 @@ module.exports = function (logger, ev, t) {
 						// [2] find doc update errors
 						const ids_with_errors = find_errors(resp);
 						if (ids_with_errors.length === 0) {
-							logger.debug('[restore] all docs in this loop have been restored. db: "' + db_name + '" - ' + db_type);
+							logger.debug('[restore] all ' + bulk_docs.docs.length + ' docs in this loop have been restored db: "' + db_name + '" - ' +
+								db_type);
 							return cb_replaced(null);									// all done
 						} else {
-							logger.warn('[restore] some docs had errors, will update them again.', ids_with_errors.length);
+							logger.warn('[restore] some docs had errors, will update them again.', ids_with_errors.length + '/' + bulk_docs.docs.length);
 
 							// [3] of the docs that had an error, get the current contents
 							const inner_opts = {

@@ -1288,7 +1288,21 @@ module.exports = function (logger, ev, t) {
 
 	// edit docs in the backup prior to migrating them
 	function edit_settings_doc_in_backup(username, password, new_console_url, backup) {
-		if (backup && backup.dbs && backup.dbs['DB_SYSTEM']) {
+		if (!backup || !backup.dbs || !backup.dbs['DB_SYSTEM']) {
+			logger.warn('[migration-console-db] did not find the system db in backup data, this is unexpected');
+		} else {
+
+			// decompress the docs (if applicable)
+			if (backup.dbs['DB_SYSTEM'].compressed_docs) {
+				try {
+					backup.dbs['DB_SYSTEM'].docs = JSON.parse(t.zlib.inflateSync((Buffer.from(backup.dbs['DB_SYSTEM'].compressed_docs, 'base64'))).toString());
+					logger.debug('[migration-console-db] decompressed docs from backup data: DB_SYSTEM');
+				} catch (e) {
+					logger.error('[migration-console-db] unable to decompress docs from backup data: DB_SYSTEM', e);
+				}
+			}
+
+			// look for the settings doc
 			if (backup.dbs['DB_SYSTEM'].docs) {
 				for (let i in backup.dbs['DB_SYSTEM'].docs) {
 					const doc = backup.dbs['DB_SYSTEM'].docs[i];
@@ -1354,6 +1368,14 @@ module.exports = function (logger, ev, t) {
 						break;
 					}
 				}
+			}
+
+			// now re-compress the docs with the edited settings doc
+			try {
+				backup.dbs['DB_SYSTEM'].compressed_docs = t.zlib.deflateSync(JSON.stringify(backup.dbs['DB_SYSTEM'].docs)).toString('base64');
+				delete backup.dbs['DB_SYSTEM'].docs;		// remove the uncompressed version
+			} catch (e) {
+				logger.error('[migration-console-db] unable to re-compress docs for db: DB_SYSTEM', e);
 			}
 		}
 		return backup;
