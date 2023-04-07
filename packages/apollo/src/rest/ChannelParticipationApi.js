@@ -49,60 +49,74 @@ export class ChannelParticipationApi {
 	}
 
 	// --------------------------------------------------------
-	// Fabric's osnadmin get-channels request - hard coded in stitch to use the athena proxy route
-	// --------------------------------------------------------
-	// identities - list of possible identities for auth - array of identity objects
-	// osn - the ordering service node to use - a optools node object
-	static async _getChannels(identities, osn) {
-		const identity4tls = await ChannelParticipationApi.findMatchingIdentity({
-			identities: identities,
-			root_certs_b64pems: _.get(osn, 'msp.tlsca.root_certs')
-		});
-
-		if (identity4tls !== null) {
-			try {
-				const opts = {
-					host: osn.osnadmin_url,
-					certificate_b64pem: identity4tls.cert,
-					private_key_b64pem: identity4tls.private_key,
-					root_cert_b64pem: _.get(osn, 'msp.tlsca.root_certs[0]'),
-					skip_cache: true,
-				};
-				return await StitchApi.getOSNChannels(opts);
-			} catch (error) {
-				Log.error('req error - unable to get osn channels:', error);
-			}
-		}
-		Log.error('unable to get osn channels data for node', osn.osnadmin_url);
-		return null;
-	}
-
-	// --------------------------------------------------------
 	// Iter over nodes and perform Fabric's osnadmin get-channels request - hard coded in stitch to use the athena proxy route
 	// --------------------------------------------------------
 	// identities - list of possible identities for auth - array of identity objects
-	// osns - array of ordering service nodes to use
+	// osns - array of ordering service nodes to use (can also be a single ordering service node object)
+	/* returns: {
+			channels: [
+				name: "mychannel", // channel name
+				url: "/participation/v1/channels/mychannel",
+			],
+			systemChannel: {   // is null if no systemChannel
+				name: "system", // the system channel name
+				url: "/participation/v1/channels/mychannel",
+			}
+		}
+	*/
 	static async getChannels(identities, osns) {
 		let resp = {
 			systemChannel: null,
 			channels: []
 		};
-		if (!Array.isArray(osns)) {
+		if (!Array.isArray(osns)) {				// convert to array if only given one
 			osns = [osns];
 		}
 		let at_least_one_resp = false;
 
-		for (let i in osns) {
-			const single_resp = await ChannelParticipationApi._getChannels(identities, osns[i]);
+		// launch n requests for n orderers
+		let reqs = osns.map(async _osn => {
+			const single_resp = await _getChannels(identities, _osn);
+
+			// if we have a response with channels, add/merge it to the return data
 			if (single_resp && single_resp.channels) {
 				at_least_one_resp = true;
 				resp.channels = _.unionWith(resp.channels, single_resp.channels, _.isEqual);
+
+				// the first orderer to respond with system channel details gets to set the return data for system channel
 				if (resp.systemChannel === null && single_resp.systemChannel !== undefined) {
 					resp.systemChannel = single_resp.systemChannel;
 				}
 			}
-		}
+		});
+		await Promise.all(reqs);
+
 		return at_least_one_resp ? resp : null;
+
+		// find a valid identity for request and call stitch api to get data
+		async function _getChannels(identities, osn) {
+			const identity4tls = await ChannelParticipationApi.findMatchingIdentity({
+				identities: identities,
+				root_certs_b64pems: _.get(osn, 'msp.tlsca.root_certs')
+			});
+
+			if (identity4tls !== null) {
+				try {
+					const opts = {
+						host: osn.osnadmin_url,
+						certificate_b64pem: identity4tls.cert,
+						private_key_b64pem: identity4tls.private_key,
+						root_cert_b64pem: _.get(osn, 'msp.tlsca.root_certs[0]'),
+						skip_cache: true,
+					};
+					return await StitchApi.getOSNChannels(opts);
+				} catch (error) {
+					Log.error('req error - unable to get osn channels:', error);
+				}
+			}
+			Log.error('unable to get osn channels data for node', osn.osnadmin_url);
+			return null;
+		}
 	}
 
 	// --------------------------------------------------------
@@ -225,12 +239,12 @@ export class ChannelParticipationApi {
 			let last_osn = null;
 			let at_least_one_resp = false;
 
-			// iter on each osn in input
-			for (let i in osns) {
-				const resp = await ChannelParticipationApi.getChannels(identities, osns[i]);
+			// launch n requests for n orderers
+			let reqs = osns.map(async _osn => {
+				const resp = await ChannelParticipationApi.getChannels(identities, _osn);
 				if (resp && resp.systemChannel) {
 					last_ch_list_resp = resp;							// remember this, used below for system
-					last_osn = osns[i];
+					last_osn = _osn;
 				}
 
 				if (resp && Array.isArray(resp.channels)) {
@@ -245,7 +259,8 @@ export class ChannelParticipationApi {
 						}
 					}
 				}
-			}
+			});
+			await Promise.all(reqs);
 
 			// use the last channel response data and the last osn to get the system channel details
 			if (last_ch_list_resp && last_ch_list_resp.systemChannel) {
@@ -310,9 +325,8 @@ export class ChannelParticipationApi {
 			});
 
 			// limit number of parallel requests by shortening the reqs array, iter till done
-			/*console.log('dsh here 1:', typeof reqs, reqs.length);
+			/*
 			while (reqs.length) {
-				console.log('dsh here 2:', typeof reqs, reqs.length);
 				await Promise.all(reqs.splice(0, 2).map(f => f()));		// send 4 reqs at a time
 			}*/
 			await Promise.all(reqs);		// dsh todo - limit number of requests at a time

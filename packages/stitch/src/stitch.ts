@@ -147,11 +147,12 @@ function test_encodeDecode_collection_config_packaged(input: any, cb: Function) 
 let _sto = <any>{											// stitch time out values on fabric req
 	fabric_get_block_timeout_ms: 1000 * 10,					// defaults
 	fabric_instantiate_timeout_ms: 1000 * 60 * 5,
-	fabric_join_channel_timeout_ms: 1000 * 25,
+	fabric_join_channel_timeout_ms: 1000 * 15,
 	fabric_install_cc_timeout_ms: 1000 * 60 * 5,
 	fabric_lc_install_cc_timeout_ms: 1000 * 60 * 5,			// lc packages are large, longer than regular install
 	fabric_general_timeout_ms: 1000 * 10,
-	fabric_lc_get_cc_timeout_ms: 1000 * 60 * 3,				// lc packages are large
+	fabric_lc_get_cc_timeout_ms: 1000 * 60 * 2,				// lc packages are large
+	fabric_ca_timeout_ms: 1000 * 5,
 };
 function setTimeouts(opts: any) {
 	const lc_opts = <any>{};
@@ -294,7 +295,8 @@ function send_process_proposal_req(opts: { p_signed_proposal: any, host: string 
 // ------------------------------------------
 const send_proposal_req_timed = (opts: Spr, cb: Function) => {
 	let cb_called = false;
-	const timeout_ms = (opts.timeout_ms && !isNaN(opts.timeout_ms)) ? Number(opts.timeout_ms) : _sto.fabric_general_timeout_ms;	// default timeout
+	const server_side_timeout = (opts.timeout_ms && !isNaN(opts.timeout_ms)) ? Number(opts.timeout_ms) : _sto.fabric_general_timeout_ms;	// default timeout
+	const client_timeout_ms = server_side_timeout + 1000;				// add time to the client timeout to let the server side timeout fire first
 
 	function cb_proper(e: any, r: { grpc_data: GrpcData }) {
 		clearTimeout(timer);
@@ -309,13 +311,15 @@ const send_proposal_req_timed = (opts: Spr, cb: Function) => {
 
 	const cb_timeout = (err: any, r: any) => {												// timeout will call this function
 		clearTimeout(timer);
-		err = 'the grpc web client timed out the proposal after ' + friendly_ms(timeout_ms);
+		err = 'the grpc web client timed out the proposal after ' + friendly_ms(client_timeout_ms);
 		const stitch_timeout_msg = '(stitch) timeout waiting for grpc web proxy response';
 		const stitch_timeout_code = 99;
 		const data: GrpcData = {
 			status: stitch_timeout_code,
 			statusMessage: stitch_timeout_msg,
-			headers: null,
+			headers: {
+				'x-timeout_ms': server_side_timeout.toString()
+			},
 			message: null,
 			trailers: null,
 			_proxy_resp: {
@@ -327,7 +331,7 @@ const send_proposal_req_timed = (opts: Spr, cb: Function) => {
 		return cb_proper(err, { grpc_data: data });
 	};
 
-	const timer = setTimeout(cb_timeout, timeout_ms);
+	const timer = setTimeout(cb_timeout, client_timeout_ms);
 	send_process_proposal_req(opts, cb_proper);
 };
 

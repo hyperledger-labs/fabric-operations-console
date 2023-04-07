@@ -3643,7 +3643,7 @@ stitch.getOSNChannels(opts, (err, data) => {
 			url: "/participation/v1/channels/mychannel",
 		],
 		systemChannel: {   // is null if no systemChannel
-			name: "system", // the system hannel name
+			name: "system", // the system channel name
 			url: "/participation/v1/channels/mychannel",
 		}
 	},

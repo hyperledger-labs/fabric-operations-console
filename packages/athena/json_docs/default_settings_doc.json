@@ -17,12 +17,9 @@
 	"app_port": 3000,
 	"allow_default_password": false,
 	"auth_scheme": "initial",
-	"backend_address_timeout_ms": 3000,
-	"ca_proxy_timeout": 5000,
 	"cluster_data": {
 		"type": null
 	},
-	"configtxlator_timeout": 90000,
 	"configtxlator_url_original": "http://example.com:80",
 	"configtxlators": {
 		"v1.1.0": "http://example.com:80",
@@ -64,7 +61,6 @@
 	},
 	"default_user_password": null,
 	"default_user_password_initial": "ohnoididnotchangethepassword",
-	"deployer_timeout": 105000,
 	"deployer_url": "http://example.com:80",
 	"disabled_compaction": true,
 	"disable_auto_fab_up": true,
@@ -92,13 +88,6 @@
 			"V2_0"
 		]
 	},
-	"fabric_get_block_timeout_ms": 10000,
-	"fabric_instantiate_timeout_ms": 300000,
-	"fabric_join_channel_timeout_ms": 25000,
-	"fabric_install_cc_timeout_ms": 300000,
-	"fabric_lc_install_cc_timeout_ms": 300000,
-	"fabric_general_timeout_ms": 10000,
-	"fabric_lc_get_cc_timeout_ms": 180000,
 	"feature_flags": {
 		"capabilities_enabled": true,
 		"create_channel_enabled": true,
@@ -144,8 +133,6 @@
 		".*"
 	],
 	"hsm": null,
-	"http_timeout": 300000,
-	"http_status_timeout": 1000,
 	"http_metrics_enabled": true,
 	"iam_api_key": null,
 	"iam_cache_enabled": true,

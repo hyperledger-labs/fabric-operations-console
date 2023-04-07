@@ -50,8 +50,6 @@ module.exports = (logger, ev, t) => {
 	// GRPC Proxy Proxy (self sign cert work around)
 	//--------------------------------------------------
 	app.all('/grpcwp/*', t.middleware.verify_view_action_session, (req, res) => {
-		req.setTimeout(ev.GRPCWPP_TIMEOUT);
-		logger.debug('[grpcwp] incoming-req-timeout:', t.misc.friendly_ms(ev.GRPCWPP_TIMEOUT));
 		t.proxy_lib.grpc_proxy_proxy_call(req, (ret) => {
 			if (ret.headers) {
 				res.set(ret.headers);

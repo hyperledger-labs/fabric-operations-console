@@ -127,7 +127,7 @@ export class CertificateAuthority extends Component {
 			return naturalSort(a.name, b.name);
 		});
 		this.props.updateState(SCOPE, { caList });
-		NodeStatus.getStatus(newCAs, SCOPE, 'caList');
+		NodeStatus.getStatus(newCAs, SCOPE, 'caList', null, 50);
 		this.props.clearNotifications('orderers_HELP');
 	};
 

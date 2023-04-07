@@ -108,7 +108,7 @@ class JoinOSNChannelModal extends React.Component {
 		if (orderer_tls_identity) {
 			try {
 				let all_identities = await IdentityApi.getIdentities();
-				const channels = await ChannelParticipationApi._getChannels(all_identities, orderer);
+				const channels = await ChannelParticipationApi.getChannels(all_identities, orderer);
 				return channels;
 			} catch (e) {
 				Log.error(e);

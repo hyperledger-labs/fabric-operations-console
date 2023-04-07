@@ -266,8 +266,8 @@ class App extends Component {
 			url: '/api/v1/logs', // http url to send logs, relative route okay
 			method: 'POST', // http method to send logs
 			headers: {}, // http headers to send w/logs
-			timeout: 10000, // http req timeout, [ms]
-			interval: 5000, // interval to post logs, [ms]
+			timeout: 5000, // http req timeout, [ms]
+			interval: 30000, // interval to post logs, [ms]
 			level: 'trace', // logging level and below to send
 			backoff: {
 				// on req failure try again in a bit

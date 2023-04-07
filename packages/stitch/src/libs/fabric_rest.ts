@@ -39,6 +39,7 @@ function proxy_fetch_get_json(opts: IntOsn) {
 			'x-certificate-b64pem': opts.certificate_b64pem,
 			'x-private-key-b64pem': opts.private_key_b64pem,
 			'x-root-cert-b64pem': opts.root_cert_b64pem,
+			'x-timeout_ms': opts.timeout_ms.toString(),
 		},
 		redirect: 'follow', 				// manual, *follow, error
 		referrer: 'no-referrer', 			// no-referrer, *client
@@ -54,6 +55,19 @@ function proxy_fetch_get_json(opts: IntOsn) {
 			return err.message;
 		}
 	});
+
+	/*function reqListener() {
+		console.log('response', this.responseText);
+	}
+	const req = new XMLHttpRequest();
+	req.addEventListener('load', reqListener);
+	req.open('GET', '/proxy/' + opts.url);
+	//req.setRequestHeader('x-certificate-b64pem', opts.certificate_b64pem);
+	//req.setRequestHeader('x-private-key-b64pem', opts.private_key_b64pem);
+	//req.setRequestHeader('x-root-cert-b64pem', opts.root_cert_b64pem);
+	req.setRequestHeader('x-timeout_ms', opts.timeout_ms.toString());
+	req.send();
+	*/
 }
 
 // ----------------------------------------------------------------
@@ -79,6 +93,7 @@ function proxy_fetch_post_form(opts: IntOsn2) {
 			'x-certificate-b64pem': opts.certificate_b64pem,
 			'x-private-key-b64pem': opts.private_key_b64pem,
 			'x-root-cert-b64pem': opts.root_cert_b64pem,
+			'x-timeout_ms': opts.timeout_ms.toString(),
 		},
 		redirect: 'follow', 				// manual, *follow, error
 		referrer: 'no-referrer', 			// no-referrer, *client
@@ -115,6 +130,7 @@ function proxy_fetch_delete_text(opts: IntOsn) {
 			'x-certificate-b64pem': opts.certificate_b64pem,
 			'x-private-key-b64pem': opts.private_key_b64pem,
 			'x-root-cert-b64pem': opts.root_cert_b64pem,
+			'x-timeout_ms': opts.timeout_ms.toString(),
 		},
 		redirect: 'follow', 				// manual, *follow, error
 		referrer: 'no-referrer', 			// no-referrer, *client
@@ -254,7 +270,7 @@ function joinOSNChannel(opts: ExtOsn3, cb: Function) {
 
 	const fetch_options = {
 		url: opts.host + '/participation/v1/channels',
-		timeout_ms: (opts.timeout_ms && !isNaN(opts.timeout_ms)) ? Number(opts.timeout_ms) : _sto.fabric_general_timeout_ms,	// default timeout
+		timeout_ms: (opts.timeout_ms && !isNaN(opts.timeout_ms)) ? Number(opts.timeout_ms) : _sto.fabric_join_channel_timeout_ms,	// default timeout
 		certificate_b64pem: opts.certificate_b64pem,
 		private_key_b64pem: opts.private_key_b64pem,
 		root_cert_b64pem: opts.root_cert_b64pem,
@@ -287,7 +303,7 @@ function unjoinOSNChannel(opts: ExtOsn2, cb: Function) {
 
 	const fetch_options = {
 		url: opts.host + '/participation/v1/channels/' + opts.channel,
-		timeout_ms: (opts.timeout_ms && !isNaN(opts.timeout_ms)) ? Number(opts.timeout_ms) : _sto.fabric_general_timeout_ms,	// default timeout
+		timeout_ms: (opts.timeout_ms && !isNaN(opts.timeout_ms)) ? Number(opts.timeout_ms) : _sto.fabric_join_channel_timeout_ms,	// default timeout
 		certificate_b64pem: opts.certificate_b64pem,
 		private_key_b64pem: opts.private_key_b64pem,
 		root_cert_b64pem: opts.root_cert_b64pem,
@@ -342,7 +358,7 @@ interface OsnBase {
 	private_key_b64pem: string;
 	root_cert_b64pem: string;
 
-	timeout_ms: number | null;
+	timeout_ms: number;
 }
 
 interface ExtOsn extends OsnBase {

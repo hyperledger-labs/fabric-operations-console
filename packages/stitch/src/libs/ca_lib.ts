@@ -19,6 +19,7 @@ import { generateCaAuthToken, scGenCSR, scGenEcdsaKeys, parseCertificate } from 
 import { fmt_ca_err, fmt_ca_ok } from './validation';
 import { Ext } from './asn1_lib';
 import { logger } from './misc';
+import { _sto } from '../stitch';
 
 // exports
 export { getCaIdentities, scGenCSR, getCaAffiliations, registerCaIdentity, enrollCaIdentity, reenrollCaIdentity, deleteCaIdentity, Ext };
@@ -44,6 +45,7 @@ function getCaIdentities(opts: CaInput, cb: Function) {
 			host: build_ca_url(options, '/api/v1/identities'),
 			authorization: token,
 			funk: 'getCaIdentities',
+			timeout_ms: (opts.timeout_ms && !isNaN(opts.timeout_ms)) ? Number(opts.timeout_ms) : _sto.fabric_ca_timeout_ms,	// default timeout
 		};
 		fetch_get_json(fetch_options).then(response => {
 			called_cb = true;
@@ -85,6 +87,7 @@ function getCaAffiliations(opts: CaInput, cb: Function) {
 			host: build_ca_url(options, '/api/v1/affiliations'),
 			authorization: token,
 			funk: 'getCaAffiliations',
+			timeout_ms: (opts.timeout_ms && !isNaN(opts.timeout_ms)) ? Number(opts.timeout_ms) : _sto.fabric_ca_timeout_ms,	// default timeout
 		};
 		fetch_get_json(fetch_options).then(response => {
 			called_cb = true;
@@ -164,7 +167,8 @@ function registerCaIdentity(opts: CaReg, cb: Function) {
 			host: build_ca_url(options, '/api/v1/identities'),
 			authorization: token,
 			body_obj: options.body_obj,
-			funk: 'registerCaIdentity'
+			funk: 'registerCaIdentity',
+			timeout_ms: (opts.timeout_ms && !isNaN(opts.timeout_ms)) ? Number(opts.timeout_ms) : _sto.fabric_ca_timeout_ms,	// default timeout
 		};
 		fetch_post_json(fetch_options).then(response => {
 			called_cb = true;
@@ -223,7 +227,8 @@ function enrollCaIdentity(opts: CaEnroll, cb: Function) {
 					caName: opts.ca_name,
 					certificate_request: csrPEM,
 				},
-				funk: 'enrollCaIdentity'
+				funk: 'enrollCaIdentity',
+				timeout_ms: (opts.timeout_ms && !isNaN(opts.timeout_ms)) ? Number(opts.timeout_ms) : _sto.fabric_ca_timeout_ms,	// default timeout
 			};
 			fetch_post_json(fetch_options).then(response => {
 				called_cb = true;
@@ -285,7 +290,8 @@ function reenrollCaIdentity(opts: CaInput, cb: Function) {
 					host: build_ca_url(options, '/api/v1/reenroll'),
 					authorization: token,
 					body_obj: options.body_obj,
-					funk: 'reenrollCaIdentity'
+					funk: 'reenrollCaIdentity',
+					timeout_ms: (opts.timeout_ms && !isNaN(opts.timeout_ms)) ? Number(opts.timeout_ms) : _sto.fabric_ca_timeout_ms,	// default timeout
 				};
 				fetch_post_json(fetch_options).then(response => {
 					called_cb = true;
@@ -344,7 +350,8 @@ function deleteCaIdentity(opts: CaInput, cb: Function) {
 			const fetch_options = {
 				host: build_ca_url(options, '/api/v1/identities/' + enroll_id),
 				authorization: token,
-				funk: 'deleteCaIdentity'
+				funk: 'deleteCaIdentity',
+				timeout_ms: (opts.timeout_ms && !isNaN(opts.timeout_ms)) ? Number(opts.timeout_ms) : _sto.fabric_ca_timeout_ms,	// default timeout
 			};
 			fetch_delete_json(fetch_options).then(response => {
 				called_cb = true;
@@ -389,7 +396,7 @@ function build_ca_url(opts: { ca_name: string, host: string }, path: string) {
 		host: 'https://example.com',		// http endpoint to a thing, include protocol and port
 	}
 */
-function fetch_get_json(opts: { host: string, authorization: string }) {
+function fetch_get_json(opts: { host: string, authorization: string, timeout_ms: number }) {
 	return fetch(opts.host, {				// Default options are marked with *
 		method: 'GET',
 		mode: 'cors', 						// cors, *same-origin
@@ -398,6 +405,7 @@ function fetch_get_json(opts: { host: string, authorization: string }) {
 		headers: {
 			'Authorization': opts.authorization,
 			'Content-Type': 'application/json; charset=utf-8',
+			'x-timeout_ms' : opts.timeout_ms.toString(),
 		},
 		redirect: 'follow', 				// manual, *follow, error
 		referrer: 'no-referrer', 			// no-referrer, *client
@@ -424,7 +432,7 @@ function fetch_get_json(opts: { host: string, authorization: string }) {
 		body_obj: {}
 	}
 */
-function fetch_post_json(opts: { host: string, authorization: string, body_obj: object }) {
+function fetch_post_json(opts: { host: string, authorization: string, body_obj: object, timeout_ms: number }) {
 	return fetch(opts.host, {				// Default options are marked with *
 		method: 'POST',
 		mode: 'cors', 						// cors, *same-origin
@@ -433,6 +441,7 @@ function fetch_post_json(opts: { host: string, authorization: string, body_obj: 
 		headers: {
 			'Authorization': opts.authorization,
 			'Content-Type': 'application/json; charset=utf-8',
+			'x-timeout_ms' : opts.timeout_ms.toString(),
 		},
 		redirect: 'follow', 				// manual, *follow, error
 		referrer: 'no-referrer', 			// no-referrer, *client
@@ -460,7 +469,7 @@ function fetch_post_json(opts: { host: string, authorization: string, body_obj: 
 		host: 'https://example.com:8122',	// http endpoint to something, include protocol and port
 	}
 */
-function fetch_delete_json(opts: { host: string, authorization: string }) {
+function fetch_delete_json(opts: { host: string, authorization: string, timeout_ms: number }) {
 	return fetch(opts.host, {				// Default options are marked with *
 		method: 'DELETE',
 		mode: 'cors', 						// cors, *same-origin
@@ -469,6 +478,7 @@ function fetch_delete_json(opts: { host: string, authorization: string }) {
 		headers: {
 			'Authorization': opts.authorization,
 			'Content-Type': 'application/json; charset=utf-8',
+			'x-timeout_ms' : opts.timeout_ms.toString(),
 		},
 		redirect: 'follow', 				// manual, *follow, error
 		referrer: 'no-referrer', 			// no-referrer, *client
@@ -494,6 +504,7 @@ interface CaInput {
 	manual_subject: string;
 	ext: Ext | null;
 	enroll_id: string | null;
+	timeout_ms: number | null;
 }
 
 interface CaReg extends CaInput {
@@ -515,4 +526,5 @@ interface CaEnroll {
 	enroll_secret: string;
 	manual_subject: string;
 	ext: Ext | null;
+	timeout_ms: number | null;
 }

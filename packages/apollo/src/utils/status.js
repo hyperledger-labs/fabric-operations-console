@@ -20,7 +20,7 @@ import ComponentApi from '../rest/ComponentApi';
 import { NodeRestApi } from '../rest/NodeRestApi';
 import { RestApi } from '../rest/RestApi';
 
-const RETRY_LIMIT = 15; // takes 4 minutes to give up
+const RETRY_LIMIT = 2;
 const RETRY_FREQUENCY = 5000;
 const SCOPE = 'node_status';
 
@@ -174,11 +174,6 @@ const NodeStatus = {
 		return res;
 	},
 
-	calcRetryDelay(lastRetryDelay, attempt) {
-		// wait 15% more each time
-		return Math.floor(lastRetryDelay * 1.15);
-	},
-
 	// make wrapper around old getStatus interface
 	getStatus(data, scope, prop, callback, retryLimit, retryFreq) {
 		// call the new interface
@@ -189,18 +184,18 @@ const NodeStatus = {
 		});
 	},
 
-	getStatusInternal(data, scope, prop, retryLimit, lastRetryDelay, attempt, callback) {
+	getStatusInternal(data, scope, prop, retryLimit, retryFreq, attempt, callback) {
 		if (!data) {
 			return;
 		}
 		if (!_.isArray(data)) {
-			return this.getStatus([data], scope, prop, callback, retryLimit, lastRetryDelay);
+			return this.getStatus([data], scope, prop, callback, retryLimit, retryFreq);
 		}
 		if (!retryLimit) {
 			retryLimit = RETRY_LIMIT;
 		}
-		if (!lastRetryDelay) {
-			lastRetryDelay = RETRY_FREQUENCY;
+		if (!retryFreq) {
+			retryFreq = RETRY_FREQUENCY;
 		}
 
 		const components = {};
@@ -339,13 +334,12 @@ const NodeStatus = {
 
 									// store the timeouts where we can clear them after a logout
 									// helps avoid the a api lockout
-									const thisDelayMs = this.calcRetryDelay(lastRetryDelay, attempt);
 									window.statusApiRetries[scope] = window.setTimeout(() => {
 										if (this.in_progress[id]) {
-											this.getStatusInternal(retry, scope, prop, retryLimit, thisDelayMs, ++attempt, callback);
+											this.getStatusInternal(retry, scope, prop, retryLimit, retryFreq, ++attempt, callback);
 											delete this.in_progress[id];
 										}
-									}, thisDelayMs);
+									}, RETRY_FREQUENCY);
 								} else {
 									retry.forEach(failed => {
 										this.updateStatus(failed.id, 'unknown', scope, prop, callback);

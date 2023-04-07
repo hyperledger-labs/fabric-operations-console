@@ -964,8 +964,7 @@ module.exports = function (logger, t) {
 		if (options.url) { options.url = encodeURI(options.url); }						// pen test require the encodeURI usage here
 		if (options.uri) { options.url = encodeURI(options.uri); }
 
-		//options._max_attempts = 1;		// dsh todo
-		//options.timeout = 2000;			// dsh todo
+		options.timeout = !isNaN(options.timeout) ? Number(options.timeout) : 1.9 * 60 * 1000;
 
 		// --- Send the Request --- //
 		const redacted_url = exports.redact_basic_auth(options.baseUrl ? (options.baseUrl + options.url) : options.url);
@@ -981,7 +980,7 @@ module.exports = function (logger, t) {
 				resp.body = resp.body ? resp.body : req_e;								// copy requests error to resp if its empty
 				if (req_e.toString().indexOf('TIMEDOUT') >= 0) {
 					logger.error('[' + options._name + ' ' + options._tx_id + '] timeout exceeded:', options.timeout);
-					resp.statusCode = 408;
+					resp.statusCode = 504;
 				}
 			}
 
@@ -997,7 +996,7 @@ module.exports = function (logger, t) {
 						let delay_ms = calc_delay(options, resp);
 						logger.warn('[' + options._name + ' ' + options._tx_id + '] ' + code_desc + ', trying again in a bit:', exports.friendly_ms(delay_ms));
 						return setTimeout(() => {
-							options.timeout = calc_retry_timeout(options, resp);
+							//options.timeout = calc_retry_timeout(options, resp);
 							logger.warn('[' + options._name + ' ' + options._tx_id + '] sending retry for prev ' + code + ' error.', options._attempt);
 							return exports.retry_req(options, cb);
 						}, delay_ms);
@@ -1028,7 +1027,7 @@ module.exports = function (logger, t) {
 		}
 
 		// calculate the timeout for the next request (in ms) - (_attempt is the number of the attempt that failed)
-		function calc_retry_timeout(options, resp) {
+		/*function calc_retry_timeout(options, resp) {
 			if (typeof options._calc_retry_timeout === 'function') {
 				const timeout = options._calc_retry_timeout(options, resp);				// if function is provided, call it
 				if (timeout && !isNaN(timeout)) {
@@ -1040,11 +1039,11 @@ module.exports = function (logger, t) {
 			if (!options.timeout || isNaN(options.timeout)) {
 				options.timeout = 30000;													// default
 			}
-			if (code === 408) {
+			if (code === 408 || code === 504) {
 				options.timeout = Number(options.timeout) + 10000 * (options._attempt + 1);	// increase each time
 			}
 			return options.timeout;
-		}
+		}*/
 	};
 
 	// -----------------------------------------------------

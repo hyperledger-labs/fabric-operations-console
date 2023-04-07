@@ -462,7 +462,7 @@ interface OrderFmtBlock extends Fmt {
 interface GrpcData {
 	status: number | null;
 	statusMessage: string | null;
-	headers: grpc.Metadata | null;
+	headers: grpc.Metadata | null | { 'x-timeout_ms': string };
 	message: ProtobufMessage | null;
 	trailers: grpc.Metadata | null;
 	_proxy_resp: ProxyResp;

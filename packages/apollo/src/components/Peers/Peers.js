@@ -238,7 +238,7 @@ class Peers extends Component {
 			data['associations'] = associations;
 		}
 		this.props.updateState(SCOPE, data);
-		NodeStatus.getStatus(newPeers, SCOPE, 'peerList');
+		NodeStatus.getStatus(newPeers, SCOPE, 'peerList', null, 50);
 		this.props.clearNotifications(SCOPE + '_HELP');
 	};
 

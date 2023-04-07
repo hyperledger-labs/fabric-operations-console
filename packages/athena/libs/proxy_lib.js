@@ -59,6 +59,7 @@ module.exports = function (logger, ev, t) {
 				requestCert: true,
 				_name: 'proxy',
 				_max_attempts: 2,
+				_tx_id: req._tx_id,
 			};
 			if (req.body.cert && req.body.key && req.body.ca) {							// accept mutual TLS parameters
 				opts.cert = t.misc.decodeb64(req.body.cert);							// base 64 decode the *client* cert PEM before sending on
@@ -66,7 +67,7 @@ module.exports = function (logger, ev, t) {
 				opts.ca = t.misc.decodeb64(req.body.ca);								// base 64 decode the server TLS PEM before sending on
 			}
 
-			if (opts.url.includes('healthz') || opts.url.includes('cainfo')) {
+			if (opts.url.includes('healthz') || opts.url.includes('cainfo') || opts.url.includes('version')) {
 				opts.timeout = ev.HTTP_STATUS_TIMEOUT;
 				opts._retry_codes = {						// list of codes we will retry
 					'429': '429 rate limit exceeded aka too many reqs',
@@ -117,13 +118,14 @@ module.exports = function (logger, ev, t) {
 				url: parsed.path2use,
 				body: sanitize_object(req.body),										// body for proxy (plain text)
 				headers: exports.copy_headers(req.headers),
-				timeout: ev.GRPCWPP_TIMEOUT,
+				timeout: get_timeout(req),
 				json: false,
 				encoding: null,
 				rejectUnauthorized: false,												// the whole point of this api is to not verify self signed certs
 				requestCert: true,
 				_name: 'grpcwp',
 				_max_attempts: 1,														// never retry (retry_req is still useful though b/c error formatting)
+				_tx_id: req._tx_id,
 			};
 
 			t.misc.retry_req(opts, (err, resp) => {
@@ -136,7 +138,7 @@ module.exports = function (logger, ev, t) {
 				}
 
 				if (resp && resp.headers) {
-					headers = exports.copy_headers(resp.headers, true);							// copy headers for our response
+					headers = exports.copy_headers(resp.headers, true);					// copy headers for our response
 				}
 				if (!response) {
 					return cb({ headers: headers, statusCode: code });
@@ -167,7 +169,7 @@ module.exports = function (logger, ev, t) {
 			let code = 500;
 			logger.error('[configtxlator proxy route] - unable to contact configtxlator ', error);
 			if (error.toString().indexOf('socket hang up') >= 0) {
-				code = 408;
+				code = 504;
 				logger.error('[configtxlator proxy route] - timeout:', opts.proxyTimeout);
 			}
 			return res.status(code).json({ statusCode: code, msg: error });
@@ -191,13 +193,14 @@ module.exports = function (logger, ev, t) {
 				url: t.misc.safe_url(parsed.path2use),
 				body: (req.method === 'POST' || req.method === 'PUT') ? sanitize_object(req.body) : null,		// body for proxy (send plain text)
 				headers: exports.copy_headers(req.headers),
-				timeout: ev.CA_PROXY_TIMEOUT,
+				timeout: get_timeout(req),
 				json: false,
 				encoding: null,
 				rejectUnauthorized: false,												// the whole point of this api is to not verify self signed certs
 				requestCert: true,
 				_name: 'ca proxy',
 				_max_attempts: 2,
+				_tx_id: req._tx_id,
 			};
 			/* dsh todo, grab tls certs from docs
 			if (req.body.tls_options) {													// optional tls values
@@ -249,13 +252,14 @@ module.exports = function (logger, ev, t) {
 					sanitize_object(req.body) : null,		// body for proxy (send plain text)
 
 				headers: exports.copy_headers(req.headers),
-				timeout: ev.CA_PROXY_TIMEOUT,				// dsh todo change
+				timeout: get_timeout(req),
 				json: false,
 				encoding: null,
 				rejectUnauthorized: false,												// the whole point of this api is to not verify self signed certs
 				requestCert: true,
 				_name: 'general proxy',
 				_max_attempts: 1,
+				_tx_id: req._tx_id,
 			};
 			if (req.headers && req.headers['x-certificate-b64pem'] && req.headers['x-private-key-b64pem']) {	// add mutual TLS parameters
 				opts.cert = t.misc.decodeb64(req.headers['x-certificate-b64pem']);	// base 64 decode the *client* cert PEM before sending on
@@ -287,6 +291,14 @@ module.exports = function (logger, ev, t) {
 			});
 		}
 	};
+
+	// get timeout value to use for this request from client's request, its in the headers
+	function get_timeout(req) {
+		if (req && req.headers && req.headers['x-timeout_ms'] && !isNaN(req.headers['x-timeout_ms'])) {
+			return Number(req.headers['x-timeout_ms']);
+		}
+		return ev.HTTP_TIMEOUT;		// default
+	}
 
 	// copy some headers
 	exports.copy_headers = (headers, response) => {
