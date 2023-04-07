@@ -147,7 +147,7 @@ function test_encodeDecode_collection_config_packaged(input: any, cb: Function) 
 let _sto = <any>{											// stitch time out values on fabric req
 	fabric_get_block_timeout_ms: 1000 * 10,					// defaults
 	fabric_instantiate_timeout_ms: 1000 * 60 * 5,
-	fabric_join_channel_timeout_ms: 1000 * 15,
+	fabric_join_channel_timeout_ms: 1000 * 25,
 	fabric_install_cc_timeout_ms: 1000 * 60 * 5,
 	fabric_lc_install_cc_timeout_ms: 1000 * 60 * 5,			// lc packages are large, longer than regular install
 	fabric_general_timeout_ms: 1000 * 10,

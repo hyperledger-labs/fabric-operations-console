@@ -440,7 +440,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 				settings.FABRIC_INSTANTIATE_TIMEOUT_MS
 					= !isNaN(athena.fabric_instantiate_timeout_ms) ? Number(athena.fabric_instantiate_timeout_ms) : 5 * 60 * 1000;
 				settings.FABRIC_JOIN_CHANNEL_TIMEOUT_MS
-					= !isNaN(athena.fabric_join_channel_timeout_ms) ? Number(athena.fabric_join_channel_timeout_ms) : 15 * 1000;
+					= !isNaN(athena.fabric_join_channel_timeout_ms) ? Number(athena.fabric_join_channel_timeout_ms) : 25 * 1000;
 				settings.FABRIC_INSTALL_CC_TIMEOUT_MS
 					= !isNaN(athena.fabric_install_cc_timeout_ms) ? Number(athena.fabric_install_cc_timeout_ms) : 5 * 60 * 1000;
 				settings.FABRIC_LC_INSTALL_CC_TIMEOUT_MS

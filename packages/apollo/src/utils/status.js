@@ -339,7 +339,7 @@ const NodeStatus = {
 											this.getStatusInternal(retry, scope, prop, retryLimit, retryFreq, ++attempt, callback);
 											delete this.in_progress[id];
 										}
-									}, RETRY_FREQUENCY);
+									}, retryFreq);
 								} else {
 									retry.forEach(failed => {
 										this.updateStatus(failed.id, 'unknown', scope, prop, callback);
