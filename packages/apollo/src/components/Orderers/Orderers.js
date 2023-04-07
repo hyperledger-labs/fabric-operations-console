@@ -150,7 +150,7 @@ class Orderers extends Component {
 			return naturalSort(a.name, b.name);
 		});
 		this.props.updateState(SCOPE, { ordererList });
-		NodeStatus.getStatus(newOrderers, SCOPE, 'ordererList');
+		NodeStatus.getStatus(newOrderers, SCOPE, 'ordererList', null, 50);
 		this.props.clearNotifications(SCOPE + '_HELP');
 	};
 

@@ -54,7 +54,6 @@ See public Optools configuration settings.
 	"CSP_HEADER_VALUES": [
 		"'none'"
 	],
-	"GRPCWPP_TIMEOUT": 300000, // grpc web proxy (http) timeout in ms
 	"HOST_URL": "http://localhost:3000", // home url
 	"HTTP_TIMEOUT": 120000,  // http timeout for athena to respond, ms
 	"LANDING_URL": "http://localhost:3000",

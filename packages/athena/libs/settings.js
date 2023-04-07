@@ -167,19 +167,19 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 				settings.PROXY_TLS_HTTP_URL = fmt_proxy_url(athena.proxy_tls_http_url) || settings.HOST_URL; // the external url to proxy http fabric traffic to
 				settings.PROXY_TLS_WS_URL = fmt_proxy_url(athena.proxy_tls_ws_url) || settings.HOST_URL;	 // the external url to proxy ws fabric traffic to
 				settings.PROXY_TLS_FABRIC_REQS = athena.proxy_tls_fabric_reqs;		// if athena should proxy fabric traffic or not
-				settings.HTTP_TIMEOUT = !isNaN(athena.http_timeout) ? Number(athena.http_timeout) : 2 * 60 * 1000;		// max time in ms for athena to respond
+
+				// backend timeouts (all should be in milliseconds)
+				settings.HTTP_TIMEOUT = !isNaN(athena.http_timeout) ? Number(athena.http_timeout) : 2 * 60 * 1000;		// max time for athena 2 resp to any req
 				settings.WS_TIMEOUT = !isNaN(athena.ws_timeout) ? Number(athena.ws_timeout) : settings.HTTP_TIMEOUT;	// defaults to http timeout
-				settings.DEPLOYER_TIMEOUT = !isNaN(athena.deployer_timeout) ? Number(athena.deployer_timeout) : 90000;	// max time in ms for dep to respond
-				settings.CONFIGTXLATOR_TIMEOUT = !isNaN(athena.configtxlator_timeout) ? Number(athena.configtxlator_timeout) : 90000;
-				settings.GRPCWPP_TIMEOUT = !isNaN(athena.grpcwpp_timeout) ? Number(athena.grpcwpp_timeout) : 300000;
-				settings.CA_PROXY_TIMEOUT = !isNaN(athena.ca_proxy_timeout) ? Number(athena.ca_proxy_timeout) : 10000;
-				settings.HTTP_STATUS_TIMEOUT = !isNaN(athena.http_status_timeout) ? Number(athena.http_status_timeout) : 1000;	// max time respond 2 status req
-				settings.HTTP_METRICS_WAIT = !isNaN(athena.http_metrics_wait) ? Number(athena.http_metrics_wait) : 3000;
+				settings.DEPLOYER_TIMEOUT = !isNaN(athena.deployer_timeout) ? Number(athena.deployer_timeout) : 105 * 1000; // max time for dep to resp
+				settings.CONFIGTXLATOR_TIMEOUT = !isNaN(athena.configtxlator_timeout) ? Number(athena.configtxlator_timeout) : 1 * 60 * 1000;
+				settings.HTTP_STATUS_TIMEOUT = !isNaN(athena.http_status_timeout) ? Number(athena.http_status_timeout) : 3 * 1000; // max time for status req
+
+				settings.HTTP_METRICS_WAIT = !isNaN(athena.http_metrics_wait) ? Number(athena.http_metrics_wait) : 3 * 1000;
 				settings.ENVIRONMENT = athena.environment;
 				settings.INFRASTRUCTURE = athena.infrastructure || '';
 				settings.TRANSACTION_VISIBILITY = athena.transaction_visibility;											// brian wanted this to toggle tx
 				settings.IAM_API_KEY = process.env.IAM_API_KEY || athena.iam_api_key;										// ibp's api key for IAM
-				settings.BACKEND_ADDRESS_TIMEOUT_MS = !isNaN(athena.backend_address_timeout_ms) ? Number(athena.backend_address_timeout_ms) : 3000;
 				settings.CSP_HEADER_VALUES = Array.isArray(athena.csp_header_values) ? athena.csp_header_values : ['default-src \'self\''];
 				settings.MAX_REQ_PER_MIN = !isNaN(athena.max_req_per_min) ? Number(athena.max_req_per_min) : 25;			// http rate limit (general APIs)
 				settings.MAX_REQ_PER_MIN_AK = !isNaN(athena.max_req_per_min_ak) ? Number(athena.max_req_per_min_ak) : 25;	// http rate limit (api key APIs)
@@ -436,15 +436,23 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 					settings.DEFAULT_USER_PASSWORD = settings.DEFAULT_USER_PASSWORD.trim();	// remove things like fat thumbed tabs and new lines
 				}
 
-				// fabric timeout settings
-				settings.FABRIC_GET_BLOCK_TIMEOUT_MS = !isNaN(athena.fabric_get_block_timeout_ms) ? Number(athena.fabric_get_block_timeout_ms) : 10000;
-				settings.FABRIC_INSTANTIATE_TIMEOUT_MS = !isNaN(athena.fabric_instantiate_timeout_ms) ? Number(athena.fabric_instantiate_timeout_ms) : 300000;
-				settings.FABRIC_JOIN_CHANNEL_TIMEOUT_MS = !isNaN(athena.fabric_join_channel_timeout_ms) ? Number(athena.fabric_join_channel_timeout_ms) : 25000;
-				settings.FABRIC_INSTALL_CC_TIMEOUT_MS = !isNaN(athena.fabric_install_cc_timeout_ms) ? Number(athena.fabric_install_cc_timeout_ms) : 300000;
-				settings.FABRIC_LC_INSTALL_CC_TIMEOUT_MS = !isNaN(athena.fabric_lc_install_cc_timeout_ms) ?
-					Number(athena.fabric_lc_install_cc_timeout_ms) : 300000;
-				settings.FABRIC_GENERAL_TIMEOUT_MS = !isNaN(athena.fabric_general_timeout_ms) ? Number(athena.fabric_general_timeout_ms) : 10000;
-				settings.FABRIC_LC_GET_CC_TIMEOUT_MS = !isNaN(athena.fabric_lc_get_cc_timeout_ms) ? Number(athena.fabric_lc_get_cc_timeout_ms) : 180000;
+				// client side (fabric request) timeout settings
+				settings.FABRIC_GET_BLOCK_TIMEOUT_MS
+					= !isNaN(athena.fabric_get_block_timeout_ms) ? Number(athena.fabric_get_block_timeout_ms) : 10 * 1000;
+				settings.FABRIC_INSTANTIATE_TIMEOUT_MS
+					= !isNaN(athena.fabric_instantiate_timeout_ms) ? Number(athena.fabric_instantiate_timeout_ms) : 5 * 60 * 1000;
+				settings.FABRIC_JOIN_CHANNEL_TIMEOUT_MS
+					= !isNaN(athena.fabric_join_channel_timeout_ms) ? Number(athena.fabric_join_channel_timeout_ms) : 25 * 1000;
+				settings.FABRIC_INSTALL_CC_TIMEOUT_MS
+					= !isNaN(athena.fabric_install_cc_timeout_ms) ? Number(athena.fabric_install_cc_timeout_ms) : 5 * 60 * 1000;
+				settings.FABRIC_LC_INSTALL_CC_TIMEOUT_MS
+					= !isNaN(athena.fabric_lc_install_cc_timeout_ms) ? Number(athena.fabric_lc_install_cc_timeout_ms) : 5 * 60 * 1000;
+				settings.FABRIC_GENERAL_TIMEOUT_MS
+					= !isNaN(athena.fabric_general_timeout_ms) ? Number(athena.fabric_general_timeout_ms) : 10 * 1000;
+				settings.FABRIC_LC_GET_CC_TIMEOUT_MS
+					= !isNaN(athena.fabric_lc_get_cc_timeout_ms) ? Number(athena.fabric_lc_get_cc_timeout_ms) : 2 * 60 * 1000;
+				settings.FABRIC_CA_TIMEOUT_MS
+					= !isNaN(athena.fabric_ca_timeout_ms) ? Number(athena.fabric_ca_timeout_ms) : 5 * 1000;
 
 				//-----------------------------
 				// Set Other Settings

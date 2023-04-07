@@ -260,10 +260,6 @@ __default_settings_doc.json:__
 // examples: 'iam', 'odic', 'ldap', 'oauth', 'ibmid'
 "auth_scheme": "initial",
 
-// how much time in ms to contact the grpcwp. retrieves the backend address
-// defaults 3000
-"backend_address_timeout_ms": 3000,
-
 // CA proxy route's timeout in ms
 // defaults 10000
 "ca_proxy_timeout": 10000,
