@@ -2275,7 +2275,7 @@ module.exports = function (logger, ev, t) {
 				logger.error('[cluster type] unable to get cluster type from deployer, communication error', depRespBody);
 				return cb({ statusCode: statusCode, error: depRespBody });
 			} else {
-				let type = 'k8s';				// defaults
+				let type = ev.STR.INFRA_K8S;				// defaults as "k8s"
 				if (!depRespBody) {
 					logger.warn('[cluster type] unable to get cluster type, deployer response is blank:', typeof depRespBody, depRespBody);
 					return cb({ statusCode: 500, error: depRespBody });
@@ -2283,7 +2283,8 @@ module.exports = function (logger, ev, t) {
 					logger.warn('[cluster type] unexpected cluster type from deployer response is not a string:', typeof depRespBody, depRespBody);
 					return cb({ statusCode: 500, error: depRespBody });
 				} else {
-					type = depRespBody.toLowerCase().trim();
+					type = depRespBody.toLowerCase();
+					type = type.replace(/[^a-zA-Z0-9]/g, '').trim();
 					logger.debug('[cluster type] got cluster type from deployer:', typeof type, type);
 					return cb(null, { type: type, message: ev.STR.STATUS_ALL_GOOD });
 				}
@@ -2292,7 +2293,7 @@ module.exports = function (logger, ev, t) {
 	};
 
 	// ------------------------------------------
-	// get and store the cluster type (iff openshift set it)
+	// get and store the cluster type
 	// ------------------------------------------
 	exports.store_cluster_type = function (cb) {
 		if (!cb) { cb = function () { }; }
@@ -2305,7 +2306,7 @@ module.exports = function (logger, ev, t) {
 				return cb({ statusCode: 500, error: 'missing cluster type in response' });
 			} else {
 
-				// overwrite the setting if its different
+				// overwrite the setting if its different (possible values atm are "openshift" or "k8s")
 				if (resp.type !== ev.INFRASTRUCTURE) {
 					logger.debug('[startup - cluster type] detected a different value for the cluster type, storing in settings doc');
 
@@ -2314,7 +2315,7 @@ module.exports = function (logger, ev, t) {
 							logger.error('[startup - cluster type] an error occurred obtaining the "' + process.env.SETTINGS_DOC_ID + '"', err, settings_doc);
 							return cb();
 						} else {
-							settings_doc.infrastructure = ev.STR.INFRA_OPENSHIFT;
+							settings_doc.infrastructure = resp.type;
 
 							t.otcc.writeDoc({ db_name: ev.DB_SYSTEM }, settings_doc, (err) => {
 								if (err) {
