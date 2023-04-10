@@ -1042,9 +1042,11 @@ module.exports = function (logger, ev, t) {
 				logger.error('[migration-console-db] db migration failed, look up for details.');
 				return cb(error, response);
 			} else {
-				change_migration_step_status('db', ev.STR.STATUS_DONE, (err) => {		// if success, mark migration as complete
-					logger.info('[migration-console-db] marked db migration as successful');
-					return cb(null);
+				mark_comps_as_migrated(() => {												// add migrated from field to the docs on the original console
+					change_migration_step_status('db', ev.STR.STATUS_DONE, (err) => {		// if success, mark migration as complete
+						logger.info('[migration-console-db] marked db migration as successful');
+						return cb(null);
+					});
 				});
 			}
 		});
@@ -1392,6 +1394,7 @@ module.exports = function (logger, ev, t) {
 					if (doc.type === ev.STR.MSP) {
 						logger.info('[migration-console-db] found a msp doc. editing url.', doc._id);
 						doc.host_url = new_console_url;
+						doc.migrated_from = ev.STR.LOCATION_IBP_SAAS;
 					}
 
 					// edit a signature collection doc
@@ -1402,16 +1405,63 @@ module.exports = function (logger, ev, t) {
 						}
 					}
 
-					// edit a component doc
-					const nodes = [ev.STR.MSP, ev.STR.MSP_EXTERNAL, ev.STR.CA, ev.STR.ORDERER, ev.STR.PEER];
-					if (nodes.includes(doc.type)) {
-						logger.info('[migration-console-db] found a component doc. adding migration flag.', doc._id);
+					// edit a deployed component doc
+					const nodes = [ev.STR.CA, ev.STR.ORDERER, ev.STR.PEER];
+					if (nodes.includes(doc.type) && doc.location === ev.STR.LOCATION_IBP_SAAS) {	// only do this for deployed components (not imported ones)
+						logger.info('[migration-console-db] found a deployed component doc. adding migration flag.', doc._id);
 						doc.migrated_from = ev.STR.LOCATION_IBP_SAAS;
 					}
 				}
 			}
 		}
 		return backup;
+	}
+
+	// add the field to indicate these components have been migrated.
+	// this is needed for the original console to continue to work b/c the new operator is deploying open source style urls (like api_url, operations_url, etc).
+	// this flag will let the original console use/pick the legacy style urls.
+	function mark_comps_as_migrated(cb) {
+		const opts = {
+			db_name: ev.DB_COMPONENTS,		// db for peers/cas/orderers/msps/etc docs
+			_id: '_design/athena-v1',		// name of design doc
+			view: '_doc_types',
+			SKIP_CACHE: true,
+			query: t.misc.formatObjAsQueryParams({ include_docs: true, keys: [ev.STR.MSP, ev.STR.CA, ev.STR.ORDERER, ev.STR.PEER] }),
+		};
+
+		t.otcc.getDesignDocView(opts, (err, resp) => {
+			if (err) {
+				logger.error('[migration-console-db] error getting all deployed components to add migration field:', err);
+				return cb();
+			} else if (!resp || !Array.isArray(resp.rows) || resp.rows.length === 0) {
+				logger.warn('[migration-console-db] no docs were returned when getting all deployed component');
+				return cb();
+			} else {
+
+				// edit the doc by adding the "migrated_from" field
+				const bulk_docs = { docs: [] };
+				for (let i in resp.rows) {
+					if (resp.rows[i].doc) {
+
+						// only do this for deployed components (not imported ones)
+						if (resp.rows[i].doc.location === ev.STR.LOCATION_IBP_SAAS || resp.rows[i].doc.type === ev.STR.MSP) {
+							resp.rows[i].doc.migrated_from = ev.STR.LOCATION_IBP_SAAS;
+							bulk_docs.docs.push(resp.rows[i].doc);
+						}
+					}
+				}
+				logger.debug('[migration-console-db] adding migration flag to ' + bulk_docs.docs.length + ' component docs');
+
+				t.couch_lib.bulkDatabase({ db_name: ev.DB_COMPONENTS }, bulk_docs, (bulkErr, bulkResp) => {	// perform the bulk operation
+					if (err != null) {
+						logger.error('[migration-console-db] could not bulk restore docs', bulkErr, bulkResp);
+					} else {
+						logger.debug('[migration-console-db] added migration flag to ' + bulk_docs.docs.length + ' component docs');
+					}
+					return cb();
+				});
+			}
+		});
 	}
 
 	return exports;
