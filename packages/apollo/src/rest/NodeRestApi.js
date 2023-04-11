@@ -329,9 +329,13 @@ class NodeRestApi {
 				newNodes.push(node);
 			}
 		});
-		newNodes.forEach(async node => {
-			await NodeRestApi.updateNodeVersion(node);
-		});
+
+		// do NOT not use something.forEach(async !!!!
+		// b/c forEach does not block each async await call, the different loops fire at the same time and race conditions occur
+		for (let i in newNodes) {
+			const node = newNodes[i];
+			newNodes[i] = await NodeRestApi.updateNodeVersion(node);
+		}
 		return newNodes;
 
 		// parse the version to "major.minor.patch" (pre-release digits are kept too if provided)
@@ -614,32 +618,46 @@ class NodeRestApi {
 	/**
 	 * Update version information (if available) for the node
 	 * @param {Component} node Component record to be updated
-	 * @param {boolean} doNotRecurse If true it will not recurse over raft nodes - prevents infinite loop/run away
 	 * @return {Promise<Component>} A Promise that resolves with the updated component record
 	 */
-	static async updateNodeVersion(node, doNotRecurse) {
-		if (node.raft && !doNotRecurse) {
-			for (let i = 0; i < node.raft.length; i++) {
-				await NodeRestApi.updateNodeVersion(node.raft[i], true);
-			}
-		} else {
-			if (node.operations_url && !node.version) {
-				let opts = {
-					url: node.operations_url + '/version',
-					method: 'GET',
-				};
-				try {
-					const resp = await RestApi.post('/api/v2/proxy/', opts);
-					const version = resp ? JSON.parse(JSON.stringify(resp)) : null;
-					if (version && version.Version) {
-						node.version = version.Version;
+	static async updateNodeVersion(node) {
+		if (node.raft) {
+			let reqs = node.raft.map(async node => {
+				if (node && node.operations_url && !node.version) {	// only ask if we don't already have it
+					try {
+						const version = await get_fabric_version_api(node);
+						node.version = version;
+					} catch (err) {
+						// do nothing
 					}
-				} catch (err) {
-					//do nothing?
 				}
+			});
+			await Promise.all(reqs);		// dsh todo - limit number of requests at a time
+			return node;
+		} else {
+			if (node && node.operations_url && !node.version) {	// only ask if we don't already have it
+				try {
+					const version = await get_fabric_version_api(node);
+					node.version = version;
+				} catch (err) {
+					// do nothing
+				}
+				return node;
 			}
 		}
-		return node;
+
+		// api to get fabric version of the component (not from db, but ask the component)
+		async function get_fabric_version_api(node) {
+			let opts = {
+				url: node.operations_url + '/version',
+				method: 'GET',
+			};
+			const resp = await RestApi.post('/api/v2/proxy/', opts);
+			const version = resp ? JSON.parse(JSON.stringify(resp)) : null;
+			if (version && version.Version && typeof version.Version === 'string') {
+				return version.Version.toLowerCase().trim();
+			}
+		}
 	}
 
 	/**

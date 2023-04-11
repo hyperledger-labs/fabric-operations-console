@@ -24,7 +24,7 @@ import { Header as Common_Header } from '../../protoc/output/common/common_pb';
 import { ProposalResponse as ProposalResponse_ProposalResponse } from '../../protoc/output/peer/proposal_response_pb';
 
 // Libs built by us
-import { arrToUint8Array, generate_tx_id, logger, pp, load_pb } from '../misc';
+import { arrToUint8Array, generate_tx_id, logger, /*pp,*/ load_pb } from '../misc';
 import { build_nonce, scSign, decode_b64_pem, pem2DER } from '../crypto_misc';
 import { validate_proposal_options } from '../validation';
 import { TransactionLib } from './transaction_pb_lib';
@@ -321,7 +321,7 @@ export class ProposalLib {
 			};
 			const p_payload = commonLib.p_build_payload(p_opts);
 
-			logger.debug('p_payload', pp(p_payload.toObject()));
+			//logger.debug('p_payload', pp(p_payload.toObject()));
 			//logger.debug('p_payload seek as hex', uint8ArrayToHexStr(p_payload.serializeBinary()));
 
 			// 7. Build singed proposal
@@ -330,7 +330,7 @@ export class ProposalLib {
 				p_proposal: p_payload,
 			};
 			this.p_build_signed_proposal(sp_opts, (_: any, p_signed_proposal: any) => {
-				logger.debug('p_signed_proposal seek', p_signed_proposal ? p_signed_proposal.toObject() : null);
+				//logger.debug('p_signed_proposal seek', p_signed_proposal ? p_signed_proposal.toObject() : null);
 				return cb(null, p_signed_proposal);
 			});
 		});
@@ -460,7 +460,7 @@ export class ProposalLib {
 			};
 			const p_payload = (new CommonLib).p_build_payload(p_opts);
 
-			logger.debug('p_payload?', pp(p_payload.toObject()));
+			//logger.debug('p_payload?', pp(p_payload.toObject()));
 			//logger.debug('p_payload tx as hex', uint8ArrayToHexStr(p_payload.serializeBinary()));
 
 			// 7. Build singed proposal
@@ -546,7 +546,7 @@ export class ProposalLib {
 					b_data: b_config_update_envelope,
 				};
 				const p_payload = commonLib.p_build_payload(p_opts);
-				logger.debug('p_payload', pp(p_payload.toObject()));
+				//logger.debug('p_payload', pp(p_payload.toObject()));
 				//logger.debug('p_payload seek as hex', uint8ArrayToHexStr(p_payload.serializeBinary()));
 
 				// 5. Build singed proposal

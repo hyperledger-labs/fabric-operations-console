@@ -415,7 +415,7 @@ function decode_common_envelope(b_envelope: Uint8Array) {
 		const signature_header = decode_signature_header(p_signature_header);
 
 		const data = decode_payload_data(b_data2, channel_header.type);
-		logger.debug('[stitch] data?', data);
+		//logger.debug('[stitch] data?', data);
 
 		return {
 			envelope: {
@@ -597,7 +597,7 @@ function decode_payload_data(b_data: any, type: number) {
 				const b_channel_header = p_header.getChannelHeader();
 				const p_channel_header = Common_ChannelHeader.deserializeBinary(<Uint8Array>b_channel_header);
 				channel_header = p_channel_header.toObject();
-				logger.debug('[stitch] channel_header?', channel_header);
+				//logger.debug('[stitch] channel_header?', channel_header);
 
 				const p_signature_header = p_header.getSignatureHeader();
 				signature_header = decode_signature_header(p_signature_header);

@@ -1007,7 +1007,7 @@ class OrdererDetails extends Component {
 				channelId: orderer.system_channel || OrdererRestApi.systemChannel,
 				configtxlator_url: options.configtxlator_url,
 			};
-			const block = await OrdererRestApi.getChannelConfigBlock(block_options);
+			const block = await OrdererRestApi.getChannelConfigBlock(block_options, orderer);
 
 			const b64_config_block = window.stitch.uint8ArrayToBase64(block);
 			await OrdererRestApi.uploadConfigBlock(options.ordererId, b64_config_block);
@@ -1051,13 +1051,13 @@ class OrdererDetails extends Component {
 		return quickAction;
 	};
 
-	async getChannelConfig(channelId) {
+	async getChannelConfigWrap(channelId, orderer) {
 		const options = {
 			ordererId: this.props.match.params.ordererId,
 			configtxlator_url: this.props.configtxlator_url,
 			channelId: channelId,
 		};
-		let block = await OrdererRestApi.getChannelConfigBlock(options);
+		let block = await OrdererRestApi.getChannelConfigBlock(options, orderer);
 		const _block_binary2json = promisify(ChannelApi._block_binary2json);
 		const resp = await _block_binary2json(block, options.configtxlator_url);
 		return resp.data.data[0].payload.data;
@@ -1067,7 +1067,7 @@ class OrdererDetails extends Component {
 		OrdererRestApi.getOrdererDetails(this.props.match.params.ordererId, false)
 			.then(orderer => {
 				let channelId = this.props.match.params.channelId || orderer.system_channel || OrdererRestApi.systemChannel;
-				this.getChannelConfig(channelId).then(debug_block => {
+				this.getChannelConfigWrap(channelId, orderer).then(debug_block => {
 					Helper.openJSONBlob(debug_block);
 				});
 			})

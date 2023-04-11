@@ -236,7 +236,8 @@ function send_process_proposal_req(opts: { p_signed_proposal: any, host: string 
 			code: undefined,							// it does not hold details about the grpc req between the grpcweb proxy and the component
 			status_message: ''
 		},
-		_b64_payload: ''
+		_b64_payload: '',
+		_block_data: undefined,							// block data dne on this call
 	};
 	const client = grpc.client(Endorser.ProcessProposal, {
 		host: <string>opts.host,
@@ -326,7 +327,8 @@ const send_proposal_req_timed = (opts: Spr, cb: Function) => {
 				code: stitch_timeout_code,
 				status_message: stitch_timeout_msg,
 			},
-			_b64_payload: ''
+			_b64_payload: '',
+			_block_data: undefined,							// block data might not exist on this call
 		};
 		return cb_proper(err, { grpc_data: data });
 	};
@@ -520,14 +522,13 @@ function getChannelInfoFromPeer(opts: Fmt, cb: Function) {
 		orderer_host: "http://orderer_url.com:port",	// http endpoint to a grpc-web compatible proxy
 		channel_id: "string",					// id of the channel
 		start_block: 0,							// set to null to get newest block
-		stop_block: 0,							// set to null to get newest block
+		stop_block: 0,							// set to null to get newest block (response does include stop block)
 		include_bin: false,						// [optional] if the pb should be returned or not
 		decoder: 'v1' || 'v2' || 'v3' || 'none'	// [optional]
 		block_number: 0							// [optional] overrides start and stop block arguments
 	}
 */
 function getChannelBlockFromOrderer(opts: OrderFmtBlock, cb: Function) {
-	let block_data: any = {};
 	let error: string | null = null;					// record if there is an error
 	opts.funk = 'getChannelBlockFromOrderer';
 	let grpc_data: GrpcData = {							// organize the response object here, it will arrive piece wise
@@ -540,8 +541,13 @@ function getChannelBlockFromOrderer(opts: OrderFmtBlock, cb: Function) {
 			code: undefined,							// it does not hold details about the grpc req between the grpcweb proxy and the component
 			status_message: ''
 		},
-		_b64_payload: ''
+		_b64_payload: '',
+		_block_data: null,
 	};
+	const grpc_data_arr: GrpcData[] = [];
+	const headers = null;
+	let status = 0;
+	let statusMessage = '';
 
 	// ------------------------ Build a seek proposal ------------------------ //
 	const p_opts = {
@@ -557,7 +563,7 @@ function getChannelBlockFromOrderer(opts: OrderFmtBlock, cb: Function) {
 		p_opts.start_block = Number(opts.block_number);
 		p_opts.stop_block = Number(opts.block_number);
 	}
-	logger.info('*[stitch] building a proposal for getChannelBlockFromOrderer:', opts.channel_id);
+	logger.info('*[stitch] building a proposal for getChannelBlockFromOrderer:', opts.channel_id, 'start:', p_opts.start_block, 'stop:', p_opts.stop_block);
 	proposalLib.p_build_abstracted_signed_proposal_seek(p_opts, (_: any, p_signed_proposal: any) => {		// build the signed proposal protobuf
 		if (!p_signed_proposal) {
 			logger.error('[stitch] error creating a signed proposal protobuf for seeking');
@@ -575,49 +581,82 @@ function getChannelBlockFromOrderer(opts: OrderFmtBlock, cb: Function) {
 			});
 			client.onHeaders((headers: grpc.Metadata) => {
 				logger.debug('[stitch] received headers in streaming deliver response:', pp(headers));
-				grpc_data.headers = headers;
+				headers = headers;
 			});
 			client.onMessage((p_deliver_response: any) => {
 				const deliver_response = p_deliver_response.toObject();
-				logger.debug('[stitch] received msg in streaming deliver response:', pp(deliver_response));
+				logger.debug('[stitch] received msg in streaming deliver response:', grpc_data_arr.length, pp(deliver_response));
 
-				if (deliver_response) {
-					grpc_data.status = deliver_response.status;
-					grpc_data.statusMessage = deliver_response.info;		// does not always exist..
+				if (!isNaN(deliver_response.status)) {									// does not always exist..
+					status = deliver_response.status;
+					if (status >= 400) {
+						// we've rec an error code, which means we've reached the end of the blocks, make an error entry
+						grpc_data_arr.push(JSON.parse(JSON.stringify(grpc_data)));		// add another one
+						const on_pos = grpc_data_arr.length - 1;
+						grpc_data_arr[on_pos].status = deliver_response.status;
+						if (deliver_response.info) {
+							grpc_data_arr[on_pos].statusMessage = deliver_response.info;// does not always exist..
+						}
+					}
+				}
+				if (deliver_response.info) {
+					statusMessage = deliver_response.info;								// does not always exist..
 				}
 
-				if (deliver_response && deliver_response.block) {			// store block data in ret var
+				if (deliver_response && deliver_response.block) {						// store block data in ret var
+					grpc_data_arr.push(JSON.parse(JSON.stringify(grpc_data)));			// add another one
+					const on_pos = grpc_data_arr.length - 1;
+
 					const p_block = p_deliver_response.getBlock();
 					const b_payload = p_block.serializeBinary();
-					grpc_data.message = p_block;							// store pb block here for now, its used again below
-					block_data = {
-						block: decode_block(opts, b_payload),				// decode the block first
+					grpc_data_arr[on_pos].message = p_block;							// store pb block here for now, its used again below
+					grpc_data_arr[on_pos]._block_data = {
+						block: decode_block(opts, b_payload),							// decode the block first
 						channel_id: opts.channel_id
 					};
-					grpc_data._b64_payload = uint8ArrayToBase64(b_payload);
+					grpc_data_arr[on_pos]._b64_payload = uint8ArrayToBase64(b_payload);
+
+					if (!isNaN(deliver_response.status)) {								// does not always exist..
+						grpc_data_arr[on_pos].status = deliver_response.status;
+					}
+					if (deliver_response.info) {
+						grpc_data_arr[on_pos].statusMessage = deliver_response.info;	// does not always exist..
+					}
 				}
 			});
 			client.onEnd((proxy_status_code: grpc.Code, proxy_status_msg: string, trailers: grpc.Metadata) => {		// all done
 				logger.debug('[stitch] received trailers in streaming deliver response:', proxy_status_code, proxy_status_msg, trailers);
-				grpc_data.trailers = trailers;								// component field
-				grpc_data._proxy_resp.code = proxy_status_code;				// proxy field
-				grpc_data._proxy_resp.status_message = proxy_status_msg;	// proxy field
-				grpc_data = fill_in_missing(grpc_data);
+				let ret = [];
+				for (let i in grpc_data_arr) {
+					if (grpc_data_arr[i].status === null) {
+						grpc_data_arr[i].status = status;
+					}
+					if (!grpc_data_arr[i].statusMessage) {
+						grpc_data_arr[i].statusMessage = statusMessage;
+					}
+					grpc_data_arr[i].headers = headers;
+					grpc_data_arr[i].trailers = trailers;
+					grpc_data_arr[i]._proxy_resp.code = proxy_status_code;				// proxy field
+					grpc_data_arr[i]._proxy_resp.status_message = proxy_status_msg;		// proxy field
+					grpc_data_arr[i] = fill_in_missing(grpc_data_arr[i]);
 
-				// --- Check for Error Codes --- //
-				if (is_error_code(grpc_data.status)) {						// an error happened if status is not 200 nor 0
-					logger.error('[stitch] received error status in grpc streaming deliver response', pp(grpc_data));
-					error = 'unable to get block';
-					logger.error('[stitch] getChannelBlockFromOrderer was not successful');
-					return cb(fmt_err(opts, grpc_data, error), null);
-				} else {
-					logger.info('[stitch] getChannelBlockFromOrderer was successful');
-					block_data.channel_id = opts.channel_id;
-					const ret = fmt_ok(opts, grpc_data, block_data);
-					if (!ret.grpc_resp) { ret.grpc_resp = {}; }				// if debug is off it won't exist yet, init it
-					ret.grpc_resp.message = grpc_data.message;				// add pb block to response, its needed for join channel
-					return cb(null, ret);
+
+					// --- Check for Error Codes --- //
+					if (is_error_code(grpc_data_arr[i].status)) {						// an error happened if status is not 200 nor 0
+						logger.error('[stitch] received error status in grpc streaming deliver response', pp(grpc_data_arr[i]));
+						error = 'unable to get block';
+						logger.error('[stitch] getChannelBlockFromOrderer was not successful', i);
+						ret.push(fmt_err(opts, grpc_data_arr[i], error));
+					} else {
+						logger.debug('[stitch] getChannelBlockFromOrderer was successful', i);
+						grpc_data_arr[i]._block_data.channel_id = opts.channel_id;
+						ret.push(fmt_ok(opts, grpc_data_arr[i], grpc_data_arr[i]._block_data));
+						if (!ret[0].grpc_resp) { ret[0].grpc_resp = {}; }				// if debug is off it won't exist yet, init it
+						ret[0].grpc_resp.message = grpc_data.message;				// add pb block to response, its needed for join channel
+					}
 				}
+				logger.info('[stitch] getChannelBlockFromOrderer responding with', ret);
+				return cb(null, ret);
 			});
 
 			client.start();							// start the web-client
@@ -656,7 +695,12 @@ function getChannelsGenesisFromOrderer(opts: Fmt, cb: Function) {
 	};
 
 	getChannelBlockFromOrderer(<any>p_opts, (err: any, resp: any) => {
-		return cb(err, resp);
+		const ret = Array.isArray(resp) ? resp[0] : resp;		// expecting array of size 1
+		if (ret && ret.error) {
+			return cb(ret, null);
+		} else {
+			return cb(err, ret);
+		}
 	});
 }
 
@@ -1240,7 +1284,8 @@ function orderTransaction(opts: OrderFmt, cb: Function) {
 					code: undefined,							// it does not hold details about the grpc req between the grpcweb proxy and the component
 					status_message: ''
 				},
-				_b64_payload: ''
+				_b64_payload: '',
+				_block_data: undefined, 						// block data dne on this call
 			};
 
 			// ------------------------ Build the GRPC Web Client ------------------------ //
@@ -1331,6 +1376,7 @@ function getChannelConfigBlockFromOrderer(opts: Fmt, cb: Function) {
 	};
 	getChannelBlockFromOrderer(n_opts, (err: any, resp: any) => {		// after getting the latest block, find its config block section
 		let config_block_number = null;
+		resp = Array.isArray(resp) ? resp[0] : resp;					// expecting array of size 1
 
 		// navigate using the protoc structure
 		if (resp && resp.data && resp.data.block && resp.data.block.metadata && resp.data.block.metadata.metadataList) {
@@ -1379,7 +1425,12 @@ function getChannelConfigBlockFromOrderer(opts: Fmt, cb: Function) {
 				decoder: opts.decoder,
 			};
 			getChannelBlockFromOrderer(c_opts, (err2: any, resp2: any) => {
-				return cb(err2, resp2);
+				const ret = Array.isArray(resp2) ? resp2[0] : resp2;		// expecting array of size 1
+				if (ret && ret.error) {
+					return cb(ret, null);
+				} else {
+					return cb(err2, ret);
+				}
 			});
 		}
 	});
@@ -1528,7 +1579,8 @@ function submitConfigUpdate(opts: Fmt, cb: Function) {
 			code: undefined,							// it does not hold details about the grpc req between the grpcweb proxy and the component
 			status_message: ''
 		},
-		_b64_payload: ''
+		_b64_payload: '',
+		_block_data: undefined, 						// block data dne on this call
 	};
 
 	// decode config update so we can get the channel id
