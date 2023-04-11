@@ -208,6 +208,7 @@ class NodeRestApi {
 			nodes = await NodeRestApi.getAllNodes(skip_cache);
 			// NOTE: the nodes list is already sorted at this point
 		} catch (error) {
+			Log.error('caught error getting all nodes:', error);
 			if (error.statusCode === 404 && error.msg === 'no components exist') {
 				nodes = [];
 			} else {
@@ -219,7 +220,7 @@ class NodeRestApi {
 				throw error;
 			}
 		}
-		const filteredNodes = type ? nodes.filter(n => n.type === type) : nodes;
+		const filteredNodes = type ? nodes.filter(n => n && n.type === type) : nodes;
 		return this.formatNodes(filteredNodes);
 	}
 
@@ -258,7 +259,9 @@ class NodeRestApi {
 		const clusters = {};
 		const ff = await SettingsApi.getFeatureFlags();
 		const patch_1_4to2_x_enabled = ff.patch_1_4to2_x_enabled;
+
 		filteredNodes.forEach(originalNode => {
+
 			// Get santitized copy of node
 			const node = NodeRestApi.sanitizeNode(originalNode);
 			if (node.backend_addr) {
@@ -305,6 +308,7 @@ class NodeRestApi {
 				}
 			}
 			node.isUpgradeAvailable = isUpgradeAvailable;
+
 			// Check if this is a RAFT node that is part of an ordering service cluster
 			if (node.cluster_id) {
 				let cluster = clusters[node.cluster_id];
@@ -642,6 +646,8 @@ class NodeRestApi {
 				} catch (err) {
 					// do nothing
 				}
+				return node;
+			} else {
 				return node;
 			}
 		}

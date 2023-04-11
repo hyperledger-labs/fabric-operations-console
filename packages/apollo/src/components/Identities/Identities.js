@@ -68,16 +68,20 @@ class Identities extends Component {
 
 	async getCAsWithRootCerts(cas) {
 		const list = [];
-		for (let i = 0; i < cas.length; i++) {
-			const ca = cas[i];
-			const rootCert = await CertificateAuthorityRestApi.getRootCertificate(ca);
-			const tlsRootCert = await CertificateAuthorityRestApi.getRootCertificate(ca, true);
-			const rootCerts = [rootCert, tlsRootCert];
-			list.push({
-				...ca,
-				rootCerts,
-			});
-		}
+		let reqs = cas.map(async ca => {
+			try {
+				const rootCert = await CertificateAuthorityRestApi.getRootCertificate(ca);
+				const tlsRootCert = await CertificateAuthorityRestApi.getRootCertificate(ca, true);
+				const rootCerts = [rootCert, tlsRootCert];
+				list.push({
+					...ca,
+					rootCerts,
+				});
+			} catch (e) {
+				Log.error('unable to get root cert for ca', (ca ? ca.id : '?'), e);
+			}
+		});
+		await Promise.all(reqs);		// dsh todo - limit number of requests at a time
 		return list;
 	}
 
@@ -89,13 +93,15 @@ class Identities extends Component {
 			ids = await IdentityApi.getIdentities();
 			const nodes = await NodeRestApi.getNodes();
 
-			let cas = nodes.filter((x) => { return x.type === 'fabric-ca'; });
-			const peers = nodes.filter((x) => { return x.type === 'fabric-peer'; });
-			const orderers = nodes.filter((x) => { return x.type === 'fabric-orderer'; });
+			let cas = nodes.filter((x) => { return x && x.type === 'fabric-ca'; });
+			const peers = nodes.filter((x) => { return x && x.type === 'fabric-peer'; });
+			const orderers = nodes.filter((x) => { return x && x.type === 'fabric-orderer'; });
 			cas = await this.getCAsWithRootCerts(cas);
 
-			for (let id of ids) {
-				for (let ca of cas) {
+			for (let i in ids) {
+				const id = ids[i];
+				for (let z in cas) {
+					const ca = cas[z];
 					const data = {
 						certificate_b64pem: id.cert,
 						root_certs_b64pems: ca.rootCerts,
