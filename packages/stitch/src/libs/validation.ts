@@ -466,7 +466,6 @@ interface GrpcData {
 	message: ProtobufMessage | null;
 	trailers: grpc.Metadata | null;
 	_proxy_resp: ProxyResp;
-	_b64_payload: string | null;
 	_block_data: any | undefined | null;
 }
 

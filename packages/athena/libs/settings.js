@@ -439,10 +439,12 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 				// client side (fabric request) timeout settings
 				settings.FABRIC_GET_BLOCK_TIMEOUT_MS
 					= !isNaN(athena.fabric_get_block_timeout_ms) ? Number(athena.fabric_get_block_timeout_ms) : 10 * 1000;
+				settings.FABRIC_GET_CC_TIMEOUT_MS
+					= !isNaN(athena.fabric_get_cc_timeout_ms) ? Number(athena.fabric_get_cc_timeout_ms) : 20 * 1000;
 				settings.FABRIC_INSTANTIATE_TIMEOUT_MS
 					= !isNaN(athena.fabric_instantiate_timeout_ms) ? Number(athena.fabric_instantiate_timeout_ms) : 5 * 60 * 1000;
 				settings.FABRIC_JOIN_CHANNEL_TIMEOUT_MS
-					= !isNaN(athena.fabric_join_channel_timeout_ms) ? Number(athena.fabric_join_channel_timeout_ms) : 25 * 1000;
+					= !isNaN(athena.fabric_join_channel_timeout_ms) ? Number(athena.fabric_join_channel_timeout_ms) : 30 * 1000;
 				settings.FABRIC_INSTALL_CC_TIMEOUT_MS
 					= !isNaN(athena.fabric_install_cc_timeout_ms) ? Number(athena.fabric_install_cc_timeout_ms) : 5 * 60 * 1000;
 				settings.FABRIC_LC_INSTALL_CC_TIMEOUT_MS

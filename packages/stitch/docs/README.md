@@ -2685,7 +2685,6 @@ stitch.getChannelConfigFromPeer(opts, (err, resp) => {
 		headers: {},   // headers in the grpc response
 		message: {},   // "ConfigEnvelope" protobuf
 		trailers: {},   // trailers in the grpc response
-		_b64_payload: "", // base 64 encoded block data
 	},
 }
 ```
@@ -2737,7 +2736,6 @@ stitch.getChannelConfigBlockFromOrderer(opts, (err, resp) => {
 		headers: {},  // headers in the grpc response
 		message: {},  // "ConfigEnvelope" protobuf
 		trailers: {},  // trailers in the grpc response
-		_b64_payload: "", // base 64 encoded block data
 	},
 	grpc_message: [],  // pb(binary) message. only exists if "include_bin" is true
 }
@@ -2930,7 +2928,6 @@ stitch.getChannelBlockFromPeer(opts, (err, resp) => {
 		headers: {},  // headers in the grpc response
 		message: {},  // "Block" protobuf
 		trailers: {},  // trailers in the grpc response,
-		_b64_payload: "", // base 64 encoded block data
 	},
 	grpc_message: [],  // pb(binary) message. only exists if "include_bin" is true
 }
@@ -3262,7 +3259,7 @@ stitch.calculateConfigUpdatePb(opts, (err, b_configUpdate) => {
 <a name="getChannelBlockFromOrderer"></a>
 
 ### F18. getChannelBlockFromOrderer()
-This method will return a block from the **orderer**.
+This method will return a range of blocks from the **orderer**.
 
 **Syntax**:
 ```js
@@ -3272,9 +3269,14 @@ const opts = {
 	client_prv_key_b64pem: "string", // the orgs private key in a base 64 encoded PEM format
 	orderer_host: "http://orderer_url.com:8080", // *grpc-web* url to orderer. include proto & port
 	channel_id: "testchainid",   // id of the channel
-	start_block: 4,              // integer of the block to get, blocks start at 0
-	stop_block: 4,  // set it to the same value in "start_block"... I know.. dsh todo!
-	include_bin: false, // [optional] defaults false, if true response will include protobuf
+
+	// if the start and stop block are the same, 1 block is returned
+	// if they are both null, the latest block (highest) is returned
+	// if stop block is null, the block starting from start_block and up to the latest are returned
+	start_block: 4,   // integer of the first block to get (blocks start at 0)
+	stop_block: 5,    // integer of the last block to get (the stop block is included in response)
+
+	include_bin: false, // [optional] defaults false, if true response will include protobuf as bin
 
 	// [optional] type of block decoder to use.
 	// defaults "v1"
@@ -3282,7 +3284,7 @@ const opts = {
 	// "v2" - protobuf.js decoder. key names are normal (camelCase)
 	// "v3" - protobuf.js decoder. key names are normal (underscores) [configtxlator format]
 	// "none" - will not decode.
-	decoder: 'v3',
+	decoder: 'v1',
 };
 stitch.getChannelBlockFromOrderer(opts, (err, data) => {
 	const c_opts = {
@@ -3299,7 +3301,7 @@ stitch.getChannelBlockFromOrderer(opts, (err, data) => {
 
 **Response/Error Format**:
 ```js
-{
+[{  // note this is an array! 1 entry per block that was requested
 	error: false,	    // true if the call encountered an error, else false
 	msp_id: "OrdererOrg",    // same msp id provide in input args
 	orderer_host: "http://orderer_url.com:8080", // the "host" used for this call
@@ -3314,10 +3316,9 @@ stitch.getChannelBlockFromOrderer(opts, (err, data) => {
 		headers: {},  // headers in the grpc response
 		message: {},  // "Block" protobuf
 		trailers: {},  // trailers in the grpc response
-		_b64_payload: "", // base 64 encoded block data
 	},
 	grpc_message: [],  // pb(binary) message. only exists if "include_bin" is true
-}
+}]
 ```
 
 
