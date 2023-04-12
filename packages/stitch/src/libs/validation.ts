@@ -319,13 +319,13 @@ function fmt_ok(input_opts: Fmt, grpc_data_incoming: GrpcData | GrpcData[], data
 	if (input_opts.orderer_host) {
 		ret.orderer_host = input_opts.orderer_host;
 	}
-	if (window.log && window.log.getLevel && window.log.getLevel() <= 1) {	// include the whole grpc resp if debug is on
-		if (Array.isArray(grpc_data_incoming)) {
-			ret.grpc_resps = grpc_data_incoming;
-		} else {
-			ret.grpc_resp = grpc_data_incoming;								// do not convert this message to obj, leave as a protobuf class! for join channel
-		}
+
+	if (Array.isArray(grpc_data_incoming)) {
+		ret.grpc_resps = grpc_data_incoming;
+	} else {
+		ret.grpc_resp = grpc_data_incoming;					// do not convert "message" in grpc_resp obj to an obj, leave as a protobuf class! for join channel
 	}
+
 	if (input_opts.include_bin === true) {									// if the pb is asked for include it
 		const grpc_data = Array.isArray(grpc_data_incoming) ? grpc_data_incoming[0] : grpc_data_incoming;	// this is often an object, but if array grab first
 		if (!grpc_data.message) {

@@ -985,7 +985,7 @@ stitch.getInstalledChaincode(opts, (err, resp) => {
 		}],
 	},
 	stitch_msg: "ok"       // error/success message for your req
-	grpc_resp: { // only exist if "error" is true or log level is debug
+	grpc_resp: {
 		status: 0,   // status code from the grpc call
 		statusMessage: "", // status message from the grpc call
 		headers: {},  // headers in the grpc response
@@ -1040,7 +1040,7 @@ stitch.installChaincode(opts, (err, resp) => {
 		}
 	},
 	stitch_msg: "ok"       // error/success message for your req
-	grpc_resp: { // only exist if "error" is true or log level is debug
+	grpc_resp: {
 		status: 0,   // status code from the grpc call
 		statusMessage: "", // status message from the grpc call
 		headers: {},  // headers in the grpc response
@@ -1089,7 +1089,7 @@ stitch.getInstantiatedChaincode(opts, (err, resp) => {
 			vscc: "",     // name of verification system cc to be used
 		}],
 	stitch_msg: "ok"       // error/success message for your req
-	grpc_resp: { // only exist if "error" is true or log level is debug
+	grpc_resp: {
 		status: 0,   // status code from the grpc call
 		statusMessage: "", // status message from the grpc call
 		headers: {},  // headers in the grpc response
@@ -1158,7 +1158,7 @@ stitch.getChaincodeDetailsFromPeer(opts11, (e3, resp3) => {
 		vscc: "",     // name of verification system cc to be used
 	},
 	stitch_msg: "ok"  // error/success message for your req
-	grpc_resp: { // only exist if "error" is true or log level is debug
+	grpc_resp: {
 		status: 0,   // status code from the grpc call
 		statusMessage: "", // status message from the grpc call
 		headers: {},  // headers in the grpc response
@@ -1210,7 +1210,7 @@ stitch.checkIfChaincodeExists(opts11, (e3, resp3) => {
 		vscc: "",     // name of verification system cc to be used
 	},
 	stitch_msg: "ok"  // error/success message for your req
-	grpc_resp: { // only exist if "error" is true or log level is debug
+	grpc_resp: {
 		status: 0,   // status code from the grpc call
 		statusMessage: "", // status message from the grpc call
 		headers: {},  // headers in the grpc response
@@ -1307,7 +1307,7 @@ stitch.instantiateChaincode(opts, (err, resp) => {
 		chaincode_version: "1.0.1", // "same chaincode_version" in input args
 	},
 	stitch_msg: "ok"       // error/success message for your req
-	grpc_resp: { // only exist if "error" is true or log level is debug
+	grpc_resp: {
 		status: 0,   // status code from the grpc call
 		statusMessage: "", // status message from the grpc call
 		headers: {},  // headers in the grpc response
@@ -1372,7 +1372,7 @@ stitch.upgradeChaincode(opts, (err, resp) => {
 		chaincode_version: "1.0.1", // "same chaincode_version" in input args
 	},
 	stitch_msg: "ok"       // error/success message for your req
-	grpc_resp: { // only exist if "error" is true or log level is debug
+	grpc_resp: {
 		status: 0,   // status code from the grpc call
 		statusMessage: "", // status message from the grpc call
 		headers: {},  // headers in the grpc response
@@ -1448,7 +1448,7 @@ stitch.lc_installChaincode(opts, (err, resp) => {
 		packageId: "marbles_1:92321c359d1efcd65dc34c6ee334e37870a4a2130889473173fad3ddf7c02249"
 	},
 	stitch_msg: "ok"       // error/success message for your req
-	grpc_resp: {         // only exist if "error" is true or log level is debug
+	grpc_resp: {
 		status: 0,     // status code from the grpc call
 		statusMessage: "", // status message from the grpc call
 		headers: {},   // headers in the grpc response
@@ -1518,7 +1518,7 @@ stitch.lc_getInstalledChaincodeData(opts, (err, resp) => {
 		}
 	},
 	stitch_msg: "ok"       // error/success message for your req
-	grpc_resp: {         // only exist if "error" is true or log level is debug
+	grpc_resp: {
 		status: 0,     // status code from the grpc call
 		statusMessage: "", // status message from the grpc call
 		headers: {},   // headers in the grpc response
@@ -1585,7 +1585,7 @@ stitch.lc_getAllInstalledChaincodeData(opts, (err, resp) => {
 		}]
 	},
 	stitch_msg: "ok"       // error/success message for your req
-	grpc_resp: {         // only exist if "error" is true or log level is debug
+	grpc_resp: {
 		status: 0,     // status code from the grpc call
 		statusMessage: "", // status message from the grpc call
 		headers: {},   // headers in the grpc response
@@ -1644,7 +1644,7 @@ stitch.lc_getInstalledChaincodePackage(opts, (err, resp) => {
 		chaincodeInstallPackage: "<base 64 encoded tar.gz file>" // this can be huge
 	},
 	stitch_msg: "ok"       // error/success message for your req
-	grpc_resp: {         // only exist if "error" is true or log level is debug
+	grpc_resp: {
 		status: 0,     // status code from the grpc call
 		statusMessage: "", // status message from the grpc call
 		headers: {},   // headers in the grpc response
@@ -1794,7 +1794,7 @@ stitch.lc_approveChaincodeDefinition(opts, (err, resp) => {
 		package_id: "marbles_1:92321c359d1efcd65dc34c6ee334e37870a4a2130889473173fad3ddf7c02249",
 	},
 	stitch_msg: "ok"       // error/success message for your req
-	grpc_resp: {         // only exist if "error" is true or log level is debug
+	grpc_resp: {
 		status: 0,     // status code from the grpc call
 		statusMessage: "", // status message from the grpc call
 		headers: {},   // headers in the grpc response
@@ -1935,7 +1935,7 @@ stitch.lc_checkChaincodeDefinitionReadiness(opts, (err, resp) => {
 		}
 	},
 	stitch_msg: "ok"       // error/success message for your req
-	grpc_resp: {         // only exist if "error" is true or log level is debug
+	grpc_resp: {
 		status: 0,     // status code from the grpc call
 		statusMessage: "", // status message from the grpc call
 		headers: {},   // headers in the grpc response
@@ -2089,7 +2089,7 @@ stitch.lc_commitChaincodeDefinition(opts, (err, resp) => {
 		package_id: "marbles_1:92321c359d1efcd65dc34c6ee334e37870a4a2130889473173fad3ddf7c02249",
 	},
 	stitch_msg: "ok"       // error/success message for your req
-	grpc_resps: [{         // only exist if "error" is true or log level is debug
+	grpc_resps: [{
 		status: 0,     // status code from the grpc call
 		statusMessage: "", // status message from the grpc call
 		headers: {},   // headers in the grpc response
@@ -2182,7 +2182,7 @@ stitch.lc_getChaincodeDefinitionOnChannel(opts, (err, resp) => {
 		version: "1"
 	},
 	stitch_msg: "ok"       // error/success message for your req
-	grpc_resp: {         // only exist if "error" is true or log level is debug
+	grpc_resp: {
 		status: 0,     // status code from the grpc call
 		statusMessage: "", // status message from the grpc call
 		headers: {},   // headers in the grpc response
@@ -2249,7 +2249,7 @@ stitch.lc_getAllChaincodeDefinitionsOnChannel(opts, (err, resp) => {
 		}]
 	},
 	stitch_msg: "ok"       // error/success message for your req
-	grpc_resp: {         // only exist if "error" is true or log level is debug
+	grpc_resp: {
 		status: 0,     // status code from the grpc call
 		statusMessage: "", // status message from the grpc call
 		headers: {},   // headers in the grpc response
