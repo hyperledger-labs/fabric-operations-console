@@ -21,7 +21,6 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import Logger from '../../../src/components/Log/Logger';
 import { CertificateAuthorityRestApi } from '../../../src/rest/CertificateAuthorityRestApi';
-import ComponentApi from '../../../src/rest/ComponentApi';
 import { NodeRestApi } from '../../../src/rest/NodeRestApi';
 // this is the component we're testing - import it wrapped in curly braces to get the version not connected to the redux store
 import { CADetails } from '../../../src/components/CADetails/CADetails';
@@ -108,7 +107,6 @@ describe('CADetails component', () => {
 	let getAffiliationsStub;
 	// NodeRestApi
 	let getCurrentConfigStub;
-	// ComponentApi
 	let getUsageInformationStub;
 	// Translate
 	let translateStub;
@@ -131,7 +129,7 @@ describe('CADetails component', () => {
 		getCurrentConfigStub = mySandBox.stub(NodeRestApi, 'getCurrentNodeConfig').callsFake(() => {
 			return Promise.resolve({});
 		});
-		getUsageInformationStub = mySandBox.stub(ComponentApi, 'getUsageInformation').callsFake(() => {
+		getUsageInformationStub = mySandBox.stub(NodeRestApi, 'getCompsResources').callsFake(() => {
 			return Promise.resolve({});
 		});
 		translateStub = mySandBox.stub().callsFake(inputString => {

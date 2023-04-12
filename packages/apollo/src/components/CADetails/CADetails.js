@@ -22,7 +22,6 @@ import { connect } from 'react-redux';
 import emptyImage from '../../assets/images/empty_msps.svg';
 import { clearNotifications, showBreadcrumb, showError, showSuccess, updateBreadcrumb, updateState } from '../../redux/commonActions';
 import { CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';
-import ComponentApi from '../../rest/ComponentApi';
 import IdentityApi from '../../rest/IdentityApi';
 import { NodeRestApi } from '../../rest/NodeRestApi';
 import ActionsHelper from '../../utils/actionsHelper';
@@ -109,7 +108,7 @@ export class CADetails extends Component {
 						this.getUsers(details);
 					}
 				);
-				ComponentApi.getUsageInformation(details)
+				NodeRestApi.getCompsResources(details)
 					.then(usageInfo => {
 						this.props.updateState(SCOPE, { usageInfo });
 					})
@@ -700,7 +699,7 @@ export class CADetails extends Component {
 								onClose={this.hideUsageModal}
 								onComplete={() => {
 									this.props.updateState(SCOPE, { usageInfo: null });
-									ComponentApi.getUsageInformation(this.props.details)
+									NodeRestApi.getCompsResources(this.props.details)
 										.then(usageInfo => {
 											this.props.updateState(SCOPE, { usageInfo });
 										})

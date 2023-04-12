@@ -20,7 +20,6 @@ import React, { Component } from 'react';
 import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { clearNotifications, showBreadcrumb, showError, showSuccess, updateBreadcrumb, updateState } from '../../redux/commonActions';
-import ComponentApi from '../../rest/ComponentApi';
 import { NodeRestApi } from '../../rest/NodeRestApi';
 import { PeerRestApi } from '../../rest/PeerRestApi';
 import ActionsHelper from '../../utils/actionsHelper';
@@ -94,7 +93,7 @@ class PeerDetails extends Component {
 					}, 30000);
 					this.checkHealth(peer, skipStatusCache);
 				}
-				ComponentApi.getUsageInformation(peer)
+				NodeRestApi.getCompsResources(peer)
 					.then(usageInfo => {
 						this.props.updateState(SCOPE, { usageInfo });
 					})
@@ -692,7 +691,7 @@ class PeerDetails extends Component {
 								onClose={this.hideUsageModal}
 								onComplete={() => {
 									this.props.updateState(SCOPE, { usageInfo: null });
-									ComponentApi.getUsageInformation(this.props.details)
+									NodeRestApi.getCompsResources(this.props.details)
 										.then(usageInfo => {
 											this.props.updateState(SCOPE, { usageInfo });
 										})

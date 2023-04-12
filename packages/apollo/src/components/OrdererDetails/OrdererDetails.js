@@ -26,7 +26,6 @@ import RequiresAttentionImage2 from '../../assets/images/requires_attention_2.sv
 import { clearNotifications, showBreadcrumb, showError, showSuccess, showWarning, updateBreadcrumb, updateState } from '../../redux/commonActions';
 import ChannelApi from '../../rest/ChannelApi';
 import { ChannelParticipationApi } from '../../rest/ChannelParticipationApi';
-import ComponentApi from '../../rest/ComponentApi';
 import IdentityApi from '../../rest/IdentityApi';
 import { MspRestApi } from '../../rest/MspRestApi';
 import { NodeRestApi } from '../../rest/NodeRestApi';
@@ -237,7 +236,7 @@ class OrdererDetails extends Component {
 
 		if (orderer.raft) {
 			orderer.raft.forEach(node => {
-				ComponentApi.getUsageInformation(node)
+				NodeRestApi.getCompsResources(node)
 					.then(nodeUsageInfo => {
 						const usageInfo = this.props.usageInfo;
 						usageInfo[node.id] = nodeUsageInfo;
@@ -250,7 +249,7 @@ class OrdererDetails extends Component {
 		}
 		if (orderer.pending) {
 			orderer.pending.forEach(node => {
-				ComponentApi.getUsageInformation(node)
+				NodeRestApi.getCompsResources(node)
 					.then(nodeUsageInfo => {
 						const usageInfo = this.props.usageInfo;
 						usageInfo[node.id] = nodeUsageInfo;
@@ -1594,7 +1593,7 @@ class OrdererDetails extends Component {
 										const usageInfo = this.props.usageInfo;
 										usageInfo[this.props.selectedNode.id] = null;
 										this.props.updateState(SCOPE, { usageInfo });
-										ComponentApi.getUsageInformation(this.props.selectedNode)
+										NodeRestApi.getCompsResources(this.props.selectedNode)
 											.then(nodeUsageInfo => {
 												usageInfo[this.props.selectedNode.id] = nodeUsageInfo;
 												this.props.updateState(SCOPE, { usageInfo });
