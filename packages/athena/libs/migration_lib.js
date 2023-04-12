@@ -1297,7 +1297,9 @@ module.exports = function (logger, ev, t) {
 			// decompress the docs (if applicable)
 			if (backup.dbs['DB_SYSTEM'].compressed_docs) {
 				try {
-					backup.dbs['DB_SYSTEM'].docs = JSON.parse(t.zlib.inflateSync((Buffer.from(backup.dbs['DB_SYSTEM'].compressed_docs, 'base64'))).toString());
+					backup.dbs['DB_SYSTEM'].docs = JSON.parse(
+						t.zlib.inflateSync((Buffer.from(backup.dbs['DB_SYSTEM'].compressed_docs, 'base64'))).toString()
+					);
 					logger.debug('[migration-console-db] decompressed docs from backup data: DB_SYSTEM');
 				} catch (e) {
 					logger.error('[migration-console-db] unable to decompress docs from backup data: DB_SYSTEM', e);
@@ -1386,6 +1388,19 @@ module.exports = function (logger, ev, t) {
 	// edit component docs in the backup prior to migrating them
 	function edit_component_docs_in_backup(new_console_url, backup) {
 		if (backup && backup.dbs && backup.dbs['DB_COMPONENTS']) {
+
+			// decompress the docs (if applicable)
+			if (backup.dbs['DB_COMPONENTS'].compressed_docs) {
+				try {
+					backup.dbs['DB_COMPONENTS'].docs = JSON.parse(
+						t.zlib.inflateSync((Buffer.from(backup.dbs['DB_COMPONENTS'].compressed_docs, 'base64'))).toString()
+					);
+					logger.debug('[migration-console-db] decompressed docs from backup data: DB_COMPONENTS');
+				} catch (e) {
+					logger.error('[migration-console-db] unable to decompress docs from backup data: DB_COMPONENTS', e);
+				}
+			}
+
 			if (backup.dbs['DB_COMPONENTS'].docs) {
 				for (let i in backup.dbs['DB_COMPONENTS'].docs) {
 					const doc = backup.dbs['DB_COMPONENTS'].docs[i];
@@ -1412,6 +1427,14 @@ module.exports = function (logger, ev, t) {
 						doc.migrated_from = ev.STR.LOCATION_IBP_SAAS;
 					}
 				}
+			}
+
+			// now re-compress the docs with the edited values
+			try {
+				backup.dbs['DB_COMPONENTS'].compressed_docs = t.zlib.deflateSync(JSON.stringify(backup.dbs['DB_COMPONENTS'].docs)).toString('base64');
+				delete backup.dbs['DB_COMPONENTS'].docs;		// remove the uncompressed version
+			} catch (e) {
+				logger.error('[migration-console-db] unable to re-compress docs for db: DB_COMPONENTS', e);
 			}
 		}
 		return backup;
