@@ -56,7 +56,7 @@ const SCOPE = 'ordererModal';
 const Log = new Logger(SCOPE);
 
 class OrdererModal extends React.Component {
-	componentDidMount() {
+	async componentDidMount() {
 		this.props.updateState(SCOPE, {
 			display_name: this.props.orderer.display_name,
 			grpcwp_url: this.props.orderer.grpcwp_url,
@@ -111,26 +111,54 @@ class OrdererModal extends React.Component {
 			ignore_del_warning: false,
 		});
 		this.identities = null;
-		this.getCAWithUsers();						// dsh todo why is this always being called
+
+		//  ------------- do common things for all side panels here ------------- //
+		let orderer_details = await OrdererRestApi.getClusterDetails(this.props.orderer.cluster_id, true);
+		this.props.updateState(SCOPE, {
+			orderer_details: orderer_details,
+		});
 
 		try {
-			if (this.props.systemChannel) {
-				this.getChannelsWithNodes();		// legacy way
-			} else {
-				this.loadChannelsOnOSN();			// osn admin way
-			}
-		} catch (e) {
-			this.props.updateState(SCOPE, {
-				channel_loading: false,
-			});
-		}
-
-		try {
-			this.checkNodeStatus();
+			await this.checkNodeStatus();
 		} catch (e) {
 			this.props.updateState(SCOPE, {
 				loading: false,
 			});
+		}
+		//  ------------- ------------------------------------ ------------- //
+
+		// only call functions we need for that specific side panel
+		switch (this.props.ordererModalType) {
+			case 'delete':
+			case 'force_delete':
+				try {
+					if (this.props.systemChannel) {
+						await this.getChannelsWithNodes();		// legacy way
+					} else {
+						await this.loadChannelsOnOSN();			// osn admin way
+					}
+				} catch (e) {
+					this.props.updateState(SCOPE, {
+						channel_loading: false,
+					});
+				}
+				break;
+			case 'update_certs':
+			case 'manage_certs':
+				this.getCAWithUsers();
+				break;
+			//case 'capabilities':
+			//case 'channel_maintenance':
+			//case 'config_override':
+			//case 'advanced':
+			//case 'restart':
+			//case 'log_settings':
+			//case 'upgrade':
+			//case 'restart':
+			//case 'manage_hsm':
+			//case 'enable_hsm':
+			//case 'update_hsm':
+			//case 'remove_hsm':
 		}
 	}
 
@@ -201,7 +229,7 @@ class OrdererModal extends React.Component {
 		});
 
 		try {
-			allChannels = await OrdererRestApi.getAllChannelNamesFromOrderer(options);
+			allChannels = await OrdererRestApi.getAllChannelNamesFromOrderer(options, this.props.orderer_details);
 		} catch (e) {
 			Log.error('unable to load all channels from orderer', e);
 		}
@@ -211,7 +239,10 @@ class OrdererModal extends React.Component {
 				channel_loading: false,
 			});
 		} else {
-			allChannels.forEach(async channel_id => {
+			// do NOT not use something.forEach(async !!!!
+			// b/c forEach does not block each async await call, the different loops fire at the same time and race conditions occur
+			for (let i in allChannels) {
+				const channel_id = allChannels[i];
 				let block_options = {
 					ordererId: options.ordererId,
 					channelId: channel_id,
@@ -221,7 +252,7 @@ class OrdererModal extends React.Component {
 					channel_loading: true,
 				});
 				try {
-					const block = await OrdererRestApi.getChannelConfigBlock(block_options);
+					const block = await OrdererRestApi.getChannelConfigBlock(block_options, this.props.orderer_details);
 					const _block_binary2json = promisify(ChannelApi._block_binary2json);
 					const resp = await _block_binary2json(block, options.configtxlator_url);
 					let l_consenters = _.get(resp, 'data.data[0].payload.data.config.channel_group.groups.Orderer.values.ConsensusType.value.metadata.consenters', []);
@@ -260,9 +291,8 @@ class OrdererModal extends React.Component {
 				this.props.updateState(SCOPE, {
 					channel_loading: false,
 				});
-			});
+			}
 		}
-
 		this.props.updateState(SCOPE, {
 			channel_loading: false,
 		});
@@ -292,8 +322,8 @@ class OrdererModal extends React.Component {
 			loading: true,
 		});
 		let components = {};
+		let orderer = this.props.orderer_details;
 
-		let orderer = await OrdererRestApi.getClusterDetails(this.props.orderer.cluster_id);
 		if (_.has(orderer, 'raft')) {
 			orderer.raft.forEach(x => {
 				components[x.id] = {
@@ -305,8 +335,14 @@ class OrdererModal extends React.Component {
 				skip_cache: true,
 			};
 		}
+
+		let statuses = null;
 		try {
-			let statuses = await RestApi.post('/api/v2/components/status', { components });
+			statuses = await RestApi.post('/api/v2/components/status', { components });
+		} catch (e) {
+			Log.error(e);
+		}
+		if (statuses) {
 			let notOkList = _.filter(statuses, status => status.status === 'not ok');
 			if (_.size(notOkList) > 0) {
 				const down_nodes = notOkList.map(node => {
@@ -319,10 +355,7 @@ class OrdererModal extends React.Component {
 					down_nodes,
 				});
 			}
-		} catch (e) {
-			Log.error(e);
 		}
-
 		this.props.updateState(SCOPE, {
 			loading: false,
 		});
@@ -412,8 +445,10 @@ class OrdererModal extends React.Component {
 			msp_root_certs[orderer.msp_id] = _.get(orderer, 'msp.ca.root_certs');
 			let all_msps = await MspRestApi.getAllMsps();
 			all_msps.forEach(msp => {
-				if (orderer.msp_id === msp.msp_id && _.isEqual(msp_root_certs[orderer.msp_id], msp.root_certs)) {
-					msp_root_certs_intermediate[orderer.msp_id] = msp.intermediate_certs;
+				if (orderer && msp && msp_root_certs) {
+					if (orderer.msp_id === msp.msp_id && _.isEqual(msp_root_certs[orderer.msp_id], msp.root_certs)) {
+						msp_root_certs_intermediate[orderer.msp_id] = msp.intermediate_certs;
+					}
 				}
 			});
 		}
@@ -829,13 +864,6 @@ class OrdererModal extends React.Component {
 						key={button.id}
 						className="ibp-ca-action bx--btn bx--btn--tertiary bx--btn--sm"
 						onClick={() => {
-							/*if (button) {
-								// dsh todo - move things out...
-								if (button.id === 'update_certs') {
-									this.getCAWithUsers();
-								}
-							}*/
-
 							if (button.onClick) {
 								button.onClick();
 							} else {
@@ -2575,6 +2603,7 @@ const dataProps = {
 	log_spec: PropTypes.string,
 	new_log_spec: PropTypes.string,
 	ignore_del_warning: PropTypes.bool,
+	orderer_details: PropTypes.object,
 };
 
 OrdererModal.propTypes = {

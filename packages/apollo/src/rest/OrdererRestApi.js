@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import async from 'async';
 import _ from 'lodash';
 import { promisify } from 'util';
 import Logger from '../components/Log/Logger';
@@ -123,7 +122,7 @@ class OrdererRestApi {
 					grpcwp_url: Helper.normalizeHttpURL(node.grpcwp_url),
 					msp_id: node.msp_id,
 					system_channel_id: node.system_channel_id || '',
-					systemless: node.systemless ? true: false,
+					systemless: node.systemless ? true : false,
 					cluster_id: node.cluster_id,
 					cluster_name: node.cluster_name,
 					msp: node.msp,
@@ -355,52 +354,65 @@ class OrdererRestApi {
 				channelId: orderer.system_channel_id || this.systemChannel,
 				configtxlator_url,
 			};
-			return await OrdererRestApi.getChannelConfig(options);
+			return await OrdererRestApi.getChannelConfig(options, orderer);
 		} catch (error) {
 			error.message = 'failed to retrieve system channel';
 			throw error;
 		}
 	}
 
-	static async getAllChannelNamesFromOrderer(options) {
-		let on_block_number = 0;
+	// get all channel ids by walking the system channel block by block
+	static async getAllChannelNamesFromOrderer(options, orderer_obj) {
 		let channel_names = [];
-		let stopexec = false;
-		await async.until(
-			async.asyncify(async () => {
-				return stopexec;
-			}),
-			async.asyncify(async () => {
-				let blocks = [];
-				const BLOCKS_AT_ONCE = Number(options.blocks_at_once) || 2;
-				for (let i = on_block_number; i < on_block_number + BLOCKS_AT_ONCE; i++) {
-					blocks.push(i);
-				}
-				try {
-					await async.eachLimit(
-						blocks,
-						BLOCKS_AT_ONCE,
-						async.asyncify(async block_number => {
-							on_block_number++;
-							let optscopy = { ...options };
-							optscopy.start_block = block_number;
-							optscopy.stop_block = block_number;
-							const channelBlock = await OrdererRestApi.getSystemChannelBlockFromOrderer(optscopy);
-							const _block_binary2json = promisify(ChannelApi._block_binary2json);
-							const resp = await _block_binary2json(channelBlock, options.configtxlator_url);
-							const channel_id = _.get(resp, 'data.data[0].payload.data.payload.header.channel_header.channel_id');
-							if (channel_id) channel_names.push(channel_id);
-						})
-					);
-				} catch (error2) {
-					stopexec = true;
-				}
-			})
-		);
+		let optsCopy = { ...options };
+		optsCopy.start_block = 0;							// start at the beginning (block 0)
+		optsCopy.stop_block = null;							// setting null will go to to the end
+		const _block_binary2json = promisify(ChannelApi._block_binary2json);
+		let resp = null;
+		try {
+			resp = await OrdererRestApi.getSystemChannelBlockFromOrderer(optsCopy, orderer_obj);
+		} catch (error2) {
+			Log.error('caught error getting channels be reading system channel block by block, error:', error2);
+		}
 
+		// iter on blocks and look for the channel ids
+		for (let x in resp) {
+			if (resp[x].error === true) {
+				if (resp[x].grpc_resp && resp[x].grpc_resp.status === 404) {
+					Log.debug('rec 404 code frm orderer - the block dne - this is expected we\'ve reached the end of the line', resp[x].stitch_msg);
+				} else {
+					Log.error('error getting blocks from orderer.', resp[x]);
+				}
+			} else {
+				try {
+
+					// parse block with configtxlator
+					const fmt_resp = await _block_binary2json(resp[x].grpc_message, options.configtxlator_url);
+					if (fmt_resp) {
+						const channel_id = _.get(fmt_resp, 'data.data[0].payload.data.payload.header.channel_header.channel_id');
+						if (channel_id) {
+							channel_names.push(channel_id);			// store the channel id
+						}
+					}
+				} catch (c_err) {
+					Log.error('caught error getting convering block w/configtxlator:', c_err);
+					break;
+				}
+			}
+			/*	// dsh todo get local decoder to work
+			if (resp[x].data && resp[x].data.block) {
+				const block = resp[x].data.block;
+				//const channel_id = _.get(fmt_resp, 'data.data[0].payload.data.payload.header.channel_header.channel_id');
+				const channel_id = _.get(block, 'data.data_list[0].envelope.payload.data.payload.header.channel_header.channel_id');
+				if (channel_id) {
+					channel_names.push(channel_id);
+				}
+			}*/
+		}
 		channel_names.sort((a, b) => {
 			return naturalSort(a, b);
 		});
+		Log.debug('walked system channel via orderer - found channels:', channel_names);
 		return channel_names;
 	}
 
@@ -419,14 +431,13 @@ class OrdererRestApi {
 		return certs;
 	}
 
-	static async getSystemChannelBlockFromOrderer(options) {
-		const orderer = await OrdererRestApi.getOrdererDetails(options.ordererId, true);
-		if (orderer.cluster_id && !options.altUrls) {
-			const cluster = await OrdererRestApi.getClusterDetails(orderer.cluster_id, true);
+	// this function recurses if the api failed, the next iteration uses another orderer url..
+	static async getSystemChannelBlockFromOrderer(options, orderer) {
+		if (!options.altUrls) {
 			options.altUrls = [];
-			if (cluster.raft) {
-				cluster.raft.forEach(node => {
-					const certs = OrdererRestApi.getCertsAssociatedWithMsp(cluster.associatedIdentities, node.msp_id);
+			if (orderer.raft) {
+				orderer.raft.forEach(node => {
+					const certs = OrdererRestApi.getCertsAssociatedWithMsp(orderer.associatedIdentities, node.msp_id);
 					options.altUrls.push({
 						url: node.url2use,
 						msp_id: node.msp_id,
@@ -471,18 +482,34 @@ class OrdererRestApi {
 			error.nodeName = orderer.display_name;
 			Log.error(error);
 			if (options.altUrls && options.altUrls.length > 0) {
-				return OrdererRestApi.getSystemChannelBlockFromOrderer(options);
+				return OrdererRestApi.getSystemChannelBlockFromOrderer(options, orderer);
 			} else {
 				throw error;
 			}
 		}
-		return resp.grpc_message;
+		return resp;
 	}
 
-	static async getChannelConfigBlock(options) {
-		const orderer = await OrdererRestApi.getOrdererDetails(options.ordererId, true);
-		if (orderer.cluster_id && !options.altUrls) {
-			const cluster = await OrdererRestApi.getClusterDetails(orderer.cluster_id, true);
+	// get config block from an orderer
+	/*
+		options = {
+			ordererId: '',
+			channelId: '',
+			configtxlator_url: '',
+			altUrls: []										// optional
+			cluster_id: '',									// optional
+		}
+	*/
+	static async getChannelConfigBlock(options, orderer) {
+		if (!orderer) {
+			if (options.cluster_id) {
+				orderer = await OrdererRestApi.getClusterDetails(options.cluster_id, true);
+			} else {
+				orderer = await OrdererRestApi.getOrdererDetails(options.ordererId, true);
+			}
+		}
+		if (!options.altUrls) {
+			const cluster = orderer;
 			options.altUrls = [];
 			if (cluster.raft) {
 				cluster.raft.forEach(node => {

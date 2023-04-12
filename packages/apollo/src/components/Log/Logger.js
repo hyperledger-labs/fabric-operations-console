@@ -34,7 +34,7 @@ class Logger {
 
 	debugMessage(level, message) {
 		if (window.log) {
-			window.log[level](this.source ? this.source + ':' + message : message);
+			window.log[level](this.source ? this.source + ': ' + message : message);
 		}
 
 		const debugLevel = level === 'log' ? 'debug' : level;
