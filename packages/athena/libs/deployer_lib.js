@@ -1283,11 +1283,7 @@ module.exports = function (logger, ev, t) {
 		} else if (fmt_err && !t.ot_misc.skip_cache(req) && t.component_lib.include_deployment_data(req)) {
 			fmt_err = null;							// if we didn't require it, don't pass error on
 		}*/
-
-		if (fmt_err) {
-			fmt_err = null;
-		}
-		return fmt_err;
+		return null;
 	}
 
 	// ------------------------------------------
