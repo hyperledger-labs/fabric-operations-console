@@ -1,7 +1,7 @@
 [
 	{
-		"version": "1.0.5-8",
-		"date": "05 April 2023",
+		"version": "1.0.5-11",
+		"date": "11 April 2023",
 		"description": [
 			{
 				"title": "Bug & security fixes",
@@ -10,6 +10,10 @@
 			{
 				"title": "Node v18",
 				"details": "Updated to use Node v18.5"
+			},
+			{
+				"title": "Performance Improvements",
+				"details": "A few pages should load their content faster, especially on Orderer related pages/modals."
 			}
 		]
 	},
