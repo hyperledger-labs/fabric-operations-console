@@ -1024,7 +1024,7 @@ class OrdererModal extends React.Component {
 				/>
 				<div className="ibp-form">
 					<div className="ibp-form-field">
-						<p>
+						<div>
 							<BlockchainTooltip type="definition"
 								tooltipText={translate('config_override_delta')}
 							>
@@ -1033,7 +1033,7 @@ class OrdererModal extends React.Component {
 							<TranslateLink text="config_override_update_orderer"
 								className="ibp-orderer-config-override-desc-with-link"
 							/>
-						</p>
+						</div>
 						<p className="ibp-form-input">
 							<ConfigOverride
 								id="ibp-config-override"
