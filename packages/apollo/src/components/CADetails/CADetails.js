@@ -51,7 +51,7 @@ export class CADetails extends Component {
 	componentDidMount() {
 		this.pathname = this.props.history.location.pathname;
 		this.props.showBreadcrumb(null, null, this.pathname);
-		this.getDetails();
+		this.getDetails(false);
 	}
 
 	componentWillUnmount() {
@@ -69,7 +69,7 @@ export class CADetails extends Component {
 			usageModal: false,
 			usageInfo: null,
 		});
-		CertificateAuthorityRestApi.getCADetails(this.props.match.params.caId)
+		CertificateAuthorityRestApi.getCADetails(this.props.match.params.caId, null, skipStatusCache)
 			.then(async details => {
 				this.props.updateBreadcrumb('breadcrumb_name', { name: details.name }, this.pathname);
 				try {
@@ -322,7 +322,7 @@ export class CADetails extends Component {
 		if (!this.props.details.associatedIdentity) {
 			IdentityApi.associateCertificateAuthority(name, this.props.details.id)
 				.then(() => {
-					this.getDetails();
+					this.getDetails(true);
 				})
 				.catch(error => {
 					this.showError('error_associate_identity');
@@ -334,7 +334,7 @@ export class CADetails extends Component {
 		try {
 			const resp = await NodeRestApi.getUnCachedDataWithDeployerAttrs(this.props.details.id);
 			Log.debug('Refresh cert response:', resp);
-			this.getDetails();
+			this.getDetails(true);
 			this.props.showSuccess('cert_refresh_successful', {}, SCOPE);
 		} catch (error) {
 			Log.error(`Refresh Failed: ${error}`);
@@ -678,7 +678,9 @@ export class CADetails extends Component {
 							<DeleteCAUserModal ca={this.props.details}
 								selectedUser={this.props.selectedUser}
 								onClose={this.closeDeleteUser}
-								onComplete={this.getDetails}
+								onComplete={() => {
+									this.getDetails(true);
+								}}
 							/>
 						)}
 					</div>
@@ -687,7 +689,9 @@ export class CADetails extends Component {
 							<CAAddUserModal
 								ca={this.props.details}
 								onClose={this.closeAddUser}
-								onComplete={this.getDetails}
+								onComplete={() => {
+									this.getDetails(true);
+								}}
 								affiliations={this.props.affiliations ? this.props.affiliations : []}
 								affiliation={this.props.affiliations ? this.props.affiliations[0] : null}
 							/>

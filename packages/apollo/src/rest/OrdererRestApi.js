@@ -34,7 +34,7 @@ const LEGACY_ORDERER_TYPE = 'orderer';
 class OrdererRestApi {
 	static systemChannel = 'testchainid';
 	static async getOrderers(skip_cache) {
-		return NodeRestApi.getNodes('fabric-orderer', skip_cache);
+		return NodeRestApi.getNodes(['fabric-orderer'], skip_cache);
 	}
 
 	/**
@@ -167,10 +167,8 @@ class OrdererRestApi {
 		}
 	}
 
-	// [ ! do not use this function !]
-	// dsh todo - hunt down code using this function and replace with getClusterDetails when possible
-	static async getOrdererDetails(orderer_id, includePrivateKeyAndCert) {
-		return NodeRestApi.getNodeDetails(orderer_id, includePrivateKeyAndCert);
+	static async getOrdererDetails(orderer_id, includePrivateKeyAndCert, skip_cache) {
+		return NodeRestApi.getNodeDetails(orderer_id, includePrivateKeyAndCert, skip_cache);
 	}
 
 	static async getClusterDetails(cluster_id, includePrivateKeyAndCert) {
@@ -184,7 +182,7 @@ class OrdererRestApi {
 	static async updateOrderer(orderer) {
 		orderer.grpcwp_url = Helper.fixURL(orderer.grpcwp_url);
 		await NodeRestApi.updateNode(orderer);
-		return this.getOrdererDetails(orderer.id);
+		return this.getOrdererDetails(orderer.id, null, true);
 	}
 
 	static async removeOrdererNodeFromSystemChannel(options) {
@@ -747,7 +745,7 @@ class OrdererRestApi {
 		Log.debug('Updated orderer block parameters: ', updated_json);
 		Log.debug('Updating orderer config to: ', options);
 
-		const orderer = await OrdererRestApi.getOrdererDetails(options.ordererId, true);
+		const orderer = await OrdererRestApi.getOrdererDetails(options.ordererId, true, true);
 		let identity = OrdererRestApi.getCertsAssociatedWithMsp(orderer.associatedIdentities, orderer.msp_id);
 		options.original_json = original_json;
 		options.updated_json = updated_json;
@@ -838,7 +836,7 @@ class OrdererRestApi {
 			delete i_consort_groups[options.payload.msp_id];
 		}
 
-		const orderer = await OrdererRestApi.getOrdererDetails(options.ordererId, true);
+		const orderer = await OrdererRestApi.getOrdererDetails(options.ordererId, true, true);
 		let identity = OrdererRestApi.getCertsAssociatedWithMsp(orderer.associatedIdentities, orderer.msp_id);
 		options.original_json = original_json;
 		options.updated_json = updated_json;

@@ -65,7 +65,7 @@ const NodeStatus = {
 	checkResources(node) {
 		console.log('ibp99 - checkResources', node.id);
 		return new Promise((resolve, reject) => {
-			NodeRestApi.getComponent(node)
+			NodeRestApi.api_getCurrentNodeDeployer(node)
 				.then(resp => {
 					if (resp && resp.resource_warnings !== 'none' && resp.resource_warnings !== 'unknown') {
 						if (this.dispatch) {

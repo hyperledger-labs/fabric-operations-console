@@ -146,7 +146,7 @@ export class PageHeader extends Component {
 		let certs = [];
 		let parsed_certs = [];
 		try {
-			const allNodes = await NodeRestApi.getAllNodes();
+			const allNodes = await NodeRestApi.getAllNodesClientCache();
 			let needToWarnCertExpiry = false;
 			allNodes.forEach(node => {
 				const eCert = _.get(node, 'msp.component.ecert');

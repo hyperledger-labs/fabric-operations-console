@@ -31,7 +31,7 @@ const ipRegex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[
 class CertificateAuthorityRestApi {
 	static rootCerts = {};
 	static async getCAs(skip_cache) {
-		return NodeRestApi.getNodes('fabric-ca', skip_cache);
+		return NodeRestApi.getNodes(['fabric-ca'], skip_cache);
 	}
 
 	/**
@@ -210,8 +210,8 @@ class CertificateAuthorityRestApi {
 		return result;
 	}
 
-	static async getCADetails(id, includePrivateKeyAndCert) {
-		return NodeRestApi.getNodeDetails(id, includePrivateKeyAndCert);
+	static async getCADetails(id, includePrivateKeyAndCert, skip_cache) {
+		return NodeRestApi.getNodeDetails(id, includePrivateKeyAndCert, skip_cache);
 	}
 
 	static getAffiliationsFromResponseData(data) {
