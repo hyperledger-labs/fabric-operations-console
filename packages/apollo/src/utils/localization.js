@@ -48,20 +48,15 @@ const Localization = {
 	},
 
 	onMissingTranslation: function (data) {
-		if (data.translationId === 'ibm_saas') {
-			const ibm_saas = Helper.getPlatform();
-			if (this.loaded) {			// this seems like a crazy way to handle a string change, todo - remove it
-				if (data.languageCode && this.loaded[data.languageCode] && this.loaded[data.languageCode][ibm_saas]) {
-					return this.loaded[data.languageCode][ibm_saas];
-				}
-				return this.loaded['en'][ibm_saas];
+		if (data && data.translationId) {			// if we are missing the translation, use the english version instead
+			if (this.loaded && this.loaded['en'] && this.loaded['en'][data.translationId]) {
+				return this.loaded['en'][data.translationId];
 			}
 		}
 		return data.translationId;
 	},
 
 	init: function (props) {
-		delete defaultTranslation.ibm_saas;
 		props.initialize({
 			languages: this.langs,
 			translation: defaultTranslation,
