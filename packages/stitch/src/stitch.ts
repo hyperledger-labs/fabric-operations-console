@@ -146,8 +146,9 @@ function test_encodeDecode_collection_config_packaged(input: any, cb: Function) 
 // --------------------------------------------------------------------------------
 let _sto = <any>{											// stitch time out values on fabric req
 	fabric_get_block_timeout_ms: 1000 * 10,					// defaults
+	fabric_get_cc_timeout_ms: 1000 * 20,
 	fabric_instantiate_timeout_ms: 1000 * 60 * 5,
-	fabric_join_channel_timeout_ms: 1000 * 25,
+	fabric_join_channel_timeout_ms: 1000 * 30,
 	fabric_install_cc_timeout_ms: 1000 * 60 * 5,
 	fabric_lc_install_cc_timeout_ms: 1000 * 60 * 5,			// lc packages are large, longer than regular install
 	fabric_general_timeout_ms: 1000 * 10,
@@ -236,7 +237,6 @@ function send_process_proposal_req(opts: { p_signed_proposal: any, host: string 
 			code: undefined,							// it does not hold details about the grpc req between the grpcweb proxy and the component
 			status_message: ''
 		},
-		_b64_payload: '',
 		_block_data: undefined,							// block data dne on this call
 	};
 	const client = grpc.client(Endorser.ProcessProposal, {
@@ -272,7 +272,6 @@ function send_process_proposal_req(opts: { p_signed_proposal: any, host: string 
 			if (b_payload === -1) {
 				return cb('grpc payload formatting error 1', { grpc_data: grpc_data });
 			} else {
-				grpc_data._b64_payload = b_payload ? uint8ArrayToBase64(b_payload) : '';
 				return cb(null, { b_payload: b_payload, grpc_data: grpc_data });	// all good
 			}
 		}
@@ -327,7 +326,6 @@ const send_proposal_req_timed = (opts: Spr, cb: Function) => {
 				code: stitch_timeout_code,
 				status_message: stitch_timeout_msg,
 			},
-			_b64_payload: '',
 			_block_data: undefined,							// block data might not exist on this call
 		};
 		return cb_proper(err, { grpc_data: data });
@@ -541,7 +539,6 @@ function getChannelBlockFromOrderer(opts: OrderFmtBlock, cb: Function) {
 			code: undefined,							// it does not hold details about the grpc req between the grpcweb proxy and the component
 			status_message: ''
 		},
-		_b64_payload: '',
 		_block_data: null,
 	};
 	const grpc_data_arr: GrpcData[] = [];
@@ -609,12 +606,11 @@ function getChannelBlockFromOrderer(opts: OrderFmtBlock, cb: Function) {
 
 					const p_block = p_deliver_response.getBlock();
 					const b_payload = p_block.serializeBinary();
-					grpc_data_arr[on_pos].message = p_block;							// store pb block here for now, its used again below
+					grpc_data_arr[on_pos].message = p_block;							// store pb block as a message type, its used again by joinPeerToChannel
 					grpc_data_arr[on_pos]._block_data = {
 						block: decode_block(opts, b_payload),							// decode the block first
 						channel_id: opts.channel_id
 					};
-					grpc_data_arr[on_pos]._b64_payload = uint8ArrayToBase64(b_payload);
 
 					if (!isNaN(deliver_response.status)) {								// does not always exist..
 						grpc_data_arr[on_pos].status = deliver_response.status;
@@ -651,8 +647,6 @@ function getChannelBlockFromOrderer(opts: OrderFmtBlock, cb: Function) {
 						logger.debug('[stitch] getChannelBlockFromOrderer was successful', i);
 						grpc_data_arr[i]._block_data.channel_id = opts.channel_id;
 						ret.push(fmt_ok(opts, grpc_data_arr[i], grpc_data_arr[i]._block_data));
-						if (!ret[0].grpc_resp) { ret[0].grpc_resp = {}; }				// if debug is off it won't exist yet, init it
-						ret[0].grpc_resp.message = grpc_data.message;				// add pb block to response, its needed for join channel
 					}
 				}
 				logger.info('[stitch] getChannelBlockFromOrderer responding with', ret);
@@ -734,7 +728,7 @@ function joinPeerToChannel(opts: Fmt, cb: Function) {
 		} else {
 			logger.debug('[stitch] genesis block response:', resp1);
 
-			const p_block = resp1.grpc_resp.message;	// message is typically a protobuf, in this case it contains a block pb
+			const p_block = resp1.grpc_resp.message;	// the field "message" is typically a protobuf, in this case it's a protobuf of a block
 			logger.debug('[stitch] p_block?', pp(p_block.toObject()));
 
 			let hosts = [opts.host];
@@ -907,7 +901,8 @@ function getInstalledChaincode(opts: Fmt, cb: Function) {
 			logger.error('[stitch] input error creating a signed proposal protobuf');
 			return cb(fmt_err(opts, null, p_signed_proposal.errors), null);
 		} else {
-			const pOpts = { p_signed_proposal: p_signed_proposal, host: opts.host, timeout_ms: opts.timeout_ms };
+			const timeout_ms = (opts.timeout_ms && !isNaN(opts.timeout_ms)) ? Number(opts.timeout_ms) : _sto.fabric_get_cc_timeout_ms;
+			const pOpts = { p_signed_proposal: p_signed_proposal, host: opts.host, timeout_ms: timeout_ms };
 			send_proposal_req_timed(pOpts, (eMessage: string, obj: UnaryReqResponse) => {
 				if (eMessage) {												// grpc req had errors
 					logger.error('[stitch] getInstalledChaincode was not successful');
@@ -1037,7 +1032,8 @@ function getInstantiatedChaincode(opts: Fmt, cb: Function) {
 			logger.error('[stitch] input error creating a signed proposal protobuf');
 			return cb(fmt_err(opts, null, p_signed_proposal.errors), null);
 		} else {
-			const pOpts = { p_signed_proposal: p_signed_proposal, host: opts.host, timeout_ms: opts.timeout_ms };
+			const timeout_ms = (opts.timeout_ms && !isNaN(opts.timeout_ms)) ? Number(opts.timeout_ms) : _sto.fabric_get_cc_timeout_ms;
+			const pOpts = { p_signed_proposal: p_signed_proposal, host: opts.host, timeout_ms: timeout_ms };
 			send_proposal_req_timed(pOpts, (eMessage: string, obj: UnaryReqResponse) => {
 				if (eMessage) {												// grpc req had errors
 					logger.error('[stitch] getInstantiatedChaincode was not successful');
@@ -1284,7 +1280,6 @@ function orderTransaction(opts: OrderFmt, cb: Function) {
 					code: undefined,							// it does not hold details about the grpc req between the grpcweb proxy and the component
 					status_message: ''
 				},
-				_b64_payload: '',
 				_block_data: undefined, 						// block data dne on this call
 			};
 
@@ -1579,7 +1574,6 @@ function submitConfigUpdate(opts: Fmt, cb: Function) {
 			code: undefined,							// it does not hold details about the grpc req between the grpcweb proxy and the component
 			status_message: ''
 		},
-		_b64_payload: '',
 		_block_data: undefined, 						// block data dne on this call
 	};
 
@@ -1704,7 +1698,8 @@ function getChaincodeDetailsFromPeer(opts: Fmt, cb: Function) {
 			logger.error('[stitch] input error creating a signed proposal protobuf');
 			return cb(fmt_err(opts, null, p_signed_proposal.errors), null);
 		} else {
-			const pOpts = { p_signed_proposal: p_signed_proposal, host: opts.host, timeout_ms: opts.timeout_ms };
+			const timeout_ms = (opts.timeout_ms && !isNaN(opts.timeout_ms)) ? Number(opts.timeout_ms) : _sto.fabric_get_cc_timeout_ms;
+			const pOpts = { p_signed_proposal: p_signed_proposal, host: opts.host, timeout_ms: timeout_ms };
 			send_proposal_req_timed(pOpts, (eMessage: string, obj: UnaryReqResponse) => {
 				if (eMessage) {												// grpc req had errors
 					logger.error('[stitch] getChaincodeDetailsFromPeer was not successful');
