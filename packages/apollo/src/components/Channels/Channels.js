@@ -417,7 +417,7 @@ class ChannelComponent extends Component {
 		return (
 			<div className="ibp-channel-tile-stats">
 				<div className="ibp-channels-orderer">
-					<div>{channel.orderers ? channel.orderers.map(orderer => (orderer.cluster_name ? orderer.cluster_name : orderer.name)).join(', ') : ''}</div>
+					<div>{channel.orderers ? channel.orderers.map(orderer => (orderer.cluster_name ? orderer.cluster_name : limit_len(orderer.name))).join(', ') : ''}</div>
 				</div>
 				<ItemTileLabels
 					certificateWarning={channel.cert_warning}
@@ -444,6 +444,14 @@ class ChannelComponent extends Component {
 				/>
 			</div>
 		);
+
+		// limit length of the orderer id on tile
+		function limit_len(str) {
+			if (typeof str === 'string' && str.length > 42) {
+				return str.substring(0, 42) + '...';
+			}
+			return str;
+		}
 	}
 
 	// build the channel tiles for orderers
@@ -794,6 +802,7 @@ class ChannelComponent extends Component {
 									{
 										header: 'ordering_service_title',
 										custom: channel => {
+											// this section only fires if te table layout (aka list) button was selected, we default to the other layout, the tile layout
 											return (
 												<div>
 													{channel.orderers.map((orderer, i) => (
