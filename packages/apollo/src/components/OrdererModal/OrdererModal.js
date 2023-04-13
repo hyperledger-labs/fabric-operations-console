@@ -66,6 +66,7 @@ class OrdererModal extends React.Component {
 			update: false,
 			loading: true,
 			channel_loading: false,
+			users_loading: false,
 			channelsWithNode: [],
 			safeChannelsWithNode: [],
 			submitting: false,
@@ -87,7 +88,6 @@ class OrdererModal extends React.Component {
 			saas_ca: null,
 			enroll_id: null,
 			enroll_secret: null,
-			loadingUsers: false,
 			users: [],
 			saas_ca_valid: false,
 			third_party_ca_valid: false,
@@ -143,11 +143,14 @@ class OrdererModal extends React.Component {
 					});
 				}
 				break;
+			case 'associate':
 			case 'update_certs':
 			case 'manage_certs':
 				this.getCAWithUsers();
 				break;
-			//case 'capabilities':
+			case 'capabilities':
+				this.getAvailableCapabilities();
+				break;
 			//case 'channel_maintenance':
 			//case 'config_override':
 			//case 'advanced':
@@ -361,7 +364,7 @@ class OrdererModal extends React.Component {
 		});
 	}
 
-	getCAList() {
+	async getCAList() {
 		return new Promise((resolve, reject) => {
 			if (this.props.cas && this.props.cas.length > 0) {
 				Log.debug('CAs from store:', this.props.cas);
@@ -380,48 +383,46 @@ class OrdererModal extends React.Component {
 		});
 	}
 
-	getCAWithUsers() {
-		this.getCAList()
-			.then(cas => {
-				this.props.updateState(SCOPE, {
-					cas,
-				});
-				if (cas.length) {
-					return this.loadUsersFromCA(cas[0]);
+	async getCAWithUsers() {
+		this.props.updateState(SCOPE, {
+			users_loading: true,
+		});
+		try {
+			const cas = await this.getCAList();
+			this.props.updateState(SCOPE, { cas });
+			if (this.props.ordererModalType === 'update_certs') {
+				for (let i in cas) {
+					await this.loadUsersFromCA(cas[i]);
 				}
-			})
-			.catch(error => {
-				Log.error(error);
-			})
-			.finally(() => {
-				this.getIdentities();
-			});
+			}
+		} catch (error) {
+			Log.error(error);
+		}
+
+		await this.getIdentities();
+		this.props.updateState(SCOPE, {
+			users_loading: false,
+		});
 	}
 
-	loadUsersFromCA(ca) {
-		this.props.updateState(SCOPE, { loadingUsers: true });
-		return CertificateAuthorityRestApi.getUsers(ca)
-			.then(all_users => {
-				const users = [];
-				if (all_users && all_users.length) {
-					all_users.forEach(user => {
-						if (user.type === 'peer') {
-							users.push(user);
-						}
-					});
-				}
-				this.props.updateState(SCOPE, {
-					users,
-					loadingUsers: false,
+	async loadUsersFromCA(ca) {
+		try {
+			const all_users = await CertificateAuthorityRestApi.getUsers(ca);
+			const users = [];
+			if (all_users && all_users.length) {
+				all_users.forEach(user => {
+					if (user.type === 'peer') {		// dsh why are we looking for peer on the orderer modal!?
+						users.push(user);
+					}
 				});
-			})
-			.catch(error => {
-				Log.error(error);
-				this.props.updateState(SCOPE, {
-					users: [],
-					loadingUsers: false,
-				});
+			}
+			this.props.updateState(SCOPE, { users });
+		} catch (error) {
+			Log.error(error);
+			this.props.updateState(SCOPE, {
+				users: [],
 			});
+		};
 	}
 
 	getIdentityFromName(name) {
@@ -435,6 +436,7 @@ class OrdererModal extends React.Component {
 		}
 		return id;
 	}
+
 	async getApplicableIdentities() {
 		const keys = Object.keys(this.props.associatedIdentities);
 		let valid_identities = {};
@@ -469,7 +471,7 @@ class OrdererModal extends React.Component {
 		return valid_identities;
 	}
 
-	getIdentities() {
+	async getIdentities() {
 		this.identities = null;
 		IdentityApi.getIdentities()
 			.then(identities => {
@@ -513,15 +515,11 @@ class OrdererModal extends React.Component {
 				this.getApplicableIdentities().then(myIdentities => {
 					this.props.updateState(SCOPE, {
 						applicableIdentities: myIdentities,
-						loading: false,
 					});
 				});
 			})
 			.catch(error => {
 				Log.error(error);
-			})
-			.finally(() => {
-				this.getAvailableCapabilities();
 			});
 	}
 
@@ -2527,7 +2525,7 @@ class OrdererModal extends React.Component {
 				submitButtonLabel={this.getSubmitButtonLabel(translate)}
 				submitButtonId={this.getSubmitButtonId()}
 				error={this.props.error}
-				loading={this.props.loading || this.props.channel_loading}
+				loading={this.props.loading || this.props.channel_loading || this.props.users_loading}
 			>
 				{this.renderPages(translate)}
 			</Wizard>
@@ -2545,6 +2543,7 @@ const dataProps = {
 	maintenance_mode: PropTypes.bool,
 	channel_state: PropTypes.string,
 	channel_loading: PropTypes.bool,
+	users_loading: PropTypes.bool,
 	submitting: PropTypes.bool,
 	channelsWithNode: PropTypes.array,
 	safeChannelsWithNode: PropTypes.array,
@@ -2583,7 +2582,6 @@ const dataProps = {
 	enroll_secret: PropTypes.string,
 	cas: PropTypes.array,
 	users: PropTypes.array,
-	loadingUsers: PropTypes.bool,
 	saas_ca_valid: PropTypes.bool,
 	third_party_ca_valid: PropTypes.bool,
 	saas_ca_private_key: PropTypes.string,
