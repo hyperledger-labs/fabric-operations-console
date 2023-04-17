@@ -2678,8 +2678,8 @@
 	"mig_header1": "Ready to migrate?",
 	"mig_header_in_progress": "Status",
 	"mig_details_title": "Details:",
-	"mig_warning_txt":"- Note that there is breaking behavior when multiple IBP instances have been deployed to the same cluster. Migrating the first console will break Fabric functionality on the other consoles. The remaining consoles will no longer be able to show Fabric related content or perform Fabric functions, but will otherwise work. Migrate the remaining consoles and use the migrated (new) console to resolve this issue.",
-	"mig_warning_txt2":"- Once migration has started Fabric nodes will become unreachable. You should expect a blockchain outage for the duration of migration.",
+	"mig_warning_txt": "- Note that there is breaking behavior when multiple IBP instances have been deployed to the same cluster. Migrating the first console will break Fabric functionality on the other consoles. The remaining consoles will no longer be able to show Fabric related content or perform Fabric functions, but will otherwise work. Migrate the remaining consoles and use the migrated (new) console to resolve this issue.",
+	"mig_warning_txt2": "- Once migration has started Fabric nodes will become unreachable. You should expect a blockchain outage for the duration of migration.",
 	"mig_tooltip1": "Please read the migration information above before starting migration. There are important considerations before starting.",
 	"mig_tooltip_in_progress": "This page will report the status of your migration. You may leave this page or close your browser. Migration will continue in the background.",
 	"mig_description": "Migration for your IBM Blockchain Platform console is enabled. Proceed after reading the information above by clicking \"Setup\".",
@@ -2735,5 +2735,7 @@
 	"mig_exported_txt": "exported on",
 	"mig_users_text": "2. (optional step) Additional local users can be created by using the \"Users\" tab on your new console. You should create a user on the new console for every active user of this console.",
 	"mig_test_txt": "3. Next check if the new console is working. Open a new tab to the new console and click on each of the node tiles. You will need to associate each node with an appropriate identity from your wallet. Compare the Fabric related content seen on the new console with the content seen on this console, it should be identical. If the new console is missing content double check that the correct identity was associated and switch the identity if needed.",
-	"mig_delete_txt": "4. If the new console is working well it's time to delete this console. Go to your [[IBM Cloud resources]](https://cloud.ibm.com/resources) dashboard, under \"Blockchain\" find the row for this console, and open it. You should be on the page which used to have the blue button that launches the console. This page should now have the text \"This console has been migrated!\". If so then it is safe to delete by using the \"Actions...\" dropdown and the \"Delete service\" option. If this text is missing contact support."
+	"mig_delete_txt": "4. If the new console is working well it's time to delete this console. Go to your [[IBM Cloud resources]](https://cloud.ibm.com/resources) dashboard, under \"Blockchain\" find the row for this console, and open it. You should be on the page which used to have the blue button that launches the console. This page should now have the text \"This console has been migrated!\". If so then it is safe to delete by using the \"Actions...\" dropdown and the \"Delete service\" option. If this text is missing contact support.",
+	"hide_archived_channels": "Hide Archived Channels",
+	"show_archived_channels": "Show Archived Channels"
 }

@@ -654,13 +654,25 @@ class ChannelComponent extends Component {
 		const items = [];
 		if (isCreateChannelFeatureAvailable) {
 			items.push({
-				id: 'create_channel',
-				text: 'create_channel',
+				id: 'toggle_archived_channels',
+				text: this.props.history.location.search == '?visibility=all' ? 'hide_archived_channels' : 'show_archived_channels',
 				fn: () => {
-					this.createChannel(null);
+					if (this.props.history.location.search == '?visibility=all') {
+						this.props.history.push('/channels')
+					} else {
+						this.props.history.push('?visibility=all')
+					}
 				},
-				disabled: !ActionsHelper.canEditComponent(this.props.feature_flags)
-			});
+				icon: this.props.history.location.search == '?visibility=all' ? 'visibilityOff' : 'visibilityOn',
+			},
+				{
+					id: 'create_channel',
+					text: 'create_channel',
+					fn: () => {
+						this.createChannel(null);
+					},
+					disabled: !ActionsHelper.canEditComponent(this.props.feature_flags)
+				});
 		}
 		return items;
 	}
