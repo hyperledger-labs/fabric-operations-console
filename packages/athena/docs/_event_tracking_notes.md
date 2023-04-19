@@ -48,8 +48,7 @@ The console still has code related to segment, but no segment events are sent/re
 
 Events are triggered from http requests to the Console (not all requests, see below).
 The events are written to the file `audit.log` in the [./packages/athena/logs/](../logs) folder, the setting `activity_tracker_filename` can be used to change the filename.
-See the [configuration options](../env/README.md#default) readme for more setting details.
-The log file is rotated by athena's winston lib once it reaches 2MB, up to 5 files.
+The log files are rotated once it reaches 2MB, up to 5 files by the [winston npm logging module](https://www.npmjs.com/package/winston).
 Meaning if 6MB of logging was generated, you would see the 3 files each with 2MB of data, named: `audit.log`, `audit1.log` and `audit2.log`.
 
 Note that since the logging is using the pod's filesystem all activity logs are wiped/reset when a pod restarts.
@@ -58,6 +57,16 @@ You can easily see if activity tracker is enabled by finding the server side log
 
 - `[event tracker] enabled logging for activity tracker`
 - `[event tracker] disabled logging for activity tracker`
+
+**How to turn it on/off:**
+
+The setting `activity_tracker_filename` will control if these audit/tracker logs are enabled or not.
+If this setting is `null` it is disabled.
+Otherwise this setting holds the name of the first file to use.
+
+This setting can be set like any other console configuration setting.
+You can use an api, edit your [config file](../env/README.md#config), or change the setting in the database directly.
+See the [configuration options](../env/README.md#how-to-change-a-setting) readme for general console setting details.
 
 **What is tracked:**
 
