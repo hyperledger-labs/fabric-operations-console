@@ -231,11 +231,11 @@ See private OpTools settings.
 ## 6. Edit a single field in the settings doc
 Edit any settings doc field.
 Use with caution.
-You may need to restart the server for some fields to take effect (logging).
+You may need to restart the server for some fields to take effect (like logging).
 
 **Check out api #7 (below) before using this one.** It has input validation.
 - **Method**: PUT
-- **Route**: `/api/v[123]/settings/key` (legacy route: `/api/v[123]/authscheme/key`)
+- **Route**: `/ak/api/v[123]/settings/key` (legacy route: `/api/v[123]/authscheme/key`)
 - **Auth**: need `blockchain.optools.settings` action
 - **Body**:
 ```js

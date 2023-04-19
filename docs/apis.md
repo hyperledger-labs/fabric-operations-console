@@ -17,7 +17,7 @@ It also has APIs to monitor Fabric Console activity.
 - Get imported peer/ca/orderer data
 - Remove imported peer/ca/orderer
 - Get all imported components
-- Get console settings
+- Get/edit console settings
 - Get console notifications (activity events, such as user login)
 - Get signature collection details
 - Create/Get/Delete console API keys

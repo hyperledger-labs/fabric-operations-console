@@ -1,9 +1,19 @@
 # Configuration Options
-There are 4 places where athena will pick up settings. In order of hierarchy:
+There are a few places where athena will pick up settings. In order of hierarchy:
 1. [Environment Variable File](#env) - JSON file that will load all keys as env variables on startup. Not required if env variables are already set.
-1. Environment Variables - Existing env variables will override the config file & default settings file.
+1. Environment Variables - Existing env variables will override the config file & settings file.
 1. [Configuration File](#config) - YAML/JSON file will overwrite default settings. Not required if default settings are fine.
-1. [Default Settings File](#default) - Internal JSON file for default values. Users should not modify this file. Changes to defaults can be accomplished with the configuration file.
+1. Settings Doc - The system database has a couchdb doc called `00_settings_athena`. This doc holds the active settings that control the console. While possible, it's not intended for users of the console to edit this doc directly. The configuration file should be used instead.
+1. [Default Settings File](#default) - Internal JSON file for default values. Users should not modify this file. Changes to active settings should be accomplished with the configuration file. This file is only read on startup to get a default value for each setting.
+
+# How to change a setting?
+
+The best way to change a console setting is to change or provide a [Configuration File](#config).
+This file is read on startup, and it will override default and current setting values.
+
+The second best way is to use the [change-console-setting-API-#6](../docs/other_apis.md).
+Like any other console API, the appropriate auth must be created.
+See our [basic API instructions](../docs/permission_apis.md#console-route-differences) and the section on [creating an API key](../docs/permission_apis.md#1-create-an-api-key).
 
 
 <a name="env"></a>
@@ -12,7 +22,7 @@ There are 4 places where athena will pick up settings. In order of hierarchy:
 When deploying athena an environmental JSON file should live in this folder `./en/dev.json`.
 *If these env variables are already set by some other means then this file can be omitted.*
 This file has the minimum settings to reach couch db.
-Once athena reaches couch db it will load the rest of the settings via the default settings doc `00_settings_athena` doc or the config yaml.
+Once athena reaches couch db it will load the rest of the settings by reading the settings doc `00_settings_athena` doc in the system database and then it will read/apply the [configuration yaml](#config) file (if present).
 
 **The file dne**, it must be created if the required fields are not already set.
 
@@ -115,12 +125,12 @@ __Example:__
 <a name="config"></a>
 
 # Configuration File
-This YAML/JSON file will **overwrite any variable** in the default settings doc.
+This YAML/JSON file will **overwrite any variable** in the settings doc.
 On startup this file will be checked against the settings doc in the databases.
 Any missing fields will be populated, and any fields with a different value will be replaced.
 
-Note to devs: Add variables to this file when the end user will not be able to change it via the UI.
-Because during restarts the value in these fields will replace any writes to the settings doc.
+Note: Only add variables to this file when the end user should *not* be able to change it via the UI.
+This is because the APIs that the UI uses can only edit the settings doc, the config file is never edited by the UI, and so everytime the console restarts... the active settings will reload to reflect values in the config file.
 
 **The config file to use can be set with the env variable `CONFIGURE_FILE`.** If not set or empty, no file will be loaded.
 
@@ -223,10 +233,11 @@ __default_settings_doc.json:__
   }
 },
 
-// initial filename for the Activity Tracker event files
-// if null activity tracker is disabled
-// files will rotated by winston
+// the base filename for the Activity Tracker event files (aka audit logs)
+// if null events will not be logged/tracked
 // defaults 'audit.log'
+// files are always written to the folder ./packages/athena/logs/
+// see doc in ./packages/athena/docs/_event_tracking_notes.md for more information
 "activity_tracker_filename": 'audit.log'
 
 // email address on the UI to surface to users for help
