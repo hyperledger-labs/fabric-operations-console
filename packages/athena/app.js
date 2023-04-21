@@ -1054,7 +1054,7 @@ function setup_passport() {
 			return done(null, obj);
 		});
 	} else if (ev.AUTH_SCHEME === 'oauth' && ev.OAUTH) {
-		logger.info('[startup] setting up the generic oauth 2 auth scheme', ev.OAUTH);
+		logger.info('[startup] setting up the generic oauth 2 auth scheme');
 		passport.use(ev.OAUTH.STRATEGY_NAME, new OAuth2Strategy({
 			authorizationURL: ev.OAUTH.AUTHORIZATION_URL,
 			tokenURL: ev.OAUTH.TOKEN_URL,
