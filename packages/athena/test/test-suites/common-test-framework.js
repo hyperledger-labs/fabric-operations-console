@@ -236,6 +236,18 @@ ev.ROLES_TO_ACTIONS[ev.STR.READER_ROLE] = [
 ev.PROXY_TLS_HTTP_URL = ev.HOST_URL;
 ev.PROXY_TLS_WS_URL = ev.HOST_URL;
 ev.PROXY_TLS_FABRIC_REQS = true;
+ev.IBM_ID = {
+	STRATEGY_NAME: 'ibmcloud',
+};
+ev.OIDC = {
+	STRATEGY_NAME: 'ICPOIDCStrategy',
+};
+ev.LDAP = {
+	STRATEGY_NAME: 'LDAPStrategy',
+};
+ev.OAUTH = {
+	STRATEGY_NAME: 'GenericStrategy',
+};
 
 // middleware containing testing functions
 const test_middleware = require('../testing-lib/test-middleware');
