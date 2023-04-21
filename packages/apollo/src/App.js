@@ -43,7 +43,6 @@ const Log = new Logger('App');
 Log.setLogLevel('warn');
 
 class App extends Component {
-	disableAuth = false;
 	cName = 'App';
 	constructor(props) {
 		super(props);
@@ -60,7 +59,7 @@ class App extends Component {
 		let userInfo;
 		try {
 			userInfo = await this.getUserInfo();
-			await this.isAuthConfigured();
+			await this.getAuthData();
 		} catch (error) {
 			Log.error(`Failed to get user info: ${error}`);
 		}
@@ -124,7 +123,7 @@ class App extends Component {
 		document.head.appendChild(analyticsFuncScript);
 	}
 
-	async isAuthConfigured() {
+	async getAuthData() {
 		let resp;
 		try {
 			resp = await ConfigureAuthApi.getAuthScheme();
@@ -137,12 +136,9 @@ class App extends Component {
 			});
 			return;
 		}
-		let l_authScheme = resp.auth_scheme;
+		let l_authScheme = resp ? resp.auth_scheme : '';
 		let isConfigured = true;
-		if (resp.auth_scheme === 'none') {
-			this.disableAuth = true;
-		}
-		if (l_authScheme === '' || (l_authScheme !== 'ibmid' && l_authScheme !== 'iam' && l_authScheme !== 'appid' && l_authScheme !== 'couchdb')) {
+		if (!l_authScheme || l_authScheme === 'initial') {
 			Log.info('No auth scheme configured yet, redirecting to configure auth page', l_authScheme);
 			isConfigured = false;
 		}
@@ -333,11 +329,7 @@ class App extends Component {
 
 	render() {
 		const translate = this.props.translate;
-		if (this.disableAuth) {
-			Log.info('Auth is disabled!');
-		}
-
-		if (this.state.authScheme === null || this.props.userInfo === null) {
+		if (!this.state.authScheme || !this.props.userInfo) {
 			return (
 				<LoadingWithContent withOverlay
 					description={translate('loading')}
@@ -345,7 +337,7 @@ class App extends Component {
 					<h3>{translate('loading')}</h3>
 				</LoadingWithContent>
 			);
-		} else if (!this.disableAuth) {
+		} else {
 			if (!this.state.authScheme.isAuthConfigured) return <AuthSetup />;
 			else {
 				let admin_list = this.state.authScheme.admin_list.map(x => (x.email ? x.email.toLowerCase() : x.toLowerCase()));
@@ -382,11 +374,11 @@ class App extends Component {
 			/>;
 		}
 
-		if (this.props.userInfo && !this.props.userInfo.logged && !this.disableAuth) {
+		if (this.props.userInfo && !this.props.userInfo.logged) {
 			window.location.href = `${this.state.authScheme.host_url}/auth/login`;
 		}
 
-		if ((this.props && this.props.userInfo && this.props.userInfo.logged) || this.disableAuth) {
+		if ((this.props && this.props.userInfo && this.props.userInfo.logged)) {
 			Log.info('Starting application!');
 			this.setupRemoteLogging(); // setup the remote logging after the user has logged in to avoid hitting api lockout
 			return <Main userInfo={this.props.userInfo}

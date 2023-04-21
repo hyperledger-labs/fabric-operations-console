@@ -640,7 +640,7 @@ module.exports = function (logger, ev, t) {
 			logged: t.middleware.isAuthenticated(req),				// true if user has logged in with auth scheme
 			authorized_actions: t.middleware.getActions(req),		// true if user has permissions on service
 			loggedInAs: {
-				name: t.middleware.getName(req),
+				name: t.middleware.getName(req) || email,
 				email: email,
 			},
 			censoredEmail: t.misc.censorEmail(email),				// to see what it looks like in the logs
