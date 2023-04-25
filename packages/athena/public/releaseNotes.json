@@ -1,5 +1,23 @@
 [
 	{
+		"version": "1.0.5-14",
+		"date": "25 April 2023",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			},
+			{
+				"title": "Performance Improvements++",
+				"details": "The Orderer details content should load faster than before."
+			},
+			{
+				"title": "Allow OAuth Login",
+				"details": "OAuth2.0 for console login can now be used and configured via console settings."
+			}
+		]
+	},
+	{
 		"version": "1.0.5-13",
 		"date": "13 April 2023",
 		"description": [
