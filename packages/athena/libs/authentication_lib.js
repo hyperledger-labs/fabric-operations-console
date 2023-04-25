@@ -53,7 +53,13 @@ module.exports = function (logger, ev, t) {
 			} else {
 
 				// --- Passport --- //
-				const strategy_name = ev.AUTH_SCHEME === 'iam' ? ev.IAM.STRATEGY_NAME : ev.IBM_ID.STRATEGY_NAME;
+				const strategy_map = {
+					iam: ev.IAM.STRATEGY_NAME,
+					oidc: ev.OIDC.STRATEGY_NAME,
+					ldap: ev.LDAP.STRATEGY_NAME,
+					oauth: ev.OAUTH.STRATEGY_NAME,
+				};
+				const strategy_name = strategy_map[ev.AUTH_SCHEME];
 				logger.debug('[passport] using auth scheme:', strategy_name);
 				passport.authenticate(strategy_name, function (e, profile) {
 					if (profile) {

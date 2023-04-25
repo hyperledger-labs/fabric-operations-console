@@ -1059,43 +1059,71 @@ function setup_passport() {
 			authorizationURL: ev.OAUTH.AUTHORIZATION_URL,
 			tokenURL: ev.OAUTH.TOKEN_URL,
 			clientID: ev.OAUTH.CLIENT_ID,
-			response_type: ev.OAUTH.RESPONSE_TYPE, 			// usually 'code',
-			grant_type: ev.OAUTH.GRANT_TYPE, 				// usually 'authorization_code',
+			scope: ev.OAUTH.SCOPE,
+			response_type: ev.OAUTH.RESPONSE_TYPE,
+			grant_type: ev.OAUTH.GRANT_TYPE,
 			clientSecret: ev.OAUTH.CLIENT_SECRET,
 			callbackURL: ev.HOST_URL + ev.LOGIN_URI,
-		}, function (accessToken, refreshToken, profile, done) {
-			try {
-				logger.debug('[oauth] oauth dance complete');
-				if (typeof profile !== 'object') {
-					profile = {};
+		}, function (accessToken, refreshToken, exchangeResp, profile, done) {
+			logger.debug('[oauth] oauth dance complete');
+
+			let payload = null;
+			if (exchangeResp && exchangeResp.id_token) {
+				try {
+					const parts = exchangeResp.id_token.split('.');
+					payload = JSON.parse(tools.misc.decodeb64(parts[1]));		// get the profile out of the token
+				} catch (e) {
+					logger.warn('[oauth] unable to parse the token exchange response as json', e);
 				}
-				profile.authorized_actions = [				// add actions, middleware will look for it
-					ev.STR.CREATE_ACTION,					// lets add all roles for generic oauth
-					ev.STR.DELETE_ACTION,
-					ev.STR.REMOVE_ACTION,
-					ev.STR.IMPORT_ACTION,
-					ev.STR.EXPORT_ACTION,
-					ev.STR.RESTART_ACTION,
-					ev.STR.LOGS_ACTION,
-					ev.STR.VIEW_ACTION,
-					ev.STR.SETTINGS_ACTION,
-					ev.STR.USERS_ACTION,
-					ev.STR.API_KEY_ACTION,
-					ev.STR.NOTIFICATIONS_ACTION,
-					ev.STR.SIG_COLLECTION_ACTION,
-					ev.STR.C_MANAGE_ACTION,
-				];
-				return done(null, profile);						// send profile on to be stored in session
-			} catch (e) {
-				logger.error('[oauth] could not get profile from oauth server', e);
-				return done(null, {
-					authorized_actions: [],
-					given_name: 'Unknown',
-					family_name: 'User',
-					name: 'Unknown User',
-					email: 'whoops@ibm.com',
-				});
 			}
+			if (ev.OAUTH.DEBUG) {
+				logger.debug('[oauth] authorization code was accepted from login');
+				logger.debug('[oauth] received profile:', profile);
+				logger.debug('[oauth] received response from token exchange:', exchangeResp);
+				logger.debug('[oauth] payload in JWT response:', payload);
+			}
+
+
+			if (typeof profile !== 'object') {													// init if it dne
+				profile = {};
+			}
+			if (payload) {
+				profile.uuid = profile.sub || profile.uuid || profile.id || profile.uid;		// first get uuid from profile if possible
+				if (!profile.uuid) {
+					profile.uuid = payload.sub || payload.uuid || payload.id || payload.uid;	// if not found try getting user id from payload
+				}
+				if (payload.email) {
+					profile.email = payload.email;
+				}
+				for (let key in payload) {														// copy fields from payload over
+					if (!profile[key]) {
+						profile[key] = payload[key];
+					}
+				}
+			}
+			delete profile.picture;						// scrub this if found, we'll never need it
+			profile.roles = [ev.STR.MANAGER_ROLE, ev.STR.WRITER_ROLE, ev.STR.READER_ROLE];
+			profile.authorized_actions = [				// add actions, middleware will look for it
+				ev.STR.CREATE_ACTION,					// lets add all roles for generic oauth
+				ev.STR.DELETE_ACTION,
+				ev.STR.REMOVE_ACTION,
+				ev.STR.IMPORT_ACTION,
+				ev.STR.EXPORT_ACTION,
+				ev.STR.RESTART_ACTION,
+				ev.STR.LOGS_ACTION,
+				ev.STR.VIEW_ACTION,
+				ev.STR.SETTINGS_ACTION,
+				ev.STR.USERS_ACTION,
+				ev.STR.API_KEY_ACTION,
+				ev.STR.NOTIFICATIONS_ACTION,
+				ev.STR.SIG_COLLECTION_ACTION,
+				ev.STR.C_MANAGE_ACTION,
+			];
+			if (ev.OAUTH.DEBUG) {
+				logger.debug('[oauth] built profile', JSON.stringify(profile, null, 2));
+			}
+			return done(null, profile);						// send profile on to be stored in session
+
 		}));
 		passport.serializeUser(function (user, done) {
 			done(null, user);

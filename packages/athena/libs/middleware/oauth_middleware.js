@@ -25,8 +25,8 @@ module.exports = function (logger, ev, t) {
 	//--------------------------------------------------
 	middleware.isAuthenticated = (req) => {
 		const user_data = getPassportData(req);
-		const user = user_data ? (user_data.name || user_data.uid) : null;
-		if (!user) {							// if name exist, we are good, i think
+		const user = user_data ? (user_data.name || user_data.uid || user_data.uuid) : null;
+		if (!user) {							// if some id exist, we are good
 			return false;
 		} else {
 			return true;

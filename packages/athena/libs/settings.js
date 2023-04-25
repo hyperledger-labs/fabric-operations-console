@@ -428,8 +428,10 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 					TOKEN_URL: athena.oauth ? athena.oauth.token_url : null,
 					CLIENT_ID: athena.oauth ? athena.oauth.client_id : null,
 					CLIENT_SECRET: athena.oauth ? athena.oauth.client_secret : null,
-					RESPONSE_TYPE: athena.oauth ? athena.oauth.response_type : null,
-					GRANT_TYPE: athena.oauth ? athena.oauth.grant_type : null,
+					RESPONSE_TYPE: (athena.oauth ? athena.oauth.response_type : null) || 'code',
+					GRANT_TYPE: (athena.oauth ? athena.oauth.grant_type : null) || 'authorization_code',
+					SCOPE: (athena.oauth ? athena.oauth.scope : null) || 'openid email profile',
+					DEBUG: athena.oauth ? (athena.oauth.debug === true) : false,
 				};
 
 				if (typeof settings.DEFAULT_USER_PASSWORD === 'string') {
@@ -706,7 +708,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 
 		if (env.AUTH_SCHEME) {									// truthy check is above, check value here
 			env.AUTH_SCHEME = env.AUTH_SCHEME.toLowerCase();
-			const valid = ['ibmid', 'iam', 'appid', 'initial', 'couchdb', 'ldap', 'oidc'];
+			const valid = ['initial', 'iam', 'couchdb', 'ldap', 'oidc', 'oauth'];
 			if (valid.indexOf(env.AUTH_SCHEME) === -1) {
 				errors.push('setup error: AUTH_SCHEME is not valid: ' + env.AUTH_SCHEME);
 			}
