@@ -43,8 +43,8 @@ class OrdererAdmins extends Component {
 	}
 
 	buildCustomTile(admin) {
-		const node_ou = _.get(admin, 'fabric_node_ous.enable') ? 'enabled' : 'disabled';
-		const certificateWarning = node_ou === 'enabled' ? false : Helper.getLongestExpiry(admin.admins);
+		const node_ou = Helper.node_ou_is_enabled(admin);
+		const certificateWarning = node_ou ? false : Helper.getLongestExpiry(admin.admins);
 
 		return (
 			<div className="ibp-orderer-admin-custom-tile">

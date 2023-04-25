@@ -76,7 +76,7 @@ class ChannelMembers extends Component {
 		return (
 			<>
 				<ItemTileLabels certificateWarning={member.certificateWarning}
-					nodeOU={member.node_ou}
+					nodeOU={member.node_ou ? true : false}
 				/>
 			</>
 		);

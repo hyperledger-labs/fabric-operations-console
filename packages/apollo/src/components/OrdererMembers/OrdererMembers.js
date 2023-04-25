@@ -40,8 +40,8 @@ class OrdererMembers extends Component {
 	}
 
 	buildCustomTile(member) {
-		const node_ou = _.get(member, 'fabric_node_ous.enable') ? 'enabled' : 'disabled';
-		const certificateWarning = node_ou === 'enabled' ? false : Helper.getLongestExpiry(member.admins);
+		const node_ou = Helper.node_ou_is_enabled(member);
+		const certificateWarning = node_ou ? false : Helper.getLongestExpiry(member.admins);
 
 		return (
 			<div>

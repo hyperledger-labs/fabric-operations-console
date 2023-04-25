@@ -1646,7 +1646,21 @@ const Helper = {
 			}
 		}
 		return true;		// if all digits match... its a match
-	}
+	},
+
+	// there seems to be confusion if/when this field is a string vs boolean, this handles both
+	// returns true if fabric_node_ous.enable is true
+	node_ou_is_enabled(data) {
+		if (data && data.fabric_node_ous) {
+			if (data.fabric_node_ous.enable === true) {
+				return true;
+			}
+			if (data.fabric_node_ous.enable === 'enabled') {
+				return true;
+			}
+		}
+		return false;
+	},
 };
 
 export default Helper;

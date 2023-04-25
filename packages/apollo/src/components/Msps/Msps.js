@@ -109,12 +109,13 @@ class Msps extends Component {
 	};
 
 	buildCustomTile(msp) {
+		const node_ou = Helper.node_ou_is_enabled(msp);
 		return (
 			<div>
 				<div>
 					<p className="ibp-node-msp-tile-name-sub">{msp.msp_id}</p>
 					<ItemTileLabels certificateWarning={msp.certificateWarning}
-						nodeOU={_.get(msp, 'fabric_node_ous.enable', false)}
+						nodeOU={node_ou}
 					/>
 				</div>
 			</div>

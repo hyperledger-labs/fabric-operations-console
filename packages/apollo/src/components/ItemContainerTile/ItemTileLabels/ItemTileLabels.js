@@ -110,7 +110,7 @@ const ItemTileLabels = ({ certificateWarning, custom, isPatchAvailable, location
 	};
 
 	const renderNodeOU = () => {
-		if (nodeOU === undefined) {
+		if (!nodeOU) {
 			return;
 		}
 		return <TileLabel label={translate('node_ou_param', { state: translate(nodeOU ? 'enabled' : 'disabled') })} />;
