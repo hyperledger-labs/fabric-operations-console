@@ -49,48 +49,54 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// GRPC Proxy Proxy (self sign cert work around)
 	//--------------------------------------------------
-	app.all('/grpcwp/*', t.middleware.verify_view_action_session, (req, res) => {
-		t.proxy_lib.grpc_proxy_proxy_call(req, (ret) => {
-			if (ret.headers) {
-				res.set(ret.headers);
-			}
-			if (!ret.response) {
-				res.status(ret.statusCode).send();
-			} else {
-				res.status(ret.statusCode).send(ret.response);
-			}
+	['get', 'post', 'put', 'delete'].forEach(function (method) {
+		app[method]('/grpcwp/*', t.middleware.verify_view_action_session, (req, res) => {
+			t.proxy_lib.grpc_proxy_proxy_call(req, (ret) => {
+				if (ret.headers) {
+					res.set(ret.headers);
+				}
+				if (!ret.response) {
+					res.status(ret.statusCode).send();
+				} else {
+					res.status(ret.statusCode).send(ret.response);
+				}
+			});
 		});
 	});
 
 	//--------------------------------------------------
 	// CA Proxy (cors && self sign cert work around)
 	//--------------------------------------------------
-	app.all('/caproxy/*', t.middleware.verify_view_action_session, (req, res) => {
-		t.proxy_lib.ca_proxy_call(req, (ret) => {
-			if (ret.headers) {
-				res.set(ret.headers);
-			}
-			if (!ret.response) {
-				res.status(ret.statusCode).send();
-			} else {
-				res.status(ret.statusCode).send(ret.response);
-			}
+	['get', 'post', 'put', 'delete'].forEach(function (method) {
+		app[method]('/caproxy/*', t.middleware.verify_view_action_session, (req, res) => {
+			t.proxy_lib.ca_proxy_call(req, (ret) => {
+				if (ret.headers) {
+					res.set(ret.headers);
+				}
+				if (!ret.response) {
+					res.status(ret.statusCode).send();
+				} else {
+					res.status(ret.statusCode).send(ret.response);
+				}
+			});
 		});
 	});
 
 	//--------------------------------------------------
 	// General Proxy (cors && self sign cert work around)
 	//--------------------------------------------------
-	app.all('/proxy/*', t.middleware.verify_view_action_session, (req, res) => {
-		t.proxy_lib.proxy_call(req, (ret) => {
-			if (ret.headers) {
-				res.set(ret.headers);
-			}
-			if (!ret.response) {
-				res.status(ret.statusCode).send();
-			} else {
-				res.status(ret.statusCode).send(ret.response);
-			}
+	['get', 'post', 'put', 'delete'].forEach(function (method) {
+		app[method]('/proxy/*', t.middleware.verify_view_action_session, (req, res) => {
+			t.proxy_lib.proxy_call(req, (ret) => {
+				if (ret.headers) {
+					res.set(ret.headers);
+				}
+				if (!ret.response) {
+					res.status(ret.statusCode).send();
+				} else {
+					res.status(ret.statusCode).send(ret.response);
+				}
+			});
 		});
 	});
 
