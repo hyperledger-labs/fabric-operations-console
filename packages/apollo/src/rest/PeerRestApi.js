@@ -31,7 +31,7 @@ const LEGACY_PEER_TYPE = 'peer';
 
 class PeerRestApi {
 	static async getPeers(skip_cache) {
-		return NodeRestApi.getNodes('fabric-peer', skip_cache);
+		return NodeRestApi.getNodes(['fabric-peer'], skip_cache);
 	}
 
 	static async getPeersWithCerts(skip_cache) {
@@ -63,8 +63,8 @@ class PeerRestApi {
 		return peers;
 	}
 
-	static async getPeerDetails(id, includePrivateKeyAndCert) {
-		return NodeRestApi.getNodeDetails(id, includePrivateKeyAndCert);
+	static async getPeerDetails(id, includePrivateKeyAndCert, skip_cache) {
+		return NodeRestApi.getNodeDetails(id, includePrivateKeyAndCert, skip_cache);
 	}
 
 	static async startPeer(peerId) {
@@ -462,7 +462,7 @@ class PeerRestApi {
 	static async updatePeer(peer) {
 		peer.grpcwp_url = Helper.fixURL(peer.grpcwp_url);
 		await NodeRestApi.updateNode(peer);
-		return this.getPeerDetails(peer.id, false);
+		return this.getPeerDetails(peer.id, false, true);
 	}
 
 	static async createPeer(data) {
@@ -494,7 +494,7 @@ class PeerRestApi {
 							admin_certs: data.admin_msp.admins,
 						},
 					},
-				  }
+				}
 				: {
 					msp: {
 						ca: {
@@ -513,7 +513,7 @@ class PeerRestApi {
 							admin_certs: data.admin_msp.admins,
 						},
 					},
-				  },
+				},
 		};
 		if (data.clusterType === 'paid') {
 			node.resources = {

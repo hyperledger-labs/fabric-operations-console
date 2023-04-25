@@ -21,7 +21,6 @@ import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import { CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';
-import ComponentApi from '../../rest/ComponentApi';
 import IdentityApi from '../../rest/IdentityApi';
 import { NodeRestApi } from '../../rest/NodeRestApi';
 import ActionsHelper from '../../utils/actionsHelper';
@@ -77,7 +76,7 @@ export class CAModal extends React.Component {
 		}
 		if (this.props.caModalType === 'settings') {
 			try {
-				const ca_details = await ComponentApi.getComponent(this.props.ca);
+				const ca_details = await NodeRestApi.api_getCurrentNodeDeployer(this.props.ca);
 				const tls_cert = _.get(ca_details, 'msp.component.tls_cert');
 				if (tls_cert && tls_cert !== _.get(this.props.ca, 'msp.component.tls_cert')) {
 					this.props.updateState(SCOPE, {
@@ -497,8 +496,10 @@ export class CAModal extends React.Component {
 		}
 		// get all the peers and ordering nodes in the system
 		const nodes_to_update = [];
-		const nodes = (await NodeRestApi.getNodes('fabric-peer')) || [];
-		const orderers = (await NodeRestApi.getNodes('fabric-orderer')) || [];
+		const all_nodes = await NodeRestApi.getNodes(['fabric-peer', 'fabric-orderer']);
+		const nodes = (Array.isArray(all_nodes) && all_nodes.length > 0) ? all_nodes.filter(n => n && n.type === 'fabric-peer') : [];
+		const orderers = (Array.isArray(all_nodes) && all_nodes.length > 0) ? all_nodes.filter(n => n && n.type === 'fabric-orderer') : [];
+
 		orderers.forEach(orderer => {
 			if (orderer.raft) {
 				orderer.raft.forEach(raft => {

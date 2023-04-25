@@ -47,9 +47,7 @@ const Log = new Logger('MspRestApi');
 
 class MspRestApi {
 	static async getAllMsps(skip_cache) {
-		const msps = await NodeRestApi.getNodes(MSP_TYPE, skip_cache);
-		// external msps are going away.  Let's just treat them as the same thing.
-		return msps.concat(await NodeRestApi.getNodes(EXTERNAL_MSP_TYPE));
+		return await NodeRestApi.getNodes([MSP_TYPE, EXTERNAL_MSP_TYPE], skip_cache);
 	}
 
 	static async getMSPDetails(id) {
@@ -57,7 +55,7 @@ class MspRestApi {
 	}
 
 	static async getMsps(skip_cache) {
-		return NodeRestApi.getNodes('msp', skip_cache);
+		return NodeRestApi.getNodes([MSP_TYPE], skip_cache);
 	}
 
 	/**
@@ -68,7 +66,7 @@ class MspRestApi {
 	static async importMSP(exported_msp) {
 		// Transform component fields to their latest aliases to avoid validation errors
 		const exportedMSP = {
-			type: 'msp',
+			type: MSP_TYPE,
 			display_name: exported_msp.display_name,
 			msp_id: exported_msp.msp_id,
 			root_certs: exported_msp.root_certs,

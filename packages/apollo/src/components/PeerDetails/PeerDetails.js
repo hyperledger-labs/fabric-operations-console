@@ -20,7 +20,6 @@ import React, { Component } from 'react';
 import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { clearNotifications, showBreadcrumb, showError, showSuccess, updateBreadcrumb, updateState } from '../../redux/commonActions';
-import ComponentApi from '../../rest/ComponentApi';
 import { NodeRestApi } from '../../rest/NodeRestApi';
 import { PeerRestApi } from '../../rest/PeerRestApi';
 import ActionsHelper from '../../utils/actionsHelper';
@@ -60,14 +59,14 @@ class PeerDetails extends Component {
 		});
 		this.pathname = this.props.history.location.pathname;
 		this.props.showBreadcrumb(null, null, this.pathname);
-		this.refresh();
+		this.refresh(false);
 		this.initialized = true;
 	}
 
 	refresh = skipStatusCache => {
 		NodeStatus.cancel();
 		this.props.updateState(SCOPE, { loading: true, usageInfo: null });
-		PeerRestApi.getPeerDetails(this.props.match.params.peerId, false)
+		PeerRestApi.getPeerDetails(this.props.match.params.peerId, false, skipStatusCache)
 			.then(async peer => {
 				try {
 					// Get complete config from deployer because the value stored in database stores only the latest config override json
@@ -94,7 +93,7 @@ class PeerDetails extends Component {
 					}, 30000);
 					this.checkHealth(peer, skipStatusCache);
 				}
-				ComponentApi.getUsageInformation(peer)
+				NodeRestApi.getCompsResources(peer)
 					.then(usageInfo => {
 						this.props.updateState(SCOPE, { usageInfo });
 					})
@@ -163,13 +162,13 @@ class PeerDetails extends Component {
 
 	startPeer = () => {
 		PeerRestApi.startPeer(this.props.details.id).then(() => {
-			this.refresh();
+			this.refresh(false);
 		});
 	};
 
 	stopPeer = () => {
 		PeerRestApi.stopPeer(this.props.details.id).then(() => {
-			this.refresh();
+			this.refresh(false);
 		});
 	};
 
@@ -191,7 +190,7 @@ class PeerDetails extends Component {
 	refreshCerts = async () => {
 		try {
 			const resp = await NodeRestApi.getUnCachedDataWithDeployerAttrs(this.props.details.id);
-			this.refresh();
+			this.refresh(true);
 			Log.debug('Refresh cert response:', resp);
 			this.props.showSuccess('cert_refresh_successful', {}, SCOPE);
 		} catch (error) {
@@ -692,7 +691,7 @@ class PeerDetails extends Component {
 								onClose={this.hideUsageModal}
 								onComplete={() => {
 									this.props.updateState(SCOPE, { usageInfo: null });
-									ComponentApi.getUsageInformation(this.props.details)
+									NodeRestApi.getCompsResources(this.props.details)
 										.then(usageInfo => {
 											this.props.updateState(SCOPE, { usageInfo });
 										})

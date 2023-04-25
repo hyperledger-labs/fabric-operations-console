@@ -1270,8 +1270,10 @@ module.exports = function (logger, ev, t) {
 		}
 	};
 
-	// reformat the error if we required this data but cannot get it
+	// (reformat the error if we required this data but cannot get it)
+	// if deployer gave us an error, AND deployment data was asked for AND we cannot use our cache... make this error:
 	function fmt_required_data_err(req, fmt_err) {
+		/* [2023/04 - changed my mind, lets absorb the error and return what we have, so we don't have to spawn a lot of apis...]
 		if (fmt_err && t.ot_misc.skip_cache(req) && t.component_lib.include_deployment_data(req)) {
 			fmt_err = {
 				statusCode: 503,
@@ -1280,8 +1282,8 @@ module.exports = function (logger, ev, t) {
 			};
 		} else if (fmt_err && !t.ot_misc.skip_cache(req) && t.component_lib.include_deployment_data(req)) {
 			fmt_err = null;							// if we didn't require it, don't pass error on
-		}
-		return fmt_err;
+		}*/
+		return null;		// see comment above
 	}
 
 	// ------------------------------------------
@@ -2079,7 +2081,7 @@ module.exports = function (logger, ev, t) {
 					t.proxy_cache.set(req._key, data2cache, 1 * 60 * 60);				// expiration is in sec
 				}
 
-				return lc_cb(fmt_required_data_err(req, fmt_err), fmt_ret);
+				return lc_cb(fmt_err, fmt_ret);
 			});
 		}
 	};
