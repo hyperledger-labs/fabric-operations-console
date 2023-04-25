@@ -1305,7 +1305,7 @@ class PeerModal extends React.Component {
 				/>
 				<div className="ibp-form">
 					<div className="ibp-form-field">
-						<p>
+						<div>
 							<BlockchainTooltip type="definition"
 								tooltipText={translate('config_override_delta')}
 							>
@@ -1314,8 +1314,8 @@ class PeerModal extends React.Component {
 							<TranslateLink text="config_override_update_peer"
 								className="ibp-peer-config-override-desc-with-link"
 							/>
-						</p>
-						<p className="ibp-form-input">
+						</div>
+						<div className="ibp-form-input">
 							<ConfigOverride
 								id="ibp-config-override"
 								config_override={this.props.config_override}
@@ -1325,7 +1325,7 @@ class PeerModal extends React.Component {
 									});
 								}}
 							/>
-						</p>
+						</div>
 					</div>
 				</div>
 			</WizardStep>

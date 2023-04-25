@@ -205,7 +205,7 @@ export class AddUserModal extends Component {
 						<h1 className="ibp-auth-settings-modal-title">{translate('add_new_users')}</h1>
 						{!this.props.isEditing && (
 							<div>
-								<p className="ibp-auth-settings-email-title ibp-tooltip-wrap">
+								<div className="ibp-auth-settings-email-title ibp-tooltip-wrap">
 									<span className="ibp-user-tooltip">
 										<BlockchainTooltip
 											tooltipText={translate(this.props.isCouchBasedAuth ? 'user_ids_tooltip' : 'user_email_address_tooltip')}
@@ -214,7 +214,7 @@ export class AddUserModal extends Component {
 											{translate(this.props.isCouchBasedAuth ? 'specify_user_ids' : 'specify_email_address')}
 										</BlockchainTooltip>
 									</span>
-								</p>
+								</div>
 								<div className="ibp-auth-settings-user-type">
 									<EmailChips
 										id="users"
@@ -245,7 +245,7 @@ export class AddUserModal extends Component {
 							</div>
 						)}
 
-						<p className="ibp-auth-settings-roles-title ibp-tooltip-wrap">
+						<div className="ibp-auth-settings-roles-title ibp-tooltip-wrap">
 							<span className="ibp-user-tooltip">
 								<BlockchainTooltip type="definition"
 									tooltipText={translate('user_role_tooltip')}
@@ -253,7 +253,7 @@ export class AddUserModal extends Component {
 									{translate('specify_roles')}
 								</BlockchainTooltip>
 							</span>
-						</p>
+						</div>
 						<div className="ibp-auth-settings-role">
 							<Checkbox
 								id={'role_manager'}

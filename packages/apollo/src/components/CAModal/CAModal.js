@@ -375,7 +375,7 @@ export class CAModal extends React.Component {
 				/>
 				<div className="ibp-form">
 					<div className="ibp-form-field">
-						<p>
+						<div>
 							<BlockchainTooltip type="definition"
 								tooltipText={translate('config_override_delta')}
 							>
@@ -384,7 +384,7 @@ export class CAModal extends React.Component {
 							<TranslateLink text="config_override_update_ca"
 								className="ibp-ca-config-override-desc-with-link"
 							/>
-						</p>
+						</div>
 						<p className="ibp-form-input">
 							<ConfigOverride
 								id="ibp-config-override"

@@ -768,9 +768,9 @@ class GenerateMSPModal extends Component {
 	renderRootCerts = translate => {
 		return (
 			<div className="ibp-generate-msp-cert-section-root">
-				<p className="ibp-tooltip-wrap ibp-msp-tooltip">
+				<div className="ibp-tooltip-wrap ibp-msp-tooltip">
 					<BlockchainTooltip triggerText={translate('root_certs')}>{translate('generate_msp_rootcert_tooltip')}</BlockchainTooltip>
-				</p>
+				</div>
 				<div>
 					{this.props.rootCerts.map((rootCert, i) => {
 						return (
@@ -820,9 +820,9 @@ class GenerateMSPModal extends Component {
 	renderTLSRootCerts = translate => {
 		return (
 			<div className="ibp-generate-msp-cert-section-tls">
-				<p className="ibp-tooltip-wrap ibp-msp-tooltip">
+				<div className="ibp-tooltip-wrap ibp-msp-tooltip">
 					<BlockchainTooltip triggerText={translate('tls_root_certs')}>{translate('generate_msp_tls_rootcert_tooltip')}</BlockchainTooltip>
-				</p>
+				</div>
 				<div>
 					{this.props.tlsRootCerts.map((tlsRootCert, i) => {
 						return (
@@ -1045,12 +1045,12 @@ class GenerateMSPModal extends Component {
 				)}
 				{admins && admins.length > 0 && admins[0].cert.length > 0 && (
 					<div>
-						<p className="ibp-tooltip-wrap">
+						<div className="ibp-tooltip-wrap">
 							{translate('admin_certificate')}
 							<span className="ibp-msp-tooltip">
 								<BlockchainTooltip>{translate('generate_msp_admin_tooltip')}</BlockchainTooltip>
 							</span>
-						</p>
+						</div>
 						<div>
 							{admins.map((admin, i) => {
 								return (
