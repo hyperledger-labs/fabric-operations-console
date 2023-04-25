@@ -361,6 +361,7 @@ class SignatureRestApi {
 				});
 			}
 
+			Log.info('Requesting signature collection, sending:', JSON.stringify(request));
 			StitchApi.buildSigCollectionAuthHeader(request, originator_private_key).then((authorization) => {
 				const header = { Authorization: authorization };
 				RestApi.post('/api/v2/signature_collections', request, header)

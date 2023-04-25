@@ -211,7 +211,7 @@ class OrdererDetails extends Component {
 	};
 
 	async getDetails(skipStatusCache) {
-		let orderer = await OrdererRestApi.getOrdererDetails(this.props.match.params.ordererId, false);
+		let orderer = await NodeRestApi.getClusterDetails(this.props.match.params.ordererId, false);
 		try {
 			// Get complete config from deployer because the value stored in database stores only the latest config override json
 			const latest_config = await NodeRestApi.getCurrentNodeConfig(orderer);
