@@ -122,7 +122,7 @@ Given(/^I am logged in$/, async() => {
 		let header = element(by.css('.ibp-login-content-title'));
 		await browser.wait(ExpectedConditions.visibilityOf(header), 2000);
 		let text = await header.getText();
-		if (text.includes('Login to IBM Blockchain Platform')) {
+		if ((text.includes('Login to IBM Blockchain Platform')) || (text.includes('Login to Fabric Operations Console'))) {
 			await login();
 		}
 	} catch (err) {

@@ -46,7 +46,7 @@ Given(/^I go to Blockchain catalog in IBM Cloud$/, async() => {
 	await browser.driver.get(catalogURL);
 });
 
-Given(/^I clicked the button with (text|title|id) (?:'|")(.*?)(?:'|")$/, async(property, value) => {
+Given(/^I clicked the button with (text|title|id|xpath) (?:'|")(.*?)(?:'|")$/, async(property, value) => {
 	await clickButton(property, value);
 });
 
@@ -168,6 +168,12 @@ Then(/^a tile with title (?:'|")(.*?)(?:'|") should have been created$/, async t
 		let tile = element(by.cssContainingText('.ibp-tile-content-title', tileTitle));
 		await browser.wait(ExpectedConditions.visibilityOf(tile), 20000);
 	}
+});
+
+Then(/^I am on Help page$/, async() => {
+	let elementToClick = element(by.xpath("//*[@id='title_bar']/header/div/button[1]"));
+	await browser.wait(ExpectedConditions.visibilityOf(elementToClick), 5000);
+	elementToClick.click();
 });
 
 Then(/^I get the URL for console$/, async() => {
