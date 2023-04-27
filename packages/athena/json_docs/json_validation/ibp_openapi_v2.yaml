@@ -312,7 +312,6 @@ paths:
 
   /ak/api/v2/kubernetes/components/{id}:
     delete:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Delete component
@@ -398,7 +397,6 @@ paths:
 
   /ak/api/v2/kubernetes/components/fabric-ca:
     post:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Create a CA
@@ -523,7 +521,6 @@ paths:
 
   /ak/api/v2/components/fabric-ca:
     post:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Import a CA
@@ -614,7 +611,6 @@ paths:
 
   /ak/api/v2/kubernetes/components/fabric-ca/{id}:
     put:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Update a CA
@@ -728,7 +724,6 @@ paths:
 
   /ak/api/v2/components/fabric-ca/{id}:
     put:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Edit data about a CA
@@ -825,7 +820,6 @@ paths:
 
   /ak/api/v2/kubernetes/components/fabric-peer:
     post:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Create a peer
@@ -1159,7 +1153,6 @@ paths:
 
   /ak/api/v2/kubernetes/components/fabric-peer/{id}:
     put:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Update a peer
@@ -1270,7 +1263,6 @@ paths:
 
   /ak/api/v2/kubernetes/components/fabric-orderer:
     post:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Create an ordering service
@@ -1586,7 +1578,6 @@ paths:
 
   /ak/api/v2/kubernetes/components/fabric-orderer/{id}:
     put:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Update an orderer node
@@ -1697,7 +1688,6 @@ paths:
 
   /ak/api/v2/kubernetes/components/{id}/config:
     put:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Submit config block to orderer
@@ -2208,7 +2198,6 @@ paths:
 
   /ak/api/v2/kubernetes/fabric/versions:
     get:
-      deprecated: true # not available in opensource console
       tags:
         - Administer the IBP console
       summary: Get supported Fabric versions
@@ -3087,7 +3076,6 @@ paths:
 
   /ak/api/v2/kubernetes/components/tags/{tag}:
     delete:
-      deprecated: true # not available in opensource console
       tags:
         - Manage multiple components
       summary: Delete components with tag
@@ -3160,7 +3148,6 @@ paths:
 
   /ak/api/v2/kubernetes/components/purge:
     delete:
-      deprecated: true # not available in opensource console
       tags:
         - Manage multiple components
       summary: Delete all components
@@ -3566,7 +3553,6 @@ paths:
 
   /ak/api/v2/kubernetes/components/{id}/certs:
     put:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Edit admin certs on a component
@@ -4694,6 +4680,21 @@ components:
       x-validate_illegal_values:
         - '.'
         - '..'
+    migrated_from:
+      type: string
+      example: ibm_saas
+      description: This is an internal field to reference if a component came from a different console. It can be left blank.
+      maxLength: 128
+    cluster_type:
+      type: string
+      example: k8s
+      description: This is an internal field to reference what type of cluster deployed the component. It can be left blank.
+      maxLength: 32
+    console_type:
+      type: string
+      example: hlfoc
+      description: This is an internal field to reference what type of console deployed the component. It can be left blank.
+      maxLength: 32
     api_url_ca:
       type: string
       description: The URL for the CA. Typically, client applications would send requests to this URL. Include the protocol, hostname/ip and port.
@@ -4930,6 +4931,8 @@ components:
               $ref: '#/components/schemas/ConfigCACreate'
             tlsca:
               $ref: '#/components/schemas/ConfigCACreate'
+        migrated_from:
+          $ref: '#/components/schemas/migrated_from'
         replicas:
           $ref: '#/components/schemas/replicas'
         tags:
@@ -6802,6 +6805,8 @@ components:
           x-validate_matching_lengths: config
           items:
             $ref: '#/components/schemas/ConfigOrdererCreate'
+        migrated_from:
+          $ref: '#/components/schemas/migrated_from'
         resources:
           type: object
           description: CPU and memory properties. This feature is not available if using a free Kubernetes cluster.
@@ -6870,6 +6875,8 @@ components:
           $ref: '#/components/schemas/ConfigObject'
         config_override:
           $ref: '#/components/schemas/ConfigPeerCreate'
+        migrated_from:
+          $ref: '#/components/schemas/migrated_from'
         resources:
           $ref: '#/components/schemas/PeerResources'
         storage:
@@ -7825,6 +7832,12 @@ components:
           $ref: '#/components/schemas/location_saas'
         api_url:
           $ref: '#/components/schemas/api_url_ca'
+        migrated_from:
+          $ref: '#/components/schemas/migrated_from'
+        cluster_type:
+          $ref: '#/components/schemas/cluster_type'
+        console_type:
+          $ref: '#/components/schemas/console_type'
         operations_url:
           $ref: '#/components/schemas/operations_url_ca'
         ca_name:
@@ -7857,6 +7870,12 @@ components:
           $ref: '#/components/schemas/display_name_orderer'
         location:
           $ref: '#/components/schemas/location_saas'
+        migrated_from:
+          $ref: '#/components/schemas/migrated_from'
+        cluster_type:
+          $ref: '#/components/schemas/cluster_type'
+        console_type:
+          $ref: '#/components/schemas/console_type'
         api_url:
           $ref: '#/components/schemas/api_url_orderer'
         msp_id:
@@ -7897,6 +7916,12 @@ components:
           $ref: '#/components/schemas/display_name_peer'
         location:
           $ref: '#/components/schemas/location_saas'
+        migrated_from:
+          $ref: '#/components/schemas/migrated_from'
+        cluster_type:
+          $ref: '#/components/schemas/cluster_type'
+        console_type:
+          $ref: '#/components/schemas/console_type'
         api_url:
           $ref: '#/components/schemas/api_url_peer'
         msp_id:

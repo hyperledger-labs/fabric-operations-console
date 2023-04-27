@@ -590,7 +590,6 @@ paths:
 
   /ak/api/v3/kubernetes/components/{id}:
     delete:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Delete component
@@ -769,7 +768,6 @@ paths:
 
   /ak/api/v3/kubernetes/components/fabric-ca:
     post:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Create a CA
@@ -1410,7 +1408,6 @@ paths:
 
   /ak/api/v3/kubernetes/components/fabric-ca/{id}:
     put:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Update a CA
@@ -1685,7 +1682,6 @@ paths:
 
   /ak/api/v3/components/fabric-ca/{id}:
     put:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Edit data about a CA
@@ -1940,7 +1936,6 @@ paths:
 
   /ak/api/v3/kubernetes/components/fabric-ca/{id}/actions:
     post:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Submit action to a CA
@@ -2129,7 +2124,6 @@ paths:
 
   /ak/api/v3/kubernetes/components/fabric-peer:
     post:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Create a peer
@@ -3175,7 +3169,6 @@ paths:
 
   /ak/api/v3/kubernetes/components/fabric-peer/{id}/actions:
     post:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Submit action to a peer
@@ -3366,7 +3359,6 @@ paths:
 
   /ak/api/v3/kubernetes/components/fabric-peer/{id}:
     put:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Update a peer
@@ -3667,7 +3659,6 @@ paths:
 
   /ak/api/v3/kubernetes/components/fabric-orderer:
     post:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Create an ordering service
@@ -4606,7 +4597,6 @@ paths:
 
   /ak/api/v3/kubernetes/components/fabric-orderer/{id}/actions:
     post:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Submit action to an orderer
@@ -4797,7 +4787,6 @@ paths:
 
   /ak/api/v3/kubernetes/components/fabric-orderer/{id}:
     put:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Update an orderer node
@@ -5090,7 +5079,6 @@ paths:
 
   /ak/api/v3/kubernetes/components/{id}/config:
     put:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Submit config block to orderer
@@ -6551,7 +6539,6 @@ paths:
 
   /ak/api/v3/kubernetes/fabric/versions:
     get:
-      deprecated: true # not available in opensource console
       tags:
         - Administer the IBP console
       summary: Get supported Fabric versions
@@ -8869,7 +8856,6 @@ paths:
 
   /ak/api/v3/kubernetes/components/tags/{tag}:
     delete:
-      deprecated: true # not available in opensource console
       tags:
         - Manage multiple components
       summary: Delete components with tag
@@ -9042,7 +9028,6 @@ paths:
 
   /ak/api/v3/kubernetes/components/purge:
     delete:
-      deprecated: true # not available in opensource console
       tags:
         - Manage multiple components
       summary: Delete all components
@@ -9902,7 +9887,6 @@ paths:
 
   /ak/api/v3/kubernetes/components/{id}/certs:
     put:
-      deprecated: true # not available in opensource console
       tags:
         - Manage component
       summary: Edit admin certs on a component
@@ -11457,7 +11441,12 @@ components:
       type: string
       example: k8s
       description: This is an internal field to reference what type of cluster deployed the component. It can be left blank.
-      maxLength: 128
+      maxLength: 32
+    console_type:
+      type: string
+      example: hlfoc
+      description: This is an internal field to reference what type of console deployed the component. It can be left blank.
+      maxLength: 32
     api_url_ca:
       type: string
       description: The URL for the CA. Typically, client applications would send requests to this URL. Include the protocol, hostname/ip and port.
@@ -11775,8 +11764,6 @@ components:
               $ref: '#/components/schemas/ConfigCACreate'
         migrated_from:
           $ref: '#/components/schemas/migrated_from'
-        cluster_type:
-          $ref: '#/components/schemas/cluster_type'
         replicas:
           $ref: '#/components/schemas/replicas'
         tags:
@@ -13791,8 +13778,6 @@ components:
             $ref: '#/components/schemas/ConfigOrdererCreate'
         migrated_from:
           $ref: '#/components/schemas/migrated_from'
-        cluster_type:
-          $ref: '#/components/schemas/cluster_type'
         resources:
           type: object
           description: CPU and memory properties. This feature is not available if using a free Kubernetes cluster.
@@ -13863,8 +13848,6 @@ components:
           $ref: '#/components/schemas/ConfigPeerCreate'
         migrated_from:
           $ref: '#/components/schemas/migrated_from'
-        cluster_type:
-          $ref: '#/components/schemas/cluster_type'
         resources:
           $ref: '#/components/schemas/PeerResources'
         storage:
@@ -14972,6 +14955,8 @@ components:
           $ref: '#/components/schemas/migrated_from'
         cluster_type:
           $ref: '#/components/schemas/cluster_type'
+        console_type:
+          $ref: '#/components/schemas/console_type'
         operations_url:
           $ref: '#/components/schemas/operations_url_ca'
         tags:
@@ -15070,6 +15055,8 @@ components:
           $ref: '#/components/schemas/migrated_from'
         cluster_type:
           $ref: '#/components/schemas/cluster_type'
+        console_type:
+          $ref: '#/components/schemas/console_type'
         msp:
           $ref: '#/components/schemas/msp_crypto_field'
         msp_id:
@@ -15107,6 +15094,8 @@ components:
           $ref: '#/components/schemas/migrated_from'
         cluster_type:
           $ref: '#/components/schemas/cluster_type'
+        console_type:
+          $ref: '#/components/schemas/console_type'
         msp:
           $ref: '#/components/schemas/msp_crypto_field'
         msp_id:

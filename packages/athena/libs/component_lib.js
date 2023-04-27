@@ -115,13 +115,6 @@ module.exports = function (logger, ev, t) {
 			delete component_doc.short_name;		// remove legacy field from db doc, less confusing, i hope
 			delete component_doc.node_id;			// remove legacy field from db doc, less confusing, i hope
 
-			// dsh todo allow these fields
-			// only deployed components by this console have console_type or cluster_type fields
-			if (component_doc.imported) {			// imported components should not have console or cluster type fields
-				delete component_doc.console_type;
-				delete component_doc.cluster_type;
-			}
-
 			// ---------------------------------------------------------
 			// ---------- now do things specific to each type ----------
 			// ---------------------------------------------------------
