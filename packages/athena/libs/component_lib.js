@@ -115,6 +115,13 @@ module.exports = function (logger, ev, t) {
 			delete component_doc.short_name;		// remove legacy field from db doc, less confusing, i hope
 			delete component_doc.node_id;			// remove legacy field from db doc, less confusing, i hope
 
+			// dsh todo allow these fields
+			// only deployed components by this console have console_type or cluster_type fields
+			if (component_doc.imported) {			// imported components should not have console or cluster type fields
+				delete component_doc.console_type;
+				delete component_doc.cluster_type;
+			}
+
 			// ---------------------------------------------------------
 			// ---------- now do things specific to each type ----------
 			// ---------------------------------------------------------
@@ -511,6 +518,9 @@ module.exports = function (logger, ev, t) {
 		const errs = [];
 		const ret_objects = [];
 		t.async.eachLimit(components, 1, (component, onboard_cb) => {	// 1 at a time avoids white list 409s, and doc._id 409s (this is a must for raft)
+			if (component) {
+				component.imported = true;
+			}
 			req.body = component;
 			req.attempt = 0;											// reset b/c will call this more than once, each component gets x attempts
 			req._fmt_response = true;

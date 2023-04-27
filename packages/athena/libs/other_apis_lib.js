@@ -121,6 +121,8 @@ module.exports = function (logger, ev, t) {
 			MIGRATED_CONSOLE_URL: ev.MIGRATED_CONSOLE_URL,
 			MIGRATION_MIN_VERSIONS: ev.MIGRATION_MIN_VERSIONS,
 			MIGRATION_STATUS: ev.MIGRATION_STATUS || {},
+			CONSOLE_TYPE: ev.CONSOLE_TYPE || '?',
+			CONSOLE_BUILD_TYPE: ev.CONSOLE_BUILD_TYPE || undefined,
 		};
 		return t.misc.sortItOut(ret);
 	};

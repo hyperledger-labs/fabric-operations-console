@@ -11453,6 +11453,11 @@ components:
       example: ibm_saas
       description: This is an internal field to reference if a component came from a different console. It can be left blank.
       maxLength: 128
+    cluster_type:
+      type: string
+      example: k8s
+      description: This is an internal field to reference what type of cluster deployed the component. It can be left blank.
+      maxLength: 128
     api_url_ca:
       type: string
       description: The URL for the CA. Typically, client applications would send requests to this URL. Include the protocol, hostname/ip and port.
@@ -11770,6 +11775,8 @@ components:
               $ref: '#/components/schemas/ConfigCACreate'
         migrated_from:
           $ref: '#/components/schemas/migrated_from'
+        cluster_type:
+          $ref: '#/components/schemas/cluster_type'
         replicas:
           $ref: '#/components/schemas/replicas'
         tags:
@@ -13784,6 +13791,8 @@ components:
             $ref: '#/components/schemas/ConfigOrdererCreate'
         migrated_from:
           $ref: '#/components/schemas/migrated_from'
+        cluster_type:
+          $ref: '#/components/schemas/cluster_type'
         resources:
           type: object
           description: CPU and memory properties. This feature is not available if using a free Kubernetes cluster.
@@ -13854,6 +13863,8 @@ components:
           $ref: '#/components/schemas/ConfigPeerCreate'
         migrated_from:
           $ref: '#/components/schemas/migrated_from'
+        cluster_type:
+          $ref: '#/components/schemas/cluster_type'
         resources:
           $ref: '#/components/schemas/PeerResources'
         storage:
@@ -14959,6 +14970,8 @@ components:
           $ref: '#/components/schemas/api_url_ca'
         migrated_from:
           $ref: '#/components/schemas/migrated_from'
+        cluster_type:
+          $ref: '#/components/schemas/cluster_type'
         operations_url:
           $ref: '#/components/schemas/operations_url_ca'
         tags:
@@ -15055,6 +15068,8 @@ components:
           $ref: '#/components/schemas/location_saas'
         migrated_from:
           $ref: '#/components/schemas/migrated_from'
+        cluster_type:
+          $ref: '#/components/schemas/cluster_type'
         msp:
           $ref: '#/components/schemas/msp_crypto_field'
         msp_id:
@@ -15090,6 +15105,8 @@ components:
           $ref: '#/components/schemas/location_saas'
         migrated_from:
           $ref: '#/components/schemas/migrated_from'
+        cluster_type:
+          $ref: '#/components/schemas/cluster_type'
         msp:
           $ref: '#/components/schemas/msp_crypto_field'
         msp_id:

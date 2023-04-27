@@ -525,6 +525,18 @@ class ImportCAModal extends React.Component {
 							required: false,
 						},
 						{
+							name: 'imported',
+							required: false,
+						},
+						{
+							name: 'cluster_type',
+							required: false,
+						},
+						{
+							name: 'console_type',
+							required: false,
+						},
+						{
 							name: 'msp',
 							required: false,
 							validate: msp => {

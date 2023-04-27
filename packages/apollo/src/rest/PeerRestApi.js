@@ -428,6 +428,9 @@ class PeerRestApi {
 				msp_id: some_peer_record.msp_id,
 				msp: some_peer_record.msp,
 				migrated_from: some_peer_record.migrated_from ? some_peer_record.migrated_from : undefined,
+				imported: some_peer_record.imported ? some_peer_record.imported : undefined,
+				cluster_type: some_peer_record.cluster_type ? some_peer_record.cluster_type : undefined,
+				console_type: some_peer_record.console_type ? some_peer_record.console_type : undefined,
 			};
 			if (!_.get(exportedPeer, 'msp.component.tls_cert')) {
 				_.set(exportedPeer, 'msp.component.tls_cert', some_peer_record.tls_cert);

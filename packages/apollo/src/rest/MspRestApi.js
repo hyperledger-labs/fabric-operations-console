@@ -79,6 +79,9 @@ class MspRestApi {
 			fabric_node_ous: exported_msp.fabric_node_ous,
 			host_url: exported_msp.host_url,
 			migrated_from: exported_msp.migrated_from ? exported_msp.migrated_from : undefined,
+			imported: exported_msp.imported ? exported_msp.imported : undefined,
+			cluster_type: exported_msp.cluster_type ? exported_msp.cluster_type : undefined,
+			console_type: exported_msp.console_type ? exported_msp.console_type : undefined,
 		};
 		return NodeRestApi.importComponent(exportedMSP);
 	}

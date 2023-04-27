@@ -239,11 +239,11 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 					c_name: athena.crn.c_name || 'bluemix',
 					c_type: athena.crn.c_type || 'public',
 					service_name: athena.crn.service_name || 'blockchain',
-					location: athena.crn.location,
-					account_id: athena.crn.account_id,								// fairly important field
-					instance_id: athena.crn.instance_id,							// this one's important, aka iid
-					resource_type: athena.crn.resource_type,
-					resource_id: athena.crn.resource_id,
+					location: athena.crn.location || '',
+					account_id: athena.crn.account_id || '',						// fairly important field
+					instance_id: athena.crn.instance_id || '',						// this one's important, aka iid
+					resource_type: athena.crn.resource_type || '',
+					resource_id: athena.crn.resource_id || '',
 				};
 				// example str: 'crn:v1:bluemix:public:blockchain:us-south:' + account_id + ':' + instance_id + '::';
 				settings.CRN_STRING = 'crn:' + settings.CRN.version +				// final build of CRN string
@@ -282,6 +282,11 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 				if (!settings.FABRIC_CAPABILITIES.application) { settings.FABRIC_CAPABILITIES.application = []; }
 				if (!settings.FABRIC_CAPABILITIES.channel) { settings.FABRIC_CAPABILITIES.channel = []; }
 				if (!settings.FABRIC_CAPABILITIES.orderer) { settings.FABRIC_CAPABILITIES.orderer = []; }
+
+				// the type of console build we are in
+				settings.CONSOLE_TYPE = settings.getConsoleType(settings) || 'hlfoc';	// valid options, "hlfoc", "ibp", "support", or "software"
+				// the source of an ibm console image build, not always set
+				settings.CONSOLE_BUILD_TYPE = athena.console_build_type || '';			// valid options, "saas", "non-saas", empty string
 
 				// set constants here
 				settings.STR = {
@@ -744,6 +749,28 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 			return cb(null);
 		}
 	}
+
+	// --------------------------------------------------------------------------------------------
+	// detect the correct console image type - returns one of "hlfoc", "ibp", "support", or "software"
+	// --------------------------------------------------------------------------------------------
+	settings.getConsoleType = (settings_doc) => {
+		let console_type = 'hlfoc';										// default console type is hyperledger fabric operations console (our open source one)
+		const siid = (settings_doc && settings_doc.crn && settings_doc.crn.instance_id) ? settings_doc.crn.instance_id : '';
+		const host_url = process.env.HOST_URL || settings_doc.host_url || '';
+
+		if (settings_doc && settings_doc.auth_scheme === 'iam') {		// if we are using iam for auth, it's ibm saas/ibp (probably prod or staging)
+			console_type = 'ibp';
+		} else if (siid) {												// if we have a service instance id, its ibm saas/ibp (probably dev)
+			console_type = 'ibp';
+		} else if (settings_doc && settings_doc.console_build_type) {	// if we have a console build type, its probably one of the ibm products:
+			if (host_url.includes('hlfsupport')) {						// its an ibm support console
+				console_type = 'support';
+			} else {
+				console_type = 'software';								// else its an ibm software console
+			}
+		}
+		return console_type;
+	};
 
 	// --------------------------------------------------------------------------------------------
 	// Get IAM endpoints - [will return defaults if iam endpoint is misbehaving]

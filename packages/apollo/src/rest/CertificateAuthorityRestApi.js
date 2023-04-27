@@ -60,6 +60,9 @@ class CertificateAuthorityRestApi {
 					},
 				},
 				migrated_from: some_ca_record.migrated_from ? some_ca_record.migrated_from : undefined,
+				imported: some_ca_record.imported ? some_ca_record.imported : undefined,
+				cluster_type: some_ca_record.cluster_type ? some_ca_record.cluster_type : undefined,
+				console_type: some_ca_record.console_type ? some_ca_record.console_type : undefined,
 			};
 			return NodeRestApi.importComponent(exported_ca);
 		});

@@ -55,6 +55,16 @@ module.exports = function (logger, ev, t) {
 			// the actual patch function/code
 			patch: rebuild_safelist,
 		},
+
+		// name of the patch
+		'patch_location': {
+
+			// description of the patch, gets stored in patch doc
+			purpose: 'this patch sorts out the "location" field madness by building new fields the console will use',
+
+			// the actual patch function/code
+			patch: patch_location,
+		},
 	};
 
 	//--------------------------------------------------
@@ -641,6 +651,87 @@ module.exports = function (logger, ev, t) {
 					});
 				}
 			});
+		});
+	}
+
+	// ----------------------------------------------------------------------------------
+	// Patch 4 - 04/26/2023
+	// this patch sorts out the "location" field madness by building new fields the console will use
+	// the new fields that console will use instead of location are: `imported` & `cluster_type`
+	// ----------------------------------------------------------------------------------
+	function patch_location(cb) {
+		if (!cb) {
+			cb = function () { };
+		}
+		logger.debug('[patch] going to run "patch_location"');
+
+		// ---------------------------------------
+		// get settings doc
+		// ---------------------------------------
+		t.couch_lib.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, function (settings_err, settings_doc) {
+			if (settings_err) {
+				logger.error('[patch lib] error getting settings doc. cannot finish patch.', settings_err);
+				return cb({ statusCode: 500, errors: 'error getting settings doc' });
+			} else {
+				const console_type = ev.getConsoleType(settings_doc);
+				logger.debug('[patch lib] detected a console type of "' + console_type + '"');
+
+				// ---------------------------------------
+				// get all components
+				// ---------------------------------------
+				const req = {
+					_skip_cache: true
+				};
+				t.component_lib.get_all_runnable_components(req, (err, resp) => {
+					if (err) {
+						logger.error('[patch lib] error getting all runnable components:', err);
+						return cb({ statusCode: 500, errors: err });
+					} else {
+
+						// ---------------------------------------
+						// get cluster type from deployer api
+						// ---------------------------------------
+						t.deployer.get_cluster_type((err2, ret) => {
+							if (err2 || !ret || !ret.type) {
+								logger.error('[patch lib] unable to get cluster type from deployer api. cannot finish patch.');
+								return cb({ statusCode: 500, errors: 'unable to get cluster type from deployer api' });
+							} else {
+								logger.debug('patch lib] got cluster type of', ret.type);
+
+								// edit the component docs
+								const bulk_docs = { docs: [] };
+								for (let i in resp) {
+									const comp = resp[i];
+									comp.imported = comp.dep_component_id ? false : true;						// if it has a deployer id, it was NOT imported
+									if (!comp.imported) {														// only add if our console deployed it
+										comp.cluster_type = ret.type;
+
+										if (comp.migrated_from === ev.STR.LOCATION_IBP_SAAS) {	// if ibp console already migrated to support, set type as ibp
+											comp.console_type = 'ibp';
+										} else {
+											comp.console_type = console_type;
+										}
+									}
+									bulk_docs.docs.push(comp);
+								}
+
+								// ---------------------------------------
+								// write the docs
+								// ---------------------------------------
+								t.couch_lib.bulkDatabase({ db_name: ev.DB_COMPONENTS }, bulk_docs, (bulkErr, bulkResp) => {	// perform the bulk operation
+									if (err != null) {
+										logger.error('[patch lib] could not bulk edit component docs. cannot finish patch.', bulkErr, bulkResp);
+										return cb({ statusCode: 500, errors: 'unable to edit component docs to patch "location" field' });
+									} else {
+										logger.debug('[patch lib] edited ' + bulk_docs.docs.length + ' component docs to add new "location" fields');
+										return cb();
+									}
+								});
+							}
+						});
+					}
+				});
+			}
 		});
 	}
 
