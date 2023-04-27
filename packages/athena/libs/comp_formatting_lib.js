@@ -381,9 +381,9 @@ module.exports = function (logger, ev, t) {
 			node_ou: conformed_dep_resp.node_ou,
 			ecert: conformed_dep_resp.ecert,
 			ca_root_certs: conformed_dep_resp.conformed_dep_resp,
-			imported: false,
-			cluster_type: ev.INFRASTRUCTURE,
-			console_type: ev.CONSOLE_TYPE,
+			imported: false,														// if they are using this api, its not an imported component
+			cluster_type: ev.INFRASTRUCTURE,										// remember what type of k8s they have for this comp
+			console_type: ev.CONSOLE_TYPE,											// remember what type of console built this comp
 
 			//config: incoming_body.config,											// athena doesn't need the field, its private
 			//crypto: incoming_body.crypto,											// athena doesn't need the field, its private
@@ -468,9 +468,6 @@ module.exports = function (logger, ev, t) {
 
 		if (incoming_body.migrated_from) {
 			component_doc.migrated_from = incoming_body.migrated_from;
-		}
-		if (incoming_body.cluster_type) {
-			component_doc.cluster_type = incoming_body.cluster_type;
 		}
 
 		// capture other body fields
