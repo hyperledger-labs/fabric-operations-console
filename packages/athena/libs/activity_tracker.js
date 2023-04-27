@@ -368,6 +368,7 @@ module.exports = function (logger, ev, t) {
 			'/configtxlator/*',
 			'/api/v[123]/components/status',
 			'/api/v1/logs',
+			'/',
 		];
 		const ret = [];
 		for (let i in ignore_routes) {												// if path ends with an optional param, make two paths, 1 without and 1 with

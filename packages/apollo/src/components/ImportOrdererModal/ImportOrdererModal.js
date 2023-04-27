@@ -1122,6 +1122,18 @@ class ImportOrdererModal extends React.Component {
 											required: false,
 										},
 										{
+											name: 'imported',
+											required: false,
+										},
+										{
+											name: 'cluster_type',
+											required: false,
+										},
+										{
+											name: 'console_type',
+											required: false,
+										},
+										{
 											name: 'msp_id',
 											required: true,
 											specialRules: Helper.SPECIAL_RULES_MSP_ID,

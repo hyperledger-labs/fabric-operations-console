@@ -39,6 +39,10 @@ module.exports = (logger, ev, t) => {
 
 	function provision(req, res) {
 		req.body.type = t.component_lib.find_type(req);					// body cannot be null, dealt with in body parser
+		delete req.body.imported;										// don't let a user decide this field, we decide it
+		delete req.body.console_type;									// don't let a user decide this field, we decide it
+		delete req.body.cluster_type;									// don't let a user decide this field, we decide it
+
 		if (!req.body.type) {
 			return res.status(400).json(t.validate.fmt_input_error(req, [{ key: 'missing_type' }]));
 		}

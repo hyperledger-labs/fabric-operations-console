@@ -178,6 +178,9 @@ const Helper = {
 				id: node.id,
 				scheme_version: node.scheme_version,
 				migrated_from: node.migrated_from ? node.migrated_from : undefined,
+				imported: node.imported ? node.imported : undefined,
+				cluster_type: node.cluster_type ? node.cluster_type : undefined,
+				console_type: node.console_type ? node.console_type : undefined,
 
 				// legacy fields needed for import on older systems
 				name: node.display_name,
@@ -216,6 +219,9 @@ const Helper = {
 				id: node.id,
 				scheme_version: node.scheme_version,
 				migrated_from: node.migrated_from ? node.migrated_from : undefined,
+				imported: node.imported ? node.imported : undefined,
+				cluster_type: node.cluster_type ? node.cluster_type : undefined,
+				console_type: node.console_type ? node.console_type : undefined,
 
 				// legacy fields needed for import on older systems
 				name: node.display_name,

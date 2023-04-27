@@ -511,6 +511,9 @@ module.exports = function (logger, ev, t) {
 		const errs = [];
 		const ret_objects = [];
 		t.async.eachLimit(components, 1, (component, onboard_cb) => {	// 1 at a time avoids white list 409s, and doc._id 409s (this is a must for raft)
+			if (component) {
+				component.imported = true;
+			}
 			req.body = component;
 			req.attempt = 0;											// reset b/c will call this more than once, each component gets x attempts
 			req._fmt_response = true;

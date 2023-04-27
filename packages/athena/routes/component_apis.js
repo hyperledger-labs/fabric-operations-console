@@ -41,6 +41,7 @@ module.exports = function (logger, ev, t) {
 
 	function add_component(req, res) {
 		req.body.type = t.component_lib.find_type(req);			// body cannot be null, dealt with in body parser
+		delete req.body.imported;								// don't let a user decide this field, we decide it
 		if (!req.body.type) {
 			return res.status(400).json(t.validate.fmt_input_error(req, [{ key: 'missing_type' }]));
 		}
@@ -49,6 +50,7 @@ module.exports = function (logger, ev, t) {
 
 		t.validate.request(req, res, null, () => {
 			req._fmt_response = true;
+			req.body.imported = true;							// if they are using this route, its an imported component
 			t.component_lib.onboard_component(req, (err, ret) => {
 				if (err) {
 					return res.status(t.ot_misc.get_code(err)).json(err);
