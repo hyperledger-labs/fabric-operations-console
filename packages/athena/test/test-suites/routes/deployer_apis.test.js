@@ -411,6 +411,7 @@ describe('Deployer APIs', () => {
 						statusCode: 200,
 						body: JSON.stringify(component_objects.single_node_response)
 					});
+					tools.stubs.get_all_components.callsArgWith(1, null, { components: [component_objects.single_node_response2] });
 					tools.stubs.record_deployer_operation.callsArgWith(4, null, component_objects.single_node_response);
 				},
 				expectBlock: (res) => {
