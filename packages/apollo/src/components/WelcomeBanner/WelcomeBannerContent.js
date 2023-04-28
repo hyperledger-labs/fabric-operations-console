@@ -212,7 +212,6 @@ export default connect(
 	state => {
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['docPrefix'] = state['settings'] ? state['settings']['docPrefix'] : null;
-		newProps['platform'] = state['settings'] ? state['settings']['platform'] : null;
 		newProps['bmixUrl'] = state['settings'] ? state['settings']['bmixUrl'] : null;
 		newProps['showDiagram'] = state['main'] ? state['main']['showDiagram'] : null;
 		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;

@@ -67,56 +67,8 @@ class UsageForm extends Component {
 		},
 	};
 
-	static DEFAULT_USAGE_ICP = {
-		peer: {
-			cpu: '0.2',
-			memory: '1000',
-			storage: '100',
-		},
-		orderer: {
-			cpu: '0.25',
-			memory: '500',
-			storage: '100',
-		},
-		ca: {
-			cpu: '0.1',
-			memory: '200',
-			storage: '20',
-		},
-		couchdb: {
-			cpu: '0.2',
-			memory: '400',
-			storage: '100',
-		},
-		leveldb: {
-			cpu: '0.0',
-			memory: '0',
-			storage: '100',
-		},
-		dind: {
-			cpu: '1',
-			memory: '1000',
-		},
-		proxy: {
-			cpu: '0.1',
-			memory: '200',
-		},
-		fluentd: {
-			cpu: '0.1',
-			memory: '200',
-		},
-		chaincodelauncher: {
-			cpu: '0.2',
-			memory: '400',
-		},
-	};
-
 	static getUsageDefaults() {
-		const platform = Helper.getPlatform();
-		if (platform && platform === 'ibmcloud') {
-			return UsageForm.DEFAULT_USAGE_SAAS;
-		}
-		return UsageForm.DEFAULT_USAGE_ICP;
+		return UsageForm.DEFAULT_USAGE_SAAS;
 	}
 
 	getFields(type) {

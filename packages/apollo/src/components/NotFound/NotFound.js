@@ -80,6 +80,5 @@ NotFound.propTypes = {
 export default connect(state => {
 	let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 	newProps['docPrefix'] = state['settings'] ? state['settings']['docPrefix'] : null;
-	newProps['platform'] = state['settings'].platform;
 	return newProps;
 }, null)(withLocalize(NotFound));

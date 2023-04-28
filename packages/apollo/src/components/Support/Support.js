@@ -114,12 +114,17 @@ class Support extends Component {
 		);
 	}
 
+	// create the support link for the type of console build this is
 	getSupportURL() {
-		let supportURL = 'https://cloud.ibm.com/unifiedsupport/supportcenter';
-		if (this.props.platform && this.props.platform !== 'ibmcloud') {
-			supportURL = 'https://www.ibm.com/mysupport';
-		}
-		return supportURL;
+		const supportUrlMap = {
+			'ibp': 'https://cloud.ibm.com/unifiedsupport/supportcenter',
+			'support': 'https://www.ibm.com/mysupport',
+			'software': 'https://www.ibm.com/mysupport',
+			'hlfoc': 'https://github.com/hyperledger-labs/fabric-operations-console/issues',
+		};
+		const supportUrl = (this.props.console_type && supportUrlMap[this.props.console_type]) ?
+			supportUrlMap[this.props.console_type] : supportUrlMap.hlfoc;
+		return supportUrl;
 	}
 
 	renderSupportSection(translate) {
@@ -155,14 +160,14 @@ class Support extends Component {
 						<div className="support-left-section">
 							<div className="ibp-support">{this.renderVersionInformation(translate)}</div>
 							<div>
-								{(this.props.auth_scheme === 'ibmid') && <TranslateLink className="ibp-support2"
+								{(this.props.console_type !== 'hlfoc') && <TranslateLink className="ibp-support2"
 									text="contact_support_2"
 								/>}
-								{(this.props.auth_scheme !== 'ibmid') && <TranslateLink className="ibp-support2"
+								{(this.props.console_type === 'hlfoc') && <TranslateLink className="ibp-support2"
 									text="contact_support_3"
 								/>}
 							</div>
-							{(this.props.auth_scheme === 'ibmid') && this.renderSupportSection(translate)}
+							{this.renderSupportSection(translate)}
 							{this.props.mustgather_enabled && <Mustgather />}
 						</div>
 					</div>
@@ -198,7 +203,7 @@ export default connect(
 	state => {
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['isAdmin'] = state['settings'].isAdmin;
-		newProps['platform'] = state['settings'].platform;
+		newProps['console_type'] = state['settings'].console_type;
 		return newProps;
 	},
 	{

@@ -48,6 +48,7 @@ const Helper = {
 		return newState;
 	},
 
+	// dsh todo remove "platform"
 	infrastructure: {
 		platform: 'ibmcloud',
 		supported_cas: ['ibmcloud', 'icp', 'openshift', 'kubernetes'],

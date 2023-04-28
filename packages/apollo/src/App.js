@@ -36,7 +36,6 @@ import ActionsHelper from './utils/actionsHelper';
 import Helper from './utils/helper';
 import localization from './utils/localization';
 import NodeStatus from './utils/status';
-import { setupMedallia } from './utils/medallia';
 
 const SCOPE = 'app';
 const Log = new Logger('App');
@@ -56,9 +55,9 @@ class App extends Component {
 	async componentDidMount() {
 		NodeStatus.initialize(this.props.dispatch);
 
-		let userInfo;
 		try {
-			userInfo = await this.getUserInfo();
+			const userInfo = await this.getUserInfo();
+			this.props.updateState('userInfo', userInfo);
 			await this.getAuthData();
 		} catch (error) {
 			Log.error(`Failed to get user info: ${error}`);
@@ -77,50 +76,6 @@ class App extends Component {
 		} catch (error) {
 			Log.error(`Failed to get signature collection requests: ${error}`);
 		}
-
-		if (settings.INFRASTRUCTURE === 'ibmcloud' && !_.get(settings, 'FEATURE_FLAGS.import_only_enabled')) {
-			try {
-				const isDev = settings.CRN.c_name === 'staging';
-				setupMedallia(userInfo, this.props.activeLanguage, isDev);
-			} catch (error) {
-				Log.error(`Failed to setup Medallia surveys: ${error}`);
-			}
-		}
-	}
-
-	initializeSegment(segment_key) {
-		const varScript = document.createElement('script');
-		varScript.innerHTML = `
-		var productTitle = "Blockchain Platform v2";
-
-		window._analytics = {
-			"segment_key" : '${segment_key}',
-			"coremetrics" : false,
-			"optimizely" : false,
-			"autoPageView" : false
-		};
-		`;
-		document.head.appendChild(varScript);
-
-		const script = document.createElement('script');
-		script.src = 'https://test.cloud.ibm.com/analytics/build/bluemix-analytics.min.js';
-		document.head.appendChild(script);
-
-		const analyticsFuncScript = document.createElement('script');
-		analyticsFuncScript.innerHTML = `
-			function trackEvent (event, obj) {
-				obj.productTitle = productTitle;
-				if (window.bluemixAnalytics) window.bluemixAnalytics.trackEvent(event, obj);
-				else console.log("bluemixAnalytics not available");
-			}
-
-			function pageEvent (event, pageName, obj) {
-				obj.productTitle = productTitle;
-				if (window.bluemixAnalytics) window.bluemixAnalytics.pageEvent( event, name = pageName ,  obj);
-				else console.log("bluemixAnalytics not available");
-			}
-		`;
-		document.head.appendChild(analyticsFuncScript);
 	}
 
 	async getAuthData() {
@@ -184,31 +139,27 @@ class App extends Component {
 		}
 		Log.setLogLevel(log_level);
 		Log.info('Current debug level: ' + Log.getLogLevel());
-		// Log.debug('Application settings: ', settings);
+		Log.debug('Received application settings. console type:', settings.CONSOLE_TYPE);
+		Log.debug('Received application settings. infrastructure/cluster type:', settings.INFRASTRUCTURE);
+		Log.debug('Received application settings. console build type:', settings.CONSOLE_BUILD_TYPE);
+
 		let crn = settings.CRN;
-		if (!crn.account_id) crn.account_id = 'n/a';
-		let bmix_url = '';
-		switch (crn.c_name) {
-			case 'staging':
-				bmix_url = 'https://test.cloud.ibm.com';
-				break;
-			case 'bluemix':
-				bmix_url = 'https://cloud.ibm.com';
-				break;
-			default:
-				break;
-		}
-		let docPrefix = 'https://www.ibm.com/docs/en/blockchain-platform/2.5.3';
-		if (settings.INFRASTRUCTURE === 'openshift') {
-			docPrefix = 'https://www.ibm.com/docs/en/hlf-support/1.0.0';
-		}
+		if (!crn.account_id) { crn.account_id = 'n/a'; }
+		const docUrlMap = {
+			'ibp': 'https://cloud.ibm.com/docs/blockchain',
+			'support': 'https://www.ibm.com/docs/en/hlf-support/1.0.0',
+			'software': 'https://www.ibm.com/docs/en/blockchain-platform/2.5.4',
+			'hlfoc': 'https://www.ibm.com/docs/en/hlf-support/1.0.0',
+		};
+		const docUrlRoot = (settings.CONSOLE_TYPE && docUrlMap[settings.CONSOLE_TYPE]) ? docUrlMap[settings.CONSOLE_TYPE] : docUrlMap.hlfoc;
+
 		const modifiedCrnString = settings.CRN_STRING && settings.CRN_STRING.indexOf('::') !== -1 && settings.CRN_STRING.slice(0, -1);
 		let features = {
 			feature_flags: settings.FEATURE_FLAGS,
 			CRN: crn,
 			crn_string: modifiedCrnString,
-			bmixUrl: bmix_url,
-			docPrefix: docPrefix,
+			bmixUrl: 'https://cloud.ibm.com',		// this link is only used to show the nicer API ui, which is relevant to all console builds, (except the auth section)
+			docPrefix: docUrlRoot,
 			cluster_data: settings.CLUSTER_DATA,
 			host_url: settings.HOST_URL,
 			version: settings.VERSION,
@@ -217,6 +168,7 @@ class App extends Component {
 			platform: settings.INFRASTRUCTURE,
 			default_consortium: settings.DEFAULT_CONSORTIUM,
 			hsm: settings.HSM,
+			console_type: settings.CONSOLE_TYPE,
 		};
 		this.props.updateState('settings', features);
 		const client_timeouts = _.get(settings, 'TIMEOUTS.CLIENT');
@@ -252,7 +204,6 @@ class App extends Component {
 
 	async getUserInfo() {
 		const userInfo = await UserSettingsRestApi.getUserInfo();
-		this.props.updateState('userInfo', userInfo);
 		return userInfo;
 	}
 
@@ -363,7 +314,7 @@ class App extends Component {
 			}
 		}
 
-		Log.debug('Current auth scheme and user info:', this.state.authScheme.type, this.props.userInfo);
+		Log.debug('Current auth scheme:', this.state.authScheme.type);
 		if (this.state.authScheme.type === 'couchdb' && this.props.userInfo && !this.props.userInfo.logged) {
 			return <Login hostUrl={this.state.authScheme.host_url} />;
 		}

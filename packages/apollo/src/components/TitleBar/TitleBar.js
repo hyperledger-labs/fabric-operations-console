@@ -162,11 +162,7 @@ class TitleBar extends Component {
 
 	goToDocs = (event, translate, type) => {
 		if ((event.key === 'Enter' && type === 'keypress') || type === 'click') {
-			if (this.props.platform && this.props.platform === 'openshift') {
-				window.open(translate('mainDocs_sw', { DOC_PREFIX: this.props.docPrefix }));
-			} else {
-				window.open(translate('mainDocs', { DOC_PREFIX: this.props.docPrefix }));
-			}
+			window.open(translate('mainDocs', { DOC_PREFIX: this.props.docPrefix }));
 		}
 	};
 
@@ -353,7 +349,6 @@ export default connect(
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;
 		newProps['authScheme'] = state['settings'] ? state['settings']['authScheme'] : null;
-		newProps['platform'] = state['settings'] ? state['settings']['platform'] : null;
 		newProps['opToolsVersion'] = state['settings'] ? state['settings']['version'] : null;
 		newProps['needsAttention'] = state['signatureCollection'] ? state['signatureCollection']['needsAttention'] : null;
 		newProps['details'] = state['signatureCollection'] ? state['signatureCollection']['details'] : null;
