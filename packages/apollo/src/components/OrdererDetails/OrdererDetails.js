@@ -184,7 +184,7 @@ class OrdererDetails extends Component {
 							channelList.channels = [];
 						}
 						channelList.channels.push(channelList.systemChannel);
-						await this.getSystemChannelConfig();
+						await this.getSystemChannelConfigData();
 					} else {														// system channel does not exist
 						systemChannel = false;
 					}
@@ -299,7 +299,7 @@ class OrdererDetails extends Component {
 					this.timestamp = 0;
 					this.props.updateState(SCOPE, { notAvailable: false });
 					if (!this.isSystemLess(this.props.details)) {
-						this.getSystemChannelConfig();
+						this.getSystemChannelConfigData();
 					}
 				}
 			}
@@ -396,8 +396,8 @@ class OrdererDetails extends Component {
 		};
 	}
 
-	getSystemChannelConfig() {
-		OrdererRestApi.getSystemChannelConfig(this.props.match.params.ordererId, this.props.configtxlator_url)
+	getSystemChannelConfigData() {
+		OrdererRestApi.getSystemChannelConfig({ cluster_id: this.props.match.params.ordererId }, this.props.configtxlator_url)
 			.then(resp => {
 				// we usually pick "SampleConsortium" but if that is missing, grab the first one. we don't support multiple atm.
 				const first_consortium = ChannelUtils.getSampleConsortiumOrFirstKey(resp.channel_group.groups.Consortiums.groups);
@@ -958,6 +958,7 @@ class OrdererDetails extends Component {
 		const options = {
 			currentOrdererId: this.props.details.raft[0].id,
 			ordererId: this.props.selectedNode.id,
+			cluster_id: this.props.selectedNode.cluster_id,
 			configtxlator_url: this.props.configtxlator_url,
 		};
 		try {
@@ -1052,7 +1053,7 @@ class OrdererDetails extends Component {
 
 	async getChannelConfigWrap(channelId, orderer) {
 		const options = {
-			ordererId: this.props.match.params.ordererId,
+			cluster_id: this.props.match.params.ordererId,
 			configtxlator_url: this.props.configtxlator_url,
 			channelId: channelId,
 		};
@@ -1063,7 +1064,7 @@ class OrdererDetails extends Component {
 	};
 
 	debug_openChannelConfig = () => {
-		OrdererRestApi.getOrdererDetails(this.props.match.params.ordererId, false)
+		OrdererRestApi.getClusterDetails(this.props.match.params.ordererId, false)
 			.then(orderer => {
 				let channelId = this.props.match.params.channelId || orderer.system_channel || OrdererRestApi.systemChannel;
 				this.getChannelConfigWrap(channelId, orderer).then(debug_block => {

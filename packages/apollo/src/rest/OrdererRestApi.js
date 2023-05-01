@@ -244,7 +244,11 @@ class OrdererRestApi {
 	static async updateConsenterIntoSystemChannel(options) {
 		let channel_config;
 		try {
-			channel_config = await OrdererRestApi.getSystemChannelConfig(options.currentOrdererId || options.ordererId, options.configtxlator_url);
+			const opts = {
+				cluster_id: options.cluster_id,
+				ordererId: options.currentOrdererId || options.ordererId
+			};
+			channel_config = await OrdererRestApi.getSystemChannelConfig(opts, options.configtxlator_url);
 		} catch (error) {
 			if (
 				options.type === 'remove' &&
@@ -340,19 +344,30 @@ class OrdererRestApi {
 		}
 	}
 
-	static async getSystemChannelConfig(ordererId, configtxlator_url) {
-		let orderer;
+	/* Get the system channel config data
+		opts: {
+			ordererId: <id of an orderer> 									// optional (required if cluster_id is blank)
+			cluster_id: <ordering cluster id of an orderering service> 		// optional  (required if ordererId is blank)
+		}
+	*/
+	static async getSystemChannelConfig(opts, configtxlator_url) {
+		let orderer = null;
 		try {
-			orderer = await OrdererRestApi.getOrdererDetails(ordererId, false);
+			if (opts.cluster_id) {
+				orderer = await OrdererRestApi.getClusterDetails(opts.cluster_id, false);
+			} else {
+				orderer = await OrdererRestApi.getOrdererDetails(opts.ordererId, false);
+			}
 		} catch (error) {
-			Log.error('Unable to get orderer', ordererId);
+			Log.error('Unable to get orderer data from console thus unable to get the system channel config', opts);
 			return; // todo really?  Shouldn't an error be thrown here?
 		}
 
 		try {
 			let options = {
-				ordererId,
-				channelId: orderer.system_channel_id || this.systemChannel,
+				ordererId: orderer ? orderer.id : null,
+				cluster_id: orderer ? orderer.cluster_id : null,
+				channelId: orderer ? (orderer.system_channel_id || this.systemChannel) : null,
 				configtxlator_url,
 			};
 			return await OrdererRestApi.getChannelConfig(options, orderer);
@@ -606,7 +621,7 @@ class OrdererRestApi {
 	*/
 
 	static async addMSP(options) {
-		const channel_config = await OrdererRestApi.getSystemChannelConfig(options.ordererId, options.configtxlator_url);
+		const channel_config = await OrdererRestApi.getSystemChannelConfig({ ordererId: this.props.ordererId }, options.configtxlator_url);
 		let original_json = channel_config;
 		let updated_json = JSON.parse(JSON.stringify(channel_config));
 
@@ -672,7 +687,7 @@ class OrdererRestApi {
 	}
 
 	static async updateAdvancedConfig(options) {
-		const channel_config = await OrdererRestApi.getSystemChannelConfig(options.ordererId, options.configtxlator_url);
+		const channel_config = await OrdererRestApi.getSystemChannelConfig({ ordererId: this.props.ordererId }, options.configtxlator_url);
 		let original_json = channel_config;
 		let updated_json = JSON.parse(JSON.stringify(channel_config));
 
@@ -826,7 +841,7 @@ class OrdererRestApi {
 	}
 
 	static async deleteMSP(options) {
-		const channel_config = await OrdererRestApi.getSystemChannelConfig(options.ordererId, options.configtxlator_url);
+		const channel_config = await OrdererRestApi.getSystemChannelConfig({ ordererId: options.ordererId }, options.configtxlator_url);
 		let original_json = channel_config;
 		let updated_json = JSON.parse(JSON.stringify(channel_config));
 		const first_consortium = ChannelUtils.getSampleConsortiumOrFirstKey(updated_json.channel_group.groups.Consortiums.groups);
@@ -1074,7 +1089,7 @@ class OrdererRestApi {
 
 	static async listIncludesAllConsentersForCluster(list, cluster_id, configtxlator_url, feature_flags) {
 		if (!cluster_id) return true;
-		const channel_config = await OrdererRestApi.getSystemChannelConfig(cluster_id, configtxlator_url);
+		const channel_config = await OrdererRestApi.getSystemChannelConfig({ cluster_id: cluster_id }, configtxlator_url);
 		let res = true;
 		const json = JSON.parse(JSON.stringify(channel_config));
 		const consenters = _.get(json, 'channel_group.groups.Orderer.values.ConsensusType.value.metadata.consenters');
@@ -1118,6 +1133,7 @@ class OrdererRestApi {
 		if (current.location === 'ibm_saas' && current.consenter_proposal_fin) {
 			const options = {
 				ordererId: current.id,
+				cluster_id: current.cluster_id,
 				configtxlator_url,
 			};
 			await OrdererRestApi.removeOrdererNodeFromSystemChannel(options);

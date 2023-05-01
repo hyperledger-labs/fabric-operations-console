@@ -45,6 +45,7 @@ class OrdererConsenterModal extends React.Component {
 			await OrdererRestApi.removeOrdererNodeFromSystemChannel({
 				...this.props.orderer,
 				ordererId: this.props.orderer.raft ? this.props.orderer.raft[0].id : this.props.orderer.id,
+				cluster_id: this.props.orderer.raft ? this.props.orderer.raft[0].cluster_id : this.props.orderer.cluster_id,
 				configtxlator_url: this.props.configtxlator_url,
 				consenter_url: window.location.protocol + '//' + this.props.consenter.url,
 			});
@@ -73,6 +74,7 @@ class OrdererConsenterModal extends React.Component {
 			await OrdererRestApi.updateOrdererCertsOnSystemChannel({
 				...this.props.orderer,
 				ordererId: orderer.id,
+				cluster_id: orderer.cluster_id,
 				configtxlator_url: this.props.configtxlator_url,
 				consenter_url: window.location.protocol + '//' + this.props.consenter.url,
 				tls_new_cert: this.props.consenter.node.client_tls_cert,

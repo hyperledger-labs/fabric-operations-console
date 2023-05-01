@@ -558,7 +558,7 @@ class OrdererModal extends React.Component {
 
 	populateBlockParams() {
 		this.props.updateState(SCOPE, { advanced_loading: true });
-		OrdererRestApi.getSystemChannelConfig(this.props.ordererId, this.props.configtxlator_url)
+		OrdererRestApi.getSystemChannelConfig({ ordererId: this.props.ordererId }, this.props.configtxlator_url)
 			.then(resp => {
 				this.props.updateState(SCOPE, {
 					absolute_max_bytes: _.get(resp, 'channel_group.groups.Orderer.values.BatchSize.value.absolute_max_bytes'),
@@ -584,7 +584,7 @@ class OrdererModal extends React.Component {
 
 	populateMaintenanceMode() {
 		this.props.updateState(SCOPE, { advanced_loading: true });
-		OrdererRestApi.getSystemChannelConfig(this.props.ordererId, this.props.configtxlator_url)
+		OrdererRestApi.getSystemChannelConfig({ ordererId: this.props.ordererId }, this.props.configtxlator_url)
 			.then(resp => {
 				let channel_state = _.get(resp, 'channel_group.groups.Orderer.values.ConsensusType.value.state');
 				let maintenance_mode = (channel_state === 'STATE_MAINTENANCE');
