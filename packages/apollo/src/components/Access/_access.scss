@@ -1,4 +1,4 @@
-.ibp-members-auth-services-label {
+.ibp-access-auth-services-label {
 	padding-bottom: 1rem;
 	display: flex;
 
@@ -7,7 +7,7 @@
 	}
 }
 
-.ibp-members-auth-services-container {
+.ibp-access-auth-services-container {
 	background: $carbon--cool-gray-90;
 	height: 7.625rem;
 	margin-top: 1rem;
@@ -16,7 +16,7 @@
 	width: 23rem;
 }
 
-.ibp-members-iam-info-container {
+.ibp-access-iam-info-container {
 	background: $carbon--cool-gray-90;
 	height: 12rem;
 	margin-top: 1rem;
@@ -25,53 +25,53 @@
 	width: 35rem;
 }
 
-.ibp-members-appId-lock-img {
+.ibp-access-appId-lock-img {
 	height: 1.875rem;
 	margin-top: 1.5rem;
 	width: 1.375rem;
 }
 
-.ibp-members-app-id-label {
+.ibp-access-app-id-label {
 	@include carbon--type-style('body-short-02');
 	@include carbon--font-weight('semibold');
 	padding-top: 0.5rem;
 }
 
-.ibp-members-cloud-service-label {
+.ibp-access-cloud-service-label {
 	@include carbon--type-style('body-short-01');
 	color: $carbon--cool-gray-40;
 	margin-top: 0.25rem;
 }
 
-.ibp-members-configure-label.bx--link {
+.ibp-access-configure-label.bx--link {
 	@include carbon--type-style('body-short-01');
 	cursor: pointer;
 	text-decoration: underline;
 }
 
-.ibp-auth-members-modal-title {
+.ibp-auth-access-modal-title {
 	@include carbon--type-style('productive-heading-05');
 	@include carbon--font-weight('light');
 	color: $text;
 }
 
-.ibp-auth-members-modal-desc {
+.ibp-auth-access-modal-desc {
 	margin-top: 1.5rem;
 }
 
-.ibp-members-iam-title {
+.ibp-access-iam-title {
 	@include carbon--type-style('productive-heading-03');
 	color: $carbon--cool-gray-10;
 	padding-top: 1rem;
 }
 
-.ibp-members-iam-desc {
+.ibp-access-iam-desc {
 	@include carbon--type-style('body-short-02');
 	color: $carbon--white-0;
 	padding-top: 1rem;
 }
 
-.ibp-members-iam-link {
+.ibp-access-iam-link {
 	padding-top: 1.5rem;
 }
 
@@ -126,10 +126,10 @@
 	}
 }
 
-.ibp-members-member-role-icon {
+.ibp-access-member-role-icon {
 	margin-left: 1.5rem;
 }
 
-.ipb-members-row {
+.ipb-access-row {
 	margin-bottom: 2rem;
 }

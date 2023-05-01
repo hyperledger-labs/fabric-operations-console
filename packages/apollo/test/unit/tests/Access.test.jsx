@@ -21,7 +21,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import { AuthenticatedUsers, AuthenticationServices, DeleteButton, Members } from '../../../src/components/Members/Members';
+import { AuthenticatedUsers, AuthenticationServices, DeleteButton, Access } from '../../../src/components/Access/Access';
 import store from '../../../src/redux/Store';
 chai.should();
 chai.use(sinonChai);
@@ -29,7 +29,7 @@ chai.use(sinonChai);
 const WrappedMembers = props => {
 	return (
 		<Provider store={store}>
-			<Members {...props} />
+			<Access {...props} />
 		</Provider>
 	);
 };
@@ -96,7 +96,7 @@ jest.mock('../../../src/components/ResetPasswordModal/ResetPasswordModal', () =>
 	};
 });
 
-describe('Members component', () => {
+describe('Access component', () => {
 	let mySandBox;
 	let props;
 	let translateStub;

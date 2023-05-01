@@ -113,6 +113,8 @@
 	"non_admin_user_list": "List of Non-Admin Users who can access the application",
 	"members": "Members",
 	"users": "Users",
+	"access": "Access",
+	"access_title": "Access",
 	"user_info": "User information",
 	"add_member": "Add member",
 	"add_user": "Add user",

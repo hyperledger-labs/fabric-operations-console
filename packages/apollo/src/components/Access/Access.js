@@ -32,11 +32,12 @@ import PageHeader from '../PageHeader/PageHeader';
 import ResetPasswordModal from '../ResetPasswordModal/ResetPasswordModal';
 import SVGs from '../Svgs/Svgs';
 
-const SCOPE = 'members';
+const SCOPE = 'access';
 const Log = new Logger(SCOPE);
 
-export class Members extends Component {
-	cName = 'Members';
+// dsh todo rename to Access
+export class Access extends Component {
+	cName = 'Access';
 
 	componentDidMount() {
 		this.props.showBreadcrumb('users', {}, this.props.history.location.pathname, true);
@@ -177,7 +178,7 @@ export class Members extends Component {
 	checkRole = (user, role) => {
 		if (user && user.roles && user.roles.includes(role)) {
 			return (
-				<div className="ibp-members-member-role-icon">
+				<div className="ibp-access-member-role-icon">
 					<SVGs type="circleFilled"
 						width="8px"
 						height="8px"
@@ -317,7 +318,7 @@ const dataProps = {
 	editMode: PropTypes.bool,
 };
 
-Members.propTypes = {
+Access.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
 	showError: PropTypes.func,
@@ -338,7 +339,7 @@ export default connect(
 		showSuccess,
 		updateState,
 	}
-)(withLocalize(Members));
+)(withLocalize(Access));
 
 export function AuthenticationServices(props) {
 	const isIbmId = props.authScheme === 'ibmid';
@@ -350,20 +351,20 @@ export function AuthenticationServices(props) {
 			<div className="bx--col-lg-13">
 				<PageHeader
 					history={props.history}
-					headerName="users"
+					headerName="access_title"
 					staticHeader
 				/>
-				<div className="ipb-members-row">
-					<h2 className="ibp-members-auth-services-label">
+				<div className="ipb-access-row">
+					<h2 className="ibp-access-auth-services-label">
 						<BlockchainTooltip direction="right"
 							triggerText={translate('authentication_services')}
 						>
 							{translate(isCouchDb ? 'authentication_services_tooltip_icp' : 'authentication_services_tooltip_ibp')}
 						</BlockchainTooltip>
 					</h2>
-					<div className="ibp-members-auth-services-container">
+					<div className="ibp-access-auth-services-container">
 						{props.authScheme ? (
-							<p className="ibp-members-app-id-label">
+							<p className="ibp-access-app-id-label">
 								{isIbmId ? translate('ibm_id') : isIam ? translate('identity_and_access_management') : isCouchDb ? translate('couchdb') : translate('app_id')}
 							</p>
 						) : (
@@ -375,10 +376,10 @@ export function AuthenticationServices(props) {
 								}}
 							/>
 						)}
-						{<p className="ibp-members-cloud-service-label">{isCouchDb ? translate('local') : translate('ibm_cloud_service')}</p>}
+						{<p className="ibp-access-cloud-service-label">{isCouchDb ? translate('local') : translate('ibm_cloud_service')}</p>}
 
 						<div className="mt-s-06">
-							<Link className="ibp-members-configure-label"
+							<Link className="ibp-access-configure-label"
 								href="#"
 								onClick={props.onConfigure}
 							>
@@ -395,7 +396,7 @@ AuthenticationServices.propTypes = {
 	onConfigure: PropTypes.func,
 	isManager: PropTypes.bool,
 	authScheme: PropTypes.string,
-	translate: PropTypes.func, // Provided by Members
+	translate: PropTypes.func, // Provided by Access
 	history: PropTypes.object
 };
 
