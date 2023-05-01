@@ -40,7 +40,7 @@ class ChannelParticipationUnjoinModal extends Component {
 			this.props.updateState(SCOPE, {
 				loading: true,
 			});
-			OrdererRestApi.getSystemChannelConfig(this.props.details.cluster_id, this.props.configtxlator_url)
+			OrdererRestApi.getSystemChannelConfig({ cluster_id: this.props.details.cluster_id }, this.props.configtxlator_url)
 				.then(resp => {
 					let channel_state = _.get(resp, 'channel_group.groups.Orderer.values.ConsensusType.value.state');
 					this.props.updateState(SCOPE, {
