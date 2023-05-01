@@ -830,7 +830,13 @@ module.exports = function (logger, ev, t) {
 									return cb(athenaError, null);								// athena had an error
 								} else {
 									restart_comp_if_needed(() => {
-										return cb(null, { athena_fmt: athenaResponse, deployer_resp: fmt_ret, tx_id: parsed.debug_tx_id });
+
+										// if we updated fabric from v2.2 to v2.4 or higher, we might now have an osn admin url (which dint' exist before)
+										// so we need to refresh our data to capture the new urls or w.e. -> call get_all_components, it will sync differences
+										const opts2 = { _skip_cache: true, _include_deployment_attributes: true };
+										t.deployer.get_all_components(opts2, () => {
+											return cb(null, { athena_fmt: athenaResponse, deployer_resp: fmt_ret, tx_id: parsed.debug_tx_id });
+										});
 									});
 								}
 							});
@@ -1856,7 +1862,7 @@ module.exports = function (logger, ev, t) {
 	exports.deployer_has_a_different_value = (athena_data, deployer_data) => {
 		const fields2check = [
 			'admin_certs', 'resources', 'storage', 'version', 'zone', 'state_db', 'region', 'dep_component_id',
-			'ca_name', 'tlsca_name', 'api_url', 'grpcwp_url', 'operations_url', 'tls_cert', 'config_override',
+			'ca_name', 'tlsca_name', 'api_url', 'grpcwp_url', 'operations_url', 'osnadmin_url', 'tls_cert', 'config_override',
 			'node_ou', 'ecert', 'tls_ca_root_certs', 'ca_root_certs', 'crypto',
 			'api_url_saas', 'grpcwp_url_saas', 'operations_url_saas', 'osnadmin_url_saas'
 			// do not check admin_certs_parsed, or tls_cert_parsed b/c we don't want that stuff stored in the db
