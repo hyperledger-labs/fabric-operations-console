@@ -25,8 +25,8 @@ const SidePanelWarning = props => {
 			<InlineNotification
 				kind={props.kind ? props.kind : 'warning'}
 				className={props.kind === 'warning' ? 'ibp-side-panel-warning-notification' : ''}
-				title={translate(props.title)}
-				subtitle={props.subtitle && typeof props.subtitle === 'string' ? translate(props.subtitle) : props.subtitle ? props.subtitle : null}
+				title={translate(props.title, props.data)}
+				subtitle={props.subtitle && typeof props.subtitle === 'string' ? translate(props.subtitle, props.data) : props.subtitle ? props.subtitle : null}
 				hideCloseButton={true}
 				caption=""
 			/>
@@ -44,6 +44,7 @@ SidePanelWarning.propTypes = {
 	title: PropTypes.string.isRequired,
 	subtitle: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
 	translate: PropTypes.func, // Provided by withLocalize
+	data: PropTypes.object,
 };
 
 export default withLocalize(SidePanelWarning);

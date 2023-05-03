@@ -951,6 +951,7 @@ const Helper = {
 		);
 	},
 
+	// dsh todo this is a mess, who wrote this? why aren't we looking at the datatype of value...
 	renderFieldSummary(translate, props, label, field, hidden, number, defaultValue) {
 		if (!field) {
 			field = label;

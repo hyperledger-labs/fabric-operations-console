@@ -10,7 +10,6 @@
 .ibp-access-auth-services-container {
 	background: $carbon--cool-gray-90;
 	height: 7.625rem;
-	margin-top: 1rem;
 	padding-left: 1.5rem;
 	padding-top: 1rem;
 	width: 23rem;
@@ -39,7 +38,7 @@
 
 .ibp-access-cloud-service-label {
 	@include carbon--type-style('body-short-01');
-	color: $carbon--cool-gray-40;
+	color: $carbon--cool-gray-40 !important;
 	margin-top: 0.25rem;
 }
 
@@ -130,6 +129,40 @@
 	margin-left: 1.5rem;
 }
 
-.ipb-access-row {
+.ibp-access-row {
 	margin-bottom: 2rem;
+	margin-top: 2rem;
+}
+
+
+.ibp-access-gear-icon {
+	height: 1rem;
+}
+
+.ibp-access-button {
+	align-items: center;
+	background: transparent;
+	border: 0;
+	bottom: .75rem;
+	cursor: pointer;
+	height: 1.875rem;
+	justify-content: center;
+	margin: 0;
+	outline: 0;
+	padding: .25rem;
+	float: right;
+	margin-top: -1rem;
+}
+
+.access-setting-value, .access-setting-label{
+	display: inline-block;
+	font-size: 1rem;
+}
+
+.access-setting-value {
+	margin-left: 4rem;
+}
+
+.access-setting-label {
+	margin-bottom: 1rem;
 }

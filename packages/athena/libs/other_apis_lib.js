@@ -173,6 +173,7 @@ module.exports = function (logger, ev, t) {
 			COOKIE_NAME: ev.COOKIE_NAME || '?',
 			MIGRATION_API_KEY: ev.MIGRATION_API_KEY,			// for debug
 			DB_CONNECTION_STRING: t.misc.redact_basic_auth(ev.DB_CONNECTION_STRING),	// for debug
+			OAUTH: ev.OAUTH,
 		};
 		return t.misc.sortItOut(ret);
 	};

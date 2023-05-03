@@ -25,6 +25,7 @@ import Helper from '../../utils/helper';
 import AddUserModal from '../AddUserModal/AddUserModal';
 import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
 import EditAuthSettingsModal from '../EditAuthSettingsModal/EditAuthSettingsModal';
+import EditAuthSchemePanel from '../EditAuthSchemePanel/EditAuthSchemePanel';
 import ItemContainer from '../ItemContainer/ItemContainer';
 import Logger from '../Log/Logger';
 import PageContainer from '../PageContainer/PageContainer';
@@ -217,6 +218,68 @@ export class Access extends Component {
 		return overflow;
 	};
 
+	openEditAuthSchemePanel = () => {
+		console.log('fired opening');
+		this.props.updateState(SCOPE, {
+			showEditAuthSchemePanel: true,
+		});
+	};
+
+	closeEditAuthSchemePanel = () => {
+		console.log('fired closing');
+		this.props.updateState(SCOPE, {
+			showEditAuthSchemePanel: false,
+		});
+	};
+
+	renderAuthTileSection = () => {
+		const isIbmId = this.props.auth_scheme === 'ibmid';
+		const isIam = this.props.auth_scheme === 'iam';
+		const isCouchDb = this.props.auth_scheme === 'couchdb';
+		const translate = this.props.translate;
+		return (
+			<div className="ibp-access-row">
+				<h3 className="ibp-access-auth-services-label">
+					{translate('authentication_services')}
+				</h3>
+				{/*dsh todo check the alt text for the other auth schemes*/}
+				<div className="ibp-access-auth-services-container">
+					{this.props.auth_scheme ? (
+						<p className="ibp-access-app-id-label">
+							{isIbmId ? translate('ibm_id') : isIam ? translate('identity_and_access_management') : isCouchDb ? translate('couchdb') : translate('app_id')}
+							{this.props.isManager &&
+								<button className="ibp-access-button"
+									onClick={() => this.openEditAuthSchemePanel()}
+									title={translate('access_gear_title')}
+								>
+									<SVGs type="settings"
+										title={translate('access_gear_title')}
+										extendClass={{ 'ibp-access-gear-icon': true }}
+									/>
+								</button>
+							}
+						</p>
+					) : (
+						<SkeletonText
+							className="ibp-auth-skeleton-text"
+							style={{
+								marginTop: '.5rem',
+								width: '8rem',
+							}}
+						/>
+					)}
+					<p className="ibp-access-cloud-service-label">
+						<BlockchainTooltip direction="right"
+							triggerText={isCouchDb ? translate('local') : translate('ibm_cloud_service')}
+						>
+							{translate(isCouchDb ? 'authentication_services_tooltip_icp' : 'authentication_services_tooltip_ibp')}
+						</BlockchainTooltip>
+					</p>
+				</div>
+			</div>
+		);
+	}
+
 	render() {
 		const isIam = this.props.auth_scheme === 'iam';
 		const translate = this.props.translate;
@@ -224,73 +287,128 @@ export class Access extends Component {
 			<PageContainer>
 				<div>
 					<div>
-						<AuthenticationServices
-							authScheme={this.props.auth_scheme}
-							onConfigure={this.openEditAuthModal}
-							isManager={this.props.isManager}
-							history={this.props.history}
-							translate={translate}
-						/>
-						{!isIam && (
-							<AuthenticatedUsers
-								loading={this.props.loading}
-								users={this.props.all_users}
-								onAdd={this.openAddUserModal}
-								onDelete={this.onDeleteUsers}
-								isManager={this.props.isManager}
-								checkRole={this.checkRole}
-								overflowMenu={this.props.isManager ? this.overflowMenu : null}
-								authScheme={this.props.auth_scheme}
-							/>
-						)}
-					</div>
-					<div>
-						{this.props.showEditSettingsModal && (
-							<EditAuthSettingsModal
-								clientId={this.props.client_id}
-								oauthServerUrl={this.props.oauth_url}
-								secret={this.props.secret}
-								tenantId={this.props.tenant_id}
-								adminContactEmail={this.props.adminContactEmail}
-								adminUsers={this.props.admin_list ? this.props.admin_list.map(user => user.email) : []}
-								generalUsers={this.props.general_list ? this.props.general_list.map(user => user.email) : []}
-								onClose={this.closeEditAuthModal}
-								onComplete={this.getAuthDetails}
-								authScheme={this.props.auth_scheme}
-								isManager={this.props.isManager}
-							/>
-						)}
-						{this.props.showAddUserModal && !this.props.editMode && (
-							<AddUserModal
-								isCouchBasedAuth={this.props.auth_scheme === 'couchdb'}
-								existingUsers={this.props.all_users.map(details => details.id)}
-								onClose={this.closeAddUserModal}
-								onComplete={emails => {
-									this.props.showSuccess(emails.length === 1 ? 'user_add_successful' : 'users_add_successful', { email: emails.join() }, SCOPE);
-									this.getAuthDetails();
-								}}
-							/>
-						)}
-						{this.props.showAddUserModal && this.props.editMode && (
-							<AddUserModal
-								existingUsers={this.props.all_users.map(details => details.id)}
-								userDetails={this.props.user}
-								onClose={this.closeAddUserModal}
-								onComplete={email => {
-									this.props.showSuccess('user_update_successful', { email }, SCOPE);
-									this.getAuthDetails();
-								}}
-							/>
-						)}
-						{this.props.showResetPasswordModal && (
-							<ResetPasswordModal
-								user={this.props.user}
-								onClose={this.closeResetPasswordModal}
-								onComplete={response => {
-									this.props.showSuccess('reset_password_successful', { user: response.user }, SCOPE);
-								}}
-							/>
-						)}
+						<div className="bx--row">
+							<div className="bx--col-lg-13">
+								<PageHeader
+									history={this.props.history}
+									headerName="access_title"
+									staticHeader
+								/>
+
+								{/* general settings content */}
+								<h3>{translate('access_settings_title')}</h3>
+								<div>
+									<Link className="ibp-access-configure-label"
+										href="#"
+										onClick={this.openEditAuthModal}
+									>
+										{translate(this.props.isManager ? 'update_configuration' : 'administrator_contact')}
+									</Link>
+									<div>
+										<div className="access-setting-label">
+											<BlockchainTooltip direction="left"
+												triggerText='Console contact email:'
+											>
+												{translate('admin_contact_email_tooltip')}
+											</BlockchainTooltip>
+										</div>
+										{/*dsh todo finish this section*/}
+										<div className="access-setting-value">dshuffma@us.ibm.com</div>
+									</div>
+
+									<div>
+										<div className="access-setting-label">
+											<BlockchainTooltip direction="left"
+												triggerText='Allow default password:'
+											>
+												{'bla bla bla'}
+											</BlockchainTooltip>
+										</div>
+										<div className="access-setting-value">true</div>
+									</div>
+								</div>
+
+								{/* auth scheme content */}
+								<this.renderAuthTileSection />
+
+								{/* users table content */}
+								{!isIam && (
+									<AuthenticatedUsers
+										loading={this.props.loading}
+										users={this.props.all_users}
+										onAdd={this.openAddUserModal}
+										onDelete={this.onDeleteUsers}
+										isManager={this.props.isManager}
+										checkRole={this.checkRole}
+										overflowMenu={this.props.isManager ? this.overflowMenu : null}
+										authScheme={this.props.auth_scheme}
+									/>
+								)}
+							</div>
+							<div>
+								{this.props.showEditSettingsModal && (
+									<EditAuthSettingsModal
+										clientId={this.props.client_id}
+										oauthServerUrl={this.props.oauth_url}
+										secret={this.props.secret}
+										tenantId={this.props.tenant_id}
+										adminContactEmail={this.props.adminContactEmail}
+										adminUsers={this.props.admin_list ? this.props.admin_list.map(user => user.email) : []}
+										generalUsers={this.props.general_list ? this.props.general_list.map(user => user.email) : []}
+										onClose={this.closeEditAuthModal}
+										onComplete={this.getAuthDetails}
+										authScheme={this.props.auth_scheme}
+										isManager={this.props.isManager}
+									/>
+								)}
+								{this.props.showAddUserModal && !this.props.editMode && (
+									<AddUserModal
+										isCouchBasedAuth={this.props.auth_scheme === 'couchdb'}
+										existingUsers={this.props.all_users.map(details => details.id)}
+										onClose={this.closeAddUserModal}
+										onComplete={emails => {
+											this.props.showSuccess(emails.length === 1 ? 'user_add_successful' : 'users_add_successful', { email: emails.join() }, SCOPE);
+											this.getAuthDetails();
+										}}
+									/>
+								)}
+								{this.props.showAddUserModal && this.props.editMode && (
+									<AddUserModal
+										existingUsers={this.props.all_users.map(details => details.id)}
+										userDetails={this.props.user}
+										onClose={this.closeAddUserModal}
+										onComplete={email => {
+											this.props.showSuccess('user_update_successful', { email }, SCOPE);
+											this.getAuthDetails();
+										}}
+									/>
+								)}
+								{this.props.showResetPasswordModal && (
+									<ResetPasswordModal
+										user={this.props.user}
+										onClose={this.closeResetPasswordModal}
+										onComplete={response => {
+											this.props.showSuccess('reset_password_successful', { user: response.user }, SCOPE);
+										}}
+									/>
+								)}
+								{this.props.showEditAuthSchemePanel && (
+									<EditAuthSchemePanel
+										clientId={this.props.client_id}
+										oauthServerUrl={this.props.oauth_url}
+										secret={this.props.secret}
+										tenantId={this.props.tenant_id}
+										adminContactEmail={this.props.adminContactEmail}
+										adminUsers={this.props.admin_list ? this.props.admin_list.map(user => user.email) : []}
+										generalUsers={this.props.general_list ? this.props.general_list.map(user => user.email) : []}
+										onClose={this.closeEditAuthSchemePanel}
+										onComplete={this.getAuthDetails}
+										authScheme={this.props.auth_scheme}
+										isManager={this.props.isManager}
+									/>
+								)}
+							</div>
+						</div>
 					</div>
 				</div>
 			</PageContainer>
@@ -316,6 +434,7 @@ const dataProps = {
 	auth_scheme: PropTypes.string,
 	user: PropTypes.object,
 	editMode: PropTypes.bool,
+	showEditAuthSchemePanel: PropTypes.bool,
 };
 
 Access.propTypes = {
@@ -340,65 +459,6 @@ export default connect(
 		updateState,
 	}
 )(withLocalize(Access));
-
-export function AuthenticationServices(props) {
-	const isIbmId = props.authScheme === 'ibmid';
-	const isIam = props.authScheme === 'iam';
-	const isCouchDb = props.authScheme === 'couchdb';
-	const translate = props.translate;
-	return (
-		<div className="bx--row">
-			<div className="bx--col-lg-13">
-				<PageHeader
-					history={props.history}
-					headerName="access_title"
-					staticHeader
-				/>
-				<div className="ipb-access-row">
-					<h2 className="ibp-access-auth-services-label">
-						<BlockchainTooltip direction="right"
-							triggerText={translate('authentication_services')}
-						>
-							{translate(isCouchDb ? 'authentication_services_tooltip_icp' : 'authentication_services_tooltip_ibp')}
-						</BlockchainTooltip>
-					</h2>
-					<div className="ibp-access-auth-services-container">
-						{props.authScheme ? (
-							<p className="ibp-access-app-id-label">
-								{isIbmId ? translate('ibm_id') : isIam ? translate('identity_and_access_management') : isCouchDb ? translate('couchdb') : translate('app_id')}
-							</p>
-						) : (
-							<SkeletonText
-								className="ibp-auth-skeleton-text"
-								style={{
-									marginTop: '.5rem',
-									width: '8rem',
-								}}
-							/>
-						)}
-						{<p className="ibp-access-cloud-service-label">{isCouchDb ? translate('local') : translate('ibm_cloud_service')}</p>}
-
-						<div className="mt-s-06">
-							<Link className="ibp-access-configure-label"
-								href="#"
-								onClick={props.onConfigure}
-							>
-								{translate(props.isManager ? 'update_configuration' : 'administrator_contact')}
-							</Link>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
-}
-AuthenticationServices.propTypes = {
-	onConfigure: PropTypes.func,
-	isManager: PropTypes.bool,
-	authScheme: PropTypes.string,
-	translate: PropTypes.func, // Provided by Access
-	history: PropTypes.object
-};
 
 export function AuthenticatedUsers(props) {
 	return (
