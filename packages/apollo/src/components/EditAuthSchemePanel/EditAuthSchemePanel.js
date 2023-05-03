@@ -165,8 +165,8 @@ class EditAuthSchemePanel extends Component {
 			'couchdb': 'This authentication method does not require any other information or any external services.'
 		};
 		let nameMap = {
-			'oauth': 'OAuth2.0',
-			'couchdb': 'CouchDB'
+			'oauth': 'OAuth2.0 Settings:',
+			'couchdb': 'CouchDB Settings:'
 		};
 		return (
 			<WizardStep type="WizardStep"
@@ -181,7 +181,7 @@ class EditAuthSchemePanel extends Component {
 
 						{this.props.auth_scheme && this.props.auth_scheme.value && <div>
 							<br />
-							<p>
+							<p className='tinyText'>
 								{descriptionMap[this.props.auth_scheme.value]}
 							</p>
 
@@ -198,9 +198,13 @@ class EditAuthSchemePanel extends Component {
 								</div>}
 							<br />
 							<br />
-							<strong>
+							<h4>
+								{nameMap[this.props.auth_scheme.value]}
+							</h4>
+							<p className='tinyText'>
 								{warningMap[this.props.auth_scheme.value]}
-							</strong>
+							</p>
+							<br/>
 						</div>}
 
 						{this.props.auth_scheme && this.props.auth_scheme.value === 'oauth' &&
@@ -253,6 +257,26 @@ class EditAuthSchemePanel extends Component {
 											type: 'text',
 											default: (private_settings && private_settings.OAUTH) ? private_settings.OAUTH.SCOPE : '' || 'openid email profile'
 
+										},
+										{
+											name: 'grant',
+											label: 'grant_label',
+											required: true,
+											tooltip: 'grant_tooltip',
+											placeholder: 'grant_tooltip',
+											type: 'text',
+											default: 'authorization_code',
+											readonly: true,
+										},
+										{
+											name: 'response_type',
+											label: 'response_type_label',
+											required: true,
+											tooltip: 'response_type_tooltip',
+											placeholder: 'response_type_tooltip',
+											type: 'text',
+											default: 'code',
+											readonly: true,
 										},
 									]}
 								/>

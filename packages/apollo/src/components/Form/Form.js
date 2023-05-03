@@ -1478,7 +1478,7 @@ class Form extends Component {
 										htmlFor={noLabelFor ? undefined : this.props.id + '-' + field.name}
 										className={field.disabled ? 'ibp-form-label-disabled' : 'ibp-form-label'}
 									>
-										{field.tooltip && !field.readonly ? (
+										{field.tooltip ? (
 											<BlockchainTooltip direction={field.tooltipDirection}
 												type="definition"
 												tooltipText={translate(field.tooltip, field.tooltipOptions)}
