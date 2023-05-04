@@ -687,7 +687,7 @@ class OrdererRestApi {
 	}
 
 	static async updateAdvancedConfig(options) {
-		const channel_config = await OrdererRestApi.getSystemChannelConfig({ ordererId: this.props.ordererId }, options.configtxlator_url);
+		const channel_config = await OrdererRestApi.getSystemChannelConfig(options, options.configtxlator_url);
 		let original_json = channel_config;
 		let updated_json = JSON.parse(JSON.stringify(channel_config));
 
@@ -760,10 +760,21 @@ class OrdererRestApi {
 			updated_json.channel_group.groups.Orderer.values.ConsensusType.value.state = 'STATE_NORMAL';
 		}
 
-		Log.debug('Updated orderer block parameters: ', updated_json);
-		Log.debug('Updating orderer config to: ', options);
+		Log.debug('Updated orderer config as json: ', updated_json);
+		Log.debug('Update orderer config options: ', options);
 
-		const orderer = await OrdererRestApi.getOrdererDetails(options.ordererId, true, true);
+		let orderer;
+		try {
+			if (options.cluster_id) {
+				orderer = await OrdererRestApi.getClusterDetails(options.cluster_id, true, true);
+			} else {
+				orderer = await OrdererRestApi.getOrdererDetails(options.ordererId, true, true);
+			}
+		} catch (error) {
+			Log.error('Unable to get orderer data from console thus unable to update config', error);
+			throw error;
+		}
+
 		let identity = OrdererRestApi.getCertsAssociatedWithMsp(orderer.associatedIdentities, orderer.msp_id);
 		options.original_json = original_json;
 		options.updated_json = updated_json;
