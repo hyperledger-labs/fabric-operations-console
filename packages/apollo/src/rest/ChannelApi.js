@@ -1962,13 +1962,13 @@ class ChannelApi {
 		ChannelApi._config_json2binary(opts.original_json, opts.configtxlator_url, (err1, original_proto) => {
 			if (err1 || !original_proto) {
 				Log.error(err1);
-				cb(err1, null);
+				return cb(err1, null);
 			} else {
 				Log.debug('created bin from original config json');
 				ChannelApi._config_json2binary(opts.updated_json, opts.configtxlator_url, (err2, updated_proto) => {
 					if (err2 || !updated_proto) {
 						Log.error(err2);
-						cb(err2, null);
+						return cb(err2, null);
 					} else {
 						Log.debug('created bin from updated config json');
 						let formData = new FormData();
@@ -1984,27 +1984,27 @@ class ChannelApi {
 							redirect: 'follow',
 							referrer: 'no-referrer',
 							encoding: null,
-						})
-							.then(res => res.blob())
-							.then(response => {
-								if (response.type === 'text/plain') {
-									//error response
-									const reader = new FileReader();
-									reader.addEventListener('loadend', e => {
-										const error_txt = e.srcElement.result;
-										cb(error_txt, null);
-									});
-									reader.readAsText(response);
-								} else {
-									const reader = new FileReader();
-									reader.addEventListener('loadend', e => {
-										const array = e.srcElement.result;
-										cb(null, new Uint8Array(array));
-									});
-									reader.readAsArrayBuffer(response);
-								}
-							})
-							.catch(error => cb(error, null));
+						}).then(res => res.blob()).then(response => {
+
+							// error response
+							if (response.type && response.type.includes('text/plain')) {
+								response.text().then((error_msg) => {
+									return cb(error_msg, null);
+								});
+							}
+
+							// good response
+							else {
+								const reader = new FileReader();
+								reader.addEventListener('loadend', e => {
+									const array = e.srcElement.result;
+									return cb(null, new Uint8Array(array));
+								});
+								reader.readAsArrayBuffer(response);
+							}
+						}).catch(error => {
+							return cb(error, null);
+						});
 					}
 				});
 			}

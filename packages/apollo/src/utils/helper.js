@@ -1668,6 +1668,17 @@ const Helper = {
 		}
 		return false;
 	},
+
+	// returns true if the component was imported to this console
+	is_imported(node_obj) {
+		if (node_obj && node_obj.imported === false) {			// better way
+			return false;
+		}
+		if (node_obj && node_obj.location === 'ibm_saas') {		// legacy way
+			return false;
+		}
+		return true;
+	},
 };
 
 export default Helper;
