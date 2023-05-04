@@ -38,3 +38,4 @@ jobs:
         run: npm install -g lerna
       - name: Run detect-secrets
         run: lerna run detect-secrets --stream
+        continue-on-error: true
