@@ -556,11 +556,10 @@ class OrdererRestApi {
 				cert: ordererCerts ? ordererCerts.cert : null,
 				private_key: ordererCerts ? ordererCerts.private_key : null,
 			};
-		if (!options.identityInfo) options.identityInfo = {};
 		const opts = {
-			msp_id: options.identityInfo.msp_id || test.msp_id,
-			client_cert_b64pem: options.identityInfo.cert || test.cert,
-			client_prv_key_b64pem: options.identityInfo.private_key || test.private_key,
+			msp_id: test.msp_id,
+			client_cert_b64pem: test.cert,
+			client_prv_key_b64pem: test.private_key,
 			orderer_host: test.url,
 			configtxlator_url: options.configtxlator_url,
 			include_bin: true,

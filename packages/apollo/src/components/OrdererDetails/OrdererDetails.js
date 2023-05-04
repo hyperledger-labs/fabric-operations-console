@@ -1038,22 +1038,18 @@ class OrdererDetails extends Component {
 	}
 
 	getQuickActions = () => {
-		let quickAction = null;
-		const pathname = _.get(this.props, 'history.location.pathname');
-		if (pathname && pathname.indexOf('/debug/') !== -1) {
-			quickAction = [
-				{
-					label: 'open_channel_config',
-					quickAction: this.debug_openChannelConfig,
-				},
-			];
-		}
+		let quickAction = [
+			{
+				label: 'open_channel_config',
+				quickAction: this.debug_openChannelConfig,
+			},
+		];
 		return quickAction;
 	};
 
 	async getChannelConfigWrap(channelId, orderer) {
 		const options = {
-			cluster_id: this.props.match.params.ordererId,
+			cluster_id: this.props.details.cluster_id,
 			configtxlator_url: this.props.configtxlator_url,
 			channelId: channelId,
 		};
@@ -1064,7 +1060,7 @@ class OrdererDetails extends Component {
 	};
 
 	debug_openChannelConfig = () => {
-		OrdererRestApi.getClusterDetails(this.props.match.params.ordererId, false)
+		OrdererRestApi.getClusterDetails(this.props.details.cluster_id, true)
 			.then(orderer => {
 				let channelId = this.props.match.params.channelId || orderer.system_channel || OrdererRestApi.systemChannel;
 				this.getChannelConfigWrap(channelId, orderer).then(debug_block => {
