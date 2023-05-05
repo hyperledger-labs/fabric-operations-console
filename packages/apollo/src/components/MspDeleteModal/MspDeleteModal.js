@@ -42,7 +42,7 @@ export class MspDeleteModal extends React.Component {
 		this.props.updateState(SCOPE, { submitting: true });
 		// API to remove MSP
 		const mspPayload = {
-			ordererId: this.props.ordererId,
+			cluster_id: this.props.clusterId,
 			configtxlator_url: this.props.configtxlator_url,
 			type: this.props.ordererAdmin ? 'ordererAdmin' : 'ordererMember',
 			operation: 'delete',

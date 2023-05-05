@@ -203,8 +203,7 @@ class OrdererRestApi {
 		return this.updateConsenterIntoSystemChannel(options);
 	}
 
-	static async getUrlForConsenterUpdate(options, consenters) {
-		const orderer = await OrdererRestApi.getOrdererDetails(options.currentOrdererId || options.ordererId);
+	static async getUrlForConsenterUpdate(options, consenters, orderer) {
 		let url2use = null;
 		const parsedURL = urlParser.parse(orderer.api_url);
 		consenters.forEach(consenter => {
@@ -241,12 +240,19 @@ class OrdererRestApi {
 		}
 	}
 
+	/*
+	options = {
+		ordererId: <id of the node we are adding/removing/changing>,
+		cluster_id: <id of the ordering service cluster>,
+		configtxlator_url: ""
+	}
+	*/
 	static async updateConsenterIntoSystemChannel(options) {
 		let channel_config;
 		try {
 			const opts = {
 				cluster_id: options.cluster_id,
-				ordererId: options.currentOrdererId || options.ordererId
+				ordererId: options.ordererId
 			};
 			channel_config = await OrdererRestApi.getSystemChannelConfig(opts, options.configtxlator_url);
 		} catch (error) {
@@ -265,7 +271,15 @@ class OrdererRestApi {
 				throw error;
 			}
 		}
-		const orderer = await OrdererRestApi.getOrdererDetails(options.ordererId, true);
+
+		let orderer;
+		try {
+			orderer = await OrdererRestApi.getOrdererDetails(options.ordererId, true);
+		} catch (error) {
+			Log.error('Unable to get orderer data from console thus unable to updateConsenterIntoSystemChannel', error);
+			throw error;
+		}
+
 		let original_json = channel_config;
 		let updated_json = JSON.parse(JSON.stringify(channel_config));
 		options.original_json = original_json;
@@ -274,7 +288,7 @@ class OrdererRestApi {
 		let identity = OrdererRestApi.getCertsAssociatedWithMsp(orderer.associatedIdentities, orderer.msp_id);
 		// get the consenter section
 		const original_length = _.get(updated_json, 'channel_group.groups.Orderer.values.ConsensusType.value.metadata.consenters.length');
-		const channel_group = await this.modifyConsenter(options, updated_json.channel_group);
+		const channel_group = await this.modifyConsenter(options, updated_json.channel_group, orderer);
 		const consenters = channel_group.groups.Orderer.values.ConsensusType.value.metadata.consenters;
 		const addingOrRemoving = consenters.length !== original_length;
 		const updatingCerts = options.type === 'update';
@@ -285,7 +299,7 @@ class OrdererRestApi {
 			options.cluster_id = orderer.cluster_id;
 			options.client_cert_b64pem = identity.cert;
 			options.client_prv_key_b64pem = identity.private_key;
-			options.orderer_host = await OrdererRestApi.getUrlForConsenterUpdate(options, consenters);
+			options.orderer_host = await OrdererRestApi.getUrlForConsenterUpdate(options, consenters, orderer);
 			await ChannelApi.updateChannel(options);
 			return { message: 'ok' };
 		} else {
@@ -293,7 +307,7 @@ class OrdererRestApi {
 		}
 	}
 
-	static async modifyConsenter(options, channel_group) {
+	static async modifyConsenter(options, channel_group, orderer) {
 		let consenterNode = channel_group.groups.Orderer.values.ConsensusType.value.metadata.consenters;
 		let ordererAddresses = channel_group.values.OrdererAddresses.value.addresses;
 
@@ -309,7 +323,7 @@ class OrdererRestApi {
 			});
 			return channel_group;
 		} else if (options.type === 'add') {
-			const orderer = await NodeRestApi.getNodeDetailsFromDeployer(options.ordererId);
+			//const orderer = await NodeRestApi.getNodeDetailsFromDeployer(options.ordererId);
 			const tlscert = _.get(orderer, 'msp.component.tls_cert');
 			if (tlscert) {
 				const nodeToAdd = {
@@ -359,7 +373,7 @@ class OrdererRestApi {
 				orderer = await OrdererRestApi.getOrdererDetails(opts.ordererId, false);
 			}
 		} catch (error) {
-			Log.error('Unable to get orderer data from console thus unable to get the system channel config', opts);
+			Log.error('Unable to get orderer data from console thus unable to get the system channel config', opts, error);
 			return; // todo really?  Shouldn't an error be thrown here?
 		}
 
@@ -612,7 +626,7 @@ class OrdererRestApi {
 
 	/*
 	  options = {
-		 ordererId: ordererId,
+		 cluster_id: <id of ordering service>,
 		 configtxlator_url: configtxlator_url,
 		 msp_payload: msp_payload
 	  }
@@ -620,7 +634,7 @@ class OrdererRestApi {
 	*/
 
 	static async addMSP(options) {
-		const channel_config = await OrdererRestApi.getSystemChannelConfig({ ordererId: this.props.ordererId }, options.configtxlator_url);
+		const channel_config = await OrdererRestApi.getSystemChannelConfig({ cluster_id: options.cluster_id }, options.configtxlator_url);
 		let original_json = channel_config;
 		let updated_json = JSON.parse(JSON.stringify(channel_config));
 
@@ -668,7 +682,7 @@ class OrdererRestApi {
 			first_consortium.groups[options.payload.msp_id] = template_msp;
 		}
 
-		const orderer = await OrdererRestApi.getOrdererDetails(options.ordererId, true);
+		const orderer = await OrdererRestApi.getClusterDetails(options.cluster_id, true);
 		let identity = OrdererRestApi.getCertsAssociatedWithMsp(orderer.associatedIdentities, orderer.msp_id);
 		options.original_json = original_json;
 		options.updated_json = updated_json;
@@ -851,7 +865,7 @@ class OrdererRestApi {
 	}
 
 	static async deleteMSP(options) {
-		const channel_config = await OrdererRestApi.getSystemChannelConfig({ ordererId: options.ordererId }, options.configtxlator_url);
+		const channel_config = await OrdererRestApi.getSystemChannelConfig({ cluster_id: options.cluster_id }, options.configtxlator_url);
 		let original_json = channel_config;
 		let updated_json = JSON.parse(JSON.stringify(channel_config));
 		const first_consortium = ChannelUtils.getSampleConsortiumOrFirstKey(updated_json.channel_group.groups.Consortiums.groups);
@@ -864,7 +878,7 @@ class OrdererRestApi {
 			delete i_consort_groups[options.payload.msp_id];
 		}
 
-		const orderer = await OrdererRestApi.getOrdererDetails(options.ordererId, true, true);
+		const orderer = await OrdererRestApi.getClusterDetails(options.cluster_id, true, true);
 		let identity = OrdererRestApi.getCertsAssociatedWithMsp(orderer.associatedIdentities, orderer.msp_id);
 		options.original_json = original_json;
 		options.updated_json = updated_json;

@@ -319,6 +319,7 @@ class App extends Component {
 			return <Login hostUrl={this.state.authScheme.host_url} />;
 		}
 
+		// note that the console setting "ALLOW_DEFAULT_PASSWORD" will control the "password_type" field
 		if (this.state.authScheme.type === 'couchdb' && this.props.userInfo && this.props.userInfo.logged && this.props.userInfo.password_type === 'default') {
 			return <Login hostUrl={this.state.authScheme.host_url}
 				changePassword={true}

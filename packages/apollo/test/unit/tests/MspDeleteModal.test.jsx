@@ -71,7 +71,7 @@ describe('MspDeleteModal component', () => {
 
 		// initial props taken from OrdererAdmin
 		props = {
-			ordererId: 'ordererId',
+			cluster_id: 'ordererId',
 			configtxlator_url: 'configtxlator_url',
 			selectedMember: {
 				name: 'name',
@@ -131,7 +131,7 @@ describe('MspDeleteModal component', () => {
 
 			removeMspSpy.should.have.been.called;
 			deleteMSPStub.should.have.been.calledOnceWithExactly({
-				ordererId: props.ordererId,
+				cluster_id: props.clusterId,
 				configtxlator_url: props.configtxlator_url,
 				type: 'ordererAdmin',
 				operation: 'delete',
@@ -158,7 +158,7 @@ describe('MspDeleteModal component', () => {
 
 			removeMspSpy.should.have.been.called;
 			deleteMSPStub.should.have.been.calledOnceWithExactly({
-				ordererId: props.ordererId,
+				cluster_id: props.clusterId,
 				configtxlator_url: props.configtxlator_url,
 				type: 'ordererAdmin',
 				operation: 'delete',
@@ -193,7 +193,7 @@ describe('MspDeleteModal component', () => {
 
 			removeMspSpy.should.have.been.called;
 			deleteMSPStub.should.have.been.calledOnceWithExactly({
-				ordererId: props.ordererId,
+				cluster_id: props.clusterId,
 				configtxlator_url: props.configtxlator_url,
 				type: 'ordererAdmin',
 				operation: 'delete',

@@ -2619,7 +2619,7 @@ OrdererModal.propTypes = {
 	...dataProps,
 	onComplete: PropTypes.func,
 	onClose: PropTypes.func,
-	ordererId: PropTypes.string,
+	clusterId: PropTypes.string,
 	singleNodeRaft: PropTypes.bool,
 	systemChannel: PropTypes.bool,
 	updateState: PropTypes.func,
