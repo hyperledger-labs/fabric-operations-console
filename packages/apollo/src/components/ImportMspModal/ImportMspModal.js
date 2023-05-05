@@ -95,7 +95,7 @@ class ImportMspModal extends React.Component {
 		this.props.updateState(SCOPE, { submitting: true });
 		const selected_msp = this.props.selected_msp;
 		const mspPayload = {
-			ordererId: this.props.ordererId,
+			cluster_id: this.props.clusterId,
 			configtxlator_url: this.props.configtxlator_url,
 			type: this.props.ordererAdmin ? 'ordererAdmin' : 'ordererMember',
 			operation: 'add',
@@ -260,7 +260,7 @@ const dataProps = {
 	duplicateMSPId: PropTypes.string,
 	msps: PropTypes.array,
 	selected_msp: PropTypes.object,
-	error: PropTypes.string,
+	error: PropTypes.object,
 	members: PropTypes.array,
 	admins: PropTypes.array,
 };
