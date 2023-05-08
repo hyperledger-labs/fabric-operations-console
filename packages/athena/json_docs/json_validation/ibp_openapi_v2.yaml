@@ -1,8 +1,8 @@
 openapi: 3.0.0
 
 info:
-  title: IBM Blockchain Platform APIs
-  description: This doc lists APIs that you can use to interact with your IBM Blockchain Platform console (IBP console)
+  title: Fabric Operations console APIs
+  description: This doc lists APIs that you can use to interact with your Fabric Operations console
   contact:
     name: Blockchain Service Support
     url: https://cloud.ibm.com/docs/blockchain/ibmblockchain_support.html#ibmblockchain_support
@@ -10,12 +10,6 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 2.5.0
-  x-alternate-name: blockchain
-  x-codegen-config:
-    go:
-      apiPackage: 'github.ibm.com/ibmcloud/blockchain-go-sdk'
-  x-try-it-out-enabled:
-    enabled: false
 
 externalDocs:
   description: Find out more about Swagger
