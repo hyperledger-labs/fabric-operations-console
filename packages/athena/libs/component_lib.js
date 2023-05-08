@@ -712,16 +712,39 @@ module.exports = function (logger, ev, t) {
 					ret.message = 'ok';
 
 					// edit other orderer node docs of the same cluster
-					if (fmt_doc.cluster_id && is_multi_edit(fmt_doc)) {	// need to edit multiple docs
+					if (fmt_doc.cluster_id && is_multi_edit(req.body)) {	// need to edit multiple docs
 						multi_raft_node_edit(fmt_doc, () => {			// I don't care if it errors
 							return cb(null, t.misc.sortKeys(ret));
 						});
 					} else {
-						return cb(null, t.misc.sortKeys(ret));
+
+						// after editing the comp's data, we may need to update our whitelist to reflect any edited urls
+						if (are_urls_edited(req.body)) {
+							exports.rebuildWhiteList(req, () => {
+								return cb(null, t.misc.sortKeys(ret));
+							});
+						} else {
+							return cb(null, t.misc.sortKeys(ret));
+						}
 					}
 				}
 			});
 		});
+
+		// do we need to rebuild the whitelist?
+		function are_urls_edited(input) {
+			const possible_urls = [
+				'api_url', 'ca_url', 'grpcwp_url', 'operations_url', 'osnadmin_url',
+				'api_url_saas', 'operations_url_saas', 'osnadmin_url_saas'
+			];
+			for (let i in possible_urls) {
+				const key = possible_urls[i];
+				if (input && input[key]) {
+					return true;
+				}
+			}
+			return false;
+		}
 
 		// do we need to edit all raft node docs?
 		function is_multi_edit(input) {

@@ -241,6 +241,7 @@ describe('Component APIs', () => {
 				callFunction: () => {
 					tools.stubs.getDoc.callsArgWith(1, null, node_api_objects.get_single_node_response_body);
 					tools.stubs.writeDoc.callsArgWith(2, null, node_api_objects.edited_node_response_body);
+					tools.stubs.rebuildWhiteList.callsArgWith(1, null);
 				},
 				expectBlock: (res, routeInfo) => {
 					//console.log('sent', routeInfo.route, JSON.stringify(routeInfo.body));
@@ -271,6 +272,7 @@ describe('Component APIs', () => {
 					tools.stubs.getDesignDocView.callsArgWith(1, null, { rows });
 					tools.stubs.getDoc.callsArgWith(1, null, get_response);
 					tools.stubs.writeDoc.callsArgWith(2, null, node_api_objects.edited_node_response_body);
+					tools.stubs.rebuildWhiteList.callsArgWith(1, null);
 				},
 				expectBlock: (res, routeInfo) => {
 					//console.log('sent', routeInfo.route, JSON.stringify(routeInfo.body));
