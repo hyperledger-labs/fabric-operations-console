@@ -373,11 +373,18 @@ class JoinChannelModal extends React.Component {
 			let allOrderers = [];
 			if (_.has(this.props.orderer, 'raft')) {
 				if (this.props.channel_orderer_addresses) {
-					allOrderers = this.props.orderer.raft.filter(x => this.props.channel_orderer_addresses.includes(_.toLower(x.backend_addr)));
+					allOrderers = this.props.orderer.raft.filter(x => {
+						return this.props.channel_orderer_addresses.includes(_.toLower(x.backend_addr));
+					});
 				} else {
 					allOrderers = this.props.orderer.raft;
 				}
 			} else {
+				allOrderers = [this.props.orderer];
+			}
+
+			// catch all if we don't find any orderers for some reason
+			if (!Array.isArray(allOrderers) || allOrderers.length === 0) {
 				allOrderers = [this.props.orderer];
 			}
 
@@ -696,6 +703,7 @@ class JoinChannelModal extends React.Component {
 			// skip step if orderer association exists
 			return;
 		}
+		// dsh todo change this.props.orderer... to this.props.selectedOrderer
 		return (
 			<WizardStep
 				type="WizardStep"
