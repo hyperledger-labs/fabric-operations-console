@@ -659,13 +659,21 @@ class ChannelComponent extends Component {
 				fn: () => {
 					if (this.props.history.location.search === '?visibility=all') {
 						this.props.history.push('/channels');
+						this.props.updateState(SCOPE, {
+							showingAllChannels: false
+						});
 					} else {
 						this.props.history.push('?visibility=all');
+						if (this.props.pending_osn_channels.length === 0) {
+							this.getAllOrdererChannels({ visibility: 'all' });
+						}
+						this.props.updateState(SCOPE, {
+							showingAllChannels: true
+						});
 					}
 				},
 				icon: this.props.history.location.search === '?visibility=all' ? 'visibilityOff' : 'visibilityOn',
-			},
-			{
+			}, {
 				id: 'create_channel',
 				text: 'create_channel',
 				fn: () => {
@@ -731,7 +739,7 @@ class ChannelComponent extends Component {
 								id="test__channels2--add--tile"
 								itemId="pending_osn_channels"
 								loading={this.props.orderer_loading}
-								items={this.props.pending_osn_channels}
+								items={this.props.showingAllChannels ? this.props.pending_osn_channels : []}
 								listMapping={[
 									{
 										header: 'name',
