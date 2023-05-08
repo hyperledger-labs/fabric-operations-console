@@ -831,11 +831,15 @@ module.exports = function (logger, ev, t) {
 								} else {
 									restart_comp_if_needed(() => {
 
-										// if we updated fabric from v2.2 to v2.4 or higher, we might now have an osn admin url (which dint' exist before)
+										// if we updated fabric from v2.2 to v2.4 or higher, we might now have an osn admin url (which didn't exist before)
 										// so we need to refresh our data to capture the new urls or w.e. -> call get_all_components, it will sync differences
 										const opts2 = { _skip_cache: true, _include_deployment_attributes: true };
 										t.deployer.get_all_components(opts2, () => {
-											return cb(null, { athena_fmt: athenaResponse, deployer_resp: fmt_ret, tx_id: parsed.debug_tx_id });
+
+											// once we sync with deployer with get_all_components(), we may need to update our whitelist to reflect new urls
+											t.component_lib.rebuildWhiteList(req, () => {
+												return cb(null, { athena_fmt: athenaResponse, deployer_resp: fmt_ret, tx_id: parsed.debug_tx_id });
+											});
 										});
 									});
 								}
