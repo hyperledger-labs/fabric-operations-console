@@ -1510,10 +1510,8 @@ class ChannelApi {
 					let orderers = null;
 					if (options.cluster_id) {
 						orderers = await OrdererRestApi.getClusterDetails(options.cluster_id);
-					} else {
-						orderers = await OrdererRestApi.getOrdererDetails(options.ordererId);
+						orderers = orderers.raft ? orderers.raft : null;
 					}
-					orderers = orderers.raft ? orderers.raft : [orderers];
 					const resp3 = await StitchApi.submitWithRetry(c_opts, orderers);
 					// send async event... don't wait
 					EventsRestApi.sendUpdateChannelEvent(options.channel_id, c_opts.msp_id);
