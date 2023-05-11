@@ -1620,7 +1620,7 @@ function build_wildcard_routes(express_app) {
 
 // check on the server's tls cert every now and then
 function periodically_check_cert() {
-	if (exports.auto_tls_cert_near_expiration(process.env.PEM_FILE_PATH, ev.STR.TLS_CERT_ORG)) {	// check cert, decide if we should auto-regen
+	if (tools.ot_misc.auto_tls_cert_near_expiration(process.env.PEM_FILE_PATH, ev.STR.TLS_CERT_ORG)) {	// check cert, decide if we should auto-regen
 		logger.warn('[tls] tls is expired or close to it, regenerating');
 		const hostname = tools.misc.get_host(ev.HOST_URL);
 		const regen_opts = {
@@ -1629,6 +1629,6 @@ function periodically_check_cert() {
 			org_name: ev.STR.TLS_CERT_ORG,
 			_lock_name: ev.STR.TLS_LOCK_NAME,
 		};
-		exports.regen_tls_cert(regen_opts, 1, () => { });
+		tools.ot_misc.regen_tls_cert(regen_opts, 1, () => { });
 	}
 }
