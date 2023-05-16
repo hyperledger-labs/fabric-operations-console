@@ -35,6 +35,10 @@ class UserSettingsRestApi {
 	static async recordIdentityExport() {
 		return RestApi.post('/api/v3/exported/identities');
 	}
+
+	static async registerSelf() {
+		return RestApi.post('/api/v3/permissions/users/registrations');
+	}
 }
 
 export default UserSettingsRestApi;

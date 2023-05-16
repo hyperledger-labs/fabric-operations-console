@@ -58,6 +58,7 @@ class App extends Component {
 		try {
 			const userInfo = await this.getUserInfo();
 			this.props.updateState('userInfo', userInfo);
+			console.log('dsh99 userinfo', userInfo);			// dsh todo remove me
 			await this.getAuthData();
 		} catch (error) {
 			Log.error(`Failed to get user info: ${error}`);
@@ -291,26 +292,14 @@ class App extends Component {
 		} else {
 			if (!this.state.authScheme.isAuthConfigured) return <AuthSetup />;
 			else {
-				let admin_list = this.state.authScheme.admin_list.map(x => (x.email ? x.email.toLowerCase() : x.toLowerCase()));
-				let access_list = this.state.authScheme.access_list
-					? this.state.authScheme.access_list.map(x => (x.email ? x.email.toLowerCase() : x.toLowerCase()))
-					: [];
-				const { email } = this.props.userInfo.loggedInAs;
-
-				if (
-					(this.props.userInfo.logged &&
-						(this.state.authScheme.type === 'ibmid' || this.state.authScheme.type === 'iam') &&
-						!ActionsHelper.canViewOpTools(this.props.userInfo)) ||
-					(this.props.userInfo.logged &&
-						this.state.authScheme.type === 'appid' &&
-						!(admin_list.includes(email.toLowerCase()) || access_list.includes(email.toLowerCase())))
-				)
+				if (!ActionsHelper.canViewOpTools(this.props.userInfo)) {
 					return (
 						<RequestAccess adminContact={this.state.authScheme.admin_contact_email}
 							userInfo={this.props.userInfo}
 							host_url={this.state.authScheme.host_url}
 						/>
 					);
+				}
 			}
 		}
 
@@ -329,7 +318,7 @@ class App extends Component {
 			window.location.href = `${this.state.authScheme.host_url}/auth/login`;
 		}
 
-		if ((this.props && this.props.userInfo && this.props.userInfo.logged)) {
+		if (this.props && this.props.userInfo && this.props.userInfo.logged) {
 			Log.info('Starting application!');
 			this.setupRemoteLogging(); // setup the remote logging after the user has logged in to avoid hitting api lockout
 			return <Main userInfo={this.props.userInfo}
