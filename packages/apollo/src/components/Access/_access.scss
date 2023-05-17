@@ -129,6 +129,22 @@
 	margin-left: 1.5rem;
 }
 
+.ibp-access-member-new-icon {
+	background-color: #81a4ec;
+	color: #fff;
+	border-radius: 1rem;
+	padding: 0;
+	text-align: center;
+}
+
+.ibp-access-member-you-icon {
+	background-color: #0353e9;
+	color: #fff;
+	border-radius: 1rem;
+	padding: 0;
+	text-align: center;
+}
+
 .ibp-access-row {
 	margin-bottom: 2rem;
 	margin-top: 2rem;
@@ -154,7 +170,8 @@
 	margin-top: -1rem;
 }
 
-.access-setting-value, .access-setting-label{
+.access-setting-value,
+.access-setting-label {
 	display: inline-block;
 	font-size: 1rem;
 }
@@ -165,4 +182,9 @@
 
 .access-setting-label {
 	margin-bottom: 1rem;
+}
+
+
+.tinyTextWhite {
+	font-size: 0.8rem;
 }

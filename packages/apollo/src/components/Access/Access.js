@@ -39,6 +39,7 @@ const Log = new Logger(SCOPE);
 // dsh todo rename to Access
 export class Access extends Component {
 	cName = 'Access';
+	// dsh todo check if iam auth is being used we should not populate content related to this new oauth access stuff
 
 	componentDidMount() {
 		this.props.showBreadcrumb('users', {}, this.props.history.location.pathname, true);
@@ -53,13 +54,45 @@ export class Access extends Component {
 			resp => {
 				ConfigureAuthApi.listUsers().then(resp2 => {
 					let all_users = [];
-					for (const i in resp2.users) {
+
+					// first find the current user and put them first
+					for (const id in resp2.users) {
+						if (this.props.userInfo && this.props.userInfo.loggedInAs && resp2.users[id].email === this.props.userInfo.loggedInAs.email) {
+							all_users.push({
+								uuid: id,
+								id: resp2.users[id].email,
+								email: resp2.users[id].email,
+								created: new Date(resp2.users[id].created).toDateString(),
+								roles: resp2.users[id].roles,
+								disabled: true,
+							});
+							delete resp2.users[id];
+							break;
+						}
+					}
+
+					// second list the users that are not pending
+					for (const id in resp2.users) {
+						if (resp2.users[id] && Array.isArray(resp2.users[id].roles) && resp2.users[id].roles.length > 0) {
+							all_users.push({
+								uuid: id,
+								id: resp2.users[id].email,
+								email: resp2.users[id].email,
+								created: new Date(resp2.users[id].created).toDateString(),
+								roles: resp2.users[id].roles,
+							});
+							delete resp2.users[id];
+						}
+					}
+
+					// last list everyone else
+					for (const id in resp2.users) {
 						all_users.push({
-							uuid: i,
-							id: resp2.users[i].email,
-							email: resp2.users[i].email,
-							created: new Date(resp2.users[i].created).toDateString(),
-							roles: resp2.users[i].roles,
+							uuid: id,
+							id: resp2.users[id].email,
+							email: resp2.users[id].email,
+							created: new Date(resp2.users[id].created).toDateString(),
+							roles: resp2.users[id].roles,
 						});
 					}
 
@@ -189,6 +222,29 @@ export class Access extends Component {
 		}
 	};
 
+	// build the cell contents for the attention column
+	buildAttentionCell = (user) => {
+		const translate = this.props.translate;
+
+		// is a new registered user
+		if ((!Array.isArray(user.roles) || user.roles.length === 0)) {
+			return (
+				<div className="ibp-access-member-new-icon">
+					{translate('pending_user_icon_txt')}
+				</div>
+			);
+		}
+
+		// this row if for the currently logged in user
+		else if (this.props.userInfo && this.props.userInfo.loggedInAs && user.id === this.props.userInfo.loggedInAs.email) {
+			return (
+				<div className="ibp-access-member-you-icon">
+					{translate('current_user_icon_txt')}
+				</div>
+			);
+		}
+	};
+
 	overflowMenu = user => {
 		const translate = this.props.translate;
 		let overflow = (
@@ -283,6 +339,9 @@ export class Access extends Component {
 	render() {
 		const isIam = this.props.auth_scheme === 'iam';
 		const translate = this.props.translate;
+		const hasPendingUsers = Array.isArray(this.props.all_users) && this.props.all_users.filter(x => {		// see if any usernames are pending (have no roles)
+			return (!Array.isArray(x.roles) || x.roles.length === 0);
+		}).length > 0;
 		return (
 			<PageContainer>
 				<div>
@@ -333,16 +392,21 @@ export class Access extends Component {
 
 								{/* users table content */}
 								{!isIam && (
-									<AuthenticatedUsers
-										loading={this.props.loading}
-										users={this.props.all_users}
-										onAdd={this.openAddUserModal}
-										onDelete={this.onDeleteUsers}
-										isManager={this.props.isManager}
-										checkRole={this.checkRole}
-										overflowMenu={this.props.isManager ? this.overflowMenu : null}
-										authScheme={this.props.auth_scheme}
-									/>
+									<div>
+										<AuthenticatedUsers
+											loading={this.props.loading}
+											users={this.props.all_users}
+											onAdd={this.openAddUserModal}
+											onDelete={this.onDeleteUsers}
+											isManager={this.props.isManager}
+											checkRole={this.checkRole}
+											buildAttentionCell={this.buildAttentionCell}
+											overflowMenu={this.props.isManager ? this.overflowMenu : null}
+											authScheme={this.props.auth_scheme}
+										/>
+
+										{hasPendingUsers && <p className='tinyTextWhite'>{translate('pending_user_title')}</p>}
+									</div>
 								)}
 							</div>
 							<div>
@@ -472,7 +536,7 @@ export function AuthenticatedUsers(props) {
 					}}
 				>
 					<ItemContainer
-						containerTitle="authenticated_users"
+						containerTitle="user_table_header"
 						containerTooltip={props.authScheme === 'couchdb' ? 'authenticated_users_tooltip_icp' : 'authenticated_users_tooltip_ibp'}
 						tooltipDirection="right"
 						containerDesc={props.authScheme === 'couchdb' ? 'user_roles_find_more' : ''}
@@ -485,12 +549,20 @@ export function AuthenticatedUsers(props) {
 						items={props.users}
 						listMapping={[
 							{
-								header: props.authScheme === 'couchdb' ? 'user_id' : 'email_address',
+								header: '',
+								custom: data => {
+									return props.buildAttentionCell(data);
+								},
+							},
+							{
+								header: 'user_id',
 								attr: 'email',
+								width: 4
 							},
 							{
 								header: 'date_added',
 								attr: 'created',
+								width: 2
 							},
 							{
 								header: 'manager',
@@ -560,8 +632,10 @@ AuthenticatedUsers.propTypes = {
 	onDelete: PropTypes.func,
 	isManager: PropTypes.bool,
 	checkRole: PropTypes.func,
+	buildAttentionCell: PropTypes.func,
 	overflowMenu: PropTypes.func,
 	authScheme: PropTypes.string,
+	userInfo: PropTypes.object,
 };
 
 export function DeleteButton() {

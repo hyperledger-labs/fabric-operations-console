@@ -25,6 +25,7 @@ import Helper from '../../utils/helper';
 import UserSettingsRestApi from '../../rest/UserSettingsRestApi';
 
 const SCOPE = 'RequestAccess';
+// dsh todo check if iam auth is being used we should not populate content related to requesting access
 
 class RequestAccess extends Component {
 	async componentDidMount() {

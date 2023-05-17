@@ -202,7 +202,7 @@ export class AddUserModal extends Component {
 					submitting={this.props.submitting}
 				>
 					<div>
-						<h1 className="ibp-auth-settings-modal-title">{translate('add_new_users')}</h1>
+						<h1 className="ibp-auth-settings-modal-title">{translate(this.props.isEditing ? 'edit_user_header' : 'add_new_users')}</h1>
 						{!this.props.isEditing && (
 							<div>
 								<div className="ibp-auth-settings-email-title ibp-tooltip-wrap">
@@ -248,7 +248,7 @@ export class AddUserModal extends Component {
 						<div className="ibp-auth-settings-roles-title ibp-tooltip-wrap">
 							<span className="ibp-user-tooltip">
 								<BlockchainTooltip type="definition"
-									tooltipText={translate('user_role_tooltip')}
+									tooltipText={translate(this.props.isEditing ? 'edit_user_role_tooltip' : 'user_role_tooltip')}
 								>
 									{translate('specify_roles')}
 								</BlockchainTooltip>
