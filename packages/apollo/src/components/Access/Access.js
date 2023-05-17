@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { Link, Loading, OverflowMenu, OverflowMenuItem, SkeletonText } from 'carbon-components-react';
+import { Loading, OverflowMenu, OverflowMenuItem, SkeletonText } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withLocalize } from 'react-localize-redux';
@@ -275,14 +275,12 @@ export class Access extends Component {
 	};
 
 	openEditAuthSchemePanel = () => {
-		console.log('fired opening');
 		this.props.updateState(SCOPE, {
 			showEditAuthSchemePanel: true,
 		});
 	};
 
 	closeEditAuthSchemePanel = () => {
-		console.log('fired closing');
 		this.props.updateState(SCOPE, {
 			showEditAuthSchemePanel: false,
 		});
@@ -302,7 +300,7 @@ export class Access extends Component {
 				<div className="ibp-access-auth-services-container">
 					{this.props.auth_scheme ? (
 						<p className="ibp-access-app-id-label">
-							{isIbmId ? translate('ibm_id') : isIam ? translate('identity_and_access_management') : isCouchDb ? translate('couchdb') : translate('app_id')}
+							{isIbmId ? translate('ibm_id') : isIam ? translate('identity_and_access_management') : isCouchDb ? translate('couchdb') : translate('oauth')}
 							{this.props.isManager &&
 								<button className="ibp-access-button"
 									onClick={() => this.openEditAuthSchemePanel()}
@@ -324,13 +322,35 @@ export class Access extends Component {
 							}}
 						/>
 					)}
-					<p className="ibp-access-cloud-service-label">
-						<BlockchainTooltip direction="right"
-							triggerText={isCouchDb ? translate('local') : translate('ibm_cloud_service')}
-						>
-							{translate(isCouchDb ? 'authentication_services_tooltip_icp' : 'authentication_services_tooltip_ibp')}
-						</BlockchainTooltip>
-					</p>
+					{this.props.auth_scheme &&
+						<p className="ibp-access-cloud-service-label">
+							{/* the authentication line*/}
+							<BlockchainTooltip direction="right"
+								triggerText={isIbmId ? translate('ibm_cloud_desc') :
+									isIam ? translate('ibm_cloud_desc') :
+										isCouchDb ? translate('local_desc') :
+											translate('oauth_desc')}
+							>
+								{isIbmId ? translate('authentication_services_tooltip_ibp') :
+									isIam ? translate('authentication_services_tooltip_ibp') :
+										isCouchDb ? translate('authentication_services_tooltip_local') :
+											translate('authentication_services_tooltip_oauth')}
+							</BlockchainTooltip>
+
+							{/* the authorization line*/}
+							<BlockchainTooltip direction="right"
+								triggerText={isIbmId ? translate('ibm_cloud_perm_desc') :
+									isIam ? translate('ibm_cloud_perm_desc') :
+										isCouchDb ? translate('local_perm_desc') :
+											translate('oauth_perm_desc')}
+							>
+								{isIbmId ? translate('authorize_services_tooltip_ibp') :
+									isIam ? translate('authorize_services_tooltip_ibp') :
+										isCouchDb ? translate('authorize_services_tooltip_oauth') :
+											translate('authorize_services_tooltip_local')}
+							</BlockchainTooltip>
+						</p>
+					}
 				</div>
 			</div>
 		);
@@ -354,40 +374,7 @@ export class Access extends Component {
 									staticHeader
 								/>
 
-								{/* general settings content */}
-								<h3>{translate('access_settings_title')}</h3>
-								<div>
-									<Link className="ibp-access-configure-label"
-										href="#"
-										onClick={this.openEditAuthModal}
-									>
-										{translate(this.props.isManager ? 'update_configuration' : 'administrator_contact')}
-									</Link>
-									<div>
-										<div className="access-setting-label">
-											<BlockchainTooltip direction="left"
-												triggerText='Console contact email:'
-											>
-												{translate('admin_contact_email_tooltip')}
-											</BlockchainTooltip>
-										</div>
-										{/*dsh todo finish this section*/}
-										<div className="access-setting-value">dshuffma@us.ibm.com</div>
-									</div>
-
-									<div>
-										<div className="access-setting-label">
-											<BlockchainTooltip direction="left"
-												triggerText='Allow default password:'
-											>
-												{'bla bla bla'}
-											</BlockchainTooltip>
-										</div>
-										<div className="access-setting-value">true</div>
-									</div>
-								</div>
-
-								{/* auth scheme content */}
+								{/* auth scheme tile content */}
 								<this.renderAuthTileSection />
 
 								{/* users table content */}

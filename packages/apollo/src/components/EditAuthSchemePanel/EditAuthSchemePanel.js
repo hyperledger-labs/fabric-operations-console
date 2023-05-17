@@ -21,17 +21,20 @@ import { clearNotifications, showError, updateState } from '../../redux/commonAc
 import SettingsApi from '../../rest/SettingsApi';
 import Helper from '../../utils/helper';
 import Form from '../Form/Form';
-import Logger from '../Log/Logger';
+//import Logger from '../Log/Logger';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
 import { ToggleSmall } from 'carbon-components-react';
 import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
+import * as constants from '../../utils/constants';
 
 const SCOPE = 'editSettings';
-const Log = new Logger(SCOPE);
+//const Log = new Logger(SCOPE);
 
+// dsh todo add ability to toggle Allow default password
 class EditAuthSchemePanel extends Component {
 	cName = 'EditAuthSchemePanel';
+	defaultAuth = constants.AUTH_COUCHDB;
 
 	async componentDidMount() {
 		this.props.updateState(SCOPE, {
@@ -43,6 +46,7 @@ class EditAuthSchemePanel extends Component {
 		const settings = await SettingsApi.getSettings();
 		const privateSettings = await SettingsApi.getPrivateSettings();
 		console.log('dsh99 settings', settings);
+		console.log('dsh99 AUTH_SCHEME:', settings.AUTH_SCHEME);
 		this.props.updateState(SCOPE, {
 			settings: settings,
 			privateSettings: privateSettings,
@@ -54,8 +58,8 @@ class EditAuthSchemePanel extends Component {
 	// submit the new settings using settings api
 	onSubmit = async () => {
 		const newAuthScheme = this.props.auth_scheme ? this.props.auth_scheme.value : null;
-		console.log('dsh99 sub newAuthScheme:', newAuthScheme);
-		if (newAuthScheme === 'oauth') {
+		console.log('dsh99 submitting newAuthScheme:', newAuthScheme);
+		if (newAuthScheme === constants.AUTH_OAUTH) {
 			const newSettings = {
 				auth_scheme: newAuthScheme,
 				oauth: {
@@ -67,13 +71,13 @@ class EditAuthSchemePanel extends Component {
 					debug: (this.props.debug === 'on') ? true : false
 				}
 			};
-			console.log('dsh99 sub newSettings:', newSettings);
+			console.log('dsh99 submitting newSettings:', newSettings);
 			try {
 				//await SettingsApi.updateSettings(newSettings);
 			} catch (e) {
 				console.error('unable to submit oauth settings, e:', e);
 			}
-		} else if (newAuthScheme === 'couchdb') {
+		} else if (newAuthScheme === constants.AUTH_COUCHDB) {
 			try {
 				await SettingsApi.updateSettings({ auth_scheme: newAuthScheme });
 			} catch (e) {
@@ -81,21 +85,6 @@ class EditAuthSchemePanel extends Component {
 			}
 		}
 	};
-
-	// the auth scheme dropdown selection changed
-	/*onChangeFormFields = (data) => {
-		console.log('dsh99 scheme change detected', data);
-		if (data && data.auth_scheme) {
-			this.props.updateState(SCOPE, {
-				selectedScheme: data.auth_scheme.value,
-			});
-		}
-	}*/
-
-	// an oauth input field was changed
-	/*onChangeOauthFields = (data) => {
-		console.log('dsh99 authorization_url', this.props.authorization_url);
-	}*/
 
 	// detect if any changes have been made to auth settings
 	oauthSettingsAreSame = () => {
@@ -119,8 +108,7 @@ class EditAuthSchemePanel extends Component {
 
 		// if oauth was selected, check oauth settings
 		if (this.props.auth_scheme && this.props.settings) {
-			console.log('dsh99 current', this.props.settings.AUTH_SCHEME, 'selected', this.props.auth_scheme);
-			if (this.props.auth_scheme.value === 'oauth') {
+			if (this.props.auth_scheme.value === constants.AUTH_OAUTH) {
 				return (JSON.stringify(newOauthSettings) === JSON.stringify(existingOauthSettings) && this.props.settings.AUTH_SCHEME === this.props.auth_scheme.value);
 			} else {
 				return (this.props.settings.AUTH_SCHEME === this.props.auth_scheme.value);
@@ -135,7 +123,7 @@ class EditAuthSchemePanel extends Component {
 		}
 		let settings = this.props.settings || {};
 		let private_settings = this.props.privateSettings || {};
-		let currentAuthScheme = settings.AUTH_SCHEME || 'couchdb';
+		let currentAuthScheme = settings.AUTH_SCHEME || this.defaultAuth;
 
 		let fields = [
 			{
@@ -146,12 +134,12 @@ class EditAuthSchemePanel extends Component {
 				default: currentAuthScheme,
 				type: 'dropdown',
 				options: [{
-					name: 'CouchDB' + ((currentAuthScheme === 'couchdb') ? ' (current)' : ''),
-					value: 'couchdb'
+					name: 'CouchDB' + ((currentAuthScheme === constants.AUTH_COUCHDB) ? ' (current)' : ''),
+					value: constants.AUTH_COUCHDB
 				},
 				{
-					name: 'OAuth2.0' + ((currentAuthScheme === 'oauth') ? ' (current)' : ''),
-					value: 'oauth'
+					name: 'OAuth2.0' + ((currentAuthScheme === constants.AUTH_OAUTH) ? ' (current)' : ''),
+					value: constants.AUTH_OAUTH
 				}]
 			},
 		];
@@ -168,6 +156,7 @@ class EditAuthSchemePanel extends Component {
 			'oauth': 'OAuth2.0 Settings:',
 			'couchdb': 'CouchDB Settings:'
 		};
+
 		return (
 			<WizardStep type="WizardStep"
 				disableSubmit={this.oauthSettingsAreSame()}
@@ -185,7 +174,7 @@ class EditAuthSchemePanel extends Component {
 								{descriptionMap[this.props.auth_scheme.value]}
 							</p>
 
-							{this.props.auth_scheme && this.props.auth_scheme.value === 'oauth' &&
+							{this.props.auth_scheme && this.props.auth_scheme.value === constants.AUTH_OAUTH &&
 								<div>
 									<SidePanelWarning title="callback_warning_title"
 										subtitle="callback_warning_desc"
@@ -204,10 +193,10 @@ class EditAuthSchemePanel extends Component {
 							<p className='tinyText'>
 								{warningMap[this.props.auth_scheme.value]}
 							</p>
-							<br/>
+							<br />
 						</div>}
 
-						{this.props.auth_scheme && this.props.auth_scheme.value === 'oauth' &&
+						{this.props.auth_scheme && this.props.auth_scheme.value === constants.AUTH_OAUTH &&
 							<div>
 								<Form scope={SCOPE}
 									id='oauth-form'
@@ -316,7 +305,7 @@ class EditAuthSchemePanel extends Component {
 				<div>
 					{Helper.renderFieldSummary(translate, this.props.auth_scheme, 'authentication_services', 'value')}
 
-					{this.props.auth_scheme && this.props.auth_scheme.value === 'oauth' && <div>
+					{this.props.auth_scheme && this.props.auth_scheme.value === constants.AUTH_OAUTH && <div>
 						{Helper.renderFieldSummary(translate, this.props, 'authorization_url_label', 'authorization_url')}
 						{Helper.renderFieldSummary(translate, this.props, 'token_url_label', 'token_url')}
 						{Helper.renderFieldSummary(translate, this.props, 'client_id_label', 'client_id')}

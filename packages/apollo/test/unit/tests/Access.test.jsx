@@ -198,7 +198,7 @@ describe('AuthenticationServices function', () => {
 		component
 			.find('.ibp-members-cloud-service-label')
 			.text()
-			.should.equal('ibm_cloud_service');
+			.should.equal('ibm_cloud_desc');
 		component
 			.find('Link .ibp-members-configure-label')
 			.text()
@@ -216,7 +216,7 @@ describe('AuthenticationServices function', () => {
 		component
 			.find('.ibp-members-cloud-service-label')
 			.text()
-			.should.equal('ibm_cloud_service');
+			.should.equal('ibm_cloud_desc');
 		component
 			.find('Link .ibp-members-configure-label')
 			.text()
@@ -234,7 +234,7 @@ describe('AuthenticationServices function', () => {
 		component
 			.find('.ibp-members-cloud-service-label')
 			.text()
-			.should.equal('local');
+			.should.equal('local_desc');
 		component
 			.find('Link .ibp-members-configure-label')
 			.text()
@@ -250,7 +250,7 @@ describe('AuthenticationServices function', () => {
 		component
 			.find('.ibp-members-cloud-service-label')
 			.text()
-			.should.equal('ibm_cloud_service');
+			.should.equal('ibm_cloud_desc');
 		component
 			.find('Link .ibp-members-configure-label')
 			.text()
@@ -266,7 +266,7 @@ describe('AuthenticationServices function', () => {
 		component
 			.find('.ibp-members-cloud-service-label')
 			.text()
-			.should.equal('ibm_cloud_service');
+			.should.equal('ibm_cloud_desc');
 		component
 			.find('Link .ibp-members-configure-label')
 			.text()
@@ -284,7 +284,7 @@ describe('AuthenticationServices function', () => {
 		component
 			.find('.ibp-members-cloud-service-label')
 			.text()
-			.should.equal('ibm_cloud_service');
+			.should.equal('ibm_cloud_desc');
 		component
 			.find('Link .ibp-members-configure-label')
 			.text()
