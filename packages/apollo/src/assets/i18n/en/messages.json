@@ -688,8 +688,6 @@
 	"remove_consenter_confirm": "Please type the URL of the consenter to confirm:",
 	"confirm_consenter_url": "Consenter URL",
 	"confirm_consenter_url_placeholder": "Enter the URL of the consenter to be removed",
-	"smart_contract_subtext": "For a tool to develop and build smart contracts see the [[IBM Blockchain VSCode extension]](_LINK1)",
-	"_LINK1": "https://marketplace.visualstudio.com/items?itemName=IBMBlockchain.ibm-blockchain-platform",
 	"add_ca_successful": "Certificate Authority added",
 	"add_cas_successful": "Certificate Authorities added",
 	"add_ca_successful_description": "Congratulations! You have successfully created '${caName}'. It will take a few minutes for the status to become green while it is deploying to your cluster in the background. Feel free to carry on with your other activities in the console while that happens.",

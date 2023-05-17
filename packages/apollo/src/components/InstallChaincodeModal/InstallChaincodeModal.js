@@ -426,7 +426,6 @@ class InstallChaincodeModal extends Component {
 						{translate('find_more_here')}
 					</a>
 				</p>
-				<TranslateLink text="smart_contract_subtext" />
 				{this.renderUploadPackage(translate)}
 				{this.renderPeerSelection(translate)}
 			</Wizard>
