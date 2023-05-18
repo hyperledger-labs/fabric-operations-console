@@ -681,3 +681,7 @@
 .ibp-row-loading {
 	pointer-events: none;
 }
+
+.bx--checkbox:disabled + .bx--checkbox-label::before{
+	border-color: #575f66 !important;
+}

@@ -275,9 +275,11 @@ export class Access extends Component {
 	};
 
 	openEditAuthSchemePanel = () => {
-		this.props.updateState(SCOPE, {
-			showEditAuthSchemePanel: true,
-		});
+		if (this.props.isManager) {
+			this.props.updateState(SCOPE, {
+				showEditAuthSchemePanel: true,
+			});
+		}
 	};
 
 	closeEditAuthSchemePanel = () => {
@@ -285,6 +287,7 @@ export class Access extends Component {
 			showEditAuthSchemePanel: false,
 		});
 		this.getAuthDetails();			// refresh on close
+		// dsh todo log user out if submit was successful
 	};
 
 	renderAuthTileSection = () => {

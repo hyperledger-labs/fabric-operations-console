@@ -149,8 +149,8 @@ class EditAuthSchemePanel extends Component {
 			'couchdb': 'The CouchDB authentication method will securely store usernames and passwords in the console\'s CouchDB database. Users can be managed (such as adding & removing) by using the `Access` tab of your console and the `Authorized users` table.',
 		};
 		let warningMap = {
-			'oauth': 'This authentication method requires the following settings. These settings can be obtained from your specific OAuth2.0 service. <help>',
-			'couchdb': 'This authentication method does not require any other information or any external services.'
+			'oauth': 'This authentication method requires the following settings. These settings can be obtained from your specific OAuth2.0 service. <help>',	// dsh todo add link
+			'couchdb': 'This authentication method does not require an external service.'
 		};
 		let nameMap = {
 			'oauth': 'OAuth2.0 Settings:',
@@ -318,7 +318,6 @@ class EditAuthSchemePanel extends Component {
 		);
 	}
 
-	// dsh todo protect this panel from only opening if user is manager
 	// dsh remove theses translation strings couch_edit_authentication_settings_desc, edit_authentication_settings_desc, administrator_contact_desc
 	render() {
 		const translate = this.props.translate;

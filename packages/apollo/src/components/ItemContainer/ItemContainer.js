@@ -14,7 +14,7 @@
  * limitations under the License.
 */
 import { Table16 } from '@carbon/icons-react/es';
-import { Button, DataTable } from 'carbon-components-react';
+import { Checkbox, Button, DataTable } from 'carbon-components-react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -493,7 +493,7 @@ class ItemContainer extends Component {
 			items.forEach(row => {
 				if (
 					selectedRows.find(selectedRow => {
-						return selectedRow.id === row.id;
+						return selectedRow.id === row.id && !row.disabled;	// do not mass select disabled rows
 					})
 				) {
 					selectedRowsWithDetails.push(row);
@@ -840,7 +840,19 @@ class ItemContainer extends Component {
 												}
 											}}
 										>
-											{this.props.selectItem && (
+											{row.disabled && (
+												<TableCell
+													key={(row.id || row.name)}
+													id={`${this.props.id}-${i}`}
+												>
+													<Checkbox
+														id={`${this.props.id}-${i}-disabled`}
+														checked={false}
+														disabled={true}
+													/>
+												</TableCell>
+											)}
+											{!row.disabled && this.props.selectItem && (
 												<TableSelectRow
 													disabled={
 														row.disabled ||
