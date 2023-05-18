@@ -26,6 +26,7 @@ module.exports = function (logger, ev, t) {
 		couchdb: require('./couchdb_middleware.js')(logger, ev, t, exports),
 		ldap: require('./ldap_middleware.js')(logger, ev, t, exports),
 		oauth: require('./oauth_middleware.js')(logger, ev, t, exports),
+		oidc: require('./oauth_middleware.js')(logger, ev, t, exports),
 	};
 	const eTrack = t.event_tracker.trackViaIntercept;
 

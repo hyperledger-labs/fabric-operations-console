@@ -290,8 +290,33 @@ class App extends Component {
 				</LoadingWithContent>
 			);
 		} else {
-			if (!this.state.authScheme.isAuthConfigured) return <AuthSetup />;
+			Log.debug('Current auth scheme:', this.state.authScheme.type);
+
+			// if user is not logged in at all...
+			if (!this.props.userInfo || !this.props.userInfo.logged) {
+
+				// if using local username/password, send user to our login prompt
+				if (this.state.authScheme.type === 'couchdb') {
+					return <Login hostUrl={this.state.authScheme.host_url} />;
+				}
+
+				// if using sso, send user to sso's login prompt
+				else {
+					window.location.href = `${this.state.authScheme.host_url}/auth/login`;
+					return (
+						<LoadingWithContent withOverlay
+							description={translate('redirecting_login')}
+						>
+							<h3>{translate('redirecting_login')}</h3>
+						</LoadingWithContent>
+					);
+				}
+			}
+
+			// if user is logged in
 			else {
+
+				// if user is logged in but has no access
 				if (!ActionsHelper.canViewOpTools(this.props.userInfo)) {
 					return (
 						<RequestAccess adminContact={this.state.authScheme.admin_contact_email}
@@ -300,38 +325,21 @@ class App extends Component {
 						/>
 					);
 				}
+
+				// if user is logged in but is using the default password, send user to change pass prompt
+				if (this.state.authScheme.type === 'couchdb' && this.props.userInfo && this.props.userInfo.logged && this.props.userInfo.password_type === 'default') {
+					return <Login hostUrl={this.state.authScheme.host_url}
+						changePassword={true}
+					/>;
+				}
+
+				// if user is logged in and can view the app, render the the app
+				Log.info('Starting application!');
+				this.setupRemoteLogging(); // setup the remote logging after the user has logged in to avoid hitting api lockout
+				return <Main userInfo={this.props.userInfo}
+					host_url={this.state.authScheme.host_url}
+				/>;
 			}
-		}
-
-		Log.debug('Current auth scheme:', this.state.authScheme.type);
-		if (this.state.authScheme.type === 'couchdb' && this.props.userInfo && !this.props.userInfo.logged) {
-			return <Login hostUrl={this.state.authScheme.host_url} />;
-		}
-
-		if (this.state.authScheme.type === 'couchdb' && this.props.userInfo && this.props.userInfo.logged && this.props.userInfo.password_type === 'default') {
-			return <Login hostUrl={this.state.authScheme.host_url}
-				changePassword={true}
-			/>;
-		}
-
-		if (this.props.userInfo && !this.props.userInfo.logged) {
-			window.location.href = `${this.state.authScheme.host_url}/auth/login`;
-		}
-
-		if (this.props && this.props.userInfo && this.props.userInfo.logged) {
-			Log.info('Starting application!');
-			this.setupRemoteLogging(); // setup the remote logging after the user has logged in to avoid hitting api lockout
-			return <Main userInfo={this.props.userInfo}
-				host_url={this.state.authScheme.host_url}
-			/>;
-		} else {
-			return (
-				<LoadingWithContent withOverlay
-					description={translate('redirecting_login')}
-				>
-					<h3>{translate('redirecting_login')}</h3>
-				</LoadingWithContent>
-			);
 		}
 	}
 }

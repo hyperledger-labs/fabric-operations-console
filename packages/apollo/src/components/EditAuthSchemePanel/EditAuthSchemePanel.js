@@ -45,20 +45,17 @@ class EditAuthSchemePanel extends Component {
 
 		const settings = await SettingsApi.getSettings();
 		const privateSettings = await SettingsApi.getPrivateSettings();
-		console.log('dsh99 settings', settings);
-		console.log('dsh99 AUTH_SCHEME:', settings.AUTH_SCHEME);
 		this.props.updateState(SCOPE, {
 			settings: settings,
 			privateSettings: privateSettings,
 			loading: false,
-			debug: 'off',
+			debug: (privateSettings && privateSettings.OAUTH && privateSettings.OAUTH.DEBUG) ? 'on' : 'off',
 		});
 	}
 
 	// submit the new settings using settings api
 	onSubmit = async () => {
 		const newAuthScheme = this.props.auth_scheme ? this.props.auth_scheme.value : null;
-		console.log('dsh99 submitting newAuthScheme:', newAuthScheme);
 		if (newAuthScheme === constants.AUTH_OAUTH) {
 			const newSettings = {
 				auth_scheme: newAuthScheme,
@@ -71,17 +68,18 @@ class EditAuthSchemePanel extends Component {
 					debug: (this.props.debug === 'on') ? true : false
 				}
 			};
-			console.log('dsh99 submitting newSettings:', newSettings);
 			try {
-				//await SettingsApi.updateSettings(newSettings);
+				await SettingsApi.updateSettings(newSettings);
 			} catch (e) {
 				console.error('unable to submit oauth settings, e:', e);
+				throw { title: 'Unable to save settings', details: (e && e.msgs) ? e.msgs.join('\n') : '' };
 			}
 		} else if (newAuthScheme === constants.AUTH_COUCHDB) {
 			try {
 				await SettingsApi.updateSettings({ auth_scheme: newAuthScheme });
 			} catch (e) {
 				console.error('unable to submit couchdb settings, e:', e);
+				throw { title: 'Unable to save settings', details: (e && e.msgs) ? e.msgs.join('\n') : '' };
 			}
 		}
 	};
@@ -96,6 +94,7 @@ class EditAuthSchemePanel extends Component {
 				client_id: this.props.privateSettings.OAUTH.CLIENT_ID,
 				client_secret: this.props.privateSettings.OAUTH.CLIENT_SECRET,
 				scope: this.props.privateSettings.OAUTH.SCOPE,
+				debug: this.props.privateSettings.OAUTH.DEBUG,
 			};
 			newOauthSettings = {
 				authorization_url: this.props.authorization_url,
@@ -103,6 +102,7 @@ class EditAuthSchemePanel extends Component {
 				client_id: this.props.client_id,
 				client_secret: this.props.client_secret,
 				scope: this.props.scope2,
+				debug: (this.props.debug === 'on') ? true : false,
 			};
 		}
 

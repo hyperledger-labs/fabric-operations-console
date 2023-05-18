@@ -155,7 +155,7 @@ module.exports = function (logger, ev, t) {
 					settings_doc.access_list[email.toLowerCase()] = {						// create the user object
 						created: Date.now(),
 						roles: [],
-						uuid: t.uuidv4()
+						uuid: t.middleware.getUuid(req) || t.uuidv4()
 					};
 
 					// update the settings doc

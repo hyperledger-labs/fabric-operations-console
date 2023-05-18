@@ -50,7 +50,7 @@ export class AddUserModal extends Component {
 		});
 	}
 
-	validateEmail = chipText => {
+	/*validateEmail = chipText => {
 		const separators = [' ', ','];
 		const emails = chipText.split(new RegExp(separators.join('|'), 'g'));
 		const chips = emails.filter(t => t.length > 0).map(t => t.trim());
@@ -65,6 +65,33 @@ export class AddUserModal extends Component {
 			} else if (chip && !Helper.isEmail(chip)) {
 				this.props.updateState(SCOPE, {
 					error: 'invalid_email',
+				});
+				isValid = false;
+			} else if (!Helper.validateCharacters(chip)) {
+				this.props.updateState(SCOPE, {
+					error: 'input_error_invalid_char',
+				});
+				isValid = false;
+			}
+		});
+		if (isValid) {
+			this.props.updateState(SCOPE, {
+				error: '',
+			});
+		}
+		return isValid;
+	};*/
+
+	validateUser = chipText => {
+		const separators = [' ', ','];
+		const users = chipText.split(new RegExp(separators.join('|'), 'g'));
+		const chips = users.filter(t => t.length > 0).map(t => t.trim());
+
+		let isValid = true;
+		chips.forEach(chip => {
+			if (chip && this.props.existingUsers.includes(chip)) {
+				this.props.updateState(SCOPE, {
+					error: 'duplicate_user_not_allowed',
 				});
 				isValid = false;
 			} else if (!Helper.validateCharacters(chip)) {
@@ -220,7 +247,7 @@ export class AddUserModal extends Component {
 										id="users"
 										placeholder={translate(this.props.isCouchBasedAuth ? 'users_placeholder_couch' : 'users_placeholder')}
 										value={this.props.newUsers}
-										handleBeforeAddChip={!this.props.isCouchBasedAuth ? this.validateEmail : () => true}
+										handleBeforeAddChip={!this.props.isCouchBasedAuth ? this.validateUser : () => true}
 										handleAddChip={this.handleAddChip}
 										handleDeleteChip={this.handleDeleteChip}
 									/>

@@ -64,16 +64,16 @@ export class Access extends Component {
 								email: resp2.users[id].email,
 								created: new Date(resp2.users[id].created).toDateString(),
 								roles: resp2.users[id].roles,
-								disabled: true,
+								disabled: true,			// this doesn't seem to do anything, dsh todo don't let a user delete themselves
 							});
 							delete resp2.users[id];
 							break;
 						}
 					}
 
-					// second list the users that are not pending
+					// second list the users that are pending
 					for (const id in resp2.users) {
-						if (resp2.users[id] && Array.isArray(resp2.users[id].roles) && resp2.users[id].roles.length > 0) {
+						if (resp2.users[id] && (!Array.isArray(resp2.users[id].roles) || resp2.users[id].roles.length === 0)) {
 							all_users.push({
 								uuid: id,
 								id: resp2.users[id].email,
@@ -284,6 +284,7 @@ export class Access extends Component {
 		this.props.updateState(SCOPE, {
 			showEditAuthSchemePanel: false,
 		});
+		this.getAuthDetails();			// refresh on close
 	};
 
 	renderAuthTileSection = () => {
@@ -299,7 +300,7 @@ export class Access extends Component {
 				{/*dsh todo check the alt text for the other auth schemes*/}
 				<div className="ibp-access-auth-services-container">
 					{this.props.auth_scheme ? (
-						<p className="ibp-access-app-id-label">
+						<div className="ibp-access-app-id-label">
 							{isIbmId ? translate('ibm_id') : isIam ? translate('identity_and_access_management') : isCouchDb ? translate('couchdb') : translate('oauth')}
 							{this.props.isManager &&
 								<button className="ibp-access-button"
@@ -312,7 +313,7 @@ export class Access extends Component {
 									/>
 								</button>
 							}
-						</p>
+						</div>
 					) : (
 						<SkeletonText
 							className="ibp-auth-skeleton-text"
@@ -323,7 +324,7 @@ export class Access extends Component {
 						/>
 					)}
 					{this.props.auth_scheme &&
-						<p className="ibp-access-cloud-service-label">
+						<div className="ibp-access-cloud-service-label">
 							{/* the authentication line*/}
 							<BlockchainTooltip direction="right"
 								triggerText={isIbmId ? translate('ibm_cloud_desc') :
@@ -349,7 +350,7 @@ export class Access extends Component {
 										isCouchDb ? translate('authorize_services_tooltip_oauth') :
 											translate('authorize_services_tooltip_local')}
 							</BlockchainTooltip>
-						</p>
+						</div>
 					}
 				</div>
 			</div>
@@ -378,7 +379,7 @@ export class Access extends Component {
 								<this.renderAuthTileSection />
 
 								{/* users table content */}
-								{!isIam && (
+								{!isIam && this.props.isManager && (
 									<div>
 										<AuthenticatedUsers
 											loading={this.props.loading}
@@ -534,6 +535,7 @@ export function AuthenticatedUsers(props) {
 						itemId="users"
 						loading={props.loading}
 						items={props.users}
+						pageSize={50}
 						listMapping={[
 							{
 								header: '',

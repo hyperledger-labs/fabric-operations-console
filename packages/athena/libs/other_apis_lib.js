@@ -199,8 +199,8 @@ module.exports = function (logger, ev, t) {
 				const key = Object.keys(req.body)[0];
 
 				// Check if the user's auth_scheme is 'ibmid'. If so then exit the API with an error message
-				if ((ev.AUTH_SCHEME === 'ibmid' || ev.AUTH_SCHEME === 'iam') && key === 'auth_scheme') {
-					return cb({ statusCode: 400, msg: 'Your auth_scheme is \'ibmid\'. You are not allowed to change this' });
+				if (key === 'auth_scheme') {
+					return cb({ statusCode: 400, msg: 'You cannot change the value of "auth_scheme" with this API.' });
 				}
 
 				settings[key] = req.body[key];								// replace the property
@@ -276,6 +276,23 @@ module.exports = function (logger, ev, t) {
 				if (!isNaN(req.body.max_req_per_min_ak)) {
 					edited_settings_doc.max_req_per_min_ak = Number(req.body.max_req_per_min_ak);
 					restart_changes++;												// increment this to trigger a restart
+				}
+
+				// auth scheme edits
+				if (req.body.auth_scheme) {
+					edited_settings_doc.auth_scheme = req.body.auth_scheme;
+				}
+
+				// oauth setting edits
+				if (req.body.oauth) {
+					edited_settings_doc.oauth = {
+						authorization_url: req.body.oauth.authorization_url,
+						token_url: req.body.oauth.token_url,
+						client_id: req.body.oauth.client_id,
+						client_secret: req.body.oauth.client_secret,
+						scope: req.body.oauth.scope,
+						debug: req.body.oauth.debug
+					};
 				}
 
 				writeSettingsDoc(req, edited_settings_doc, (write_error, resp) => {	// write the updated settings back to the db
