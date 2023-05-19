@@ -166,7 +166,7 @@ module.exports = function (logger, ev, t) {
 		const ret = {											// compile the list of private settings
 			DEPLOYER_URL: ev.DEPLOYER_URL || '?',				// for OpTools developers show the un-redacted url
 			JUPITER_URL: ev.JUPITER_URL || '?',					// for OpTools developers show the un-redacted url
-			//DEFAULT_USER_PASSWORD: ev.DEFAULT_USER_PASSWORD,	// for debug
+			//DEFAULT_USER_PASSWORD: ev.DEFAULT_USER_PASSWORD,	// do not uncomment this line in production
 			SESSION_SECRET: ev.SESSION_SECRET,					// for debug
 			URL_SAFE_LIST: ev.URL_SAFE_LIST || [],				// for debug, moved this here from get_ev_settings so we don't leak component addresses
 			CONFIGTXLATOR_URL_ORIGINAL: ev.CONFIGTXLATOR_URL_ORIGINAL || '?',
@@ -174,6 +174,7 @@ module.exports = function (logger, ev, t) {
 			MIGRATION_API_KEY: ev.MIGRATION_API_KEY,			// for debug
 			DB_CONNECTION_STRING: t.misc.redact_basic_auth(ev.DB_CONNECTION_STRING),	// for debug
 			OAUTH: ev.OAUTH,
+			ALLOW_DEFAULT_PASSWORD: ev.ALLOW_DEFAULT_PASSWORD
 		};
 		return t.misc.sortItOut(ret);
 	};
@@ -280,6 +281,17 @@ module.exports = function (logger, ev, t) {
 
 				// auth scheme edits
 				if (req.body.auth_scheme) {
+
+					// if we are changing TO couchdb auth, then reset all user passwords (users will use the default password to login)
+					if (req.body.auth_scheme === 'couchdb' && edited_settings_doc.auth_scheme !== 'couchdb') {	// if already using couchdb, skip this part
+						logger.debug('[edit settings] setting up couchdb auth, resetting all user passwords to the default pass');
+						for (let user in edited_settings_doc.access_list) {
+							delete edited_settings_doc.access_list[user].hashed_secret;
+							delete edited_settings_doc.access_list[user].salt;
+							delete edited_settings_doc.access_list[user].ts_changed_password;
+						}
+					}
+
 					edited_settings_doc.auth_scheme = req.body.auth_scheme;
 				}
 
@@ -293,6 +305,14 @@ module.exports = function (logger, ev, t) {
 						scope: req.body.oauth.scope,
 						debug: req.body.oauth.debug
 					};
+				}
+
+				// couchdb setting edits
+				if (req.body.default_user_password) {
+					edited_settings_doc.default_user_password = req.body.default_user_password;
+				}
+				if (typeof req.body.allow_default_password === 'boolean') {
+					edited_settings_doc.allow_default_password = req.body.allow_default_password;
 				}
 
 				writeSettingsDoc(req, edited_settings_doc, (write_error, resp) => {	// write the updated settings back to the db

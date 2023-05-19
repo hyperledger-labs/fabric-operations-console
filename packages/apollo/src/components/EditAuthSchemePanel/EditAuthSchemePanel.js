@@ -27,6 +27,8 @@ import WizardStep from '../WizardStep/WizardStep';
 import { ToggleSmall } from 'carbon-components-react';
 import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import * as constants from '../../utils/constants';
+import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
+import LoginApi from '../../rest/LoginApi';
 
 const SCOPE = 'editSettings';
 //const Log = new Logger(SCOPE);
@@ -41,6 +43,7 @@ class EditAuthSchemePanel extends Component {
 			submitting: false,
 			loading: true,
 			settings: {},
+			readOnly: true,
 		});
 
 		const settings = await SettingsApi.getSettings();
@@ -50,6 +53,7 @@ class EditAuthSchemePanel extends Component {
 			privateSettings: privateSettings,
 			loading: false,
 			debug: (privateSettings && privateSettings.OAUTH && privateSettings.OAUTH.DEBUG) ? 'on' : 'off',
+			allowDefault: (privateSettings && privateSettings.ALLOW_DEFAULT_PASSWORD) ? true : false,
 		});
 	}
 
@@ -75,8 +79,13 @@ class EditAuthSchemePanel extends Component {
 				throw { title: 'Unable to save settings', details: (e && e.msgs) ? e.msgs.join('\n') : '' };
 			}
 		} else if (newAuthScheme === constants.AUTH_COUCHDB) {
+			const newSettings = {
+				auth_scheme: newAuthScheme,
+				default_user_password: this.props.default_password,
+				allow_default_password: this.props.allowDefault,
+			};
 			try {
-				await SettingsApi.updateSettings({ auth_scheme: newAuthScheme });
+				await SettingsApi.updateSettings(newSettings);
 			} catch (e) {
 				console.error('unable to submit couchdb settings, e:', e);
 				throw { title: 'Unable to save settings', details: (e && e.msgs) ? e.msgs.join('\n') : '' };
@@ -84,8 +93,44 @@ class EditAuthSchemePanel extends Component {
 		}
 	};
 
+	// debounce the new-password input field as it is entered
+	onPassChange(value) {
+		clearTimeout(this.debounce);
+		this.debounce = setTimeout(() => {
+			this.onPasswordChangeFormChangeDebounced(value);
+		}, 200);
+	}
+
+	// test new password's strength as it is entered
+	async onPasswordChangeFormChangeDebounced(value) {
+		if (value.default_password) {
+			try {
+				await LoginApi.testPasswordStr(value.default_password);
+				this.props.updateState(SCOPE, {
+					newPasswordError: '',
+				});
+				this.validate_confirm();
+			} catch (e) {
+				const msg = e ? e.msg : 'Password was not updated';
+				this.props.updateState(SCOPE, {
+					newPasswordError: (Array.isArray(msg) && typeof msg[0] === 'string') ? msg.join('<br/>') : msg,
+				});
+			}
+		} else if (value.confirm_default_password) {
+			this.validate_confirm();
+		}
+	}
+
+	// check if confirmation password input matches new password input
+	validate_confirm = () => {
+		const newPassword = this.props.default_password;
+		this.props.updateState(SCOPE, {
+			confirmPasswordError: (newPassword && newPassword === this.props.confirm_default_password) ? '' : 'passwords_do_not_match',
+		});
+	}
+
 	// detect if any changes have been made to auth settings
-	oauthSettingsAreSame = () => {
+	authSettingsAreSame = () => {
 		let existingOauthSettings, newOauthSettings;
 		if (this.props.privateSettings && this.props.privateSettings.OAUTH) {
 			existingOauthSettings = {
@@ -109,11 +154,33 @@ class EditAuthSchemePanel extends Component {
 		// if oauth was selected, check oauth settings
 		if (this.props.auth_scheme && this.props.settings) {
 			if (this.props.auth_scheme.value === constants.AUTH_OAUTH) {
-				return (JSON.stringify(newOauthSettings) === JSON.stringify(existingOauthSettings) && this.props.settings.AUTH_SCHEME === this.props.auth_scheme.value);
+				return (
+					this.props.settings.AUTH_SCHEME === this.props.auth_scheme.value &&
+					JSON.stringify(newOauthSettings) === JSON.stringify(existingOauthSettings)
+				);
+			} else if (this.props.auth_scheme.value === constants.AUTH_COUCHDB) {
+				return false;	// return false always to let user change resubmit couchdb settings even if they are the same
 			} else {
-				return (this.props.settings.AUTH_SCHEME === this.props.auth_scheme.value);
+				return this.props.settings.AUTH_SCHEME === this.props.auth_scheme.value;
 			}
 		}
+		return true;
+	}
+
+	// detect if required fields are set and valid
+	requiredFieldsAreValid = () => {
+		if (this.props.auth_scheme) {
+			if (this.props.auth_scheme.value === constants.AUTH_OAUTH) {
+				return this.props.authorization_url && this.props.token_url && this.props.client_id && this.props.client_secret && this.props.scope2;
+			} else if (this.props.auth_scheme.value === constants.AUTH_COUCHDB) {
+				return (
+					this.props.default_password && this.props.confirm_default_password &&
+					this.props.default_password === this.props.confirm_default_password &&
+					this.props.newPasswordError === '' && this.props.confirmPasswordError === ''
+				);
+			}
+		}
+		return false;
 	}
 
 	// render the auth scheme side panel wizard
@@ -130,7 +197,6 @@ class EditAuthSchemePanel extends Component {
 				name: 'auth_scheme',
 				label: 'auth_scheme_label',
 				required: true,
-				//tooltip: 'admin_contact_email_tooltip',
 				default: currentAuthScheme,
 				type: 'dropdown',
 				options: [{
@@ -145,12 +211,12 @@ class EditAuthSchemePanel extends Component {
 		];
 
 		let descriptionMap = {
-			'oauth': 'The OAuth2.0 authentication method requires an external OAuth2 service. Users can be managed (such as adding & removing) by contacting your administrator of the OAuth2 service. User roles (permissions) can be managed by using the `Access` tab of your console and the `Authorized users` table.',
-			'couchdb': 'The CouchDB authentication method will securely store usernames and passwords in the console\'s CouchDB database. Users can be managed (such as adding & removing) by using the `Access` tab of your console and the `Authorized users` table.',
+			'oauth': 'oauth_desc_txt',
+			'couchdb': 'couchdb_desc_txt',
 		};
 		let warningMap = {
-			'oauth': 'This authentication method requires the following settings. These settings can be obtained from your specific OAuth2.0 service. <help>',	// dsh todo add link
-			'couchdb': 'This authentication method does not require an external service.'
+			'oauth': 'oauth_warning_txt',	// dsh todo add link to docs
+			'couchdb': 'couchdb_warning_txt'
 		};
 		let nameMap = {
 			'oauth': 'OAuth2.0 Settings:',
@@ -159,7 +225,7 @@ class EditAuthSchemePanel extends Component {
 
 		return (
 			<WizardStep type="WizardStep"
-				disableSubmit={this.oauthSettingsAreSame()}
+				disableSubmit={this.authSettingsAreSame() || !this.requiredFieldsAreValid()}
 			>
 				<div className="ibp-edit-auth-settings">
 					<div>
@@ -171,7 +237,7 @@ class EditAuthSchemePanel extends Component {
 						{this.props.auth_scheme && this.props.auth_scheme.value && <div>
 							<br />
 							<p className='tinyText'>
-								{descriptionMap[this.props.auth_scheme.value]}
+								{translate(descriptionMap[this.props.auth_scheme.value])}
 							</p>
 
 							{this.props.auth_scheme && this.props.auth_scheme.value === constants.AUTH_OAUTH &&
@@ -191,11 +257,12 @@ class EditAuthSchemePanel extends Component {
 								{nameMap[this.props.auth_scheme.value]}
 							</h4>
 							<p className='tinyText'>
-								{warningMap[this.props.auth_scheme.value]}
+								{translate(warningMap[this.props.auth_scheme.value])}
 							</p>
 							<br />
 						</div>}
 
+						{/*OAuth2.0 settings here */}
 						{this.props.auth_scheme && this.props.auth_scheme.value === constants.AUTH_OAUTH &&
 							<div>
 								<Form scope={SCOPE}
@@ -282,6 +349,66 @@ class EditAuthSchemePanel extends Component {
 									labelB={translate('on')}
 									aria-label={translate('debug_label')}
 								/>
+							</div>
+						}
+
+						{/*CouchDB settings here */}
+						{this.props.auth_scheme && this.props.auth_scheme.value === constants.AUTH_COUCHDB &&
+							<div>
+								<Form scope={SCOPE}
+									id='oauth-form'
+									fields={[
+										{
+											name: 'default_password',
+											label: 'default_password_label',
+											required: true,
+											tooltip: 'default_password_tooltip',
+											placeholder: 'default_password_placeholder',
+											errorMsg: this.props.newPasswordError,
+											type: 'password',
+											readonly: this.props.readOnly,	// this is a little hack to prevent browser autofill, flip to false on user click
+											onFocus: () => {
+												this.props.updateState(SCOPE, {
+													readOnly: false,
+												});
+											}
+										},
+										{
+											name: 'confirm_default_password',
+											label: 'confirm_default_password_label',
+											required: true,
+											placeholder: 'default_password_placeholder',
+											errorMsg: this.props.confirmPasswordError,
+											type: 'password',
+											readonly: this.props.readOnly,	// this is a little hack to prevent browser autofill, flip to false on user click
+											onFocus: () => {
+												this.props.updateState(SCOPE, {
+													readOnly: false,
+												});
+											}
+										},
+									]}
+									onChange={value => this.onPassChange(value)}
+								/>
+								<BlockchainTooltip direction="right"
+									triggerText={translate('allow_default_keep_label')}
+									className='allow-default-label'
+								>
+									{translate('allow_default_keep_tooltip')}
+								</BlockchainTooltip>
+								<ToggleSmall
+									id="toggle-allow-default-access"
+									toggled={this.props.allowDefault}
+									onToggle={() => {
+										this.props.updateState(SCOPE, {
+											allowDefault: !this.props.allowDefault,
+										});
+									}}
+									labelA={translate('disabled')}
+									labelB={translate('enabled')}
+									aria-label={translate('allow_default_keep_label')}
+									className='allow-default-wrap'
+								/>
 							</div>}
 					</div>
 				</div>
@@ -298,9 +425,7 @@ class EditAuthSchemePanel extends Component {
 			<WizardStep
 				type="WizardStep"
 				title={translate('summary')}
-				disableSubmit={
-					false//!this.props.adminContactEmail
-				}
+				disableSubmit={!this.requiredFieldsAreValid()}
 			>
 				<div>
 					{Helper.renderFieldSummary(translate, this.props.auth_scheme, 'authentication_services', 'value')}
@@ -312,6 +437,11 @@ class EditAuthSchemePanel extends Component {
 						{Helper.renderFieldSummary(translate, this.props, 'client_secret_label', 'client_secret', true)}
 						{Helper.renderFieldSummary(translate, this.props, 'scope_label', 'scope2')}
 						{Helper.renderFieldSummary(translate, this.props, 'debug_label', 'debug')}
+					</div>}
+
+					{this.props.auth_scheme && this.props.auth_scheme.value === constants.AUTH_COUCHDB && <div>
+						{Helper.renderFieldSummary(translate, this.props, 'default_password_label', 'default_password', true)}
+						{Helper.renderFieldSummary(translate, this.props, 'allow_default_keep_label', 'allowDefault')}
 					</div>}
 				</div>
 			</WizardStep>
@@ -351,6 +481,13 @@ const dataProps = {
 	client_id: PropTypes.string,
 	client_secret: PropTypes.string,
 	scope2: PropTypes.string,
+
+	default_password: PropTypes.string,
+	confirm_default_password: PropTypes.string,
+	allowDefault: PropTypes.bool,
+	readOnly: PropTypes.bool,
+	newPasswordError: PropTypes.string,
+	confirmPasswordError: PropTypes.string,
 };
 
 EditAuthSchemePanel.propTypes = {

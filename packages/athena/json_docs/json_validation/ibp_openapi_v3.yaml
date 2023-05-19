@@ -14048,6 +14048,10 @@ components:
           description: This is the password a user would use when they login to the console for the first time.
           minLength: 10
           maxLength: 128
+        allow_default_password:
+          type: boolean
+          example: true
+          description: If true users will be allowed to keep the default password and will not be prompted to change it on their first login.
         inactivity_timeouts:
           type: object
           properties:

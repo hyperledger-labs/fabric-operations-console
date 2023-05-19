@@ -957,6 +957,9 @@ const Helper = {
 			field = label;
 		}
 		let value = _.get(props, field);
+		if (typeof value === 'boolean') {
+			value = value ? 'enabled' : 'disabled';		// hack, otherwise the summary is not showing fields that are false
+		}
 		if (!value) {
 			return;
 		}
@@ -1014,11 +1017,17 @@ const Helper = {
 		if (!_.isString(value)) {
 			value = '' + value;
 		}
+
+		let label_txt = translate(label);
+		if (label_txt && label_txt[label_txt.length - 1] !== ':') {	// add colon to end of field if it doesn't have one...
+			label_txt += ':';
+		}
+
 		if (hidden) {
 			return (
 				<div className="summary-section">
 					<HiddenText id={'summary_' + field}
-						label={translate(label)}
+						label={label_txt}
 						labelClassName="summary-label"
 						text={value}
 						className="summary-value"
@@ -1028,7 +1037,7 @@ const Helper = {
 		}
 		return (
 			<div className="summary-section">
-				<p className="summary-label">{translate(label)}</p>
+				<p className="summary-label">{label_txt}</p>
 				<p className={'summary-value' + (filename ? ' summary-nowrap' : '')}>{value}</p>
 			</div>
 		);
