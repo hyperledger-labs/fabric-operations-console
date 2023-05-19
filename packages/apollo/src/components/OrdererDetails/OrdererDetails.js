@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 
 import { Button, CodeSnippet, SkeletonText, Tab, Tabs } from 'carbon-components-react';
 import _ from 'lodash';
@@ -130,16 +130,16 @@ class OrdererDetails extends Component {
 		const ordererDetails = await this.getDetails(skipStatusCache);
 		if (this.channelParticipationEnabled(ordererDetails)) {
 			await this.getCPChannelList();
-		};
+		}
 		this.props.updateState(SCOPE, {
 			loading: false,
 			channelsLoading: false,
 		});
-	};
+	}
 
 	// detect if channel participation features are enabled (this doesn't mean they should be shown!)
 	channelParticipationEnabled(obj) {
-		const has_osnadmin_url = (obj && typeof obj.osnadmin_url === 'string') ? true : false;
+		const has_osnadmin_url = obj && typeof obj.osnadmin_url === 'string' ? true : false;
 		const osnadmin_feats_enabled = this.props.feature_flags && this.props.feature_flags.osnadmin_feats_enabled === true;
 		return osnadmin_feats_enabled && has_osnadmin_url;
 	}
@@ -155,14 +155,15 @@ class OrdererDetails extends Component {
 		let channelList = {};
 
 		// if we cannot get the channels b/c of an network error, perm error, etc, default to the using the "systemless" field
-		let systemChannel = (this.props.details && this.props.details.systemless) ? false : true;
+		let systemChannel = this.props.details && this.props.details.systemless ? false : true;
 
 		let orderer_tls_identity = await IdentityApi.getTLSIdentity(this.props.selectedNode || this.props.details);
 		if (!orderer_tls_identity) {
 			// if we don't have a tls identity, we cannot load the system channel details via the channel participation apis...
 			// so assume we do (or do not) have a system channel based on the "systemless" field
 			// if we do have the identity it will be more robust to just look up the system channel details via channel participation apis
-		} else {
+		} else if (orderer_tls_identity && !systemChannel) {
+			// Only use channel participation apis if cluster doesn't have a system channel since if it does, the api is not available
 			try {
 				let all_identity = await IdentityApi.getIdentities();
 				const resp = await ChannelParticipationApi.mapChannels(all_identity, useNodes);
@@ -177,7 +178,8 @@ class OrdererDetails extends Component {
 
 				if (resp) {
 					channelList = resp;
-					if (_.get(channelList, 'systemChannel.name')) {					// system channel does exist
+					if (_.get(channelList, 'systemChannel.name')) {
+						// system channel does exist
 						systemChannel = true;
 						channelList.systemChannel.type = 'system_channel';
 						if (channelList.channels === null) {
@@ -185,7 +187,8 @@ class OrdererDetails extends Component {
 						}
 						channelList.channels.push(channelList.systemChannel);
 						await this.getSystemChannelConfigData();
-					} else {														// system channel does not exist
+					} else {
+						// system channel does not exist
 						systemChannel = false;
 					}
 				}
@@ -581,7 +584,11 @@ class OrdererDetails extends Component {
 	};
 
 	renderNodeVersion(translate) {
-		if (!this.props.selectedNode || this.props.selectedNode.location !== 'ibm_saas' || !ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)) {
+		if (
+			!this.props.selectedNode ||
+			this.props.selectedNode.location !== 'ibm_saas' ||
+			!ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)
+		) {
 			return;
 		}
 		// Do not show HSM for now
@@ -722,7 +729,11 @@ class OrdererDetails extends Component {
 	}
 
 	buildNodeTile(node) {
-		const isPatchAvailable = !node.pending && node.isUpgradeAvailable && node.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags);
+		const isPatchAvailable =
+			!node.pending &&
+			node.isUpgradeAvailable &&
+			node.location === 'ibm_saas' &&
+			ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags);
 		const associatedMSP = node.msp_id;
 		const tls_root_certs = _.get(node, 'msp.tlsca.root_certs') || [];
 		const ecert = _.get(node, 'msp.component.ecert');
@@ -855,8 +866,7 @@ class OrdererDetails extends Component {
 					</div>
 					{this.props.error && <SidePanelError error={this.props.error} />}
 				</div>
-				<RequiresAttentionImage2
-					className="ibp-requires-attention-image"
+				<RequiresAttentionImage2 className="ibp-requires-attention-image"
 					alt=""
 				/>
 			</div>
@@ -876,8 +886,7 @@ class OrdererDetails extends Component {
 					<h3>{translate('running_partial')}</h3>
 					<p>{translate('running_partial_desc')}</p>
 				</div>
-				<RequiresAttentionImage
-					className="ibp-requires-attention-image"
+				<RequiresAttentionImage className="ibp-requires-attention-image"
 					alt=""
 				/>
 			</div>
@@ -897,8 +906,7 @@ class OrdererDetails extends Component {
 					<h3>{translate('missing_endorsement_policy_title')}</h3>
 					<p>{translate('missing_endorsement_policy_desc', { orgs: this.props.missingEndorsementOrgs.join(',') })}</p>
 				</div>
-				<RequiresAttentionImage
-					className="ibp-requires-attention-image ibp-requires-attention-small-image"
+				<RequiresAttentionImage className="ibp-requires-attention-image ibp-requires-attention-small-image"
 					alt=""
 				/>
 			</div>
@@ -942,8 +950,7 @@ class OrdererDetails extends Component {
 						</Button>
 					</div>
 				</div>
-				<RequiresAttentionImage
-					className="ibp-requires-attention-image"
+				<RequiresAttentionImage className="ibp-requires-attention-image"
 					alt=""
 				/>
 			</div>
@@ -1056,7 +1063,7 @@ class OrdererDetails extends Component {
 		const _block_binary2json = promisify(ChannelApi._block_binary2json);
 		const resp = await _block_binary2json(block, options.configtxlator_url);
 		return resp.data.data[0].payload.data;
-	};
+	}
 
 	debug_openChannelConfig = () => {
 		OrdererRestApi.getClusterDetails(this.props.details.cluster_id, true)
@@ -1446,14 +1453,14 @@ class OrdererDetails extends Component {
 												<Tab id="ibp-orderer-details"
 													label={translate('details')}
 												>
-													{!this.props.loading && this.isSystemLess(this.props.details) && !this.props.orderer_tls_identity &&
+													{!this.props.loading && this.isSystemLess(this.props.details) && !this.props.orderer_tls_identity && (
 														<div>
 															<SidePanelWarning title="tls_identity_not_found"
 																subtitle="orderer_tls_admin_identity_not_found"
 															/>
 														</div>
-													}
-													{this.channelParticipationEnabled(this.props.details) && this.props.orderer_tls_identity &&
+													)}
+													{this.channelParticipationEnabled(this.props.details) && this.props.orderer_tls_identity && (
 														<ChannelParticipationDetails
 															selectedNode={this.props.selectedNode}
 															channelList={this.props.channelList}
@@ -1463,7 +1470,7 @@ class OrdererDetails extends Component {
 															isSystemLess={this.isSystemLess(this.props.details)}
 															drillDown={false}
 														/>
-													}
+													)}
 													{!this.props.loading && !hasAssociatedIdentities && (
 														<div className="ibp-orderer-no-identity">
 															<p>{translate('orderer_no_identity')}</p>
@@ -1534,17 +1541,16 @@ class OrdererDetails extends Component {
 													id="ibp-orderer-usage"
 													className={
 														this.props.selectedNode.isUpgradeAvailable &&
-															this.props.selectedNode.location === 'ibm_saas' &&
-															ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)
+														this.props.selectedNode.location === 'ibm_saas' &&
+														ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)
 															? 'ibp-patch-available-tab'
 															: ''
 													}
 													label={translate('usage_info', {
 														patch:
 															this.props.selectedNode.isUpgradeAvailable &&
-																this.props.selectedNode.location === 'ibm_saas' &&
-																ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) ?
-																(
+															this.props.selectedNode.location === 'ibm_saas' &&
+															ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) ? (
 																	<div className="ibp-details-patch-container">
 																		<div className="ibp-patch-available-tag ibp-node-details"
 																			onClick={() => this.openOrdererSettings('upgrade')}
@@ -1562,8 +1568,7 @@ class OrdererDetails extends Component {
 												</Tab>
 											)}
 											{this.isSystemLess(this.props.selectedNode) && (
-												<Tab
-													id="ibp-orderer-channels"
+												<Tab id="ibp-orderer-channels"
 													label={translate('channels')}
 												>
 													<ChannelParticipationDetails
