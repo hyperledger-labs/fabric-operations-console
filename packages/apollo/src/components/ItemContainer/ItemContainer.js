@@ -849,6 +849,7 @@ class ItemContainer extends Component {
 														id={`${this.props.id}-${i}-disabled`}
 														checked={false}
 														disabled={true}
+														labelText=''
 													/>
 												</TableCell>
 											)}

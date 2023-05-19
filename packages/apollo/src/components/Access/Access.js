@@ -32,6 +32,7 @@ import PageContainer from '../PageContainer/PageContainer';
 import PageHeader from '../PageHeader/PageHeader';
 import ResetPasswordModal from '../ResetPasswordModal/ResetPasswordModal';
 import SVGs from '../Svgs/Svgs';
+import TranslateLink from '../TranslateLink/TranslateLink';
 
 const SCOPE = 'access';
 const Log = new Logger(SCOPE);
@@ -381,6 +382,9 @@ export class Access extends Component {
 								{/* auth scheme tile content */}
 								<this.renderAuthTileSection />
 
+								{/* doc link */}
+								{!isIam && <TranslateLink text="user_roles_find_more" />}
+
 								{/* users table content */}
 								{!isIam && this.props.isManager && (
 									<div>
@@ -397,6 +401,15 @@ export class Access extends Component {
 										/>
 
 										{hasPendingUsers && <p className='tinyTextWhite'>{translate('pending_user_title')}</p>}
+									</div>
+								)}
+
+								{/* non-manager description */}
+								{!isIam && !this.props.isManager && (
+									<div>
+										<br/>
+										<br/>
+										{translate('access_not_a_manager')}
 									</div>
 								)}
 							</div>
@@ -530,8 +543,6 @@ export function AuthenticatedUsers(props) {
 						containerTitle="user_table_header"
 						containerTooltip={props.authScheme === 'couchdb' ? 'authenticated_users_tooltip_icp' : 'authenticated_users_tooltip_ibp'}
 						tooltipDirection="right"
-						containerDesc={props.authScheme === 'couchdb' ? 'user_roles_find_more' : ''}
-						containerDescLink={props.authScheme === 'couchdb' ? 'user_roles_find_more_link' : ''}
 						autoWidthButton
 						buttonText="add_new_users"
 						id="authenticated_members"
@@ -547,7 +558,7 @@ export function AuthenticatedUsers(props) {
 								},
 							},
 							{
-								header: 'user_id',
+								header: 'username_label',
 								attr: 'email',
 								width: 4
 							},
