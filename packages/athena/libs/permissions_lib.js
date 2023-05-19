@@ -429,7 +429,7 @@ module.exports = function (logger, ev, t) {
 			_id: '_design/athena-v1',		// name of design doc
 			view: '_doc_types',
 			query: 'key="api_key_doc"&reduce=false&include_docs=true',
-			SKIP_CACHE: (req.query.skip_cache === 'yes')
+			SKIP_CACHE: t.ot_misc.skip_cache(req)
 		};
 		t.otcc.getDesignDocView(opts, (err, resp) => {
 			if (err) {

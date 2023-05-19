@@ -16,28 +16,36 @@
 import { RestApi } from './RestApi';
 
 class ConfigureAuthApi {
-	static async getAuthScheme(body) {
-		return RestApi.get('/api/v2/authscheme');
+	static async getAuthScheme() {
+		return RestApi.get('/api/v3/authscheme');
 	}
 
 	static async configureAuthScheme(body) {
-		return RestApi.put('/api/v2/authscheme', body);
+		return RestApi.put('/api/v3/authscheme', body);
 	}
 
-	static async listUsers(body) {
-		return RestApi.get('/api/v2/permissions/users', body);
+	static async listUsers(skip_cache) {
+		return RestApi.get('/api/v3/permissions/users' + (skip_cache ? '?cache=skip' : ''));
 	}
 
 	static async addUsers(body) {
-		return RestApi.post('/api/v2/permissions/users', body);
+		return RestApi.post('/api/v3/permissions/users', body);
 	}
 
 	static async editUsers(body) {
-		return RestApi.put('/api/v2/permissions/users', body);
+		return RestApi.put('/api/v3/permissions/users', body);
 	}
 
 	static async deleteUsers(body) {
-		return RestApi.delete(`/api/v2/permissions/users?uuids=[${body.uuids}]`);
+		return RestApi.delete(`/api/v3/permissions/users?uuids=[${body.uuids}]`);
+	}
+
+	static async listApiKeys(skip_cache) {
+		return RestApi.get('/api/v3/permissions/keys' + (skip_cache ? '?cache=skip' : ''));
+	}
+
+	static async addApiKey(body) {
+		return RestApi.post('/api/v3/permissions/keys', body);
 	}
 }
 

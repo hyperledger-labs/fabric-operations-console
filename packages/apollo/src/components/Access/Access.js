@@ -45,6 +45,9 @@ export class Access extends Component {
 	componentDidMount() {
 		this.props.showBreadcrumb('users', {}, this.props.history.location.pathname, true);
 		this.getAuthDetails();
+
+		// dsh todo don't call this if not a manager...
+		this.getApikeyDetails();
 	}
 
 	getAuthDetails = () => {
@@ -121,6 +124,33 @@ export class Access extends Component {
 		);
 	};
 
+	// get all the api keys
+	getApikeyDetails = async (skip_cache) => {
+		this.props.updateState(SCOPE, {
+			api_keys_loading: true,
+			all_apikeys: [],
+		});
+		try {
+			const resp = await ConfigureAuthApi.listApiKeys(skip_cache);
+			console.log('dsh99', resp);
+			const all_keys = [];
+			for (const id in resp.keys) {
+				all_keys.push({
+					api_key: resp.keys[id].api_key,
+					description: resp.keys[id].description,
+					created: new Date(resp.keys[id].ts_created).toDateString(),
+					roles: resp.keys[id].roles,
+				});
+			}
+			this.props.updateState(SCOPE, {
+				api_keys_loading: false,
+				all_apikeys: all_keys,
+			});
+		} catch (e) {
+			console.error('unable to load api keys, error', e);
+		}
+	};
+
 	openEditAuthModal = () => {
 		this.props.updateState(SCOPE, {
 			showEditSettingsModal: true,
@@ -133,9 +163,10 @@ export class Access extends Component {
 		});
 	};
 
-	openAddUserModal = () => {
+	openAddUserModal = (type) => {
 		this.props.updateState(SCOPE, {
 			showAddUserModal: true,
+			addModalType: type,
 		});
 	};
 
@@ -404,11 +435,33 @@ export class Access extends Component {
 									</div>
 								)}
 
+								{/* apikey table content */}
+								{!isIam && (this.props.isManager || this.props.isWriter) && (
+									<div>
+										<ApiKeys
+											loading={this.props.loading}
+											apikeys={this.props.all_apikeys}
+											onAdd={() => {
+												this.openAddUserModal('apikey');
+											}}
+											onDelete={this.onDeleteApiKey}
+											isManager={this.props.isManager}
+											isWriter={this.props.isManager}
+											checkRole={this.checkRole}
+											buildAttentionCell={this.buildAttentionCell}
+											authScheme={this.props.auth_scheme}
+										/>
+										{Array.isArray(this.props.all_apikeys) && this.props.all_apikeys.length > 0 &&
+											<p className='tinyTextWhite'>{translate('api_key_warning_txt')}</p>
+										}
+									</div>
+								)}
+
 								{/* non-manager description */}
 								{!isIam && !this.props.isManager && (
 									<div>
-										<br/>
-										<br/>
+										<br />
+										<br />
 										{translate('access_not_a_manager')}
 									</div>
 								)}
@@ -434,9 +487,14 @@ export class Access extends Component {
 										isCouchBasedAuth={this.props.auth_scheme === 'couchdb'}
 										existingUsers={this.props.all_users.map(details => details.id)}
 										onClose={this.closeAddUserModal}
+										modalType={this.props.addModalType}
 										onComplete={emails => {
-											this.props.showSuccess(emails.length === 1 ? 'user_add_successful' : 'users_add_successful', { email: emails.join() }, SCOPE);
-											this.getAuthDetails();
+											if (emails) {
+												this.props.showSuccess(emails.length === 1 ? 'user_add_successful' : 'users_add_successful', { email: emails.join() }, SCOPE);
+												this.getAuthDetails();
+											} else {
+												this.getApikeyDetails(true);
+											}
 										}}
 									/>
 								)}
@@ -503,6 +561,8 @@ const dataProps = {
 	user: PropTypes.object,
 	editMode: PropTypes.bool,
 	showEditAuthSchemePanel: PropTypes.bool,
+	all_apikeys: PropTypes.array,
+	addModalType: PropTypes.string,
 };
 
 Access.propTypes = {
@@ -634,6 +694,117 @@ AuthenticatedUsers.propTypes = {
 	onAdd: PropTypes.func,
 	onDelete: PropTypes.func,
 	isManager: PropTypes.bool,
+	checkRole: PropTypes.func,
+	buildAttentionCell: PropTypes.func,
+	overflowMenu: PropTypes.func,
+	authScheme: PropTypes.string,
+	userInfo: PropTypes.object,
+};
+
+export function ApiKeys(props) {
+	return (
+		<div className="bx--row">
+			<div id="page-container"
+				className="bx--col-lg-13"
+			>
+				<div
+					style={{
+						width: '100%',
+					}}
+				>
+					<ItemContainer
+						containerTitle="apikey_table_header"
+						tooltipDirection="right"
+						autoWidthButton
+						id="current_apikeys"
+						itemId="apikeys"
+						loading={props.loading}
+						items={props.apikeys}
+						pageSize={50}
+						listMapping={[
+							{
+								header: 'apikey_description_label',
+								attr: 'description',
+								width: 3
+							},
+							{
+								header: 'date_added',
+								attr: 'created',
+								width: 2
+							},
+							{
+								header: 'apikey_label',
+								attr: 'api_key',
+								width: 2
+							},
+							{
+								header: 'manager',
+								custom: data => {
+									return props.checkRole(data, 'manager');
+								},
+							},
+							{
+								header: 'writer',
+								custom: data => {
+									return props.checkRole(data, 'writer');
+								},
+							},
+							{
+								header: 'reader',
+								custom: data => {
+									return props.checkRole(data, 'reader');
+								},
+							},
+							{
+								header: 'empty',
+								custom: user => {
+									if (user.deleting) {
+										return <Loading withOverlay={false}
+											small
+											className="ibp-deleting-spinner"
+										/>;
+									}
+									if (props.overflowMenu) {
+										return props.overflowMenu(user);
+									}
+								},
+							},
+						]}
+						addItems={
+							(props.isManager || props.isWriter)
+								? [
+									{
+										text: 'add_new_apikey',
+										fn: props.onAdd,
+									},
+								]
+								: []
+						}
+						selectItem={
+							(props.isManager || props.isWriter)
+								? {
+									id: 'deleteUser',
+									text: 'delete_users',
+									fn: props.onDelete,
+									image: <DeleteButton />,
+									multiSelect: true,
+								} /* prettier-ignore */
+								: null
+						}
+						disableAddItem={!props.isManager}
+					/>
+				</div>
+			</div>
+		</div>
+	);
+}
+ApiKeys.propTypes = {
+	loading: PropTypes.bool,
+	apikeys: PropTypes.array,
+	onAdd: PropTypes.func,
+	onDelete: PropTypes.func,
+	isManager: PropTypes.bool,
+	isWriter: PropTypes.bool,
 	checkRole: PropTypes.func,
 	buildAttentionCell: PropTypes.func,
 	overflowMenu: PropTypes.func,
