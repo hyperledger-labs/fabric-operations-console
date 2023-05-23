@@ -203,40 +203,54 @@ class OrdererRestApi {
 		return this.updateConsenterIntoSystemChannel(options);
 	}
 
+	// sometimes the selected orderer is not a consenter on the channel yet, and thus cannot be used to submit the transaction,
+	// if so find another orderer we know about that is a consenter and send the tx to that orderer
 	static async getUrlForConsenterUpdate(options, consenters, orderer) {
-		let url2use = null;
-		const parsedURL = urlParser.parse(orderer.api_url);
-		consenters.forEach(consenter => {
-			if (consenter.host === parsedURL.hostname && consenter.port === parsedURL.port) {
-				url2use = orderer.url2use;
+		Log.debug('possible consenters on this channel', consenters);
+		Log.debug('selected orderer', orderer);
+		if (orderer) {
+			const parsedURL = urlParser.parse(orderer.api_url);
+			if (consenters && parsedURL) {
+				for (let i in consenters) {
+					const consenter = consenters[i];
+					if (consenter.host === parsedURL.hostname && Number(consenter.port) === Number(parsedURL.port) && orderer && orderer.url2use) {
+						Log.debug('the selected orderer is a consenter, will use this orderer for the tx', orderer.url2use);
+						return orderer.url2use;
+					}
+				}
 			}
-		});
-		if (url2use === null && orderer.cluster_id) {
+		}
+
+		if (orderer && orderer.cluster_id) {
+			Log.debug('the consenter list did not contain the selected orderer, so will look for another orderer node');
+
 			// If orderer is not in the consenter set, look for other nodes in the same
 			// cluster that we can use to submit the update
 			const cluster = await OrdererRestApi.getClusterDetails(orderer.cluster_id);
-			let url = null;
-			if (cluster.raft) {
-				for (let i = 0; i < cluster.raft.length && !url; i++) {
+			Log.debug('the ordering cluster details', cluster);
+			if (cluster && cluster.raft) {
+				for (let i in cluster.raft) {
 					const node = cluster.raft[i];
-					const parsedURL2 = urlParser.parse(node.api_url);
-					for (let j = 0; j < consenters.length && !url; j++) {
-						const consenter = consenters[j];
-						if (consenter.host === parsedURL2.hostname && consenter.port === parsedURL2.port) {
-							url = node.url2use;
+					if (node) {
+						const parsedURL2 = urlParser.parse(node.api_url);
+						for (let j in consenters) {
+							const consenter = consenters[j];
+							if (consenter && parsedURL2 && consenter.host === parsedURL2.hostname && Number(consenter.port) === Number(parsedURL2.port) && node.url2use) {
+								Log.debug('found alternative orderer that is a consenter, will use this orderer for the tx', node.url2use);
+								return node.url2use;
+							}
 						}
 					}
 				}
 			}
-			if (!url) {
-				url = orderer.url2use;
-			}
-			return url;
+		}
+
+		if (orderer && orderer.url2use) {
+			Log.warn('did not find a valid orderer to use for this tx, defaulting to selected orderer', orderer.url2use);
+			return orderer.url2use;
 		} else {
-			if (!url2use) {
-				url2use = orderer.url2use;
-			}
-			return url2use;
+			Log.error('did not find any orderer to use for this tx');
+			return null;
 		}
 	}
 

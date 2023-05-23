@@ -272,7 +272,7 @@ class OrdererDetails extends Component {
 				}
 			});
 			if (!nodeToOpen && orderer.pending) {
-				orderer.forEach(node => {
+				orderer.pending.forEach(node => {
 					if (node.id === this.props.match.params.nodeId) {
 						nodeToOpen = node;
 					}
@@ -972,7 +972,6 @@ class OrdererDetails extends Component {
 			await OrdererRestApi.addOrdererNodeToSystemChannel(options);
 		} catch (error) {
 			let duplicate_consenter = false;
-			Log.error(`Could not add order ${options.ordererId} to system channel: ${error}`);
 			let title = 'error_add_to_system_channel';
 			let details = error && error.message ? error.message : error;
 			if (_.has(error, 'stitch_msg') && _.includes(error.stitch_msg, 'no Raft leader')) {
@@ -985,9 +984,12 @@ class OrdererDetails extends Component {
 			}
 			if (_.has(error, 'stitch_msg') && _.includes(error.stitch_msg, 'duplicate consenter')) {
 				duplicate_consenter = true;
+				Log.warn('orderer was already added as a consenter, ignore errors');
 			}
-			// duplicate consenter is okay... it has been added, ignore
+
+			// duplicate consenter is okay... orderer was already, ignore error and continue
 			if (!duplicate_consenter) {
+				Log.error(`could not add orderer "${options.ordererId}" to system channel:`, error);
 				this.props.updateState(SCOPE, {
 					addToSystemChannelInProgress: false,
 					error: {
@@ -1001,23 +1003,39 @@ class OrdererDetails extends Component {
 
 		let orderer;
 		try {
-			orderer = await OrdererRestApi.getClusterDetails(options.cluster_id, false);
+			Log.debug('getting orderer cluster details', options.cluster_id);
+			orderer = await OrdererRestApi.getClusterDetails(options.cluster_id, true);
 		} catch (error) {
-			Log.error(`Unable to get orderer ${options.cluster_id}:`, error);
+			Log.error(`could not add orderer "${options.ordererId}" to system channel. unable to get orderer cluster data: ${options.cluster_id}:`, error);
 			return;
 		}
 
 		try {
+			Log.debug('getting current config block to give to the new orderer');
 			let block_options = {
 				cluster_id: options.cluster_id,
 				channelId: orderer.system_channel || OrdererRestApi.systemChannel,
 				configtxlator_url: options.configtxlator_url,
 			};
 			const block = await OrdererRestApi.getChannelConfigBlock(block_options, orderer);
-
+			Log.debug('got block to bootstrap new orderer', options.ordererId);
 			const b64_config_block = window.stitch.uint8ArrayToBase64(block);
 			await OrdererRestApi.uploadConfigBlock(options.ordererId, b64_config_block);
+			Log.debug('block sent to bootstrap new orderer', options.ordererId);
+		} catch (error) {
+			Log.error(`could not add orderer "${options.ordererId}" to system channel. could not send config block:`, error);
+			this.props.updateState(SCOPE, {
+				addToSystemChannelInProgress: false,
+				error: {
+					title: 'error_add_to_system_channel',
+					details: 'communication error - unable to send block to orderer',
+				},
+			});
+			return;
+		}
 
+		try {
+			Log.debug('finishing add consenter flow, editing node data');
 			const update = {
 				id: this.props.selectedNode.id,
 				type: 'fabric-orderer',
@@ -1025,6 +1043,7 @@ class OrdererDetails extends Component {
 				pending: undefined,
 			};
 			await OrdererRestApi.updateOrderer(update);
+			Log.debug('recorded that the new orderer has completed the append-consenter flow', options.ordererId);
 
 			this.props.updateState(SCOPE, {
 				addToSystemChannelInProgress: false,
@@ -1032,7 +1051,7 @@ class OrdererDetails extends Component {
 			this.refresh(true);
 			this.props.showSuccess('add_to_system_channel_successful', {}, SCOPE);
 		} catch (error) {
-			Log.error('Could not add to system channel:', error);
+			Log.error('could not record that the orderer completed the append-consenter flow:', error);
 			this.props.updateState(SCOPE, {
 				addToSystemChannelInProgress: false,
 				error: {
@@ -1040,6 +1059,7 @@ class OrdererDetails extends Component {
 					details: error,
 				},
 			});
+			return;
 		}
 	}
 
