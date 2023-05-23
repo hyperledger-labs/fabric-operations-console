@@ -328,7 +328,8 @@ export class AddUserModal extends Component {
 						<div className="ibp-auth-settings-roles-title ibp-tooltip-wrap">
 							<span className="ibp-user-tooltip">
 								<BlockchainTooltip type="definition"
-									tooltipText={translate(this.props.isEditing ? 'edit_user_role_tooltip' : 'user_role_tooltip')}
+									tooltipText={translate(this.props.modalType === 'apikey' ? 'apikey_role_tooltip' :
+										this.props.isEditing ? 'edit_user_role_tooltip' : 'user_role_tooltip')}
 								>
 									{translate('specify_roles')}
 								</BlockchainTooltip>

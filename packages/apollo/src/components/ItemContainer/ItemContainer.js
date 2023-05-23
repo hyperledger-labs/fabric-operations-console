@@ -362,7 +362,7 @@ class ItemContainer extends Component {
 		if (table && this.props.emptyMessage) {
 			return (
 				<div className="ibp-empty-table-container">
-					<h4>{translate(this.props.emptyMessage, this.props.emptyTranslationOpts)}</h4>
+					{translate(this.props.emptyMessage, this.props.emptyTranslationOpts)}
 				</div>
 			);
 		}

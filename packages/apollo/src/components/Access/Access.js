@@ -37,7 +37,7 @@ import TranslateLink from '../TranslateLink/TranslateLink';
 const SCOPE = 'access';
 const Log = new Logger(SCOPE);
 
-// dsh todo rename to Access
+// dsh todo create isWriter property
 export class Access extends Component {
 	cName = 'Access';
 	// dsh todo check if iam auth is being used we should not populate content related to this new oauth access stuff
@@ -200,6 +200,7 @@ export class Access extends Component {
 		});
 	};
 
+	// dsh todo add confirmation box to this delete button!
 	onDeleteUsers = users => {
 		let managersSelected = users.filter(user => user.roles.includes('manager'));
 		let currentManagers = this.props.all_users.filter(user => user.roles.includes('manager'));
@@ -241,6 +242,48 @@ export class Access extends Component {
 		}
 	};
 
+	// dsh todo
+	// delete the selected api keys
+	onDeleteApiKey = keys => {
+		/*let managersSelected = users.filter(user => user.roles.includes('manager'));
+		let currentManagers = this.props.all_users.filter(user => user.roles.includes('manager'));
+		if (managersSelected.length === currentManagers.length) {
+			this.props.showError('atleast_one_admin_required', {}, SCOPE);
+		} else {
+			let body = { uuids: users.map(user => `"${user.uuid}"`) };
+			const emails = users.map(user => user.id);
+			users.map(user => {
+				const userIndex = users.findIndex(el => el.uuid === user.uuid);
+				let userToUpdate = (users[users.findIndex(el => el.uuid === user.uuid)] = user);
+				userToUpdate.deleting = true;
+				users[userIndex] = userToUpdate;
+				this.props.updateState(SCOPE, {
+					all_users: [...this.props.all_users],
+				});
+				return true;
+			});
+			ConfigureAuthApi.deleteUsers(body).then(
+				resp => {
+					if (resp.message === 'ok') {
+						this.props.showSuccess(emails.length === 1 ? 'user_removed_successful' : 'users_removed_successful', { email: emails.join() }, SCOPE);
+						this.getAuthDetails();
+					} else {
+						this.props.showError('error_removing_users', { email: emails.join() }, SCOPE);
+						this.props.updateState(SCOPE, {
+							loading: false,
+						});
+					}
+				},
+				error => {
+					Log.error(error);
+					this.props.updateState(SCOPE, {
+						loading: false,
+					});
+					this.props.showError('error_removing_users', { email: emails.join() }, SCOPE);
+				}
+			);
+		}*/
+	};
 	checkRole = (user, role) => {
 		if (user && user.roles && user.roles.includes(role)) {
 			return (
@@ -414,7 +457,7 @@ export class Access extends Component {
 								<this.renderAuthTileSection />
 
 								{/* doc link */}
-								{!isIam && <TranslateLink text="user_roles_find_more" />}
+								{!isIam && this.props.isManager && <TranslateLink text="user_roles_find_more" />}
 
 								{/* users table content */}
 								{!isIam && this.props.isManager && (
@@ -720,7 +763,8 @@ export function ApiKeys(props) {
 						itemId="apikeys"
 						loading={props.loading}
 						items={props.apikeys}
-						pageSize={50}
+						emptyMessage={'no_api_keys_msg'}
+						pageSize={5}
 						listMapping={[
 							{
 								header: 'apikey_description_label',
