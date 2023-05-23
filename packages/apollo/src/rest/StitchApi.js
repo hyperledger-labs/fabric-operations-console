@@ -119,6 +119,7 @@ class StitchApi {
 			} else {
 				const orderer = orderers.pop();
 				if (orderer && orderer.url2use) {
+					Log.debug('will retry tx with another orderer', orderer);
 					opts_copy.orderer_host = orderer.url2use;
 					return StitchApi.submitWithRetry(opts_copy, orderers);
 				} else {

@@ -1416,6 +1416,7 @@ class ChannelApi {
 			// Genetic API to update a channel
 			const options = {
 				configtxlator: 'url',
+				orderer_host: '<the orderer node url to use for this channel update>",
 				channel_id: options.channel_id,
 				org_msp_id: options.org_msp_id,
 				original_json: {},
