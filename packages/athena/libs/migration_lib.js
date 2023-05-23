@@ -1315,7 +1315,7 @@ module.exports = function (logger, ev, t) {
 					if (doc._id === process.env.SETTINGS_DOC_ID) {
 						logger.info('[migration-console-db] found settings doc. editing...');
 						doc.auth_scheme = 'couchdb';				// change the auth scheme, this console will use local users
-						doc.allow_default_password = true;			// less painful ux
+						doc.allow_default_password = false;			// needed for security
 						doc.access_list = {};						// clear
 						doc.crn_string = '-';						// clear
 						doc.crn = { instance_id: '' };				// clear
