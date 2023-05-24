@@ -24,7 +24,6 @@ import ActionsHelper from '../../utils/actionsHelper';
 import Helper from '../../utils/helper';
 import AddUserModal from '../AddUserModal/AddUserModal';
 import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
-import EditAuthSettingsModal from '../EditAuthSettingsModal/EditAuthSettingsModal';
 import EditAuthSchemePanel from '../EditAuthSchemePanel/EditAuthSchemePanel';
 import ItemContainer from '../ItemContainer/ItemContainer';
 import Logger from '../Log/Logger';
@@ -33,6 +32,7 @@ import PageHeader from '../PageHeader/PageHeader';
 import ResetPasswordModal from '../ResetPasswordModal/ResetPasswordModal';
 import SVGs from '../Svgs/Svgs';
 import TranslateLink from '../TranslateLink/TranslateLink';
+import DeleteAccessModal from '../DeleteAccessModal/DeleteAccessModal';
 
 const SCOPE = 'access';
 const Log = new Logger(SCOPE);
@@ -44,84 +44,82 @@ export class Access extends Component {
 
 	componentDidMount() {
 		this.props.showBreadcrumb('users', {}, this.props.history.location.pathname, true);
-		this.getAuthDetails();
 
-		// dsh todo don't call this if not a manager...
-		this.getApikeyDetails();
+		this.getAuthDetails();
+		if (ActionsHelper.canManageUsers(this.props.userInfo)) {
+			this.getApikeyDetails();
+		}
 	}
 
-	getAuthDetails = () => {
+	getAuthDetails = (skip_cache) => {
 		this.props.updateState(SCOPE, {
 			loading: true,
 		});
-		ConfigureAuthApi.getAuthScheme().then(
-			resp => {
-				ConfigureAuthApi.listUsers().then(resp2 => {
-					let all_users = [];
+		ConfigureAuthApi.getAuthScheme(skip_cache).then(resp => {
+			ConfigureAuthApi.listUsers(skip_cache).then(resp2 => {
+				let all_users = [];
 
-					// first find the current user and put them first
-					for (const id in resp2.users) {
-						if (this.props.userInfo && this.props.userInfo.loggedInAs && resp2.users[id].email === this.props.userInfo.loggedInAs.email) {
-							all_users.push({
-								uuid: id,
-								id: resp2.users[id].email,
-								email: resp2.users[id].email,
-								created: new Date(resp2.users[id].created).toDateString(),
-								roles: resp2.users[id].roles,
-								disabled: true,			// this doesn't seem to do anything, dsh todo don't let a user delete themselves
-							});
-							delete resp2.users[id];
-							break;
-						}
-					}
-
-					// second list the users that are pending
-					for (const id in resp2.users) {
-						if (resp2.users[id] && (!Array.isArray(resp2.users[id].roles) || resp2.users[id].roles.length === 0)) {
-							all_users.push({
-								uuid: id,
-								id: resp2.users[id].email,
-								email: resp2.users[id].email,
-								created: new Date(resp2.users[id].created).toDateString(),
-								roles: resp2.users[id].roles,
-							});
-							delete resp2.users[id];
-						}
-					}
-
-					// last list everyone else
-					for (const id in resp2.users) {
+				// first find the current user and put them first
+				for (const id in resp2.users) {
+					if (this.props.userInfo && this.props.userInfo.loggedInAs && resp2.users[id].email === this.props.userInfo.loggedInAs.email) {
 						all_users.push({
 							uuid: id,
-							id: resp2.users[id].email,
+							id: resp2.users[id].email,		// multi select items need an "id" field
+							email: resp2.users[id].email,
+							created: new Date(resp2.users[id].created).toDateString(),
+							roles: resp2.users[id].roles,
+							disabled: true,			// this doesn't seem to do anything, dsh todo don't let a user delete themselves
+						});
+						delete resp2.users[id];
+						break;
+					}
+				}
+
+				// second list the users that are pending
+				for (const id in resp2.users) {
+					if (resp2.users[id] && (!Array.isArray(resp2.users[id].roles) || resp2.users[id].roles.length === 0)) {
+						all_users.push({
+							uuid: id,
+							id: resp2.users[id].email,		// multi select items need an "id" field
 							email: resp2.users[id].email,
 							created: new Date(resp2.users[id].created).toDateString(),
 							roles: resp2.users[id].roles,
 						});
+						delete resp2.users[id];
 					}
+				}
 
-					// const loggedInUser = all_users.find(user => user.email.toLowerCase() === this.props.userInfo.loggedInAs.email.toLowerCase());
-					this.props.updateState(SCOPE, {
-						loading: false,
-						oauth_url: resp.oauth_url,
-						secret: resp.secret,
-						tenant_id: resp.tenant_id,
-						client_id: resp.client_id,
-						adminContactEmail: resp.admin_contact_email ? resp.admin_contact_email : '',
-						all_users: all_users,
-						isManager: this.props.userInfo ? ActionsHelper.canRestartOpTools(this.props.userInfo) : false,
-						auth_scheme: resp.auth_scheme,
+				// last list everyone else
+				for (const id in resp2.users) {
+					all_users.push({
+						uuid: id,
+						id: resp2.users[id].email,			// multi select items need an "id" field
+						email: resp2.users[id].email,
+						created: new Date(resp2.users[id].created).toDateString(),
+						roles: resp2.users[id].roles,
 					});
-				});
-			},
-			error => {
-				Log.error(error);
+				}
+
+				// const loggedInUser = all_users.find(user => user.email.toLowerCase() === this.props.userInfo.loggedInAs.email.toLowerCase());
 				this.props.updateState(SCOPE, {
 					loading: false,
+					oauth_url: resp.oauth_url,
+					secret: resp.secret,
+					tenant_id: resp.tenant_id,
+					client_id: resp.client_id,
+					adminContactEmail: resp.admin_contact_email ? resp.admin_contact_email : '',
+					all_users: all_users,
+					isManager: this.props.userInfo ? ActionsHelper.canRestartOpTools(this.props.userInfo) : false,
+					auth_scheme: resp.auth_scheme,
 				});
-				this.props.showError('error_getting_auth_details', {}, SCOPE);
-			}
-		);
+			});
+		}, error => {
+			Log.error(error);
+			this.props.updateState(SCOPE, {
+				loading: false,
+			});
+			this.props.showError('error_getting_auth_details', {}, SCOPE);
+		});
 	};
 
 	// get all the api keys
@@ -132,10 +130,10 @@ export class Access extends Component {
 		});
 		try {
 			const resp = await ConfigureAuthApi.listApiKeys(skip_cache);
-			console.log('dsh99', resp);
 			const all_keys = [];
 			for (const id in resp.keys) {
 				all_keys.push({
+					id: resp.keys[id].api_key,			// multi select items need an "id" field
 					api_key: resp.keys[id].api_key,
 					description: resp.keys[id].description,
 					created: new Date(resp.keys[id].ts_created).toDateString(),
@@ -149,18 +147,6 @@ export class Access extends Component {
 		} catch (e) {
 			console.error('unable to load api keys, error', e);
 		}
-	};
-
-	openEditAuthModal = () => {
-		this.props.updateState(SCOPE, {
-			showEditSettingsModal: true,
-		});
-	};
-
-	closeEditAuthModal = () => {
-		this.props.updateState(SCOPE, {
-			showEditSettingsModal: false,
-		});
 	};
 
 	openAddUserModal = (type) => {
@@ -200,90 +186,20 @@ export class Access extends Component {
 		});
 	};
 
-	// dsh todo add confirmation box to this delete button!
-	onDeleteUsers = users => {
-		let managersSelected = users.filter(user => user.roles.includes('manager'));
-		let currentManagers = this.props.all_users.filter(user => user.roles.includes('manager'));
-		if (managersSelected.length === currentManagers.length) {
-			this.props.showError('atleast_one_admin_required', {}, SCOPE);
-		} else {
-			let body = { uuids: users.map(user => `"${user.uuid}"`) };
-			const emails = users.map(user => user.id);
-			users.map(user => {
-				const userIndex = users.findIndex(el => el.uuid === user.uuid);
-				let userToUpdate = (users[users.findIndex(el => el.uuid === user.uuid)] = user);
-				userToUpdate.deleting = true;
-				users[userIndex] = userToUpdate;
-				this.props.updateState(SCOPE, {
-					all_users: [...this.props.all_users],
-				});
-				return true;
-			});
-			ConfigureAuthApi.deleteUsers(body).then(
-				resp => {
-					if (resp.message === 'ok') {
-						this.props.showSuccess(emails.length === 1 ? 'user_removed_successful' : 'users_removed_successful', { email: emails.join() }, SCOPE);
-						this.getAuthDetails();
-					} else {
-						this.props.showError('error_removing_users', { email: emails.join() }, SCOPE);
-						this.props.updateState(SCOPE, {
-							loading: false,
-						});
-					}
-				},
-				error => {
-					Log.error(error);
-					this.props.updateState(SCOPE, {
-						loading: false,
-					});
-					this.props.showError('error_removing_users', { email: emails.join() }, SCOPE);
-				}
-			);
-		}
-	};
+	openDeleteModal = (type, things) => {
+		this.props.updateState(SCOPE, {
+			showDeleteModal: true,
+			delModalType: type,
+			delThings: things,
+		});
+	}
 
-	// dsh todo
-	// delete the selected api keys
-	onDeleteApiKey = keys => {
-		/*let managersSelected = users.filter(user => user.roles.includes('manager'));
-		let currentManagers = this.props.all_users.filter(user => user.roles.includes('manager'));
-		if (managersSelected.length === currentManagers.length) {
-			this.props.showError('atleast_one_admin_required', {}, SCOPE);
-		} else {
-			let body = { uuids: users.map(user => `"${user.uuid}"`) };
-			const emails = users.map(user => user.id);
-			users.map(user => {
-				const userIndex = users.findIndex(el => el.uuid === user.uuid);
-				let userToUpdate = (users[users.findIndex(el => el.uuid === user.uuid)] = user);
-				userToUpdate.deleting = true;
-				users[userIndex] = userToUpdate;
-				this.props.updateState(SCOPE, {
-					all_users: [...this.props.all_users],
-				});
-				return true;
-			});
-			ConfigureAuthApi.deleteUsers(body).then(
-				resp => {
-					if (resp.message === 'ok') {
-						this.props.showSuccess(emails.length === 1 ? 'user_removed_successful' : 'users_removed_successful', { email: emails.join() }, SCOPE);
-						this.getAuthDetails();
-					} else {
-						this.props.showError('error_removing_users', { email: emails.join() }, SCOPE);
-						this.props.updateState(SCOPE, {
-							loading: false,
-						});
-					}
-				},
-				error => {
-					Log.error(error);
-					this.props.updateState(SCOPE, {
-						loading: false,
-					});
-					this.props.showError('error_removing_users', { email: emails.join() }, SCOPE);
-				}
-			);
-		}*/
-	};
+	closeDeleteModal = type => {
+		this.props.updateState(SCOPE, {
+			showDeleteModal: false,
+		});
+	}
+
 	checkRole = (user, role) => {
 		if (user && user.roles && user.roles.includes(role)) {
 			return (
@@ -361,7 +277,6 @@ export class Access extends Component {
 		this.props.updateState(SCOPE, {
 			showEditAuthSchemePanel: false,
 		});
-		this.getAuthDetails();			// refresh on close
 		// dsh todo log user out if submit was successful
 	};
 
@@ -466,7 +381,9 @@ export class Access extends Component {
 											loading={this.props.loading}
 											users={this.props.all_users}
 											onAdd={this.openAddUserModal}
-											onDelete={this.onDeleteUsers}
+											onDelete={(users) => {
+												this.openDeleteModal('user', users);
+											}}
 											isManager={this.props.isManager}
 											checkRole={this.checkRole}
 											buildAttentionCell={this.buildAttentionCell}
@@ -487,12 +404,12 @@ export class Access extends Component {
 											onAdd={() => {
 												this.openAddUserModal('apikey');
 											}}
-											onDelete={this.onDeleteApiKey}
+											onDelete={(keys) => {
+												this.openDeleteModal('apikey', keys);
+											}}
 											isManager={this.props.isManager}
 											isWriter={this.props.isManager}
 											checkRole={this.checkRole}
-											buildAttentionCell={this.buildAttentionCell}
-											authScheme={this.props.auth_scheme}
 										/>
 										{Array.isArray(this.props.all_apikeys) && this.props.all_apikeys.length > 0 &&
 											<p className='tinyTextWhite'>{translate('api_key_warning_txt')}</p>
@@ -510,21 +427,8 @@ export class Access extends Component {
 								)}
 							</div>
 							<div>
-								{this.props.showEditSettingsModal && (
-									<EditAuthSettingsModal
-										clientId={this.props.client_id}
-										oauthServerUrl={this.props.oauth_url}
-										secret={this.props.secret}
-										tenantId={this.props.tenant_id}
-										adminContactEmail={this.props.adminContactEmail}
-										adminUsers={this.props.admin_list ? this.props.admin_list.map(user => user.email) : []}
-										generalUsers={this.props.general_list ? this.props.general_list.map(user => user.email) : []}
-										onClose={this.closeEditAuthModal}
-										onComplete={this.getAuthDetails}
-										authScheme={this.props.auth_scheme}
-										isManager={this.props.isManager}
-									/>
-								)}
+
+								{/* add user modal */}
 								{this.props.showAddUserModal && !this.props.editMode && (
 									<AddUserModal
 										isCouchBasedAuth={this.props.auth_scheme === 'couchdb'}
@@ -532,15 +436,18 @@ export class Access extends Component {
 										onClose={this.closeAddUserModal}
 										modalType={this.props.addModalType}
 										onComplete={emails => {
-											if (emails) {
-												this.props.showSuccess(emails.length === 1 ? 'user_add_successful' : 'users_add_successful', { email: emails.join() }, SCOPE);
-												this.getAuthDetails();
-											} else {
+											if (this.props.addModalType === 'apikey') {
+												//this.props.showSuccess(emails.length === 1 ? 'user_add_successful' : 'users_add_successful', { email: emails.join() }, SCOPE);
 												this.getApikeyDetails(true);
+											} else {
+												this.props.showSuccess(emails.length === 1 ? 'user_add_successful' : 'users_add_successful', { email: emails.join(', ') }, SCOPE);
+												this.getAuthDetails(true);
 											}
 										}}
 									/>
 								)}
+
+								{/* edit user roles modal */}
 								{this.props.showAddUserModal && this.props.editMode && (
 									<AddUserModal
 										existingUsers={this.props.all_users.map(details => details.id)}
@@ -548,10 +455,12 @@ export class Access extends Component {
 										onClose={this.closeAddUserModal}
 										onComplete={email => {
 											this.props.showSuccess('user_update_successful', { email }, SCOPE);
-											this.getAuthDetails();
+											this.getAuthDetails(true);
 										}}
 									/>
 								)}
+
+								{/* reset user password modal */}
 								{this.props.showResetPasswordModal && (
 									<ResetPasswordModal
 										user={this.props.user}
@@ -561,6 +470,8 @@ export class Access extends Component {
 										}}
 									/>
 								)}
+
+								{/* change auth scheme modal */}
 								{this.props.showEditAuthSchemePanel && (
 									<EditAuthSchemePanel
 										clientId={this.props.client_id}
@@ -571,9 +482,33 @@ export class Access extends Component {
 										adminUsers={this.props.admin_list ? this.props.admin_list.map(user => user.email) : []}
 										generalUsers={this.props.general_list ? this.props.general_list.map(user => user.email) : []}
 										onClose={this.closeEditAuthSchemePanel}
-										onComplete={this.getAuthDetails}
+										onComplete={() => {
+											this.getAuthDetails(true);
+										}}
 										authScheme={this.props.auth_scheme}
 										isManager={this.props.isManager}
+									/>
+								)}
+
+								{/* delete user or api key modal */}
+								{this.props.showDeleteModal && (
+									<DeleteAccessModal
+										deleteArr={this.props.delThings}
+										modalType={this.props.delModalType}
+										onClose={this.closeDeleteModal}
+										onComplete={removedItems => {
+											if (this.props.delModalType === 'apikey') {
+												this.props.showSuccess((Array.isArray(removedItems) && removedItems.length > 1) ?
+													'apikeys_removed_successful' : 'apikey_removed_successful', SCOPE
+												);
+												this.getApikeyDetails(true);
+											} else {
+												this.props.showSuccess((Array.isArray(removedItems) && removedItems.length > 1) ?
+													'users_removed_successful' : 'user_removed_successful', { email: removedItems.join(', ') }, SCOPE
+												);
+												this.getAuthDetails(true);
+											}
+										}}
 									/>
 								)}
 							</div>
@@ -595,7 +530,6 @@ const dataProps = {
 	admin_list: PropTypes.array,
 	general_list: PropTypes.array,
 	all_users: PropTypes.array,
-	showEditSettingsModal: PropTypes.bool,
 	showAddUserModal: PropTypes.bool,
 	showResetPasswordModal: PropTypes.bool,
 	userInfo: PropTypes.object,
@@ -606,6 +540,9 @@ const dataProps = {
 	showEditAuthSchemePanel: PropTypes.bool,
 	all_apikeys: PropTypes.array,
 	addModalType: PropTypes.string,
+	delModalType: PropTypes.string,
+	showDeleteModal: PropTypes.bool,
+	delThings: PropTypes.array,
 };
 
 Access.propTypes = {
@@ -852,7 +789,6 @@ ApiKeys.propTypes = {
 	checkRole: PropTypes.func,
 	buildAttentionCell: PropTypes.func,
 	overflowMenu: PropTypes.func,
-	authScheme: PropTypes.string,
 	userInfo: PropTypes.object,
 };
 

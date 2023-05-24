@@ -31,6 +31,7 @@ import WizardStep from '../WizardStep/WizardStep';
 const SCOPE = 'editSettings';
 const Log = new Logger(SCOPE);
 
+// this is component is no longer used 2023/05/24 !
 class EditAuthSettingsModal extends Component {
 	cName = 'EditAuthSettingsModal';
 

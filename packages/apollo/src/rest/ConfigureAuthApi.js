@@ -16,8 +16,8 @@
 import { RestApi } from './RestApi';
 
 class ConfigureAuthApi {
-	static async getAuthScheme() {
-		return RestApi.get('/api/v3/authscheme');
+	static async getAuthScheme(skip_cache) {
+		return RestApi.get('/api/v3/authscheme' + (skip_cache ? '?cache=skip' : ''));
 	}
 
 	static async configureAuthScheme(body) {
@@ -46,6 +46,10 @@ class ConfigureAuthApi {
 
 	static async addApiKey(body) {
 		return RestApi.post('/api/v3/permissions/keys', body);
+	}
+
+	static async deleteApiKey(apikey) {
+		return RestApi.delete('/api/v3/permissions/keys/' + apikey);
 	}
 }
 
