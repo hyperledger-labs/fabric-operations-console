@@ -216,9 +216,8 @@ export class AddUserModal extends Component {
 		try {
 			const resp = await ConfigureAuthApi.addApiKey(body);
 			this.props.updateState(SCOPE, { submitting: false, error: null });
-			// dsh todo do something with the resp! need to show the api secret value
 			this.sidePanel.closeSidePanel();
-			this.props.onComplete();
+			this.props.onComplete(resp);
 		} catch (error) {
 			this.props.updateState(SCOPE, {
 				submitting: false,

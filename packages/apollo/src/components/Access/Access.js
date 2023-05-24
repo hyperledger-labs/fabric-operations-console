@@ -33,6 +33,8 @@ import ResetPasswordModal from '../ResetPasswordModal/ResetPasswordModal';
 import SVGs from '../Svgs/Svgs';
 import TranslateLink from '../TranslateLink/TranslateLink';
 import DeleteAccessModal from '../DeleteAccessModal/DeleteAccessModal';
+import SidePanel from '../SidePanel/SidePanel';
+import Form from '../Form/Form';
 
 const SCOPE = 'access';
 const Log = new Logger(SCOPE);
@@ -371,8 +373,8 @@ export class Access extends Component {
 								{/* auth scheme tile content */}
 								<this.renderAuthTileSection />
 
-								{/* doc link */}
-								{!isIam && this.props.isManager && <TranslateLink text="user_roles_find_more" />}
+								{/* doc links */}
+								{!isIam && <TranslateLink text="access_doc_links" />}
 
 								{/* users table content */}
 								{!isIam && this.props.isManager && (
@@ -435,11 +437,16 @@ export class Access extends Component {
 										existingUsers={this.props.all_users.map(details => details.id)}
 										onClose={this.closeAddUserModal}
 										modalType={this.props.addModalType}
-										onComplete={emails => {
+										onComplete={data => {
 											if (this.props.addModalType === 'apikey') {
-												//this.props.showSuccess(emails.length === 1 ? 'user_add_successful' : 'users_add_successful', { email: emails.join() }, SCOPE);
 												this.getApikeyDetails(true);
+												this.props.updateState(SCOPE, {
+													showApiSecret: true,
+													apikey_reveal: data.api_key,
+													api_secret_reveal: data.api_secret,
+												});
 											} else {
+												const emails = data;
 												this.props.showSuccess(emails.length === 1 ? 'user_add_successful' : 'users_add_successful', { email: emails.join(', ') }, SCOPE);
 												this.getAuthDetails(true);
 											}
@@ -511,11 +518,61 @@ export class Access extends Component {
 										}}
 									/>
 								)}
+
+								{/* api key & secret reveal content */}
+								{this.props.showApiSecret && (
+									<SidePanel
+										id="ibp--template-full-page-side-panel"
+										closed={() => {
+											this.props.updateState(SCOPE, {
+												showApiSecret: false,
+											});
+										}}
+										ref={sidePanel => (this.sidePanel = sidePanel)}
+										buttons={[
+											{
+												id: 'api_key_secret_reveal',
+												text: translate('i_understand'),
+												type: 'submit',
+											},
+										]}
+										fullPageCenter
+									>
+										<div className="ibp-full-page-center-panel-container">
+											<h1>{translate('success')}</h1>
+											<br />
+											<p>{translate('api_secret_reveal_txt1')}</p>
+											<p>{translate('api_secret_reveal_txt2')}</p>
+											<br />
+											<Form
+												scope={SCOPE}
+												className='access-form-apikey-secret'
+												id={SCOPE}
+												fields={[
+													{
+														name: 'apikey_name',
+														label: 'apikey_label',
+														placeholder: 'apikey_label',
+														readonly: true,
+														default: this.props.apikey_reveal
+													},
+													{
+														name: 'api_secret',
+														label: 'api_secret_label',
+														placeholder: 'api_secret_label',
+														readonly: true,
+														default: this.props.api_secret_reveal
+													},
+												]}
+											/>
+										</div>
+									</SidePanel>
+								)}
 							</div>
 						</div>
 					</div>
-				</div>
-			</PageContainer>
+				</div >
+			</PageContainer >
 		);
 	}
 }
@@ -543,6 +600,9 @@ const dataProps = {
 	delModalType: PropTypes.string,
 	showDeleteModal: PropTypes.bool,
 	delThings: PropTypes.array,
+	showApiSecret: PropTypes.bool,
+	api_secret_reveal: PropTypes.string,
+	apikey_reveal: PropTypes.string,
 };
 
 Access.propTypes = {
