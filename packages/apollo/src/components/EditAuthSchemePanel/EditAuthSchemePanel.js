@@ -74,6 +74,7 @@ class EditAuthSchemePanel extends Component {
 			};
 			try {
 				await SettingsApi.updateSettings(newSettings);
+				this.props.onComplete(constants.AUTH_OAUTH);
 			} catch (e) {
 				console.error('unable to submit oauth settings, e:', e);
 				throw { title: 'Unable to save settings', details: (e && e.msgs) ? e.msgs.join('\n') : '' };
@@ -86,6 +87,7 @@ class EditAuthSchemePanel extends Component {
 			};
 			try {
 				await SettingsApi.updateSettings(newSettings);
+				this.props.onComplete(constants.AUTH_COUCHDB);
 			} catch (e) {
 				console.error('unable to submit couchdb settings, e:', e);
 				throw { title: 'Unable to save settings', details: (e && e.msgs) ? e.msgs.join('\n') : '' };
@@ -448,7 +450,6 @@ class EditAuthSchemePanel extends Component {
 		);
 	}
 
-	// dsh remove theses translation strings couch_edit_authentication_settings_desc, edit_authentication_settings_desc, administrator_contact_desc
 	render() {
 		const translate = this.props.translate;
 		return (

@@ -35,14 +35,14 @@ import TranslateLink from '../TranslateLink/TranslateLink';
 import DeleteAccessModal from '../DeleteAccessModal/DeleteAccessModal';
 import SidePanel from '../SidePanel/SidePanel';
 import Form from '../Form/Form';
+import * as constants from '../../utils/constants';
 
 const SCOPE = 'access';
 const Log = new Logger(SCOPE);
+let login_interval = null;
 
-// dsh todo create isWriter property
 export class Access extends Component {
 	cName = 'Access';
-	// dsh todo check if iam auth is being used we should not populate content related to this new oauth access stuff
 
 	componentDidMount() {
 		this.props.showBreadcrumb('users', {}, this.props.history.location.pathname, true);
@@ -70,7 +70,7 @@ export class Access extends Component {
 							email: resp2.users[id].email,
 							created: new Date(resp2.users[id].created).toDateString(),
 							roles: resp2.users[id].roles,
-							disabled: true,			// this doesn't seem to do anything, dsh todo don't let a user delete themselves
+							disabled: true,
 						});
 						delete resp2.users[id];
 						break;
@@ -102,7 +102,6 @@ export class Access extends Component {
 					});
 				}
 
-				// const loggedInUser = all_users.find(user => user.email.toLowerCase() === this.props.userInfo.loggedInAs.email.toLowerCase());
 				this.props.updateState(SCOPE, {
 					loading: false,
 					oauth_url: resp.oauth_url,
@@ -112,6 +111,7 @@ export class Access extends Component {
 					adminContactEmail: resp.admin_contact_email ? resp.admin_contact_email : '',
 					all_users: all_users,
 					isManager: this.props.userInfo ? ActionsHelper.canRestartOpTools(this.props.userInfo) : false,
+					isWriter: this.props.userInfo ? ActionsHelper.canEditComponent(this.props.userInfo) : false,
 					auth_scheme: resp.auth_scheme,
 				});
 			});
@@ -253,7 +253,7 @@ export class Access extends Component {
 						this.openEditUserModal(user);
 					}}
 				/>
-				{this.props.auth_scheme && this.props.auth_scheme === 'couchdb' && this.props.isManager && (
+				{this.props.auth_scheme && this.props.auth_scheme === constants.AUTH_COUCHDB && this.props.isManager && (
 					<OverflowMenuItem
 						id="reset_user"
 						itemText={translate('reset_password')}
@@ -279,25 +279,24 @@ export class Access extends Component {
 		this.props.updateState(SCOPE, {
 			showEditAuthSchemePanel: false,
 		});
-		// dsh todo log user out if submit was successful
 	};
 
 	renderAuthTileSection = () => {
 		const isIbmId = this.props.auth_scheme === 'ibmid';
-		const isIam = this.props.auth_scheme === 'iam';
-		const isCouchDb = this.props.auth_scheme === 'couchdb';
+		const isIam = this.props.auth_scheme === constants.AUTH_IAM;
+		const isCouchDb = this.props.auth_scheme === constants.AUTH_COUCHDB;
 		const translate = this.props.translate;
 		return (
 			<div className="ibp-access-row">
 				<h3 className="ibp-access-auth-services-label">
 					{translate('authentication_services')}
 				</h3>
-				{/*dsh todo check the alt text for the other auth schemes*/}
+
 				<div className="ibp-access-auth-services-container">
 					{this.props.auth_scheme ? (
 						<div className="ibp-access-app-id-label">
 							{isIbmId ? translate('ibm_id') : isIam ? translate('identity_and_access_management') : isCouchDb ? translate('couchdb') : translate('oauth')}
-							{this.props.isManager &&
+							{!isIam && this.props.isManager &&
 								<button className="ibp-access-button"
 									onClick={() => this.openEditAuthSchemePanel()}
 									title={translate('access_gear_title')}
@@ -353,7 +352,7 @@ export class Access extends Component {
 	}
 
 	render() {
-		const isIam = this.props.auth_scheme === 'iam';
+		const isIam = this.props.auth_scheme === constants.AUTH_IAM;
 		const translate = this.props.translate;
 		const hasPendingUsers = Array.isArray(this.props.all_users) && this.props.all_users.filter(x => {		// see if any usernames are pending (have no roles)
 			return (!Array.isArray(x.roles) || x.roles.length === 0);
@@ -371,10 +370,10 @@ export class Access extends Component {
 								/>
 
 								{/* auth scheme tile content */}
-								<this.renderAuthTileSection />
+								{!this.props.loading && <this.renderAuthTileSection />}
 
 								{/* doc links */}
-								{!isIam && <TranslateLink text="access_doc_links" />}
+								{!this.props.loading && !isIam && <TranslateLink text="access_doc_links" />}
 
 								{/* users table content */}
 								{!isIam && this.props.isManager && (
@@ -420,7 +419,7 @@ export class Access extends Component {
 								)}
 
 								{/* non-manager description */}
-								{!isIam && !this.props.isManager && (
+								{!this.props.loading && !isIam && !this.props.isManager && (
 									<div>
 										<br />
 										<br />
@@ -433,7 +432,7 @@ export class Access extends Component {
 								{/* add user modal */}
 								{this.props.showAddUserModal && !this.props.editMode && (
 									<AddUserModal
-										isCouchBasedAuth={this.props.auth_scheme === 'couchdb'}
+										isCouchBasedAuth={this.props.auth_scheme === constants.AUTH_COUCHDB}
 										existingUsers={this.props.all_users.map(details => details.id)}
 										onClose={this.closeAddUserModal}
 										modalType={this.props.addModalType}
@@ -489,8 +488,25 @@ export class Access extends Component {
 										adminUsers={this.props.admin_list ? this.props.admin_list.map(user => user.email) : []}
 										generalUsers={this.props.general_list ? this.props.general_list.map(user => user.email) : []}
 										onClose={this.closeEditAuthSchemePanel}
-										onComplete={() => {
-											this.getAuthDetails(true);
+										onComplete={(type) => {
+											this.props.updateState(SCOPE, {
+												showLoginTimer: true,
+												showLoginType: type,
+												loginTimeRemaining_s: 120,		// time in seconds to threaten user with
+											});
+
+											if (type === constants.AUTH_OAUTH) {
+												clearInterval(login_interval);
+												login_interval = setInterval(() => {
+													this.props.updateState(SCOPE, {
+														loginTimeRemaining_s: (this.props.loginTimeRemaining_s > 0) ? this.props.loginTimeRemaining_s - 1 : 0,
+													});
+
+													if (this.props.loginTimeRemaining_s <= 0) {		// reload the page if they waited this long
+														window.location.href = '/auth/logout';
+													}
+												}, 1000);
+											}
 										}}
 										authScheme={this.props.auth_scheme}
 										isManager={this.props.isManager}
@@ -537,6 +553,7 @@ export class Access extends Component {
 											},
 										]}
 										fullPageCenter
+										hideClose={true}
 									>
 										<div className="ibp-full-page-center-panel-container">
 											<h1>{translate('success')}</h1>
@@ -566,6 +583,49 @@ export class Access extends Component {
 												]}
 											/>
 										</div>
+									</SidePanel>
+								)}
+
+								{/* oauth logout/login timer content */}
+								{this.props.showLoginTimer && (
+									<SidePanel
+										id="ibp--template-full-page-side-panel"
+										closed={() => {
+											this.props.updateState(SCOPE, {
+												showLoginTimer: false,
+												loading: true,
+											});
+											window.location.href = '/auth/logout';
+										}}
+										ref={sidePanel => (this.sidePanel = sidePanel)}
+										buttons={[
+											{
+												id: 'access-logout-butt',
+												text: translate('logout'),
+												type: 'submit',
+											},
+										]}
+										fullPageCenter
+										hideClose={true}
+									>
+										{this.props.showLoginType === constants.AUTH_OAUTH && <div className="ibp-full-page-center-panel-container">
+											<h1>{translate('login_req_header')}</h1>
+											<br />
+											<br />
+											<p>{translate('login_required_txt1')}</p>
+											<br />
+											<h3>{this.props.loginTimeRemaining_s} secs remaining</h3>
+											<br />
+											<p>{translate('login_required_txt2')}</p>
+										</div>}
+										{this.props.showLoginType === constants.AUTH_COUCHDB && <div className="ibp-full-page-center-panel-container">
+											<h1>{translate('logout_header')}</h1>
+											<br />
+											<br />
+											<p>{translate('logout_required_txt1')}</p>
+											<br />
+											<p>{translate('logout_required_txt2')}</p>
+										</div>}
 									</SidePanel>
 								)}
 							</div>
@@ -603,6 +663,9 @@ const dataProps = {
 	showApiSecret: PropTypes.bool,
 	api_secret_reveal: PropTypes.string,
 	apikey_reveal: PropTypes.string,
+	showLoginTimer: PropTypes.bool,
+	loginTimeRemaining_s: PropTypes.number,
+	showLoginType: PropTypes.string,
 };
 
 Access.propTypes = {
@@ -641,7 +704,7 @@ export function AuthenticatedUsers(props) {
 				>
 					<ItemContainer
 						containerTitle="user_table_header"
-						containerTooltip={props.authScheme === 'couchdb' ? 'authenticated_users_tooltip_icp' : 'authenticated_users_tooltip_ibp'}
+						containerTooltip={props.authScheme === constants.AUTH_COUCHDB ? 'authenticated_users_tooltip_icp' : 'authenticated_users_tooltip_ibp'}
 						tooltipDirection="right"
 						autoWidthButton
 						buttonText="add_new_users"

@@ -211,7 +211,6 @@ export class AddUserModal extends Component {
 			description: this.props.apikey_name,
 			roles: this.props.roles,
 		};
-		console.log('dsh99 submitting body', body);
 
 		try {
 			const resp = await ConfigureAuthApi.addApiKey(body);

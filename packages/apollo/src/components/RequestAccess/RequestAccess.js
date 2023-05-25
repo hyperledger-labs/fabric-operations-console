@@ -23,9 +23,9 @@ import { Button, Loading } from 'carbon-components-react';
 import { updateState } from '../../redux/commonActions';
 import Helper from '../../utils/helper';
 import UserSettingsRestApi from '../../rest/UserSettingsRestApi';
+import * as constants from '../../utils/constants';
 
 const SCOPE = 'RequestAccess';
-// dsh todo check if iam auth is being used we should not populate content related to requesting access
 
 class RequestAccess extends Component {
 	async componentDidMount() {
@@ -56,6 +56,7 @@ class RequestAccess extends Component {
 
 	render() {
 		const translate = this.props.translate;
+		const isIam = this.props.auth_scheme === constants.AUTH_IAM;
 		return (
 			<div>
 				<Router>
@@ -69,7 +70,7 @@ class RequestAccess extends Component {
 					<p>{translate('request_access_details')}</p>
 					<br />
 					<br />
-					{this.props.userInfo && this.props.userInfo.loggedInAs && this.props.userInfo.loggedInAs.email &&
+					{!isIam && this.props.userInfo && this.props.userInfo.loggedInAs && this.props.userInfo.loggedInAs.email &&
 						<Button
 							onClick={this.register_user}
 							className="ibp-button ibm-label mig-button"
@@ -82,7 +83,7 @@ class RequestAccess extends Component {
 							/>}
 						</Button>
 					}
-					{this.props.pending &&
+					{!isIam && this.props.pending &&
 						<p className="grey_txt">
 							{translate('request_pending_txt')}
 						</p>

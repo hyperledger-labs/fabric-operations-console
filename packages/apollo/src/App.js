@@ -20,7 +20,6 @@ import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import './app.scss';
-import AuthSetup from './components/AuthSetup/AuthSetup';
 import LoadingWithContent from './components/LoadingWithContent/LoadingWithContent';
 import Logger from './components/Log/Logger';
 import Login from './components/Login/Login';
@@ -58,7 +57,6 @@ class App extends Component {
 		try {
 			const userInfo = await this.getUserInfo();
 			this.props.updateState('userInfo', userInfo);
-			console.log('dsh99 userinfo', userInfo);			// dsh todo remove me
 			await this.getAuthData();
 		} catch (error) {
 			Log.error(`Failed to get user info: ${error}`);
@@ -322,6 +320,7 @@ class App extends Component {
 						<RequestAccess adminContact={this.state.authScheme.admin_contact_email}
 							userInfo={this.props.userInfo}
 							host_url={this.state.authScheme.host_url}
+							auth_scheme={this.state.authScheme.type}
 						/>
 					);
 				}

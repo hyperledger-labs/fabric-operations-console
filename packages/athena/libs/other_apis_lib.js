@@ -18,6 +18,7 @@
 //------------------------------------------------------------
 module.exports = function (logger, ev, t) {
 	const exports = {};
+	exports.login_timer = null;
 
 	//--------------------------------------------------
 	// Get non-sensitive settings for athena
@@ -252,6 +253,7 @@ module.exports = function (logger, ev, t) {
 				return cb(edit_err, edited_settings_doc);							// error already logged
 			} else {
 				let restart_changes = edited_settings_doc.log_changes;				// this gets deleted before writing doc
+				const original_doc = JSON.parse(JSON.stringify(edited_settings_doc));
 
 				// make the timeout changes
 				handle_fabric_timeout_settings(req, edited_settings_doc);
@@ -293,6 +295,30 @@ module.exports = function (logger, ev, t) {
 					}
 
 					edited_settings_doc.auth_scheme = req.body.auth_scheme;
+
+					// if we are changing TO oauth OR changing oauth params, then create a user login timer
+					// if a user fails to login with 2 minutes, revert the changes made here
+					// (this helps prevent a console from being inaccessible due to setting bad/wrong oauth settings)
+					if (req.body.auth_scheme === 'oauth' || req.body.oauth) {
+						logger.warn('[edit settings] setting up user login timer, a user must login using the new auth setting to keep these settings');
+						clearTimeout(exports.login_timer);
+						exports.login_timer = setTimeout(() => {
+							logger.error('[edit settings] the user login timer has expired. reverting auth setting changes');
+							t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, (err, settings_doc) => {
+								if (err) {
+									logger.error('[edit settings] unable to get settings doc to revert a setting...?', err);
+								} else {
+									settings_doc.auth_scheme = original_doc.auth_scheme;	// revert to the old scheme
+									if (original_doc.oauth) {
+										settings_doc.oauth = original_doc.oauth;			// revert oauth settings to prev values if there were prev values
+									}
+									writeSettingsDoc(req, settings_doc, (write_error, resp) => {
+										logger.info('[edit settings] the auth scheme settings have reverted');
+									});
+								}
+							});
+						}, 1000 * 116);			// a little shy of 120 seconds should account for any delay and make this happen before the UI times out
+					}
 				}
 
 				// oauth setting edits
