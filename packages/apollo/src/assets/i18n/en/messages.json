@@ -2637,7 +2637,7 @@
 	"delete_user": "Delete user",
 	"identity_removal_disabled": "Identity removal is disabled for this Certificate Authority. Ensure that it is enabled by updating the CA configuration.",
 	"duplicate_mspid_import_error_desc": "MSP already exists",
-	"no_capability_changes": "System channel can only be updated if there are changes to capability.",
+	"no_capability_changes": "The orderer already has the selected capabilities.",
 	"in_val_too_many_keys": "Too many fields in body. This API only supports 1 field in the body. Use multiple apis to update multiple fields.",
 	"smart_contract_20_lifecycle_notice_title": "Fabric v2.0 lifecycle is now available under channel details page",
 	"smart_contract_20_lifecycle_notice_desc": "Good news. The process to deploy smart contracts on a channel has been updated to support the Fabric v2.0 lifecycle. You can continue to use this page to install and instantiate your legacy smart contracts in .cds format. Find out more about the new smart contract lifecycle with this how-to topic. If your channel application capability is set to v2.0, open the channel and select the Smart contract management tab to get started.",

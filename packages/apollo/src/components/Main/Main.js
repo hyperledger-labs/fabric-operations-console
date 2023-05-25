@@ -165,16 +165,16 @@ class Main extends Component {
 										component={PeerDetails}
 									/>
 									<Route exact
-										path="/orderer/:ordererId"
+										path="/orderer/:clusterIdPath"
 										component={OrdererDetails}
 									/>
 									<Route exact
-										path="/orderer/:ordererId/:nodeId"
+										path="/orderer/:clusterIdPath/:nodeId"
 										component={OrdererDetails}
 									/>
 									{/* /debug is a debugging route that exposes a link in the left pane to download the config block of the channel */}
 									<Route exact
-										path="/debug/orderer/:ordererId/:channelId?"
+										path="/debug/orderer/:clusterIdPath/:channelId?"
 										component={OrdererDetails}
 									/>
 									<Route path="/ca/:caId"

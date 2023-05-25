@@ -184,7 +184,7 @@ class OrdererDetails extends Component {
 							channelList.channels = [];
 						}
 						channelList.channels.push(channelList.systemChannel);
-						await this.getSystemChannelConfig();
+						await this.getSystemChannelConfigData();
 					} else {														// system channel does not exist
 						systemChannel = false;
 					}
@@ -211,7 +211,7 @@ class OrdererDetails extends Component {
 	};
 
 	async getDetails(skipStatusCache) {
-		let orderer = await NodeRestApi.getClusterDetails(this.props.match.params.ordererId, false);
+		let orderer = await NodeRestApi.getClusterDetails(this.props.match.params.clusterIdPath, false);
 		try {
 			// Get complete config from deployer because the value stored in database stores only the latest config override json
 			const latest_config = await NodeRestApi.getCurrentNodeConfig(orderer);
@@ -299,7 +299,7 @@ class OrdererDetails extends Component {
 					this.timestamp = 0;
 					this.props.updateState(SCOPE, { notAvailable: false });
 					if (!this.isSystemLess(this.props.details)) {
-						this.getSystemChannelConfig();
+						this.getSystemChannelConfigData();
 					}
 				}
 			}
@@ -396,8 +396,8 @@ class OrdererDetails extends Component {
 		};
 	}
 
-	getSystemChannelConfig() {
-		OrdererRestApi.getSystemChannelConfig(this.props.match.params.ordererId, this.props.configtxlator_url)
+	getSystemChannelConfigData() {
+		OrdererRestApi.getSystemChannelConfig({ cluster_id: this.props.match.params.clusterIdPath }, this.props.configtxlator_url)
 			.then(resp => {
 				// we usually pick "SampleConsortium" but if that is missing, grab the first one. we don't support multiple atm.
 				const first_consortium = ChannelUtils.getSampleConsortiumOrFirstKey(resp.channel_group.groups.Consortiums.groups);
@@ -450,7 +450,7 @@ class OrdererDetails extends Component {
 					this.props.showError(error.message_key, { nodeName: error.nodeName }, SCOPE);
 				} else {
 					if (this.props.details.associatedIdentity) {
-						this.props.showError('system_channel_error', { ordererId: this.props.match.params.ordererId }, SCOPE);
+						this.props.showError('system_channel_error', { ordererId: this.props.match.params.clusterIdPath }, SCOPE);
 					} else {
 						this.props.showError('orderer_not_available_title', {}, SCOPE);
 					}
@@ -956,12 +956,12 @@ class OrdererDetails extends Component {
 			error: null,
 		});
 		const options = {
-			currentOrdererId: this.props.details.raft[0].id,
 			ordererId: this.props.selectedNode.id,
+			cluster_id: this.props.selectedNode.cluster_id,
 			configtxlator_url: this.props.configtxlator_url,
 		};
 		try {
-			Log.info(`Adding orderer ${options.ordererId} to system channel via orderer ${options.currentOrdererId}`);
+			Log.info(`Adding orderer ${options.ordererId} to system channel`);
 			await OrdererRestApi.addOrdererNodeToSystemChannel(options);
 		} catch (error) {
 			let duplicate_consenter = false;
@@ -994,15 +994,15 @@ class OrdererDetails extends Component {
 
 		let orderer;
 		try {
-			orderer = await OrdererRestApi.getOrdererDetails(options.currentOrdererId, false);
+			orderer = await OrdererRestApi.getClusterDetails(options.cluster_id, false);
 		} catch (error) {
-			Log.error(`Unable to get orderer ${options.currentOrdererId}:`, error);
+			Log.error(`Unable to get orderer ${options.cluster_id}:`, error);
 			return;
 		}
 
 		try {
 			let block_options = {
-				ordererId: options.currentOrdererId,
+				cluster_id: options.cluster_id,
 				channelId: orderer.system_channel || OrdererRestApi.systemChannel,
 				configtxlator_url: options.configtxlator_url,
 			};
@@ -1037,22 +1037,18 @@ class OrdererDetails extends Component {
 	}
 
 	getQuickActions = () => {
-		let quickAction = null;
-		const pathname = _.get(this.props, 'history.location.pathname');
-		if (pathname && pathname.indexOf('/debug/') !== -1) {
-			quickAction = [
-				{
-					label: 'open_channel_config',
-					quickAction: this.debug_openChannelConfig,
-				},
-			];
-		}
+		let quickAction = [
+			{
+				label: 'open_channel_config',
+				quickAction: this.debug_openChannelConfig,
+			},
+		];
 		return quickAction;
 	};
 
 	async getChannelConfigWrap(channelId, orderer) {
 		const options = {
-			ordererId: this.props.match.params.ordererId,
+			cluster_id: this.props.details.cluster_id,
 			configtxlator_url: this.props.configtxlator_url,
 			channelId: channelId,
 		};
@@ -1063,7 +1059,7 @@ class OrdererDetails extends Component {
 	};
 
 	debug_openChannelConfig = () => {
-		OrdererRestApi.getOrdererDetails(this.props.match.params.ordererId, false)
+		OrdererRestApi.getClusterDetails(this.props.details.cluster_id, true)
 			.then(orderer => {
 				let channelId = this.props.match.params.channelId || orderer.system_channel || OrdererRestApi.systemChannel;
 				this.getChannelConfigWrap(channelId, orderer).then(debug_block => {
@@ -1318,7 +1314,7 @@ class OrdererDetails extends Component {
 						)}
 						{this.props.selected && (
 							<OrdererModal
-								ordererId={this.props.match.params.ordererId}
+								clusterId={this.props.match.params.clusterIdPath}
 								configtxlator_url={this.props.configtxlator_url}
 								orderer={this.props.selected}
 								singleNodeRaft={_.get(this.props, 'details.raft.length') === 1}
@@ -1489,7 +1485,7 @@ class OrdererDetails extends Component {
 																orderer={this.props.details}
 																configtxlator_url={this.props.configtxlator_url}
 																onClose={this.onClose}
-																ordererId={this.props.match.params.ordererId}
+																clusterId={this.props.match.params.clusterIdPath}
 																loading={this.props.sysChLoading}
 																disableAddItem={this.props.disabled}
 																feature_flags={this.props.feature_flags}
@@ -1498,7 +1494,7 @@ class OrdererDetails extends Component {
 																admins={this.props.admins}
 																members={this.props.members}
 																configtxlator_url={this.props.configtxlator_url}
-																ordererId={this.props.match.params.ordererId}
+																clusterId={this.props.match.params.clusterIdPath}
 																onClose={this.onClose}
 																loading={this.props.sysChLoading}
 																disableAddItem={this.props.disabled}

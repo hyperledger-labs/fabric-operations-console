@@ -162,7 +162,7 @@ class OrdererMembers extends Component {
 				{this.props.showDeleteModal && (
 					<MspDeleteModal
 						onClose={this.closeDeleteMSPModal}
-						ordererId={this.props.ordererId}
+						clusterId={this.props.clusterId}
 						configtxlator_url={this.props.configtxlator_url}
 						selectedMember={this.props.selectedMember}
 						onComplete={() => {
@@ -172,7 +172,7 @@ class OrdererMembers extends Component {
 				)}
 				{this.props.showAddMSPModal && (
 					<ImportMspModal
-						ordererId={this.props.ordererId}
+						clusterId={this.props.clusterId}
 						configtxlator_url={this.props.configtxlator_url}
 						onClose={this.closeAddMSPModal}
 						onComplete={() => {

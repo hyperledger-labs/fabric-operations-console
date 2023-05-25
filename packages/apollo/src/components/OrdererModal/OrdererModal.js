@@ -127,42 +127,7 @@ class OrdererModal extends React.Component {
 		}
 		//  ------------- ------------------------------------ ------------- //
 
-		// only call functions we need for that specific side panel
-		switch (this.props.ordererModalType) {
-			case 'delete':
-			case 'force_delete':
-				try {
-					if (this.props.systemChannel) {
-						await this.getChannelsWithNodes();		// legacy way
-					} else {
-						await this.loadChannelsOnOSN();			// osn admin way
-					}
-				} catch (e) {
-					this.props.updateState(SCOPE, {
-						channel_loading: false,
-					});
-				}
-				break;
-			case 'associate':
-			case 'update_certs':
-			case 'manage_certs':
-				this.getCAWithUsers();
-				break;
-			case 'capabilities':
-				this.getAvailableCapabilities();
-				break;
-			//case 'channel_maintenance':
-			//case 'config_override':
-			//case 'advanced':
-			//case 'restart':
-			//case 'log_settings':
-			//case 'upgrade':
-			//case 'restart':
-			//case 'manage_hsm':
-			//case 'enable_hsm':
-			//case 'update_hsm':
-			//case 'remove_hsm':
-		}
+		this.showAction(this.props.ordererModalType);
 	}
 
 	// load the channels this orderer is on - to find ones its a consenter on and block a delete...
@@ -399,7 +364,7 @@ class OrdererModal extends React.Component {
 			Log.error(error);
 		}
 
-		await this.getIdentities();
+		await this.loadIdentities();
 		this.props.updateState(SCOPE, {
 			users_loading: false,
 		});
@@ -437,8 +402,8 @@ class OrdererModal extends React.Component {
 		return id;
 	}
 
-	async getApplicableIdentities() {
-		const keys = Object.keys(this.props.associatedIdentities);
+	async getApplicableIdentities(associatedIdentities) {
+		const keys = Object.keys(associatedIdentities);
 		let valid_identities = {};
 		const allOrderers = this.props.orderer.raft ? this.props.orderer.raft : [this.props.orderer];
 		let msp_root_certs = {};
@@ -471,56 +436,50 @@ class OrdererModal extends React.Component {
 		return valid_identities;
 	}
 
-	async getIdentities() {
+	async loadIdentities() {
 		this.identities = null;
-		IdentityApi.getIdentities()
-			.then(identities => {
-				const associatedIdentities = {};
-				if (identities.length) {
-					this.identities = identities;
-					if (this.props.orderer && this.props.orderer.raft) {
-						this.props.orderer.raft.forEach(node => {
-							if (associatedIdentities[node.msp_id] === undefined) {
-								associatedIdentities[node.msp_id] = null;
-								if (this.props.orderer.associatedIdentities) {
-									this.props.orderer.associatedIdentities.forEach(identity => {
-										if (identity.msp_id === node.msp_id) {
-											associatedIdentities[node.msp_id] = this.getIdentityFromName(identity.name);
-										}
-									});
+		let identities;
+		try {
+			identities = await IdentityApi.getIdentities();
+		} catch (error) {
+			Log.error('unable to get identities:', error);
+		}
+		const associatedIdentities = {};
+		if (identities && identities.length) {
+			this.identities = identities;
+			if (this.props.orderer && this.props.orderer.raft) {
+				this.props.orderer.raft.forEach(node => {
+					if (associatedIdentities[node.msp_id] === undefined) {
+						associatedIdentities[node.msp_id] = null;
+						if (this.props.orderer.associatedIdentities) {
+							this.props.orderer.associatedIdentities.forEach(identity => {
+								if (identity.msp_id === node.msp_id) {
+									associatedIdentities[node.msp_id] = this.getIdentityFromName(identity.name);
 								}
-							}
-						});
+							});
+						}
 					}
-					if (this.props.orderer && this.props.orderer.pending) {
-						this.props.orderer.pending.forEach(node => {
-							if (associatedIdentities[node.msp_id] === undefined) {
-								associatedIdentities[node.msp_id] = null;
-								if (this.props.orderer.associatedIdentities) {
-									this.props.orderer.associatedIdentities.forEach(identity => {
-										if (identity.msp_id === node.msp_id) {
-											associatedIdentities[node.msp_id] = this.getIdentityFromName(identity.name);
-										}
-									});
+				});
+			}
+			if (this.props.orderer && this.props.orderer.pending) {
+				this.props.orderer.pending.forEach(node => {
+					if (associatedIdentities[node.msp_id] === undefined) {
+						associatedIdentities[node.msp_id] = null;
+						if (this.props.orderer.associatedIdentities) {
+							this.props.orderer.associatedIdentities.forEach(identity => {
+								if (identity.msp_id === node.msp_id) {
+									associatedIdentities[node.msp_id] = this.getIdentityFromName(identity.name);
 								}
-							}
-						});
+							});
+						}
 					}
-				}
-				this.props.updateState(SCOPE, {
-					associatedIdentities,
 				});
-			})
-			.then(() => {
-				this.getApplicableIdentities().then(myIdentities => {
-					this.props.updateState(SCOPE, {
-						applicableIdentities: myIdentities,
-					});
-				});
-			})
-			.catch(error => {
-				Log.error(error);
-			});
+			}
+		}
+		this.props.updateState(SCOPE, {
+			associatedIdentities,
+			applicableIdentities: await this.getApplicableIdentities(associatedIdentities),
+		});
 	}
 
 	isAll20Nodes = () => {
@@ -551,14 +510,13 @@ class OrdererModal extends React.Component {
 			this.props.updateState(SCOPE, {
 				availableChannelCapabilities,
 				availableOrdererCapabilities,
-				loading: false,
 			});
 		}
 	};
 
 	populateBlockParams() {
 		this.props.updateState(SCOPE, { advanced_loading: true });
-		OrdererRestApi.getSystemChannelConfig(this.props.ordererId, this.props.configtxlator_url)
+		OrdererRestApi.getSystemChannelConfig({ cluster_id: this.props.orderer.cluster_id }, this.props.configtxlator_url)
 			.then(resp => {
 				this.props.updateState(SCOPE, {
 					absolute_max_bytes: _.get(resp, 'channel_group.groups.Orderer.values.BatchSize.value.absolute_max_bytes'),
@@ -582,9 +540,10 @@ class OrdererModal extends React.Component {
 			});
 	}
 
-	populateMaintenanceMode() {
+	// figure out if maintenance mode is currently on or off
+	getMaintenanceModeState() {
 		this.props.updateState(SCOPE, { advanced_loading: true });
-		OrdererRestApi.getSystemChannelConfig(this.props.ordererId, this.props.configtxlator_url)
+		OrdererRestApi.getSystemChannelConfig({ cluster_id: this.props.orderer.cluster_id }, this.props.configtxlator_url)
 			.then(resp => {
 				let channel_state = _.get(resp, 'channel_group.groups.Orderer.values.ConsensusType.value.state');
 				let maintenance_mode = (channel_state === 'STATE_MAINTENANCE');
@@ -772,14 +731,55 @@ class OrdererModal extends React.Component {
 			});
 	};
 
+	// show the side panel for this action
 	async showAction(action) {
-		if (action === 'log_settings') {
-			this.getLogSettings();
-		}
 		this.props.updateState(SCOPE, {
 			action_in_progress: this.props.ordererModalType,
 			ordererModalType: action,
 		});
+
+		// only call functions we need for that specific side panel
+		switch (action) {
+			case 'delete':
+			case 'force_delete':
+				try {
+					if (this.props.systemChannel) {
+						await this.getChannelsWithNodes();		// legacy way
+					} else {
+						await this.loadChannelsOnOSN();			// osn admin way
+					}
+				} catch (e) {
+					this.props.updateState(SCOPE, {
+						channel_loading: false,
+					});
+				}
+				break;
+			case 'associate':
+			case 'update_certs':
+			case 'manage_certs':
+				this.getCAWithUsers();
+				break;
+			case 'capabilities':
+				this.getAvailableCapabilities();
+				break;
+			case 'channel_maintenance':
+				this.getMaintenanceModeState();
+				break;
+			//case 'config_override':
+			case 'advanced':
+				this.populateBlockParams();
+				break;
+			//case 'restart':
+			case 'log_settings':
+				this.getLogSettings();
+				break;
+			//case 'upgrade':
+			//case 'restart':
+			//case 'manage_hsm':
+			//case 'enable_hsm':
+			//case 'update_hsm':
+			//case 'remove_hsm':
+		}
 	}
 
 	hideAction = () => {
@@ -808,8 +808,7 @@ class OrdererModal extends React.Component {
 			);
 		}
 		const buttons = [];
-		const saas = this.props.orderer.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags);
-		if (saas) {
+		if (!Helper.is_imported(this.props.orderer) && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)) {
 			if (this.props.clusterType !== 'free') {
 				buttons.push({
 					id: 'edit_config_override',
@@ -929,34 +928,26 @@ class OrdererModal extends React.Component {
 								kind="secondary"
 								className="ibp-orderer-action"
 								onClick={() => {
-									this.populateBlockParams();
 									this.showAction('advanced');
 								}}
 							>
 								{translate('advanced_orderer_config')}
 							</Button>
-							{this.props.capabilitiesEnabled &&
-								this.props.availableChannelCapabilities &&
-								this.props.availableOrdererCapabilities &&
-								(this.props.availableChannelCapabilities.length > 0 || this.props.availableOrdererCapabilities.length > 0) &&
-								(
-									<Button
-										id="capabilities"
-										kind="secondary"
-										className="ibp-orderer-action"
-										onClick={() => {
-											this.showAction('capabilities');
-										}}
-									>
-										{translate('channel_capabilities')}
-									</Button>
-								)}
+							{this.props.capabilitiesEnabled && (<Button
+								id="capabilities"
+								kind="secondary"
+								className="ibp-orderer-action"
+								onClick={() => {
+									this.showAction('capabilities');
+								}}
+							>
+								{translate('channel_capabilities')}
+							</Button>)}
 							<Button
 								id="channel_maintenance"
 								kind="secondary"
 								className="ibp-orderer-action"
 								onClick={() => {
-									this.populateMaintenanceMode();
 									this.showAction('channel_maintenance');
 								}}
 							>
@@ -1053,9 +1044,10 @@ class OrdererModal extends React.Component {
 		this.props.updateState(SCOPE, {});
 	};
 
-	updateAdvancedConfig = (resolve, reject) => {
+	// update the orderer services block parameters
+	updateBlockParams = (resolve, reject) => {
 		const payload = {
-			ordererId: this.props.ordererId,
+			cluster_id: this.props.orderer.cluster_id,
 			configtxlator_url: this.props.configtxlator_url,
 			block_params: {
 				absolute_max_bytes: parseInt(this.props.absolute_max_bytes),
@@ -1094,18 +1086,18 @@ class OrdererModal extends React.Component {
 
 	updateCapabilities = (resolve, reject) => {
 		const payload = {
-			ordererId: this.props.ordererId,
+			cluster_id: this.props.orderer.cluster_id,
 			configtxlator_url: this.props.configtxlator_url,
 			capabilities: {
 				orderer:
-					this.props.selectedOrdererCapability && typeof this.props.selectedOrdererCapability === 'object' ? [this.props.selectedOrdererCapability.id] : null,
+					this.props.selectedOrdererCapability && this.props.selectedOrdererCapability.id !== 'select_capability' ? [this.props.selectedOrdererCapability.id] : null,
 				channel:
-					this.props.selectedChannelCapability && typeof this.props.selectedChannelCapability === 'object' ? [this.props.selectedChannelCapability.id] : null,
+					this.props.selectedChannelCapability && this.props.selectedChannelCapability.id !== 'select_capability' ? [this.props.selectedChannelCapability.id] : null,
 			},
 		};
-
 		OrdererRestApi.updateAdvancedConfig(payload)
 			.then(resp => {
+				Log.debug('updated capabilities, received response:', resp);
 				this.props.onComplete();
 				resolve();
 			})
@@ -1126,7 +1118,7 @@ class OrdererModal extends React.Component {
 
 	updateChannelMaintenance = (resolve, reject) => {
 		const payload = {
-			ordererId: this.props.ordererId,
+			cluster_id: this.props.orderer.cluster_id,
 			configtxlator_url: this.props.configtxlator_url,
 			maintenance_mode: this.props.maintenance_mode,
 		};
@@ -1377,6 +1369,7 @@ class OrdererModal extends React.Component {
 	}
 
 	renderAdvanced(translate) {
+		let absolute_max_b = this.props.absolute_max_bytes ? this.props.absolute_max_bytes : bytes(constants.ABSOLUTE_MAX_BYTES_DEFAULT);
 		return (
 			<WizardStep
 				type="WizardStep"
@@ -1396,76 +1389,79 @@ class OrdererModal extends React.Component {
 						{translate('find_more_here')}
 					</a>
 				</p>
-				<Form
-					scope={SCOPE}
-					id={SCOPE + '-advanced'}
-					onChange={data => {
-						if (data.absolute_max_bytes_mb !== undefined) {
-							this.props.updateState(SCOPE, {
-								absolute_max_bytes: Math.floor(data.absolute_max_bytes_mb * 1024 * 1024),
-							});
-						}
-						if (data.timeout_ms !== undefined) {
-							this.props.updateState(SCOPE, {
-								timeout: data.timeout_ms + 'ms',
-							});
-						}
-					}}
-					fields={[
-						{
-							name: 'absolute_max_bytes_mb',
-							label: 'absolute_max_bytes',
-							tooltip: 'absolute_max_bytes_tooltip',
-							tooltipOptions: { absolute_max_bytes_max: constants.ABSOLUTE_MAX_BYTES_MAX },
-							default: this.props.absolute_max_bytes
-								? Math.floor(this.props.absolute_max_bytes / (1024 * 1024))
-								: bytes(constants.ABSOLUTE_MAX_BYTES_DEFAULT) / (1024 * 1024),
-							type: 'slider',
-							min: 0.01,
-							max: bytes(constants.ABSOLUTE_MAX_BYTES_MAX) / (1024 * 1024),
-							step: 0.01,
-							unit: translate('megabyte'),
-							loading: this.props.advanced_loading,
-						},
-						{
-							name: 'max_message_count',
-							default: this.props.max_message_count,
-							tooltip: 'max_message_count_tooltip',
-							tooltipOptions: { max_message_count_min: constants.MAX_MESSAGE_COUNT_MIN, max_message_count_max: constants.MAX_MESSAGE_COUNT_MAX },
-							type: 'slider',
-							min: constants.MAX_MESSAGE_COUNT_MIN,
-							max: constants.MAX_MESSAGE_COUNT_MAX,
-							loading: this.props.advanced_loading,
-						},
-						{
-							name: 'preferred_max_bytes',
-							default: this.props.preferred_max_bytes,
-							placeholder: 'preferred_max_bytes_placeholder',
-							tooltip: 'preferred_max_bytes_tooltip',
-							type: 'slider',
-							min: bytes(constants.PREFERRED_MAX_BYTES_MIN),
-							max: bytes(constants.PREFERRED_MAX_BYTES_MAX),
-							loading: this.props.advanced_loading,
-						},
-						{
-							name: 'timeout_ms',
-							label: 'timeout',
-							tooltip: 'timeout_tooltip',
-							tooltipOptions: { timeout_min: constants.TIMEOUT_MIN, timeout_max: constants.TIMEOUT_MAX },
-							default: this.props.timeout ? parse(this.props.timeout) : undefined,
-							type: 'slider',
-							min: parse(constants.TIMEOUT_MIN),
-							max: parse(constants.TIMEOUT_MAX),
-							unit: translate('millisecond'),
-							loading: this.props.advanced_loading,
-						},
-					]}
-				/>
-				<div className="ibp-error-panel">
-					<SidePanelWarning title="please_note"
-						subtitle="block_params_warning"
+				{this.props.advanced_loading && <Loading withOverlay={false} />}
+				{/*
+					// the input sliders in this form are really picky, they only accept the default number the first time it is rendered
+					// so to get that to work right, we can't render them at all until get the current values from an orderer.
+				*/}
+				{!this.props.advanced_loading && <div>
+
+					<Form
+						scope={SCOPE}
+						id={SCOPE + '-advanced'}
+						onChange={data => {
+							if (data.absolute_max_bytes_mb !== undefined) {
+								this.props.updateState(SCOPE, {
+									absolute_max_bytes: Math.floor(data.absolute_max_bytes_mb * 1024 * 1024),
+								});
+							}
+							if (data.timeout_ms !== undefined) {
+								this.props.updateState(SCOPE, {
+									timeout: data.timeout_ms + 'ms',
+								});
+							}
+						}}
+						fields={[
+							{
+								name: 'absolute_max_bytes_mb',
+								label: 'absolute_max_bytes',
+								tooltip: 'absolute_max_bytes_tooltip',
+								tooltipOptions: { absolute_max_bytes_max: constants.ABSOLUTE_MAX_BYTES_MAX },
+								default: Math.floor(absolute_max_b / (1024 * 1024)),
+								type: 'slider',
+								min: 0.01,
+								max: bytes(constants.ABSOLUTE_MAX_BYTES_MAX) / (1024 * 1024),
+								step: 0.01,
+								unit: translate('megabyte'),
+							},
+							{
+								name: 'max_message_count',
+								default: this.props.max_message_count,
+								tooltip: 'max_message_count_tooltip',
+								tooltipOptions: { max_message_count_min: constants.MAX_MESSAGE_COUNT_MIN, max_message_count_max: constants.MAX_MESSAGE_COUNT_MAX },
+								type: 'slider',
+								min: constants.MAX_MESSAGE_COUNT_MIN,
+								max: constants.MAX_MESSAGE_COUNT_MAX,
+							},
+							{
+								name: 'preferred_max_bytes',
+								default: this.props.preferred_max_bytes,
+								placeholder: 'preferred_max_bytes_placeholder',
+								tooltip: 'preferred_max_bytes_tooltip',
+								type: 'slider',
+								min: bytes(constants.PREFERRED_MAX_BYTES_MIN),
+								max: bytes(constants.PREFERRED_MAX_BYTES_MAX),
+							},
+							{
+								name: 'timeout_ms',
+								label: 'timeout',
+								tooltip: 'timeout_tooltip',
+								tooltipOptions: { timeout_min: constants.TIMEOUT_MIN, timeout_max: constants.TIMEOUT_MAX },
+								default: this.props.timeout ? parse(this.props.timeout) : undefined,
+								type: 'slider',
+								min: parse(constants.TIMEOUT_MIN),
+								max: parse(constants.TIMEOUT_MAX),
+								unit: translate('millisecond'),
+							},
+						]}
 					/>
+					<div className="ibp-error-panel">
+						<SidePanelWarning title="please_note"
+							subtitle="block_params_warning"
+						/>
+					</div>
 				</div>
+				}
 			</WizardStep>
 		);
 	}
@@ -1566,6 +1562,20 @@ class OrdererModal extends React.Component {
 			this.props.currentCapabilities && this.props.currentCapabilities.channel
 				? semver.coerce(this.props.currentCapabilities.channel.replace(/_/g, '.')).version
 				: 'select_capability';
+
+		const currentOrdererCapabilityOpt = {
+			id: this.props.currentCapabilities && this.props.currentCapabilities.orderer
+				? this.props.currentCapabilities.orderer : 'select_capability',
+			name: currentOrdererCapability,
+			value: currentOrdererCapability
+		};
+		const currentChannelCapabilityOpt = {
+			id: this.props.currentCapabilities && this.props.currentCapabilities.orderer
+				? this.props.currentCapabilities.channel : 'select_capability',
+			name: currentChannelCapability,
+			value: currentChannelCapability
+		};
+
 		return (
 			<WizardStep
 				type="WizardStep"
@@ -1592,7 +1602,7 @@ class OrdererModal extends React.Component {
 									type: 'dropdown',
 									tooltip: 'system_channel_orderer_capability_tooltip',
 									options: this.props.availableOrdererCapabilities,
-									default: currentOrdererCapability,
+									default: currentOrdererCapabilityOpt,
 								},
 							]}
 							onChange={data => {
@@ -1611,7 +1621,7 @@ class OrdererModal extends React.Component {
 									type: 'dropdown',
 									tooltip: 'system_channel_channel_capability_tooltip',
 									options: this.props.availableChannelCapabilities,
-									default: currentChannelCapability,
+									default: currentChannelCapabilityOpt,
 								},
 							]}
 							onChange={data => {
@@ -2076,7 +2086,7 @@ class OrdererModal extends React.Component {
 					await new Promise((resolve, reject) => this.updateHSM(resolve, reject));
 					break;
 				case 'advanced':
-					await new Promise((resolve, reject) => this.updateAdvancedConfig(resolve, reject));
+					await new Promise((resolve, reject) => this.updateBlockParams(resolve, reject));
 					break;
 				case 'capabilities':
 					await new Promise((resolve, reject) => this.updateCapabilities(resolve, reject));
@@ -2416,6 +2426,7 @@ class OrdererModal extends React.Component {
 		});
 		let log_level_identity = null;
 		let log_spec = null;
+		await this.loadIdentities();
 		for (let i = 0; i < this.identities.length && !log_level_identity; i++) {
 			const match = await StitchApi.isIdentityFromRootCert({
 				certificate_b64pem: this.identities[i].cert,
@@ -2608,7 +2619,7 @@ OrdererModal.propTypes = {
 	...dataProps,
 	onComplete: PropTypes.func,
 	onClose: PropTypes.func,
-	ordererId: PropTypes.string,
+	clusterId: PropTypes.string,
 	singleNodeRaft: PropTypes.bool,
 	systemChannel: PropTypes.bool,
 	updateState: PropTypes.func,

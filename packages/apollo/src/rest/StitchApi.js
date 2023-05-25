@@ -91,6 +91,12 @@ class StitchApi {
 		return authHeader;
 	}
 
+	/*
+	opts = {
+		// tbd
+	}
+	orderers = [orderer data] - this is now optional 2023/05/18 - if found will retry request with the next orderer in array
+	*/
 	static async submitWithRetry(opts, orderers) {
 		const submitConfigUpdate = promisify(window.stitch.submitConfigUpdate);
 		let opts_copy = _.cloneDeep(opts);
@@ -98,16 +104,26 @@ class StitchApi {
 			let resp = await submitConfigUpdate(opts);
 			return resp;
 		} catch (error) {
-			Log.error('submitWithRetry error', error);
+			Log.error('error submitting channel config, error:', error);
 			if (_.includes(error.stitch_msg, 'no Raft leader')) {
 				throw Error('no Raft leader');
 			}
-			const orderer = orderers.pop();
-			if (orderer && orderer.url2use) {
-				opts_copy.orderer_host = orderer.url2use;
-				return StitchApi.submitWithRetry(opts_copy, orderers);
-			} else {
+
+			// only retry if we have other orderers to use
+			if (!orderers) {
+				Log.error('there are no other orderers to try');
 				throw error;
+			} else if (orderers.length === 0) {
+				Log.error('have tried this request with all orderers');
+				throw error;
+			} else {
+				const orderer = orderers.pop();
+				if (orderer && orderer.url2use) {
+					opts_copy.orderer_host = orderer.url2use;
+					return StitchApi.submitWithRetry(opts_copy, orderers);
+				} else {
+					throw error;
+				}
 			}
 		}
 	}

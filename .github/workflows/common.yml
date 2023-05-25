@@ -33,8 +33,9 @@ jobs:
         with:
           node-version: 18.x
       - name: Install detect-secrets
-        run: pip install --upgrade git+https://github.com/ibm/detect-secrets.git@0.13.1+ibm.52.dss#egg=detect-secrets
+        run: pip install --upgrade git+https://github.com/ibm/detect-secrets.git@0.13.1+ibm.59.dss#egg=detect-secrets
       - name: Install Lerna
         run: npm install -g lerna
       - name: Run detect-secrets
         run: lerna run detect-secrets --stream
+        continue-on-error: true

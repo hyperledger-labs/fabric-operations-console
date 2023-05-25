@@ -760,7 +760,9 @@ module.exports = (logger, ev, t, opts) => {
 			const regex = new RegExp(/:\d{1,5}$/, 'i');
 			if (!regex.test(input)) {														// if no port in input find "port" field in body
 				const path2parent = path2field.slice(0, path2field.length - 1).join('.');			// get path to the parent object
-				const port = t.misc.safe_dot_nav(req_body, 'req_body.' + path2parent + '.port');	// get the value of "port" in req body
+				const port = t.misc.safe_dot_nav(req_body, [								// get the value of "port" in req body
+					'req_body.' + path2parent + '.port',
+					'req_body.' + path2parent + '.caport']);
 				url_str = input + ':' + port;
 			}
 			if (!t.ot_misc.validateUrl(url_str, req._whitelist || ev.URL_SAFE_LIST)) {

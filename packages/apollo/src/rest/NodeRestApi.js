@@ -329,6 +329,7 @@ class NodeRestApi {
 		return this.formatNodes(filteredNodes);
 	}
 
+	// dsh todo stop calling getAvailableVersions all the time!
 	static async formatNodes(filteredNodes) {
 		// Attaching available versions to nodes allows us to show users that updated are available to a given node.
 		const upgradeVersions = await NodeRestApi.getAvailableVersions();
