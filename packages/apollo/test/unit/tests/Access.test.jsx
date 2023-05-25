@@ -21,7 +21,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import { AuthenticatedUsers, AuthenticationServices, DeleteButton, Access } from '../../../src/components/Access/Access';
+import { AuthenticatedUsers, DeleteButton, Access } from '../../../src/components/Access/Access';
 import store from '../../../src/redux/Store';
 chai.should();
 chai.use(sinonChai);
@@ -30,14 +30,6 @@ const WrappedMembers = props => {
 	return (
 		<Provider store={store}>
 			<Access {...props} />
-		</Provider>
-	);
-};
-
-const WrappedAuthenticationServices = props => {
-	return (
-		<Provider store={store}>
-			<AuthenticationServices {...props} />
 		</Provider>
 	);
 };
@@ -101,7 +93,7 @@ describe('Access component', () => {
 	let props;
 	let translateStub;
 
-	beforeEach(async() => {
+	beforeEach(async () => {
 		mySandBox = sinon.createSandbox();
 
 		translateStub = mySandBox.stub().callsFake(inputString => {
@@ -134,14 +126,14 @@ describe('Access component', () => {
 		};
 	});
 
-	afterEach(async() => {
+	afterEach(async () => {
 		mySandBox.restore();
 	});
 
 	it('Should return the members component for manager with everything enabled', () => {
 		const component = mount(<WrappedMembers {...props} />);
-		component.find('#ItemContainer').should.have.lengthOf(1);
-		component.find('#EditAuthSettingsModal').should.have.lengthOf(1);
+		component.find('#ItemContainer').should.have.lengthOf(2);
+		component.find('#EditAuthSettingsModal').should.have.lengthOf(0);
 		component.find('#AddUserModal').should.have.lengthOf(1);
 		component.find('#ResetPasswordModal').should.have.lengthOf(1);
 	});
@@ -151,144 +143,20 @@ describe('Access component', () => {
 		props.admin_list = null;
 		props.general_list = null;
 		const component = mount(<WrappedMembers {...props} />);
-		component.find('#ItemContainer').should.have.lengthOf(1);
-		component.find('#EditAuthSettingsModal').should.have.lengthOf(1);
+		component.find('#ItemContainer').should.have.lengthOf(0);
+		component.find('#EditAuthSettingsModal').should.have.lengthOf(0);
 		component.find('#AddUserModal').should.have.lengthOf(1);
 		component.find('#ResetPasswordModal').should.have.lengthOf(1);
 	});
 
-	it('Should return the members component for manager with iam scheme and edit mode disabled', () => {
+	it('Should not return the members component for manager with iam scheme and edit mode disabled', () => {
 		props.auth_scheme = 'iam';
 		props.editMode = false;
 		const component = mount(<WrappedMembers {...props} />);
 		component.find('#ItemContainer').should.have.lengthOf(0);
-		component.find('#EditAuthSettingsModal').should.have.lengthOf(1);
+		component.find('#EditAuthSettingsModal').should.have.lengthOf(0);
 		component.find('#AddUserModal').should.have.lengthOf(1);
 		component.find('#ResetPasswordModal').should.have.lengthOf(1);
-	});
-});
-
-describe('AuthenticationServices function', () => {
-	let mySandBox;
-	let props;
-
-	beforeEach(async() => {
-		mySandBox = sinon.createSandbox();
-		props = {
-			onConfigure: mySandBox.stub(),
-			isManager: false,
-			authScheme: 'ibmid',
-			translate: mySandBox.stub().callsFake(text => {
-				return text;
-			}),
-		};
-	});
-
-	afterEach(async() => {
-		mySandBox.restore();
-	});
-
-	it('should return AuthenticationServices with ibmId for non manager', () => {
-		const component = mount(<WrappedAuthenticationServices {...props} />);
-		sinon.assert.callCount(props.translate, 5);
-		component
-			.find('.ibp-members-app-id-label')
-			.text()
-			.should.equal('ibm_id');
-		component
-			.find('.ibp-members-cloud-service-label')
-			.text()
-			.should.equal('ibm_cloud_desc');
-		component
-			.find('Link .ibp-members-configure-label')
-			.text()
-			.should.equal('administrator_contact');
-	});
-
-	it('should return AuthenticationServices with iam for non manager', () => {
-		props.authScheme = 'iam';
-		const component = mount(<WrappedAuthenticationServices {...props} />);
-		sinon.assert.callCount(props.translate, 5);
-		component
-			.find('.ibp-members-app-id-label')
-			.text()
-			.should.equal('identity_and_access_management');
-		component
-			.find('.ibp-members-cloud-service-label')
-			.text()
-			.should.equal('ibm_cloud_desc');
-		component
-			.find('Link .ibp-members-configure-label')
-			.text()
-			.should.equal('administrator_contact');
-	});
-
-	it('should return AuthenticationServices with couchdb for non manager', () => {
-		props.authScheme = 'couchdb';
-		const component = mount(<WrappedAuthenticationServices {...props} />);
-		sinon.assert.callCount(props.translate, 5);
-		component
-			.find('.ibp-members-app-id-label')
-			.text()
-			.should.equal('couchdb');
-		component
-			.find('.ibp-members-cloud-service-label')
-			.text()
-			.should.equal('local_desc');
-		component
-			.find('Link .ibp-members-configure-label')
-			.text()
-			.should.equal('administrator_contact');
-	});
-
-	it('should return AuthenticationServices with an authentication scheme not from the list for non manager', () => {
-		props.authScheme = 'something else';
-		const component = mount(<WrappedAuthenticationServices {...props} />);
-		sinon.assert.callCount(props.translate, 5);
-		component.find('.ibp-members-app-id-label').should.have.lengthOf(1);
-		component.find('SkeletonText .ibp-auth-skeleton-text').should.have.lengthOf(0);
-		component
-			.find('.ibp-members-cloud-service-label')
-			.text()
-			.should.equal('ibm_cloud_desc');
-		component
-			.find('Link .ibp-members-configure-label')
-			.text()
-			.should.equal('administrator_contact');
-	});
-
-	it('should return AuthenticationServices with no authentication scheme for non manager', () => {
-		props.authScheme = '';
-		const component = mount(<WrappedAuthenticationServices {...props} />);
-		sinon.assert.callCount(props.translate, 4);
-		component.find('.ibp-members-app-id-label').should.have.lengthOf(0);
-		component.find('SkeletonText .ibp-auth-skeleton-text').should.have.lengthOf(1);
-		component
-			.find('.ibp-members-cloud-service-label')
-			.text()
-			.should.equal('ibm_cloud_desc');
-		component
-			.find('Link .ibp-members-configure-label')
-			.text()
-			.should.equal('administrator_contact');
-	});
-
-	it('should return AuthenticationServices with ibmd scheme for manager', () => {
-		props.isManager = true;
-		const component = mount(<WrappedAuthenticationServices {...props} />);
-		sinon.assert.callCount(props.translate, 5);
-		component
-			.find('.ibp-members-app-id-label')
-			.text()
-			.should.equal('ibm_id');
-		component
-			.find('.ibp-members-cloud-service-label')
-			.text()
-			.should.equal('ibm_cloud_desc');
-		component
-			.find('Link .ibp-members-configure-label')
-			.text()
-			.should.equal('update_configuration');
 	});
 });
 
@@ -296,14 +164,14 @@ describe('AuthenticatedUsers function', () => {
 	let mySandBox;
 	let props;
 
-	beforeEach(async() => {
+	beforeEach(async () => {
 		mySandBox = sinon.createSandbox();
 		props = {
 			authScheme: 'couchdb',
 		};
 	});
 
-	afterEach(async() => {
+	afterEach(async () => {
 		mySandBox.restore();
 	});
 
@@ -322,11 +190,11 @@ describe('AuthenticatedUsers function', () => {
 describe('AuthenticatedUsers function', () => {
 	let mySandBox;
 
-	beforeEach(async() => {
+	beforeEach(async () => {
 		mySandBox = sinon.createSandbox();
 	});
 
-	afterEach(async() => {
+	afterEach(async () => {
 		mySandBox.restore();
 	});
 

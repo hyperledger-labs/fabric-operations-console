@@ -33,7 +33,7 @@ module.exports = function (logger, ev, t) {
 
 		if (res && (res.statusCode === 401 || res.statusCode === 403)) {
 			if (options.lockout_limit >= 1) {						// -1 means lockout is disabled
-				if (!req.path.includes('/api/v1/logs') && !req.path.includes('/api/v2/components/status')) {	// ignore certain apollo apis
+				if (req && req.path && !req.path.includes('/api/v1/logs') && !req.path.includes('/api/v2/components/status')) {	// ignore certain apollo apis
 					add_failure(key);								// now add our latest failure
 					logger.warn('[lockout]', req._tx_id, 'incrementing count towards a lockout:', failures[key].timestamps.length +
 						'/' + options.lockout_limit);

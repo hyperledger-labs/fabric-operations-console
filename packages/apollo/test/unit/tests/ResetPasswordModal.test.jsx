@@ -71,12 +71,10 @@ describe('ResetPasswordModal component', () => {
 		});
 
 		props = {
-			loading: null,
 			user: {
 				email: null,
 				uuid: null,
 			},
-			defaultPassword: null,
 			error: null,
 			submitting: null,
 
@@ -98,7 +96,6 @@ describe('ResetPasswordModal component', () => {
 		});
 
 		it('should render', async() => {
-			props.loading = false;
 			props.submitting = false;
 			props.user.email = 'an@email';
 			const component = mount(<ResetPasswordModal {...props} />);
@@ -162,7 +159,7 @@ describe('ResetPasswordModal component', () => {
 				.find('_default')
 				.at(0)
 				.props()
-				.fields[0].name.should.deep.equal('username');
+				.fields[0].name.should.deep.equal('username_label');
 			component
 				.find('_default')
 				.at(0)
@@ -173,26 +170,6 @@ describe('ResetPasswordModal component', () => {
 				.at(0)
 				.props()
 				.fields[0].disabled.should.deep.equal(true);
-			component
-				.find('_default')
-				.at(0)
-				.props()
-				.fields[1].name.should.deep.equal('defaultPassword');
-			component
-				.find('_default')
-				.at(0)
-				.props()
-				.fields[1].placeholder.should.deep.equal('defaultPassword_placeholder');
-			component
-				.find('_default')
-				.at(0)
-				.props()
-				.fields[1].default.should.deep.equal('');
-			component
-				.find('_default')
-				.at(0)
-				.props()
-				.fields[1].disabled.should.deep.equal(true);
 			onResetStub.should.have.not.been.called;
 		});
 
@@ -214,70 +191,16 @@ describe('ResetPasswordModal component', () => {
 	 */
 	describe('ResetPasswordModal - componentDidMount()', () => {
 		let componentDidMountSpy;
-		let getDefaultPasswordStub;
 
 		beforeEach(() => {
 			componentDidMountSpy = mySandBox.spy(ResetPasswordModal.prototype, 'componentDidMount');
 			onResetStub = mySandBox.stub(ResetPasswordModal.prototype, 'onReset').resolves();
-			getDefaultPasswordStub = mySandBox.stub(UserSettingsRestApi, 'getDefaultPassword').resolves();
 		});
 
 		function genericResetAndStubs(instance) {
 			componentDidMountSpy.resetHistory();
 			updateStateStub.resetHistory();
 		}
-
-		it('should set default password to null if no valid response', async() => {
-			const component = await shallow(<ResetPasswordModal {...props} />);
-			props.defaultPassword = 'dummyDefaultPassword'; // pragma: allowlist secret
-			component.setProps(props);
-			const instance = component.instance();
-			genericResetAndStubs(instance);
-
-			await instance.componentDidMount();
-
-			props.loading.should.equal(false);
-			should.equal(null, props.defaultPassword);
-			componentDidMountSpy.should.have.been.called;
-			updateStateStub.should.have.been.calledTwice;
-		});
-
-		it('should set default password to response password if valid', async() => {
-			const component = await shallow(<ResetPasswordModal {...props} />);
-			props.defaultPassword = 'dummyDefaultPassword'; // pragma: allowlist secret
-			component.setProps(props);
-			const instance = component.instance();
-			genericResetAndStubs(instance);
-			const newpassword = 'newDummyPassword'; // pragma: allowlist secret
-			getDefaultPasswordStub.resolves({ DEFAULT_USER_PASSWORD: newpassword }); // pragma: allowlist secret
-
-			await instance.componentDidMount();
-
-			props.loading.should.equal(false);
-			props.defaultPassword.should.equal(newpassword);
-			componentDidMountSpy.should.have.been.called;
-			updateStateStub.should.have.been.calledTwice;
-		});
-
-		it('should log error if error thrown by getDefaultPassword', async() => {
-			const component = await shallow(<ResetPasswordModal {...props} />);
-			props.defaultPassword = 'dummyDefaultPassword'; // pragma: allowlist secret
-			component.setProps(props);
-			const instance = component.instance();
-			genericResetAndStubs(instance);
-			const error = new Error('some error');
-			getDefaultPasswordStub.rejects(error);
-
-			await instance.componentDidMount();
-			Promise.all([getDefaultPasswordStub, instance.componentDidMount]);
-
-			logErrorStub.should.have.been.calledWithExactly('Failed to get default password:', error); // pragma: allowlist secret
-			props.loading.should.equal(false);
-			props.defaultPassword.should.equal('dummyDefaultPassword');
-
-			componentDidMountSpy.should.have.been.called;
-			updateStateStub.should.have.been.calledTwice;
-		});
 	});
 
 	describe('ResetPasswordModal - onReset()', () => {
@@ -301,7 +224,6 @@ describe('ResetPasswordModal component', () => {
 
 		it('should log success if able to reset password', async() => {
 			const component = shallow(<ResetPasswordModal {...props} />);
-			props.defaultPassword = 'dummyDefaultPassword'; // pragma: allowlist secret
 			props.user = {
 				email: 'an@email',
 			};
@@ -311,12 +233,6 @@ describe('ResetPasswordModal component', () => {
 
 			await instance.onReset();
 
-			logInfoStub.should.have.been.calledWith('Resetting password');
-			logInfoStub.should.have.been.calledWith('Password reset successfully:', response);
-			onCompleteStub.should.have.been.calledWithExactly({
-				user: props.user.email,
-				password: props.defaultPassword, // pragma: allowlist secret
-			});
 			closeSidePanelStub.should.have.been.called;
 			onResetSpy.should.have.been.called;
 			updateStateStub.should.have.not.been.called;
@@ -325,7 +241,6 @@ describe('ResetPasswordModal component', () => {
 
 		it('should log error if unable to reset password', async() => {
 			const component = shallow(<ResetPasswordModal {...props} />);
-			props.defaultPassword = 'dummyDefaultPassword'; // pragma: allowlist secret
 			props.user = {
 				email: 'an@email',
 			};
@@ -337,8 +252,6 @@ describe('ResetPasswordModal component', () => {
 
 			await instance.onReset();
 
-			logInfoStub.should.have.been.calledWith('Resetting password');
-			logErrorStub.should.have.been.calledWith(`Could not reset password: ${error}`); // pragma: allowlist secret
 			onCompleteStub.should.have.not.been.called;
 			closeSidePanelStub.should.have.not.been.called;
 			onResetSpy.should.have.been.called;

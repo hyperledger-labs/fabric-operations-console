@@ -60,7 +60,8 @@ describe('Lockout Lib', () => {
 									_tx_id: 'abcd',
 									headers: {
 										'user-agent': 'PostmanRuntime/7.26.5'
-									}
+									},
+									path: '/'
 								};
 								const fake_res = {
 									statusCode: 401,
@@ -84,7 +85,8 @@ describe('Lockout Lib', () => {
 									_tx_id: 'abcd',
 									headers: {
 										'user-agent': 'PostmanRuntime/7.26.5'
-									}
+									},
+									path: '/'
 								};
 								const fake_res = {
 									statusCode: 400,
@@ -108,7 +110,8 @@ describe('Lockout Lib', () => {
 									_tx_id: 'abcd',
 									headers: {
 										'user-agent': 'PostmanRuntime/7.26.5'
-									}
+									},
+									path: '/'
 								};
 								const fake_res = {
 									statusCode: 401,
@@ -150,7 +153,8 @@ describe('Lockout Lib', () => {
 									_tx_id: 'abcd',
 									headers: {
 										'user-agent': 'PostmanRuntime/7.26.5'
-									}
+									},
+									path: '/'
 								};
 								const fake_res = {
 									statusCode: 401,

@@ -877,7 +877,7 @@ describe('Other APIs', () => {
 							},
 							expectBlock: (res) => {
 								if (res.body.statusCode) { expect(res.body.statusCode).to.equal(400); }
-								if (res.body.msg) { expect(res.body.msg).to.equal('Your auth_scheme is \'ibmid\'. You are not allowed to change this'); }
+								if (res.body.msg) { expect(res.body.msg).to.equal('You cannot change the value of "auth_scheme" with this API.'); }
 								common.ev.AUTH_SCHEME = 'initial';
 							}
 						},
@@ -897,7 +897,7 @@ describe('Other APIs', () => {
 							},
 							expectBlock: (res) => {
 								if (res.body.statusCode) { expect(res.body.statusCode).to.equal(400); }
-								if (res.body.msg) { expect(res.body.msg).to.equal('Your auth_scheme is \'ibmid\'. You are not allowed to change this'); }
+								if (res.body.msg) { expect(res.body.msg).to.equal('You cannot change the value of "auth_scheme" with this API.'); }
 								common.ev.AUTH_SCHEME = 'initial';
 							}
 						},

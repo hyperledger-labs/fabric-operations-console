@@ -34,7 +34,6 @@ import TranslateLink from '../TranslateLink/TranslateLink';
 const SCOPE = 'editSettings';
 //const Log = new Logger(SCOPE);
 
-// dsh todo add ability to toggle Allow default password
 class EditAuthSchemePanel extends Component {
 	cName = 'EditAuthSchemePanel';
 	defaultAuth = constants.AUTH_COUCHDB;
@@ -218,7 +217,7 @@ class EditAuthSchemePanel extends Component {
 			'couchdb': 'couchdb_desc_txt',
 		};
 		let warningMap = {
-			'oauth': 'oauth_warning_txt',	// dsh todo add link to docs
+			'oauth': 'oauth_warning_txt',
 			'couchdb': 'couchdb_warning_txt'
 		};
 		let nameMap = {
