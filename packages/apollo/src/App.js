@@ -20,7 +20,6 @@ import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import './app.scss';
-import AuthSetup from './components/AuthSetup/AuthSetup';
 import LoadingWithContent from './components/LoadingWithContent/LoadingWithContent';
 import Logger from './components/Log/Logger';
 import Login from './components/Login/Login';
@@ -289,61 +288,57 @@ class App extends Component {
 				</LoadingWithContent>
 			);
 		} else {
-			if (!this.state.authScheme.isAuthConfigured) return <AuthSetup />;
-			else {
-				let admin_list = this.state.authScheme.admin_list.map(x => (x.email ? x.email.toLowerCase() : x.toLowerCase()));
-				let access_list = this.state.authScheme.access_list
-					? this.state.authScheme.access_list.map(x => (x.email ? x.email.toLowerCase() : x.toLowerCase()))
-					: [];
-				const { email } = this.props.userInfo.loggedInAs;
+			Log.debug('Current auth scheme:', this.state.authScheme.type);
 
-				if (
-					(this.props.userInfo.logged &&
-						(this.state.authScheme.type === 'ibmid' || this.state.authScheme.type === 'iam') &&
-						!ActionsHelper.canViewOpTools(this.props.userInfo)) ||
-					(this.props.userInfo.logged &&
-						this.state.authScheme.type === 'appid' &&
-						!(admin_list.includes(email.toLowerCase()) || access_list.includes(email.toLowerCase())))
-				)
+			// if user is not logged in at all...
+			if (!this.props.userInfo || !this.props.userInfo.logged) {
+
+				// if using local username/password, send user to our login prompt
+				if (this.state.authScheme.type === 'couchdb') {
+					return <Login hostUrl={this.state.authScheme.host_url} />;
+				}
+
+				// if using sso, send user to sso's login prompt
+				else {
+					window.location.href = `${this.state.authScheme.host_url}/auth/login`;
+					return (
+						<LoadingWithContent withOverlay
+							description={translate('redirecting_login')}
+						>
+							<h3>{translate('redirecting_login')}</h3>
+						</LoadingWithContent>
+					);
+				}
+			}
+
+			// if user is logged in
+			else {
+
+				// if user is logged in but has no access
+				if (!ActionsHelper.canViewOpTools(this.props.userInfo)) {
 					return (
 						<RequestAccess adminContact={this.state.authScheme.admin_contact_email}
 							userInfo={this.props.userInfo}
 							host_url={this.state.authScheme.host_url}
+							auth_scheme={this.state.authScheme.type}
 						/>
 					);
+				}
+
+				// if user is logged in but is using the default password, send user to change pass prompt
+				if (this.state.authScheme.type === 'couchdb' && this.props.userInfo && this.props.userInfo.logged && this.props.userInfo.password_type === 'default') {
+					return <Login hostUrl={this.state.authScheme.host_url}
+						changePassword={true}
+					/>;
+				}
+
+				// if user is logged in and can view the app, render the the app
+				Log.info('Starting application!');
+				this.setupRemoteLogging(); // setup the remote logging after the user has logged in to avoid hitting api lockout
+				return <Main userInfo={this.props.userInfo}
+					host_url={this.state.authScheme.host_url}
+				/>;
 			}
-		}
-
-		Log.debug('Current auth scheme:', this.state.authScheme.type);
-		if (this.state.authScheme.type === 'couchdb' && this.props.userInfo && !this.props.userInfo.logged) {
-			return <Login hostUrl={this.state.authScheme.host_url} />;
-		}
-
-		// note that the console setting "ALLOW_DEFAULT_PASSWORD" will control the "password_type" field
-		if (this.state.authScheme.type === 'couchdb' && this.props.userInfo && this.props.userInfo.logged && this.props.userInfo.password_type === 'default') {
-			return <Login hostUrl={this.state.authScheme.host_url}
-				changePassword={true}
-			/>;
-		}
-
-		if (this.props.userInfo && !this.props.userInfo.logged) {
-			window.location.href = `${this.state.authScheme.host_url}/auth/login`;
-		}
-
-		if ((this.props && this.props.userInfo && this.props.userInfo.logged)) {
-			Log.info('Starting application!');
-			this.setupRemoteLogging(); // setup the remote logging after the user has logged in to avoid hitting api lockout
-			return <Main userInfo={this.props.userInfo}
-				host_url={this.state.authScheme.host_url}
-			/>;
-		} else {
-			return (
-				<LoadingWithContent withOverlay
-					description={translate('redirecting_login')}
-				>
-					<h3>{translate('redirecting_login')}</h3>
-				</LoadingWithContent>
-			);
 		}
 	}
 }

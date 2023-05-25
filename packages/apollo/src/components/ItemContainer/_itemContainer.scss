@@ -440,7 +440,7 @@
 
 	.ibp-empty-table-container {
 		align-items: center;
-		background-color: $carbon--cool-gray-100;
+		background-color: #21272a;
 		display: flex;
 		height: 3rem;
 		padding-left: 1.5rem;
@@ -680,4 +680,8 @@
 
 .ibp-row-loading {
 	pointer-events: none;
+}
+
+.bx--checkbox:disabled + .bx--checkbox-label::before{
+	border-color: #575f66 !important;
 }

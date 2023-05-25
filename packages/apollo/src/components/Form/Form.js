@@ -39,7 +39,11 @@ class Form extends Component {
 		formData[this.props.id] = {};
 		const data = {};
 		this.props.fields.forEach(field => {
-			data[field.name] = this.getDefaultValue(field);
+			if (field.type === 'dropdown') {
+				data[field.name] = { value: this.getDefaultValue(field) };		// dropdown fields hold an object...
+			} else {
+				data[field.name] = this.getDefaultValue(field);
+			}
 			if (field.type === 'certificates') {
 				const subfields = [];
 				if (data[field.name] && data[field.name].length) {
@@ -389,12 +393,13 @@ class Form extends Component {
 		);
 	}
 
+	// wtf is going on here, when are dropdown options ever strings
 	fixStringOptions(options) {
 		const opts = [];
 		if (options) {
 			options.forEach(option => {
 				if (typeof option === 'string') {
-					opts.push({ name: option });
+					opts.push({ value: option, name: option });
 				} else {
 					opts.push(option);
 				}
@@ -403,14 +408,14 @@ class Form extends Component {
 		return opts;
 	}
 
-	fixSelectedItem(value, options) {
-		let ret = value;
-		if (typeof value === 'string') {
-			options.forEach(option => {
-				if (option.name === value) {
-					ret = option;
-				}
-			});
+	// wtf is going on here, when are dropdown options ever strings
+	fixSelectedItem(data, options) {
+		let ret = data;
+		const value = (typeof data === 'string') ? data : data.value;
+		for (let i in options) {
+			if (options[i] && options[i].value === value) {
+				return options[i];
+			}
 		}
 		return ret;
 	}
@@ -808,7 +813,7 @@ class Form extends Component {
 								selected={this.isOptionSelected(option, value)}
 								ref={selectableTileComponent => {
 									if (selectableTileComponent && disabled) {
-										selectableTileComponent.handleKeyDown = function() {};
+										selectableTileComponent.handleKeyDown = function () { };
 									}
 								}}
 							>
@@ -1478,7 +1483,7 @@ class Form extends Component {
 										htmlFor={noLabelFor ? undefined : this.props.id + '-' + field.name}
 										className={field.disabled ? 'ibp-form-label-disabled' : 'ibp-form-label'}
 									>
-										{field.tooltip && !field.readonly ? (
+										{field.tooltip ? (
 											<BlockchainTooltip direction={field.tooltipDirection}
 												type="definition"
 												tooltipText={translate(field.tooltip, field.tooltipOptions)}

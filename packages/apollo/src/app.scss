@@ -42,6 +42,7 @@
 @import './components/GettingStartedModal/ecosystemDiagram';
 @import './components/Dropzone/dropzone';
 @import './components/EditAuthSettingsModal/editAuthSettingsModal';
+@import './components/EditAuthSchemePanel/editAuthSchemePanel';
 @import './components/EmailChips/emailChips';
 @import './components/ExportModal/exportModal';
 @import './components/FileUploader/fileUploader';
@@ -78,7 +79,7 @@
 @import './components/Login/login';
 @import './components/Main/main';
 @import './components/MigrationPage/migrationPage';
-@import './components/Members/members';
+@import './components/Access/access';
 @import './components/MSPDefinitionModal/mSPDefinitionModal';
 @import './components/MspDeleteModal/mspDeleteModal';
 @import './components/MspDetailsModal/mspDetailsModal';
@@ -134,3 +135,4 @@
 @import './components/WelcomeBanner/welcomeBannerTile';
 @import './components/WelcomeMessage/welcomeMessage';
 @import './components/Wizard/wizard';
+@import './components/DeleteAccessModal/deleteAccessModal';

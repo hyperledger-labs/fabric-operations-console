@@ -78,3 +78,7 @@ export const STEP_COMPLETE = '';
 export const STEP_IN_PROGRESS = 'step-active';
 export const STEP_NOT_STARTED = 'step-inactive';
 export const STEP_FAILED = 'step-error';
+
+export const AUTH_COUCHDB = 'couchdb';
+export const AUTH_OAUTH = 'oauth';
+export const AUTH_IAM = 'iam';

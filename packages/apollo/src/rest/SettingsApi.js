@@ -56,7 +56,11 @@ class SettingsApi {
 	}
 
 	static async getSettings() {
-		return RestApi.get('/api/v2/settings?preventCache=' + new Date().getTime());
+		return RestApi.get('/api/v3/settings?preventCache=' + new Date().getTime());
+	}
+
+	static async getPrivateSettings() {
+		return RestApi.get('/api/v3/private-settings?preventCache=' + new Date().getTime());
 	}
 
 	static async getFeatureFlags() {

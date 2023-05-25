@@ -1,8 +1,8 @@
 openapi: 3.0.0
 
 info:
-  title: IBM Blockchain Platform APIs
-  description: This doc lists APIs that you can use to interact with your IBM Blockchain Platform console (IBP console)
+  title: Fabric Operations console APIs
+  description: This doc lists APIs that you can use to interact with your Fabric Operations console
   contact:
     name: Blockchain Service Support
     url: https://cloud.ibm.com/docs/blockchain/ibmblockchain_support.html#ibmblockchain_support
@@ -13989,6 +13989,53 @@ components:
       type: object
       x-validate_no_extra_keys: true
       properties:
+        auth_scheme:
+          type: string
+          example: oauth
+          description: The type of auth to use to authorize users. Valid choices are "iam", "couchdb", and "oauth".
+          enum:
+            - iam
+            - couchdb
+            - oauth
+            - oidc
+            - ldap
+        oauth:
+          type: object
+          properties:
+            authorization_url:
+              type: string
+              example: https://example.com
+              description: The url of the OAuth2.0 service to send the user for authorization/login.
+              minLength: 12
+              maxLength: 256
+            token_url:
+              type: string
+              example: https://example.com
+              description: The url of the OAuth2.0 service to exchange an authorizatoin code for an access token.
+              minLength: 12
+              maxLength: 256
+            client_id:
+              type: string
+              example: asdf
+              description: Credentials to use the OAuth2.0 service.
+              minLength: 4
+              maxLength: 128
+            client_secret:
+              type: string
+              example: asdf
+              description: Credentials to use the OAuth2.0 service.
+              minLength: 4
+              maxLength: 128
+            scope:
+              type: string
+              example: openid profile email
+              description: The scopes to ask for when using the OAuth2.0 service. Multiple scopes should be separated with spaces.
+              minLength: 3
+              maxLength: 32
+            debug:
+              type: boolean
+              example: true
+              description: If true the server logs will contain extra user information during login. This is useful to have when debugging issues when setting up oauth.
         admin_contact_email:
           type: string
           example: no-reply@domain.com
@@ -14001,6 +14048,10 @@ components:
           description: This is the password a user would use when they login to the console for the first time.
           minLength: 10
           maxLength: 128
+        allow_default_password:
+          type: boolean
+          example: true
+          description: If true users will be allowed to keep the default password and will not be prompted to change it on their first login.
         inactivity_timeouts:
           type: object
           properties:

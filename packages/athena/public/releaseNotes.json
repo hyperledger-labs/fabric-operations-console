@@ -1,5 +1,19 @@
 [
 	{
+		"version": "1.0.5-19",
+		"date": "25 May 2023",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			},
+			{
+				"title": "OAuth Login",
+				"details": "OAuth2.0 for console login can now be used and configured via the Access tab."
+			}
+		]
+	},
+	{
 		"version": "1.0.5-18",
 		"date": "08 May 2023",
 		"description": [

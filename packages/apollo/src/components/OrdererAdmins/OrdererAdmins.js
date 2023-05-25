@@ -14,7 +14,6 @@
  * limitations under the License.
 */
 
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withLocalize } from 'react-localize-redux';

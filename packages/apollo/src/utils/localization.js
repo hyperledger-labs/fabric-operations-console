@@ -15,7 +15,6 @@
 */
 import { renderToStaticMarkup } from 'react-dom/server';
 import defaultTranslation from '../assets/i18n/en/messages.json';
-import Helper from './helper';
 
 // INJECT TRANSLATIONS IF FILES PRESENT
 const Data = {};

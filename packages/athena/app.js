@@ -1092,8 +1092,8 @@ function setup_passport() {
 				if (!profile.uuid) {
 					profile.uuid = payload.sub || payload.uuid || payload.id || payload.uid;	// if not found try getting user id from payload
 				}
-				if (payload.email) {
-					profile.email = payload.email;
+				if (payload.email && typeof payload.email === 'string') {
+					profile.email = payload.email.toLowerCase();
 				}
 				for (let key in payload) {														// copy fields from payload over
 					if (!profile[key]) {
@@ -1102,23 +1102,9 @@ function setup_passport() {
 				}
 			}
 			delete profile.picture;						// scrub this if found, we'll never need it
-			profile.roles = [ev.STR.MANAGER_ROLE, ev.STR.WRITER_ROLE, ev.STR.READER_ROLE];
-			profile.authorized_actions = [				// add actions, middleware will look for it
-				ev.STR.CREATE_ACTION,					// lets add all roles for generic oauth
-				ev.STR.DELETE_ACTION,
-				ev.STR.REMOVE_ACTION,
-				ev.STR.IMPORT_ACTION,
-				ev.STR.EXPORT_ACTION,
-				ev.STR.RESTART_ACTION,
-				ev.STR.LOGS_ACTION,
-				ev.STR.VIEW_ACTION,
-				ev.STR.SETTINGS_ACTION,
-				ev.STR.USERS_ACTION,
-				ev.STR.API_KEY_ACTION,
-				ev.STR.NOTIFICATIONS_ACTION,
-				ev.STR.SIG_COLLECTION_ACTION,
-				ev.STR.C_MANAGE_ACTION,
-			];
+			profile.roles = (profile.email && ev.ACCESS_LIST[profile.email] && ev.ACCESS_LIST[profile.email].roles) ?
+				ev.ACCESS_LIST[profile.email].roles : [];		// get their roles from db
+			profile.authorized_actions = tools.middleware.buildActionsFromRoles(profile.roles, tools.misc.censorEmail(profile.email));
 			if (ev.OAUTH.DEBUG) {
 				logger.debug('[oauth] built profile', JSON.stringify(profile, null, 2));
 			}
@@ -1224,7 +1210,7 @@ function setup_tls_and_start_app(attempt) {
 		logger.debug('[tls] looking for tls private key pem in:', process.env.KEY_FILE_PATH);
 		logger.debug('[tls] looking for tls cert in:', process.env.PEM_FILE_PATH);
 		if (!process.env.KEY_FILE_PATH || !process.env.PEM_FILE_PATH) {
-			logger.debug('[tls] ENV vars for tls cert/key paths are not set or empty. will not be able to use tls.');
+			logger.error('[tls] ENV vars for tls cert/key paths are not set or empty. will not be able to use tls.');
 			useHTTPS = false;
 			start_app();
 		} else {

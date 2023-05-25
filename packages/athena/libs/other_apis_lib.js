@@ -18,6 +18,7 @@
 //------------------------------------------------------------
 module.exports = function (logger, ev, t) {
 	const exports = {};
+	exports.login_timer = null;
 
 	//--------------------------------------------------
 	// Get non-sensitive settings for athena
@@ -166,13 +167,15 @@ module.exports = function (logger, ev, t) {
 		const ret = {											// compile the list of private settings
 			DEPLOYER_URL: ev.DEPLOYER_URL || '?',				// for OpTools developers show the un-redacted url
 			JUPITER_URL: ev.JUPITER_URL || '?',					// for OpTools developers show the un-redacted url
-			//DEFAULT_USER_PASSWORD: ev.DEFAULT_USER_PASSWORD,	// for debug
+			//DEFAULT_USER_PASSWORD: ev.DEFAULT_USER_PASSWORD,	// do not uncomment this line in production
 			SESSION_SECRET: ev.SESSION_SECRET,					// for debug
 			URL_SAFE_LIST: ev.URL_SAFE_LIST || [],				// for debug, moved this here from get_ev_settings so we don't leak component addresses
 			CONFIGTXLATOR_URL_ORIGINAL: ev.CONFIGTXLATOR_URL_ORIGINAL || '?',
 			COOKIE_NAME: ev.COOKIE_NAME || '?',
 			MIGRATION_API_KEY: ev.MIGRATION_API_KEY,			// for debug
 			DB_CONNECTION_STRING: t.misc.redact_basic_auth(ev.DB_CONNECTION_STRING),	// for debug
+			OAUTH: ev.OAUTH,
+			ALLOW_DEFAULT_PASSWORD: ev.ALLOW_DEFAULT_PASSWORD
 		};
 		return t.misc.sortItOut(ret);
 	};
@@ -198,8 +201,8 @@ module.exports = function (logger, ev, t) {
 				const key = Object.keys(req.body)[0];
 
 				// Check if the user's auth_scheme is 'ibmid'. If so then exit the API with an error message
-				if ((ev.AUTH_SCHEME === 'ibmid' || ev.AUTH_SCHEME === 'iam') && key === 'auth_scheme') {
-					return cb({ statusCode: 400, msg: 'Your auth_scheme is \'ibmid\'. You are not allowed to change this' });
+				if (key === 'auth_scheme') {
+					return cb({ statusCode: 400, msg: 'You cannot change the value of "auth_scheme" with this API.' });
 				}
 
 				settings[key] = req.body[key];								// replace the property
@@ -250,6 +253,7 @@ module.exports = function (logger, ev, t) {
 				return cb(edit_err, edited_settings_doc);							// error already logged
 			} else {
 				let restart_changes = edited_settings_doc.log_changes;				// this gets deleted before writing doc
+				const original_doc = JSON.parse(JSON.stringify(edited_settings_doc));
 
 				// make the timeout changes
 				handle_fabric_timeout_settings(req, edited_settings_doc);
@@ -275,6 +279,66 @@ module.exports = function (logger, ev, t) {
 				if (!isNaN(req.body.max_req_per_min_ak)) {
 					edited_settings_doc.max_req_per_min_ak = Number(req.body.max_req_per_min_ak);
 					restart_changes++;												// increment this to trigger a restart
+				}
+
+				// auth scheme edits
+				if (req.body.auth_scheme) {
+
+					// if we are changing TO couchdb auth, then reset all user passwords (users will use the default password to login)
+					if (req.body.auth_scheme === 'couchdb' && edited_settings_doc.auth_scheme !== 'couchdb') {	// if already using couchdb, skip this part
+						logger.debug('[edit settings] setting up couchdb auth, resetting all user passwords to the default pass');
+						for (let user in edited_settings_doc.access_list) {
+							delete edited_settings_doc.access_list[user].hashed_secret;
+							delete edited_settings_doc.access_list[user].salt;
+							delete edited_settings_doc.access_list[user].ts_changed_password;
+						}
+					}
+
+					edited_settings_doc.auth_scheme = req.body.auth_scheme;
+
+					// if we are changing TO oauth OR changing oauth params, then create a user login timer
+					// if a user fails to login with 2 minutes, revert the changes made here
+					// (this helps prevent a console from being inaccessible due to setting bad/wrong oauth settings)
+					if (req.body.auth_scheme === 'oauth' || req.body.oauth) {
+						logger.warn('[edit settings] setting up user login timer, a user must login using the new auth setting to keep these settings');
+						clearTimeout(exports.login_timer);
+						exports.login_timer = setTimeout(() => {
+							logger.error('[edit settings] the user login timer has expired. reverting auth setting changes');
+							t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, (err, settings_doc) => {
+								if (err) {
+									logger.error('[edit settings] unable to get settings doc to revert a setting...?', err);
+								} else {
+									settings_doc.auth_scheme = original_doc.auth_scheme;	// revert to the old scheme
+									if (original_doc.oauth) {
+										settings_doc.oauth = original_doc.oauth;			// revert oauth settings to prev values if there were prev values
+									}
+									writeSettingsDoc(req, settings_doc, (write_error, resp) => {
+										logger.info('[edit settings] the auth scheme settings have reverted');
+									});
+								}
+							});
+						}, 1000 * 116);			// a little shy of 120 seconds should account for any delay and make this happen before the UI times out
+					}
+				}
+
+				// oauth setting edits
+				if (req.body.oauth) {
+					edited_settings_doc.oauth = {
+						authorization_url: req.body.oauth.authorization_url,
+						token_url: req.body.oauth.token_url,
+						client_id: req.body.oauth.client_id,
+						client_secret: req.body.oauth.client_secret,
+						scope: req.body.oauth.scope,
+						debug: req.body.oauth.debug
+					};
+				}
+
+				// couchdb setting edits
+				if (req.body.default_user_password) {
+					edited_settings_doc.default_user_password = req.body.default_user_password;
+				}
+				if (typeof req.body.allow_default_password === 'boolean') {
+					edited_settings_doc.allow_default_password = req.body.allow_default_password;
 				}
 
 				writeSettingsDoc(req, edited_settings_doc, (write_error, resp) => {	// write the updated settings back to the db

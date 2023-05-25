@@ -327,5 +327,18 @@ module.exports = function (logger, ev, t) {
 		});
 	});
 
+	//--------------------------------------------------
+	// A user that does not have access to the console is requesting access
+	//--------------------------------------------------
+	app.post('/api/v3/permissions/users/registrations', t.middleware.public, (req, res) => {
+		t.permissions_lib.register_user(req, (err, ret) => {
+			if (err) {
+				return res.status(t.ot_misc.get_code(err)).json(err);
+			} else {
+				return res.status(200).json(ret);
+			}
+		});
+	});
+
 	return app;
 };

@@ -34,7 +34,7 @@ import Channels from '../Channels/Channels';
 import Identities from '../Identities/Identities';
 import LeftNav from '../LeftNav/LeftNav';
 import Logger from '../Log/Logger';
-import Members from '../Members/Members';
+import Access from '../Access/Access';
 import Msps from '../Msps/Msps';
 import Nodes from '../Nodes/Nodes';
 import NotFound from '../NotFound/NotFound';
@@ -184,8 +184,13 @@ class Main extends Component {
 										component={Channels}
 										exact
 									/>
+									{/* 2023/05/01 the /users route is now legacy, renamed to /access */}
 									<Route path="/users"
-										component={Members}
+										component={Access}
+										exact
+									/>
+									<Route path="/access"
+										component={Access}
 										exact
 									/>
 									<Route path="/peer/:peerId/channel/:channelId"

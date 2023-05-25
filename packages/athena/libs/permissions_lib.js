@@ -45,7 +45,7 @@ module.exports = function (logger, ev, t) {
 	};
 
 	//--------------------------------------------------
-	// Adds users - this only works on software (saas uses IAM)
+	// Adds users - this only works on software/support (saas uses IAM)
 	//--------------------------------------------------
 	exports.add_users = (req, cb) => {
 
@@ -134,7 +134,54 @@ module.exports = function (logger, ev, t) {
 	};
 
 	//--------------------------------------------------
-	// Edit users - this only works on software (saas uses IAM)
+	// Register user - this only works on software/support (saas uses IAM)
+	//--------------------------------------------------
+	exports.register_user = (req, cb) => {
+
+		// get the Athena settings doc first
+		t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, (err, settings_doc) => {
+			if (err || !settings_doc) {
+				logger.error('could not get settings doc to add users', err);
+				return cb(err);
+			} else {
+				if (!settings_doc.access_list) {
+					settings_doc.access_list = {};							// init
+				}
+
+				let email = t.middleware.getEmail(req);
+				if (!email || typeof email !== 'string') {
+					return cb({ statusCode: 400, msg: 'a username was not found in session' }, null);
+				} else {
+					settings_doc.access_list[email.toLowerCase()] = {						// create the user object
+						created: Date.now(),
+						roles: [],
+						uuid: t.middleware.getUuid(req) || t.uuidv4()
+					};
+
+					// update the settings doc
+					const wr_opts = {
+						db_name: ev.DB_SYSTEM,
+						doc: settings_doc
+					};
+					t.otcc.repeatWriteSafe(wr_opts, (doc) => {
+						settings_doc._rev = doc._rev;
+						return { doc: settings_doc };
+					}, (err_writeDoc) => {
+						if (err_writeDoc) {
+							logger.error('[permissions] cannot edit settings doc to register user:', err_writeDoc);
+							cb({ statusCode: 500, msg: 'could not update settings doc', details: err_writeDoc }, null);
+						} else {
+							logger.info('[permissions] register user - success');
+							return cb(null, { message: 'ok' });				// all good
+						}
+					});
+				}
+			}
+		});
+	};
+
+	//--------------------------------------------------
+	// Edit users - this only works on software/support (saas uses IAM)
 	//--------------------------------------------------
 	exports.edit_users = (req, cb) => {
 
@@ -206,7 +253,7 @@ module.exports = function (logger, ev, t) {
 	};
 
 	//--------------------------------------------------
-	// Delete users - this only works on software (saas uses IAM)
+	// Delete users - this only works on software/support (saas uses IAM)
 	//--------------------------------------------------
 	exports.delete_users = (req, cb) => {
 
@@ -382,7 +429,7 @@ module.exports = function (logger, ev, t) {
 			_id: '_design/athena-v1',		// name of design doc
 			view: '_doc_types',
 			query: 'key="api_key_doc"&reduce=false&include_docs=true',
-			SKIP_CACHE: (req.query.skip_cache === 'yes')
+			SKIP_CACHE: t.ot_misc.skip_cache(req)
 		};
 		t.otcc.getDesignDocView(opts, (err, resp) => {
 			if (err) {
@@ -650,6 +697,7 @@ module.exports = function (logger, ev, t) {
 			crn: ev.CRN || {},
 			session_expiration_ts: req.session ? req.session.backend_expires : '?',
 			session_expires_in_ms: req.session ? (req.session.backend_expires - Date.now()) : '?',
+			is_registered: (email && ev.ACCESS_LIST[email]) ? true : false,
 		};
 		if (ev.AUTH_SCHEME === 'couchdb') {
 			ret.password_type = t.middleware.getPasswordType(req);

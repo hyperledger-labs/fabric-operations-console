@@ -95,6 +95,9 @@ module.exports = function (logger, ev, t) {
 			return null;
 		} else {
 			const user_data = getPassportData(req);
+			if (user_data && user_data.sub) {
+				return user_data.sub;
+			}
 			if (user_data && user_data.uuid) {
 				return user_data.uuid;
 			}

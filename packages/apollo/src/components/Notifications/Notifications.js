@@ -44,7 +44,7 @@ const Notifications = ({ translate }) => {
 		<div className="ibp-notifications">
 			{list.map(notify => {
 				if (notify.autoClose && !notify.timer) {
-					const timeout = _.isNumber(notify.autoClose) ? notify.autoClose : 5000;
+					const timeout = _.isNumber(notify.autoClose) ? notify.autoClose : 10000;
 					notify.timer = setTimeout(() => {
 						clearNotifications(notify.id);
 					}, timeout);

@@ -22,7 +22,6 @@ import Helper from '../../utils/helper';
 import Form from '../Form/Form';
 import Logger from '../Log/Logger';
 import SidePanel from '../SidePanel/SidePanel';
-import UserSettingsRestApi from '../../rest/UserSettingsRestApi';
 import LoginApi from '../../rest/LoginApi';
 
 const SCOPE = 'resetPasswordModal';
@@ -32,33 +31,14 @@ export class ResetPasswordModal extends Component {
 	cName = 'ResetPasswordModal';
 
 	async componentDidMount() {
-		this.props.updateState(SCOPE, {
-			loading: true,
-		});
-
-		try {
-			const resp = await UserSettingsRestApi.getDefaultPassword();
-			this.props.updateState(SCOPE, {
-				loading: false,
-				defaultPassword: resp ? resp.DEFAULT_USER_PASSWORD : null,
-			});
-		} catch (error) {
-			Log.error('Failed to get default password:', error);
-			this.props.updateState(SCOPE, {
-				loading: false,
-			});
-		}
+		// nothing to do
 	}
 
 	async onReset() {
 		try {
-			Log.info('Resetting password');
+			Log.info('Resetting password for', this.props.user.uuid);
 			const resp = await LoginApi.resetPassword(this.props.user.uuid);
 			Log.info('Password reset successfully:', resp);
-			this.props.onComplete({
-				user: this.props.user.email,
-				password: this.props.defaultPassword,
-			});
 			this.sidePanel.closeSidePanel();
 		} catch (error) {
 			Log.error(`Could not reset password: ${error}`);
@@ -83,7 +63,6 @@ export class ResetPasswordModal extends Component {
 							id: 'reset_password',
 							text: translate('reset_password'),
 							onClick: () => this.onReset(),
-							disabled: this.props.loading,
 							type: 'submit',
 						},
 					]}
@@ -95,21 +74,16 @@ export class ResetPasswordModal extends Component {
 							<h1 className="ibm-light">{translate('reset_password')}</h1>
 						</div>
 						<p className="ibp-modal-desc">{translate('reset_password_desc')}</p>
+						<p className="ibp-modal-desc">{translate('default_password_desc')}</p>
 						<Form
 							scope={SCOPE}
 							id={SCOPE + '-reset-password'}
 							fields={[
 								{
-									name: 'username',
+									name: 'username_label',
 									default: this.props.user.email,
 									disabled: true,
-								},
-								{
-									name: 'defaultPassword',
-									placeholder: 'defaultPassword_placeholder',
-									default: '',
-									disabled: true,
-								},
+								}
 							]}
 						/>
 					</div>
@@ -122,8 +96,7 @@ export class ResetPasswordModal extends Component {
 const dataProps = {
 	submitting: PropTypes.bool,
 	error: PropTypes.string,
-	loading: PropTypes.bool,
-	defaultPassword: PropTypes.string,
+	//loading: PropTypes.bool,
 };
 
 ResetPasswordModal.propTypes = {

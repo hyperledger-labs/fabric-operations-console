@@ -57,8 +57,8 @@ const mainNav = [
 	},
 	{
 		icon: 'member',
-		path: '/users',
-		id: 'users',
+		path: '/access',
+		id: 'access',
 		globalNavSubmenu: [],
 		newGroup: true,
 	},

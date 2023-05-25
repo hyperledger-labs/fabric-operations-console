@@ -325,6 +325,7 @@
 			"version": "v1"
 		},
 		"crn_string": "?",
+		"is_registered": true,
 		"logged": true,
 		"loggedInAs": {
 			"email": "someone_else@us.ibm.com",

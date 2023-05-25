@@ -1,4 +1,4 @@
-.ibp-members-auth-services-label {
+.ibp-access-auth-services-label {
 	padding-bottom: 1rem;
 	display: flex;
 
@@ -7,16 +7,15 @@
 	}
 }
 
-.ibp-members-auth-services-container {
+.ibp-access-auth-services-container {
 	background: $carbon--cool-gray-90;
 	height: 7.625rem;
-	margin-top: 1rem;
 	padding-left: 1.5rem;
 	padding-top: 1rem;
 	width: 23rem;
 }
 
-.ibp-members-iam-info-container {
+.ibp-access-iam-info-container {
 	background: $carbon--cool-gray-90;
 	height: 12rem;
 	margin-top: 1rem;
@@ -25,53 +24,53 @@
 	width: 35rem;
 }
 
-.ibp-members-appId-lock-img {
+.ibp-access-appId-lock-img {
 	height: 1.875rem;
 	margin-top: 1.5rem;
 	width: 1.375rem;
 }
 
-.ibp-members-app-id-label {
+.ibp-access-app-id-label {
 	@include carbon--type-style('body-short-02');
 	@include carbon--font-weight('semibold');
 	padding-top: 0.5rem;
 }
 
-.ibp-members-cloud-service-label {
+.ibp-access-cloud-service-label {
 	@include carbon--type-style('body-short-01');
-	color: $carbon--cool-gray-40;
+	color: $carbon--cool-gray-40 !important;
 	margin-top: 0.25rem;
 }
 
-.ibp-members-configure-label.bx--link {
+.ibp-access-configure-label.bx--link {
 	@include carbon--type-style('body-short-01');
 	cursor: pointer;
 	text-decoration: underline;
 }
 
-.ibp-auth-members-modal-title {
+.ibp-auth-access-modal-title {
 	@include carbon--type-style('productive-heading-05');
 	@include carbon--font-weight('light');
 	color: $text;
 }
 
-.ibp-auth-members-modal-desc {
+.ibp-auth-access-modal-desc {
 	margin-top: 1.5rem;
 }
 
-.ibp-members-iam-title {
+.ibp-access-iam-title {
 	@include carbon--type-style('productive-heading-03');
 	color: $carbon--cool-gray-10;
 	padding-top: 1rem;
 }
 
-.ibp-members-iam-desc {
+.ibp-access-iam-desc {
 	@include carbon--type-style('body-short-02');
 	color: $carbon--white-0;
 	padding-top: 1rem;
 }
 
-.ibp-members-iam-link {
+.ibp-access-iam-link {
 	padding-top: 1.5rem;
 }
 
@@ -126,10 +125,76 @@
 	}
 }
 
-.ibp-members-member-role-icon {
+.ibp-access-member-role-icon {
 	margin-left: 1.5rem;
 }
 
-.ipb-members-row {
+.ibp-access-member-new-icon {
+	background-color: #81a4ec;
+	color: #fff;
+	border-radius: 1rem;
+	padding: 0;
+	text-align: center;
+}
+
+.ibp-access-member-you-icon {
+	background-color: #0353e9;
+	color: #fff;
+	border-radius: 1rem;
+	padding: 0;
+	text-align: center;
+}
+
+.ibp-access-row {
 	margin-bottom: 2rem;
+}
+
+.ibp-access-gear-icon {
+	height: 2rem;
+	padding: 0.5rem;
+	margin-top: -.7rem;
+	margin-right: -.3rem;
+}
+
+.ibp-access-gear-icon:hover {
+	background: #121619;
+	fill: #ccc;
+}
+
+.ibp-access-button {
+	align-items: center;
+	background: transparent;
+	border: 0;
+	bottom: .75rem;
+	cursor: pointer;
+	height: 1.875rem;
+	justify-content: center;
+	margin: 0;
+	outline: 0;
+	padding: .25rem;
+	float: right;
+	margin-top: -1rem;
+}
+
+.access-setting-value,
+.access-setting-label {
+	display: inline-block;
+	font-size: 1rem;
+}
+
+.access-setting-value {
+	margin-left: 4rem;
+}
+
+.access-setting-label {
+	margin-bottom: 1rem;
+}
+
+
+.tinyTextWhite {
+	font-size: 0.8rem;
+}
+
+.access-form-apikey-secret {
+	width: 30rem;
 }

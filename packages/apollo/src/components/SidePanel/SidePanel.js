@@ -87,6 +87,7 @@ export class SidePanel extends React.Component {
 					${this.props.largePanel ? 'ibp-large-panel-button-container' : ''}
 					${this.props.extraLargePanel ? 'ibp-extra-large-panel-button-container' : ''}
 					${this.props.verticalPanel ? 'ibp-vertical-panel-button-container' : ''}
+					${this.props.fullPageCenter ? 'ibp-full-page-center-panel-button-container ' : ''}
 				`}
 				>
 					{this.props.warningTxt &&
@@ -142,13 +143,14 @@ export class SidePanel extends React.Component {
 	}
 
 	render() {
-		let className = this.props.verticalPanel ? 'vertical__panel--outer--container' : 'side__panel--outer--container';
+		let className = (this.props.verticalPanel || this.props.fullPageCenter) ? 'vertical__panel--outer--container' : 'side__panel--outer--container';
+
 		if (this.props.isOpening) {
 			className =
 				className +
 				`${this.props.largePanel
 					? ' side__panel--large--transitioning--in'
-					: this.props.verticalPanel
+					: (this.props.verticalPanel || this.props.fullPageCenter)
 						? ' vertical__panel--transitioning--in'
 						: ' side__panel--transitioning--in'
 				}`;
@@ -158,7 +160,7 @@ export class SidePanel extends React.Component {
 				className +
 				`${this.props.largePanel
 					? ' side__panel--large--transitioning--out'
-					: this.props.verticalPanel
+					: (this.props.verticalPanel || this.props.fullPageCenter)
 						? ' vertical__panel--transitioning--out'
 						: ' side__panel--transitioning--out'
 				}`;
@@ -191,7 +193,7 @@ export class SidePanel extends React.Component {
 							/>
 							{!this.props.hideClose && (
 								<button
-									className={`ibp-panel--close-icon-button ${this.props.verticalPanel ? 'ibp-vertical-panel-close' : ''}`}
+									className={`ibp-panel--close-icon-button ${(this.props.verticalPanel || this.props.fullPageCenter) ? 'ibp-vertical-panel-close' : ''}`}
 									onClick={this.closeSidePanel}
 									aria-label="Close"
 									style={{
@@ -211,10 +213,17 @@ export class SidePanel extends React.Component {
 									${this.props.extraLargePanel ? 'ibp-extra-large-panel' : ''}
 									${!this.props.buttons ? 'ibp-panel--content-no-buttons' : ''}
 									${this.props.verticalPanel ? 'ibp-vertical-panel' : ''}
+									${this.props.fullPageCenter ? 'ibp-full-page-center-panel' : ''}
 								`}
 							>
 								<div className="ibp-panel-content-flex-div">
-									<div className="ibp-panel-content-children">{this.props.children}</div>
+									<div className={`
+										ibp-panel-content-children
+										${this.props.fullPageCenter ? 'ibp-full-page-center-children' : ''}
+											`}
+									>
+										{this.props.children}
+									</div>
 									{this.renderFooter()}
 									{this.renderErrors()}
 								</div>
@@ -223,8 +232,8 @@ export class SidePanel extends React.Component {
 							{this.props.submitting && (
 								<div
 									className={`ibp-side-panel-submitting-overlay
-								${this.props.largePanel ? 'ibp-large-side-panel-overlay' : ''}
-								${this.props.verticalPanel ? 'ibp-vertical-panel-overlay' : ''}`}
+										${this.props.largePanel ? 'ibp-large-side-panel-overlay' : ''}
+										${(this.props.verticalPanel || this.props.fullPageCenter) ? 'ibp-vertical-panel-overlay' : ''}`}
 								/>
 							)}
 						</div>
