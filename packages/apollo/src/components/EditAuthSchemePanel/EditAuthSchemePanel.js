@@ -29,6 +29,7 @@ import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import * as constants from '../../utils/constants';
 import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
 import LoginApi from '../../rest/LoginApi';
+import TranslateLink from '../TranslateLink/TranslateLink';
 
 const SCOPE = 'editSettings';
 //const Log = new Logger(SCOPE);
@@ -258,8 +259,10 @@ class EditAuthSchemePanel extends Component {
 							<h4>
 								{nameMap[this.props.auth_scheme.value]}
 							</h4>
-							<p className='tinyText'>
-								{translate(warningMap[this.props.auth_scheme.value])}
+							<p>
+								<TranslateLink className='tinyText'
+									text={warningMap[this.props.auth_scheme.value]}
+								/>
 							</p>
 							<br />
 						</div>}
@@ -338,7 +341,12 @@ class EditAuthSchemePanel extends Component {
 										},
 									]}
 								/>
-								<p className="settings-toggle-label">{translate('debug_label')}</p>
+								<BlockchainTooltip direction="right"
+									triggerText={translate('debug_label')}
+									className='allow-default-label'
+								>
+									{translate('debug_logs_tooltip')}
+								</BlockchainTooltip>
 								<ToggleSmall
 									id="toggle-debug-access-logs"
 									toggled={this.props.debug === 'on'}
@@ -350,6 +358,7 @@ class EditAuthSchemePanel extends Component {
 									labelA={translate('off')}
 									labelB={translate('on')}
 									aria-label={translate('debug_label')}
+									className='allow-default-wrap'
 								/>
 							</div>
 						}
