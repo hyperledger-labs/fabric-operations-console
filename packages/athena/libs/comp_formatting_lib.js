@@ -148,6 +148,14 @@ module.exports = function (logger, ev, t) {
 				}
 				doc = exports.redact_ak(req, doc);
 			}
+
+			// remove sensitive fields from a CA response
+			if (doc.ca && doc.ca.db) {
+				delete doc.ca.db.datasource;
+			}
+			if (doc.config_override && doc.config_override.ca && doc.config_override.ca.db) {
+				delete doc.config_override.ca.db.datasource;
+			}
 		}
 
 		return doc;										// don't sort here, sort right before responding
