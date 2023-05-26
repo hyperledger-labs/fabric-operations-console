@@ -237,6 +237,14 @@ module.exports = function (logger, ev, t) {
 	}
 
 	//--------------------------------------------------
+	// clear the login timer
+	//--------------------------------------------------
+	exports.clear_login_timer = () => {
+		logger.info('[oauth] the user login timer has been dismissed via a successful login');
+		clearTimeout(exports.login_timer);
+	};
+
+	//--------------------------------------------------
 	// Edit settings fields on UI
 	//--------------------------------------------------
 	/*
