@@ -66,6 +66,10 @@ const ActionsHelper = {
 		return ActionsHelper._actionCheck(user, constants.ACTION_USERS_MANAGE);
 	},
 
+	canManageApiKeys(user) {
+		return ActionsHelper._actionCheck(user, constants.ACTION_COMPONENT_IMPORT);
+	},
+
 	_actionCheck(user, action) {
 		if (user && user.authorized_actions) {
 			return user.authorized_actions.includes(action);

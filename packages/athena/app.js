@@ -1108,6 +1108,8 @@ function setup_passport() {
 			if (ev.OAUTH.DEBUG) {
 				logger.debug('[oauth] built profile', JSON.stringify(profile, null, 2));
 			}
+
+			tools.other_apis_lib.clear_login_timer();
 			return done(null, profile);						// send profile on to be stored in session
 
 		}));

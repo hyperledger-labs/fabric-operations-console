@@ -110,8 +110,8 @@ export class Access extends Component {
 					client_id: resp.client_id,
 					adminContactEmail: resp.admin_contact_email ? resp.admin_contact_email : '',
 					all_users: all_users,
-					isManager: this.props.userInfo ? ActionsHelper.canRestartOpTools(this.props.userInfo) : false,
-					isWriter: this.props.userInfo ? ActionsHelper.canEditComponent(this.props.userInfo) : false,
+					isManager: this.props.userInfo ? ActionsHelper.canManageUsers(this.props.userInfo) : false,
+					isWriter: this.props.userInfo ? ActionsHelper.canManageApiKeys(this.props.userInfo) : false,
 					auth_scheme: resp.auth_scheme,
 				});
 			});
@@ -409,7 +409,7 @@ export class Access extends Component {
 												this.openDeleteModal('apikey', keys);
 											}}
 											isManager={this.props.isManager}
-											isWriter={this.props.isManager}
+											isWriter={this.props.isWriter}
 											checkRole={this.checkRole}
 										/>
 										{Array.isArray(this.props.all_apikeys) && this.props.all_apikeys.length > 0 &&
