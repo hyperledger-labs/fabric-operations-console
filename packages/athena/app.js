@@ -1109,7 +1109,11 @@ function setup_passport() {
 				logger.debug('[oauth] built profile', JSON.stringify(profile, null, 2));
 			}
 
-			tools.other_apis_lib.clear_login_timer();
+			if (Array.isArray(profile.roles) && profile.roles.includes(ev.STR.MANAGER_ROLE)) {
+				tools.other_apis_lib.clear_login_timer();
+			} else {
+				logger.error('[oauth] this user is not a manager, it does not qualify as the first successful login');
+			}
 			return done(null, profile);						// send profile on to be stored in session
 
 		}));

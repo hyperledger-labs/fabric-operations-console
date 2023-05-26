@@ -252,6 +252,10 @@ class EditAuthSchemePanel extends Component {
 									<SidePanelWarning title="oauth_warning_title"
 										subtitle="oauth_warning_desc"
 									/>
+
+									<SidePanelWarning title="oauth_user_warning_title"
+										subtitle="oauth_user_warning_desc"
+									/>
 								</div>}
 							<br />
 							<br />
