@@ -137,14 +137,20 @@ class OrdererDetails extends Component {
 		});
 	}
 
-	// detect if channel participation features are enabled (this doesn't mean they should be shown!)
+	// detect if channel participation features are enabled (they may or may not have a system channel still!!)
+	// (note: don't add the tls identity check to this function)
 	channelParticipationEnabled(obj) {
-		const has_osnadmin_url = obj && typeof obj.osnadmin_url === 'string' ? true : false;
+		const has_osnadmin_url = (obj && typeof obj.osnadmin_url === 'string') ? true : false;
 		const osnadmin_feats_enabled = this.props.feature_flags && this.props.feature_flags.osnadmin_feats_enabled === true;
-		return osnadmin_feats_enabled && has_osnadmin_url;
+
+		// if we don't have the version... (b/c imported) just set this to true to skip this part
+		const valid_version = (obj && obj.version) ? semver.gte(semver.coerce(obj.version), semver.coerce('2.4')) : true;
+
+		return osnadmin_feats_enabled && has_osnadmin_url && valid_version;
 	}
 
-	// detect if channel participation features should be shown, based on osnadmin_url availability and a feature flag && system channel should not exist
+	// detect if channel tiles should be populated on the page by USING the channel participation feature
+	// based on osnadmin_url availability and a feature flag && the system channel should not exist
 	isSystemLess(obj) {
 		return this.channelParticipationEnabled(obj) && !this.props.systemChannel;
 	}
@@ -155,15 +161,14 @@ class OrdererDetails extends Component {
 		let channelList = {};
 
 		// if we cannot get the channels b/c of an network error, perm error, etc, default to the using the "systemless" field
-		let systemChannel = this.props.details && this.props.details.systemless ? false : true;
+		let systemChannel = (this.props.details && this.props.details.systemless) ? false : true;
 
 		let orderer_tls_identity = await IdentityApi.getTLSIdentity(this.props.selectedNode || this.props.details);
 		if (!orderer_tls_identity) {
 			// if we don't have a tls identity, we cannot load the system channel details via the channel participation apis...
 			// so assume we do (or do not) have a system channel based on the "systemless" field
 			// if we do have the identity it will be more robust to just look up the system channel details via channel participation apis
-		} else if (orderer_tls_identity && !systemChannel) {
-			// Only use channel participation apis if cluster doesn't have a system channel since if it does, the api is not available
+		} else {
 			try {
 				let all_identity = await IdentityApi.getIdentities();
 				const resp = await ChannelParticipationApi.mapChannels(all_identity, useNodes);
@@ -179,6 +184,7 @@ class OrdererDetails extends Component {
 				if (resp) {
 					channelList = resp;
 					if (_.get(channelList, 'systemChannel.name')) {
+
 						// system channel does exist
 						systemChannel = true;
 						channelList.systemChannel.type = 'system_channel';
@@ -188,6 +194,7 @@ class OrdererDetails extends Component {
 						channelList.channels.push(channelList.systemChannel);
 						await this.getSystemChannelConfigData();
 					} else {
+
 						// system channel does not exist
 						systemChannel = false;
 					}
@@ -1469,17 +1476,25 @@ class OrdererDetails extends Component {
 												this.props.updateState(SCOPE, { selectedTab });
 											}}
 										>
+
+											{/* [details section] - an orderer node is NOT selected, this is the top level content */}
 											{!this.props.selectedNode && (
 												<Tab id="ibp-orderer-details"
 													label={translate('details')}
 												>
-													{!this.props.loading && this.isSystemLess(this.props.details) && !this.props.orderer_tls_identity && (
+													{!this.props.loading && this.channelParticipationEnabled(this.props.details) && !this.props.orderer_tls_identity && (
 														<div>
 															<SidePanelWarning title="tls_identity_not_found"
-																subtitle="orderer_tls_admin_identity_not_found"
+																subtitle={translate(this.isSystemLess(this.props.details) ?
+																	'orderer_tls_admin_identity_not_found' : 'orderer_tls_admin_identity_not_found2')}
 															/>
 														</div>
 													)}
+
+													{/*
+													its possible for an orderer to be at fabric v2.4, have CP features enabled, but still have a system channel, (it is not systemless yet)
+													so we still need to show them the ChannelParticipationDetails modal, which has the ability to remove the system channel
+													*/}
 													{this.channelParticipationEnabled(this.props.details) && this.props.orderer_tls_identity && (
 														<ChannelParticipationDetails
 															selectedNode={this.props.selectedNode}
@@ -1532,6 +1547,8 @@ class OrdererDetails extends Component {
 													)}
 												</Tab>
 											)}
+
+											{/* [all nodes section] - an orderer node is NOT selected, this is the top level content */}
 											{!this.props.selectedNode && (
 												<Tab id="ibp-orderer-nodes"
 													label={translate('ordering_nodes')}
@@ -1556,37 +1573,41 @@ class OrdererDetails extends Component {
 													</div>
 												</Tab>
 											)}
+
+											{/* [drill down section] - an orderer node is selected, this is the drill down "info and usage" tab */}
 											{this.props.selectedNode && this.props.selectedNode.consenter_proposal_fin && (
 												<Tab
 													id="ibp-orderer-usage"
 													className={
 														this.props.selectedNode.isUpgradeAvailable &&
-														this.props.selectedNode.location === 'ibm_saas' &&
-														ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)
+															this.props.selectedNode.location === 'ibm_saas' &&
+															ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)
 															? 'ibp-patch-available-tab'
 															: ''
 													}
 													label={translate('usage_info', {
-														patch:
-															this.props.selectedNode.isUpgradeAvailable &&
+														patch: this.props.selectedNode.isUpgradeAvailable &&
 															this.props.selectedNode.location === 'ibm_saas' &&
-															ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) ? (
-																	<div className="ibp-details-patch-container">
-																		<div className="ibp-patch-available-tag ibp-node-details"
-																			onClick={() => this.openOrdererSettings('upgrade')}
-																		>
-																			{translate('patch_available')}
-																		</div>
+															ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) ?
+															(
+																<div className="ibp-details-patch-container">
+																	<div className="ibp-patch-available-tag ibp-node-details"
+																		onClick={() => this.openOrdererSettings('upgrade')}
+																	>
+																		{translate('patch_available')}
 																	</div>
-																) : (
-																	''
-																),
+																</div>
+															) : (
+																''
+															),
 													})}
 												>
 													<NodeDetails node={this.props.selectedNode} />
 													{this.renderUsage(translate)}
 												</Tab>
 											)}
+
+											{/* [drill down section] - an orderer nodes is selected and it is systemless, this is the drill down "Channels" tab */}
 											{this.isSystemLess(this.props.selectedNode) && (
 												<Tab id="ibp-orderer-channels"
 													label={translate('channels')}
