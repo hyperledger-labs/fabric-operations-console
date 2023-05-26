@@ -201,6 +201,7 @@ class EditAuthSchemePanel extends Component {
 				required: true,
 				default: currentAuthScheme,
 				type: 'dropdown',
+				format: 'object',
 				options: [{
 					name: 'CouchDB' + ((currentAuthScheme === constants.AUTH_COUCHDB) ? ' (current)' : ''),
 					value: constants.AUTH_COUCHDB

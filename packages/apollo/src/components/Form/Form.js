@@ -39,8 +39,8 @@ class Form extends Component {
 		formData[this.props.id] = {};
 		const data = {};
 		this.props.fields.forEach(field => {
-			if (field.type === 'dropdown') {
-				data[field.name] = { value: this.getDefaultValue(field) };		// dropdown fields hold an object...
+			if (field.type === 'dropdown' && field.format === 'object') {
+				data[field.name] = { value: this.getDefaultValue(field) };		// some dropdown fields hold an object...
 			} else {
 				data[field.name] = this.getDefaultValue(field);
 			}
@@ -393,13 +393,15 @@ class Form extends Component {
 		);
 	}
 
-	// wtf is going on here, when are dropdown options ever strings
+	// this is weird, why do we have this.... - dsh todo rework
 	fixStringOptions(options) {
 		const opts = [];
 		if (options) {
 			options.forEach(option => {
 				if (typeof option === 'string') {
 					opts.push({ value: option, name: option });
+				} else if (option.version) {
+					opts.push({ ...option, value: option.version });		// fabric version dropdown options don't set "value"... todo fix that
 				} else {
 					opts.push(option);
 				}
@@ -408,16 +410,31 @@ class Form extends Component {
 		return opts;
 	}
 
-	// wtf is going on here, when are dropdown options ever strings
+	// this function will return the selected dropdown option object (or string if applicable).
+	// this is weird, why do we have this mess.... - dsh todo rework
+	// some dropdowns have options that are an array of strings, others are an array of objects like:
+	// 		{name: <field name>, value: <value>}
+	// there are also options that seem to have custom objects, that have a "name" field....
 	fixSelectedItem(data, options) {
-		let ret = data;
 		const value = (typeof data === 'string') ? data : data.value;
 		for (let i in options) {
-			if (options[i] && options[i].value === value) {
-				return options[i];
+			if (typeof options[i] === 'string') {
+				if (options[i] === value) {
+					return options[i];
+				}
+			} else {
+				if (value !== undefined) {
+					if (options[i] && options[i].value === value) {
+						return options[i];
+					}
+				} else {			// if there is no "value" field... look for name
+					if (data && data.name && options[i] && options[i].name === data.name) {
+						return options[i];
+					}
+				}
 			}
 		}
-		return ret;
+		return null;
 	}
 
 	fixChangedItem(options, item) {
