@@ -767,6 +767,7 @@ class ItemContainer extends Component {
 			rows.push({ id: '' + (item.id || item.name) });
 		});
 		const ariaTitle = this.props.containerTitle ? translate(this.props.containerTitle) : this.props.itemId ? this.props.itemId : '';
+		const multiSelect = this.props.selectItem && this.props.selectItem.multiSelect;
 		return (
 			<div className={`ibp-container-list ${!items.length ? 'ibp-container-empty-list' : ''}`}>
 				<DataTable
@@ -840,9 +841,9 @@ class ItemContainer extends Component {
 												}
 											}}
 										>
-											{row.disabled && (
+											{row.disabled && multiSelect && (
 												<TableCell
-													key={(row.id || row.name)}
+													key={(row.id || row.name) + '_' + i}
 													id={`${this.props.id}-${i}`}
 												>
 													<Checkbox
@@ -853,7 +854,7 @@ class ItemContainer extends Component {
 													/>
 												</TableCell>
 											)}
-											{!row.disabled && this.props.selectItem && (
+											{!row.disabled && multiSelect && (
 												<TableSelectRow
 													disabled={
 														row.disabled ||
