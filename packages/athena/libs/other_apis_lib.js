@@ -367,6 +367,11 @@ module.exports = function (logger, ev, t) {
 							return;
 						} else {
 							logger.debug('[edit settings] there were no changes to log settings, no need to restart.');
+							if (req.body.auth_scheme) {
+								logger.debug('[edit settings] updating passport strategies');
+								t.update_passport();								// update the passport - new oauth_url
+							}
+
 							ev.update(null, err => {								// reload ev settings
 								if (err) {
 									logger.error('[edit settings] error updating ev', err);
