@@ -146,7 +146,7 @@ class Consenters extends Component {
 		// remove consenter options that have already been selected, match on host + port
 		if (allowed_raftNodes) {
 			if (consenters) {
-				availableConsenters = allowed_raftNodes.filter(x => !consenters.find(y => y.port === x.port && y.host === x.host));
+				availableConsenters = allowed_raftNodes.filter(x => !consenters.find(y => Number(y.port) === Number(x.port) && y.host === x.host));
 			} else {
 				availableConsenters = allowed_raftNodes;
 			}

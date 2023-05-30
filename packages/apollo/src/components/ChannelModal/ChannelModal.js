@@ -1423,7 +1423,7 @@ class ChannelModal extends Component {
 		if (!_.has(selectedOrderer, 'id')) return;
 		this.props.updateState(SCOPE, { loadingConsenters: true });
 
-		OrdererRestApi.getOrdererDetails(selectedOrderer.id, true).then(orderer => {
+		OrdererRestApi.getClusterDetails(selectedOrderer.cluster_id, true).then(orderer => {
 			let getCertsFromDeployer = false;
 
 			if (orderer && orderer.raft) {
@@ -1446,6 +1446,7 @@ class ChannelModal extends Component {
 
 				// [PATH 1] - using OSN Admin features in create channel wizard
 				if (this.props.osnadmin_feats_enabled && orderer && orderer.osnadmin_url && orderer.systemless) {
+					Log.debug('using osnadmin feats');
 					this.props.updateState(SCOPE, { use_osnadmin: true }); // change the menu options
 					this.showStepsInTimeline(['osn_join_channel', 'channel_orderer_organizations']);
 					if (this.props.isChannelUpdate) {
@@ -1466,11 +1467,13 @@ class ChannelModal extends Component {
 
 				// [PATH 2] - using legacy create channel wizard
 				else {
+					Log.debug('will not use osnadmin feats...');
 					this.props.updateState(SCOPE, { use_osnadmin: false });
 					this.showStepsInTimeline(['ordering_service_organization', 'organization_creating_channel']);
 					this.hideStepsInTimeline(['osn_join_channel', 'channel_orderer_organizations']); // but hide these
 
 					if (getCertsFromDeployer) {
+						Log.debug('getting tls certs from deployer...');
 						NodeRestApi.getTLSSignedCertFromDeployer(orderer.raft)
 							.then(nodesWithCerts => {
 								Log.debug('Signed certs for raft nodes from deployer', nodesWithCerts);
@@ -1496,6 +1499,7 @@ class ChannelModal extends Component {
 								this.props.updateState(SCOPE, { raftNodes: [], isTLSUnavailable: true, loadingConsenters: false, loading: false });
 							});
 					} else {
+						Log.debug('not getting tls certs from deployer');
 						this.props.updateState(SCOPE, { raftNodes: consenters, loadingConsenters: false, loading: false });
 					}
 				}
