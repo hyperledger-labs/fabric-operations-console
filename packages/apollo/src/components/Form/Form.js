@@ -400,8 +400,10 @@ class Form extends Component {
 			options.forEach(option => {
 				if (typeof option === 'string') {
 					opts.push({ value: option, name: option });
+				} else if (option.display_name) {
+					opts.push({ ...option, value: option.display_name });	// fabric component dropdown options don't set "value"...
 				} else if (option.version) {
-					opts.push({ ...option, value: option.version });		// fabric version dropdown options don't set "value"... todo fix that
+					opts.push({ ...option, value: option.version });		// fabric version dropdown options don't set "value"...
 				} else {
 					opts.push(option);
 				}
