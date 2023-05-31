@@ -62,7 +62,6 @@ module.exports = function (logger, ev, t) {
 				const strategy_name = strategy_map[ev.AUTH_SCHEME];
 				logger.debug('[passport] using auth scheme:', strategy_name);
 				passport.authenticate(strategy_name, function (e, profile) {
-					logger.debug('[passport] has returned...');
 					if (profile) {
 						logger.debug('[passport] received profile');
 						req._email = profile.email || profile.name || null;
