@@ -263,29 +263,6 @@ describe('Other APIs', () => {
 				}
 			},
 			{
-				itStatement: 'should return an error - error passed to "ev.update" stub test_id=xgtnxk',
-				callFunction: (routeInfo) => {
-					routeInfo.body = {
-						inactivity_timeouts: { enabled: false, max_idle_time: 100000 },
-						file_logging: {
-							client: {
-								enabled: true
-							}
-						}
-					};
-					tools.stubs.getDoc.callsArgWith(1, null, athena_settings);
-					tools.stubs.writeDoc.callsArgWith(2, null);
-					tools.stubs.update.callsArgWith(1, null);
-					tools.stubs.update.callsArgWith(1, { 'something': 'horrible' });
-				},
-				expectBlock: (res) => {
-					expect(res.status).to.equal(500);
-					expect(JSON.stringify(res.body)).to.equal(
-						JSON.stringify({ 'statusCode': 500, 'msg': 'unable to update settings', 'details': { 'something': 'horrible' } })
-					);
-				}
-			},
-			{
 				itStatement: 'should return an error - invalid timeout values - test_id=zywbuk',
 				callFunction: (routeInfo) => {
 					routeInfo.body = {

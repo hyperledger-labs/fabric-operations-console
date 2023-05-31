@@ -788,6 +788,12 @@ function setup_pillow_talk() {
 			ev.update(null);										// reload ev settings
 		}
 
+		// --- Passport Update --- //
+		if (doc.message_type === 'passport') {
+			logger.debug('[pillow] - received a passport update message');
+			setup_passport();
+		}
+
 		// --- Requesting HTTP Metrics Docs --- //
 		if (doc.message_type === 'req_http_metrics') {
 			logger.debug('[pillow] - received an access log data request message.', doc.tx_id);
@@ -928,11 +934,11 @@ function setup_debug_log() {
 //---------------------
 function setup_passport() {
 	if (ev.AUTH_SCHEME === 'appid') {
-		logger.error('[startup] "appid" is no longer supported 08/29/2019');
+		logger.error('[passport setup] "appid" is no longer supported 08/29/2019');
 	} else if (ev.AUTH_SCHEME === 'ibmid' && ev.IBM_ID.CLIENT_ID && ev.IBM_ID.CLIENT_SECRET) {
-		logger.error('[startup] "ibmid" is no longer supported 05/26/2021');
+		logger.error('[passport setup] "ibmid" is no longer supported 05/26/2021');
 	} else if (ev.AUTH_SCHEME === 'iam' && ev.IAM.CLIENT_ID && ev.IAM.CLIENT_SECRET && ev.IAM_API_KEY) {
-		logger.info('[startup] setting up the ibm id (iam) auth scheme');
+		logger.info('[passport setup] setting up the ibm id (iam) auth scheme');
 		passport.use(ev.IAM.STRATEGY_NAME, new OAuth2Strategy({
 			authorizationURL: ev.IAM.AUTHORIZATION_URL,
 			tokenURL: ev.IAM.TOKEN_URL,
@@ -972,13 +978,13 @@ function setup_passport() {
 			return done(null, obj);
 		});
 	} else if (ev.AUTH_SCHEME === 'couchdb') {
-		logger.info('[startup] setting up the couchdb auth scheme');
+		logger.info('[passport setup] setting up the couchdb auth scheme');
 		// there really isn't anything to do...
 	} else if (ev.AUTH_SCHEME === 'initial') {
-		logger.warn('[startup] "initial" auth scheme provided. the app is open to all.');
+		logger.warn('[passport setup] "initial" auth scheme provided. the app is open to all.');
 		// there really isn't anything to do...
 	} else if (ev.AUTH_SCHEME === 'oidc' && ev.IAM_API_KEY) {
-		logger.info('[startup] setting up the OIDC (bedrock IAM) auth scheme');
+		logger.info('[passport setup] setting up the OIDC (bedrock IAM) auth scheme');
 		passport.use(ev.OIDC.STRATEGY_NAME, new OpenIDConnectStrategy({
 			authorizationURL: ev.OIDC.AUTHORIZATION_URL,
 			tokenURL: ev.OIDC.TOKEN_URL,
@@ -1020,7 +1026,7 @@ function setup_passport() {
 			return done(null, obj);
 		});
 	} else if (ev.AUTH_SCHEME === 'ldap' && ev.LDAP && ev.LDAP.URL) {
-		logger.info('[startup] setting up the ldap auth scheme');
+		logger.info('[passport setup] setting up the ldap auth scheme');
 		passport.use(ev.LDAP.STRATEGY_NAME, new LDAPStrategy({
 			server: {
 				url: ev.LDAP.URL,
@@ -1054,7 +1060,7 @@ function setup_passport() {
 			return done(null, obj);
 		});
 	} else if (ev.AUTH_SCHEME === 'oauth' && ev.OAUTH) {
-		logger.info('[startup] setting up the generic oauth 2 auth scheme');
+		logger.info('[passport setup] setting up the generic oauth2 auth scheme');
 		passport.use(ev.OAUTH.STRATEGY_NAME, new OAuth2Strategy({
 			authorizationURL: ev.OAUTH.AUTHORIZATION_URL,
 			tokenURL: ev.OAUTH.TOKEN_URL,
@@ -1124,7 +1130,7 @@ function setup_passport() {
 			done(null, obj);
 		});
 	} else {
-		logger.error('[startup] value for "auth_scheme" is not understood or there is incomplete data for the chosen scheme.', ev.AUTH_SCHEME);
+		logger.error('[passport setup] value for "auth_scheme" is not understood or there is incomplete data for the chosen scheme.', ev.AUTH_SCHEME);
 	}
 }
 

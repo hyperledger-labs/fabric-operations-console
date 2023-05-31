@@ -325,7 +325,7 @@ module.exports = function (logger, ev, t) {
 									});
 								}
 							});
-						}, 1000 * 116);			// a little shy of 120 seconds should account for any delay and make this happen before the UI times out
+						}, 1000 * 115);			// a little shy of 120 seconds should account for any delay and make this happen before the UI times out
 					}
 				}
 
@@ -367,19 +367,24 @@ module.exports = function (logger, ev, t) {
 							return;
 						} else {
 							logger.debug('[edit settings] there were no changes to log settings, no need to restart.');
-							if (req.body.auth_scheme) {
-								logger.debug('[edit settings] updating passport strategies');
-								t.update_passport();								// update the passport - new oauth_url
-							}
+							// the ev settings will reload automatically b/c of our pillow talk listener
 
-							ev.update(null, err => {								// reload ev settings
-								if (err) {
-									logger.error('[edit settings] error updating ev', err);
-									return cb({ statusCode: 500, msg: 'unable to update settings', details: err });
-								} else {
-									return cb(null, exports.get_ev_settings());
+							// reload passport settings after the delay
+							// wait for the update-settings debounce to take effect before updating passport
+							setTimeout(() => {
+								if (req.body.oauth) {
+									const msg = {
+										message_type: 'passport',
+										message: 'reloading passport setup b/c auth settings changed',
+										by: t.misc.censorEmail(t.middleware.getEmail(req)),
+										uuid: t.middleware.getUuid(req),
+									};
+									t.pillow.broadcast(msg);
 								}
-							});
+
+								// return ev settings response after the delay
+								return cb(null, exports.get_ev_settings());
+							}, 1000);	// 400ms was not enough, 500 is
 						}
 					}
 				});
