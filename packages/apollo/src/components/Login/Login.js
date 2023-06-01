@@ -55,7 +55,7 @@ export class Login extends Component {
 			Log.info(`Logging in as ${this.props.email}`);
 			const resp = await LoginApi.login(this.props.email, this.props.login_password);
 			Log.debug(`Logged in as ${this.props.email}:`, resp);
-			window.location.href = `${this.props.hostUrl}/nodes`;
+			window.location.href = '/nodes';
 		} catch (error) {
 			Log.error(`Failed to log in as ${this.props.email}: ${error}`);
 			this.props.updateState(SCOPE, {
@@ -69,7 +69,7 @@ export class Login extends Component {
 			Log.info('Changing password');
 			const resp = await LoginApi.changePassword(this.props.currentPassword, this.props.newPassword);
 			Log.info('Changed password:', resp);
-			window.location.href = `${this.props.hostUrl}/auth/logout`;
+			window.location.href = '/auth/logout';
 		} catch (error) {
 			Log.error(`Password was not changed: ${error}`);
 			let error_current_password =
