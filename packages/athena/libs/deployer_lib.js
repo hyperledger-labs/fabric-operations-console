@@ -834,7 +834,7 @@ module.exports = function (logger, ev, t) {
 										// if we updated fabric from v2.2 to v2.4 or higher, we might now have an osn admin url (which didn't exist before)
 										// so we need to refresh our data to capture the new urls or w.e. -> call get_all_components, it will sync differences
 										const opts2 = { _skip_cache: true, _include_deployment_attributes: true };
-										t.deployer.get_all_components(opts2, () => {
+										exports.get_all_components(opts2, () => {
 
 											// once we sync with deployer with get_all_components(), we may need to update our whitelist to reflect new urls
 											t.component_lib.rebuildWhiteList(req, () => {
@@ -1190,9 +1190,12 @@ module.exports = function (logger, ev, t) {
 					deployer_data: deployer_data,
 				};
 				if (deployer_data && !deployer_data._cached) {						// do not run sync w/cached deployer data
-					batch_sync_deployer_attributes_with_couch(ret);					// we don't wait on batch sync... todo re-evaluate
+					batch_sync_deployer_attributes_with_couch(ret, () => {
+						return cb(null, ret);
+					});
+				} else {
+					return cb(null, ret);
 				}
-				return cb(null, ret);
 			}
 		});
 	};
