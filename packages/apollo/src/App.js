@@ -295,12 +295,12 @@ class App extends Component {
 
 				// if using local username/password, send user to our login prompt
 				if (this.state.authScheme.type === 'couchdb') {
-					return <Login hostUrl={this.state.authScheme.host_url} />;
+					return <Login />;
 				}
 
 				// if using sso, send user to sso's login prompt
 				else {
-					window.location.href = `${this.state.authScheme.host_url}/auth/login`;
+					window.location.href = '/auth/login';
 					return (
 						<LoadingWithContent withOverlay
 							description={translate('redirecting_login')}
