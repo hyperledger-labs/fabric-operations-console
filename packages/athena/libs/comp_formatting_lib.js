@@ -156,6 +156,14 @@ module.exports = function (logger, ev, t) {
 			if (doc.config_override && doc.config_override.ca && doc.config_override.ca.db) {
 				delete doc.config_override.ca.db.datasource;
 			}
+
+			// remove sensitive fields from a TLS CA response
+			if (doc.tlsca && doc.tlsca.db) {
+				delete doc.tlsca.db.datasource;
+			}
+			if (doc.config_override && doc.config_override.tlsca && doc.config_override.tlsca.db) {
+				delete doc.config_override.tlsca.db.datasource;
+			}
 		}
 
 		return doc;										// don't sort here, sort right before responding
