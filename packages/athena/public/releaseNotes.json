@@ -1,7 +1,17 @@
 [
 	{
-		"version": "1.0.5-22",
-		"date": "1 May 2023",
+		"version": "1.0.5-24",
+		"date": "8 June 2023",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
+		"version": "1.0.5-23",
+		"date": "1 June 2023",
 		"description": [
 			{
 				"title": "Bug & security fixes",
