@@ -1336,13 +1336,12 @@ module.exports = function (logger, ev, t) {
 						}
 
 						// create the user login for the new console
-						const secret_details = t.misc.salt_secret(password);
 						doc.access_list[username] = {
 							created: Date.now(),
 							roles: Object.keys(ev.ROLES_TO_ACTIONS),
 							uuid: t.uuidv4(),
-							salt: secret_details.salt,
-							hashed_secret: secret_details.hashed_secret,
+							salt: null,
+							hashed_secret: null,		// don't set this field, user will use default password and have to change it on first login
 							ts_changed_password: Date.now(),
 						};
 
