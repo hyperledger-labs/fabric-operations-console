@@ -2,7 +2,7 @@
 
 ## Overview
 
-By default the console users a user login method using local (couchdb) usernames/passwords.
+By default the console will login users using local (couchdb) usernames/passwords.
 However this can be changed to use an external OAuth2.0 service.
 When an OAuth2.0 service is used, the list of users than can access the console will be controlled by your OAuth2.0 administrator.
 Any users that can login to your external service will be able to login to the console.
@@ -33,16 +33,16 @@ Any users that can login to your external service will be able to login to the c
 1. Review the settings you are about to make, and click `Submit` when ready
 1. Once submitted you will see a countdown informing you to logout and login within 2 minutes. This behavior is only for the first login when turning OAuth on. The timer is created to let the console revert itself to the local usernames/passwords if the OAuth2.0 based login is unsuccessful (to prevent everyone from being locked out of the console).
 	- Click the button to logout and immediately try to login
-		- If successful you are congrats!
-		- If you encounter errors, try a private/incognito window. If that didn't help wait for 2 minutes, and the console will revert to the local usernames/password based auth you had before this change. If you have waited for 2 minutes and still see login errors, try a private/incognito window. Once you are able to login with your local username/password go back to the `Access` tab, double check the OAuth settings, and try again.
-1. Lastly, take a look at the usernames listed in the `Users` table. If some usernames were only for the local username/password login and they will not be used by your OAuth login, they should be deleted. Otherwise if someone were to register this username with your OAuth service, they will be able to gain unintentional entrance to your console.
+		- If successful, congrats!
+		- If you encounter errors, try a private/incognito window. If that didn't help wait for 2 minutes, and the console will revert to the local username/password auth you had before this change. If you have waited for 2 minutes and still see login errors, try a private/incognito window. Once you are able to login with your local username/password go back to the `Access` tab, double check the OAuth settings, and try again.
+1. Lastly, take a look at the usernames listed in the `Users` table. If some usernames were only for the local username/password login and they will not be used by your OAuth login, they should be deleted. Otherwise if someone were to register this username with your OAuth service, they will be able to gain unintentional access to your console.
 
 ## Permissions
 The permissions of what a user can do on the console are listed/controlled on the `Access` tab under the `Users` table.
 - Users with a `Manager` role can edit the `Users` table and reassign user permissions.
-- When using the OAuth2 authentication method, a username (email) with no permissions can request permissions by first logging into the console. A successful login with the OAuth service will show the user a mostly empty page with a button to request permission. After they click this button, their username (email) will appear in the `Users` table. Another user (one with a `Manager` role) can then assign that username permissions. Usernames can also be added and given permission by a user with the `Manager` role, without making a new user go through the request step.
-- Usernames listed in the table that were only added for local username/password login and are not currently used by the OAuth login should be deleted. Otherwise if someone were to register this username with your OAuth service, they will be able to gain unintentional entrance to your console.
-- Check the [permissions](./_permissions.md) doc for more details on what each role does.
+- When using the OAuth2 authentication method, a username (email) with no permissions can request permissions by first logging into the console. A successful login with the OAuth service will show the user a mostly empty page with a button to request permission. After they click this button, their username (email) will appear in the `Users` table. Another user (one with a `Manager` role) can then assign that username permissions. If a username is already known it can be added and given permission without making that user go through the request step (use the `Add new users` button, on the `Access` tab).
+- Usernames listed in the table that were only added for local username/password login and are not currently used by the OAuth login should be deleted. Otherwise if someone were to register this username with your OAuth service, they will be able to gain unintentional access to your console.
+- Check the [console permissions](./_permissions.md) doc for more details on the `Manager`, `Writer`, and `Reader` username roles.
 
 
 ## Help
