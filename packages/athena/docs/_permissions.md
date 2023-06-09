@@ -4,10 +4,10 @@
 OK, so the console supports multiple auth schemes to allow integration into whatever specific services are available.
 They are all modeled to the same spec.
 Meaning they work similarly when it comes to user login and enforcing user roles/permissions.
-All of the auth schemes are modeled off the IAM SaaS auth scheme that we provided to all IBM Cloud Saas service instances.
+All of the auth schemes are modeled off the IAM SaaS auth scheme that was provided to all IBM Cloud Saas service instances.
 
 Choosing an auth scheme is dependent on the environment where the console is running and what other external services are available.
-It's recommend to use either the generic oauth scheme, or the local username (couchdb) scheme.
+It's recommend to use either the generic OAuth scheme, or the local username (couchdb) scheme.
 
 Once an auth scheme is setup it will be used to assign each users (or api key) 1 of 3 roles:
 `MANAGER`, `WRITER`, or `READER`.
@@ -66,16 +66,10 @@ If an api key/user attempts to do an action and it does not have the correspondi
 - **How to enable** - the setting `auth_scheme` should be set to `appid`.
 - **Pre-reqs** - IBM Cloud's App ID service instance.
 
-### 7. IBMid - legacy IBM IAM (discontinued)
-- **Notes** - this auth scheme is discontinued. this auth scheme was only used for IBP SaaS Dev. this is the legacy IBM ID/IAM system.
-- **Login** - the list of users that can login is determined by the IBM ID system. This means the users that have permissions to the specific IBP service instance (aka resource) will be able to login.
-- **Roles** - all users that have access to the IBP service instance (resource) will received the role `MANAGER`.
-- **API keys** -  not available.
-- **How to enable** - the setting `auth_scheme` should be set to `ibmid`. the setting fields `ibmid` && `iam_api_key` are also required. see the [settings readme](../env/README.md#auth-schemes-explained) for details.
-- **Pre-reqs** - The legacy IBM ID SSO service.
-
 ## User Actions:
-All actions are defined below:
+Below you will find a description for each user/api-key "action".
+Users (and api keys) will be assigned roles, and roles will contain these actions.
+Users without the needed action, will not be allowed to perform that function.
   - `blockchain.components.create` - **(n/a for standalone!)**
     - can add **saas** components (including template apis)
   - `blockchain.components.delete` - **(n/a for standalone!)**
@@ -122,6 +116,11 @@ All actions are defined below:
     - can check whether optools is running
   - `blockchain.optools.redeploy` - hyperion action
     - can refresh the optools deployment for a given resource
+
+## Roles
+	- Manager
+	- Writer
+	- Reader
 
 ### Actions for Manager
 The console roles use a hierarchy. Therefore the `MANAGER` role includes all actions found in `WRITER` and `READER` roles.
