@@ -528,8 +528,10 @@ module.exports = function (session, tools, logger) {
 		this._get_session(safe_sid, true, (err, session_doc) => {
 			if (err) {
 				if (err.reason === 'deleted') {
-					logger.error(log_tag(safe_sid) + ' session was deleted. cannot get sid:', safe_sid, err);
-					return cb({ code: 'ENOENT' });
+					logger.error(log_tag(safe_sid) + ' session was deleted. making a new one:', safe_sid);
+					create_session(session_doc, (error, response) => {			// if it was deleted, make a new one dummy
+						return cb(error, response);
+					});
 				} else {
 					logger.debug(log_tag(safe_sid) + ' no session doc making a new one', safe_sid, err.statusCode);
 					create_session(session_doc, (error, response) => {			// create new session doc
