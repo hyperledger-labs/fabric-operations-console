@@ -397,7 +397,7 @@ export class Access extends Component {
 								)}
 
 								{/* apikey table content */}
-								{!isIam && (this.props.isManager || this.props.isWriter) && (
+								{!isIam && (this.props.isManager) && (
 									<div>
 										<ApiKeys
 											loading={this.props.loading}
@@ -651,6 +651,7 @@ const dataProps = {
 	showResetPasswordModal: PropTypes.bool,
 	userInfo: PropTypes.object,
 	isManager: PropTypes.bool,
+	isWriter: PropTypes.bool,
 	auth_scheme: PropTypes.string,
 	user: PropTypes.object,
 	editMode: PropTypes.bool,
@@ -797,6 +798,7 @@ AuthenticatedUsers.propTypes = {
 	onAdd: PropTypes.func,
 	onDelete: PropTypes.func,
 	isManager: PropTypes.bool,
+	isWriter: PropTypes.bool,
 	checkRole: PropTypes.func,
 	buildAttentionCell: PropTypes.func,
 	overflowMenu: PropTypes.func,
@@ -875,7 +877,7 @@ export function ApiKeys(props) {
 							},
 						]}
 						addItems={
-							(props.isManager || props.isWriter)
+							(props.isManager)
 								? [
 									{
 										text: 'add_new_apikey',
@@ -885,10 +887,10 @@ export function ApiKeys(props) {
 								: []
 						}
 						selectItem={
-							(props.isManager || props.isWriter)
+							(props.isManager)
 								? {
-									id: 'deleteUser',
-									text: 'delete_users',
+									id: 'deleteApiKey',
+									text: 'delete',
 									fn: props.onDelete,
 									image: <DeleteButton />,
 									multiSelect: true,

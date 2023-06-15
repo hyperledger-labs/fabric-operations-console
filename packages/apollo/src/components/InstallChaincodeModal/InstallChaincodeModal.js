@@ -25,7 +25,6 @@ import FileUploader from '../FileUploader/FileUploader';
 import Form from '../Form/Form';
 import Logger from '../Log/Logger';
 import SVGs from '../Svgs/Svgs';
-import TranslateLink from '../TranslateLink/TranslateLink';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
 
