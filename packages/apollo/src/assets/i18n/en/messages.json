@@ -2698,7 +2698,7 @@
 	"migration_what1": "The migration process will copy this console's data to a new console deployed on your cluster and update the base image of your Fabric nodes. There are no limitations or functional losses to your environment or capabilities.",
 	"migration_details1": "This console is hosted by IBM Blockchain Platform. The new console will be hosted on your cluster, which also hosts your peers, orderers, and CAs.",
 	"migration_details2": "You are currently logged into this console using IBMid credentials. New (local) credentials will be created for the new console using an email/password you define.",
-	"migration_details2.1": "- If you are using console APIs for custom integrations the IBM IAM API keys used to authenticate will need to be changed to use [[local API keys]](https://www.ibm.com/docs/en/hlf-support/1.0.0?topic=how-administering-your-console).",
+	"migration_details2.1": "- If you are using console APIs for custom integrations the IBM IAM API keys used to authenticate will need to be changed to use [[local API keys]](https://www.ibm.com/docs/en/hlf-support/1.0.0?topic=console-administering-your#console-icp-manage-api-key).",
 	"migration_details4": "Once migration is started this console will be put into a read-only state (this console will be unable to create or edit nodes/channels/chaincode).",
 	"migration_details3": "The new console will use a self-signed TLS certificate to communicate with your web browser. On your first visit the browser will display a TLS warning. Follow the browser prompts to accept the new TLS certificate.",
 	"migration_details6": "The name of this product will change from IBM Blockchain Platform to IBM Support for Hyperledger Fabric",
