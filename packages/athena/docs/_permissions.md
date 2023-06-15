@@ -16,8 +16,8 @@ If an api key/user attempts to do an action and it does not have the correspondi
 
 
 ### 1. CouchDB (local usernames)
-- **Notes** - this will use the CouchDB instance that OpTools normally uses for internal data. the usernames (and api keys) will be stored in the settings doc. *passwords are salted and hashed.*
-- **Login** - the list of users that can login is determined by the settings doc. Adding or removing users can be accomplished on the console UI.
+- **Notes** - this will use the CouchDB instance that the console normally uses for internal data. the usernames (and api keys) will be stored in the settings doc. *passwords are uniquely salted and hashed.*
+- **Login** - the list of users that can login is stored in the settings doc in the console database. Adding or removing users can be accomplished on the console UI by using the `Access` tab.
 - **Roles** - roles can be assigned to users via the console UI using the `Access` tab.
 - **API keys** - keys can be created via the console UI using the `Access` tab.
 - **How to enable** - enable this setting by using the gear icon on the `Access` tab. alternatively the setting `auth_scheme` should be set to `couchdb`.
@@ -70,35 +70,36 @@ If an api key/user attempts to do an action and it does not have the correspondi
 Below you will find a description for each user/api-key "action".
 Users (and api keys) will be assigned roles, and roles will contain these actions.
 Users without the needed action, will not be allowed to perform that function.
-  - `blockchain.components.create` - **(n/a for standalone!)**
-    - can add **saas** components (including template apis)
-  - `blockchain.components.delete` - **(n/a for standalone!)**
-    - can remove **saas** components
+  - `blockchain.components.create`
+    - can **deploy** components (creates a peer/orderer/ca kubernetes deployment)
+  - `blockchain.components.delete`
+    - can remove **deployed** components
   - `blockchain.components.remove`
-    - can remove **non saas** component
+    - can remove **imported** component
   - `blockchain.components.import`
-    -  can import **any** component (including peers, cas, orderers, msps)
+    - can **import** components (adds a database entry about a peer/orderer/ca)
   - `blockchain.components.export`
-    -  can export **any** component
+    - can export (download) component meta data (JSON)
   - `blockchain.optools.restart`
-    - can restart optools
+    - can restart the console
     - can call flush cache api
   - `blockchain.optools.logs`
-    - can change logging settings of optools
+    - can change logging settings of the console
     - can view http metrics
   - `blockchain.optools.view`
-    - can view the UI, can also use any GET api, view optools logs
+    - can view the UI, can also use any GET api, view the console logs
   - `blockchain.optools.settings`
-    - can edit optools' setting doc via api
-    - can view npm files like package.json
-    - can backup and restore databases
-	- can add a new validator file (swagger)
+    - can edit the console' setting doc via api
+    - can view npm files like package.json from browser/api
+    - can backup and restore console databases
+	- can add a new input validator file (swagger)
   - `blockchain.notifications.manage`
-    - can add/remove notifications
+    - can add/remove console notifications
   - `blockchain.users.manage`
-    - can add/remove users to optools **(n/a for SaaS!)**
+    - can add/remove users to the console
+	- can change user permissions (roles)
   - `blockchain.api_keys.manage`
-    - can add/remove api keys to optools **(n/a for SaaS!)**
+    - can add/remove api keys to the console
   - `blockchain.signaturecollection.manage`
     - can delete and redistribute signature collections
     - can import external msps certs & athena urls
@@ -110,12 +111,12 @@ Users without the needed action, will not be allowed to perform that function.
     - can run the component /actions api (such as restart, re-enroll, enroll
     - can create/delete config-block docs
     - can migrate a console to another cluster
-  - `blockchain.instance.link` - hyperion action
+  - `blockchain.instance.link` - a hyperion action (deprecated)
     - can create a resource, associating it with a cluster
-  - `blockchain.instance.view` - hyperion action
-    - can check whether optools is running
-  - `blockchain.optools.redeploy` - hyperion action
-    - can refresh the optools deployment for a given resource
+  - `blockchain.instance.view` - a hyperion action (deprecated)
+    - can check whether the console is running
+  - `blockchain.optools.redeploy` - a hyperion action (deprecated)
+    - can refresh the console deployment for a given resource
 
 ## Roles
 	- Manager

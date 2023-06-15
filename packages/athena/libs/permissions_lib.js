@@ -237,11 +237,24 @@ module.exports = function (logger, ev, t) {
 						} else {
 							logger.info('[permissions] editing users - success');
 
+							for (let uuid in uuids) {
+								t.session_store._destroySessionByUuid(uuid);		// this is async, but we'll just run through them all w/o blocking
+							}
+
 							ev.update(null, err => {								// reload ev settings
 								if (err) {
 									logger.error('[permissions] error updating config settings', err);
 									return cb({ statusCode: 500, msg: 'could not update config settings' }, null);
 								} else {
+
+									// we need to flush the caches of other instances after a perm change
+									// this will inform other athena instances to get the new session/role information
+									const msg = {
+										message_type: 'flush_session_cache',
+										message: 'user role(s) were changed, clear session cache',
+									};
+									t.pillow.broadcast(msg);
+
 									cb(null, { message: 'ok', uuids: ret_uuids });			// all good
 								}
 							});

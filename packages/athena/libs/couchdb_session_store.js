@@ -339,6 +339,7 @@ module.exports = function (session, tools, logger) {
 	couchSessionStore.prototype._flush_cache = function () {
 		if (this.enable_session_cache) {
 			this.cache.flushAll();
+			logger.silly('[session store] cache cleared');
 		}
 	};
 
@@ -357,10 +358,10 @@ module.exports = function (session, tools, logger) {
 			};
 			this.couch_lib.getDesignDocView(options, (err, docs) => {
 				if (err || !docs) {
-					logger.warn('[session store] could not find docs to delete:', err, docs);
+					logger.warn('[session store] could not find session docs to delete:', err, docs);
 					return cb(err);
 				} else if (!docs.rows || docs.rows.length === 0) {
-					logger.debug('[session store] 0 session docs found for uuid:', uuid);
+					logger.debug('[session store] there are no session docs for uuid to delete:', uuid);
 					return cb(err);
 				} else {
 					logger.debug('[session store] deleting sessions for uuid via bulk delete:', uuid);
@@ -527,8 +528,10 @@ module.exports = function (session, tools, logger) {
 		this._get_session(safe_sid, true, (err, session_doc) => {
 			if (err) {
 				if (err.reason === 'deleted') {
-					logger.error(log_tag(safe_sid) + ' session was deleted. cannot get sid:', safe_sid, err);
-					return cb({ code: 'ENOENT' });
+					logger.error(log_tag(safe_sid) + ' session was deleted. making a new one:', safe_sid);
+					create_session(session_doc, (error, response) => {			// if it was deleted, make a new one dummy
+						return cb(error, response);
+					});
 				} else {
 					logger.debug(log_tag(safe_sid) + ' no session doc making a new one', safe_sid, err.statusCode);
 					create_session(session_doc, (error, response) => {			// create new session doc
