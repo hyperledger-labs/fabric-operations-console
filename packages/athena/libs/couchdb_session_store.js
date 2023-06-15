@@ -358,10 +358,10 @@ module.exports = function (session, tools, logger) {
 			};
 			this.couch_lib.getDesignDocView(options, (err, docs) => {
 				if (err || !docs) {
-					logger.warn('[session store] could not find docs to delete:', err, docs);
+					logger.warn('[session store] could not find session docs to delete:', err, docs);
 					return cb(err);
 				} else if (!docs.rows || docs.rows.length === 0) {
-					logger.debug('[session store] 0 session docs found for uuid:', uuid);
+					logger.debug('[session store] there are no session docs for uuid to delete:', uuid);
 					return cb(err);
 				} else {
 					logger.debug('[session store] deleting sessions for uuid via bulk delete:', uuid);
