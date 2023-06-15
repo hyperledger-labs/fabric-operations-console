@@ -102,7 +102,6 @@ describe('Permission APIs', () => {
 		tools.middleware.verify_users_action_ak = function (req, res, next) {
 			return next();
 		};
-		tools.session_store._destroySessionByUuid = sinon.stub().callsArgWith(1, null);
 		const permission_apis = require('../../../routes/permission_apis.js')(common.logger, ev, tools);
 		this.app = common.expressApp(permission_apis);
 		setEvSettings();
@@ -110,7 +109,6 @@ describe('Permission APIs', () => {
 	});
 	afterEach((done) => {
 		myutils.restoreStubs(tools.stubs);
-		delete tools.session_store._destroySessionByUuid;
 		ev.AUTH_SCHEME = 'appid';
 		done();
 	});
