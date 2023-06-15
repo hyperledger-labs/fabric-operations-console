@@ -14,14 +14,13 @@
  * limitations under the License.
 */
 //------------------------------------------------------------
-// App ID, IBM ID SSO, and local login routes
-// - Based on https://www.npmjs.com/package/ibmcloud-appid
+// OAuth2.0 (SSO), and local login routes
 //------------------------------------------------------------
 module.exports = function (logger, ev, t, passport) {
 	const app = t.express.Router();
 
 	//-----------------------------------------------------------------------------
-	// Handle SSO Login - iam/appid/ibmid auth schemes
+	// Handle SSO Login - iam/ibmid/oauth auth schemes
 	//-----------------------------------------------------------------------------
 	app.get(ev.LOGIN_URI, t.middleware.public, function (req, res, next) {
 		t.auth_lib.sso_login(req, res, next, passport);
@@ -35,11 +34,6 @@ module.exports = function (logger, ev, t, passport) {
 	});
 
 	//-----------------------------------------------------------------------------
-	// App ID Redirect URL
-	//-----------------------------------------------------------------------------
-	//app.get(ev.CALLBACK_URI, passport.authenticate(t.AppIdWebAppStrategy.STRATEGY_NAME, { allowAnonymousLogin: true }));
-
-	//-----------------------------------------------------------------------------
 	// Logout URL
 	//-----------------------------------------------------------------------------
 	app.get(ev.LOGOUT_URI, t.middleware.public, function (req, res) {
@@ -47,6 +41,15 @@ module.exports = function (logger, ev, t, passport) {
 		t.notifications.procrastinate(req, notice);
 
 		req.session.destroy(() => {														// important to call destroy so express ask for new sid
+
+			// we need to flush the caches of other instances on a successful logout,
+			// b/c the other athena instances need to have their entry for this session removed
+			const msg = {
+				message_type: 'flush_session_cache',
+				message: 'user has logged out, clear session cache',
+			};
+			t.pillow.broadcast(msg);
+
 			if (req.query && req.query.action === 'no_redirect') {
 				res.status(200).send('OK');
 			} else {

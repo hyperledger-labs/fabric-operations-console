@@ -93,6 +93,15 @@ module.exports = function (logger, ev, t) {
 						// --- Redirect to Home --- //
 						req.session.save(() => {						// redirects seem tricky w/ auto session saving, lets wait for the save before returning
 							logger.debug('[passport] session saved. redirecting to:', ev.LANDING_URL);
+
+							// we need to flush the caches of other instances on a successful login,
+							// just in case another athena instance already has an entry for the session w/o the user details in it
+							const msg = {
+								message_type: 'flush_session_cache',
+								message: 'user has logged in, clear session cache',
+							};
+							t.pillow.broadcast(msg);
+
 							res.setHeader('Access-Control-Expose-Headers', 'Location');
 							res.redirect(ev.LANDING_URL);
 						});
@@ -184,6 +193,15 @@ module.exports = function (logger, ev, t) {
 					} else {
 						req.session.save(() => {			// timing seems tricky w/ auto session saving, lets manually wait for the save before returning
 							logger.info('[auth] local login success', t.misc.censorEmail(lc_email));
+
+							// we need to flush the caches of other instances on a successful login,
+							// just in case another athena instance already has an entry for the session w/o the user details in it
+							const msg = {
+								message_type: 'flush_session_cache',
+								message: 'user has logged in, clear session cache',
+							};
+							t.pillow.broadcast(msg);
+
 							const ret = {
 								message: 'ok',
 								name: req.session.couchdb_profile.name,
@@ -240,6 +258,13 @@ module.exports = function (logger, ev, t) {
 
 					// --- Redirect to Home --- //
 					req.session.save(() => {						// redirects seem tricky w/ auto session saving, lets wait for the save before returning
+
+						const msg = {
+							message_type: 'flush_session_cache',
+							message: 'user has logged in, clear session cache',
+						};
+						t.pillow.broadcast(msg);
+
 						const ret = {
 							message: 'ok',
 							name: profile.givenName,

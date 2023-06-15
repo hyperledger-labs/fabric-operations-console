@@ -339,6 +339,7 @@ module.exports = function (session, tools, logger) {
 	couchSessionStore.prototype._flush_cache = function () {
 		if (this.enable_session_cache) {
 			this.cache.flushAll();
+			logger.silly('[session store] cache cleared');
 		}
 	};
 

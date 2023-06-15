@@ -757,15 +757,14 @@ function setup_pillow_talk() {
 		// --- Flush all caches --- //
 		if (doc.message_type === 'flush_cache') {
 			logger.debug('[pillow] - received a flush all caches message');
-			const notice = {
-				status: 'success',
-				message: 'flushing all caches via pillow talk',
-				by: doc.by,
-				severity: 'warning',
-			};
-			tools.notifications.create(notice, () => {				// send notification to clients
-				tools.caches.flush_all();
-			});
+			tools.caches.flush_all();
+		}
+
+		// --- Clear Session Related Caches --- //
+		if (doc.message_type === 'flush_session_cache') {
+			logger.debug('[pillow] - received a clear-session-cache message');
+			tools.session_store._flush_cache();
+			tools.iam_lib.flush_cache();
 		}
 
 		// --- Evict cache keys --- //
