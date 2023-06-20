@@ -12,7 +12,7 @@ Any users that can login to your external service will be able to login to the c
 	- When this is done, all usernames will revert to using the `default password` for their first login. Once logged in, they will need to choose a new password.
 
 ## Setting up OAuth
-**Super important - Read instructions 1-11 once before starting.**
+**Super important - Read instructions 1-9 once before starting.**
 
 1. First login to your console and browse to the "Access" tab found on the left side of the screen.
 1. If you are a user with the `Manager` role you will see a tile showing you the currently configured authentication method and a table listing the current usernames. **Before we switch to the OAuth method** make sure the username (email) you plan on logging in with on your OAuth2.0 service is listed in the `Users` table. If the username (email) is not yet listed, click the `Add new users` button and follow the prompts to create a user with a `Manager` role. Enter your email address as the username.
@@ -35,13 +35,13 @@ Any users that can login to your external service will be able to login to the c
 	- Click the button to logout and immediately try to login
 		- If successful, congrats!
 		- If you encounter errors, try a private/incognito window. If that didn't help wait for 2 minutes, and the console will revert to the local username/password auth you had before this change. If you have waited for 2 minutes and still see login errors, try another private/incognito window. Once you are able to login with your local username/password go back to the `Access` tab, double check the  settings with your OAuth administrator, make some changes, and try again.
-1. Lastly, take a look at the usernames listed in the `Users` table. If some usernames were only for the local username/password login and they will not be used by your OAuth login, they should be deleted. Otherwise if someone were to register this username with your OAuth service, they will be able to gain unintentional access to your console.
+1. Lastly, take a look at the usernames listed in the `Users` table. If some usernames were only for the local username/password login and they will not be used by your OAuth login, they should be deleted. Otherwise if someone were to register this username with your OAuth service, they will be able to gain access to your console.
 
 ## Permissions
 The permissions of what a user can do on the console are listed/controlled on the `Access` tab under the `Users` table.
 - Users with a `Manager` role can edit the `Users` table and reassign user permissions.
 - When using the OAuth2 authentication method, a username (email) with no permissions can request permissions by first logging into the console. A successful login with the OAuth service will show the user a mostly empty page with a button to request permission. After they click this button, their username (email) will appear in the `Users` table. Another user (one with a `Manager` role) can then assign that username permissions. If a username is already known it can be added and given permission without making that user go through the request step (use the `Add new users` button, on the `Access` tab).
-- Usernames listed in the table that were only added for local username/password login and are not currently used by the OAuth login should be deleted. Otherwise if someone were to register this username with your OAuth service, they will be able to gain unintentional access to your console.
+- Usernames listed in the table that were only added for local username/password login and are not currently used by the OAuth login should be deleted. Otherwise once someone registers this username with your OAuth service, they would have gained access to your console (which seems unintended if this username was thought to be defunct).
 - Check the [console permissions](./_permissions.md) doc for more details on the `Manager`, `Writer`, and `Reader` username roles.
 
 

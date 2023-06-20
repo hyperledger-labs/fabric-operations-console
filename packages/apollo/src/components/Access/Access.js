@@ -108,11 +108,11 @@ export class Access extends Component {
 					secret: resp.secret,
 					tenant_id: resp.tenant_id,
 					client_id: resp.client_id,
-					adminContactEmail: resp.admin_contact_email ? resp.admin_contact_email : '',
 					all_users: all_users,
 					isManager: this.props.userInfo ? ActionsHelper.canManageUsers(this.props.userInfo) : false,
 					isWriter: this.props.userInfo ? ActionsHelper.canManageApiKeys(this.props.userInfo) : false,
 					auth_scheme: resp.auth_scheme,
+					in_read_only_mode: resp.in_read_only_mode === true,
 				});
 			});
 		}, error => {
@@ -286,6 +286,7 @@ export class Access extends Component {
 		const isIam = this.props.auth_scheme === constants.AUTH_IAM;
 		const isCouchDb = this.props.auth_scheme === constants.AUTH_COUCHDB;
 		const translate = this.props.translate;
+		const inReadOnlyMode = this.props.in_read_only_mode;
 		return (
 			<div className="ibp-access-row">
 				<h3 className="ibp-access-auth-services-label">
@@ -296,7 +297,7 @@ export class Access extends Component {
 					{this.props.auth_scheme ? (
 						<div className="ibp-access-app-id-label">
 							{isIbmId ? translate('ibm_id') : isIam ? translate('identity_and_access_management') : isCouchDb ? translate('couchdb') : translate('oauth')}
-							{!isIam && this.props.isManager &&
+							{!isIam && this.props.isManager && !inReadOnlyMode &&
 								<button className="ibp-access-button"
 									onClick={() => this.openEditAuthSchemePanel()}
 									title={translate('access_gear_title')}
@@ -357,6 +358,8 @@ export class Access extends Component {
 		const hasPendingUsers = Array.isArray(this.props.all_users) && this.props.all_users.filter(x => {		// see if any usernames are pending (have no roles)
 			return (!Array.isArray(x.roles) || x.roles.length === 0);
 		}).length > 0;
+		const inReadOnlyMode = this.props.in_read_only_mode;
+
 		return (
 			<PageContainer>
 				<div>
@@ -388,8 +391,9 @@ export class Access extends Component {
 											isManager={this.props.isManager}
 											checkRole={this.checkRole}
 											buildAttentionCell={this.buildAttentionCell}
-											overflowMenu={this.props.isManager ? this.overflowMenu : null}
+											overflowMenu={(this.props.isManager && !inReadOnlyMode) ? this.overflowMenu : null}
 											authScheme={this.props.auth_scheme}
+											inReadOnlyMode={this.props.in_read_only_mode}
 										/>
 
 										{hasPendingUsers && <p className='tinyTextWhite'>{translate('pending_user_title')}</p>}
@@ -411,6 +415,7 @@ export class Access extends Component {
 											isManager={this.props.isManager}
 											isWriter={this.props.isWriter}
 											checkRole={this.checkRole}
+											inReadOnlyMode={this.props.in_read_only_mode}
 										/>
 										{Array.isArray(this.props.all_apikeys) && this.props.all_apikeys.length > 0 &&
 											<p className='tinyTextWhite'>{translate('api_key_warning_txt')}</p>
@@ -484,7 +489,6 @@ export class Access extends Component {
 										oauthServerUrl={this.props.oauth_url}
 										secret={this.props.secret}
 										tenantId={this.props.tenant_id}
-										adminContactEmail={this.props.adminContactEmail}
 										adminUsers={this.props.admin_list ? this.props.admin_list.map(user => user.email) : []}
 										generalUsers={this.props.general_list ? this.props.general_list.map(user => user.email) : []}
 										onClose={this.closeEditAuthSchemePanel}
@@ -643,7 +647,6 @@ const dataProps = {
 	secret: PropTypes.string,
 	tenant_id: PropTypes.string,
 	client_id: PropTypes.string,
-	adminContactEmail: PropTypes.string,
 	admin_list: PropTypes.array,
 	general_list: PropTypes.array,
 	all_users: PropTypes.array,
@@ -667,6 +670,7 @@ const dataProps = {
 	showLoginTimer: PropTypes.bool,
 	loginTimeRemaining_s: PropTypes.number,
 	showLoginType: PropTypes.string,
+	in_read_only_mode: PropTypes.bool,
 };
 
 Access.propTypes = {
@@ -775,7 +779,7 @@ export function AuthenticatedUsers(props) {
 								: []
 						}
 						selectItem={
-							props.isManager
+							props.isManager && !props.inReadOnlyMode
 								? {
 									id: 'deleteUser',
 									text: 'delete_users',
@@ -785,7 +789,7 @@ export function AuthenticatedUsers(props) {
 								} /* prettier-ignore */
 								: null
 						}
-						disableAddItem={!props.isManager}
+						disableAddItem={!props.isManager || props.inReadOnlyMode}
 					/>
 				</div>
 			</div>
@@ -804,6 +808,7 @@ AuthenticatedUsers.propTypes = {
 	overflowMenu: PropTypes.func,
 	authScheme: PropTypes.string,
 	userInfo: PropTypes.object,
+	inReadOnlyMode: PropTypes.bool,
 };
 
 export function ApiKeys(props) {
@@ -887,7 +892,7 @@ export function ApiKeys(props) {
 								: []
 						}
 						selectItem={
-							(props.isManager)
+							(props.isManager && !props.inReadOnlyMode)
 								? {
 									id: 'deleteApiKey',
 									text: 'delete',
@@ -897,7 +902,7 @@ export function ApiKeys(props) {
 								} /* prettier-ignore */
 								: null
 						}
-						disableAddItem={!props.isManager}
+						disableAddItem={!props.isManager || props.inReadOnlyMode}
 					/>
 				</div>
 			</div>
@@ -915,6 +920,7 @@ ApiKeys.propTypes = {
 	buildAttentionCell: PropTypes.func,
 	overflowMenu: PropTypes.func,
 	userInfo: PropTypes.object,
+	inReadOnlyMode: PropTypes.bool,
 };
 
 export function DeleteButton() {

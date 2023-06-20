@@ -39,6 +39,7 @@ module.exports = function (logger, ev, t) {
 			admin_list: [],									// populated below - legacy..
 			access_list: [], 								// populated below - legacy..
 			all_users: [],
+			in_read_only_mode: ev.READ_ONLY,
 		};
 
 		if (isAuthenticated) {
@@ -160,7 +161,7 @@ module.exports = function (logger, ev, t) {
 			admin_list: [],									// populated below - legacy..
 			access_list: [], 								// populated below - legacy..
 			all_users: JSON.parse(JSON.stringify(ev.ACCESS_LIST)),
-			admin_contact_email: ev.ADMIN_CONTACT_EMAIL
+			admin_contact_email: ev.ADMIN_CONTACT_EMAIL,
 		};
 		for (let email in ev.ACCESS_LIST) {
 			const lc_email = email.toLowerCase();
