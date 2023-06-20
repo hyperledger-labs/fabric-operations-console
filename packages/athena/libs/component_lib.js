@@ -1678,12 +1678,26 @@ module.exports = function (logger, ev, t) {
 	exports.build_status_url = (comp_doc) => {
 		let ret = null;
 		if (comp_doc) {
-			if (comp_doc.type === ev.STR.CA && comp_doc.api_url) {
-				ret = comp_doc.api_url + '/cainfo';					// CA's use this route
-			} else if (comp_doc.operations_url && (comp_doc.type === ev.STR.ORDERER || comp_doc.type === ev.STR.PEER)) {
-				ret = comp_doc.operations_url + '/healthz';			// peers and orderers use this route
+
+			// if its been migrated use the legacy routes
+			if (comp_doc.migrated_from === ev.STR.LOCATION_IBP_SAAS) {
+				if (comp_doc.type === ev.STR.CA && comp_doc.api_url_saas) {
+					ret = comp_doc.api_url_saas + '/cainfo';			// CA's use this route
+				} else if (comp_doc.operations_url_saas && (comp_doc.type === ev.STR.ORDERER || comp_doc.type === ev.STR.PEER)) {
+					ret = comp_doc.operations_url_saas + '/healthz';	// peers and orderers use this route
+				}
+			}
+
+			// if it hasn't been migrated use regular routes
+			else {
+				if (comp_doc.type === ev.STR.CA && comp_doc.api_url) {
+					ret = comp_doc.api_url + '/cainfo';					// CA's use this route
+				} else if (comp_doc.operations_url && (comp_doc.type === ev.STR.ORDERER || comp_doc.type === ev.STR.PEER)) {
+					ret = comp_doc.operations_url + '/healthz';			// peers and orderers use this route
+				}
 			}
 		}
+
 		return ret;
 	};
 
