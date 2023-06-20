@@ -128,7 +128,7 @@
 	"confirm_default_password_label": "Confirm default password for new users",
 	"allow_default_keep_label": "Allow users to keep the default password",
 	"allow_default_keep_tooltip": "Allowing users to keep using the default password is helpful when you are setting up and tearing down test environments. It is not recommended for any other purpose.",
-	"oauth_desc_txt": "The OAuth2.0 authentication method requires an external OAuth2 service. Users can be managed (such as adding & removing) by contacting your administrator of the OAuth2 service. User roles (permissions) can be managed by using the `Access` tab of your console and the \"User\"` table.",
+	"oauth_desc_txt": "The OAuth2.0 authentication method requires an external OAuth2 service. Users can be managed (such as adding & removing) by contacting your administrator of the OAuth2 service. User roles (permissions) can be managed by using the \"Access\" tab of your console and the \"Users\" table.",
 	"couchdb_desc_txt": "The CouchDB authentication method will securely store usernames and passwords in the console's CouchDB database. Users can be managed (such as adding & removing) by using the \"Access\" tab of your console and the \"Users\" table.",
 	"oauth_warning_txt": "This authentication method requires the following settings. These settings can normally be obtained from a dashboard specific to your OAuth2.0 service. For more help [[see the docs]](https://github.com/hyperledger-labs/fabric-operations-console/blob/main/packages/athena/docs/_oauth.md).",
 	"couchdb_warning_txt": "This authentication method requires the following settings.",
