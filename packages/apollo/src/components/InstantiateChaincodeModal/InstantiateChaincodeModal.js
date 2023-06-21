@@ -1064,7 +1064,7 @@ class InstantiateChaincodeModal extends Component {
 				onSubmit={this.onSubmit}
 				submitButtonLabel={this.props.isUpgrade ? translate('upgrade_smc') : translate('instantiate_smc')}
 				error={this.props.error}
-				//loading={this.props.loading}
+				loading={this.props.isUpgrade ? false : this.props.loading}
 			>
 				<p className="ibp-modal-desc">
 					{this.props.isUpgrade ? (

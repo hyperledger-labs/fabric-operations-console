@@ -26,7 +26,7 @@
 	@include carbon--type-style('productive-heading-04');
 	align-items: baseline;
 	display: flex;
-	padding-top: 2rem;
+	padding-top: 1rem;
 
 	.bx--tooltip__label {
 		@include carbon--type-style('productive-heading-04');
@@ -77,4 +77,8 @@
 	.ibp-wizard-link-spacer {
 		height: 1rem;
 	}
+}
+
+.ibp-wizard-loading {
+	margin-top: 2rem;
 }
