@@ -43,5 +43,8 @@
 		"karma-mocha": "2.0.*",
 		"mocha": "^9.1.*",
 		"tslint": "^6.1.0"
+	},
+	"overrides": {
+		"semver": "^7.5.2"
 	}
 }
