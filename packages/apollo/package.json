@@ -38,7 +38,7 @@
 		"react-router-dom": "^5.1.2",
 		"redux": "^4.0.4",
 		"redux-thunk": "^2.3.0",
-		"semver": "^6.3.0",
+		"semver": "^7.5.2",
 		"uuid": "^3.3.3",
 		"validator": "^13.7.0"
 	},
@@ -154,6 +154,9 @@
 		},
 		"winston": {
 			"async": "3.2.2"
-		}
+		},
+		"semver": "^7.5.2",
+		"xml2js": "^0.5.0",
+		"optionator": "^0.9.1"
 	}
 }
