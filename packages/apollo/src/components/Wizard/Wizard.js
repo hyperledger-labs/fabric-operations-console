@@ -312,6 +312,8 @@ class Wizard extends Component {
 					)}
 					{!!this.props.title && <h1 className="ibp-wizard-title">{translate(this.props.title)}</h1>}
 					<FocusComponent setFocus={this.props.setFocus}>{this.renderChildren(translate)}</FocusComponent>
+
+					{/* loading animation/spinner svg here */}
 					{this.props.loading && <Loading withOverlay={false}
 						className="ibp-wizard-loading"
 					/>}

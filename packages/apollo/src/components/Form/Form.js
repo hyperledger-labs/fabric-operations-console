@@ -418,20 +418,22 @@ class Form extends Component {
 	// 		{name: <field name>, value: <value>}
 	// there are also options that seem to have custom objects, that have a "name" field....
 	fixSelectedItem(data, options) {
-		const value = (typeof data === 'string') ? data : data.value;
-		for (let i in options) {
-			if (typeof options[i] === 'string') {
-				if (options[i] === value) {
-					return options[i];
-				}
-			} else {
-				if (value !== undefined) {
-					if (options[i] && options[i].value === value) {
+		if (data) {
+			const value = (typeof data === 'string') ? data : data.value;
+			for (let i in options) {
+				if (typeof options[i] === 'string') {
+					if (options[i] === value) {
 						return options[i];
 					}
-				} else {			// if there is no "value" field... look for name
-					if (data && data.name && options[i] && options[i].name === data.name) {
-						return options[i];
+				} else {
+					if (value !== undefined) {
+						if (options[i] && options[i].value === value) {
+							return options[i];
+						}
+					} else {			// if there is no "value" field... look for name
+						if (data && data.name && options[i] && options[i].name === data.name) {
+							return options[i];
+						}
 					}
 				}
 			}
