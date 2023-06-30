@@ -305,7 +305,18 @@ class PeerRestApi {
 				if (error.grpc_resp.statusMessage.indexOf('successfully installed') !== -1) {
 					Log.info(`smart contract already installed on peer "${peer.display_name}"`);
 					return {};
-				} else {
+				} else if (error.grpc_resp.statusMessage.indexOf('???') === 10) {
+					try {
+						const lc_installChaincode = v2_lifecycle ? promisify(window.stitch.lc_installChaincode) : promisify(window.stitch.installChaincode);
+						const installChaincode = await lc_installChaincode(opts);
+						return installChaincode.data;
+					}
+					catch (error) {
+						Log.error(error);
+						throw error;
+					}
+				}
+				else {
 					throw error;
 				}
 			}
