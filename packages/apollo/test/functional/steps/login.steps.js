@@ -29,7 +29,7 @@ Given(/^I am on the login page$/, async() => {
 	if (text.includes('Login to IBM Blockchain Platform'))
     	 text.should.equal('Login to IBM Blockchain Platform');
     else
-    	 text.includes('Login to Fabric Operations Console');
+    	 text.should.equal('Login to Fabric Operations Console');
 });
 
 When(/^I login with the email '(.*?)' and password '(.*?)'$/, async(email, password) => {
@@ -113,7 +113,7 @@ Then(/^I should be redirected to the login page again$/, async() => {
     if (text.includes('Login to IBM Blockchain Platform'))
          text.should.equal('Login to IBM Blockchain Platform');
     else
-         text.includes('Login to Fabric Operations Console');
+         text.should.equal('Login to Fabric Operations Console');
 });
 
 Then(/^I should see a welcome modal$/, async() => {
