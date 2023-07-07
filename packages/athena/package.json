@@ -44,7 +44,7 @@
 		"passport-idaas-openidconnect": "2.0.*",
 		"passport-ldapauth": "3.0.*",
 		"passport-oauth": "1.0.*",
-		"protobufjs": "6.11.*",
+		"protobufjs": "7.2.*",
 		"request": "2.88.*",
 		"selfsigned": "^1.10.8",
 		"uuid": "3.3.*",
