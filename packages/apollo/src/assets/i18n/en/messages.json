@@ -1625,7 +1625,7 @@
 	"channel_policy_update_desc": "<strong>${org}</strong> has submitted a change to the <strong>${channel}</strong> channel.  The policy to update the configuration of this channel requires ${number_of_signatures} signatures.",
 	"channel_policy_update_approved": "<strong>${org}</strong> has submitted a change to the <strong>${channel}</strong> channel.",
 	"new_channel_request_desc": "<strong>${org}</strong> created a new channel: <strong>${channel}</strong>",
-	"new_channel_pending_request": "New channel request submittted",
+	"new_channel_pending_request": "New channel request submitted",
 	"new_channel_pending_request_desc": "<strong>${org}</strong> submitted request to create a new channel: <strong>${channel}</strong> and is waiting for the orderer signature.",
 	"signature_for_msp": "Signature for ${msp}:",
 	"signature_for_msp_placeholder": "Select identity to sign with",
