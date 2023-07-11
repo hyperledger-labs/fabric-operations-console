@@ -393,9 +393,10 @@ module.exports = (logger, ev, t) => {
 						// ignore parsing errors
 					}
 
-					// redact CA enroll id/secret data if not a manager
-					const lc_authorized_actions = t.middleware.getActions(req);
-					if (req.path.includes('/type/ca/') && (!lc_authorized_actions || !lc_authorized_actions.includes(ev.STR.C_MANAGE_ACTION))) {
+					// redact CA enroll id/secret data
+					// i've removed the line below b/c we no longer allow managers to see the registry object - 07/11/2023
+					//const lc_authorized_actions = t.middleware.getActions(req);
+					if (req.path.includes('/type/ca/') /*&& (!lc_authorized_actions || !lc_authorized_actions.includes(ev.STR.C_MANAGE_ACTION))*/) {
 						try {
 							const obj = JSON.parse(ret);
 							// only redact the inner registry fields, else other (non-sensitive) fields will get redacted
