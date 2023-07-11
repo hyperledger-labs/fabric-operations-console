@@ -25,7 +25,11 @@ Given(/^I am on the login page$/, async() => {
 	await browser.wait(ExpectedConditions.visibilityOf(header), 5000);
 	await browser.sleep(5000);
 	let text = await header.getText();
-	text.should.equal('Login to IBM Blockchain Platform');
+	//text.should.equal('Login to IBM Blockchain Platform');
+	if (text.includes('Login to IBM Blockchain Platform'))
+    	 text.should.equal('Login to IBM Blockchain Platform');
+    else
+    	 text.should.equal('Login to Fabric Operations Console');
 });
 
 When(/^I login with the email '(.*?)' and password '(.*?)'$/, async(email, password) => {
@@ -105,7 +109,11 @@ Then(/^I should be redirected to the login page again$/, async() => {
 	await browser.wait(ExpectedConditions.visibilityOf(header), 10000);
 	await browser.sleep(10000);
 	let text = await header.getText();
-	text.should.equal('Login to IBM Blockchain Platform');
+	//text.should.equal('Login to IBM Blockchain Platform');
+    if (text.includes('Login to IBM Blockchain Platform'))
+         text.should.equal('Login to IBM Blockchain Platform');
+    else
+         text.should.equal('Login to Fabric Operations Console');
 });
 
 Then(/^I should see a welcome modal$/, async() => {
@@ -150,7 +158,7 @@ Given(/^I am logged in for first time$/, async() => {
 		await browser.wait(ExpectedConditions.visibilityOf(header), 2000);
 		await browser.sleep(5000);
 		let text = await header.getText();
-		if (text.includes('Login to IBM Blockchain Platform')) {
+		if ((text.includes('Login to IBM Blockchain Platform')) || (text.includes('Login to Fabric Operations Console'))) {
 			await login(browser.automationUser, browser.automationDefaultPassword);
 		}
 	} catch (err) {
