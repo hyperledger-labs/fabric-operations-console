@@ -494,8 +494,7 @@ class PeerModal extends React.Component {
 			if (e && e.msgs && e.msgs[0] && e.msgs[0].includes('Invalid \'version\' value')) {
 				breaking_upgrade = true;
 				breaking_details = (e && e.msgs) ? e.msgs[0] : '';
-				if(breaking_details.includes('Upgrading Fabric from \'2.2'))
-				{
+				if (breaking_details.includes('Upgrading Fabric from \'2.2')) {
 					breaking_msg = 'peer_breaking_upgrade_2';
 				} else if (breaking_details.includes('Upgrading Fabric from \'1.4')) {	// use a better error message
 					breaking_msg = 'peer_breaking_upgrade';

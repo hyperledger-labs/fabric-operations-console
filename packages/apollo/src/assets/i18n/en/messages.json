@@ -1446,7 +1446,7 @@
 	"peer_breaking_upgrade_title": "Breaking upgrade",
 	"peer_breaking_title": "Version Warning",
 	"peer_breaking_upgrade": "The selected peer version is not always compatible with Node.js v8 chaincode (which was often used by Fabric 1.4). You should first upgrade to a peer that is compatible (such as v2.2.10). After updating your peer, update any node chaincode to be compatible with Node.js v16. Then you may upgrade your peer to the selected version.",
-	"peer_breaking_upgrade_2": "The selected peer version is not always compatible with Node.js v8 chaincode. You should first update all node chaincode to be compatible with Node.js v16. Then you may upgrade your peer to the selected version.",
+	"peer_breaking_upgrade_2": "The selected peer version is not compatible with Node.js v8 chaincode. You should first update all node chaincode to be compatible with Node.js v16. Then you may upgrade your peer to the selected version.",
 	"peer_breaking": "The selected peer version is not always compatible with Node.js v8 chaincode (which was often used by Fabric 1.4). It's recommended to use a version that is compatible (such as v2.2.10). This warning can be ignored if all node chaincode is compatible with Node.js v16.",
 	"breaking_link_text": "Fabric documentation details",
 	"ignore_breaking_txt": "I understand this is a potentially breaking change. Upgrade anyway.",
