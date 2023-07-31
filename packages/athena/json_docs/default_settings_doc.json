@@ -16,7 +16,7 @@
 	"integration_test_enabled": false,
 	"app_port": 3000,
 	"allow_default_password": false,
-	"auth_scheme": "initial",
+	"auth_scheme": "couchdb",
 	"cluster_data": {
 		"type": null
 	},

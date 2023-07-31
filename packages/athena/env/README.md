@@ -268,8 +268,8 @@ __default_settings_doc.json:__
 // the env variable "AUTH_SCHEME" will override this
 // see below for "Auth Schemes Explained"
 // changes to this field require a restart.
-// examples: 'iam', 'odic', 'ldap', 'oauth', 'ibmid'
-"auth_scheme": "initial",
+// examples: 'initial', 'couchdb', 'iam', 'odic', 'ldap', 'oauth', 'ibmid'
+"auth_scheme": "couchdb",
 
 // CA proxy route's timeout in ms
 // defaults 10000
