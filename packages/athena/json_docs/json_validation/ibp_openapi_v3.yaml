@@ -13999,6 +13999,7 @@ components:
             - oauth
             - oidc
             - ldap
+            - initial
         oauth:
           type: object
           properties:
