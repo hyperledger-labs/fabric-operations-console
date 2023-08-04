@@ -56,6 +56,12 @@ const mainNav = [
 		globalNavSubmenu: [],
 	},
 	{
+		icon: 'fingerprint', // 'terminal' looks good to
+		path: '/audit-logs',
+		id: 'audit_logs',
+		globalNavSubmenu: [],
+	},
+	{
 		icon: 'member',
 		path: '/access',
 		id: 'access',
@@ -118,6 +124,13 @@ class LeftNav extends Component {
 	buildNavItems() {
 		if (this.props.submenu) {
 			return this.props.submenu;
+		}
+
+		for (let i in mainNav) {
+			if (mainNav[i] && mainNav[i].id === 'audit_logs') {
+				// todo, contextually bring back audit_logs
+				mainNav.splice(i, 1);
+			}
 		}
 		return mainNav;
 	}
