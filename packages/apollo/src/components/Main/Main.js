@@ -47,6 +47,7 @@ import Settings from '../Settings/Settings';
 import Support from '../Support/Support';
 import TitleBar from '../TitleBar/TitleBar';
 import MigrationPage from '../MigrationPage/MigrationPage';
+import AuditLogs from '../AuditLogs/AuditLogs';
 
 const SCOPE = 'main';
 const Log = new Logger(SCOPE);
@@ -245,6 +246,10 @@ class Main extends Component {
 									<Route path="/migration"
 										component={MigrationPage}
 										exact
+									/>
+									<Route exact
+										path="/audit-logs"
+										component={AuditLogs}
 									/>
 									<Route path="*"
 										component={NotFound}
