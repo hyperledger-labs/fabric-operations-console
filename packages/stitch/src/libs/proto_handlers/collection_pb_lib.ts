@@ -92,6 +92,25 @@ export class CollectionLib {
 			delete config.maxPeerCount;
 			delete config.max_peer_count;
 		}
+		if (config.requiredPeerCount) {
+			config.required_peer_count = config.requiredPeerCount;				// copy sdk's field to fabric's
+			delete config.requiredPeerCount;
+		}
+
+		if (config.blockToLive) {
+			config.block_to_live = config.blockToLive;				// copy sdk's field to fabric's
+			delete config.blockToLive;
+		}
+
+		if (config.memberOnlyRead) {
+			config.member_only_read = config.memberOnlyRead;				// copy sdk's field to fabric's
+			delete config.memberOnlyRead;
+		}
+
+		if (config.memberOnlyWrite) {
+			config.member_only_write = config.memberOnlyWrite;				// copy sdk's field to fabric's
+			delete config.memberOnlyWrite;
+		}
 
 		// validation
 		if (!config.member_orgs_policy) {
@@ -166,7 +185,11 @@ interface MixedPolicySyntax {
 
 interface Scc {
 	name: string;						// name of your collection
-	required_peer_count: number; 		// min number of peers that must get the private data to successfully endorse
+
+
+	required_peer_count: number | null | undefined; 		// min number of peers that must get the private data to successfully endorse
+	requiredPeerCount: number | null | undefined;          // Fabric SDK format uses this...convert to "required_peer_count"
+
 
 	member_orgs_policy: MixedPolicySyntax | string | null; // sig policy of which orgs have access to the private data - supports peer-cli syntax using string
 	policy: any | null;					// [legacy] fabric-sdk syntax uses this field... convert to "member_orgs_policy"
@@ -175,10 +198,15 @@ interface Scc {
 	maxPeerCount: number | null | undefined; 		// [legacy] fabric sdk" format uses this... convert to "maximum_peer_count"
 	max_peer_count: number | null | undefined;		// [legacy 2] fabric sdk" format uses this... convert to "maximum_peer_count" - this version shouldn't exist
 
-	block_to_live: number;				// when to expire private data, after this number of blocks the private data is deleted, 0 = unlimited
-	member_only_read: boolean;			// if true, only collection member clients can read private data
-	member_only_write: boolean; 		// if true, only collection member clients can write private data
+	block_to_live: number | null | undefined;				// when to expire private data, after this number of blocks the private data is deleted, 0 = unlimited
+	blockToLive: number | null | undefined;                // Fabric SDK format uses this...convert to "block_to_live"
 
+
+	member_only_read: boolean | null | undefined;			// if true, only collection member clients can read private data
+	memberOnlyRead: boolean | null | undefined;            // Fabric SDK format uses this...convert to "member_only_read"
+
+	member_only_write: boolean | null | undefined; 		// if true, only collection member clients can write private data
+	memberOnlyWrite: boolean | null | undefined;            // Fabric SDK format uses this...convert to "member_only_write"
 
 	// proto file: /v2.0/peer/policy.proto
 	endorsement_policy: {

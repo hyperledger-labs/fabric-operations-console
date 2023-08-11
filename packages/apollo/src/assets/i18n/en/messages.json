@@ -1446,6 +1446,7 @@
 	"peer_breaking_upgrade_title": "Breaking upgrade",
 	"peer_breaking_title": "Version Warning",
 	"peer_breaking_upgrade": "The selected peer version is not always compatible with Node.js v8 chaincode (which was often used by Fabric 1.4). You should first upgrade to a peer that is compatible (such as v2.2.10). After updating your peer, update any node chaincode to be compatible with Node.js v16. Then you may upgrade your peer to the selected version.",
+	"peer_breaking_upgrade_2": "The selected peer version is not compatible with Node.js v8 chaincode. You should first update all node chaincode to be compatible with Node.js v16. Then you may upgrade your peer to the selected version.",
 	"peer_breaking": "The selected peer version is not always compatible with Node.js v8 chaincode (which was often used by Fabric 1.4). It's recommended to use a version that is compatible (such as v2.2.10). This warning can be ignored if all node chaincode is compatible with Node.js v16.",
 	"breaking_link_text": "Fabric documentation details",
 	"ignore_breaking_txt": "I understand this is a potentially breaking change. Upgrade anyway.",
@@ -1625,7 +1626,7 @@
 	"channel_policy_update_desc": "<strong>${org}</strong> has submitted a change to the <strong>${channel}</strong> channel.  The policy to update the configuration of this channel requires ${number_of_signatures} signatures.",
 	"channel_policy_update_approved": "<strong>${org}</strong> has submitted a change to the <strong>${channel}</strong> channel.",
 	"new_channel_request_desc": "<strong>${org}</strong> created a new channel: <strong>${channel}</strong>",
-	"new_channel_pending_request": "New channel request submittted",
+	"new_channel_pending_request": "New channel request submitted",
 	"new_channel_pending_request_desc": "<strong>${org}</strong> submitted request to create a new channel: <strong>${channel}</strong> and is waiting for the orderer signature.",
 	"signature_for_msp": "Signature for ${msp}:",
 	"signature_for_msp_placeholder": "Select identity to sign with",
@@ -2809,6 +2810,7 @@
 	"mig_users_text": "2. (optional step) Additional local users can be created by using the \"Users\" tab on your new console. You should create a user on the new console for every active user of this console.",
 	"mig_test_txt": "3. Next check if the new console is working. Open a new tab to the new console and click on each of the node tiles. You will need to associate each node with an appropriate identity from your wallet. Compare the Fabric related content seen on the new console with the content seen on this console, it should be identical. If the new console is missing content double check that the correct identity was associated and switch the identity if needed.",
 	"mig_delete_txt": "4. If the new console is working well it's time to delete this console. Go to your [[IBM Cloud resources]](https://cloud.ibm.com/resources) dashboard, under \"Blockchain\" find the row for this console, and open it. You should be on the page which used to have the blue button that launches the console. This page should now have the text \"This console has been migrated!\". If so then it is safe to delete by using the \"Actions...\" dropdown and the \"Delete service\" option. If this text is missing contact support.",
+	"audit_logs": "Audit logs",
 	"hide_archived_channels": "Hide Archived Channels",
 	"show_archived_channels": "Show Archived Channels"
 }
