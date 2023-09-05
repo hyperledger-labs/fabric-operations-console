@@ -709,7 +709,12 @@ class ChannelApi {
 		consenters.forEach(consenter => {
 			ordererAddresses.push(consenter.host + ':' + consenter.port);
 		});
-		node.values.OrdererAddresses.value.addresses = ordererAddresses;
+
+		// the "addresses" field is legacy for fabric, if its not already populated, don't bother updating it
+		// fabric will find orderer addresses in the "consenters" field
+		if (node.values.OrdererAddresses.value && node.values.OrdererAddresses.value.addresses) {
+			node.values.OrdererAddresses.value.addresses = ordererAddresses;
+		}
 	}
 
 	static getNodeOUIdentifier(certificate) {
@@ -1307,7 +1312,7 @@ class ChannelApi {
 		const port = parsedURL.port;
 
 		let consenterNodes = updated_json.channel_group.groups.Orderer.values.ConsensusType.value.metadata.consenters;
-		let ordererAddresses = updated_json.channel_group.values.OrdererAddresses.value.addresses;
+		let ordererAddresses = _.get(updated_json, 'channel_group.values.OrdererAddresses.value.addresses', []);
 
 		if (opts.mode === 'delete') {
 			ChannelApi.deleteConsenters(consenterNodes, ordererAddresses, host, port);
