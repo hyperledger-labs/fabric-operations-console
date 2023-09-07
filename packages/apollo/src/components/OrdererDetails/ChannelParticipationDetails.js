@@ -116,7 +116,7 @@ class ChannelParticipationDetails extends Component {
 			loading: true,
 			editLoading: true,
 		});
-		var channel_details = await ChannelApi.getChannel(channel.name);
+		let channel_details = await ChannelApi.getChannel(channel.name);
 		this.props.updateState(SCOPE, {
 			channelEdit: channel.name,
 			peerName: channel_details.peers[0].id,
@@ -462,7 +462,7 @@ class ChannelParticipationDetails extends Component {
 									if (cb) cb();
 								});
 						});
-						this.props.updateState(SCOPE,{showEditChannelModal: true})
+					this.props.updateState(SCOPE, { showEditChannelModal: true });
 				})
 				.catch(error => {
 					this.acls = [];
@@ -639,9 +639,9 @@ class ChannelParticipationDetails extends Component {
 
 				{!this.props.loading && this.props.showEditChannelModal && (
 					<ChannelModal
-					onClose={this.hideEditChannelModal}
-					onComplete={channelName => {
-						this.props.showSuccess('channel_update_request_submitted', { channelName }, SCOPE)
+						onClose={this.hideEditChannelModal}
+						onComplete={channelName => {
+							this.props.showSuccess('channel_update_request_submitted', { channelName }, SCOPE);
 					}}
 					channelId={this.props.channelEdit}
 					existingOrgs={this.props.members}
