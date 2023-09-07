@@ -196,6 +196,12 @@ class UpdateChannelMspModal extends React.Component {
 		this.props.updateState('wizard', { error });
 	}
 
+	onClose = () => {
+		this.props.updateState(SCOPE, {
+			submit_identity_options: null,
+		});
+	}
+
 	onSubmit = () => {
 		this.props.updateState(SCOPE, {
 			loading: true,
@@ -263,6 +269,9 @@ class UpdateChannelMspModal extends React.Component {
 						Log.info('Channel was updated successfully: ', resp);
 						this.props.onComplete(this.props.msp.id || this.props.msp.msp_id, this.props.isOrdererMSP);
 						resolve();
+						this.props.updateState(SCOPE, {
+							submit_identity_options: null,
+						});
 					})
 					.catch(error => {
 						Log.error(error);
@@ -281,6 +290,7 @@ class UpdateChannelMspModal extends React.Component {
 						this.props.updateState(SCOPE, {
 							loading: false,
 							disableSubmit: false,
+							submit_identity_options: null,
 						});
 						reject({
 							title: error_msg,
@@ -331,6 +341,31 @@ class UpdateChannelMspModal extends React.Component {
 				default: 'select_msp_id',
 			},
 		];
+		if (this.props.submit_identity_options && !this.props.isOrdererMSP && this.props.submit_identity_options.length < 6) {
+			this.props.submit_identity_options.map((admin, index) => {
+				if (!admin.cas) {
+					if (index < 1) {
+						fields.push({
+							label: 'Admins',
+							name: 'admin_identity',
+							type: 'text',
+							default: admin.name,
+							readonly: true,
+						});
+					}
+					else {
+						fields.push({
+							label: 'Admins',
+							name: 'admin_identity',
+							type: 'text',
+							default: admin.name,
+							readonly: true,
+							hideLabel: true,
+						});
+					}
+				}
+			})
+		}
 		if (!this.props.isOrdererMSP) {
 			fields.push({
 				name: 'submit_identity',
