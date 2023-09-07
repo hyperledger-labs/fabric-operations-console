@@ -50,6 +50,7 @@ import Notification from './Notification';
 import NewNotification from './NewNotification';
 import Partnership from './Partnership';
 import PartyPopper from './PartyPopper';
+import Pencil from './Pencil';
 import Plus from './Plus';
 import Previous from './Previous';
 import Restart from './Restart';
@@ -146,6 +147,8 @@ class SVGs extends Component {
 				return this.setDimensions(<Partnership />, translate);
 			case 'partyPopper':
 				return this.setDimensions(<PartyPopper />, translate);
+			case 'pencil':
+				return this.setDimensions(<Pencil />, translate);
 			case 'previous':
 				return this.setDimensions(<Previous />, translate);
 			case 'plus':
