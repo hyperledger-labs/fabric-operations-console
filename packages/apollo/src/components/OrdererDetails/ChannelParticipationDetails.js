@@ -642,23 +642,23 @@ class ChannelParticipationDetails extends Component {
 						onClose={this.hideEditChannelModal}
 						onComplete={channelName => {
 							this.props.showSuccess('channel_update_request_submitted', { channelName }, SCOPE);
-					}}
-					channelId={this.props.channelEdit}
-					existingOrgs={this.props.members}
-					existingOrdererOrgs={this.props.ordererMembers}
-					existingAcls={this.acls}
-					existingBlockParams={this.blockParams}
-					existingRaftParams={this.raftParams}
-					existingCapabilities={this.capabilities}
-					existingConsenters={this.consenters}
-					existingEndorsementPolicy={this.existingEndorsementPolicy}
-					existingLifecyclePolicy={this.existingLifecyclePolicy}
-					nOutOf={this.nOutOf}
-					channelOrderer={this.orderers && this.orderers.length > 0 ? this.orderers : null}
-					channelPeers={this.props.peerList}
-					editLoading={this.props.editLoading}
-				/>
-					)}
+						}}
+						channelId={this.props.channelEdit}
+						existingOrgs={this.props.members}
+						existingOrdererOrgs={this.props.ordererMembers}
+						existingAcls={this.acls}
+						existingBlockParams={this.blockParams}
+						existingRaftParams={this.raftParams}
+						existingCapabilities={this.capabilities}
+						existingConsenters={this.consenters}
+						existingEndorsementPolicy={this.existingEndorsementPolicy}
+						existingLifecyclePolicy={this.existingLifecyclePolicy}
+						nOutOf={this.nOutOf}
+						channelOrderer={this.orderers && this.orderers.length > 0 ? this.orderers : null}
+						channelPeers={this.props.peerList}
+						editLoading={this.props.editLoading}
+					/>)
+				}
 				{this.props.showCPDetailsModal && (
 					<ChannelParticipationModal
 						channelInfo={this.props.channelInfo}
