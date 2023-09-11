@@ -27,17 +27,21 @@ import Form from '../../../Form/Form';
 import SidePanelWarning from '../../../SidePanelWarning/SidePanelWarning';
 
 const SCOPE = 'channelModal';
-
+let hasAdmin = false;
 // This is step "channel_orderer_organizations"
 //
 // this panel allows selecting the orderer orgs in the config-block and which one's get the admin role
 // (only used for osn admin nodes)
 export class OrdererOrganizations extends Component {
 	componentDidMount() {
-		this.props.updateState(SCOPE, {
-			noAdminError: 'no_admin_error',
-			noOrderersError: false
-		});
+		if(!hasAdmin)
+		{
+			this.props.updateState(SCOPE, {
+				noAdminError: 'no_admin_error',
+				noOrderersError: false
+			});
+		}
+
 	}
 
 	// user added a new msp/org
@@ -99,7 +103,7 @@ export class OrdererOrganizations extends Component {
 	};
 
 	checkAdminCount(selected_ordering_orgs) {
-		let hasAdmin = false;
+		hasAdmin = false;
 		if (selected_ordering_orgs) {
 			selected_ordering_orgs.forEach(org => {
 				if (org.msp_id !== '' && org.roles.includes('admin')) {
