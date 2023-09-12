@@ -34,7 +34,7 @@ let hasAdmin = false;
 // (only used for osn admin nodes)
 export class OrdererOrganizations extends Component {
 	componentDidMount() {
-		if(!hasAdmin)
+		if (!hasAdmin)
 		{
 			this.props.updateState(SCOPE, {
 				noAdminError: 'no_admin_error',
