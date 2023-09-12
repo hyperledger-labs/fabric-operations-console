@@ -197,7 +197,7 @@ class UpdateChannelMspModal extends React.Component {
 		this.props.updateState('wizard', { error });
 	}
 
-	onClose = () => {
+	onCancel = () => {
 		this.props.updateState(SCOPE, {
 			submit_identity_options: null,
 		});
@@ -478,7 +478,7 @@ class UpdateChannelMspModal extends React.Component {
 				title="update_msp_definition"
 				disable_focus_trap={true}
 				loading={this.props.loading}
-				onClose={this.onClose}
+				onClose={this.onCancel}
 				onSubmit={this.onSubmit}
 				submitButtonLabel={translate('update_msp_definition')}
 				error={this.props.error}
