@@ -176,6 +176,7 @@ class UpdateChannelMspModal extends React.Component {
 			disableSubmit: !this.props.isOrdererMSP,
 		});
 	}
+
 	async onSelectMSP(event) {
 		if (event.selectedMsp) {
 			this.populateMSP(event.selectedMsp);
@@ -342,30 +343,21 @@ class UpdateChannelMspModal extends React.Component {
 				default: 'select_msp_id',
 			},
 		];
-		if (this.props.submit_identity_options && !this.props.isOrdererMSP && this.props.submit_identity_options.length < 6) {
-			this.props.submit_identity_options.map((admin, index) => {
-				if (!admin.cas) {
-					if (index < 1) {
-						fields.push({
-							label: 'Admins',
-							name: 'admin_identity',
-							type: 'text',
-							default: admin.name,
-							readonly: true,
-						});
-					}
-					else {
-						fields.push({
-							label: 'Admins',
-							name: 'admin_identity',
-							type: 'text',
-							default: admin.name,
-							readonly: true,
-							hideLabel: true,
-						});
-					}
-				}
-			})
+		if (this.props.submit_identity_options && !this.props.isOrdererMSP) {
+			let mspAdmins = this.populateMSPAdmins();
+			fields.push({
+				label: 'Known channel admins',
+				name: 'admin_identity',
+				type: 'component',
+				default:
+					mspAdmins.map((val, idx) =>
+						<div key={idx}>
+							<p>{val}</p>
+						</div>),
+				readonly: true,
+				tooltip: 'msp_admin_type_tooltip',
+				tooltipDirection: 'top',
+			});
 		}
 		if (!this.props.isOrdererMSP) {
 			fields.push({
@@ -379,6 +371,20 @@ class UpdateChannelMspModal extends React.Component {
 		return fields;
 	}
 
+	populateMSPAdmins()
+	{
+		const admin_identites = [];
+		this.props.submit_identity_options.forEach(value => {
+			const parsed_msp_cert = StitchApi.parseCertificate(value.cert);
+			if (admin_identites.length < 6)
+			{
+				if (parsed_msp_cert.subject_parts.OU === 'admin') {
+					admin_identites.push(value.name);
+				}
+			}
+		});
+		return admin_identites;
+	}
 	renderUploadMSPDefinition(translate) {
 		return (
 			<WizardStep
