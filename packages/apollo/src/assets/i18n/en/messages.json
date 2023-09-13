@@ -121,6 +121,7 @@
 	"response_type_label": "Response type",
 	"response_type_tooltip": "The only supported response type is \"code\".",
 	"msp_admin_type_tooltip": "These are identities in your wallet that are also admins on this channel",
+	"msp_admin_type_label": "Known channel admins",
 	"debug_label": "User login debug logs",
 	"debug_logs_tooltip": "Extra console server logs during user login can help debug OAuth2.0 setup issues, but for maximum user privacy this setting should be off once login problems are resolved.",
 	"default_password_placeholder": "Enter a password here",

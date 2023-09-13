@@ -346,13 +346,13 @@ class UpdateChannelMspModal extends React.Component {
 		if (this.props.submit_identity_options && !this.props.isOrdererMSP) {
 			let mspAdmins = this.populateMSPAdmins();
 			fields.push({
-				label: 'Known channel admins',
+				label: 'msp_admin_type_label',
 				name: 'admin_identity',
 				type: 'component',
 				default:
 					mspAdmins.map((val, idx) =>
 						<div key={idx}>
-							<p>{val}</p>
+							<p className='admin-identity-name'>{val}</p>
 						</div>),
 				readonly: true,
 				tooltip: 'msp_admin_type_tooltip',
