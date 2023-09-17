@@ -40,7 +40,7 @@ const Log = new Logger(SCOPE);
 class UpdateChannelMspModal extends React.Component {
 	componentDidMount() {
 		this.getMsps();
-		this.resetState();
+		this.fetchOrgNodes();
 	}
 
 	componentWillUnmount() {
@@ -178,6 +178,7 @@ class UpdateChannelMspModal extends React.Component {
 	}
 
 	async onSelectMSP(event) {
+		await this.populateMSPAdmins();
 		if (event.selectedMsp) {
 			this.populateMSP(event.selectedMsp);
 		}
@@ -343,14 +344,13 @@ class UpdateChannelMspModal extends React.Component {
 				default: 'select_msp_id',
 			},
 		];
-		if (this.props.submit_identity_options && !this.props.isOrdererMSP) {
-			let mspAdmins = this.populateMSPAdmins();
+		if (this.props.submit_identity_options && !this.props.isOrdererMSP && this.props.adminIdentites) {
 			fields.push({
 				label: 'msp_admin_type_label',
 				name: 'admin_identity',
 				type: 'component',
 				default:
-					mspAdmins.map((val, idx) =>
+					this.props.adminIdentites.map((val, idx) =>
 						<div key={idx}>
 							<p className='admin-identity-name'>{val}</p>
 						</div>),
@@ -371,20 +371,48 @@ class UpdateChannelMspModal extends React.Component {
 		return fields;
 	}
 
-	populateMSPAdmins()
+	 populateMSPAdmins ()
 	{
-		const admin_identites = [];
-		this.props.submit_identity_options.forEach(value => {
-			const parsed_msp_cert = StitchApi.parseCertificate(value.cert);
-			if (admin_identites.length < 6)
-			{
-				if (parsed_msp_cert.subject_parts.OU === 'admin') {
-					admin_identites.push(value.name);
-				}
-			}
-		});
-		return admin_identites;
+		const mspCerts = [];
+		const admin_identites =[];
+		if (this.props.orgNodes[this.props.msp.id])
+		{
+			mspCerts.root_certs = this.props.orgNodes[this.props.msp.id].values_map.MSP.value.root_certs_list;
+			mspCerts.intermediate_certs = this.props.orgNodes[this.props.msp.id].values_map.MSP.value.intermediate_certs_list;
+			IdentityApi.getIdentitiesForMsp(mspCerts).then(mspIdentities => {
+				mspIdentities.forEach(value => {
+					const parsed_msp_cert = StitchApi.parseCertificate(value.cert);
+					if (admin_identites.length < 6)
+					{
+						if (parsed_msp_cert.subject_parts.OU === 'admin') {
+							admin_identites.push(value.name);
+						}
+					}
+					this.props.updateState(SCOPE, {
+						adminIdentites: admin_identites,
+					});
+				});
+			});
+		}
 	}
+
+	fetchOrgNodes = () => {
+		try {
+			ChannelApi.getChannelConfig(this.props.peer.id, this.props.channelId).then(config_envelop => {
+				let config = config_envelop.config;
+				let org_nodes = _.get(config, 'channel_group.groups_map.Application.groups_map');
+				this.props.updateState(SCOPE, {
+					orgNodes: org_nodes,
+				});
+				this.resetState();
+			});
+		}
+		catch (error) {
+			Log.error(error);
+			this.resetState();
+		};
+	}
+
 	renderUploadMSPDefinition(translate) {
 		return (
 			<WizardStep
@@ -494,8 +522,10 @@ class UpdateChannelMspModal extends React.Component {
 
 const dataProps = {
 	loading: PropTypes.bool,
+	adminIdentites: PropTypes.array,
 	error: PropTypes.string,
 	msps: PropTypes.array,
+	orgNodes: PropTypes.array,
 	orderers: PropTypes.array,
 	selectedOrderer: PropTypes.object,
 	msp_id: PropTypes.string,
