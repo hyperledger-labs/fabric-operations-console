@@ -60,6 +60,7 @@ class ChannelDetails extends Component {
 		this.msp_id = null;
 		this.acls = [];
 		this.anchorPeers = [];
+		this.orgNodes= [];
 		this.chaincode = [];
 		this.nOutOf = {
 			n: 1,
@@ -252,6 +253,8 @@ class ChannelDetails extends Component {
 							root_certs: _.get(orgNodes[orgs[i]], 'values_map.MSP.value.root_certs_list'),
 						});
 					}
+
+					this.orgNodes = orgNodes;
 
 					const ordererNodes = _.get(config, 'channel_group.groups_map.Orderer.groups_map');
 					const orderers = Object.keys(ordererNodes);
@@ -1076,6 +1079,7 @@ class ChannelDetails extends Component {
 					consenters={this.consenters}
 					loading={this.props.loading}
 					isOrdererMSP={false}
+					orgNodes={this.orgNodes}
 				/>
 				<ChannelMembers
 					id="orderer"

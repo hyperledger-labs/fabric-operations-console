@@ -40,7 +40,7 @@ const Log = new Logger(SCOPE);
 class UpdateChannelMspModal extends React.Component {
 	componentDidMount() {
 		this.getMsps();
-		this.fetchOrgNodes();
+		this.resetState();
 	}
 
 	componentWillUnmount() {
@@ -396,23 +396,6 @@ class UpdateChannelMspModal extends React.Component {
 		}
 	}
 
-	fetchOrgNodes = () => {
-		try {
-			ChannelApi.getChannelConfig(this.props.peer.id, this.props.channelId).then(config_envelop => {
-				let config = config_envelop.config;
-				let org_nodes = _.get(config, 'channel_group.groups_map.Application.groups_map');
-				this.props.updateState(SCOPE, {
-					orgNodes: org_nodes,
-				});
-				this.resetState();
-			});
-		}
-		catch (error) {
-			Log.error(error);
-			this.resetState();
-		};
-	}
-
 	renderUploadMSPDefinition(translate) {
 		return (
 			<WizardStep
@@ -525,7 +508,6 @@ const dataProps = {
 	adminIdentites: PropTypes.array,
 	error: PropTypes.string,
 	msps: PropTypes.array,
-	orgNodes: PropTypes.array,
 	orderers: PropTypes.array,
 	selectedOrderer: PropTypes.object,
 	msp_id: PropTypes.string,
