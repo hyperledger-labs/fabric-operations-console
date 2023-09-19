@@ -124,6 +124,7 @@ class ChannelMembers extends Component {
 						onClose={this.hideUpdateMSPModal}
 						onComplete={this.onUpdateMspCompleted}
 						isOrdererMSP={this.props.selectedChannelMspForEdit.isOrdererMSP}
+						orgNodes={this.props.orgNodes}
 					/>
 				)}
 				{this.props.isOrdererMSP && this.props.selectedOrdererMspForEdit && (
