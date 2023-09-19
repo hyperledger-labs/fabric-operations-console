@@ -241,14 +241,14 @@ export class CADetails extends Component {
 					this.generateCertificate(null);
 				},
 				disabled: !ActionsHelper.canEditComponent(this.props.feature_flags),
-				decoupleFromLoading: false
+				decoupleFromLoading: true
 			});
 			buttons.push({
 				text: 'register_user',
 				fn: this.openAddUser,
 				icon: 'plus',
 				disabled: !ActionsHelper.canEditComponent(this.props.feature_flags),
-				decoupleFromLoading: false
+				decoupleFromLoading: true
 			});
 		}
 		return buttons;
