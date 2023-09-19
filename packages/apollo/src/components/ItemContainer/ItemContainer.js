@@ -466,7 +466,7 @@ class ItemContainer extends Component {
 							onClick={button.fn}
 							kind={button.kind || (i !== this.props.addItems.length - 1 ? 'secondary' : 'primary')}
 							title={!button.tooltip ? (button.title ? translate(button.title) : translate(button.text)) : ''}
-							disabled={this.props.disableAddItem || this.props.loading || button.disabled}
+							disabled={button.decoupleFromLoading ? false :(this.props.disableAddItem || this.props.loading || button.disabled)}
 						>
 							{!button.tooltip && <span className="ibp__button-text bx--type-zeta">{translate(button.text)}</span>}
 							{button.tooltip && (
