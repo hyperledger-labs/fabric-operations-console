@@ -163,12 +163,11 @@ module.exports = function (logger, ev, t) {
 		body: {
 			"status": "error" || "success"
 			"message": "some string to surface to a user"
-			"ts_display": 0,     // unix timestamp
+			"timestamp": 0,     // unix timestamp
 			"by": "dshuffma",
 			"component_id": "",
 			"component_type": "",
 			"component_display_name": "",
-			"severity": "",
 			"api": "",
 			"code": 200,
 			"elapsed_ms": 1234,
@@ -179,21 +178,12 @@ module.exports = function (logger, ev, t) {
 	*/
 	exports.create = function (body, cb) {
 		const valid_status = ['error', 'success'];
-		const valid_sevs = ['normal', 'warning', 'critical'];
 		const lc_status = (body && body.status) ? body.status.toLowerCase() : null;
-		const lc_sev = (body && body.severity) ? body.severity.toLowerCase() : 'normal';		// normal is default
 		if (valid_status.indexOf(lc_status) === -1) {						// check if status is acceptable
 			const err = {
 				statusCode: 400,
 				error: 'not a valid value for status: "' + lc_status + '"',
 				valid: valid_status
-			};
-			if (cb) { return cb(err, null); }
-		} else if (valid_sevs.indexOf(lc_sev) === -1) {						// check if severity is acceptable
-			const err = {
-				statusCode: 400,
-				error: 'not a valid value for severity: "' + lc_sev + '"',
-				valid: valid_sevs
 			};
 			if (cb) { return cb(err, null); }
 		} else if (!body.message || typeof body.message !== 'string') {		// check if message is okay
@@ -210,7 +200,6 @@ module.exports = function (logger, ev, t) {
 				message: body.message,
 				ts_display: body.ts_display || Date.now(),							// timestamp provided from input
 				status: lc_status,
-				severity: lc_sev,
 				by: body.by || '-',
 				component_id: body.component_id || undefined,						// if undefined, it will be removed which is what i want
 				component_type: body.component_type || undefined,					// if undefined, it will be removed which is what i want
@@ -327,7 +316,7 @@ module.exports = function (logger, ev, t) {
 			const opts = {
 				db_name: ev.DB_SYSTEM,
 				_id: '_design/athena-v1',
-				view: ev.STR.ARCHIVED_VIEW,
+				view: ev.STR.ALL_NOTICES_VIEW,
 				query: t.misc.formatObjAsQueryParams({ include_docs: include_docs, skip: skip, limit: limit, descending: true }),
 				SKIP_CACHE: (options.SKIP_CACHE === true),
 			};

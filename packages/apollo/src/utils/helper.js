@@ -1689,6 +1689,24 @@ const Helper = {
 		}
 		return true;
 	},
+
+	// format the object into a valid query parameter
+	formatObjAsQueryParams(obj) {
+		let query = '';
+		for (let key in obj) {
+			if (key === 'key' || key === 'keys') {
+				query += key + '=' + JSON.stringify(obj[key]) + '&';
+			} else if (typeof obj[key] !== 'object') {
+				query += key + '=' + obj[key] + '&';
+			} else {
+				query += key + '=' + JSON.stringify(obj[key]) + '&';
+			}
+		}
+		if (query !== '') {
+			query = query.substring(0, query.length - 1);	// remove last "&"
+		}
+		return (query === '') ? '' : '?' + query;			// add leading "?" if we are sending query parameter data
+	}
 };
 
 export default Helper;

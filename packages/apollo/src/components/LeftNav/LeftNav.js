@@ -56,17 +56,17 @@ const mainNav = [
 		globalNavSubmenu: [],
 	},
 	{
-		icon: 'fingerprint', // 'terminal' looks good to
-		path: '/audit-logs',
-		id: 'audit_logs',
-		globalNavSubmenu: [],
-	},
-	{
 		icon: 'member',
 		path: '/access',
 		id: 'access',
 		globalNavSubmenu: [],
 		newGroup: true,
+	},
+	{
+		icon: 'fingerprint', // 'terminal' looks good to
+		path: '/audit-logs',
+		id: 'audit_logs',
+		globalNavSubmenu: [],
 	},
 	{
 		icon: 'settings',
@@ -125,14 +125,17 @@ class LeftNav extends Component {
 		if (this.props.submenu) {
 			return this.props.submenu;
 		}
+		const origNav = JSON.parse(JSON.stringify(mainNav));
 
-		for (let i in mainNav) {
-			if (mainNav[i] && mainNav[i].id === 'audit_logs') {
-				// todo, contextually bring back audit_logs
-				mainNav.splice(i, 1);
+		// remove audit log tab if its disabled
+		if (!this.props.auditLogsEnabled) {
+			for (let i in origNav) {
+				if (origNav[i] && origNav[i].id === 'audit_logs') {
+					origNav.splice(i, 1);
+				}
 			}
 		}
-		return mainNav;
+		return origNav;
 	}
 
 	buildBackNavItem() {
@@ -187,6 +190,7 @@ const dataProps = {
 	location: PropTypes.shape({
 		pathname: PropTypes.string,
 	}),
+	auditLogsEnabled: PropTypes.bool,
 };
 
 LeftNav.propTypes = {

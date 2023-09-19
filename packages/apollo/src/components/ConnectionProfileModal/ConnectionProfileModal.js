@@ -190,7 +190,7 @@ class ConnectionProfileModal extends Component {
 			};
 
 			let filename = this.props.msp.msp_id + '_profile.json';
-			let file = JSON.stringify(profile, null, 4);
+			let file = JSON.stringify(profile, null, '\t');
 			const createTarget = document.querySelector('.side__panel--outer--container') || document.body;
 			let link = document.createElement('a');
 			if (link.download !== undefined) {
