@@ -72,8 +72,11 @@ jobs:
         with:
           node-version: 18.x
       - run: npm config set registry https://registry.npmjs.org/
-      - run: npm install -g ibm-openapi-validator@0.51.1
-      - run: npm run validate
+      - run: npm install -g swagger-cli
+      - run: npm install -g ibm-openapi-validator@0.56.0
+      - run: npm run validate:openapi:self
+      - run: npm run validate:openapi:cloud
+      - run: npm run validate:openapi
 
   lint:
     name: Lint
