@@ -159,7 +159,7 @@ module.exports = (logger, ev, t, opts) => {
 			return thing;
 		} else {
 			try {
-				return t.yaml.safeLoad(thing);
+				return t.yaml.load(thing);
 			} catch (e) {
 				logger.error('[validate] unable to convert yaml to json. e:', e);
 			}
