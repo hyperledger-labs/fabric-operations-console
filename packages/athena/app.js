@@ -173,7 +173,7 @@ function _load_config(file_name) {
 		}
 	} else {
 		try {														// use yaml ib if its not json
-			return tools.yaml.safeLoad(tools.fs.readFileSync(file_name, 'utf8'));
+			return tools.yaml.load(tools.fs.readFileSync(file_name, 'utf8'));
 		} catch (e) {
 			console.error('Error - Unable to load yaml configuration file', file_name);
 			console.error(e);

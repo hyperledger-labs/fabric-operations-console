@@ -320,7 +320,7 @@ tools.middleware = require('../../libs/middleware/middleware.js')(logger, ev, to
 tools.notifications = require('../../libs/notifications_lib.js')(logger, ev, tools);
 tools.ca_lib = require('../../libs/ca_lib.js')(logger, ev, tools);
 tools.proxy_lib = require('../../libs/proxy_lib.js')(logger, ev, tools);
-tools.config_file = tools.yaml.safeLoad(tools.fs.readFileSync(config_file_location, 'utf8'));
+tools.config_file = tools.yaml.load(tools.fs.readFileSync(config_file_location, 'utf8'));
 tools.notifications.create = () => { return true; };
 tools.user_preferences = require('../../libs/user_preferences_lib.js')(logger, ev, tools);
 tools.auth_scheme = require('../../libs/auth_scheme_lib.js')(logger, ev, tools);

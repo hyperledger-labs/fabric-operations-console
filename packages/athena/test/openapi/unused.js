@@ -66,7 +66,7 @@ function parse_to_json(thing) {
 		return thing;
 	} else {
 		try {
-			return yaml.safeLoad(thing);
+			return yaml.load(thing);
 		} catch (e) {
 			console.error('unable to convert yaml to json. e:', e);
 		}
