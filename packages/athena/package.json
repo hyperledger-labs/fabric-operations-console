@@ -20,7 +20,6 @@
 		"build:stitch": "npm run --prefix ../stitch build_all",
 		"validate:openapi": "swagger-cli --version && swagger-cli validate ./json_docs/json_validation/ibp_openapi_v3.yaml",
 		"validate:openapi:cloud": "lint-openapi -s -c ./test/openapi/.validaterc.json -r ./test/openapi/.spectral.yaml ./json_docs/json_validation/ibp_openapi_v3.yaml",
-		"validate:openapi:cloud:version": "lint-openapi --version",
 		"validate:openapi:self": "node ./test/openapi/init_examples.js && node ./test/openapi/same_same.js && node ./test/openapi/unused.js && node ./test/openapi/response_inspection.js"
 	},
 	"repository": {
