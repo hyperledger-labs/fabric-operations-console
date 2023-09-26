@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   title: Fabric Operations console APIs
-  description: APIs that you can use to manage your Hyperledger Fabric Operations console
+  description: APIs to manage your Hyperledger Fabric Operations console
   contact:
     name: Fabric Operations console docs
     url: https://github.com/hyperledger-labs/fabric-operations-console
@@ -15,9 +15,9 @@ info:
     enabled: false
 
 servers:
-  - url: https://{your-console-hostname-and-port}
+  - url: https://{REPLACE_HOSTNAME_AND_PORT}
     variables:
-      your-console-hostname-and-port:
+      REPLACE_HOSTNAME_AND_PORT:
         description: The hostname and external port of your Fabric Operations console
         default: example.com:443
 
@@ -29,7 +29,7 @@ tags:
     description: APIs to get, create, import, edit, or delete a component.
   - name: Manage multiple components
     description: APIs to get & delete multiple components.
-  - name: Administer the Fabric Operations console
+  - name: Administer the console
     description: APIs to change or monitor the Fabric Operations console.
   - name: Download examples
     description: APIs to get postman collections and OpenAPI files.
@@ -164,11 +164,8 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X GET "https://{API-Endpoint}/ak/api/v3/components/{Component-ID}?cache=skip&deployment_attrs=included" \
+                      curl -X GET "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/components/{Component-ID}?cache=skip&deployment_attrs=included" \
                       -H "Authorization: Bearer {Access-Token}"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.read
 
       responses:
         200:
@@ -312,11 +309,8 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X DELETE "https://{API-Endpoint}/ak/api/v3/components/{Component-ID}" \
+                      curl -X DELETE "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/components/{Component-ID}" \
                       -H "Authorization: Bearer {Access-Token}"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.remove
       responses:
         200:
           description: Request was successful.
@@ -351,7 +345,7 @@ paths:
       summary: Delete component
       description: |
         Removes a single component from the Fabric Operations console **and** it deletes the Kubernetes deployment.
-        - Using this api on an **imported** component will *error out* since its Kubernetes deployment is unknown and cannot be removed. Instead use the [Remove imported component](#remove-component) API to remove imported components.
+        - Using this api on an **imported** component will *error out* since it does not have a Kubernetes deployment and thus it cannot be removed. Instead use the [Remove imported component](#remove-component) API to remove imported components.
         - Using this api on a **created** component removes it from the Fabric Operations console **and** it will delete the component from the Kubernetes cluster where it resides. The Kubernetes delete must succeed before the component will be removed from the Fabric Operations console.
       operationId: delete_component
       parameters:
@@ -372,11 +366,8 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X DELETE "https://{API-Endpoint}/ak/api/v3/kubernetes/components/{Component-ID}" \
+                      curl -X DELETE "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/kubernetes/components/{Component-ID}" \
                       -H "Authorization: Bearer {Access-Token}"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.delete
       responses:
         200:
           description: Request was successful.
@@ -433,7 +424,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X POST "https://{API-Endpoint}/ak/api/v3/kubernetes/components/fabric-ca" \
+                      curl -X POST "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/kubernetes/components/fabric-ca" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
@@ -461,9 +452,6 @@ paths:
                               }
                             }
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.create
       responses:
         200:
           description: Request was successful.
@@ -560,7 +548,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X POST "https://{API-Endpoint}/ak/api/v3/components/fabric-ca" \
+                      curl -X POST "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/components/fabric-ca" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
@@ -580,9 +568,6 @@ paths:
                               }
                             }
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.import
       responses:
         200:
           description: Request was successful.
@@ -681,7 +666,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X PUT "https://{API-Endpoint}/ak/api/v3/kubernetes/components/fabric-ca/{Component-ID}" \
+                      curl -X PUT "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/kubernetes/components/fabric-ca/{Component-ID}" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
@@ -694,9 +679,6 @@ paths:
                               }
                              }
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.update
       responses:
         200:
           description: Request was successful.
@@ -801,16 +783,13 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X PUT "https://{API-Endpoint}/ak/api/v3/components/{Component-ID}" \
+                      curl -X PUT "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/components/{Component-ID}" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
                             \"display_name\": \"My Other CA\",
-                            \"tags\": [\"fabric-ca\", \"ibm_saas\", \"blue_team\", \"dev\"]
+                            \"tags\": [\"fabric-ca\", \"saas\", \"blue_team\", \"dev\"]
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.update
       responses:
         200:
           description: Request was successful.
@@ -915,15 +894,12 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X POST "https://{API-Endpoint}/ak/api/v3/kubernetes/components/fabric-ca/{Component-ID}/actions" \
+                      curl -X POST "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/kubernetes/components/fabric-ca/{Component-ID}/actions" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
                             \"restart\": true
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.configure
       responses:
         202:
           description: Request was received successfully.
@@ -974,7 +950,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X POST "https://{API-Endpoint}/ak/api/v3/kubernetes/components/fabric-peer" \
+                      curl -X POST "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/kubernetes/components/fabric-peer" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
@@ -1012,9 +988,6 @@ paths:
                               }
                             }
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.create
       responses:
         200:
           description: Request was successful.
@@ -1135,7 +1108,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X POST "https://{API-Endpoint}/ak/api/v3/components/fabric-peer" \
+                      curl -X POST "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/components/fabric-peer" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
@@ -1165,9 +1138,6 @@ paths:
                               }
                             }
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.import
       responses:
         200:
           description: Request was successful.
@@ -1290,16 +1260,13 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X PUT "https://{API-Endpoint}/ak/api/v3/components/fabric-peer/{Component-ID}" \
+                      curl -X PUT "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/components/fabric-peer/{Component-ID}" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
                             \"display_name\": \"My Other Peer\",
-                            \"tags\": [\"fabric-peer\", \"ibm_saas\", \"red_team\", \"prod\"]
+                            \"tags\": [\"fabric-peer\", \"saas\", \"red_team\", \"prod\"]
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.update
       responses:
         200:
           description: Request was successful.
@@ -1428,15 +1395,12 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X POST "https://{API-Endpoint}/ak/api/v3/kubernetes/components/fabric-peer/{Component-ID}/actions" \
+                      curl -X POST "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/kubernetes/components/fabric-peer/{Component-ID}/actions" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
                             \"restart\": true
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.configure
       responses:
         202:
           description: Request was received successfully.
@@ -1489,7 +1453,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X PUT "https://{API-Endpoint}/ak/api/v3/kubernetes/components/fabric-peer/{Component-ID}" \
+                      curl -X PUT "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/kubernetes/components/fabric-peer/{Component-ID}" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
@@ -1502,9 +1466,6 @@ paths:
                               }
                             }
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.update
       responses:
         200:
           description: Request was successful.
@@ -1631,7 +1592,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X POST "https://{API-Endpoint}/ak/api/v3/kubernetes/components/fabric-orderer" \
+                      curl -X POST "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/kubernetes/components/fabric-orderer" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
@@ -1641,9 +1602,6 @@ paths:
                             \"cluster_name\": \"My three Node Raft\",
                             \"display_name\": \"ordering service node\"
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.create
       responses:
         200:
           description: Request was successful.
@@ -1759,7 +1717,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X POST "https://{API-Endpoint}/ak/api/v3/components/fabric-orderer" \
+                      curl -X POST "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/components/fabric-orderer" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
@@ -1791,9 +1749,6 @@ paths:
                               }
                             }
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.import
       responses:
         200:
           description: Request was successful.
@@ -1908,7 +1863,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X PUT "https://{API-Endpoint}/ak/api/v3/components/fabric-orderer/{Component-ID}" \
+                      curl -X PUT "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/components/fabric-orderer/{Component-ID}" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
@@ -1916,9 +1871,6 @@ paths:
                             \"display_name\": \"ordering node\",
                             \"msp_id\": \"orderermsp\"
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.update
       responses:
         200:
           description: Request was successful.
@@ -2039,15 +1991,12 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X POST "https://{API-Endpoint}/ak/api/v3/kubernetes/components/fabric-orderer/{Component-ID}/actions" \
+                      curl -X POST "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/kubernetes/components/fabric-orderer/{Component-ID}/actions" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
                             \"restart\": true
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.configure
       responses:
         202:
           description: Request was received successfully.
@@ -2100,7 +2049,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X PUT "https://{API-Endpoint}/ak/api/v3/kubernetes/components/fabric-orderer/{Component-ID}" \
+                      curl -X PUT "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/kubernetes/components/fabric-orderer/{Component-ID}" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
@@ -2113,9 +2062,6 @@ paths:
                               }
                             }
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.update
       responses:
         200:
           description: Request was successful.
@@ -2249,15 +2195,12 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X PUT "https://{API-Endpoint}/ak/api/v3/kubernetes/components/{Component-ID}/config" \
+                      curl -X PUT "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/kubernetes/components/{Component-ID}/config" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
                             \"b64_block\":\"bWFzc2l2ZSBiaW5hcnkgb2YgYSBjb25maWcgYmxvY2sgd291bGQgYmUgaGVyZSBpZiB0aGlzIHdhcyByZWFsLCBwbGVhc2UgZG9udCBzZW5kIHRoaXM=\"
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.update
       responses:
         200:
           description: Request was successful.
@@ -2390,7 +2333,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X POST "https://{API-Endpoint}/ak/api/v3/components/msp" \
+                      curl -X POST "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/components/msp" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
@@ -2402,9 +2345,6 @@ paths:
                               \"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo\"
                             ]
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.import
       responses:
         200:
           description: Request was successful.
@@ -2479,15 +2419,12 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X PUT "https://{API-Endpoint}/ak/api/v3/components/{Msp-ID}" \
+                      curl -X PUT "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/components/{Msp-ID}" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
                             \"display_name\": \"My Other MSP\"
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.update
       responses:
         200:
           description: Request was successful.
@@ -2567,11 +2504,8 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X GET "https://{API-Endpoint}/ak/api/v3/components/msps/{Msp-ID}" \
+                      curl -X GET "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/components/msps/{Msp-ID}" \
                       -H "Authorization: Bearer {Access-Token}"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.read
       responses:
         200:
           description: Request was successful.
@@ -2615,9 +2549,9 @@ paths:
   /ak/api/v3/settings:
     get:
       tags:
-        - Administer the Fabric Operations console
-      summary: Get public Fabric Operations console settings
-      description: Retrieve all public (non-sensitive) settings for the Fabric Operations console. Use this API for debugging purposes. It shows what behavior to expect and confirms whether the desired settings are active.
+        - Administer the console
+      summary: Get public console settings
+      description: Retrieve all public (non-sensitive) settings for the Fabric Operations console.
       operationId: get_settings
       x-sdk-operations:
         request-examples:
@@ -2628,11 +2562,8 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X GET "https://{API-Endpoint}/ak/api/v3/settings" \
+                      curl -X GET "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/settings" \
                       -H "Content-Type: application/json"
-      x-ibm-events:
-        events:
-          - name: blockchain.ibp_console.read
       responses:
         200:
           description: Request was successful.
@@ -2732,9 +2663,9 @@ paths:
                       tag: v0.4.31
     put:
       tags:
-        - Administer the Fabric Operations console
-      summary: Change Fabric Operations console settings
-      description: Edit a few Fabric Operations console settings (such as the rate limit and timeout settings). **Some edits will trigger an automatic server restart.**
+        - Administer the console
+      summary: Change console settings
+      description: Edit a few Fabric Operations console settings (such as the rate limit and timeout settings). **Some edits will trigger an automatic console restart.**
       operationId: edit_settings
       requestBody:
         description: Fabric Operations console settings that can be edited. Each setting field is optional.
@@ -2752,7 +2683,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X PUT "https://{API-Endpoint}/ak/api/v3/settings" \
+                      curl -X PUT "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/settings" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
@@ -2771,9 +2702,6 @@ paths:
                               }
                             }
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.ibp_console.update
       responses:
         200:
           description: Request was successful.
@@ -2875,7 +2803,7 @@ paths:
   /ak/api/v3/kubernetes/fabric/versions:
     get:
       tags:
-        - Administer the Fabric Operations console
+        - Administer the console
       summary: Get supported Fabric versions
       description: Get list of supported Fabric versions by each component type. These are the Fabric versions your Fabric Operations console can use when creating or upgrading components.
       operationId: get_fab_versions
@@ -2890,11 +2818,8 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X GET "https://{API-Endpoint}/ak/api/v3/kubernetes/fabric/versions" \
+                      curl -X GET "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/kubernetes/fabric/versions" \
                       -H "Authorization: Bearer {Access-Token}"
-      x-ibm-events:
-        events:
-          - name: blockchain.ibp_console.read
       responses:
         200:
           description: Request was successful.
@@ -2949,8 +2874,8 @@ paths:
   /ak/api/v3/health:
     get:
       tags:
-        - Administer the Fabric Operations console
-      summary: Get Fabric Operations console health stats
+        - Administer the console
+      summary: Get console health stats
       description: See statistics of the Fabric Operations console process such as memory usage, CPU usage, up time, cache, and operating system stats.
       operationId: get_health
       x-sdk-operations:
@@ -2962,12 +2887,9 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X GET "https://{API-Endpoint}/ak/api/v3/health" \
+                      curl -X GET "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/health" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}"
-      x-ibm-events:
-        events:
-          - name: blockchain.ibp_console.read
       responses:
         200:
           description: Request was successful.
@@ -3042,8 +2964,8 @@ paths:
   /ak/api/v3/notifications:
     get:
       tags:
-        - Administer the Fabric Operations console
-      summary: Get all notifications
+        - Administer the console
+      summary: Get console notifications
       description: Retrieve all notifications. This API supports pagination through the query parameters. Notifications are generated from actions such as creating a component, deleting a component, server restart, and so on.
       operationId: list_notifications
       parameters:
@@ -3077,11 +2999,8 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X GET "https://{API-Endpoint}/ak/api/v3/notifications?limit=20&skip=0" \
+                      curl -X GET "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/notifications?limit=20&skip=0" \
                       -H "Authorization: Bearer {Access-Token}"
-      x-ibm-events:
-        events:
-          - name: blockchain.notifications.read
       responses:
         200:
           description: Request was successful.
@@ -3116,10 +3035,8 @@ paths:
 
   /ak/api/v3/signature_collections:
     get:
-      x-sdk-exclude: true
-      x-cli-exclude: true
       tags:
-        - Administer the Fabric Operations console
+        - Administer the console
       summary: Get signature collection txs
       description: Get all signature collection transactions. These transactions involve creating or editing Fabric channels. The only transactions that are listed are ones that involved this Fabric Operations console. Channels that are edited or created outside of the Fabric Operations console are not discoverable.
       operationId: get_sig_txs
@@ -3138,11 +3055,8 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X GET "https://{API-Endpoint}/ak/api/v3/signature_collections?cache=skip&full_details=omitted" \
+                      curl -X GET "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/signature_collections?cache=skip&full_details=omitted" \
                       -H "Authorization: Bearer {Access-Token}"
-      x-ibm-events:
-        events:
-          - name: blockchain.signature_collections.read
       responses:
         200:
           description: Request was successful.
@@ -3247,11 +3161,8 @@ paths:
                 $ref: '#/components/schemas/Forbidden'
 
     post:
-      x-visible-environment: hidden # not visible anywhere, api is only used by apollo. the spec is still used by the validator.
-      x-sdk-exclude: true
-      x-cli-exclude: true
       tags:
-        - Administer the Fabric Operations console
+        - Administer the console
       summary: Create a signature collection tx
       description: Create a signature collection transaction. These transactions involve creating or editing Fabric channels & chaincode approvals.
       operationId: create_sig_tx
@@ -3270,7 +3181,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X POST "https://{API-Endpoint}/ak/api/v3/signature_collections" \
+                      curl -X POST "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/signature_collections" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
@@ -3302,9 +3213,6 @@ paths:
                               \"number_of_signatures\": 1
                             }
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.signature_collections.create
       responses:
         200:
           description: Request was successful.
@@ -3401,11 +3309,8 @@ paths:
 
   /ak/api/v3/signature_collections/{id}:
     put:
-      x-visible-environment: hidden # not visible anywhere, api is only used by apollo. the spec is still used by the validator.
-      x-sdk-exclude: true
-      x-cli-exclude: true
       tags:
-        - Administer the Fabric Operations console
+        - Administer the console
       summary: Edit a signature collection tx
       description: Edit or redistribute a signature collection transaction. These transactions involve creating or editing Fabric channels & chaincode approvals.
       operationId: edit_sig_tx
@@ -3426,7 +3331,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X PUT "https://{API-Endpoint}/ak/api/v3/signature_collections/{Transaction-ID}" \
+                      curl -X PUT "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/signature_collections/{Transaction-ID}" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
@@ -3444,9 +3349,6 @@ paths:
                                 \"hash_ver\": \"v2\"
                             }
                         }"
-      x-ibm-events:
-        events:
-          - name: blockchain.signature_collections.update
       responses:
         200:
           description: Request was successful.
@@ -3542,7 +3444,7 @@ paths:
                 $ref: '#/components/schemas/Forbidden'
     delete:
       tags:
-        - Administer the Fabric Operations console
+        - Administer the console
       summary: Delete a signature collection tx
       description: Delete a signature collection transaction. These transactions involve creating or editing Fabric channels & chaincode approvals. This request is not distributed to external Fabric Operations consoles, thus the signature collection transaction is only deleted locally.
       operationId: delete_sig_tx
@@ -3557,11 +3459,8 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X DELETE "https://{API-Endpoint}/ak/api/v3/signature_collections/{Transaction-ID}" \
+                      curl -X DELETE "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/signature_collections/{Transaction-ID}" \
                       -H "Authorization: Bearer {Access-Token}"
-      x-ibm-events:
-        events:
-          - name: blockchain.signature_collections.delete
       responses:
         200:
           description: Request was successful.
@@ -3590,8 +3489,8 @@ paths:
   /ak/api/v3/notifications/bulk:
     post:
       tags:
-        - Administer the Fabric Operations console
-      summary: Archive notifications
+        - Administer the console
+      summary: Archive console notifications
       description: Archive 1 or more notifications. Archived notifications will no longer appear in the default [Get all notifications](#list-notifications) API.
       operationId: archive_notifications
       requestBody:
@@ -3610,7 +3509,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X POST "https://{API-Endpoint}/ak/api/v3/notifications/bulk" \
+                      curl -X POST "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/notifications/bulk" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
@@ -3620,9 +3519,6 @@ paths:
                                 \"d7d831ddcd8d8c5bf87f4d972f675096\"
                             ]
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.notifications.delete
       responses:
         200:
           description: Request was successful.
@@ -3669,12 +3565,9 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X GET "https://{API-Endpoint}/ak/api/v3/components" \
+                      curl -X GET "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/components" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.read
       responses:
         200:
           description: Request was successful.
@@ -3812,12 +3705,9 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X GET "https://{API-Endpoint}/ak/api/v3/components/types/{Type}" \
+                      curl -X GET "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/components/types/{Type}" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.read
       responses:
         200:
           description: Request was successful.
@@ -3955,12 +3845,9 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X GET "https://{API-Endpoint}/ak/api/v3/components/tags/{Tag}" \
+                      curl -X GET "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/components/tags/{Tag}" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.read
       responses:
         200:
           description: Request was successful.
@@ -4097,11 +3984,8 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X DELETE "https://{API-Endpoint}/ak/api/v3/components/{Tag}" \
+                      curl -X DELETE "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/components/{Tag}" \
                       -H "Authorization: Bearer {Access-Token}"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.remove
       responses:
         200:
           description: Request was successful.
@@ -4151,11 +4035,8 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X DELETE "https://{API-Endpoint}/ak/api/v3/kubernetes/components/tags/{Tag}" \
+                      curl -X DELETE "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/kubernetes/components/tags/{Tag}" \
                       -H "Authorization: Bearer {Access-Token}"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.delete
       responses:
         200:
           description: Request was successful.
@@ -4200,11 +4081,8 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X DELETE "https://{API-Endpoint}/ak/api/v3/kubernetes/components/purge" \
+                      curl -X DELETE "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/kubernetes/components/purge" \
                       -H "Authorization: Bearer {Access-Token}"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.delete
       responses:
         200:
           description: Request was successful.
@@ -4236,8 +4114,8 @@ paths:
   /ak/api/v3/restart:
     post:
       tags:
-        - Administer the Fabric Operations console
-      summary: Restart the Fabric Operations console
+        - Administer the console
+      summary: Restart console
       description: Restart Fabric Operations console processes. This causes a small outage (10 - 30 seconds) which is possibly disruptive to active user sessions.
       operationId: restart
       x-sdk-operations:
@@ -4249,12 +4127,9 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X POST "https://{API-Endpoint}/ak/api/v3/restart" \
+                      curl -X POST "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/restart" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}"
-      x-ibm-events:
-        events:
-          - name: blockchain.ibp_console.start
       responses:
         200:
           description: Request was successful.
@@ -4281,12 +4156,10 @@ paths:
 
   /ak/api/v3/logs/file_settings:
     put:
-      x-visible-environment: hidden # not visible anywhere, use `/ak/api/v3/settings` instead. api still exists & this spec is still used by the validator.
-      x-sdk-exclude: true
-      x-cli-exclude: true
+      x-hidden: true # use `/ak/api/v3/settings` instead of this api
       tags:
-        - Administer the Fabric Operations console
-      summary: Change logging settings
+        - Administer the console
+      summary: Edit console logging
       description: Change your **Fabric Operations console's** file logging settings. Settings that are omitted from the request body will remain as is.
       operationId: update_file_settings
       requestBody:
@@ -4305,7 +4178,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X PUT "https://{API-Endpoint}/ak/api/v3/logs/file_settings" \
+                      curl -X PUT "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/logs/file_settings" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
@@ -4320,9 +4193,6 @@ paths:
                               \"unique_name\": false
                             }
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.ibp_console.update
       responses:
         200:
           description: Request was successful.
@@ -4363,9 +4233,9 @@ paths:
   /ak/api/v3/sessions:
     delete:
       tags:
-        - Administer the Fabric Operations console
-      summary: Delete all Fabric Operations console sessions
-      description: Delete all client sessions in Fabric Operations console. Use this API to clear any active logins and force everyone to log in again. This API is useful for debugging purposes and when changing roles of a user. It forces any role changes to take effect immediately. Otherwise, permission or role changes will take effect during the user's next login or session expiration.
+        - Administer the console
+      summary: Delete console sessions
+      description: Delete all client sessions in Fabric Operations console. Use this API to clear any active logins and force everyone to login again.
       operationId: delete_all_sessions
       x-sdk-operations:
         request-examples:
@@ -4376,12 +4246,9 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X DELETE "https://{API-Endpoint}/ak/api/v3/sessions" \
+                      curl -X DELETE "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/sessions" \
                         -H "Content-Type: application/json" \
                         -H "Authorization: Bearer {Access-Token}"
-      x-ibm-events:
-        events:
-          - name: blockchain.sessions.delete
       responses:
         200:
           description: Request was successful.
@@ -4410,9 +4277,9 @@ paths:
   /ak/api/v3/notifications/purge:
     delete:
       tags:
-        - Administer the Fabric Operations console
-      summary: Delete all notifications
-      description: Delete all notifications. This API is intended for administration.
+        - Administer the console
+      summary: Delete console notifications
+      description: Delete all Fabric Operations console notifications/events.
       operationId: delete_all_notifications
       x-sdk-operations:
         request-examples:
@@ -4423,12 +4290,9 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X DELETE "https://{API-Endpoint}/ak/api/v3/notifications/purge" \
+                      curl -X DELETE "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/notifications/purge" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}"
-      x-ibm-events:
-        events:
-          - name: blockchain.notifications.delete
       responses:
         200:
           description: Request was successful.
@@ -4457,8 +4321,8 @@ paths:
   /ak/api/v3/cache:
     delete:
       tags:
-        - Administer the Fabric Operations console
-      summary: Clear Fabric Operations console caches
+        - Administer the console
+      summary: Clear console caches
       description: Clear the in-memory caches across all Fabric Operations console server processes. No effect on caches that are currently disabled.
       operationId: clear_caches
       x-sdk-operations:
@@ -4470,11 +4334,8 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X DELETE "https://{API-Endpoint}/ak/api/v3/cache" \
+                      curl -X DELETE "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/cache" \
                       -H "Authorization: Bearer {Access-Token}"
-      x-ibm-events:
-        events:
-          - name: blockchain.cache.delete
       responses:
         200:
           description: Request was successful.
@@ -4539,16 +4400,13 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X PUT "https://{API-Endpoint}/ak/api/v3/kubernetes/components/{Component-ID}/certs" \
+                      curl -X PUT "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/kubernetes/components/{Component-ID}/certs" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
                             \"append_admin_certs\": [\"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=\"],
                             \"remove_admin_certs\": []
                           }"
-      x-ibm-events:
-        events:
-          - name: blockchain.components.update
       responses:
         200:
           description: Request was successful.
@@ -4607,7 +4465,7 @@ paths:
         Choose an auth strategy that matches your environment & concerns:
 
         - **Bearer Auth** - This is the recommended auth strategy. The same bearer token used to authenticate this request will be copied into the Postman collection examples. Since the bearer token expires the auth embedded in the collection will also expire. At that point the collection might be deleted & regenerated, or manually edited to refresh the authorization header values. To use this strategy set `auth_type` to `bearer`.
-        - **Api Key Auth** - The IAM api key will be copied into the Postman collection examples. This means the auth embedded in the collection will never expire. To use this strategy set `auth_type` to `api_key`.
+        - **Api Key Auth** - The api key will be copied into the Postman collection examples. This means the auth embedded in the collection will never expire. To use this strategy set `auth_type` to `api_key`.
         - **Basic Auth** - A basic auth username and password will be copied into the Postman collection examples. This is **not** recommended because these credentials do not expire. To use this strategy set `auth_type` to `basic`.
 
       operationId: get_postman
@@ -4626,11 +4484,8 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X GET "https://{API-Endpoint}/ak/api/v3/postman?auth_type={Auth-Type}&token={Access-Token}" \
+                      curl -X GET "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/postman?auth_type={Auth-Type}&token={Access-Token}" \
                       -H "Authorization: Bearer {Access-Token}"
-      x-ibm-events:
-        events:
-          - name: blockchain.ibp_console.read
       responses:
         200:
           description: Request was successful.
@@ -4670,11 +4525,8 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X GET "https://{API-Endpoint}/ak/api/v3/openapi" \
+                      curl -X GET "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/openapi" \
                       -H "Authorization: Bearer {Access-Token}"
-      x-ibm-events:
-        events:
-          - name: blockchain.ibp_console.read
       responses:
         200:
           description: Request was successful.
@@ -4697,12 +4549,11 @@ paths:
 
   /ak/api/v3/backups:
     get:
-      x-sdk-exclude: true
-      x-cli-exclude: true
+      x-hidden: true
       tags:
-        - Administer the Fabric Operations console
-      summary: Get backup ids
-      description: Get the ids of all database backups.
+        - Administer the console
+      summary: Get console backup ids
+      description: Get the ids of all Fabric Operations console database backups.
       operationId: get_db_backups
       x-sdk-operations:
         request-examples:
@@ -4713,7 +4564,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X GET "https://{API-Endpoint}/ak/api/v3/backups" \
+                      curl -X GET "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/backups" \
                       -H "Authorization: Bearer {Access-Token}"
       responses:
         200:
@@ -4740,11 +4591,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/Forbidden'
     post:
-      x-sdk-exclude: true
-      x-cli-exclude: true
+      x-hidden: true
       tags:
-        - Administer the Fabric Operations console
-      summary: Start a database backup
+        - Administer the console
+      summary: Start console backup
       description: Start a backup of Fabric Operations console databases. The api will return before the backup is complete.
       operationId: start_db_backup
       x-sdk-operations:
@@ -4756,7 +4606,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X POST "https://{API-Endpoint}/ak/api/v3/backups" \
+                      curl -X POST "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/backups" \
                       -H "Authorization: Bearer {Access-Token}"
       responses:
         200:
@@ -4785,12 +4635,11 @@ paths:
                 $ref: '#/components/schemas/Forbidden'
 
     put:
-      x-sdk-exclude: true
-      x-cli-exclude: true
+      x-hidden: true
       tags:
-        - Administer the Fabric Operations console
-      summary: Restore databases via backup data
-      description: Restore the contents of a backup by sending the backup data in the body. The api will return before the restore is complete.
+        - Administer the console
+      summary: Restore console data
+      description: Restore the contents of a Fabric Operations console backup by sending the backup data in the body. The api will return before the restore is complete.
       operationId: start_db_restore
       requestBody:
         description: Restore backup settings.
@@ -4808,7 +4657,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X PUT "https://{API-Endpoint}/ak/api/v3/backups" \
+                      curl -X PUT "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/backups" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
@@ -4851,12 +4700,11 @@ paths:
 
   /ak/api/v3/backups/{id}:
     put:
-      x-sdk-exclude: true
-      x-cli-exclude: true
+      x-hidden: true
       tags:
-        - Administer the Fabric Operations console
-      summary: Restore databases via backup id
-      description: Restore the contents of a backup by sending the backup id. The api will return before the restore is complete.
+        - Administer the console
+      summary: Restore console data via id
+      description: Restore the contents of a Fabric Operations console backup by sending the backup id. The api will return before the restore is complete.
       operationId: start_db_restore_id
       parameters:
         - $ref: '#/components/parameters/PathBackupId'
@@ -4876,7 +4724,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X PUT "https://{API-Endpoint}/ak/api/v3/backups/03_ibp_db_backup_1592924104038" \
+                      curl -X PUT "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/backups/03_ibp_db_backup_1592924104038" \
                       -H "Authorization: Bearer {Access-Token}" \
 
       responses:
@@ -4904,12 +4752,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/Forbidden'
     get:
-      x-sdk-exclude: true
-      x-cli-exclude: true
+      x-hidden: true
       tags:
-        - Administer the Fabric Operations console
-      summary: Get a database backup
-      description: Download a database backup. Includes attachments.
+        - Administer the console
+      summary: Get console backup
+      description: Download a Fabric Operations console database backup.
       operationId: get_db_backup
       parameters:
         - $ref: '#/components/parameters/PathBackupId'
@@ -4922,7 +4769,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X GET "https://{API-Endpoint}/ak/api/v3/backups/03_ibp_db_backup_1592924104038" \
+                      curl -X GET "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/backups/03_ibp_db_backup_1592924104038" \
                       -H "Authorization: Bearer {Access-Token}" \
 
       responses:
@@ -4950,11 +4797,10 @@ paths:
 
   /ak/api/v3/backups/{id}/attachments/{att_name}:
     put:
-      x-sdk-exclude: true
-      x-cli-exclude: true
+      x-hidden: true
       tags:
-        - Administer the Fabric Operations console
-      summary: Attach data to a backup
+        - Administer the console
+      summary: Attach data to console backup
       description: Attach custom data to a Fabric Operations console backup. If the attachment name already exist the data will be replaced.
       operationId: attach_db_backup
       parameters:
@@ -4976,7 +4822,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X PUT "https://{API-Endpoint}/ak/api/v3/backups/03_ibp_db_backup_1592924104038/attatchments/my-attachement" \
+                      curl -X PUT "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/backups/03_ibp_db_backup_1592924104038/attatchments/my-attachement" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
@@ -5009,19 +4855,18 @@ paths:
 
   /ak/api/v3/link/resources/{encoded_crn}:
     post:
-      x-sdk-exclude: true
-      x-cli-exclude: true
+      x-hidden: true
       tags:
-        - Administer the Fabric Operations console
-      summary: Link a resource to a cluster
+        - Administer the console
+      summary: Link resource to cluster
       description: |
         This api will create a link to a cluster. Once the link is made an Fabric Operations console will be deployed into the cluster.
 
         **This API requires unique authorization headers.**
         In addition to the normal `Authorization` header the `x-refresh-token` must be set. Header details:
 
-        - **Authorization** - This header must be a **user's** bearer IAM token in the form `Bearer access-token-here`. The access token can be found in the `access_token` field of your IAM response during the apikey exchange. More details below.
-        - **x-refresh-token** - This header must be a refresh IAM token. The refresh token can be found in the `refresh_token` field of your IAM response during the apikey exchange. More details below.
+        - **Authorization** - This header must be a **user's** bearer token in the form `Bearer access-token-here`. The access token can be found in the `access_token` field of your response during the apikey exchange. More details below.
+        - **x-refresh-token** - This header must be a refresh token. The refresh token can be found in the `refresh_token` field of your response during the apikey exchange. More details below.
 
         **User Apikey Exchange**
 
@@ -5046,7 +4891,7 @@ paths:
                   lang: curl
                   source:
                     - |-
-                      curl -X POST "https://{API-Endpoint}/ak/api/v3/link/resources/crn%3Av1%3Abluemix%3Apublic%3Ablockchain%3Aus-south%3Aa%2Fe00012345%3A000-000-000-000-000%3A%3A" \
+                      curl -X POST "https://{REPLACE_HOSTNAME_AND_PORT}/ak/api/v3/link/resources/crn%3Av1%3Abluemix%3Apublic%3Ablockchain%3Aus-south%3Aa%2Fe00012345%3A000-000-000-000-000%3A%3A" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}" \
                       -H "x-refresh-token: {Refresh-Token}" \
@@ -5077,15 +4922,12 @@ paths:
   #
   #.
   # -----------------------------------------------------------------------------------------------------------------------------------------------------------
-  # Software APIs - ! not applicable for IBP SaaS!
+  # Software APIs - ! not applicable for SaaS!
   # -----------------------------------------------------------------------------------------------------------------------------------------------------------
   /ak/api/v3/permissions/keys:
     post:
-      x-visible-environment: hidden
-      x-sdk-exclude: true
-      x-cli-exclude: true
       tags:
-        - Administer the Fabric Operations console
+        - Administer the console
       summary: Create api key
       description: Create a console api key. This key can be used to authenticate and call other APIs. Only users or api keys with a `manager` role can call this api. The `api_secret` in the response must be saved by the user. It is unrecoverable. API keys do not expire but can be deleted.
       operationId: create_ibp_api_key
@@ -5130,11 +4972,8 @@ paths:
                 $ref: '#/components/schemas/Forbidden'
 
     get:
-      x-visible-environment: hidden
-      x-sdk-exclude: true
-      x-cli-exclude: true
       tags:
-        - Administer the Fabric Operations console
+        - Administer the console
       summary: List api keys
       description: List all console api keys and their descriptions. The api secrets will not be in the response.
       operationId: get_ibp_api_keys
@@ -5169,11 +5008,8 @@ paths:
 
   /ak/api/v3/permissions/keys/{key_id}:
     delete:
-      x-visible-environment: hidden
-      x-sdk-exclude: true
-      x-cli-exclude: true
       tags:
-        - Administer the Fabric Operations console
+        - Administer the console
       summary: Delete api key
       description: Delete a single console api key. The key becomes unusable immediately.
       operationId: delete_ibp_api_key
@@ -5210,13 +5046,10 @@ paths:
 
   /ak/api/v3/permissions/users:
     post:
-      x-visible-environment: hidden
-      x-sdk-exclude: true
-      x-cli-exclude: true
       tags:
-        - Administer the Fabric Operations console
+        - Administer the console
       summary: Add users
-      description: Add new users to the Fabric Operations console. Users can log in and perform operations Fabric Operations console operations. Only users or api keys with a `manager` role can call this api.
+      description: Add new users to the Fabric Operations console. Users can login and perform operations Fabric Operations console operations. Only users or api keys with a `manager` role can call this api.
       operationId: add_ibp_users
       requestBody:
         description: Pass the desired roles for the usernames. Valid roles - "reader", "writer", "manager".
@@ -5250,11 +5083,8 @@ paths:
                 $ref: '#/components/schemas/Forbidden'
 
     delete:
-      x-visible-environment: hidden
-      x-sdk-exclude: true
-      x-cli-exclude: true
       tags:
-        - Administer the Fabric Operations console
+        - Administer the console
       summary: Delete users
       description: Delete existing console users by uuid. Only users or api keys with a `manager` role can call this api. Note that uuids are expected, not usernames.
       operationId: delete_ibp_users
@@ -5286,11 +5116,8 @@ paths:
                 $ref: '#/components/schemas/Forbidden'
 
     put:
-      x-visible-environment: hidden
-      x-sdk-exclude: true
-      x-cli-exclude: true
       tags:
-        - Administer the Fabric Operations console
+        - Administer the console
       summary: Edit users
       description: Edit existing console users by uuid. Only users or api keys with a `manager` role can call this api. Note that uuids are expected, not usernames.
       operationId: edit_ibp_user_roles
@@ -5327,11 +5154,8 @@ paths:
                 $ref: '#/components/schemas/Forbidden'
 
     get:
-      x-visible-environment: hidden
-      x-sdk-exclude: true
-      x-cli-exclude: true
       tags:
-        - Administer the Fabric Operations console
+        - Administer the console
       summary: List users
       description: List users of the Fabric Operations console. Includes the user's roles and the timestamp of when it was added.
       operationId: get_ibp_users
@@ -5362,11 +5186,8 @@ paths:
 
   /ak/api/v3/permissions/users/password/reset:
     put:
-      x-visible-environment: hidden
-      x-sdk-exclude: true
-      x-cli-exclude: true
       tags:
-        - Administer the Fabric Operations console
+        - Administer the console
       summary: Reset users' passwords
       description: Reset multiple console user passwords to the default password. The default password was chosen when Fabric Operations console was initially set up. Only users or api keys with a `manager` role can call this api.
       operationId: reset_ibp_user_passwords
@@ -5759,16 +5580,19 @@ components:
         hf.Registrar.Roles:
           type: string
           example: '*'
+          description: Roles that a registar is allowed to assign to users it registers.
           x-validate_case_insensitive: true
           x-validate_overwrite_key: hf.Registrar.Roles
         hf.Registrar.DelegateRoles:
           type: string
           example: '*'
+          description: Roles that a registar is allowed to assign to the hf.Registrar.Roles *attribute* for users it registers.
           x-validate_case_insensitive: true
           x-validate_overwrite_key: hf.Registrar.DelegateRoles
         hf.Revoker:
           type: boolean
           example: true
+          description: If `true` this user can revoke certificates.
           x-validate_case_insensitive: true
           x-validate_overwrite_key: hf.Revoker
         hf.IntermediateCA:
@@ -11401,8 +11225,8 @@ components:
       name: auth_type
       in: query
       description: |
-        - **bearer** - IAM Bearer Auth - The same bearer token used to authenticate this request will be copied into the Postman collection examples. The query parameter `token` must also be set with your IAM bearer/access token value.
-        - **api_key** - IAM Api Key Auth - The IAM api key will be copied into the Postman collection examples. The query parameter `api_key` must also be set with your IAM API Key value.
+        - **bearer** - Bearer Auth - The same bearer token used to authenticate this request will be copied into the Postman collection examples. The query parameter `token` must also be set with your bearer/access token value.
+        - **api_key** - Api Key Auth - The api key will be copied into the Postman collection examples. The query parameter `api_key` must also be set with your API Key value.
         - **basic** - Basic Auth - A basic auth username and password will be copied into the Postman collection examples. The query parameters `username` & `password` must also be set with your console api key credentials. The console api key is the username and the api secret is the password.
       required: true
       schema:
@@ -11434,7 +11258,7 @@ components:
     AuthToken:
       name: token
       in: query
-      description: The IAM access/bearer token to use for auth in the collection.
+      description: The access/bearer token to use for auth in the collection.
       required: false
       schema:
         type: string
@@ -11442,7 +11266,7 @@ components:
     AuthApiKey:
       name: api_key
       in: query
-      description: The IAM api key to use for auth in the collection.
+      description: The api key to use for auth in the collection.
       required: false
       schema:
         type: string
