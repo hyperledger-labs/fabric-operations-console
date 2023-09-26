@@ -2,28 +2,21 @@ openapi: 3.0.0
 
 info:
   title: Fabric Operations console APIs
-  description: This doc lists APIs that you can use to interact with your Fabric Operations console
+  description: APIs to manage your Hyperledger Fabric Operations console
   contact:
-    name: Blockchain Service Support
-    url: https://cloud.ibm.com/docs/blockchain/ibmblockchain_support.html#ibmblockchain_support
+    name: Fabric Operations console docs
+    url: https://github.com/hyperledger-labs/fabric-operations-console
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 2.5.0
 
-externalDocs:
-  description: Find out more about Swagger
-  url: http://swagger.io
-
 servers:
-  - url: https://{instance_id}.{cluster_id}.blockchain.cloud.ibm.com
+  - url: https://{REPLACE_HOSTNAME_AND_PORT}
     variables:
-      instance_id:
-        description: The id of the instance of the blockchain service
-        default: my-instance-id
-      cluster_id:
-        description: The id of the cluster where the blockchain service is located
-        default: my-cluster-id
+      REPLACE_HOSTNAME_AND_PORT:
+        description: The hostname and external port of your Fabric Operations console
+        default: example.com:443
 
 security:
   - BearerAuth: []
@@ -33,12 +26,10 @@ tags:
     description: APIs to get, create, import, edit, or delete a component.
   - name: Manage multiple components
     description: APIs to get & delete multiple components.
-  - name: Administer the IBP console
-    description: APIs to change or monitor the IBP console.
+  - name: Administer the Fabric Operations console
+    description: APIs to change or monitor the Fabric Operations console.
   - name: Download examples
     description: APIs to get postman collections and swagger files.
-  - name: IBP Software APIs
-    description: APIs that are only available for IBP Software (OpenShift Container Platform or IBM Cloud Private)
 #
 #
 #
@@ -127,7 +118,7 @@ x-validate_error_messages:
   # it is invalid to have this parameter and NOT have another parameter in the same body.
   invalid_combo_missing: "Parameter '$PROPERTY_NAME' is missing companion parameter '$COMPANION_PROPERTY'. Both fields must exist."
 
-  # it is invalid to set this field if using a free k8s plan - doesn't apply to IBP software
+  # it is invalid to set this field if using a free k8s plan - doesn't apply to software
   invalid_key_on_free_plan: "A *free* IBM Cloud Kubernetes cluster cannot use the parameter '$PROPERTY_NAME'."
 
   # it is invalid to set more than 1 key in this body
@@ -152,7 +143,7 @@ paths:
       tags:
         - Manage component
       summary: Get component data
-      description: Get the IBP console's data on a component (peer, CA, orderer, or MSP). The component might be imported or created.
+      description: Get the Fabric Operations console's data on a component (peer, CA, orderer, or MSP). The component might be imported or created.
       operationId: get_component
       parameters:
         - $ref: '#/components/parameters/PathIdGet'
@@ -171,35 +162,6 @@ paths:
                     - |-
                       curl -X GET "https://{API-Endpoint}/ak/api/v2/components/{Component-ID}?cache=skip&deployment_attrs=included" \
                       -H "Authorization: Bearer {Access-Token}"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Get data for component "{Component-ID}"
-                      opts := service.NewGetComponentOptions("{Component-ID}")
-                      result, detailedResponse, err := service.GetComponent(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -231,9 +193,9 @@ paths:
         - Manage component
       summary: Remove imported component
       description: |
-        Remove a single component from the IBP console.
-        - Using this api on an **imported** component removes it from the IBP console.
-        - Using this api on a **created** component removes it from the IBP console **but** it will **not** delete the component from the Kubernetes cluster where it resides. Thus it orphans the Kubernetes deployment (if it exists). Instead use the [Delete component](#delete-component) API to delete the Kubernetes deployment and the IBP console data at once.
+        Remove a single component from the Fabric Operations console.
+        - Using this api on an **imported** component removes it from the Fabric Operations console.
+        - Using this api on a **created** component removes it from the Fabric Operations console **but** it will **not** delete the component from the Kubernetes cluster where it resides. Thus it orphans the Kubernetes deployment (if it exists). Instead use the [Delete component](#delete-component) API to delete the Kubernetes deployment and the Fabric Operations console data at once.
       operationId: remove_component
       parameters:
         - name: id
@@ -255,35 +217,6 @@ paths:
                     - |-
                       curl -X DELETE "https://{API-Endpoint}/ak/api/v2/components/{Component-ID}" \
                       -H "Authorization: Bearer {Access-Token}"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Remove component
-                      opts := service.NewRemoveComponentOptions("myca")
-                      result, detailedResponse, err := service.RemoveComponent(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -310,9 +243,9 @@ paths:
         - Manage component
       summary: Delete component
       description: |
-        Removes a single component from the IBP console **and** it deletes the Kubernetes deployment.
+        Removes a single component from the Fabric Operations console **and** it deletes the Kubernetes deployment.
         - Using this api on an **imported** component will *error out* since its Kubernetes deployment is unknown and cannot be removed. Instead use the [Remove imported component](#remove-imported-component) API to remove imported components.
-        - Using this api on a **created** component removes it from the IBP console **and** it will delete the component from the Kubernetes cluster where it resides. The Kubernetes delete must succeed before the component will be removed from the IBP console.
+        - Using this api on a **created** component removes it from the Fabric Operations console **and** it will delete the component from the Kubernetes cluster where it resides. The Kubernetes delete must succeed before the component will be removed from the Fabric Operations console.
       operationId: delete_component
       parameters:
         - name: id
@@ -334,35 +267,6 @@ paths:
                     - |-
                       curl -X DELETE "https://{API-Endpoint}/ak/api/v2/kubernetes/components/{Component-ID}" \
                       -H "Authorization: Bearer {Access-Token}"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                       authenticator := &core.IamAuthenticator{
-                           ApiKey: "{API-Key}",
-                       }
-
-                       // Create an instance of the "BlockchainV2Options" struct
-                       options := &blockchainv2.BlockchainV2Options{
-                           Authenticator: authenticator,
-                           URL: "https://{API-Endpoint}",
-                       }
-
-                       // Create an instance of the "BlockchainV2" service client.
-                       service, err := blockchainv2.NewBlockchainV2(options)
-                       if err != nil {
-                           return
-                       }
-
-                       // Delete component
-                       opts := service.NewDeleteComponentOptions("myca")
-                       replace, detailedResponse, err := service.DeleteComponent(opts)
-                       fmt.Println("result:", replace)
-                       fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -440,53 +344,6 @@ paths:
                               }
                             }
                           }"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Create CA
-                      var identities []blockchainv2.ConfigCARegistryIdentitiesItem
-                      svc, err := service.NewConfigCARegistryIdentitiesItem("{User_Name}", "{Secret}", "{Type}")
-                      if err != nil {
-                        return //err
-                      }
-                      identities = append(identities, *svc)
-                      registry, err := service.NewConfigCARegistry(-1, identities)
-                      if err != nil {
-                        return
-                      }
-                      ca_config_create, err := service.NewConfigCACreate(registry)
-                      if err != nil {
-                        return
-                      }
-                      config_override, err := service.NewCreateCaBodyConfigOverride(ca_config_create)
-                      if err != nil {
-                        return
-                      }
-                      opts := service.NewCreateCaOptions("{ Display_Name }", config_override)
-                      result, detailedResponse, err := service.CreateCa(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -518,7 +375,7 @@ paths:
       tags:
         - Manage component
       summary: Import a CA
-      description: Import an existing Certificate Authority (CA) to your IBP console. It is recommended to only import components that were created by this or another IBP console.
+      description: Import an existing Certificate Authority (CA) to your Fabric Operations console. It is recommended to only import components that were created by this or another Fabric Operations console.
       operationId: import_ca
       requestBody:
         description: Import a CA.
@@ -546,37 +403,8 @@ paths:
                             \"ca_name\": \"ca\",
                             \"tlsca_name\": \"tlsca\",
                             \"tls_cert\": \"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo\",
-                            \"location\": \"ibmcloud\"
+                            \"location\": \"cloud\"
                           }"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Import CA
-                      opts := service.NewImportCaOptions("{Display_Name}", "{API_URL}", "{CA_Name}", "{TLS_CA_Name}", "{TLS_Cert}")
-                      result, detailedResponse, err := service.ImportCa(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -641,49 +469,6 @@ paths:
                               }
                              }
                           }"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                        ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                        Authenticator: authenticator,
-                        URL:           "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                        return
-                      }
-
-                      // Update CA
-                      cpu := "200m"
-                      memory := "256Mi"
-                      resourceRequests := blockchainv2.ResourceRequests{Cpu: &cpu, Memory: &memory}
-                      resourceObject, err := service.NewResourceObject(&resourceRequests)
-                      if err != nil {
-                        return
-                      }
-
-                      caBodyResources, err := service.NewUpdateCaBodyResources(resourceObject)
-                      if err != nil {
-                        return
-                      }
-
-                      opts := service.NewUpdateCaOptions("{ CA_Id }")
-                      opts.SetResources(caBodyResources)
-                      result, detailedResponse, err := service.UpdateCa(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -748,38 +533,6 @@ paths:
                             \"display_name\": \"My Other CA\",
                             \"tags\": [\"fabric-ca\", \"ibm_saas\", \"blue_team\", \"dev\"]
                           }"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                        ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                        Authenticator: authenticator,
-                        URL:           "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                        return
-                      }
-
-                      // Edit CA Data
-                      tags := [4]string{"fabric-ca", "ibm_sass", "blue_team", "dev"}
-                      opts := service.NewEditCaOptions("{CA_Id}")
-                      opts.SetCaName("My Ca Edited")
-                      opts.SetTags(tags[:])
-                      result, detailedResponse, err := service.EditCa(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -878,57 +631,6 @@ paths:
                               }
                             }
                           }"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                        ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                        Authenticator: authenticator,
-                        URL:           "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                        return
-                      }
-
-                      // Create Peer
-                      cacerts := [1]string{"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo"}
-                      component, err := service.NewMspConfigData(
-                        "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo",
-                        "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo",
-                        cacerts[:])
-                      if err != nil {
-                        return
-                      }
-
-                      tls, err := service.NewMspConfigData(
-                        "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo",
-                        "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo",
-                        cacerts[:])
-                      if err != nil {
-                        return
-                      }
-
-                      configObjectMsp, err := service.NewConfigObjectMsp(component, tls)
-                      if err != nil {
-                        return
-                      }
-                      configObject := blockchainv2.ConfigObject{Msp: configObjectMsp}
-                      opts := service.NewCreatePeerOptions("{MSP_Name}", "{Peer_Name}", &configObject)
-                      result, detailedResponse, err := service.CreatePeer(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
 
       responses:
         200:
@@ -961,7 +663,7 @@ paths:
       tags:
         - Manage component
       summary: Import a peer
-      description: Import an existing peer into your IBP console. It is recommended to only import components that were created by this or another IBP console.
+      description: Import an existing peer into your Fabric Operations console. It is recommended to only import components that were created by this or another Fabric Operations console.
       operationId: import_peer
       requestBody:
         description: Import a peer.
@@ -992,35 +694,6 @@ paths:
                             \"tls_cert\": \"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo\",
                             \"tls_ca_root_cert\": \"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkRpZmZlcmVudCBkYXRhIGhlcmUgaWYgdGhpcyB3YXMgcmVhbAotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==\"
                           }"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                        ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                        Authenticator: authenticator,
-                        URL:           "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                        return
-                      }
-
-                      // Import Peer
-                      opts := service.NewImportPeerOptions("{Display_Name}", "{MSP_ID}", "GRPCWP_URL", "{TLS_CA_ROOT_CERT}")
-                      result, detailedResponse, err := service.ImportPeer(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -1080,39 +753,6 @@ paths:
                             \"msp_id\": \"peermsp\",
                             \"tags\": [\"fabric-peer\", \"ibm_saas\", \"red_team\", \"prod\"]
                           }"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                        ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                        Authenticator: authenticator,
-                        URL:           "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                        return
-                      }
-
-                      // Edit Peer Data
-                      tags := [4]string{"fabric-peer", "ibm_sass", "red_team", "dev"}
-                      opts := service.NewEditPeerOptions("{Peer_Id}")
-                      opts.SetDisplayName("My Other Peer")
-                      opts.SetMspID("peermsp")
-                      opts.SetTags(tags[:])
-                      result, detailedResponse, err := service.EditPeer(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -1183,46 +823,6 @@ paths:
                               }
                             }
                           }"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                        ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                        Authenticator: authenticator,
-                        URL:           "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                        return
-                      }
-
-                      // Update Peer
-                      cpu := "400m"
-                      memory := "800Mi"
-                      resourceRequests := blockchainv2.ResourceRequests{Cpu: &cpu, Memory: &memory}
-                      resourceObject, err := service.NewResourceObject(&resourceRequests)
-                      if err != nil {
-                        return
-                      }
-
-                      peerBodyResources := &blockchainv2.PeerResources{Peer: resourceObject}
-
-                      opts := service.NewUpdatePeerOptions("{Peer_Id}")
-                      opts.SetResources(peerBodyResources)
-                      result, detailedResponse, err := service.UpdatePeer(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -1288,67 +888,6 @@ paths:
                             \"cluster_name\": \"My three Node Raft\",
                             \"display_name\": \"ordering service node\"
                           }"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                        ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                        Authenticator: authenticator,
-                        URL:           "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                        return
-                      }
-
-                      // Create Ordering Service
-                      cacert, err := service.NewConfigObjectEnrollmentComponentCatls("LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo")
-                      if err != nil {
-                      	return
-                      }
-
-                      caTlsCert, err := service.NewConfigObjectEnrollmentTlsCatls("LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo")
-                      if err != nil {
-                      	return
-                      }
-
-                      enrollmentComponent, err := service.NewConfigObjectEnrollmentComponent("localhost", float64(3000), "myca", cacert, "admin", "password")
-                      if err != nil {
-                      	return
-                      }
-
-                      tlsEnrollment, err := service.NewConfigObjectEnrollmentTls("localhost", float64(3000), "myca", caTlsCert)
-                      if err != nil {
-                      	return
-                      }
-
-                      objectEnrollment, err := service.NewConfigObjectEnrollment(enrollmentComponent, tlsEnrollment)
-                      if err != nil {
-                      	return
-                      }
-
-                      configObject := blockchainv2.ConfigObject{Enrollment: objectEnrollment}
-                      configObjectArray := [1]blockchainv2.ConfigObject{configObject}
-                      opts := service.NewCreateOrdererOptions("{Orderer_Type}", "{Msp_Id}", "{Display_Name}", configObjectArray[:])
-                      opts.SetOrdererType("raft")
-                      opts.SetMspID("orderermsp")
-                      opts.SetConfig(configObjectArray[:])
-                      opts.SetClusterName("My three Node Raft")
-                      opts.SetDisplayName("ordering service node")
-                      result, detailedResponse, err := service.CreateOrderer(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -1380,7 +919,7 @@ paths:
       tags:
         - Manage component
       summary: Import an ordering service
-      description: Import an existing Ordering Service (OS) to your IBP console. It is recommended to only import components that were created by this or another IBP console.
+      description: Import an existing Ordering Service (OS) to your Fabric Operations console. It is recommended to only import components that were created by this or another Fabric Operations console.
       operationId: import_orderer
       requestBody:
         description: Import an ordering service.
@@ -1413,40 +952,6 @@ paths:
                           \"tls_cert\": \"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo\",
                           \"tls_ca_root_cert\": \"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkRpZmZlcmVudCBkYXRhIGhlcmUgaWYgdGhpcyB3YXMgcmVhbAotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==\"
                         }"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                        ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                        Authenticator: authenticator,
-                        URL:           "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                        return
-                      }
-
-                      // Import Ordering Service
-                      opts := service.NewImportOrdererOptions("{Cluster_Name}", "{Display_Name}", "{MSP_Id}", "{GRPCWP_URL}", "{TLS_CA_Root_Cert}")
-                      opts.SetClusterID("abcde")
-                      opts.SetApiURL("grpcs://n3a3ec3-myorderer.ibp.us-south.containers.appdomain.cloud:7050")
-                      opts.SetOperationsURL("https://n3a3ec3-myorderer.ibp.us-south.containers.appdomain.cloud:8443")
-                      opts.SetSystemChannelID("testchainid")
-                      opts.SetTlsCert("LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo")
-                      result, detailedResponse, err := service.ImportOrderer(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -1506,38 +1011,6 @@ paths:
                             \"display_name\": \"ordering node\",
                             \"msp_id\": \"orderermsp\"
                           }"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                        ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                        Authenticator: authenticator,
-                        URL:           "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                        return
-                      }
-
-                      // Edit Orderer Data
-                      opts := service.NewEditOrdererOptions("{Ordering_Service_name}")
-                      opts.SetClusterName("My Other OS")
-                      opts.SetDisplayName("ordering node")
-                      opts.SetMspID("orderermsp")
-                      result, detailedResponse, err := service.EditOrderer(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -1608,46 +1081,6 @@ paths:
                               }
                             }
                           }"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                        ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                        Authenticator: authenticator,
-                        URL:           "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                        return
-                      }
-
-                      // Update Orderer
-                      cpu := "500m"
-                      memory := "1024Mi"
-                      requests := &blockchainv2.ResourceRequests{Cpu: &cpu, Memory: &memory}
-
-                      resourceObject, err := service.NewResourceObject(requests)
-                      if err != nil {
-                        return
-                      }
-
-                      ordererResources := &blockchainv2.UpdateOrdererBodyResources{Orderer: resourceObject}
-                      opts := service.NewUpdateOrdererOptions("{Orderer_Name}")
-                      opts.SetResources(ordererResources)
-                      result, detailedResponse, err := service.UpdateOrderer(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -1698,7 +1131,7 @@ paths:
           7. Build a [SignedProposal](https://github.com/hyperledger/fabric/blob/release-1.4/protos/peer/proposal.proto#L105) out of the `ConfigUpdate` & `ConfigSignature`. Submit the `SignedProposal` to an existing ordering node (do not use the pre-created node).
           8. After the `SignedProposal` transaction is committed to a block, pull the latest config block (for the system-channel) from an existing ordering node (use a Fabric CLI or another Fabric tool).
           9. Submit the latest config block to your pre-created node with the 'Submit config block to orderer' API (which is this api!)
-          10. Use the [Edit data about an orderer](#edit-data-about-an-orderer) API to change the pre-created node's field `consenter_proposal_fin` to `true`. This changes the status icon on the IBP console.
+          10. Use the [Edit data about an orderer](#edit-data-about-an-orderer) API to change the pre-created node's field `consenter_proposal_fin` to `true`. This changes the status icon on the Fabric Operations console.
       operationId: submit_block
       parameters:
         - $ref: '#/components/parameters/PathIdEdit'
@@ -1724,36 +1157,6 @@ paths:
                       -d "{
                             \"b64_block\":\"bWFzc2l2ZSBiaW5hcnkgb2YgYSBjb25maWcgYmxvY2sgd291bGQgYmUgaGVyZSBpZiB0aGlzIHdhcyByZWFs\"
                           }"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                        ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                        Authenticator: authenticator,
-                        URL:           "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                        return
-                      }
-
-                      // Submit Config Block
-                      opts := service.NewSubmitBlockOptions("{Orderer_Id}")
-                      opts.SetB64Block("bWFzc2l2ZSBiaW5hcnkgb2YgYSBjb25maWcgYmxvY2sgd291bGQgYmUgaGVyZSBpZiB0aGlzIHdhcyByZWFs")
-                      result, detailedResponse, err := service.SubmitBlock(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -1779,7 +1182,7 @@ paths:
       tags:
         - Manage component
       summary: Import an MSP
-      description: Create or import a Membership Service Provider (MSP) definition into your IBP console. This definition represents an organization that controls a peer or OS (Ordering Service).
+      description: Create or import a Membership Service Provider (MSP) definition into your Fabric Operations console. This definition represents an organization that controls a peer or OS (Ordering Service).
       operationId: import_msp
       requestBody:
         description: Create or import an MSP.
@@ -1809,40 +1212,6 @@ paths:
                               \"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo\"
                             ]
                           }"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                        ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                        Authenticator: authenticator,
-                        URL:           "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                        return
-                      }
-
-                      // Import MSP Definition
-                      rootCerts := [1]string{"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo"}
-                      admins := [1]string{"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkFkbWluIGNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo="}
-                      tlsRootCerts := [1]string{"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo"}
-                      opts := service.NewImportMspOptions("{MSP_ID}", "{Display_Name}", rootCerts[:])
-                      opts.SetAdmins(admins[:])
-                      opts.SetTlsRootCerts(tlsRootCerts[:])
-                      result, detailedResponse, err := service.ImportMsp(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -1900,36 +1269,6 @@ paths:
                       -d "{
                             \"display_name\": \"My Other MSP\"
                           }"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                        ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                        Authenticator: authenticator,
-                        URL:           "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                        return
-                      }
-
-                      // Edit MSP
-                      opts := service.NewEditMspOptions("{Msp_Id}")
-                      opts.SetDisplayName("My Other MSP")
-                      result, detailedResponse, err := service.EditMsp(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -1967,7 +1306,7 @@ paths:
       tags:
         - Manage component
       summary: Get MSP's public certificates
-      description: External IBP consoles can use this API to get the public certificate for your given MSP id.
+      description: External Fabric Operations consoles can use this API to get the public certificate for your given MSP id.
       operationId: get_msp_certificate
       parameters:
         - name: msp_id
@@ -1988,35 +1327,6 @@ paths:
                     - |-
                       curl -X GET "https://{API-Endpoint}/ak/api/v2/components/msps/{Component-ID}" \
                       -H "Authorization: Bearer {Access-Token}"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Get msp id data for msp "{Component-ID}"
-                      opts := service.NewGetMspCertificateOptions("{Component-ID}")
-                      result, detailedResponse, err := service.GetMspCertificate(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -2046,9 +1356,9 @@ paths:
   /ak/api/v2/settings:
     get:
       tags:
-        - Administer the IBP console
-      summary: Get public IBP console settings
-      description: Retrieve all public (non-sensitive) settings for the IBP console. Use this API for debugging purposes. It shows what behavior to expect and confirms whether the desired settings are active.
+        - Administer the Fabric Operations console
+      summary: Get public Fabric Operations console settings
+      description: Retrieve all public (non-sensitive) settings for the Fabric Operations console. Use this API for debugging purposes. It shows what behavior to expect and confirms whether the desired settings are active.
       operationId: get_settings
       x-sdk-operations:
         request-examples:
@@ -2061,35 +1371,6 @@ paths:
                     - |-
                       curl -X GET "https://{API-Endpoint}/ak/api/v2/settings" \
                       -H "Content-Type: application/json"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Get IBP settings
-                      opts := service.NewGetSettingsOptions()
-                      result, detailedResponse, err := service.GetSettings(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -2099,12 +1380,12 @@ paths:
                 $ref: '#/components/schemas/GetPublicSettingsResponse'
     put:
       tags:
-        - Administer the IBP console
-      summary: Change IBP console settings
-      description: Edit a few IBP console settings (such as the rate limit and timeout settings). **Some edits will trigger an automatic server restart.**
+        - Administer the Fabric Operations console
+      summary: Change Fabric Operations console settings
+      description: Edit a few Fabric Operations console settings (such as the rate limit and timeout settings). **Some edits will trigger an automatic server restart.**
       operationId: edit_settings
       requestBody:
-        description: IBP console settings that can be edited. Each setting field is optional.
+        description: Fabric Operations console settings that can be edited. Each setting field is optional.
         content:
           application/json:
             schema:
@@ -2138,50 +1419,6 @@ paths:
                               }
                             }
                           }"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Create variables that require a reference
-                      boolean_false := false
-                      boolean_true := true
-                      type_float64 := float64(89999)
-                      debug_level := "debug"
-                      info_level := "info"
-
-                      // Create logging service structs
-                      clientLoggingSettings := &blockchainv2.LoggingSettingsClient{Enabled: &boolean_true, Level: &debug_level, UniqueName: &boolean_false}
-                      serverLoggingSettings := &blockchainv2.LoggingSettingsServer{Enabled: &boolean_true, Level: &info_level, UniqueName: &boolean_false}
-
-                      // Set and edit settings options
-                      opts := service.NewEditSettingsOptions()
-                      opts.SetMaxReqPerMin(float64(50))
-                      opts.SetInactivityTimeouts(&blockchainv2.EditSettingsBodyInactivityTimeouts{Enabled: &boolean_false, MaxIdleTime: &type_float64})
-                      opts.SetFileLogging(&blockchainv2.EditLogSettingsBody{Client: clientLoggingSettings, Server: serverLoggingSettings})
-                      opts.SetFabricLcGetCcTimeoutMs(float64(350000))
-                      result, detailedResponse, err := service.EditSettings(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -2193,9 +1430,9 @@ paths:
   /ak/api/v2/kubernetes/fabric/versions:
     get:
       tags:
-        - Administer the IBP console
+        - Administer the Fabric Operations console
       summary: Get supported Fabric versions
-      description: Get list of supported Fabric versions by each component type. These are the Fabric versions your IBP console can use when creating or upgrading components.
+      description: Get list of supported Fabric versions by each component type. These are the Fabric versions your Fabric Operations console can use when creating or upgrading components.
       operationId: get_fab_versions
       parameters:
         - $ref: '#/components/parameters/QueryCache'
@@ -2210,35 +1447,6 @@ paths:
                     - |-
                       curl -X GET "https://{API-Endpoint}/ak/api/v2/kubernetes/fabric/versions" \
                       -H "Authorization: Bearer {Access-Token}"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Get supported Fabric options
-                      opts := service.NewGetFabVersionsOptions()
-                      result, detailedResponse, err := service.GetFabVersions(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -2262,9 +1470,9 @@ paths:
   /ak/api/v2/health:
     get:
       tags:
-        - Administer the IBP console
-      summary: Get IBP console health stats
-      description: See statistics of the IBP console process such as memory usage, CPU usage, up time, cache, and operating system stats.
+        - Administer the Fabric Operations console
+      summary: Get Fabric Operations console health stats
+      description: See statistics of the Fabric Operations console process such as memory usage, CPU usage, up time, cache, and operating system stats.
       operationId: get_health
       x-sdk-operations:
         request-examples:
@@ -2278,35 +1486,6 @@ paths:
                       curl -X GET "https://{API-Endpoint}/ak/api/v2/health" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Get health stats on the IBP console
-                      opts := service.NewGetHealthOptions()
-                      result, detailedResponse, err := service.GetHealth(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -2330,7 +1509,7 @@ paths:
   /ak/api/v2/notifications:
     get:
       tags:
-        - Administer the IBP console
+        - Administer the Fabric Operations console
       summary: Get all notifications
       description: Retrieve all notifications. This API supports pagination through the query parameters. Notifications are generated from actions such as creating a component, deleting a component, server restart, and so on.
       operationId: list_notifications
@@ -2367,35 +1546,6 @@ paths:
                     - |-
                       curl -X GET "https://{API-Endpoint}/ak/api/v2/notifications?limit=20&skip=0" \
                       -H "Authorization: Bearer {Access-Token}"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Get notifications
-                      opts := service.NewListNotificationsOptions()
-                      result, detailedResponse, err := service.ListNotifications(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -2422,9 +1572,9 @@ paths:
       x-sdk-exclude: true
       x-cli-exclude: true
       tags:
-        - Administer the IBP console
+        - Administer the Fabric Operations console
       summary: Get signature collection txs
-      description: Get all signature collection transactions. These transactions involve creating or editing Fabric channels. The only transactions that are listed are ones that involved this IBP console. Channels that are edited or created outside of the IBP console are not discoverable.
+      description: Get all signature collection transactions. These transactions involve creating or editing Fabric channels. The only transactions that are listed are ones that involved this Fabric Operations console. Channels that are edited or created outside of the Fabric Operations console are not discoverable.
       operationId: get_sig_txs
       parameters:
         - $ref: '#/components/parameters/QuerySigTxDetails'
@@ -2474,7 +1624,7 @@ paths:
       x-sdk-exclude: true
       x-cli-exclude: true
       tags:
-        - Administer the IBP console
+        - Administer the Fabric Operations console
       summary: Create a signature collection tx
       description: Create a signature collection transaction. These transactions involve creating or editing Fabric channels & chaincode approvals.
       operationId: create_sig_tx
@@ -2551,7 +1701,7 @@ paths:
       x-sdk-exclude: true
       x-cli-exclude: true
       tags:
-        - Administer the IBP console
+        - Administer the Fabric Operations console
       summary: Edit a signature collection tx
       description: Edit or redistribute a signature collection transaction. These transactions involve creating or editing Fabric channels & chaincode approvals.
       operationId: edit_sig_tx
@@ -2611,9 +1761,9 @@ paths:
                 $ref: '#/components/schemas/Forbidden'
     delete:
       tags:
-        - Administer the IBP console
+        - Administer the Fabric Operations console
       summary: Delete a signature collection tx
-      description: Delete a signature collection transaction. These transactions involve creating or editing Fabric channels & chaincode approvals. This request is not distributed to external IBP consoles, thus the signature collection transaction is only deleted locally.
+      description: Delete a signature collection transaction. These transactions involve creating or editing Fabric channels & chaincode approvals. This request is not distributed to external Fabric Operations consoles, thus the signature collection transaction is only deleted locally.
       operationId: delete_sig_tx
       parameters:
         - $ref: '#/components/parameters/PathTxId'
@@ -2628,35 +1778,6 @@ paths:
                     - |-
                       curl -X DELETE "https://{API-Endpoint}/ak/api/v2/signature_collections/{Transaction-ID}" \
                       -H "Authorization: Bearer {Access-Token}"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Delete a signature collection tx
-                      opts := service.NewDeleteSigTxOptions("{Transaction_Id}")
-                      result, detailedResponse, err := service.DeleteSigTx(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -2680,7 +1801,7 @@ paths:
   /ak/api/v2/notifications/bulk:
     post:
       tags:
-        - Administer the IBP console
+        - Administer the Fabric Operations console
       summary: Archive notifications
       description: Archive 1 or more notifications. Archived notifications will no longer appear in the default [Get all notifications](#get-all-notifications) API.
       operationId: archive_notifications
@@ -2710,36 +1831,6 @@ paths:
                                 \"d7d831ddcd8d8c5bf87f4d972f675096\"
                             ]
                           }"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Archive Notifications
-                      notifications := [3]string{"edf0c5e0b76d49ccadb8eee3eec88a48", "c9d00ebf849051e4f102008dc0be2488", "d7d831ddcd8d8c5bf87f4d972f675096"}
-                      opts := service.NewArchiveNotificationsOptions(notifications[:])
-                      result, detailedResponse, err := service.ArchiveNotifications(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -2765,7 +1856,7 @@ paths:
       tags:
         - Manage multiple components
       summary: Get all components
-      description: Get the IBP console's data on all components (peers, CAs, orderers, and MSPs). The component might be imported or created.
+      description: Get the Fabric Operations console's data on all components (peers, CAs, orderers, and MSPs). The component might be imported or created.
       operationId: list_components
       parameters:
         - $ref: '#/components/parameters/QueryDeploymentAttrs'
@@ -2784,35 +1875,6 @@ paths:
                       curl -X GET "https://{API-Endpoint}/ak/api/v2/components" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Get all component data
-                      opts := service.NewListComponentsOptions()
-                      result, detailedResponse, err := service.ListComponents(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -2844,7 +1906,7 @@ paths:
       tags:
         - Manage multiple components
       summary: Get components of a type
-      description: Get the IBP console's data on components that are a specific type. The component might be imported or created.
+      description: Get the Fabric Operations console's data on components that are a specific type. The component might be imported or created.
       operationId: get_components_by_type
       parameters:
         - $ref: '#/components/parameters/PathType'
@@ -2863,35 +1925,6 @@ paths:
                       curl -X GET "https://{API-Endpoint}/ak/api/v2/components/types/{Component-Type}" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}"
-          go:
-          - name: Example request
-            example:
-              - type: code
-                lang: go
-                source:
-                  - |-
-                    // Create an authenticator
-                    authenticator := &core.IamAuthenticator{
-                        ApiKey: "{API-Key}",
-                    }
-
-                    // Create an instance of the "BlockchainV2Options" struct
-                    options := &blockchainv2.BlockchainV2Options{
-                        Authenticator: authenticator,
-                        URL: "https://{API-Endpoint}",
-                    }
-
-                    // Create an instance of the "BlockchainV2" service client.
-                    service, err := blockchainv2.NewBlockchainV2(options)
-                    if err != nil {
-                        return
-                    }
-
-                    // Get data for components with this type "{Component-Type}"
-                    opts := service.NewGetComponentsByTypeOptions("{Component-Type}")
-                    result, detailedResponse, err := service.GetComponentsByType(opts)
-                    fmt.Println("result:", result)
-                    fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -2923,7 +1956,7 @@ paths:
       tags:
         - Manage multiple components
       summary: Get components with tag
-      description: Get the IBP console's data on components that have a specific tag. The component might be imported or created. Tags are not case-sensitive.
+      description: Get the Fabric Operations console's data on components that have a specific tag. The component might be imported or created. Tags are not case-sensitive.
       operationId: get_component_by_tag
       parameters:
         - $ref: '#/components/parameters/PathTag'
@@ -2942,35 +1975,6 @@ paths:
                       curl -X GET "https://{API-Endpoint}/ak/api/v2/components/tags/{Tag}" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Get data for components with tag "{Tag}"
-                      opts := service.NewGetComponentByTagOptions("{Tag}")
-                      result, detailedResponse, err := service.GetComponentByTag(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -3002,9 +2006,9 @@ paths:
         - Manage multiple components
       summary: Remove components with tag
       description: |
-        Removes components with the matching tag from the IBP console. Tags are not case-sensitive.
-        - Using this api on **imported** components removes them from the IBP console.
-        - Using this api on **created** components removes them from the IBP console **but** it will **not** delete the components from the Kubernetes cluster where they reside. Thus it orphans the Kubernetes deployments (if it exists). Instead use the [Delete components with tag](#delete-component-s-with-tag) API to delete the Kubernetes deployment and the IBP console data at once.
+        Removes components with the matching tag from the Fabric Operations console. Tags are not case-sensitive.
+        - Using this api on **imported** components removes them from the Fabric Operations console.
+        - Using this api on **created** components removes them from the Fabric Operations console **but** it will **not** delete the components from the Kubernetes cluster where they reside. Thus it orphans the Kubernetes deployments (if it exists). Instead use the [Delete components with tag](#delete-component-s-with-tag) API to delete the Kubernetes deployment and the Fabric Operations console data at once.
       operationId: remove_components_by_tag
       parameters:
         - $ref: '#/components/parameters/PathTag'
@@ -3019,35 +2023,6 @@ paths:
                     - |-
                       curl -X DELETE "https://{API-Endpoint}/ak/api/v2/components/{Tag}" \
                       -H "Authorization: Bearer {Access-Token}"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Get all component data
-                      opts := service.NewRemoveComponentsByTagOptions("{Tag}")
-                      result, detailedResponse, err := service.RemoveComponentsByTag(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -3074,9 +2049,9 @@ paths:
         - Manage multiple components
       summary: Delete components with tag
       description: |
-        Removes components with the matching tag from the IBP console **and** it deletes the Kubernetes deployment. Tags are not case-sensitive.
+        Removes components with the matching tag from the Fabric Operations console **and** it deletes the Kubernetes deployment. Tags are not case-sensitive.
         - Using this api on **imported** components will be skipped over since their Kubernetes deployment is unknown and cannot be removed. Instead use the [Remove components with tag](#remove-component-s-with-tag) API to remove imported components with a tag.
-        - Using this api on **created** components removes them from the IBP console **and** it will delete the components from the Kubernetes cluster where they reside. The Kubernetes delete must succeed before the component will be removed from the IBP console.
+        - Using this api on **created** components removes them from the Fabric Operations console **and** it will delete the components from the Kubernetes cluster where they reside. The Kubernetes delete must succeed before the component will be removed from the Fabric Operations console.
       operationId: delete_components_by_tag
       parameters:
         - $ref: '#/components/parameters/PathTag'
@@ -3091,35 +2066,6 @@ paths:
                     - |-
                       curl -X DELETE "https://{API-Endpoint}/ak/api/v2/kubernetes/components/tags/{Tag}" \
                       -H "Authorization: Bearer {Access-Token}"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Get all component data
-                      opts := service.NewDeleteComponentsByTagOptions("{Tag}")
-                      result, detailedResponse, err := service.DeleteComponentsByTag(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -3145,7 +2091,7 @@ paths:
       tags:
         - Manage multiple components
       summary: Delete all components
-      description: Removes all components from the IBP console **and** their Kubernetes deployments (if applicable). Works on imported and created components (peers, CAs, orderers, MSPs, and signature collection transactions). This api attempts to effectively reset the IBP console to its initial (empty) state (except for logs & notifications, those will remain).
+      description: Removes all components from the Fabric Operations console **and** their Kubernetes deployments (if applicable). Works on imported and created components (peers, CAs, orderers, MSPs, and signature collection transactions). This api attempts to effectively reset the Fabric Operations console to its initial (empty) state (except for logs & notifications, those will remain).
       operationId: delete_all_components
       x-sdk-operations:
         request-examples:
@@ -3158,35 +2104,6 @@ paths:
                     - |-
                       curl -X DELETE "https://{API-Endpoint}/ak/api/v2/kubernetes/components/purge" \
                       -H "Authorization: Bearer {Access-Token}"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Get all component data
-                      opts := service.NewDeleteAllComponentsOptions()
-                      result, detailedResponse, err := service.DeleteAllComponents(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -3210,9 +2127,9 @@ paths:
   /ak/api/v2/restart:
     post:
       tags:
-        - Administer the IBP console
-      summary: Restart the IBP console
-      description: Restart IBP console processes. This causes a small outage (10 - 30 seconds) which is possibly disruptive to active user sessions.
+        - Administer the Fabric Operations console
+      summary: Restart the Fabric Operations console
+      description: Restart Fabric Operations console processes. This causes a small outage (10 - 30 seconds) which is possibly disruptive to active user sessions.
       operationId: restart
       x-sdk-operations:
         request-examples:
@@ -3226,35 +2143,6 @@ paths:
                       curl -X POST "https://{API-Endpoint}/ak/api/v2/restart" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Restart
-                      opts := service.NewRestartOptions()
-                      result, detailedResponse, err := service.Restart(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -3281,9 +2169,9 @@ paths:
       x-sdk-exclude: true
       x-cli-exclude: true
       tags:
-        - Administer the IBP console
+        - Administer the Fabric Operations console
       summary: Change logging settings
-      description: Change your **IBP console's** file logging settings. Settings that are omitted from the request body will remain as is.
+      description: Change your **Fabric Operations console's** file logging settings. Settings that are omitted from the request body will remain as is.
       operationId: update_file_settings
       requestBody:
         description: Include only the settings that you want to change, and the other settings will remain as is.
@@ -3345,9 +2233,9 @@ paths:
   /ak/api/v2/sessions:
     delete:
       tags:
-        - Administer the IBP console
-      summary: Delete all IBP console sessions
-      description: Delete all client sessions in IBP console. Use this API to clear any active logins and force everyone to log in again. This API is useful for debugging purposes and when changing roles of a user. It forces any role changes to take effect immediately. Otherwise, permission or role changes will take effect during the user's next login or session expiration.
+        - Administer the Fabric Operations console
+      summary: Delete all Fabric Operations console sessions
+      description: Delete all client sessions in Fabric Operations console. Use this API to clear any active logins and force everyone to log in again. This API is useful for debugging purposes and when changing roles of a user. It forces any role changes to take effect immediately. Otherwise, permission or role changes will take effect during the user's next login or session expiration.
       operationId: delete_all_sessions
       x-sdk-operations:
         request-examples:
@@ -3361,35 +2249,6 @@ paths:
                       curl -X DELETE "https://{API-Endpoint}/ak/api/v2/sessions" \
                         -H "Content-Type: application/json" \
                         -H "Authorization: Bearer {Access-Token}"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Delete Sessions
-                      opts := service.NewDeleteAllSessionsOptions()
-                      result, detailedResponse, err := service.DeleteAllSessions(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -3413,7 +2272,7 @@ paths:
   /ak/api/v2/notifications/purge:
     delete:
       tags:
-        - Administer the IBP console
+        - Administer the Fabric Operations console
       summary: Delete all notifications
       description: Delete all notifications. This API is intended for administration.
       operationId: delete_all_notifications
@@ -3429,35 +2288,6 @@ paths:
                       curl -X DELETE "https://{API-Endpoint}/ak/api/v2/notifications/purge" \
                       -H "Content-Type: application/json" \
                       -H "Authorization: Bearer {Access-Token}"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Delete Notifications
-                      opts := service.NewDeleteAllNotificationsOptions()
-                      result, detailedResponse, err := service.DeleteAllNotifications(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -3481,9 +2311,9 @@ paths:
   /ak/api/v2/cache:
     delete:
       tags:
-        - Administer the IBP console
-      summary: Clear IBP console caches
-      description: Clear the in-memory caches across all IBP console server processes. No effect on caches that are currently disabled.
+        - Administer the Fabric Operations console
+      summary: Clear Fabric Operations console caches
+      description: Clear the in-memory caches across all Fabric Operations console server processes. No effect on caches that are currently disabled.
       operationId: clear_caches
       x-sdk-operations:
         request-examples:
@@ -3496,35 +2326,6 @@ paths:
                     - |-
                       curl -X DELETE "https://{API-Endpoint}/ak/api/v2/cache" \
                       -H "Authorization: Bearer {Access-Token}"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Clear Caches
-                      opts := service.NewClearCachesOptions()
-                      result, detailedResponse, err := service.ClearCaches(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -3590,39 +2391,6 @@ paths:
                             \"append_admin_certs\": [\"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=\"],
                             \"remove_admin_certs\": []
                           }"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                        ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                        Authenticator: authenticator,
-                        URL:           "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                        return
-                      }
-
-                      // Edit Admin Certs
-                      appendAdminCerts := [1]string{"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo="}
-                      removeAdminCerts := []string{}
-                      opts := service.NewEditAdminCertsOptions("orderernode")
-                      opts.SetAppendAdminCerts(appendAdminCerts[:])
-                      opts.SetRemoveAdminCerts(appendAdminCerts[:])
-                      result, detailedResponse, err := service.EditAdminCerts(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -3661,13 +2429,13 @@ paths:
         - Download examples
       summary: Generate Postman collection
       description: |
-        Generate and download a Postman API Collection. The JSON contains all the APIs available in the IBP console. It can be imported to the [Postman](https://www.postman.com/downloads) desktop application. **The examples in the collection will be pre-populated with authorization credentials.** The authorization credentials to use must be provided to this API. See the query parameters for available options.
+        Generate and download a Postman API Collection. The JSON contains all the APIs available in the Fabric Operations console. It can be imported to the [Postman](https://www.postman.com/downloads) desktop application. **The examples in the collection will be pre-populated with authorization credentials.** The authorization credentials to use must be provided to this API. See the query parameters for available options.
 
         Choose an auth strategy that matches your environment & concerns:
 
-        - **IAM Bearer Auth** - *[Available on IBM Cloud]* - This is the recommended auth strategy. The same bearer token used to authenticate this request will be copied into the Postman collection examples. Since the bearer token expires the auth embedded in the collection will also expire. At that point the collection might be deleted & regenerated, or manually edited to refresh the authorization header values. To use this strategy set `auth_type` to `bearer`.
-        - **IAM Api Key Auth** - *[Available on IBM Cloud]* - The IAM api key will be copied into the Postman collection examples. This means the auth embedded in the collection will never expire. To use this strategy set `auth_type` to `api_key`.
-        - **Basic Auth** - *[Available on OpenShift & IBM Cloud Private]* - A basic auth username and password will be copied into the Postman collection examples. This is **not** available for an IBP SaaS instance on IBM Cloud. To use this strategy set `auth_type` to `basic`.
+        - **Bearer Auth** - This is the recommended auth strategy. The same bearer token used to authenticate this request will be copied into the Postman collection examples. Since the bearer token expires the auth embedded in the collection will also expire. At that point the collection might be deleted & regenerated, or manually edited to refresh the authorization header values. To use this strategy set `auth_type` to `bearer`.
+        - **Api Key Auth** - The api key will be copied into the Postman collection examples. This means the auth embedded in the collection will never expire. To use this strategy set `auth_type` to `api_key`.
+        - **Basic Auth** - A basic auth username and password will be copied into the Postman collection examples. This is **not** recommended because these credentials do not expire. To use this strategy set `auth_type` to `basic`.
 
       operationId: get_postman
       parameters:
@@ -3687,35 +2455,6 @@ paths:
                     - |-
                       curl -X GET "https://{API-Endpoint}/ak/api/v2/postman?auth_type=bearer&token={Access-Token}" \
                       -H "Authorization: Bearer {Access-Token}"
-          go:
-          - name: Example request
-            example:
-              - type: code
-                lang: go
-                source:
-                  - |-
-                    // Create an authenticator
-                    authenticator := &core.IamAuthenticator{
-                        ApiKey: "{API-Key}",
-                    }
-
-                    // Create an instance of the "BlockchainV2Options" struct
-                    options := &blockchainv2.BlockchainV2Options{
-                        Authenticator: authenticator,
-                        URL: "https://{API-Endpoint}",
-                    }
-
-                    // Create an instance of the "BlockchainV2" service client.
-                    service, err := blockchainv2.NewBlockchainV2(options)
-                    if err != nil {
-                        return
-                    }
-
-                    // Get a postman collection using {Auth-Type}
-                    opts := service.NewGetPostmanOptions("{Auth-Type}")
-                    result, detailedResponse, err := service.GetPostman(opts)
-                    fmt.Println("result:", result)
-                    fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -3741,7 +2480,7 @@ paths:
       tags:
         - Download examples
       summary: Download OpenAPI file
-      description: Download the [OpenAPI](https://swagger.io/specification/) specification YAML file (aka swagger file) for the IBP console. This is the same file that was used to generate the APIs on this page. This file documents APIs offered by the IBP console.
+      description: Download the [OpenAPI](https://swagger.io/specification/) specification YAML file (aka swagger file) for the Fabric Operations console. This is the same file that was used to generate the APIs on this page. This file documents APIs offered by the Fabric Operations console.
       operationId: get_swagger
       x-sdk-operations:
         request-examples:
@@ -3754,35 +2493,6 @@ paths:
                     - |-
                       curl -X GET "https://{API-Endpoint}/ak/api/v2/openapi" \
                       -H "Authorization: Bearer {Access-Token}"
-          go:
-            - name: Example request
-              example:
-                - type: code
-                  lang: go
-                  source:
-                    - |-
-                      // Create an authenticator
-                      authenticator := &core.IamAuthenticator{
-                          ApiKey: "{API-Key}",
-                      }
-
-                      // Create an instance of the "BlockchainV2Options" struct
-                      options := &blockchainv2.BlockchainV2Options{
-                          Authenticator: authenticator,
-                          URL: "https://{API-Endpoint}",
-                      }
-
-                      // Create an instance of the "BlockchainV2" service client.
-                      service, err := blockchainv2.NewBlockchainV2(options)
-                      if err != nil {
-                          return
-                      }
-
-                      // Get the swagger file for all apis
-                      opts := service.NewGetSwaggerOptions()
-                      result, detailedResponse, err := service.GetSwagger(opts)
-                      fmt.Println("result:", result)
-                      fmt.Println("response:", detailedResponse)
       responses:
         200:
           description: Request was successful.
@@ -3809,7 +2519,7 @@ paths:
       x-sdk-exclude: true
       x-cli-exclude: true
       tags:
-        - Administer the IBP console
+        - Administer the Fabric Operations console
       summary: Get backup ids
       description: Get the ids of all database backups.
       operationId: get_db_backups
@@ -3848,9 +2558,9 @@ paths:
       x-sdk-exclude: true
       x-cli-exclude: true
       tags:
-        - Administer the IBP console
+        - Administer the Fabric Operations console
       summary: Start a database backup
-      description: Start a backup of IBP console databases. The api will return before the backup is complete.
+      description: Start a backup of Fabric Operations console databases. The api will return before the backup is complete.
       operationId: start_db_backup
       x-sdk-operations:
         request-examples:
@@ -3888,7 +2598,7 @@ paths:
       x-sdk-exclude: true
       x-cli-exclude: true
       tags:
-        - Administer the IBP console
+        - Administer the Fabric Operations console
       summary: Restore databases via backup data
       description: Restore the contents of a backup by sending the backup data in the body. The api will return before the restore is complete.
       operationId: start_db_restore
@@ -3950,7 +2660,7 @@ paths:
       x-sdk-exclude: true
       x-cli-exclude: true
       tags:
-        - Administer the IBP console
+        - Administer the Fabric Operations console
       summary: Restore databases via backup id
       description: Restore the contents of a backup by sending the backup id. The api will return before the restore is complete.
       operationId: start_db_restore_id
@@ -3999,7 +2709,7 @@ paths:
       x-sdk-exclude: true
       x-cli-exclude: true
       tags:
-        - Administer the IBP console
+        - Administer the Fabric Operations console
       summary: Get a database backup
       description: Download a database backup. Includes attachments.
       operationId: get_db_backup
@@ -4043,9 +2753,9 @@ paths:
       x-sdk-exclude: true
       x-cli-exclude: true
       tags:
-        - Administer the IBP console
+        - Administer the Fabric Operations console
       summary: Attach data to a backup
-      description: Attach custom data to a IBP console backup. If the attachment name already exist the data will be replaced.
+      description: Attach custom data to a Fabric Operations console backup. If the attachment name already exist the data will be replaced.
       operationId: attach_db_backup
       parameters:
         - $ref: '#/components/parameters/PathBackupId'
@@ -4097,7 +2807,7 @@ paths:
   #
   #.
   # -----------------------------------------------------------------------------------------------------------------------------------------------------------
-  # Software APIs - ! not applicable for IBP SaaS on IBM Cloud !
+  # Software APIs - ! not applicable for SaaS !
   # -----------------------------------------------------------------------------------------------------------------------------------------------------------
   /ak/api/v2/permissions/keys:
     post:
@@ -4105,9 +2815,9 @@ paths:
       x-sdk-exclude: true
       x-cli-exclude: true
       tags:
-        - IBP Software APIs
-      summary: (Software) - Create an IBP api key
-      description: (IBP Software only) - Create an IBP api key. This key can be used to authenticate and call other APIs. Only users or api keys with a `manager` role can call this api. The `api_secret` in the response must be saved by the user. It is unrecoverable. API keys do not expire but can be deleted.
+        - Administer the Fabric Operations console
+      summary: Create an api key
+      description: Create an api key. This key can be used to authenticate and call other APIs. Only users or api keys with a `manager` role can call this api. The `api_secret` in the response must be saved by the user. It is unrecoverable. API keys do not expire but can be deleted.
       operationId: create_ibp_api_key
       requestBody:
         description: Pass the desired roles for the new api key. Valid roles - "reader", "writer", "manager".
@@ -4147,9 +2857,9 @@ paths:
       x-sdk-exclude: true
       x-cli-exclude: true
       tags:
-        - IBP Software APIs
-      summary: (Software) - List IBP api keys
-      description: (IBP Software only) - List all IBP api keys and their descriptions. The api secrets will not be in the response.
+        - Administer the Fabric Operations console
+      summary: List api keys
+      description: List all api keys and their descriptions. The api secrets will not be in the response.
       operationId: get_ibp_api_keys
       responses:
         200:
@@ -4177,9 +2887,9 @@ paths:
       x-sdk-exclude: true
       x-cli-exclude: true
       tags:
-        - IBP Software APIs
-      summary: (Software) - Delete an api key
-      description: (IBP Software only) - Delete a single IBP api key. The key becomes unusable immediately.
+        - Administer the Fabric Operations console
+      summary: Delete an api key
+      description: Delete a single api key. The key becomes unusable immediately.
       operationId: delete_ibp_api_key
       parameters:
         - name: key_id
@@ -4214,9 +2924,9 @@ paths:
       x-sdk-exclude: true
       x-cli-exclude: true
       tags:
-        - IBP Software APIs
-      summary: (Software) - Add users
-      description: (IBP Software only) - Add new users to the IBP console. Users can log in and perform operations IBP console operations. Only users or api keys with a `manager` role can call this api.
+        - Administer the Fabric Operations console
+      summary: Add users
+      description: Add new users to the Fabric Operations console. Users can log in and perform operations Fabric Operations console operations. Only users or api keys with a `manager` role can call this api.
       operationId: add_ibp_users
       requestBody:
         description: Pass the desired roles for the usernames. Valid roles - "reader", "writer", "manager".
@@ -4250,9 +2960,9 @@ paths:
       x-sdk-exclude: true
       x-cli-exclude: true
       tags:
-        - IBP Software APIs
-      summary: (Software) - Delete users
-      description: (IBP Software only) - Delete existing users by uuid. Only users or api keys with a `manager` role can call this api. Note that uuids are expected, not usernames.
+        - Administer the Fabric Operations console
+      summary: Delete users
+      description: Delete existing users by uuid. Only users or api keys with a `manager` role can call this api. Note that uuids are expected, not usernames.
       operationId: delete_ibp_users
       parameters:
         - $ref: '#/components/parameters/QueryUuids'
@@ -4281,9 +2991,9 @@ paths:
       x-sdk-exclude: true
       x-cli-exclude: true
       tags:
-        - IBP Software APIs
-      summary: (Software) - Edit users
-      description: (IBP Software only) - Edit existing users by uuid. Only users or api keys with a `manager` role can call this api. Note that uuids are expected, not usernames.
+        - Administer the Fabric Operations console
+      summary: Edit users
+      description: Edit existing users by uuid. Only users or api keys with a `manager` role can call this api. Note that uuids are expected, not usernames.
       operationId: edit_ibp_user_roles
       requestBody:
         description: Pass the desired roles for the usernames. Valid roles - "reader", "writer", "manager".
@@ -4317,9 +3027,9 @@ paths:
       x-sdk-exclude: true
       x-cli-exclude: true
       tags:
-        - IBP Software APIs
-      summary: (Software) - List users
-      description: (IBP Software only) - List users of the IBP console. Includes the user's roles and the timestamp of when it was added.
+        - Administer the Fabric Operations console
+      summary: List users
+      description: List users of the Fabric Operations console. Includes the user's roles and the timestamp of when it was added.
       operationId: get_ibp_users
       responses:
         200:
@@ -4347,9 +3057,9 @@ paths:
       x-sdk-exclude: true
       x-cli-exclude: true
       tags:
-        - IBP Software APIs
-      summary: (Software) - Reset users' passwords
-      description: (IBP Software only) - Reset multiple user passwords to the default password. The default password was chosen when IBP console was initially set up. Only users or api keys with a `manager` role can call this api.
+        - Administer the Fabric Operations console
+      summary: Reset users' passwords
+      description: Reset multiple user passwords to the default password. The default password was chosen when Fabric Operations console was initially set up. Only users or api keys with a `manager` role can call this api.
       operationId: reset_ibp_user_passwords
       requestBody:
         description: Pass an array of uuids to reset.
@@ -4438,7 +3148,7 @@ components:
       maxLength: 255 # not sure of real limit, using the same limit as enroll id...
     location_saas:
       type: string
-      example: ibmcloud
+      example: cloud
       description: Indicates where the component is running.
       maxLength: 1024 # spam prevention limit
       x-validate_illegal_values:
@@ -4457,7 +3167,7 @@ components:
       type: string
       example: 'LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo='
       description: |
-        This field is used by IBP console when adding the node as a consenter to the system channel. The field indicates what certificate the orderer will use when establishing mutual tls connections between other orderers when acting as the **server or client**. The certificate should be base 64 encoded PEM.
+        This field is used by Fabric Operations console when adding the node as a consenter to the system channel. The field indicates what certificate the orderer will use when establishing mutual tls connections between other orderers when acting as the **server or client**. The certificate should be base 64 encoded PEM.
 
         When setting `tls_cert` the fields `client_tls_cert` and `server_tls_cert` are not allowed.
       x-validate_base64_certificate: true
@@ -4475,7 +3185,7 @@ components:
       type: string
       example: 'LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo='
       description: |
-        This field is used by IBP console when adding the node as a consenter to the system channel. The field indicates what certificate the orderer will use when establishing mutual tls connections between other orderers when acting as the **server**. The certificate should be base 64 encoded PEM.
+        This field is used by Fabric Operations console when adding the node as a consenter to the system channel. The field indicates what certificate the orderer will use when establishing mutual tls connections between other orderers when acting as the **server**. The certificate should be base 64 encoded PEM.
 
         When setting `server_tls_cert` the field `client_tls_cert` is required and `tls_cert` is not allowed.
       x-validate_base64_certificate: true
@@ -4488,7 +3198,7 @@ components:
       type: string
       example: 'LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCkNlcnQgZGF0YSB3b3VsZCBiZSBoZXJlIGlmIHRoaXMgd2FzIHJlYWwKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo='
       description: |
-        This field is used by IBP console when adding the node as a consenter to the system channel. The field indicates what certificate the orderer will use when establishing mutual tls connections between other orderers when acting as the **client**. The certificate should be base 64 encoded PEM.
+        This field is used by Fabric Operations console when adding the node as a consenter to the system channel. The field indicates what certificate the orderer will use when establishing mutual tls connections between other orderers when acting as the **client**. The certificate should be base 64 encoded PEM.
 
         When setting `client_tls_cert` the field `server_tls_cert` is required and `tls_cert` is not allowed.
       x-validate_base64_certificate: true
@@ -4536,27 +3246,27 @@ components:
         maxLength: 32 # artificial limit, we want users to use short tags
     display_name_ca:
       type: string
-      description: A descriptive name for this CA. The IBP console tile displays this name.
+      description: A descriptive name for this CA. The Fabric Operations console tile displays this name.
       example: My CA
       maxLength: 64 # UI overflow limiter
     display_name_orderer:
       type: string
-      description: A descriptive base name for each ordering node. One or more child IBP console tiles display this name.
+      description: A descriptive base name for each ordering node. One or more child Fabric Operations console tiles display this name.
       example: orderer
       maxLength: 64 # UI overflow limiter
     display_name_peer:
       type: string
-      description: A descriptive name for this peer. The IBP console tile displays this name.
+      description: A descriptive name for this peer. The Fabric Operations console tile displays this name.
       example: My Peer
       maxLength: 64 # UI overflow limiter
     display_name_msp:
       type: string
-      description: A descriptive name for this MSP. The IBP console tile displays this name.
+      description: A descriptive name for this MSP. The Fabric Operations console tile displays this name.
       example: My Peer
       maxLength: 64 # UI overflow limiter
     cluster_name_orderer:
       type: string
-      description: A descriptive name for an ordering service. The parent IBP console tile displays this name.
+      description: A descriptive name for an ordering service. The parent Fabric Operations console tile displays this name.
       example: ordering service 1
       maxLength: 64 # UI overflow limiter
     client_keyfile:
@@ -4802,7 +3512,7 @@ components:
           x-validate_regex_error_msg: regex_fail_full_url
     scheme_version:
       type: string
-      description: The versioning of the IBP console format of this JSON.
+      description: The versioning of the Fabric Operations console format of this JSON.
       example: v1
     config_override_response:
       type: object
@@ -4837,7 +3547,7 @@ components:
         #  $ref: '#/components/schemas/FabricNodeOus'
 
     EditLogSettingsBody:
-      description: File system logging settings. All body fields are optional (only send the fields that you want to change). _Changes to this field will restart the IBP console server(s)_
+      description: File system logging settings. All body fields are optional (only send the fields that you want to change). _Changes to this field will restart the Fabric Operations console server(s)_
       type: object
       x-validate_no_extra_keys: true
       properties:
@@ -4914,7 +3624,7 @@ components:
           description: |
             Set `config_override` to create the root/initial enroll id and enroll secret as well as enabling custom CA configurations (such as using postgres). See the [Fabric CA configuration file](https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/serverconfig.html) for more information about each parameter.
 
-            The field `tlsca` is optional. The IBP console will copy the value of `config_override.ca` into `config_override.tlsca` if `config_override.tlsca` is omitted (which is recommended).
+            The field `tlsca` is optional. The Fabric Operations console will copy the value of `config_override.ca` into `config_override.tlsca` if `config_override.tlsca` is omitted (which is recommended).
 
             *The nested field **names** below are not case-sensitive.*
           required:
@@ -4957,7 +3667,7 @@ components:
         - caount
         - cafiles
         - operations
-        - ldap # temp adding field as invalid, issue https://github.ibm.com/IBM-Blockchain/OpTools/issues/3548
+        - ldap
       x-validate_no_extra_keys: true
       x-validate_case_insensitive: true
       required:
@@ -4979,8 +3689,6 @@ components:
           $ref: '#/components/schemas/ConfigCA_registry'
         db:
           $ref: '#/components/schemas/ConfigCA_db'
-        #ldap: # removing for now, issue https://github.ibm.com/IBM-Blockchain/OpTools/issues/3548
-        #  $ref: '#/components/schemas/ConfigCA_ldap'
         affiliations:
           $ref: '#/components/schemas/ConfigCA_affiliations'
         csr:
@@ -5584,7 +4292,6 @@ components:
       x-validate_case_insensitive: true
 
     # orderer yaml property reference: https://github.com/hyperledger/fabric/blob/release-1.4/sampleconfig/orderer.yaml
-    # orderer deployer property reference: https://github.ibm.com/IBM-Blockchain/ibp-operator/blob/master/docs/overrides/orderer-yaml.md
     ConfigOrdererCreate:
       type: object
       description: |
@@ -5859,7 +4566,6 @@ components:
               $ref: '#/components/schemas/Statsd_prefix'
 
     # peer yaml property reference: https://github.com/hyperledger/fabric/blob/release-1.4/sampleconfig/core.yaml
-    # peer deployer property reference: https://github.ibm.com/IBM-Blockchain/ibp-operator/blob/master/docs/overrides/core-yaml.md
     ConfigPeerCreate:
       type: object
       description: |
@@ -6758,9 +5464,9 @@ components:
         cluster_name:
           type: string
           description: |
-            A descriptive name for an ordering service. The parent IBP console tile displays this name.
+            A descriptive name for an ordering service. The parent Fabric Operations console tile displays this name.
 
-            This field should only be set if you are creating a new OS cluster or when appending to an unknown (external) OS cluster. An unknown/external cluster is one that this IBP console has not imported or created.
+            This field should only be set if you are creating a new OS cluster or when appending to an unknown (external) OS cluster. An unknown/external cluster is one that this Fabric Operations console has not imported or created.
           example: ordering service 1
         id:
           $ref: '#/components/schemas/component_id'
@@ -6777,7 +5483,7 @@ components:
           example: abcde
         external_append:
           type: string
-          description: Set to `true` only if you are appending to an unknown (external) OS cluster. Else set it to `false` or omit the field. An unknown/external cluster is one that this IBP console has not imported or created.
+          description: Set to `true` only if you are appending to an unknown (external) OS cluster. Else set it to `false` or omit the field. An unknown/external cluster is one that this Fabric Operations console has not imported or created.
           example: false
         config:
           type: array
@@ -7008,7 +5714,7 @@ components:
         #  $ref: '#/components/schemas/FabricNodeOus'
 
     EditSettingsBody:
-      description: Body schema to edit IBP console settings. Each setting field is optional.
+      description: Body schema to edit Fabric Operations console settings. Each setting field is optional.
       type: object
       x-validate_no_extra_keys: true
       properties:
@@ -7029,13 +5735,13 @@ components:
           $ref: '#/components/schemas/EditLogSettingsBody'
         max_req_per_min:
           type: number
-          description: The base limit for the maximum number of `/api/*` API requests (aka UI requests) in 1 minute. Defaults `25`. [Rate Limits](#rate-limits). _Changes to this field will restart the IBP console server(s)_
+          description: The base limit for the maximum number of `/api/*` API requests (aka UI requests) in 1 minute. Defaults `25`. [Rate Limits](#rate-limits). _Changes to this field will restart the Fabric Operations console server(s)_
           minimum: 1
           maximum: 1000
           example: 25
         max_req_per_min_ak:
           type: number
-          description: The base limit for the maximum number of `/ak/api/*` API requests (aka external api key requests) in 1 minute. Defaults `25`. [Rate Limits](#rate-limits). _Changes to this field will restart the IBP console server(s)_
+          description: The base limit for the maximum number of `/ak/api/*` API requests (aka external api key requests) in 1 minute. Defaults `25`. [Rate Limits](#rate-limits). _Changes to this field will restart the Fabric Operations console server(s)_
           minimum: 1
           maximum: 1000
           example: 25
@@ -7216,7 +5922,7 @@ components:
         - caount
         - cafiles
         - operations
-        - ldap # temp adding field as invalid, issue https://github.ibm.com/IBM-Blockchain/OpTools/issues/3548
+        - ldap
       x-validate_no_extra_keys: true
       x-validate_case_insensitive: true
       properties:
@@ -7236,8 +5942,6 @@ components:
           $ref: '#/components/schemas/ConfigCA_registry'
         db:
           $ref: '#/components/schemas/ConfigCA_db'
-        #ldap: # removing for now, issue https://github.ibm.com/IBM-Blockchain/OpTools/issues/3548
-        #  $ref: '#/components/schemas/ConfigCA_ldap'
         affiliations:
           $ref: '#/components/schemas/ConfigCA_affiliations'
         csr:
@@ -7565,7 +6269,7 @@ components:
       properties:
         ATHENA_ID:
           type: string
-          description: Random/unique id for the process running the IBP console server.
+          description: Random/unique id for the process running the Fabric Operations console server.
           example: 17v7e
         AUTH_SCHEME:
           type: string
@@ -7581,14 +6285,14 @@ components:
             type:
               type: string
               example: 'paid'
-              description: Indicates whether this is a paid or free IBP console.
+              description: Indicates whether this is a paid or free Fabric Operations console.
         CONFIGTXLATOR_URL:
           type: string
           description: URL used for a configtxlator rest server.
           example: https://n3a3ec3-configtxlator.ibp.us-south.containers.appdomain.cloud
         CRN:
           type: object
-          description: metadata about the IBM Cloud service instance. [Only populated if using IBM Cloud]
+          description: metadata about the service instance.
           properties:
             account_id:
               type: string
@@ -7620,7 +6324,7 @@ components:
           example: 'crn:v1:staging:public:blockchain:us-south:a/abcd:abc123::'
         CSP_HEADER_VALUES:
           type: array
-          description: array of strings that define the Content Security Policy headers for the IBP console.
+          description: array of strings that define the Content Security Policy headers for the Fabric Operations console.
           items:
             type: string
         DB_SYSTEM:
@@ -7630,7 +6334,7 @@ components:
         DEPLOYER_URL:
           type: string
           example: https://api.dev.blockchain.cloud.ibm.com
-          description: URL of the companion application for the IBP console.
+          description: URL of the companion application for the Fabric Operations console.
         DOMAIN:
           type: string
           description: Browser cookies will use this value for their domain property. Thus it should match the URL's domain in the browser. `null` is valid if serving over http.
@@ -7658,7 +6362,7 @@ components:
                 example: 'V1_1'
         FEATURE_FLAGS:
           type: object
-          description: Configures th IBP console to enable/disable features.
+          description: Configures th Fabric Operations console to enable/disable features.
         FILE_LOGGING:
           type: object
           properties:
@@ -7669,18 +6373,18 @@ components:
           description: File logging settings.
         HOST_URL:
           type: string
-          description: The external URL to reach the IBP console.
+          description: The external URL to reach the Fabric Operations console.
           example: http://localhost:3000
         IAM_CACHE_ENABLED:
           type: boolean
-          description: If true an in memory cache will be used to interface with the IBM IAM (an authorization) service. [Only applies if IBP is running in IBM Cloud]
+          description: If true an in memory cache will be used to interface with the IAM (an authorization) service.
           example: true
         IAM_URL:
           type: string
-          description: The URL to reach the IBM IAM service. [Only applies if IBP is running in IBM Cloud]
+          description: The URL to reach the IAM service.
         IBM_ID_CALLBACK_URL:
           type: string
-          description: The URL to use during SSO login with the IBM IAM service. [Only applies if IBP is running in IBM Cloud]
+          description: The URL to use during SSO login with the IAM service.
         IGNORE_CONFIG_FILE:
           type: boolean
           description: If true the config file will not be loaded during startup. Thus settings in the config file will not take effect.
@@ -7696,8 +6400,8 @@ components:
               example: 60000
         INFRASTRUCTURE:
           type: string
-          description: What type of infrastructure is being used to run the IBP console. "ibmcloud", "azure", "other"
-          example: ibmcloud
+          description: What type of infrastructure is being used to run the Fabric Operations console. "cloud", "azure", "other"
+          example: cloud
         LANDING_URL:
           type: string
           example: http://localhost:3000
@@ -7723,7 +6427,7 @@ components:
           example: true
         PORT:
           type: string
-          description: Internal port that IBP console is running on.
+          description: Internal port that Fabric Operations console is running on.
           example: '3000'
         PROXY_CACHE_ENABLED:
           type: boolean
@@ -7732,8 +6436,8 @@ components:
         PROXY_TLS_FABRIC_REQS:
           type: string
           description: |
-            If `"always"` requests to Fabric components will go through the IBP console server.
-            If `true` requests to Fabric components with IP based URLs will go through the IBP console server, while Fabric components with hostname based URLs will go directly from the browser to the component.
+            If `"always"` requests to Fabric components will go through the Fabric Operations console server.
+            If `true` requests to Fabric components with IP based URLs will go through the Fabric Operations console server, while Fabric components with hostname based URLs will go directly from the browser to the component.
             If `false` all requests to Fabric components will go directly from the browser to the component.
         PROXY_TLS_HTTP_URL:
           type: string
@@ -7765,7 +6469,7 @@ components:
           example: true
         VERSIONS:
           type: object
-          description: The various commit hashes of components powering this IBP console.
+          description: The various commit hashes of components powering this Fabric Operations console.
           properties:
             apollo:
               type: string
@@ -7782,7 +6486,7 @@ components:
             tag:
               type: string
               example: v0.4.31
-              description: The tag of the build powering this IBP console
+              description: The tag of the build powering this Fabric Operations console
 
     GetNotificationsResponse:
       type: object
@@ -7988,7 +6692,7 @@ components:
 
     LoggingSettingsClient:
       type: object
-      description: The client side (browser) logging settings. _Changes to this field will restart the IBP console server(s)_
+      description: The client side (browser) logging settings. _Changes to this field will restart the Fabric Operations console server(s)_
       properties:
         enabled:
           type: boolean
@@ -8003,7 +6707,7 @@ components:
 
     LoggingSettingsServer:
       type: object
-      description: The server side logging settings. _Changes to this field will restart the IBP console server(s)_
+      description: The server side logging settings. _Changes to this field will restart the Fabric Operations console server(s)_
       properties:
         enabled:
           type: boolean
@@ -8061,7 +6765,7 @@ components:
           example: 1.2 mins
         up_time:
           type: string
-          description: Total time the IBP console server has been running.
+          description: Total time the Fabric Operations console server has been running.
           example: 30 days
 
     NotificationData:
@@ -8119,7 +6823,7 @@ components:
             instance_id:
               type: string
               example: p59ta
-              description: Random/unique id for a process running IBP console.
+              description: Random/unique id for a process running Fabric Operations console.
             now:
               type: number
               description: UTC UNIX timestamp of the current time according to the server. In milliseconds.
@@ -8130,7 +6834,7 @@ components:
               example: 1542746836056
             up_time:
               type: string
-              description: Total time the IBP console server has been running.
+              description: Total time the Fabric Operations console server has been running.
               example: 30 days
             memory_usage:
               type: object
@@ -8475,7 +7179,7 @@ components:
         - signcerts
         - cacerts
       properties:
-        keystore: # the name of this field is odd, see deployer doc: https://github.ibm.com/IBM-Blockchain/fabric_images/blob/v1.2/v1/fabric/alpine/msp_structure.md
+        keystore:
           type: string
           description: An identity private key (base 64 encoded PEM) for this component.
         signcerts:
@@ -8863,7 +7567,7 @@ components:
 
     SignatureOptools_url:
       type: string
-      description: The url of the IBP console for this org. Include protocol, port, & hostname. Field is parsed during request distribution. The path/route to use during request distribution will be decided internally by the paths availability (`/api/v1/*` or `/api/v2/*`).
+      description: The url of the Fabric Operations console for this org. Include protocol, port, & hostname. Field is parsed during request distribution. The path/route to use during request distribution will be decided internally by the paths availability (`/api/v1/*` or `/api/v2/*`).
       example: http://localhost:3000
 
     SignatureSignature: # do not base64 validation to this field, for a ccd tx it will be a simple string
@@ -8999,7 +7703,7 @@ components:
 
     SigTxVisibility:
       type: string
-      description: Where the transaction appears in the IBP console. Either `inbox` or `archive`.
+      description: Where the transaction appears in the Fabric Operations console. Either `inbox` or `archive`.
       example: inbox
       enum:
         - inbox
@@ -9206,7 +7910,7 @@ components:
           x-validate_base64_certificate: true
         hash_ver:
           type: string
-          description: The version of the hash function over this request. IBP consoles v2.5.* and higher should use "v2".
+          description: The version of the hash function over this request. Fabric Operations consoles v2.5.* and higher should use "v2".
           example: v2
           enum:
             - v2
@@ -9404,11 +8108,11 @@ components:
     #
     #.
     # ---------------------------------------------------------------------------------------------------------------------------------------------------------
-    # Software Schemas - ! not applicable for IBP SaaS on IBM Cloud !
+    # Software Schemas - ! not applicable for SaaS!
     # ---------------------------------------------------------------------------------------------------------------------------------------------------------
     api_key:
       type: string
-      description: The api key. Used to authenticate APIs on IBP Software.
+      description: The api key. Used to authenticate APIs on the console.
       example: <api_key here>
     api_roles:
       type: array
@@ -9708,8 +8412,8 @@ components:
       in: query
       description: |
         Set to 'included' if the response should fetch CA attributes, inspect certificates, and append extra fields to CA and MSP component responses.
-        - CA components will have fields appended/updated with data fetched from the `/cainfo?ca=ca` endpoint of a CA, such as: `ca_name`, `root_cert`, `fabric_version`, `issuer_public_key` and `issued_known_msps`. The field `issued_known_msps` indicates imported IBP MSPs that this CA has issued. Meaning the MSP's root cert contains a signature that is derived from this CA's root cert. Only imported MSPs are checked. Default responses will not include these fields.
-        - MSP components will have the field `issued_by_ca_id` appended. This field indicates the id of an IBP console CA that issued this MSP. Meaning the MSP's root cert contains a signature that is derived from this CA's root cert. Only imported/created CAs are checked. Default responses will not include these fields.
+        - CA components will have fields appended/updated with data fetched from the `/cainfo?ca=ca` endpoint of a CA, such as: `ca_name`, `root_cert`, `fabric_version`, `issuer_public_key` and `issued_known_msps`. The field `issued_known_msps` indicates imported MSPs that this CA has issued. Meaning the MSP's root cert contains a signature that is derived from this CA's root cert. Only imported MSPs are checked. Default responses will not include these fields.
+        - MSP components will have the field `issued_by_ca_id` appended. This field indicates the id of an Fabric Operations console CA that issued this MSP. Meaning the MSP's root cert contains a signature that is derived from this CA's root cert. Only imported/created CAs are checked. Default responses will not include these fields.
       required: false
       schema:
         type: string
@@ -9731,9 +8435,9 @@ components:
       name: auth_type
       in: query
       description: |
-        - **bearer** - IAM Bearer Auth - *[Available on IBM Cloud]* - The same bearer token used to authenticate this request will be copied into the Postman collection examples. The query parameter `token` must also be set with your IAM bearer/access token value.
-        - **api_key** - IAM Api Key Auth - *[Available on IBM Cloud]* - The IAM api key will be copied into the Postman collection examples. The query parameter `api_key` must also be set with your IAM API Key value.
-        - **basic** - Basic Auth - *[Available on OpenShift & IBM Cloud Private]* - A basic auth username and password will be copied into the Postman collection examples. The query parameters `username` & `password` must also be set with your IBP api key credentials. The IBP api key is the username and the api secret is the password.
+        - **bearer** - Bearer Auth - The same bearer token used to authenticate this request will be copied into the Postman collection examples. The query parameter `token` must also be set with your bearer/access token value.
+        - **api_key** - Api Key Auth - The api key will be copied into the Postman collection examples. The query parameter `api_key` must also be set with your API Key value.
+        - **basic** - Basic Auth - A basic auth username and password will be copied into the Postman collection examples. The query parameters `username` & `password` must also be set with your console api key credentials. The console api key is the username and the api secret is the password.
       required: true
       schema:
         type: string

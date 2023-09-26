@@ -608,7 +608,7 @@ module.exports = function (logger, ev, t) {
 								config_file = JSON.parse(config_file);
 
 							} else {
-								config_file = t.yaml.safeLoad(config_file);							// if its yaml, load it with the yaml lib
+								config_file = t.yaml.load(config_file);							// if its yaml, load it with the yaml lib
 							}
 						} catch (e) {
 							logger.error('[other] could not parse config file', e);
@@ -727,7 +727,7 @@ module.exports = function (logger, ev, t) {
 							if (process.env.CONFIGURE_FILE.indexOf('.json') >= 0) {			// json config file
 								config_file = JSON.parse(config_file);
 							} else {
-								config_file = t.yaml.safeLoad(config_file);					// yaml config file
+								config_file = t.yaml.load(config_file);					// yaml config file
 							}
 						} catch (e) {
 							logger.error('[settings edit] could not parse config file', e);
@@ -833,7 +833,7 @@ module.exports = function (logger, ev, t) {
 	exports.store_swagger_file = (req, cb) => {
 		let json = null;
 		try {
-			json = t.yaml.safeLoad(req.body);
+			json = t.yaml.load(req.body);
 		} catch (e) {
 			logger.error('[openapi] unable to covert yaml to json:', e);
 		}
