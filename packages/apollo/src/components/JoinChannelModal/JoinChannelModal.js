@@ -783,7 +783,7 @@ class JoinChannelModal extends React.Component {
 										<SidePanelWarning
 											title={translate(`channel_warning_20_join_peer_${x.type}`, {
 												peer: x.nodes.map(node => node.name),
-												peerVersion: x.nodes.map(node => node.version),
+												peerVersion: Helper.prettyPrintVersion(x.nodes.map(node => node.version)),
 												channelVersion: x.channelVersion,
 											})}
 										/>
