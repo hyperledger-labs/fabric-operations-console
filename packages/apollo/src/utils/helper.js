@@ -1511,8 +1511,9 @@ const Helper = {
 	getPre20Nodes(nodes) {
 		let pre20Nodes = [];
 		nodes.forEach(node => {
-			node.version = null;
-			if (!node.version || this.version_matches_pattern('1.4.x', node.version)) {
+			if (!node.version) {
+				console.error('cannot check if node is older than v2 b/c node does not have a "version" field', node);
+			} else if (this.version_matches_pattern('1.4.x', node.version)) {
 				pre20Nodes.push({
 					name: node.display_name || node.name,
 					version: node.version || '1.4.x',
