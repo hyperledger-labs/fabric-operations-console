@@ -351,7 +351,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: The `id` of the component to delete. Use the [Get all components](#list_components) API to determine the id of the component to be deleted.
+          description: The `id` of the component to delete. Use the [Get all components](#list-components) API to determine the id of the component to be deleted.
           required: true
           style: simple
           explode: false
@@ -3491,7 +3491,7 @@ paths:
       tags:
         - Administer the console
       summary: Archive console notifications
-      description: Archive 1 or more notifications. Archived notifications will no longer appear in the default [Get all notifications](#list-notifications) API.
+      description: Archive 1 or more notifications. Archived notifications will no longer appear in the [Get console notifications]((#listnotifications)) API with default settings.
       operationId: archive_notifications
       requestBody:
         description: Archive notifications.
@@ -3550,7 +3550,7 @@ paths:
         - Manage multiple components
       summary: Get all components
       description: Get the Fabric Operations console's data on all components (peers, CAs, orderers, and MSPs). The component might be imported or created.
-      operationId: list_components
+      operationId: list-components
       parameters:
         - $ref: '#/components/parameters/QueryDeploymentAttrs'
         - $ref: '#/components/parameters/QueryParsedCerts'
@@ -3971,8 +3971,8 @@ paths:
       description: |
         Removes components with the matching tag from the Fabric Operations console. Tags are not case-sensitive.
         - Using this api on **imported** components removes them from the Fabric Operations console.
-        - Using this api on **created** components removes them from the Fabric Operations console **but** it will **not** delete the components from the Kubernetes cluster where they reside. Thus it orphans the Kubernetes deployments (if it exists). Instead use the [Delete components with tag](#delete_components_by_tag) API to delete the Kubernetes deployment and the Fabric Operations console data at once.
-      operationId: remove_components_by_tag
+        - Using this api on **created** components removes them from the Fabric Operations console **but** it will **not** delete the components from the Kubernetes cluster where they reside. Thus it orphans the Kubernetes deployments (if it exists). Instead use the [Delete components with tag](#delete-components-by-tag) API to delete the Kubernetes deployment and the Fabric Operations console data at once.
+      operationId: remove-components-by-tag
       parameters:
         - $ref: '#/components/parameters/PathTag'
       x-sdk-operations:
@@ -4021,9 +4021,9 @@ paths:
       summary: Delete components with tag
       description: |
         Removes components with the matching tag from the Fabric Operations console **and** it deletes the Kubernetes deployment. Tags are not case-sensitive.
-        - Using this api on **imported** components will be skipped over since their Kubernetes deployment is unknown and cannot be removed. Instead use the [Remove components with tag](#remove_components_by_tag) API to remove imported components with a tag.
+        - Using this api on **imported** components will be skipped over since their Kubernetes deployment is unknown and cannot be removed. Instead use the [Remove components with tag](#remove-components-by-tag) API to remove imported components with a tag.
         - Using this api on **created** components removes them from the Fabric Operations console **and** it will delete the components from the Kubernetes cluster where they reside. The Kubernetes delete must succeed before the component will be removed from the Fabric Operations console.
-      operationId: delete_components_by_tag
+      operationId: delete-components-by-tag
       parameters:
         - $ref: '#/components/parameters/PathTag'
       x-sdk-operations:
@@ -4379,7 +4379,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: The `id` of the component to edit. Use the [Get all components](#list_components) API to determine the id of the component.
+          description: The `id` of the component to edit. Use the [Get all components](#list-components) API to determine the id of the component.
           required: true
           style: simple
           explode: false
@@ -10107,6 +10107,7 @@ components:
           description: Array of actions that are needed for this api
           items:
             type: string
+            example: blockchain.users.manage
         iid:
           type: string
           description: The service's instance id
@@ -11058,7 +11059,7 @@ components:
     PathIdEdit:
       name: id
       in: path
-      description: The `id` of the component to modify. Use the [Get all components](#list_components) API to determine the component id.
+      description: The `id` of the component to modify. Use the [Get all components](#list-components) API to determine the component id.
       required: true
       schema:
         type: string
@@ -11087,7 +11088,7 @@ components:
     PathIdGet:
       name: id
       in: path
-      description: The `id` of the component to retrieve. Use the [Get all components](#list_components) API to determine the component id.
+      description: The `id` of the component to retrieve. Use the [Get all components](#list-components) API to determine the component id.
       required: true
       schema:
         type: string
