@@ -76,7 +76,7 @@ function parse_to_json(thing) {
 
 // return true if the reference is in use anywhere
 function ref_exist(ref_name, type, swagger_txt) {
-	const name = '#/components/' + type + '/' + ref_name;   // openapi v3 spec will use this format
+	const name = '#/components/' + type + '/' + ref_name; // openapi v3 spec will use this format
 	if (swagger_txt.indexOf(name) >= 0) {
 		return true;
 	} else {

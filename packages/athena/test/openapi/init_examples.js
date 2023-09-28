@@ -70,7 +70,7 @@ function parse_swagger(openapi_obj, path, depth) {
 							const resolved = resolve_ref(ref, swagger);		// resolve the initial reference to make it easier to parse
 							flatten_obj(resolved, swagger, 0);				// flatten all references to make it easier to parse
 
-							if (!all_paths[path][method].responses[code].content['application/json'].examples) {  // if we don't have an example yet, build one
+							if (!all_paths[path][method].responses[code].content['application/json'].examples) { // if we don't have an example yet, build one
 								const example = build_example(resolved, '', 0);
 								refs_to_replace[ref] = example;				// store this example, will replace all occurrences later
 								built_examples++;

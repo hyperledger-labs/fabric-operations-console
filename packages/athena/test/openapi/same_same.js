@@ -64,7 +64,7 @@ function recurse_swagger(thing, path, depth) {
 			same_same(field_name, field.description, path + '.' + field_name);
 		} else if (field.items && field.items.description) {
 			//console.log('found arr leaf field', field_name);
-			same_same(field_name, field.items.description, path)
+			same_same(field_name, field.items.description, path);
 		} else if (field.properties) {
 			recurse_swagger(field.properties, path + '.' + field_name, ++depth);
 		}
