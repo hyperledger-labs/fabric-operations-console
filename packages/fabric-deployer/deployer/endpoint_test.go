@@ -25,7 +25,7 @@ import (
 	"net/http/httptest"
 
 	"github.com/IBM-Blockchain/fabric-deployer/deployer"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"go.uber.org/zap"
 )

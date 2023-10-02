@@ -26,7 +26,7 @@ import (
 	"go.uber.org/zap"
 )
 
-//Endpoint represents a particular endpoint
+// Endpoint represents a particular endpoint
 type Endpoint struct {
 	// Handler is the handler function for this endpoint
 	Handler func(w http.ResponseWriter, r *http.Request) (interface{}, int, error)

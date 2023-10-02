@@ -28,7 +28,7 @@ import (
 	"github.com/IBM-Blockchain/fabric-deployer/config"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/mustgather"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/mustgather/mocks"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"go.uber.org/zap"
 	corev1 "k8s.io/api/core/v1"
