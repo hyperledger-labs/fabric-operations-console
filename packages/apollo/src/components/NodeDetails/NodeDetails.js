@@ -18,6 +18,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withLocalize } from 'react-localize-redux';
+import Helper from '../../utils/helper';
 
 class NodeDetails extends Component {
 	getTitle() {
@@ -46,7 +47,7 @@ class NodeDetails extends Component {
 			<div className="node-details-field-value"
 				key={field + '-value'}
 			>
-				{_.get(this.props.node, field)}
+				{field === 'version' ? Helper.prettyPrintVersion(_.get(this.props.node, field)) : _.get(this.props.node, field)}
 			</div>,
 		];
 	}
