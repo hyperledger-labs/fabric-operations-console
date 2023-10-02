@@ -1393,7 +1393,7 @@ const Helper = {
 			}
 			return 'v' + parts.join('.');
 		}
-		return str;
+		return '-';
 	},
 
 	// '2.0.0' -> 'v2.0.0'

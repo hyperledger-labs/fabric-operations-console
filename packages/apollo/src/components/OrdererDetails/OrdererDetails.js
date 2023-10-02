@@ -1132,7 +1132,7 @@ class OrdererDetails extends Component {
 				label: 'node_location',
 				value: this.props.selectedNode.location ? translate(this.props.selectedNode.location) : '',
 			});
-			let versionLabel = this.props.selectedNode.version ? this.props.selectedNode.version : translate('version_not_found');
+			let versionLabel = this.props.selectedNode.version ? Helper.prettyPrintVersion(this.props.selectedNode.version) : translate('version_not_found');
 			if (this.props.selectedNode && this.props.selectedNode.isUnsupported) {
 				versionLabel = translate('unsupported');
 			}

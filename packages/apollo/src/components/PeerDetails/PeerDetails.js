@@ -408,7 +408,7 @@ class PeerDetails extends Component {
 	}
 
 	getStickySectionGroups(translate) {
-		let versionLabel = this.props.details && this.props.details.version ? this.props.details.version : translate('version_not_found');
+		let versionLabel = this.props.details && this.props.details.version ? Helper.prettyPrintVersion(this.props.details.version) : translate('version_not_found');
 		if (this.props.details && this.props.details.isUnsupported) {
 			versionLabel = translate('unsupported');
 		}
