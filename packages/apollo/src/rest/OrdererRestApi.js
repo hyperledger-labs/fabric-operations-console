@@ -323,7 +323,7 @@ class OrdererRestApi {
 
 	static async modifyConsenter(options, channel_group, orderer) {
 		let consenterNode = channel_group.groups.Orderer.values.ConsensusType.value.metadata.consenters;
-		let ordererAddresses = channel_group.values.OrdererAddresses.value.addresses;
+		let ordererAddresses = _.get(channel_group, 'values.OrdererAddresses.value.addresses', []);
 
 		let parsedURL = urlParser.parse(options.consenter_url || options.api_url);
 		const host = parsedURL.hostname;

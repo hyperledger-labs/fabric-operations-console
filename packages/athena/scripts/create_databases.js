@@ -114,7 +114,7 @@ module.exports = (logger, t) => {
 			} else {
 				try {
 					const temp = t.fs.readFileSync(t.path.join(__dirname, doc), 'utf8');
-					fs_doc = t.yaml.safeLoad(temp);
+					fs_doc = t.yaml.load(temp);
 				} catch (e) {
 					logger.error('[db startup] unable to read yaml file. cannot add to database.', doc, e);
 					return cb_createDocs();

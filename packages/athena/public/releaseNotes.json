@@ -1,5 +1,25 @@
 [
 	{
+		"version": "1.0.6-4",
+		"date": "02 Oct 2023",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
+		"version": "1.0.6-1",
+		"date": "5 Sept 2023",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
 		"version": "1.0.5-29",
 		"date": "11 July 2023",
 		"description": [

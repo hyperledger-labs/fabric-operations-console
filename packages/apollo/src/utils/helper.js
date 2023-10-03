@@ -1393,9 +1393,15 @@ const Helper = {
 			}
 			return 'v' + parts.join('.');
 		}
-		return str;
+		return '-';
 	},
 
+	// '2.0.0' -> 'v2.0.0'
+	// '2.0.0-5' -> 'v2.0.0-5'
+	// 'V2.0.0-5' -> 'v2.0.0-5'
+	prettyPrintVersion(str) {
+		return this.prettyPrintPolicy(str);
+	},
 
 	readLocalBinaryFile(file, limit) {
 		return new Promise((resolve, reject) => {
@@ -1501,10 +1507,13 @@ const Helper = {
 		return highest;
 	},
 
+	// return array of nodes that are using  a fabric version older than v2.0
 	getPre20Nodes(nodes) {
 		let pre20Nodes = [];
 		nodes.forEach(node => {
-			if (!node.version || node.version.indexOf('2') !== 0) {
+			if (!node.version) {
+				console.error('cannot check if node is older than v2 b/c node does not have a "version" field', node);
+			} else if (this.version_matches_pattern('1.4.x', node.version)) {
 				pre20Nodes.push({
 					name: node.display_name || node.name,
 					version: node.version || '1.4.x',
@@ -1514,6 +1523,7 @@ const Helper = {
 		return pre20Nodes;
 	},
 
+	// check if the user has the right fabric versions on each relevant peer/orderer for the capability selected
 	validateCapability20Update(applicationCapability, ordererCapability, channelCapability, channelPeers, channelOrderers) {
 		let channel_warning_20 = false;
 		let channel_warning_20_details = [];

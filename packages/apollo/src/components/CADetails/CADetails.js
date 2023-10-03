@@ -240,13 +240,15 @@ export class CADetails extends Component {
 				fn: () => {
 					this.generateCertificate(null);
 				},
-				disabled: !ActionsHelper.canEditComponent(this.props.feature_flags)
+				disabled: !ActionsHelper.canEditComponent(this.props.feature_flags),
+				decoupleFromLoading: true
 			});
 			buttons.push({
 				text: 'register_user',
 				fn: this.openAddUser,
 				icon: 'plus',
-				disabled: !ActionsHelper.canEditComponent(this.props.feature_flags)
+				disabled: !ActionsHelper.canEditComponent(this.props.feature_flags),
+				decoupleFromLoading: true
 			});
 		}
 		return buttons;
@@ -529,7 +531,7 @@ export class CADetails extends Component {
 		if (this.props.details && (this.props.details.location === 'ibm_saas' || this.props.details.version)) {
 			groups.push({
 				label: 'node_version_title',
-				value: this.props.details && this.props.details.version ? this.props.details.version : translate('version_not_found'),
+				value: this.props.details && this.props.details.version ? Helper.prettyPrintVersion(this.props.details.version) : translate('version_not_found'),
 				loadingData: this.props.details && !this.props.details.name && !this.props.details.version,
 			});
 		}

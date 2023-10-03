@@ -707,7 +707,8 @@ const template = {
 										"mod_policy": "/Channel/Orderer/Admins",
 										"value": {
 
-											// we are leaving this blank so that fabric uses the addresses defined in each org's section
+											// we are leaving this blank so that fabric uses the addresses defined in each org's section consenter field
+											// legacy
 											// include port, no protocol
 											"addresses": []
 										},
