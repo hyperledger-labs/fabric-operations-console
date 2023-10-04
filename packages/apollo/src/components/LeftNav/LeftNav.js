@@ -64,7 +64,7 @@ const mainNav = [
 	},
 	{
 		icon: 'fingerprint', // 'terminal' looks good to
-		path: '/audit-logs',
+		path: '/audit',
 		id: 'audit_logs',
 		globalNavSubmenu: [],
 	},

@@ -53,9 +53,9 @@ module.exports = function (logger, ev, t) {
 	// ------------------------------------------
 	/*
 		options: {
-		 	notification_ids: [],
-		 	couch_resp: {},				// response from get all docs
-		 	view: ""					// name of the design doc view to use
+			notification_ids: [],
+			couch_resp: {},				// response from get all docs
+			view: ""					// name of the design doc view to use
 		}
 	 */
 	function bulk_archive_or_delete_notifications(options, cb) {
@@ -99,8 +99,8 @@ module.exports = function (logger, ev, t) {
 	// ------------------------------------------------------------------
 	/*
 		options: {
-		 	notification_ids: [],
-		 	couch_resp: {},				// response from get all docs
+			notification_ids: [],
+			couch_resp: {},				// response from get all docs
 		}
 	 */
 	function build_delete_or_archive_array(options) {
@@ -253,7 +253,7 @@ module.exports = function (logger, ev, t) {
 				logger.error('[notification lib] - could not find all notification docs', err);
 				return cb(err, null);
 			} else {
-				const docs = format(resp);
+				const docs = filter(format(resp));
 				logger.debug('[notification lib] - found all notification docs: ', (resp && resp.rows) ? resp.rows.length : 0);
 				const ret = { notifications: docs };
 				ret.total = (resp) ? resp.total_rows : 0;		// number of docs in the view
@@ -293,6 +293,23 @@ module.exports = function (logger, ev, t) {
 						delete doc._rev;
 						ret.push(doc);
 					}
+				}
+			}
+			return ret;
+		}
+
+		// filter the notification data down by a user search
+		function filter(data) {
+			const search = (options && typeof options.search === 'string') ? options.search.toLowerCase().trim() : '';
+			if (!search) {
+				return data;
+			}
+
+			const ret = [];
+			for (let i in data) {
+				const doc = JSON.stringify(Object.values(data[i])).toLowerCase();
+				if (doc.includes(search)) {
+					ret.push(data[i]);
 				}
 			}
 			return ret;

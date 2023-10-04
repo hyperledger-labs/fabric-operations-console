@@ -250,7 +250,7 @@ class Main extends Component {
 										exact
 									/>
 									<Route exact
-										path="/audit-logs"
+										path="/audit"
 										component={AuditLogs}
 									/>
 									<Route path="*"

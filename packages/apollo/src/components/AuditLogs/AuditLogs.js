@@ -30,28 +30,50 @@ import emptyImage from '../../assets/images/empty_nodes.svg';
 import SidePanel from '../SidePanel/SidePanel';
 import Clipboard from '../../utils/clipboard';
 import SVGs from '../Svgs/Svgs';
+import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
+import { Checkbox, TextInput } from 'carbon-components-react';
 
 const SCOPE = 'AuditLogs';
 //const Log = new Logger(SCOPE);
 
 class AuditLogs extends Component {
 	PAGE_SIZE = 50;
+	debounce = null;
 
 	async componentDidMount() {
 		this.props.showBreadcrumb('settings', {}, this.props.history.location.pathname, true);
 		this.props.updateState(SCOPE, {
 			loading: true,
+			logsLoading: true,
+			showTableColumns: {
+				date: true,
+				log: true,
+				by: false,
+				api: true,
+				code: true,
+				outcome: true,
+				tx_id: false,
+			}
 		});
 
+		await this.getLogs();
+		this.props.updateState(SCOPE, {
+			loading: false,
+		});
+	}
+
+	// get logs - no search/filters
+	async getLogs() {
 		try {
 			const logs = await AuditLogsApi.getLogs({ limit: this.PAGE_SIZE, skip: 0 });
 			this.props.updateState(SCOPE, {
 				logs: logs ? logs.notifications : [],
-				totalLogCount: logs ? logs.total : 0,
-				loading: false,
+				displayLogCount: logs ? logs.total : 0,			// the total number to display in the table (w/filters)
+				logsLoading: false,
 				showingPage: 1,
 				showDetails: null,
 				copyFlash: false,
+				allLogsCount: logs ? logs.total : 0,			// the actual number of all logs w/o filters
 			});
 		} catch (e) {
 			console.error('e', e);
@@ -65,30 +87,32 @@ class AuditLogs extends Component {
 		});
 	};
 
-	// dsh todo change plain text to json file
-
 	// download ALL audit logs as a text file
 	downloadAllLogs = async log => {
 		try {
-			const logs = await AuditLogsApi.getLogs({ limit: this.props.totalLogCount, skip: 0 });
+			const logs = await AuditLogsApi.getLogs({ limit: this.numberOfTotalLogs(), skip: 0 });
 			this.props.updateState(SCOPE, {
 				logs: logs ? logs.notifications : [],
 			});
-			this.downloadFile(0, this.props.totalLogCount);
+			this.downloadFile(0, this.numberOfTotalLogs(), false);
 		} catch (e) {
 			console.error('unable to get logs to download them', e);
 		}
 	};
 
+	numberOfTotalLogs = () => {
+		return this.props.allLogsCount || 100000;
+	}
+
 	// download audit log as a text file
 	downloadLogs = log => {
 		const start = (this.props.showingPage - 1) * this.PAGE_SIZE;
 		const end = start + this.PAGE_SIZE;
-		this.downloadFile(start, end);
+		this.downloadFile(start, end, true);
 	};
 
 	// download x logs as a text file
-	downloadFile(start, end) {
+	downloadFile(start, end, filter) {
 		let filename = 'audit_logs.' + Date.now() + '.json';
 		let data_str = JSON.stringify(this.format_logs_for_export(this.props.logs.slice(start, end)), null, '\t');
 		const createTarget = document.body;
@@ -140,7 +164,7 @@ class AuditLogs extends Component {
 			const all_logs = this.props.logs.concat(logs.notifications);
 			this.props.updateState(SCOPE, {
 				logs: logs ? all_logs : [],
-				totalLogCount: logs ? logs.total : 0,
+				displayLogCount: logs ? logs.total : 0,
 				showingPage: page + 1,
 			});
 		} catch (e) {
@@ -196,6 +220,128 @@ class AuditLogs extends Component {
 		}
 	}
 
+	// toggle the visibility of a column in the activity table
+	onChangeTableColumn(event) {
+		const showTableColumns = JSON.parse(JSON.stringify(this.props.showTableColumns));
+		if (event.target && event.target.value && showTableColumns && showTableColumns[event.target.value] !== undefined) {
+			showTableColumns[event.target.value] = !showTableColumns[event.target.value];	// flip it
+			this.props.updateState(SCOPE, {
+				showTableColumns: showTableColumns
+			});
+		}
+	}
+
+	// dynamically build the columns based on the selected options
+	buildTableColumns() {
+		const translate = this.props.translate;
+		const ret = [];
+		if (this.props.showTableColumns) {
+			if (this.props.showTableColumns.date) {
+				ret.push({
+					header: 'date',
+					custom: log => {
+						return (
+							<span title={Helper.fromNow(log.ts_display, translate)}>
+								{new Date(log.ts_display).toLocaleDateString()} - {new Date(log.ts_display).toLocaleTimeString()}
+							</span>
+						);
+					},
+					width: 2
+				});
+			}
+			if (this.props.showTableColumns.log) {
+				ret.push({
+
+					header: 'log_title',
+					attr: 'message',
+					translate: false,
+					width: 4
+				});
+			}
+
+
+			if (this.props.showTableColumns.by) {
+				ret.push({
+
+					header: 'by_title',
+					attr: 'by',
+					translate: false,
+					width: 2
+				});
+			}
+
+			if (this.props.showTableColumns.api) {
+				ret.push({
+
+					header: 'api_title',
+					attr: 'api',
+					translate: false,
+					width: 2
+				});
+			}
+
+			if (this.props.showTableColumns.code) {
+				ret.push({
+
+					header: 'response_code',
+					attr: 'code',
+					translate: false,
+					width: 1
+				});
+			}
+
+			if (this.props.showTableColumns.outcome) {
+				ret.push({
+
+					header: 'outcome_title',
+					attr: 'status',
+					translate: false,
+					width: 1
+				});
+			}
+
+
+			if (this.props.showTableColumns.tx_id) {
+				ret.push({
+					header: 'tx_id_title',
+					attr: 'tx_id',
+					translate: false,
+					width: 1
+				});
+			}
+		}
+
+		return ret;
+	}
+
+	// send search term and filter logs down before returning them
+	async searchTable(event) {
+		const search = event.target.value;
+		clearTimeout(this.debounce);
+
+		this.debounce = setTimeout(async () => {
+			this.props.updateState(SCOPE, {
+				logsLoading: true,
+			});
+
+			if (!search) {
+				return await this.getLogs();							// if no search terms, do normal api
+			} else {
+				try {
+					const logs = await AuditLogsApi.getLogs({ limit: this.numberOfTotalLogs(), skip: 0, search: search });
+					this.props.updateState(SCOPE, {
+						logs: logs ? logs.notifications : [],
+						displayLogCount: logs ? logs.returning : 0,		// in this case the total should reflect the number of logs after applying the filter
+						showingPage: 1,
+						logsLoading: false,
+					});
+				} catch (e) {
+					console.error('unable to get logs for search', e);
+				}
+			}
+		}, 150);
+	}
+
 	// --------------------------------------------------------------------------
 	// Main Migration Content
 	// --------------------------------------------------------------------------
@@ -230,16 +376,108 @@ class AuditLogs extends Component {
 
 						{!this.props.loading &&
 							<div>
+								<BlockchainTooltip triggerText={translate('audit_logs_title')}
+									direction='right'
+									className='audit-style-wrap'
+								>
+									{translate('audit_table_desc')}
+								</BlockchainTooltip>
+
+								<br />
+
+								<TextInput
+									id={'activity-checkbox-search'}
+									labelText={translate('search')}
+									wrapperClassName='audit-checkboxes'
+									placeholder={translate('search_terms')}
+									onChange={evt => {
+										this.searchTable(evt);
+									}}
+								/>
+
+								<br />
+
+								<div>
+									<div className='bx--label'>{translate('log_columns_desc')}</div>
+								</div>
+								<Checkbox
+									id={'activity-checkbox-date'}
+									labelText={translate('date')}
+									wrapperClassName='audit-checkboxes'
+									value='date'
+									checked={this.props.showTableColumns ? this.props.showTableColumns.date : false}
+									onClick={event => {
+										this.onChangeTableColumn(event);
+									}}
+								/>
+								<Checkbox
+									id={'activity-checkbox-log'}
+									labelText={translate('log_title')}
+									wrapperClassName='audit-checkboxes'
+									value='log'
+									checked={this.props.showTableColumns ? this.props.showTableColumns.log : false}
+									onClick={event => {
+										this.onChangeTableColumn(event);
+									}}
+								/>
+								<Checkbox
+									id={'activity-checkbox-by'}
+									labelText={translate('by_title')}
+									wrapperClassName='audit-checkboxes'
+									value='by'
+									checked={this.props.showTableColumns ? this.props.showTableColumns.by : false}
+									onClick={event => {
+										this.onChangeTableColumn(event);
+									}}
+								/>
+								<Checkbox
+									id={'activity-checkbox-api'}
+									labelText={translate('api_title')}
+									wrapperClassName='audit-checkboxes'
+									value='api'
+									checked={this.props.showTableColumns ? this.props.showTableColumns.api : false}
+									onClick={event => {
+										this.onChangeTableColumn(event);
+									}}
+								/>
+								<Checkbox
+									id={'activity-checkbox-code'}
+									labelText={translate('response_code')}
+									wrapperClassName='audit-checkboxes'
+									value='code'
+									checked={this.props.showTableColumns ? this.props.showTableColumns.code : false}
+									onClick={event => {
+										this.onChangeTableColumn(event);
+									}}
+								/>
+								<Checkbox
+									id={'activity-checkbox-outcome'}
+									labelText={translate('outcome_title')}
+									wrapperClassName='audit-checkboxes'
+									value='outcome'
+									checked={this.props.showTableColumns ? this.props.showTableColumns.outcome : false}
+									onClick={event => {
+										this.onChangeTableColumn(event);
+									}}
+								/>
+								<Checkbox
+									id={'activity-checkbox-tx_id'}
+									labelText={translate('tx_id_title')}
+									wrapperClassName='audit-checkboxes'
+									value='tx_id'
+									checked={this.props.showTableColumns ? this.props.showTableColumns.tx_id : false}
+									onClick={event => {
+										this.onChangeTableColumn(event);
+									}}
+								/>
+
 								<ItemContainer
-									containerTitle="audit_logs_title"
-									containerTooltip="audit_table_desc"
-									tooltipDirection="right"
 									emptyImage={emptyImage}
 									emptyTitle="audit_table_tile_empty"
 									emptyMessage="audit_table_text_empty"
 									id="audit-logs"
 									itemId="audit_logs"
-									loading={this.props.loading}
+									loading={this.props.loading || this.props.logsLoading}
 									items={this.props.logs}
 									menuItems={log => [
 										{
@@ -249,48 +487,12 @@ class AuditLogs extends Component {
 											},
 										}
 									]}
-									listMapping={[
-										{
-											header: 'date',
-											custom: log => {
-												return (
-													<span title={Helper.fromNow(log.ts_display, translate)}>
-														{new Date(log.ts_display).toLocaleDateString()} - {new Date(log.ts_display).toLocaleTimeString()}
-													</span>
-												);
-											},
-											width: 2
-										},
-										{
-											header: 'log_title',
-											attr: 'message',
-											translate: false,
-											width: 4
-										},
-										{
-											header: 'api_title',
-											attr: 'api',
-											translate: false,
-											width: 2
-										},
-										{
-											header: 'response_code',
-											attr: 'code',
-											translate: false,
-											width: 1
-										},
-										{
-											header: 'outcome_title',
-											attr: 'status',
-											translate: false,
-											width: 1
-										},
-									]}
+									listMapping={this.buildTableColumns()}
 									buttonText="register_user"
 									addItems={!this.props.loading && this.getButtons()}
 									isLink={true}
 									pageSize={this.PAGE_SIZE}
-									itemCount={this.props.totalLogCount}
+									itemCount={this.props.displayLogCount}
 									onPage={this.getLogsForPage}
 								/>
 							</div>
@@ -358,13 +560,16 @@ class AuditLogs extends Component {
 
 const dataProps = {
 	loading: PropTypes.bool,
+	logsLoading: PropTypes.bool,
 	settings: PropTypes.object,
 	errorMsg: PropTypes.string,
 	logs: PropTypes.array,
-	totalLogCount: PropTypes.number,
+	displayLogCount: PropTypes.number,
 	showingPage: PropTypes.number,
 	showDetails: PropTypes.object,
 	copyFlash: PropTypes.bool,
+	showTableColumns: PropTypes.object,
+	allLogsCount: PropTypes.number,
 };
 
 AuditLogs.propTypes = {
