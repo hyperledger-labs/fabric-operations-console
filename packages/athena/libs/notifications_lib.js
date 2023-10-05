@@ -266,6 +266,8 @@ module.exports = function (logger, ev, t) {
 		function format(resp) {
 			const ret = [];
 			if (resp) {
+				const offset_ms = options.timezoneOffset ? options.timezoneOffset * 60 * 1000 : 0;	// convert browser local timezone offset into ms offset
+
 				for (let i in resp.rows) {
 					if (resp.rows[i].doc) {
 						const doc = resp.rows[i].doc;
@@ -278,20 +280,32 @@ module.exports = function (logger, ev, t) {
 							const last_athena_msg = (Array.isArray(doc.athena_messages) && doc.athena_messages.length > 0) ?
 								doc.athena_messages[doc.athena_messages.length - 1] : null;
 							doc.message = doc.description + ': ' + last_athena_msg;		// build the display message
-
-							delete doc._id;
-							delete doc.athena_messages;
-							delete doc.tx_id;
 						}
 
 						// --- Other Notification --- //
 						else if (doc.type === 'other' || doc.type === 'notification') {
 							doc.id = doc._id;
-							delete doc._id;
 						}
 
-						delete doc._rev;
-						ret.push(doc);
+						// build a local date by using the browsers local time
+						if (doc && doc.ts_display) {
+							const tmp = doc.ts_display - offset_ms;
+							doc.local_date = t.misc.formatDate(tmp, '%n/%D/%Y - %i:%m:%s %P');
+						}
+
+
+						ret.push({
+							local_date: doc.local_date,
+							timestamp: doc.ts_display,
+							log: doc.message,
+							http_details: doc.api,
+							response_code: doc.code,
+							elapsed_ms: doc.elapsed_ms,
+							by: doc.by,
+							status: doc.status,
+							tx_id: doc.tx_id,
+							component_id: doc.component_id ? doc.component_id : undefined
+						});
 					}
 				}
 			}

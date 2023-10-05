@@ -87,6 +87,10 @@ class AuditLogs extends Component {
 		});
 	};
 
+	numberOfTotalLogs = () => {
+		return this.props.allLogsCount || 100000;
+	}
+
 	// download ALL audit logs as a text file
 	downloadAllLogs = async log => {
 		try {
@@ -94,25 +98,21 @@ class AuditLogs extends Component {
 			this.props.updateState(SCOPE, {
 				logs: logs ? logs.notifications : [],
 			});
-			this.downloadFile(0, this.numberOfTotalLogs(), false);
+			this.downloadFile(0, this.numberOfTotalLogs());
 		} catch (e) {
 			console.error('unable to get logs to download them', e);
 		}
 	};
 
-	numberOfTotalLogs = () => {
-		return this.props.allLogsCount || 100000;
-	}
-
 	// download audit log as a text file
 	downloadLogs = log => {
 		const start = (this.props.showingPage - 1) * this.PAGE_SIZE;
 		const end = start + this.PAGE_SIZE;
-		this.downloadFile(start, end, true);
+		this.downloadFile(start, end);
 	};
 
 	// download x logs as a text file
-	downloadFile(start, end, filter) {
+	downloadFile(start, end) {
 		let filename = 'audit_logs.' + Date.now() + '.json';
 		let data_str = JSON.stringify(this.format_logs_for_export(this.props.logs.slice(start, end)), null, '\t');
 		const createTarget = document.body;
@@ -174,22 +174,7 @@ class AuditLogs extends Component {
 
 	// format each log for exporting to a file
 	format_logs_for_export(logs) {
-		const ret = [];
-		for (let i in logs) {
-			ret.push({
-				local_date: new Date(logs[i].ts_display).toLocaleDateString() + ' -  ' + new Date(logs[i].ts_display).toLocaleTimeString(),
-				timestamp: logs[i].ts_display,
-				log: logs[i].message,
-				http_details: logs[i].api,
-				response_code: logs[i].code,
-				elapsed_ms: logs[i].elapsed_ms,
-				by: logs[i].by,
-				status: logs[i].status,
-				tx_id: logs[i].tx_id,
-				component_id: logs[i].component_id ? logs[i].component_id : undefined,
-			});
-		}
-		return JSON.parse(JSON.stringify(ret));		// parse and string it to drop the undefined fields
+		return JSON.parse(JSON.stringify(logs));
 	}
 
 	// pretty print json key
@@ -231,21 +216,27 @@ class AuditLogs extends Component {
 		}
 	}
 
+	// make a local timezone date string from timestamp
+	/*makeDate(ts) {
+		return new Date(ts).toLocaleDateString() + ' - ' + new Date(ts).toLocaleTimeString();
+	}*/
+
 	// dynamically build the columns based on the selected options
 	buildTableColumns() {
-		const translate = this.props.translate;
+		//const translate = this.props.translate;
 		const ret = [];
 		if (this.props.showTableColumns) {
 			if (this.props.showTableColumns.date) {
 				ret.push({
 					header: 'date',
-					custom: log => {
+					attr: 'local_date',
+					/*custom: log => {
 						return (
 							<span title={Helper.fromNow(log.ts_display, translate)}>
-								{new Date(log.ts_display).toLocaleDateString()} - {new Date(log.ts_display).toLocaleTimeString()}
+								{this.makeDate(log.ts_display)}
 							</span>
 						);
-					},
+					},*/
 					width: 2
 				});
 			}
@@ -253,7 +244,7 @@ class AuditLogs extends Component {
 				ret.push({
 
 					header: 'log_title',
-					attr: 'message',
+					attr: 'log',
 					translate: false,
 					width: 4
 				});
@@ -274,7 +265,7 @@ class AuditLogs extends Component {
 				ret.push({
 
 					header: 'api_title',
-					attr: 'api',
+					attr: 'http_details',
 					translate: false,
 					width: 2
 				});
@@ -284,7 +275,7 @@ class AuditLogs extends Component {
 				ret.push({
 
 					header: 'response_code',
-					attr: 'code',
+					attr: 'response_code',
 					translate: false,
 					width: 1
 				});
@@ -515,7 +506,7 @@ class AuditLogs extends Component {
 									}
 								]}
 								fullPageCenter
-								hideClose={true}
+								hideClose={false}
 							>
 								<div className="ibp-full-page-center-panel-container">
 									<h1>

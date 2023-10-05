@@ -75,7 +75,7 @@ export class SidePanel extends React.Component {
 					this.props.closed();
 				}
 			},
-			this.props.largePanel ? 458 : 250
+			this.props.largePanel ? 458 : 100
 		);
 	};
 
@@ -191,7 +191,11 @@ export class SidePanel extends React.Component {
 							/>
 							{!this.props.hideClose && (
 								<button
-									className={`ibp-panel--close-icon-button ${(this.props.verticalPanel || this.props.fullPageCenter) ? 'ibp-vertical-panel-close' : ''}`}
+									className={`
+									ibp-panel--close-icon-button
+									${this.props.verticalPanel ? 'ibp-vertical-panel-close' : ''}
+									${this.props.fullPageCenter ? 'ibp-full-page-center-panel-close' : ''}
+									`}
 									onClick={this.closeSidePanel}
 									aria-label="Close"
 									style={{

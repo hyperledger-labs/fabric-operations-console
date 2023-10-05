@@ -25,6 +25,7 @@ class AuditLogsApi {
 		if (!isNaN(opts.skip)) {
 			opts.skip = Number(opts.skip);
 		}
+		opts.timezoneOffset = new Date().getTimezoneOffset();
 		return RestApi.get('/api/v3/notifications' + helper.formatObjAsQueryParams(opts));
 	}
 }
