@@ -111,6 +111,7 @@ export class PageHeader extends Component {
 			migratedConsoleUrl: resp ? resp.migrated_console_url : '',
 			showDeleteBanner: false,
 			migrationType: this.detectBannerType(resp ? resp.deadline : 0),
+			showThreat: resp ? resp.migration_enabled : false,
 		};
 		migrationState.showDeleteBanner = migrationState.isMigrationComplete;
 		migrationState.showReadOnlyBanner = migrationState.isMigrationComplete;
@@ -123,6 +124,7 @@ export class PageHeader extends Component {
 			migrationState.showMigrationBanner = false;
 			migrationState.showDeleteBanner = false;
 			migrationState.showReadOnlyBanner = false;
+			migrationState.showThreat = false;
 		}
 
 		this.props.updateState(SCOPE, migrationState);
@@ -412,6 +414,14 @@ export class PageHeader extends Component {
 						title={translate('migration_done_title')}
 					/>
 				)}
+				{this.props.showAnnouncement && this.props.showThreat && (
+					<InlineNotification
+						className='threat-style'
+						kind="error"
+						hideCloseButton
+						title={translate('threat_message')}
+					/>
+				)}
 				{this.props.showAnnouncement && this.props.showReadOnlyBanner && (
 					<InlineNotification
 						kind="warning"
@@ -493,6 +503,7 @@ const dataProps = {
 	showCertUpdateNotice: PropTypes.bool,
 	upCompList: PropTypes.string,
 	migrationType: PropTypes.string,
+	showThreat: PropTypes.bool,
 };
 
 PageHeader.propTypes = {

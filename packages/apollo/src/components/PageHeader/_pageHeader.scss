@@ -15,3 +15,28 @@
 	line-height: 1.125rem;
 	margin-top: 0.5rem;
 }
+
+.threat-style {
+	background: #000 !important;
+	.bx--inline-notification__text-wrapper {
+		color: #cc0000;
+		animation: color-change 3s infinite;
+	}
+}
+
+@keyframes color-change {
+	0% {
+		color: #cc0000;
+		font-weight: 900;
+	}
+
+	50% {
+		color: #fff;
+		font-weight: 300;
+	}
+
+	100% {
+		color: #cc0000;
+		font-weight: 900;
+	}
+}
