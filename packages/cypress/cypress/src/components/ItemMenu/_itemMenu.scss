@@ -1,0 +1,47 @@
+.ibm .bx--data-table-v2 {
+	.bx--overflow-menu {
+		opacity: 1;
+		width: 2.5rem;
+		height: 100%;
+		padding: 0.4rem;
+
+		&:hover {
+			background-color: $carbon--cool-gray-80;
+		}
+
+		&:focus {
+			background-color: $carbon--cool-gray-80;
+		}
+
+		.bx--overflow-menu__icon {
+			transform: none;
+
+			&:hover {
+				fill: #8c9ba5;
+			}
+		}
+
+		.bx--overflow-menu-options {
+			padding: 0;
+			background: #242a2e;
+			margin-top: 1px;
+			padding: 0;
+			margin-right: 0;
+			border: none;
+			box-shadow: 0 2px 2px 1px rgba(0, 0, 0, 0.4);
+
+			.bx--overflow-menu-options__btn {
+				white-space: normal;
+			}
+		}
+	}
+}
+
+.bx--overflow-menu-options__option {
+	height: 3rem;
+	background-color: $carbon--cool-gray-80;
+
+	&:hover {
+		background-color: $carbon--cool-gray-90  !important;
+	}
+}

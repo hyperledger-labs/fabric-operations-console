@@ -1,0 +1,136 @@
+{
+	"payload": {
+		"data": {
+			"config_update": {
+				"channel_id": "channel_template",
+				"read_set": {
+					"groups": {
+						"Application": {
+							"groups": {}
+						},
+						"Orderer": {
+							"groups": {}
+						}
+					},
+					"values": {
+						"Consortium": {
+							"value": {
+								"name": "SampleConsortium"
+							}
+						}
+					}
+				},
+				"write_set": {
+					"groups": {
+						"Application": {
+							"groups": {},
+							"mod_policy": "Admins",
+							"policies": {
+								"Admins": {
+									"mod_policy": "Admins",
+									"policy": {
+										"type": 3,
+										"value": {
+											"rule": "MAJORITY"
+										}
+									}
+								},
+								"Readers": {
+									"mod_policy": "Readers",
+									"policy": {
+										"type": 3,
+										"value": {}
+									}
+								},
+								"Writers": {
+									"mod_policy": "Writers",
+									"policy": {
+										"type": 3,
+										"value": {}
+									}
+								}
+							},
+							"version": "1"
+						},
+						"Orderer": {
+							"mod_policy": "Admins",
+							"version": 0,
+							"values": {
+								"ConsensusType": {
+									"mod_policy": "Admins",
+									"version": 1,
+									"value": {
+										"type": "etcdraft",
+										"metadata": {
+											"consenters": [],
+											"options": {
+												"tick_interval": "500ms",
+												"election_tick": 10,
+												"heartbeat_tick": 1,
+												"max_inflight_blocks": 5,
+												"snapshot_interval_size": 20971520
+											}
+										}
+									}
+								},
+								"BatchSize": {
+									"mod_policy": "Admins",
+									"version": 1,
+									"value": {}
+								},
+								"BatchTimeout": {
+									"mod_policy": "Admins",
+									"version": 1,
+									"value": {}
+								},
+								"Capabilities": {
+									"mod_policy": "Admins",
+									"version": 1,
+									"value": {
+										"capabilities": {}
+									}
+								}
+							}
+						}
+					},
+					"values": {
+						"Consortium": {
+							"value": {
+								"name": "SampleConsortium"
+							}
+						},
+						"OrdererAddresses": {
+							"mod_policy": "/Channel/Orderer/Admins",
+							"version": 1,
+							"value": {
+								"addresses": []
+							}
+						}
+					}
+				}
+			},
+			"signatures": [
+				{
+					"signature": "c2lnbmF0dXJl",
+					"signature_header": {
+						"creator": "Y2VydA==",
+						"nonce": "Xkdag/Ta4tdweCvRjMGYkySECpxvY1db"
+					}
+				}
+			]
+		},
+		"header": {
+			"channel_header": {
+				"channel_id": "channel_template",
+				"timestamp": "2017-06-07T01:31:26.000Z",
+				"tx_id": "f9087213aa294839f48c40428a164c282691c557b27c9bd69c49f346716a8037",
+				"type": 2
+			},
+			"signature_header": {
+				"creator": "Y2VydA==",
+				"nonce": "0isHhoNEAknCmfBsD2aC9AfrtjWILHaV"
+			}
+		}
+	},
+	"signature": "c2lnbmF0dXJl"
+}

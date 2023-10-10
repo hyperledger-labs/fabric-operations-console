@@ -1,0 +1,46 @@
+.ibp-edit-auth-settings {
+	.ibp__auth-configuration--json {
+		width: 28rem;
+	}
+
+	.ibp__auth-configuration--input-field {
+		width: 28rem;
+	}
+}
+
+.ibp__auth-configuration--admin-email {
+	@include carbon--type-style('label-01');
+	color: $carbon--cool-gray-30;
+	margin-top: 1.5rem;
+}
+
+.ibp-admin-help-icon {
+	margin-top: 0.5rem;
+	margin-left: 0.5rem;
+	vertical-align: top;
+}
+
+.ibp__auth-configuration--input-field.ibp__auth-admin-email-input {
+	margin: 0.5rem 0;
+}
+
+.ibp-contact-help-icon {
+	display: inline-flex;
+	margin-left: 0.5rem;
+	margin-top: 0.5rem;
+	vertical-align: top;
+
+	.bx--tooltip__trigger path,
+	.bx--tooltip__trigger:hover path {
+		fill: $text;
+	}
+}
+
+.ibp-help-icon-text {
+	@include carbon--type-style('body-short-01');
+	min-width: 15rem;
+}
+
+.ibp-admin-contact-email {
+	margin-top: 1rem;
+}

@@ -1,0 +1,24 @@
+.ibp-profile-button {
+	background: transparent;
+	border: 0;
+	cursor: pointer;
+	text-align: left;
+	transition: $basic-duo-transition;
+	width: 100%;
+
+	&:hover {
+		background: $itemHover;
+	}
+}
+
+.ibp-logout-successful {
+	.bx--modal-header {
+		button {
+			display: none;
+		}
+	}
+
+	a:visited {
+		color: $visited-link;
+	}
+}

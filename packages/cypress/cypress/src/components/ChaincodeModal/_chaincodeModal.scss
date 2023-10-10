@@ -1,0 +1,28 @@
+.ibp-chaincode-approval {
+	border-bottom: 1px solid $carbon--cool-gray-60;
+	margin-bottom: 1rem;
+	padding-bottom: 0.5rem;
+
+	.ibp-chaincode-approval-true {
+		color: $success;
+	}
+
+	td {
+		vertical-align: middle;
+		padding-right: 1rem;
+		padding-bottom: 0.5rem;
+
+		button {
+			width: 100%;
+			padding-right: 1rem;
+		}
+	}
+
+	.ibp-side-panel-warning {
+		margin-bottom: 1rem;
+	}
+}
+
+.ibp-upload-toggle {
+	margin-top: 1.5rem;
+}

@@ -1,0 +1,13 @@
+.ibp-left-nav {
+	background-color: $background;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	left: 0;
+	outline: 0;
+	padding-top: 4rem;
+	position: fixed;
+	top: 0rem;
+	width: 3.25rem;
+	z-index: $firstLayer;
+}

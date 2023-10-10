@@ -1,0 +1,61 @@
+.not-found-container {
+	background: $background;
+	display: flex;
+	height: calc(100vh - 4rem);
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 4rem;
+	width: 100%;
+	z-index: $firstLayer;
+
+	.ibp-404-content-container {
+		padding-top: 10rem;
+
+		.ibp-404-header,
+		.ibp-404-desc {
+			padding-bottom: 0.5rem;
+			color: $carbon--cool-gray-30;
+		}
+
+		.ibp-404-header:last-of-type {
+			padding-bottom: 2rem;
+		}
+	}
+
+	.ibp-404-content-container,
+	.ibp-404-illustration-container {
+		padding: 10rem 5rem;
+		box-sizing: border-box;
+		width: 100%;
+	}
+
+	.ibp-404-illustration-container {
+		align-items: center;
+		background: linear-gradient(to bottom, $carbon--blue-90 0%, $carbon--blue-50 75%);
+		display: flex;
+		justify-content: center;
+
+		.ibp-not-found-illustration-img {
+			max-width: 291px;
+			min-width: 291px;
+		}
+	}
+
+	.ibp-404-help-links {
+		display: flex;
+		padding-top: 2rem;
+		flex-direction: column;
+		align-items: flex-start;
+
+		& * {
+			display: block;
+			margin: 0;
+		}
+
+		.ibp-404-link {
+			display: inline-block;
+			margin-bottom: 1rem;
+		}
+	}
+}

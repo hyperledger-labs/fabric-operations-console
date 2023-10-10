@@ -1,0 +1,39 @@
+.ibp-stepper-container {
+	width: 43rem;
+
+	.ibp-stepper-progress-container {
+		position: relative;
+
+		.ibp-stepper-progress-default {
+			background-color: $carbon--cool-gray-70;
+			display: block;
+			height: 0.125rem;
+			width: 100%;
+		}
+
+		.ibp-stepper-progress-line {
+			background-color: $carbon--blue-40;
+			display: block;
+			height: 0.125rem;
+			position: absolute;
+			top: 0;
+			transition: width 350ms ease;
+			width: 1rem;
+		}
+	}
+
+	.ibp-stepper-steps-container {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+		padding: 0.5rem 0;
+
+		.ibp-stepper-step {
+			display: flex;
+			align-items: center;
+
+			.ibp-stepper-step-name {
+				padding-left: 0.5rem;
+			}
+		}
+	}
+}

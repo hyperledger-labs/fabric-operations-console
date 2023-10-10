@@ -1,0 +1,79 @@
+.ibp-side-panel-error {
+	background-color: $inverseBackground;
+	color: $inverseText;
+	z-index: $sidePanelError;
+
+	.bx--inline-notification {
+		max-width: 100%;
+	}
+
+	.bx--inline-notification__text-wrapper {
+		display: block;
+	}
+
+	.bx--inline-notification__title {
+		margin-bottom: 1rem;
+	}
+
+	.ibp-link {
+		background-color: transparent;
+		border-top: none;
+		border-left: none;
+		border-right: none;
+		color: $action;
+		cursor: pointer;
+		font-size: 100%;
+		margin-bottom: 0.25rem;
+		margin-top: 0px;
+		padding: 0px;
+	}
+
+	.bx--inline-notification {
+		margin: 0;
+		padding: 1rem 1rem 1.75rem 1rem;
+	}
+
+	.bx--inline-notification--error {
+		border: 0;
+		border-top: 0.25rem solid $field-error;
+	}
+
+	.bx--inline-notification__title {
+		@include carbon--font-weight('semibold');
+
+	}
+
+	.bx--inline-notification__title,
+	.bx--inline-notification__subtitle {
+		color: $inverseText;
+	}
+
+	.bx--inline-notification__title {
+		margin-bottom: 0.5rem;
+	}
+
+	.bx--inline-notification__details {
+		align-items: flex-start;
+	}
+
+	.ibp-side-panel-error-details {
+		max-height: 10rem;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	a.ibp-break-error-link {
+		font-size: 12px;
+		margin-bottom: 1.5rem;
+		display: block;
+	}
+}
+
+.ibp-large-panel {
+	.ibp-side-panel-error {
+		position: absolute;
+		bottom: 4rem;
+		right: 0;
+		width: 31rem;
+	}
+}

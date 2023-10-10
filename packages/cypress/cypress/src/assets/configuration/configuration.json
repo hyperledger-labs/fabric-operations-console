@@ -1,0 +1,5 @@
+{
+	"supported_cas": ["cloud"],
+	"supported_orderers": ["cloud"],
+	"supported_peers": ["cloud"]
+}

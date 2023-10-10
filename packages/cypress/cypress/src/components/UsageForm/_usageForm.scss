@@ -1,0 +1,12 @@
+.ibp-usage-title {
+	@include carbon--font-weight('semibold');
+	display: inline;
+
+	.bx--tooltip__label {
+		@include carbon--type-style('productive-heading-03');
+	}
+}
+
+.ibp-usage-form .ibp-tooltip-container {
+	display: inline-block;
+}

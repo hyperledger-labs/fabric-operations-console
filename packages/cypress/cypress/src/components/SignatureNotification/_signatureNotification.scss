@@ -1,0 +1,239 @@
+.ibp-signature-request {
+	@include carbon--theme($carbon--theme--white) {
+
+		// Use the white theme here
+		.ibp-signature-request-notification {
+			background-color: $inverseBackground;
+			color: $inverseText;
+			border-left: solid 0.25rem $action;
+			position: relative;
+			padding: 1rem;
+			margin-top: 0.5rem;
+			min-width: 478px;
+
+			.ibp-signature-request-notification-title {
+				@include carbon--font-weight('semibold');
+				margin-bottom: 0.25rem;
+				padding-right: 3.5rem;
+			}
+
+			.ibp-signature-request-notification-text {
+				padding-right: 3.5rem;
+			}
+		}
+
+		.ibp-signature-request-notification-closed {
+			border-left: solid 0.25rem $success;
+		}
+
+		.ibp-signature-request-notification-failedToSend {
+			border-left: solid 0.25rem $field-error;
+		}
+
+		.ibp-signature-request-progress-bar {
+			height: 0.25rem;
+			position: relative;
+			background-color: $carbon--cool-gray-30;
+			margin-top: 1.5rem;
+			margin-bottom: 0.5rem;
+
+			.ibp-signature-request-progress {
+				position: absolute;
+				height: 0.25rem;
+				top: 0;
+				left: 0;
+				background-color: $action;
+			}
+
+			.ibp-signatures-complete {
+				background-color: $success;
+				width: 100%;
+			}
+		}
+
+		.ibp-signature-collection-notification-link {
+			border: 1px solid transparent;
+			color: $action;
+			background-color: transparent;
+			cursor: pointer;
+			display: flex;
+			margin-top: 1rem;
+			outline: 0;
+
+			&:hover,
+			&:focus {
+				border-bottom: 1px solid $carbon--blue-40;
+				display: flex;
+			}
+
+			.ibp-signature-collection-notification-link-text {
+				@include carbon--type-style('body-short-01');
+				color: $carbon--blue-60;
+			}
+
+			svg {
+				margin-left: 0.5rem;
+
+				g {
+					fill: $carbon--blue-60;
+				}
+			}
+		}
+
+		.ibp-signature-collection-notification-time {
+			position: absolute;
+			bottom: 1rem;
+			right: 1rem;
+		}
+
+		.ibp-signature-request-icon {
+			margin: 0;
+		}
+
+		.bx--tooltip__trigger {
+			align-items: center;
+			display: flex;
+			height: 1.25rem;
+			justify-content: center;
+			margin: 0;
+			width: 1.25rem;
+
+			svg {
+				height: 1rem;
+				width: 1rem;
+
+				path {
+					fill: $carbon--cool-gray-80;
+				}
+			}
+		}
+
+		.bx--tooltip__trigger.bx--tooltip--left:hover .bx--assistive-text {
+			background-color: $carbon--cool-gray-80;
+			color: $text;
+		}
+
+		.bx--tooltip__trigger.bx--tooltip--left::before {
+			border-color: transparent transparent transparent $carbon--cool-gray-80;
+		}
+
+		.ibp-signature-request-icons {
+			align-items: center;
+			display: flex;
+			position: absolute;
+			right: 1rem;
+			top: 1rem;
+
+			.bx--btn--secondary .bx--btn__icon,
+			.bx--btn--secondary .bx--btn__icon path:not([data-icon-path]):not([fill="none"]) {
+				fill: #000;
+			}
+
+			.ibp-signature-request-audit-button {
+				background-color: transparent;
+				border: 0;
+				cursor: pointer;
+				display: flex;
+				height: auto;
+				outline: 0;
+				padding: 0.325rem;
+				max-width: 2rem;
+				min-width: 2rem;
+
+				svg {
+					g {
+						fill: rgb(19, 23, 26);
+					}
+				}
+
+				&:hover,
+				&:focus {
+					background-color: $carbon--cool-gray-10;
+				}
+
+				&:focus {
+					box-shadow: inset 0px 0px 0px 2px $action;
+					transition: $basic-duo-transition;
+				}
+
+				.ibp-signature-request-icon {
+					margin: 0;
+
+					.bx--tooltip__trigger {
+						align-items: center;
+						display: flex;
+						height: 1.25rem;
+						justify-content: center;
+						margin: 0;
+						width: 1.25rem;
+
+						svg {
+							height: 1rem;
+							width: 1rem;
+
+							path {
+								fill: $carbon--cool-gray-80;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		.bx--form-item.bx--checkbox-wrapper {
+			.bx--checkbox:focus+.ibp-notification-archive-checkbox.bx--checkbox-label::before {
+				border-color: $action;
+			}
+
+			.bx--checkbox:checked+.ibp-notification-archive-checkbox.bx--checkbox-label::before {
+				background-color: $itemBackground;
+			}
+
+			.ibp-notification-archive-checkbox {
+				&.bx--checkbox-label::before {
+					border-color: $itemBackground;
+				}
+
+				&.bx--checkbox-label::after {
+					border-left-color: $carbon--white-0;
+					border-bottom-color: $carbon--white-0;
+				}
+			}
+		}
+
+		.ibp-signature-request-notification-loading-skeleton {
+			background: $itemBackground;
+			height: 6.25rem;
+			margin-top: 0.5rem;
+			padding: 1rem;
+			width: 100%;
+
+			.ibp-signature-request-loading-skeleton-title,
+			.ibp-signature-request-loading-skeleton-subtitle {
+				animation: skeletonShimmer 600ms linear infinite forwards alternate;
+				background: $itemHover;
+				height: 1.25rem;
+				width: 70%;
+			}
+
+			.ibp-signature-request-loading-skeleton-subtitle {
+				margin-top: 0.5rem;
+				height: 1rem;
+				width: 50%;
+			}
+		}
+
+		.signature-collection-resend-skeleton {
+			animation: skeletonShimmer 600ms linear infinite forwards alternate;
+			background-color: $itemHover;
+			display: inline-block;
+			height: 1.25rem;
+			width: 100%;
+		}
+
+		.signature-request-failed-org {
+			@include carbon--font-weight('semibold');
+			margin-left: 2rem;
+		}
+	}
+}

@@ -1,0 +1,15 @@
+.ibm {
+	.ibp-loading-with-content {
+		.bx--loading {
+			.bx--loading__svg {
+				.bx--loading__stroke {
+					stroke: $carbon--blue-60;
+				}
+			}
+		}
+	}
+}
+
+.ibp-loading-with-content.bx--loading-overlay {
+	background: $carbon--cool-gray-100 100%;
+}

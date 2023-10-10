@@ -1,0 +1,29 @@
+.ibp__certificate--container {
+	margin-bottom: 2rem;
+
+	> :nth-child(2) {
+		margin-left: 2rem;
+	}
+}
+
+.ibp-certificate-loading {
+	position: relative;
+}
+
+.ibp-generate-cert-section {
+	margin-bottom: 1rem;
+
+	label {
+		@include carbon--font-weight('semibold');
+	}
+
+	textarea {
+		height: 10rem;
+		margin-top: 0.5rem;
+		width: 100%;
+	}
+
+	.ibp-generate-cert-note {
+		margin-top: 0.5rem;
+	}
+}

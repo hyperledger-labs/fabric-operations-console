@@ -1,0 +1,27 @@
+.ibp-usage-container {
+	display: inline-block;
+	margin-top: 1rem;
+}
+
+.ibp-usage-wizard .ibp-tooltip-container {
+	display: inline;
+}
+
+.ibp-usage-footer {
+	@include carbon--type-style('body-short-01');
+	background-color: $inverseBackground;
+	border-top: 3px solid $carbon--blue-50;
+	color: $inverseText;
+	display: flex;
+	flex-direction: row;
+
+	.ibp-usage-footer-column {
+		flex-grow: 1;
+		flex-shrink: 1;
+		padding: 1rem;
+
+		.ibp-usage-footer-heading {
+			@include carbon--font-weight('semibold');
+		}
+	}
+}

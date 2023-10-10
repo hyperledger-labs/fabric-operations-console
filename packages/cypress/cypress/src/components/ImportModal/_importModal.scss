@@ -1,0 +1,45 @@
+.ibp-import-modal-desc {
+	margin-bottom: 1rem;
+}
+
+.ibp-import-file-details {
+	align-items: center;
+	background: $carbon--cool-gray-80;
+	border: 1px solid $text;
+	display: flex;
+	justify-content: space-between;
+	height: 3.75rem;
+	margin-top: 1.68rem;
+	max-width: 28rem;
+
+	.ibp-import-file-name {
+		@include carbon--type-style('body-short-02');
+		padding-left: 1rem;
+	}
+
+	.ibp-import-file-other-details {
+		display: flex;
+		line-height: 2rem;
+		padding-right: 1rem;
+
+		.ibp-import-file-version {
+			@include carbon--type-style('label-01');
+			align-items: center;
+			background: $carbon--cool-gray-70;
+			border-radius: 6.25rem;
+			display: flex;
+			height: 2rem;
+			min-width: 1.875rem;
+			padding: 0 0.75rem;
+			color: $white;
+		}
+
+		.ibp-import-file-remove-icon {
+			background-color: transparent;
+			border: none;
+			margin-left: 1rem;
+			padding-left: 0.5rem;
+			padding-right: 0.5rem;
+		}
+	}
+}

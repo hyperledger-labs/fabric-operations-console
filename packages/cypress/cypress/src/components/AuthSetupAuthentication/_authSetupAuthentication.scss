@@ -1,0 +1,35 @@
+.ibp__auth-proceed-button-container {
+	display: flex;
+}
+
+.ibp__auth-proceed-button-link {
+	@include carbon--type-style('body-short-01');
+	align-items: center;
+	background-color: $carbon--blue-40;
+	color: $text;
+	display: flex;
+	height: 4rem;
+	justify-content: left;
+	margin-top: 2rem;
+	padding: 1.2rem 0rem 1.75rem 2rem;
+	text-decoration: none;
+	text-align: center;
+	width: 16.5rem;
+
+	&:hover {
+		background-color: $actionHover;
+	}
+}
+
+.ibp__auth-proceed-to-config {
+	@include carbon--type-style('body-short-02');
+	color: $text;
+	padding-top: 2.5rem;
+}
+
+.ibp__auth-configuration--continue-button.ibp__auth-continue-button {
+	height: 4rem;
+	margin-top: 2rem;
+	padding: 1.2rem 0rem 1.75rem 2rem;
+	width: 16.5rem;
+}

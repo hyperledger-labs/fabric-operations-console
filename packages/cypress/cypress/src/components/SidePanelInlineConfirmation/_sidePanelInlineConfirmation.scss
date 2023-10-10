@@ -1,0 +1,43 @@
+@keyframes confirmationEnter {
+	0% {
+		transform: translateY(4rem);
+	}
+
+	100% {
+		transform: translateY(0px);
+	}
+}
+
+.ibp-side-panel-inline-confirmation-container {
+	background-color: $carbon--white-0;
+	border-top: 3px solid $action;
+	color: $inverseText;
+	height: 4.75rem;
+	width: 542px;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	padding: 1rem;
+	transition: $basic-duo-transition;
+
+	.ibp-side-panel-inline-confirmation-title {
+		@include carbon--type-style('productive-heading-01');
+	}
+
+	.ibp-side-panel-inline-confirmation-subtitle {
+		@include carbon--type-style('body-short-01');
+	}
+
+	.ibp-side-panel-inline-close-icon {
+		cursor: pointer;
+		position: absolute;
+		right: 1rem;
+		top: 1rem;
+	}
+}
+
+.ibp-side-panel-inline-confirmation-opening {
+	animation: confirmationEnter 250ms 1;
+	animation-fill-mode: both;
+	transition: $basic-duo-transition;
+}

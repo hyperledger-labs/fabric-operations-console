@@ -1,0 +1,120 @@
+@keyframes dash {
+	to {
+		stroke-dashoffset: 500;
+	}
+}
+
+@keyframes skeletonShimmer {
+	0% {
+		opacity: 0.25;
+	}
+
+	100% {
+		opacity: 0.85;
+	}
+}
+
+@keyframes dash {
+	to {
+		stroke-dashoffset: 0;
+	}
+}
+
+@for $i from 1 to 25 {
+	.diagram--animate-shimmer-ellipse:nth-child(#{$i}) {
+		animation-delay: $i * 0.25s;
+	}
+}
+
+.diagram--animate-shimmer-ellipse {
+	animation: skeletonShimmer 600ms linear infinite forwards alternate;
+}
+
+.diagram--outer-svg-container {
+	max-width: 900px;
+	margin: auto;
+	position: relative;
+
+	.diagram--parent-container {
+		height: 100%;
+		max-width: 100%;
+		width: 100%;
+	}
+}
+
+.diagram--active-hover-item {
+	transform: translateY(-0.5rem);
+	transition: 1s ease-in-out;
+}
+
+.diagram--inactive-hover-item {
+	opacity: 0.5;
+}
+
+.diagram--animate-remote-node-connectors {
+	animation: dash 20s linear infinite;
+}
+
+.diagram--infra-container,
+.diagram--infraLid-container,
+.diagram--icp-container,
+.diagram--aws-container,
+.diagram--remote-node-connecting-lines,
+.diagram--certs-container,
+.diagram--phone-container,
+.diagram--computer-container,
+.diagram--app-console-container,
+.diagram--vscode-container,
+.diagram--client-app-container,
+.diagram--multiCloud-container {
+	transition: all 0.1s linear;
+}
+
+.diagram--animate-shimmer {
+	animation: skeletonShimmer 600ms linear infinite forwards alternate;
+}
+
+.diagram--active-hotspot {
+	stroke: $white;
+	stroke-width: 2px;
+	animation: dash 2000ms ease-in forwards;
+}
+
+.diagram--hotspot-circle {
+	outline: 0;
+	stroke-dashoffset: 800;
+	stroke-dasharray: 800;
+}
+
+.diagram--text-container {
+	pointer-events: none;
+
+	&.diagram--text-box {
+		background-color: $carbon--cool-gray-90;
+		height: 11.25rem;
+		padding: 1rem;
+		width: 23.75rem;
+		z-index: $highestLayer;
+	}
+
+	&.diagram--text-box-long {
+		width: 500px;
+	}
+
+	&.diagram--text-box-taller {
+		height: 12.5rem;
+	}
+
+	.diagram--text-header {
+		@include carbon--font-weight('semibold');
+	}
+
+	.diagram--text {
+		color: $carbon--cool-gray-20;
+	}
+
+	.diagram--text-container-inner {
+		background-color: $carbon--cool-gray-90;
+		padding: 1rem;
+	}
+}

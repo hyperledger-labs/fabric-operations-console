@@ -1,0 +1,88 @@
+.ibp-notifications {
+	position: fixed;
+	top: 3rem;
+	right: 0px;
+	z-index: $firstLayer;
+
+	.bx--toast-notification__details {
+		position: relative;
+	}
+
+	.bx--toast-notification--info {
+		background-color: $white;
+		border-left: 0.1875rem solid $action;
+	}
+
+	.bx--toast-notification--success {
+		background-color: $white;
+		border-left: 0.1875rem solid $success;
+	}
+
+	.bx--toast-notification__close-button {
+		background-color: transparent;
+	}
+
+	.bx--toast-notification__caption,
+	.bx--toast-notification__subtitle {
+		color: $inverseText;
+	}
+
+	.bx--toast-notification__close-button {
+		.bx--toast-notification__icon {
+			fill: $background;
+		}
+	}
+
+	.ibp-notification-icon {
+		position: absolute;
+		top: 0rem;
+		left: -0.5rem;
+	}
+
+	.ibp-notification-icon-spin {
+		position: absolute;
+		bottom: 0.25rem;
+		right: -0.75rem;
+		width: auto;
+
+		.bx--loading--small {
+			.bx--loading__svg {
+				stroke: #0062ff;
+			}
+		}
+	}
+
+	.bx--toast-notification--error {
+		.bx--toast-notification__icon {
+			fill: $carbon--red-60;
+		}
+	}
+
+	.bx--toast-notification--warning {
+		.bx--toast-notification__icon {
+			fill: $warning;
+		}
+	}
+
+	.bx--toast-notification--success {
+		.bx--toast-notification__icon {
+			fill: $carbon--green-50;
+		}
+	}
+
+	.ibp-info-notification {
+		padding-bottom: 1rem;
+	}
+
+	.ibp-notification-icon-spin-relative {
+		.bx--loading--small {
+			.bx--loading__svg {
+				stroke: #0062ff;
+			}
+		}
+	}
+}
+
+.bx--toast-notification__subtitle {
+	padding-top: 0.25rem;
+}

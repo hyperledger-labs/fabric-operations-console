@@ -1,0 +1,44 @@
+.ibp-item-location-details {
+	bottom: 1rem;
+	margin-right: 1rem;
+	position: absolute;
+
+	.ibp-item-tile-details-label {
+		@include carbon--type-style('label-01');
+		align-items: center;
+		color: $carbon--cool-gray-30;
+		display: flex;
+		padding-bottom: 0.5rem;
+
+		&:last-of-type {
+			padding-bottom: 0;
+		}
+
+		.ibp--item-location-icon {
+			fill: $carbon--cool-gray-30;
+
+			&.ibp-item-location-icon-patch-available {
+				fill: $carbon--blue-50;
+			}
+
+			&.ibp-item-location-icon-needs-attention {
+				fill: $carbon--yellow-20;
+			}
+
+			margin-right: 0.5rem;
+		}
+	}
+
+	.ibp-item-location-import-label {
+		@include carbon--type-style('label-01');
+		color: $carbon--cool-gray-30;
+	}
+
+	.ibp-certificate-expiration-warning {
+		color: $warning;
+
+		.ibp--item-location-icon {
+			fill: $warning;
+		}
+	}
+}

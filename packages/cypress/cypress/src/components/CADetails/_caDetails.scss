@@ -1,0 +1,119 @@
+.ibp-node-details-panel {
+	display: flex;
+	flex-direction: column;
+	max-width: 324px;
+	top: 3rem;
+	position: sticky;
+}
+
+.ibp-node-detail-title {
+	color: $carbon--cool-gray-50;
+	line-height: 2rem;
+}
+
+.ibp-node-details-location {
+	margin-top: 2rem;
+
+	h4 {
+		padding-bottom: 0.2rem;
+	}
+}
+
+.ibp-node-details-header {
+	padding-bottom: 4rem;
+}
+
+.ibp-ca-name-tooltip {
+	margin-left: 0.75rem;
+}
+
+.ibp__user--container {
+	margin-top: 1rem;
+}
+
+.ibp-ca-detail-subtext {
+	margin-top: 1rem;
+}
+
+.ibp-not-available {
+	margin-bottom: 1rem;
+}
+
+.ibp-node-details-name {
+	align-items: baseline;
+	display: flex;
+}
+
+.ibp-ca-no-identity {
+	margin-top: 1rem;
+
+	button {
+		margin-top: 1rem;
+	}
+}
+
+.ibp-page-container .bx--tabs .bx--tabs__nav .bx--tabs__nav-item,
+.ibp-page-container .bx--tabs .bx--tabs__nav .bx--tabs__nav-item.bx--tabs__nav-item--selected {
+	border-bottom: none;
+
+	a {
+		min-width: 10rem;
+		width: auto;
+	}
+}
+
+.ibp-ca-details {
+	.ibp--node-details-sticky-container-content {
+		margin-top: 0;
+	}
+
+	.ibp-node-version-value {
+		margin-top: 1rem;
+		@include carbon--type-style('body-short-01');
+		color: $carbon--cool-gray-30;
+	}
+
+	.ibp-upgrade-available {
+		position: relative;
+		padding-bottom: 5rem;
+		background: linear-gradient(to right, #0000ff, #13171a);
+
+		.ibp-new-version-actions {
+			margin-top: 1rem;
+		}
+
+		button {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+		}
+	}
+
+	.ibp-usage-div {
+		.ibp-item-container {
+			padding-top: 0;
+		}
+	}
+
+	.ibp-node-version-and-hsm {
+		display: flex;
+		flex-direction: row;
+
+		.ibp-hsm-tab {
+			flex-direction: column;
+			padding-bottom: 5rem;
+			position: relative;
+
+			button {
+				position: absolute;
+				bottom: 0;
+				right: 0;
+			}
+		}
+
+		.ibp-hsm-tab:not(:first-child) {
+			margin-left: 2rem;
+			min-width: 60%;
+		}
+	}
+}

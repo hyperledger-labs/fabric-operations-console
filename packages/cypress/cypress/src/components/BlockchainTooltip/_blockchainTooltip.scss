@@ -1,0 +1,43 @@
+.ibp-tooltip-container {
+	display: flex;
+	height: fit-content;
+
+	&.ibp-tooltip-container-with-checkbox {
+		align-items: center;
+		display: flex;
+		height: 1.5rem;
+		margin-bottom: 0.1875rem;
+		margin-top: 0.1875rem;
+	}
+}
+
+.ibp-dark-theme .bx--tooltip .bx--tooltip__caret {
+	background-color: transparent;
+}
+
+.ibp-tooltip-container {
+	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--top.bx--tooltip--align-start::before {
+		top: -0.27rem;
+		z-index: $highestLayer;
+	}
+
+	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--bottom.bx--tooltip--align-start::before {
+		bottom: -0.27rem;
+		z-index: $highestLayer;
+	}
+
+	.bx--tooltip--definition {
+		.bx--tooltip__trigger {
+			text-align: left;
+		}
+	}
+}
+
+.bx--tooltip[data-floating-menu-direction='right'] {
+	max-width: 25rem;
+}
+
+.ibp-hide-tooltip {
+	display: none !important;
+	pointer-events: none;
+}

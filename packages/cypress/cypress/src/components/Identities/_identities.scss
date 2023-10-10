@@ -1,0 +1,25 @@
+.ibp-identities-header {
+	padding-bottom: 1.25rem;
+}
+
+.ibp-identity-tile-stats {
+	color: $carbon--cool-gray-40;
+	text-align: left;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	height: 90%;
+	display: flex;
+
+	.ibp-wallet-identity-expiration {
+		position: absolute;
+		bottom: 1rem;
+	}
+
+	.ibp-wallet-identity-from-ca {
+		color: $carbon--cool-gray-20;
+		position: absolute;
+		bottom: 2.5rem;
+		font-size: small;
+	}
+}

@@ -1,0 +1,123 @@
+.settings-dropdown-container {
+	height: 5.625rem;
+}
+
+.settings-section {
+	margin-bottom: 2.2rem;
+	width: 32rem;
+}
+
+.settings-label {
+	display: flex;
+	margin-bottom: 1rem;
+
+	.bx--tooltip__label {
+		@include carbon--type-style('productive-heading-03');
+	}
+}
+
+.transaction-data {
+	display: flex;
+	flex-direction: row;
+}
+
+.transaction-data-block {
+	margin-right: 1rem;
+	min-width: 10rem;
+}
+
+.settings-item-container {
+	align-items: center;
+	display: flex;
+	justify-content: space-between;
+}
+
+.settings-button-container {
+	button {
+		margin-right: 2rem;
+	}
+}
+
+#settings-client,
+#settings-server {
+	.ibp-form-label {
+		@include carbon--type-style('body-short-01');
+		color: $field-label-color;
+	}
+
+	.ibp-form-input {
+		margin-bottom: 0.75rem;
+		margin-top: 0.5rem;
+	}
+}
+
+#settings-client,
+#settings-server {
+	min-width: 18rem;
+}
+
+.settings-toggle {
+	margin-right: 9.275rem;
+
+	.bx--form-item {
+		flex-grow: 0;
+	}
+
+	.settings-toggle-inner {
+		align-items: center;
+		display: flex;
+		flex-direction: row;
+	}
+
+	.settings-toggle-label {
+		@include carbon--type-style('body-short-01');
+		padding-bottom: 0.5rem;
+		width: max-content;
+	}
+}
+
+.ibp-tooltip {
+	padding-left: 0.75rem;
+}
+
+.submit-button {
+	margin: 1.5rem 1rem 1.5rem 0;
+}
+
+.settings-reset-email {
+	width: 20rem;
+}
+
+.ibp-save-changes {
+	margin-bottom: 2rem;
+}
+
+.ibp-settings-bulk-data-container {
+	padding-top: 1rem;
+}
+
+#ibp-progress-bar-wrap {
+	width: 19rem;
+	height: 0.5rem;
+	border: #0f62fe 2px solid;
+	display: inline-block;
+	vertical-align: bottom;
+	margin-left: 2rem;
+}
+
+#ibp-progress-bar {
+	width: 0%;
+	background: #0f62fe;
+	height: 100%;
+	transition: all 0.2s linear;
+}
+
+#save_settings,
+#data_import_button,
+#data_export_button {
+	padding: 0;
+	width: 8rem;
+	text-align: center;
+	display: inline-block;
+	margin-bottom: 1rem;
+}

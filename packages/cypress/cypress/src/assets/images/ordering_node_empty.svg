@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="175" height="109" viewBox="0 0 175 109">
+  <defs>
+    <filter id="ordering-node-empty-state-a" width="164.8%" height="164.8%" x="-32.4%" y="-32.4%" filterUnits="objectBoundingBox">
+      <feOffset dy="2" in="SourceAlpha" result="shadowOffsetOuter1"/>
+      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="5"/>
+      <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0"/>
+      <feMerge>
+        <feMergeNode in="shadowMatrixOuter1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <linearGradient id="ordering-node-empty-state-b" x1="100%" x2="0%" y1="50%" y2="50%">
+      <stop offset="0%" stop-color="#50565B"/>
+      <stop offset="100%" stop-color="#6E757C"/>
+    </linearGradient>
+    <filter id="ordering-node-empty-state-c" width="164.8%" height="164.8%" x="-32.4%" y="-32.4%" filterUnits="objectBoundingBox">
+      <feOffset dy="2" in="SourceAlpha" result="shadowOffsetOuter1"/>
+      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="5"/>
+      <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0"/>
+      <feMerge>
+        <feMergeNode in="shadowMatrixOuter1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="ordering-node-empty-state-d" width="164.8%" height="164.8%" x="-32.4%" y="-32.4%" filterUnits="objectBoundingBox">
+      <feOffset dy="2" in="SourceAlpha" result="shadowOffsetOuter1"/>
+      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="5"/>
+      <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0"/>
+      <feMerge>
+        <feMergeNode in="shadowMatrixOuter1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="ordering-node-empty-state-e" width="172.7%" height="172.7%" x="-36.4%" y="-36.4%" filterUnits="objectBoundingBox">
+      <feOffset dy="2" in="SourceAlpha" result="shadowOffsetOuter1"/>
+      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="1"/>
+      <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0"/>
+      <feMerge>
+        <feMergeNode in="shadowMatrixOuter1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <path id="ordering-node-empty-state-f" d="M9.75,8.25 L9.75,9.75 L8.25,9.75 L8.25,8.25 L9.75,8.25 L9.75,8.25 Z M10.125,7.5 L7.875,7.5 C7.66789322,7.5 7.5,7.66789322 7.5,7.875 L7.5,10.125 C7.5,10.3321068 7.66789322,10.5 7.875,10.5 L10.125,10.5 C10.3321068,10.5 10.5,10.3321068 10.5,10.125 L10.5,7.875 C10.5,7.66789322 10.3321068,7.5 10.125,7.5 Z M9.75,4.5 L9.75,6 L8.25,6 L8.25,4.5 L9.75,4.5 L9.75,4.5 Z M10.125,3.75 L7.875,3.75 C7.66789322,3.75 7.5,3.91789322 7.5,4.125 L7.5,6.375 C7.5,6.58210678 7.66789322,6.75 7.875,6.75 L10.125,6.75 C10.3321068,6.75 10.5,6.58210678 10.5,6.375 L10.5,4.125 C10.5,3.91789322 10.3321068,3.75 10.125,3.75 Z M6,8.25 L6,9.75 L4.5,9.75 L4.5,8.25 L6,8.25 L6,8.25 Z M6.375,7.5 L4.125,7.5 C3.91789322,7.5 3.75,7.66789322 3.75,7.875 L3.75,10.125 C3.75,10.3321068 3.91789322,10.5 4.125,10.5 L6.375,10.5 C6.58210678,10.5 6.75,10.3321068 6.75,10.125 L6.75,7.875 C6.75,7.66789322 6.58210678,7.5 6.375,7.5 Z M6,2.25 L6,6 L2.25,6 L2.25,2.25 L6,2.25 L6,2.25 Z M6,1.5 L2.25,1.5 C1.83578644,1.5 1.5,1.83578644 1.5,2.25 L1.5,6 C1.5,6.41421356 1.83578644,6.75 2.25,6.75 L6,6.75 C6.41421356,6.75 6.75,6.41421356 6.75,6 L6.75,2.25 C6.75,1.83578644 6.41421356,1.5 6,1.5 Z"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd" transform="translate(6 7)">
+    <g fill-rule="nonzero" transform="translate(0 1)">
+      <circle cx="152.5" cy="77.5" r="3.5" fill="#373D42"/>
+      <circle cx="14.5" cy="10.5" r="3.5" fill="#373D42"/>
+      <circle cx="16.5" cy="77.5" r="2.5" fill="#D7306D"/>
+      <circle cx="163.5" cy="71.5" r="2.5" fill="#B287F3"/>
+      <circle cx="154" cy="89" r="2" fill="#373D42"/>
+      <circle cx="161.5" cy="9.5" r="2.5" fill="#373D42"/>
+      <circle cx="2.5" cy="2.5" r="2.5" fill="#FFA768"/>
+      <circle cx="77.5" cy="85.5" r="2.5" fill="#373D42"/>
+    </g>
+    <g fill-rule="nonzero" filter="url(#ordering-node-empty-state-a)" opacity=".5" transform="rotate(-20 70.36 3.635)">
+      <rect width="71" height="71" fill="#373D42" rx="1"/>
+      <rect width="47" height="9" x="8" y="8" fill="url(#ordering-node-empty-state-b)" rx="1"/>
+      <rect width="24" height="6" x="8" y="21" fill="#6E757C" rx="1"/>
+      <rect width="31" height="6" x="8" y="57" fill="#50565B" rx="1"/>
+    </g>
+    <rect width="71" height="71" x="79.001" y="10.001" fill="#23292E" fill-rule="nonzero" rx="1" transform="rotate(20 114.5 45.5)"/>
+    <g fill-rule="nonzero" filter="url(#ordering-node-empty-state-c)" opacity=".5" transform="rotate(20 46.642 264.518)">
+      <rect width="71" height="71" fill="#373D42" rx="1"/>
+      <rect width="47" height="9" x="8" y="8" fill="url(#ordering-node-empty-state-b)" rx="1"/>
+      <rect width="24" height="6" x="8" y="21" fill="#6E757C"/>
+      <rect width="31" height="6" x="8" y="57" fill="#50565B"/>
+    </g>
+    <g fill-rule="nonzero" filter="url(#ordering-node-empty-state-d)" transform="translate(46 6)">
+      <rect width="71" height="71" fill="#373D42" rx="1"/>
+      <rect width="47" height="9" x="8" y="8" fill="url(#ordering-node-empty-state-b)" rx="1"/>
+      <rect width="24" height="6" x="8" y="21" fill="#6E757C" rx="1"/>
+      <rect width="31" height="6" x="8" y="57" fill="#50565B"/>
+    </g>
+    <g filter="url(#ordering-node-empty-state-e)" transform="translate(90 64)">
+      <circle cx="11" cy="11" r="11" fill="#0F6FFF" fill-rule="nonzero"/>
+      <use fill="#FFF" transform="translate(5 5)" xlink:href="#ordering-node-empty-state-f"/>
+    </g>
+  </g>
+</svg>

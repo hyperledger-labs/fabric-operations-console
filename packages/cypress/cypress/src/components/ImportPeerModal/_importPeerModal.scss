@@ -1,0 +1,258 @@
+.ibp-modal-step {
+	margin-bottom: 1rem;
+}
+
+.ibp-modal-title {
+	margin-bottom: 2rem;
+}
+
+.ibp-modal-desc {
+	margin-bottom: 2rem;
+}
+
+.bx--btn--secondary {
+	background-color: $cancelButton;
+	color: $text;
+	margin-bottom: 1rem;
+	min-width: 100px;
+}
+
+.bx--btn--secondary:hover {
+	background-color: $cancelButtonHover;
+}
+
+.bx--btn--primary {
+	background-color: $action;
+	min-width: 100px;
+}
+
+.bx--btn--primary:hover {
+	background-color: $actionHover;
+}
+
+.bx--file-filename.ibp-importPeer--fileName {
+	margin-bottom: 0.5rem;
+}
+
+.ibp-panel--content {
+	.bx--file__state-container {
+		display: none;
+	}
+
+	.ibp-clear-files-button {
+		margin-top: 1.5rem;
+	}
+
+	h2 {
+		margin-bottom: 1rem;
+	}
+}
+
+.hidden_section {
+	height: 0px;
+	overflow: hidden;
+}
+
+.ibp-link {
+	cursor: pointer;
+}
+
+fieldset.ibp-peer-locations {
+	legend {
+		font-weight: 400;
+		margin-bottom: 1rem;
+	}
+
+	.ibp-peer-location {
+		height: 5rem;
+		width: 100%;
+	}
+}
+
+.ibp-peer-locations {
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+
+	.ibp-peer-location {
+		background-color: transparent;
+		border: 1px solid $itemBackground;
+		width: 100%;
+		height: 5rem;
+		padding: 1rem;
+		position: relative;
+
+		&:hover,
+		&:focus {
+			background-color: $itemHover;
+		}
+
+		.ibp-import-node-add-icon {
+			bottom: 1rem;
+			position: absolute;
+			right: 1rem;
+		}
+
+		.bx--tile__checkmark {
+			display: none;
+		}
+	}
+
+	.bx--tile--is-selected {
+		outline: 1px solid $action;
+	}
+}
+
+JsonInputComponent {
+	margin-top: 1rem;
+}
+
+.ibp-identity-type-toggle {
+	margin-bottom: 1rem;
+}
+
+.ibp-identity-keypair {
+	@include carbon--font-weight('semibold');
+	color: $field-label-color;
+}
+
+.summary-section {
+	margin-bottom: 1rem;
+
+	.summary-label {
+		@include carbon--type-style('label-01');
+		color: $carbon--cool-gray-30;
+		padding-bottom: 0.1875rem;
+	}
+
+	.summary-value {
+		color: $text;
+	}
+
+	.summary-nowrap {
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+}
+
+.ibp-third-party-ca {
+	.bx--checkbox-wrapper {
+		display: inline-block;
+	}
+
+	.ibp-tooltip-container {
+		display: inline;
+	}
+}
+
+.ibp-usage-container {
+	display: inline-block;
+	margin-top: 1rem;
+}
+
+.ibp-usage-wizard .ibp-tooltip-container {
+	display: inline;
+}
+
+.ibp-resource-allocation-desc {
+	margin-bottom: 1rem;
+}
+
+.ibp-usage-footer {
+	@include carbon--type-style('body-short-01');
+	background-color: $inverseBackground;
+	border-top: 3px solid $carbon--blue-50;
+	color: $inverseText;
+	display: flex;
+	flex-direction: row;
+
+	.ibp-usage-footer-column {
+		flex-grow: 1;
+		flex-shrink: 1;
+		padding: 1rem;
+
+		.ibp-usage-footer-heading {
+			@include carbon--font-weight('semibold');
+		}
+	}
+}
+
+#saasCA-enroll_id {
+	.bx--skeleton.bx--dropdown-v2.bx--list-box.bx--form-item {
+		height: 3.5rem;
+		max-height: 3.5rem;
+	}
+}
+
+.ibp-importPeer--accordion {
+	.bx--accordion__content {
+		padding-right: 1rem;
+	}
+
+	.ibp-accordion-form {
+		.bx--radio-button-wrapper .bx--radio-button__label {
+			justify-content: left;
+		}
+	}
+}
+
+.ibp-peer-state-database {
+	margin-top: 1rem;
+
+	.bx--checkbox-wrapper {
+		display: inline-block;
+	}
+
+	.ibp-tooltip-container {
+		display: inline;
+	}
+
+	.bx--radio-button-wrapper .bx--radio-button__label {
+		align-items: left;
+		justify-content: left;
+		margin-top: 0.25rem;
+	}
+
+	.ibp-peer-state-database-label {
+		margin-top: 1rem;
+	}
+}
+
+.ibp-no-identities {
+	margin-bottom: 1rem;
+}
+
+.ibp-advanced-peer-checkboxes-label {
+	margin-bottom: 0.5rem;
+}
+
+.ibp-advanced-peer-checkboxes {
+	display: flex;
+	flex-direction: row;
+	width: 1rem;
+	white-space: nowrap;
+}
+
+.ibp-peer-database-wizard,
+.ibp-peer-zone-wizard {
+	.bx--radio-button-wrapper .bx--radio-button__label {
+		align-items: left;
+		justify-content: left;
+		margin-top: 0.25rem;
+	}
+}
+
+.ibp-peer-zone-desc {
+	margin-bottom: 1rem;
+}
+
+.ibp-peer-hsm-desc {
+	margin-bottom: 1rem;
+}
+
+.ibp-peer-zone-link.ibp-link,
+.ibp-peer-zone-link.ibp-link:hover {
+	display: block;
+	margin-bottom: 1rem;
+	margin-top: 1rem;
+	width: max-content;
+}

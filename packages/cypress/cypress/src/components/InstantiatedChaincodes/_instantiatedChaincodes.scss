@@ -1,0 +1,21 @@
+.ibp-upgrade-available-label {
+	@include carbon--type-style('label-01');
+	background: $secondaryActionHover;
+	border-radius: 6.25rem;
+	bottom: 0.5rem;
+	display: inline-flex;
+	line-height: 2rem;
+	padding: 0 1rem;
+	position: relative;
+	width: auto;
+}
+
+#overflow-instantiate ul {
+	background: $carbon--cool-gray-90;
+	margin-top: 1px;
+	padding: 0;
+	padding-right: 0rem;
+	margin-right: 0rem;
+	border: none;
+	box-shadow: 0px 2px 2px 1px rgba(0, 0, 0, 0.4);
+}

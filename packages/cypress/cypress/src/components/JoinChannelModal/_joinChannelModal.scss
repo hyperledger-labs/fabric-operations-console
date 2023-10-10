@@ -1,0 +1,100 @@
+.ibp-modal-title {
+	margin-bottom: 2rem;
+}
+
+.ibp-modal-desc {
+	margin-bottom: 2rem;
+}
+
+.ibp-join_channel--button {
+	border: 0;
+	color: $text;
+	cursor: pointer;
+	height: 4rem;
+	padding: 0.75rem;
+	position: relative;
+	text-align: left;
+	width: 50%;
+}
+
+.ibp-join_channel--button span {
+	position: absolute;
+	top: 1rem;
+}
+
+.bx--btn--secondary,
+.ibp-join_channel--button.ibp-join_channel--cancel--button {
+	background-color: $cancelButton;
+}
+
+.bx--btn--secondary:hover,
+.ibp-join_channel--button.ibp-join_channel--cancel--button:hover {
+	background-color: $cancelButtonHover;
+}
+
+.bx--btn--primary,
+.ibp-join_channel--button.ibp-join_channel--submit--button {
+	background-color: $action;
+}
+
+.bx--btn--primary:hover,
+.ibp-join_channel--button.ibp-join_channel--submit--button:hover {
+	background-color: $actionHover;
+}
+
+.ibp-join_channel--button.ibp-join_channel--submit--button:disabled,
+.ibp-join_channel--button.ibp-join_channel--submit--button[disabled] {
+	background-color: $buttonDisabled;
+	cursor: not-allowed;
+}
+
+.bx--btn--primary {
+	min-width: 100px;
+}
+
+.bx--btn--secondary {
+	color: $text;
+	min-width: 100px;
+}
+
+.hidden_section {
+	height: 0px;
+	overflow: hidden;
+}
+
+.ibp-link {
+	cursor: pointer;
+}
+
+.anchor-peer-toggle {
+	margin-top: 1.5rem;
+
+	.bx--form-item {
+		flex-grow: 0;
+	}
+
+	.settings-toggle-inner {
+		align-items: center;
+		display: flex;
+		flex-direction: row;
+		margin-bottom: 1.5rem;
+	}
+
+	.settings-toggle-label {
+		@include carbon--type-style('body-short-01');
+		padding-bottom: 0.5rem;
+		width: max-content;
+	}
+}
+
+.ibp-address-override-section {
+	margin-top: 1rem;
+
+	p {
+		margin-bottom: 1rem;
+	}
+
+	.ibp-peer-mapping {
+		padding-left: 1rem;
+	}
+}

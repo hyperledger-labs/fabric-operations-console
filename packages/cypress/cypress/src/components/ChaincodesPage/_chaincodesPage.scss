@@ -1,0 +1,42 @@
+.ibp-chaincodepage-component {
+	margin-bottom: 2rem;
+}
+
+.lifecycle-20-notice {
+	background-color: $field-background;
+	padding: 2rem;
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 3rem;
+
+	h3 {
+		margin-bottom: 1rem;
+	}
+
+	p {
+		button {
+			z-index: $firstLayer;
+		}
+	}
+
+	.go-to-channel-button {
+		margin-top: 2rem;
+		margin-left: 1em;
+		padding-right: 1rem;
+		width: 12rem;
+	}
+
+	.how-to-topic-button {
+		margin-top: 2rem;
+		padding-right: 1rem;
+		width: 9rem;
+	}
+
+	.ibp-requires-attention-image {
+		flex-grow: 0;
+		margin-left: 2rem;
+		width: 32rem;
+		height: 10rem;
+		margin-top: 1.6rem;
+	}
+}

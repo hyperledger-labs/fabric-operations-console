@@ -1,0 +1,152 @@
+@keyframes navItemFadeIn {
+	0% {
+		opacity: 0.25;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+.ibp-left-nav-item {
+	align-items: center;
+	color: $text;
+	display: flex;
+	height: 3.25rem;
+	justify-content: center;
+	margin-bottom: 1px;
+	position: relative;
+	text-decoration: none;
+	width: 3.25rem;
+
+	&.bottom-nav-group {
+		position: absolute;
+		bottom: 1rem;
+	}
+
+	.ibp-left-nav-icon {
+		bottom: 0;
+		display: inherit;
+		height: 3.25rem;
+		left: 1rem;
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 1.125rem;
+	}
+
+	.ibp-left-nav-link {
+		border-left: 0.1875rem solid transparent;
+		height: 100%;
+		transition: all 250ms ease;
+		width: 100%;
+
+		&:hover,
+		&:focus {
+			background-color: $itemBackground;
+			outline: 0;
+		}
+	}
+
+	.ibp-active-left-nav-item {
+		border-left: 0.1875rem solid $action;
+	}
+
+	.left-nav-item-content {
+		background: $itemBackground;
+		box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+		display: none;
+		left: 3.25rem;
+		padding: 1rem;
+		position: absolute;
+		top: 0;
+		transition: opacity 250ms ease-in;
+		width: 15rem;
+
+		.ibp-sub-menu-title {
+			padding-bottom: 0.75rem;
+			text-transform: capitalize;
+		}
+
+		.ibp-left-nav-header-link {
+			color: #fff;
+			text-decoration: none;
+		}
+	}
+
+	.left-nav-extended.left-nav-item-content {
+		height: 100vh;
+	}
+
+	.left-nav-shortened.left-nav-item-content {
+		height: 3.25rem;
+		padding: 1.0875rem;
+
+		.ibp-left-nav-text {
+			@include carbon--type-style('body-short-01');
+			@include carbon--font-weight('semibold');
+			border-bottom: 0;
+			height: auto;
+			margin-bottom: 0;
+		}
+	}
+}
+
+@media (min-width: 52.5rem) {
+	.ibp-left-nav-item {
+		justify-content: left;
+		width: 3.25rem;
+
+		&:hover {
+			.ibp-left-nav-link {
+				background-color: $itemBackground;
+			}
+
+			&:hover,
+			&:focus {
+				.left-nav-item-content {
+					animation: navItemFadeIn 250ms linear forwards alternate;
+					display: block;
+				}
+			}
+		}
+
+		.ibp-left-nav-link {
+			&:focus {
+				+.left-nav-item-content {
+					animation: navItemFadeIn 250ms linear forwards alternate;
+					display: block;
+				}
+			}
+		}
+
+		.left-nav-item-content {
+
+			&:hover,
+			&:focus {
+				display: block;
+			}
+		}
+
+		.ibp-left-nav-icon {
+			margin-left: 1rem;
+			margin-right: 1rem;
+			left: 0;
+		}
+
+		.left-nav-item-content {
+			display: none;
+		}
+
+		.ibp-left-nav-text {
+			border-bottom: 1px solid $background;
+			height: 2.25rem;
+			margin-bottom: 0.75rem;
+		}
+	}
+}
+
+.ibp-left-nav-link:hover,
+.ibp-left-nav-link:focus {
+	background-color: $itemHover;
+}

@@ -1,0 +1,57 @@
+.ibp-actions-title {
+	@include carbon--font-weight('semibold');
+	color: $field-label-color;
+	margin-bottom: 1rem;
+}
+
+div .ibp-orderer-action {
+	margin-right: 1rem;
+	margin-bottom: 1rem;
+}
+
+.ibp-hidden {
+	display: none;
+}
+
+#confirm_remove:not(:disabled) {
+	background-color: $inverse-support-01;
+}
+
+#confirm_remove:focus,
+#confirm_remove:hover:not(:disabled) {
+	background-color: $hover-danger;
+}
+
+.ibp-orderer-log-settings,
+.ibp-remove-orderer-desc,
+.ibp-manage-orderer-certs,
+.ibp-remove-orderer-confirm {
+	margin-bottom: 1rem;
+}
+
+.ibp-advanced-config-learn-more {
+	@include carbon--type-style('body-short-02');
+	color: $carbon--blue-40;
+	margin-bottom: 1rem;
+	margin-top: 1rem;
+	display: block;
+	width: max-content;
+}
+
+.ibp-error-panel {
+	margin-top: 0.75rem;
+
+	.bx--inline-notification--info {
+		margin: 1.5rem 0;
+		margin-top: 0rem;
+	}
+}
+
+.ibp-no-identities {
+	margin-bottom: 1rem;
+}
+
+.ibp-orderer-log-identity,
+.ibp-orderer-config-override-desc-with-link {
+	margin-top: 1rem;
+}

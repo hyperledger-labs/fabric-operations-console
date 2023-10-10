@@ -1,0 +1,389 @@
+.ibp-form {
+	.ibp-form-field {
+		margin-bottom: 0.5rem;
+		padding-top: 0.5rem;
+		position: relative;
+
+		.ibp-form-label,
+		.ibp-form-label-disabled {
+			@include carbon--type-style('label-01');
+			color: $field-label-color;
+		}
+
+		.ibp-form-input {
+			margin-top: 0.5rem;
+			border: solid 1px $field-border;
+			position: relative;
+
+			.bx--text__input {
+				width: 100%;
+
+				&:hover &:not(&:disabled) {
+					box-shadow: inset 0px 0px 0px 1px white;
+					transition: $basic-duo-transition;
+				}
+
+				&:focus {
+					box-shadow: inset 0px 0px 0px 2px white;
+					transition: $basic-duo-transition;
+				}
+
+				&:disabled {
+					cursor: not-allowed;
+					opacity: 0.4;
+				}
+			}
+
+			textarea.bx--text__input {
+				height: 7rem;
+				padding-top: 1rem;
+				padding-bottom: 1rem;
+			}
+
+			textarea.bx--text-area.bx--text__input.ibm-label {
+				height: inherit;
+			}
+
+			input:read-only,
+			textarea:read-only {
+				opacity: 0.5;
+				-webkit-text-fill-color: #fff;
+			}
+		}
+
+		&.input_error {
+			.ibp-form-input {
+				input {
+					outline: 2px solid $field-error;
+					outline-offset: -2px;
+					box-shadow: none;
+				}
+			}
+
+			.ibp-text-input-error {
+				@include carbon--type-style('label-01');
+				color: $field-error;
+				padding-top: 0.5rem;
+				padding-bottom: 0.5rem;
+			}
+		}
+	}
+
+	.ibp-form-field-disabled {
+		.ibp-form-label {
+			color: $disabled-03;
+			cursor: not-allowed;
+		}
+
+		.ibp-pem-delete,
+		.bx--text__input {
+			opacity: 0.4;
+			cursor: not-allowed;
+		}
+
+		.ibp-pem-input {
+			.bx--btn {
+				cursor: not-allowed;
+				background-color: $buttonDisabled;
+			}
+		}
+	}
+
+	.ibp-name-value-list {
+		padding-bottom: 1rem;
+		padding-right: 1rem;
+
+		.ibp-name-value-pair {
+			display: flex;
+			flex-direction: row;
+			margin-bottom: 0.5rem;
+			line-height: 3rem;
+
+			.ibp-name-value-name {
+				margin-right: 0.5rem;
+				flex-grow: 1;
+				background-color: $field-background;
+				border: none;
+				color: $carbon--white-0;
+				padding-left: 1rem;
+
+				&:hover {
+					box-shadow: inset 0px 0px 0px 1px $carbon--white-0;
+					transition: $basic-duo-transition;
+				}
+
+				&:focus {
+					box-shadow: inset 0px 0px 0px 2px $carbon--white-0;
+					transition: $basic-duo-transition;
+				}
+			}
+
+			.ibp-name-value-value {
+				margin-left: 0.5rem;
+				flex-grow: 1;
+				background-color: $field-background;
+				border: none;
+				color: $carbon--white-0;
+				padding-left: 1rem;
+
+				&:hover {
+					box-shadow: inset 0px 0px 0px 1px $carbon--white-0;
+					transition: $basic-duo-transition;
+				}
+
+				&:focus {
+					box-shadow: inset 0px 0px 0px 2px $carbon--white-0;
+					transition: $basic-duo-transition;
+				}
+			}
+		}
+
+		.ibp-name-value-add {
+			.ibp-name-value-add-button-img {
+				width: 0.75rem;
+				height: 0.75rem;
+				margin-left: 1rem;
+			}
+		}
+
+		.ibp-name-value-delete {
+			margin-left: 0.5rem;
+		}
+	}
+
+	.ibp-multi-select {
+		padding-right: 1rem;
+		padding-bottom: 1rem;
+		@include carbon--font-weight('regular');
+
+		.ibp-multi-select-item {
+			min-height: 1rem;
+		}
+
+		.ibp-multi-select-item-disabled {
+			opacity: 0.6;
+		}
+
+		.ibp-multi-select-item-disabled:active {
+			pointer-events: none;
+		}
+
+		color: #fff;
+
+		.ibp-tooltip-container {
+			margin-left: 0rem;
+		}
+	}
+
+	.ibp-drop-down-container {
+		display: flex;
+		flex-direction: row-reverse;
+		justify-content: flex-end;
+		position: relative;
+
+		.bx--dropdown__wrapper {
+			width: 100%;
+		}
+
+		.ibp-inline-loading-icon {
+			max-width: 2rem;
+			position: absolute;
+			right: -2.5rem;
+			top: 0.25rem;
+		}
+	}
+}
+
+.ibp-form-password {
+	padding-right: 44px;
+}
+
+.ibp-form-readonly-div {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: inline-block;
+}
+
+.ibp-form-field .ibp-visibility-toggle svg {
+	width: 20px;
+	height: 20px;
+}
+
+.ibp-form-field .ibp-tooltip-container {
+	display: flex;
+}
+
+.ibp-pem-input {
+	.bx--label {
+		display: none;
+	}
+
+	.bx--label-description {
+		display: none;
+	}
+
+	.bx--btn {
+		margin-top: 0.5rem;
+	}
+}
+
+.ibp-no-label {
+	margin-bottom: 0px;
+	padding-top: 0px;
+}
+
+.ibp-pem-value {
+	display: flex;
+	flex-direction: row;
+
+	.ibp-pem-export,
+	.ibp-pem-delete {
+		align-items: center;
+		background: transparent;
+		border: 2px solid transparent;
+		cursor: pointer;
+		display: flex;
+		flex-grow: 0;
+		height: 2.5rem;
+		margin-left: 1rem;
+		transition: $basic-duo-transition;
+
+		&:hover,
+		&:focus {
+			background: $carbon--cool-gray-80;
+		}
+
+		&:focus {
+			border: 2px solid #ffffff;
+			box-shadow: inset 0px 0px 0px 1px #13171a;
+			outline: 0;
+		}
+	}
+
+	.ibp-pem-export {
+		margin-left: 0px;
+	}
+}
+
+.ibp-form-field {
+
+	.radioButtonWrapper,
+	.bx--radio-button-wrapper {
+		margin: 0.5rem;
+
+		.bx--radio-button__label {
+			@include carbon--type-style('body-short-01');
+			color: $carbon--white-0;
+			justify-content: left;
+		}
+	}
+}
+
+.ibp-form-slider {
+	.bx--slider-container {
+		width: 30rem;
+	}
+
+	.bx--slider__thumb,
+	.bx--slider__thumb:active,
+	.bx--slider__filled-track {
+		background-color: $white;
+	}
+
+	.bx--slider-text-input {
+		width: 6rem;
+	}
+
+	.bx--slider__range-label {
+		white-space: nowrap;
+	}
+
+	.bx--label {
+		display: none;
+	}
+}
+
+.ibp-pem-file {
+	margin-top: 0.5rem;
+}
+
+.ibp-form .ibp-form-input {
+	.ibp-identity-action-div {
+		margin-top: -0.5rem;
+
+		.ibp-identity-action {
+			background-color: transparent;
+			color: $action;
+			font-weight: 400;
+			margin-bottom: 0px;
+
+			svg {
+				margin-bottom: -0.25rem;
+				margin-right: 0.5rem;
+
+				g {
+					fill: $action;
+				}
+			}
+		}
+
+		.ibp-identity-action:disabled {
+			color: $buttonDisabled;
+
+			svg {
+				g {
+					fill: $buttonDisabled;
+				}
+			}
+		}
+
+		.ibp-identity-action:disabled:hover {
+			background-color: transparent;
+			color: $buttonDisabled;
+		}
+
+		.ibp-identity-action:hover {
+			background-color: transparent;
+			color: $action;
+		}
+
+		.ibp-identity-action:focus {
+			background-color: transparent;
+			border: none;
+			color: $action;
+			outline: none;
+			text-decoration: underline;
+		}
+	}
+
+	.ibp-input-field-password {
+		.bx--text-input__field-wrapper[data-invalid='true'] {
+			.bx--text-input__invalid-icon {
+				right: 2.5rem;
+			}
+		}
+	}
+}
+
+.ibp-horizontal-radio {
+	.bx--radio-button-wrapper {
+		display: inline-block;
+		vertical-align: top;
+
+		.bx--radio-button__label {
+			padding-left: 2rem;
+		}
+	}
+}
+
+.ibp-form-description {
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+}
+
+.ibp-multi-select-2 {
+	.bx--checkbox-label {
+		padding-left: 1.5rem;
+	}
+}

@@ -1,0 +1,716 @@
+.ibp-welcome-desc {
+	max-width: 43rem;
+}
+
+.ibp-welcome-step-container {
+	display: flex;
+
+	.ibp-welcome-card {
+		@include carbon--font-weight('regular');
+		color: $text;
+		padding-right: 1rem;
+	}
+}
+
+.ibp-welcome-info-container {
+	position: absolute;
+	left: 1rem;
+	top: 16rem;
+	z-index: $fifthLayer;
+
+	.ibp-welcome-diagram-active-content-container {
+		background-color: $carbon--cool-gray-90;
+		margin-bottom: 1rem;
+		max-width: 28rem;
+		padding: 1rem;
+		cursor: pointer;
+		margin: 0;
+
+		&.ibp-diagram-active-description {
+			background-color: $carbon--cool-gray-90;
+		}
+
+		h4 {
+			padding: 0.25rem 0;
+		}
+
+		& * {
+			@include carbon--type-style('body-short-01');
+		}
+	}
+}
+
+.ibp-getting-started-container {
+	display: grid;
+	grid-auto-rows: 1fr;
+	grid-gap: 2px;
+	grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
+	min-height: 18rem;
+
+	.ibp-getting-started-large-tile {
+		background-color: $itemBackground;
+		height: 12rem;
+		padding: 1.5rem;
+		border: 0;
+		color: $white;
+		text-align: left;
+		display: flex;
+		flex-direction: column;
+		position: relative;
+		cursor: pointer;
+		transition: $basic-duo-transition;
+
+		&:hover,
+		&:focus {
+			background-color: $itemHover;
+
+			.ibp-getting-started-button-checkmark {
+				opacity: 1;
+			}
+		}
+
+		&:focus {
+			background-color: $itemHover;
+			box-shadow: inset 0px 0px 0px 2px white;
+			outline: 0;
+		}
+
+		.ibp-getting-started-header {
+			font-size: 1.25rem;
+			padding-bottom: 0.75rem;
+		}
+
+		.ibp-getting-started-description {
+			font-size: 0.875rem;
+		}
+
+		.ibp-getting-started-button-checkmark {
+			fill: $white;
+			position: absolute;
+			top: 1.25rem;
+			right: 1.25rem;
+			opacity: 0;
+			transition: $basic-duo-transition;
+		}
+
+		&.ibp-getting-started-option-active {
+			box-shadow: inset 0px 0px 0px 2px white;
+
+			.ibp-getting-started-button-checkmark {
+				opacity: 1;
+			}
+		}
+
+		.ibp-getting-started-est-time {
+			@include carbon--type-style('label-01');
+			position: absolute;
+			bottom: 1.25rem;
+		}
+	}
+}
+
+.ibp-getting-started-desc {
+	padding-bottom: 4rem;
+	max-width: 45rem;
+}
+
+.ibp-template-header {
+	padding-bottom: 1.25rem;
+}
+
+.ibp-selected-template-desc,
+.ibp-template-usage-desc {
+	@include carbon--type-style('body-short-01');
+}
+
+.ibp-template-diagram {
+	padding-top: 2rem;
+	padding-bottom: 4rem;
+	max-width: 100%;
+}
+
+.ibp-template-usage-table {
+	font-weight: 400;
+	padding: 1.5rem 0;
+
+	.ibp-template-usage-row {
+		border-bottom: 1px solid $carbon--cool-gray-80;
+		display: flex;
+
+		div {
+			@include carbon--type-style('body-short-01');
+			width: 33%;
+			display: inline-block;
+			padding: 1rem;
+			font-size: 0.875rem;
+		}
+
+		div:not(.ibp-template-usage-row-header) {
+			color: $carbon--cool-gray-30;
+		}
+
+		.ibp-template-usage-row-header {
+			color: $white;
+			@include carbon--font-weight('semibold');
+		}
+	}
+}
+
+.ibp-template-usage-table.ibp-template-custom-component-table {
+	.ibp-template-usage-row {
+		div {
+			width: 35%;
+			display: inline-block;
+			padding: 1rem;
+			font-size: 0.875rem;
+		}
+
+		div:not(.ibp-template-usage-row-header) {
+			color: $carbon--cool-gray-30;
+		}
+	}
+}
+
+.ibp--uploaded-template-component-overview {
+	padding-top: 1rem;
+
+	.ibp--uploaded-template-component-display-name {
+		@include carbon--type-style('body-short-01');
+		color: $carbon--cool-gray-30;
+	}
+}
+
+.ibp--template-attached-container {
+	background-color: $itemBackground;
+	height: 2rem;
+	max-width: 22.75rem;
+	min-width: 22.75rem;
+	padding: 0.5rem;
+	position: relative;
+
+	.ibp--template--attached-file-name {
+		@include carbon--type-style('label-01');
+		padding-left: 0.75rem;
+	}
+
+	align-items: center;
+	display: flex;
+	margin: 1rem 0;
+
+	.ibp-template-remove-file-icon {
+		cursor: pointer;
+		fill: $carbon--white-0;
+		position: absolute;
+		right: 0.5rem;
+	}
+}
+
+.ibp--upload-template-step-container {
+	padding-bottom: 1.5rem;
+
+	p,
+	.ibp--template-secrets-note {
+		@include carbon--type-style('body-short-01');
+		color: $carbon--cool-gray-20;
+	}
+
+	.ibp--template-secrets-note {
+		padding-top: 1.5rem;
+	}
+}
+
+#ibp--template-full-page-side-panel {
+	.ibp--template--main-content {
+		padding: 0;
+	}
+
+	.ibp-template-header-container {
+		position: relative;
+
+		.ibp-template-header.ibp--template-full-page-header:before {
+			content: '';
+			position: absolute;
+			height: 1px;
+			background-color: $itemBackground;
+			width: calc(100% + 2rem);
+			bottom: 0;
+			left: -2rem;
+		}
+	}
+
+	.ibp--template-list-container {
+		padding-top: 1rem;
+
+		.ibp--template-type-selectable-button {
+			background-color: $itemBackground;
+			border: 1px solid transparent;
+			border-bottom: 1px solid $itemBackground;
+			color: $carbon--white-0;
+			cursor: pointer;
+			display: inline-flex;
+			flex-direction: column;
+			align-items: flex-start;
+			margin-bottom: 0.5rem;
+			margin-right: 0.5rem;
+			min-height: 8.5rem;
+			padding: 1rem;
+			position: relative;
+			text-align: left;
+			max-width: 388px;
+			width: 100%;
+
+			&.ibp--template-currently-selected {
+				box-shadow: inset 0px 0px 0px 1px $carbon--white-0;
+
+				.ibp-selected-template-checkmark {
+					opacity: 1;
+				}
+			}
+
+			&:hover,
+			&:focus {
+				transition: background-color 0.2s cubic-bezier(0.2, 0.2, 0.38, 0.9);
+
+				.ibp-selected-template-checkmark {
+					opacity: 1;
+				}
+			}
+
+			&:hover {
+				background-color: $carbon--cool-gray-80;
+
+				.ibp-selected-template-checkmark {
+					fill: $carbon--cool-gray-30;
+				}
+
+				.ibp-selected-template-checkmark {
+					path[data-icon-path='inner-path'] {
+						opacity: 1;
+						fill: $carbon--white-0;
+					}
+				}
+			}
+
+			&:focus {
+				box-shadow: inset 0px 0px 0px 2px $carbon--white-0;
+				outline: 0;
+			}
+
+			.ibp-template-tile-desc {
+				@include carbon--type-style('label-01');
+				color: $ibm-color__cool-gray-30;
+				padding-top: 0.75rem;
+			}
+
+			&.ibp--dropzone-container {
+				align-items: baseline;
+			}
+
+			.ibp-complexity-scale-outer-container {
+				position: absolute;
+				bottom: 0.5rem;
+			}
+
+			.ibp-change-template-button {
+				position: absolute;
+				bottom: 0;
+				right: 0;
+			}
+
+			.ibp-selected-template-checkmark {
+				fill: $carbon--white-0;
+				position: absolute;
+				top: 1rem;
+				right: 1rem;
+				transition: $basic-duo-transition;
+				opacity: 0;
+			}
+		}
+	}
+
+	.ibp--selected-template-info-container {
+		.ibp--custom-template-currently-selected {
+			background-color: transparent;
+			margin: 2rem 0;
+			max-width: 48rem;
+			min-height: 18rem;
+			transition: $basic-duo-transition;
+
+			&:hover {
+				background-color: $carbon--cool-gray-90;
+			}
+
+			&:focus {
+				box-shadow: inset 0px 0px 0px 2px $carbon--white-0;
+				outline: 0;
+			}
+
+			.ibp--custom-template-inner {
+				align-items: center;
+				display: flex;
+				flex-direction: column;
+				height: 7rem;
+				justify-content: center;
+				min-height: 18rem;
+				padding: 1rem;
+				position: relative;
+				width: 100%;
+
+				.ibp-template-uploading-container {
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					padding-top: 1rem;
+
+					.bx--inline-loading {
+						width: inherit;
+					}
+				}
+
+				&:after {
+					content: '';
+					position: absolute;
+					top: 0;
+					left: 0;
+					right: 0;
+					bottom: 0;
+					// hack to get custom dashed border //
+					background: linear-gradient(90deg, $carbon--cool-gray-80 100%, transparent 100%) top left no-repeat,
+						linear-gradient(90deg,
+							transparent calc(0.5rem / 2),
+							$carbon--cool-gray-80 calc(0.5rem / 2),
+							$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
+							transparent calc(0.5rem / 2 + 0.5rem)) top center repeat-x,
+						linear-gradient(90deg, $carbon--cool-gray-80 100%, transparent 100%) top right no-repeat,
+						linear-gradient(0deg, $carbon--cool-gray-80 100%, transparent 100%) top left no-repeat,
+						linear-gradient(0deg,
+							transparent calc(0.5rem / 2),
+							$carbon--cool-gray-80 calc(0.5rem / 2),
+							$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
+							transparent calc(0.5rem / 2 + 0.5rem)) center left repeat-y,
+						linear-gradient(0deg, $carbon--cool-gray-80 100%, transparent 100%) bottom left no-repeat,
+						linear-gradient(90deg, $carbon--cool-gray-80 100%, transparent 100%) bottom left no-repeat,
+						linear-gradient(90deg,
+							transparent calc(0.5rem / 2),
+							$carbon--cool-gray-80 calc(0.5rem / 2),
+							$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
+							transparent calc(0.5rem / 2 + 0.5rem)) bottom center repeat-x,
+						linear-gradient(90deg, $carbon--cool-gray-80 100%, transparent 100%) bottom right no-repeat,
+						linear-gradient(0deg, $carbon--cool-gray-80 100%, transparent 100%) top right no-repeat,
+						linear-gradient(0deg,
+							transparent calc(0.5rem / 2),
+							$carbon--cool-gray-80 calc(0.5rem / 2),
+							$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
+							transparent calc(0.5rem / 2 + 0.5rem)) center right repeat-y,
+						linear-gradient(0deg, $carbon--cool-gray-80 100%, transparent 100%) bottom right no-repeat;
+					background-size: 0.5rem 2px, calc(0.5rem + 0.5rem) 2px, 0.5rem 2px, 2px 0.5rem, 2px calc(0.5rem + 0.5rem), 2px 0.5rem;
+				}
+
+				.ibp--custom-template-drag-desc {
+					@include carbon--type-style('body-short-01');
+					max-width: 13.25rem;
+
+					.ibp--custom-template-browse-link {
+						color: $carbon--blue-30;
+					}
+				}
+			}
+
+			&.ibp--dropzone--highlight {
+				.ibp--custom-template-inner {
+					&:after {
+						content: '';
+						position: absolute;
+						top: 0;
+						left: 0;
+						right: 0;
+						bottom: 0;
+						background: linear-gradient(90deg, $carbon--blue-50 100%, transparent 100%) top left no-repeat,
+							linear-gradient(90deg,
+								transparent calc(0.5rem / 2),
+								$carbon--blue-50 calc(0.5rem / 2),
+								$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
+								transparent calc(0.5rem / 2 + 0.5rem)) top center repeat-x,
+							linear-gradient(90deg, $carbon--blue-50 100%, transparent 100%) top right no-repeat,
+							linear-gradient(0deg, $carbon--blue-50 100%, transparent 100%) top left no-repeat,
+							linear-gradient(0deg,
+								transparent calc(0.5rem / 2),
+								$carbon--blue-50 calc(0.5rem / 2),
+								$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
+								transparent calc(0.5rem / 2 + 0.5rem)) center left repeat-y,
+							linear-gradient(0deg, $carbon--blue-50 100%, transparent 100%) bottom left no-repeat,
+							linear-gradient(90deg, $carbon--blue-50 100%, transparent 100%) bottom left no-repeat,
+							linear-gradient(90deg,
+								transparent calc(0.5rem / 2),
+								$carbon--blue-50 calc(0.5rem / 2),
+								$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
+								transparent calc(0.5rem / 2 + 0.5rem)) bottom center repeat-x,
+							linear-gradient(90deg, $carbon--blue-50 100%, transparent 100%) bottom right no-repeat,
+							linear-gradient(0deg, $carbon--blue-50 100%, transparent 100%) top right no-repeat,
+							linear-gradient(0deg,
+								transparent calc(0.5rem / 2),
+								$carbon--blue-50 calc(0.5rem / 2),
+								$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
+								transparent calc(0.5rem / 2 + 0.5rem)) center right repeat-y,
+							linear-gradient(0deg, $carbon--blue-50 100%, transparent 100%) bottom right no-repeat;
+						background-size: 0.5rem 2px, calc(0.5rem + 0.5rem) 2px, 0.5rem 2px, 2px 0.5rem, 2px calc(0.5rem + 0.5rem), 2px 0.5rem;
+					}
+				}
+			}
+		}
+	}
+
+	.ibp-side-panel-error {
+		bottom: 4rem;
+		right: 2rem;
+		position: fixed;
+		width: 496px;
+	}
+
+	.ibp--selected-template-estimate-container {
+		background-color: $carbon--cool-gray-90;
+		padding: 0;
+		margin: 2rem 0;
+
+		.ibp-template-usage-intro {
+			border-bottom: 1px solid $carbon--cool-gray-100;
+			padding: 1rem;
+		}
+
+		.ibp-template-usage-iks {
+			border-bottom: 1px solid $carbon--yellow-20;
+			border-top: 1px solid $carbon--cool-gray-100;
+			padding: 1.5rem 1rem;
+
+			.ibp-template-usage-desc {
+				@include carbon--type-style('label-01');
+				@include carbon--font-weight('semibold');
+				padding-bottom: 0.5rem;
+			}
+
+			.ibp-template-usage-number {
+				@include carbon--type-style('productive-heading-03');
+			}
+		}
+	}
+
+	.ibp-panel-content-children {
+		&>*:not(.ibp-vertical-panel-timeline-container) {
+			margin-left: 19.5rem;
+		}
+	}
+
+	.ibp-template-detail-section {
+		padding-top: 2rem;
+		padding-bottom: 6rem;
+
+		.ibp-template-diagram-label {
+			color: $carbon--cool-gray-30;
+		}
+
+		.ibp-template-diagram-container {
+			border-left: 1px solid $carbon--cool-gray-60;
+			padding: 0rem 2rem;
+			margin: 1rem 0;
+
+			.ibp-template-diagram-image {
+				max-width: 522px;
+			}
+		}
+
+		.ibp-template-export-svg {
+			fill: $carbon--white-0;
+			margin-left: 0.5rem;
+		}
+
+		.bx--btn--tertiary {
+			position: relative;
+
+			.ibp-template-export-svg {
+				position: absolute;
+				right: 1rem;
+			}
+
+			&:hover,
+			&:focus {
+				.ibp-template-export-svg {
+					fill: $carbon--cool-gray-90;
+				}
+			}
+		}
+
+		.ibp-timeline-details-prefix-container {
+			display: flex;
+			align-items: flex-end;
+
+			.bx--form-item.bx--text-input-wrapper {
+				max-width: 400px;
+			}
+
+			.ibp-timeline-details-reset-button {
+				align-items: center;
+				display: flex;
+				justify-content: center;
+				max-height: 2.5rem;
+				min-height: 2.5rem;
+				margin-left: 0.5rem;
+				padding-top: 0;
+				padding-bottom: 0;
+			}
+		}
+	}
+}
+
+.ibp-template-deploying-section {
+	.ibp-template-progress-container {
+		padding-top: 1.5rem;
+
+		.ibp-template-progress-bar-label {
+			@include carbon--type-style('label-01');
+			padding-top: 0.5rem;
+			padding-bottom: 1.75rem;
+		}
+
+		.ibp-template-progress-bar {
+			max-width: 694px;
+			min-width: 694px;
+			position: relative;
+
+			.ibp-template-progress-fill,
+			.ibp-template-progress-fill-background {
+				display: block;
+				height: 1px;
+			}
+
+			.ibp-template-progress-fill {
+				background-color: $carbon--blue-50;
+				transition: width 0.2s cubic-bezier(0.2, 0.2, 0.38, 0.9);
+			}
+
+			.ibp-template-progress-fill-background {
+				background-color: $itemBackground;
+				width: 100%;
+			}
+		}
+
+		.ibp-template-progress-error-message {
+			align-items: center;
+			display: flex;
+
+			.ibp-template-progress-bar-label {
+				color: $carbon--red-50;
+			}
+		}
+	}
+
+	.ibp-template-component-learn-more-container {
+		.ibp-template-learn-options {
+			display: flex;
+
+			.ibp-template-deploying-illustration {
+				margin-left: 3rem;
+			}
+
+			.ibp-template-learn-more {
+				max-width: 864px;
+				padding-bottom: 1rem;
+
+				legend {
+					@include carbon--type-style('productive-heading-03');
+					padding-bottom: 1.375rem;
+				}
+
+				.bx--tile--selectable {
+					background-color: $itemBackground;
+					display: inline-block;
+					max-width: 288px;
+					min-width: 288px;
+
+					.bx--tile-content {
+						p {
+							@include carbon--type-style('body-short-01');
+						}
+					}
+				}
+			}
+		}
+
+		.ibp-template-deploying-header {
+			padding-bottom: 1rem;
+		}
+
+		.ibp-template-learn-more-desc {
+			@include carbon--type-style('body-long-01');
+			max-width: 864px;
+			padding-bottom: 1rem;
+		}
+
+		.ibp-template-component-label {
+			@include carbon--type-style('label-01');
+			color: $carbon--cool-gray-30;
+			padding-bottom: 2rem;
+		}
+	}
+
+	.ibp-template-download-identity-button {
+		display: flex;
+		justify-content: space-between;
+		padding-right: 1rem;
+		min-width: 14rem;
+		margin-top: 2rem;
+
+		.ibp-template-download-identity-button-text {
+			color: $carbon--blue-60;
+			min-width: max-content;
+		}
+
+		.bx--inline-loading {
+			width: inherit;
+		}
+	}
+
+	.ibp-template-progress-container {
+		.ibp-template-warning-message-container {
+			align-items: center;
+			display: flex;
+			padding: 1rem 0;
+
+			.ibp-template-warning-message {
+				@include carbon--type-style('label-01');
+				color: $carbon--cool-gray-30;
+				padding-left: 0.5rem;
+			}
+		}
+	}
+}
+
+.bx--text-input.ibp-template-prefix-input {
+	max-width: 400px;
+}
+
+.ibp-template-deploy-submit-icon {
+	position: absolute;
+	right: 1rem;
+	top: 1.25rem;
+}
+
+#ibp--template-side-panel-container {
+	.ibp-side-panel-error {
+		bottom: 0rem;
+		right: 2rem;
+		position: fixed;
+		width: 496px;
+	}
+
+	.ibp-panel--content.ibp-vertical-panel {
+		padding-bottom: 4rem;
+	}
+
+	.ibp-template-download-identity-button.bx--btn--ghost {
+		color: $action;
+
+		&:hover {
+			background-color: $carbon--cool-gray-20;
+		}
+	}
+}

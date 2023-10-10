@@ -1,0 +1,215 @@
+#generateMSPModal {
+	h2 {
+		@include carbon--type-style('productive-heading-04');
+	}
+
+	.ibp-side-panel-error {
+		bottom: 9rem;
+		position: absolute;
+		right: 0;
+		width: 31rem;
+	}
+
+	.ibp-page-loading {
+		position: relative;
+	}
+
+	.ibp-json-toggle {
+		margin-bottom: 1rem;
+	}
+
+	.bx--accordion__content {
+		padding-bottom: 0px;
+		padding-top: 0px;
+	}
+
+	.ibp-accordion-desc {
+		padding-top: 0.5rem;
+	}
+
+	.ibp-error-panel {
+		margin-top: 0.75rem;
+
+		.bx--inline-notification--info {
+			margin: 1.5rem 0;
+			margin-top: 0rem;
+		}
+	}
+
+	.bx--type-delta {
+		padding: 1.5rem 0 0 0;
+	}
+
+	.ibp-msp-row {
+		align-items: center;
+		display: flex;
+
+		.ibp-msp-input {
+			margin: 0.5rem 0;
+			width: 100%;
+		}
+
+		.ibp-download-cert {
+			margin-left: 2rem;
+			padding-top: 1.75rem;
+		}
+
+		.ibp-msp-remove {
+			cursor: pointer;
+			margin: 0 1rem;
+			min-width: 3rem;
+		}
+	}
+
+	.ibp__text-input {
+		@include carbon--type-style('body-short-02');
+		background: $carbon--cool-gray-80;
+		border: 1px solid $carbon--cool-gray-50;
+		color: white;
+		height: 3rem;
+		margin: 0.5rem 0rem 1rem 0rem;
+		padding: 0rem 1rem;
+		width: 100%;
+	}
+
+	.ibp-generate-certificate {
+		margin: 1rem 1rem 1.5rem 0;
+	}
+
+	.ibp-generate-cert-button {
+		display: flex;
+		flex-direction: row;
+		padding-bottom: $spacing-07;
+	}
+
+	.ibp-generate-cert-label {
+		padding-bottom: 0.5rem;
+	}
+
+	.hidden_section {
+		height: 0px;
+		overflow: hidden;
+	}
+
+	.ibp-root-cert-details {
+		margin-top: 1rem;
+	}
+
+	.ibp-msp-tooltip {
+		.bx--tooltip__label {
+			@include carbon--type-style('body-short-02');
+		}
+	}
+
+	.ibp-modal-accordions {
+		display: block;
+		height: 100%;
+
+		.bx--accordion {
+			padding-bottom: 6rem;
+		}
+	}
+
+	.ibp-error-panel {
+		background-color: #f3f1f1;
+		width: 100%;
+
+		.bx--inline-notification--error {
+			color: black;
+			margin-bottom: 2rem;
+			margin-top: 2rem;
+		}
+	}
+
+	.ibp-generate-msp-modal-content {
+		height: 100%;
+		margin-left: 17.5rem;
+		overflow-x: hidden;
+		padding-bottom: 6rem;
+		padding-left: 2rem;
+
+		.ibp-form-input {
+			max-width: 26.25rem;
+			position: relative;
+		}
+
+		.ibp-root-cert-details {
+			.ibp-form-input {
+				max-width: 33.25rem;
+			}
+		}
+	}
+
+	.ibp-generate-msp-cert-section {
+
+		.ibp-generate-msp-cert-section-root,
+		.ibp-generate-msp-cert-section-tls {
+			min-width: 26.25rem;
+			padding-bottom: 1rem;
+		}
+	}
+
+	.ibp-msp-row {
+		max-width: 34rem;
+		position: relative;
+	}
+
+	.ibp-generate-msp-wizard-desc {
+		padding-bottom: $spacing-05;
+	}
+
+	.bx--content-switcher.ibp-identity-type-toggle {
+		justify-content: flex-start;
+
+		#ibp-use-new-identity,
+		#ibp-use-existing-identity {
+			max-width: 12rem;
+		}
+	}
+
+	.ibp-summary-section {
+		margin-bottom: 0.5rem;
+		display: flex;
+		flex-direction: row;
+
+		.ibp-summary-section-key {
+			width: 18rem;
+			flex-shrink: 0;
+			font-size: 0.875rem;
+			color: #bebebe;
+			letter-spacing: 0.01rem;
+			line-height: 1.125rem;
+		}
+
+		.ibp-summary-section-value {
+			font-size: 0.875rem;
+			color: #f3f3f3;
+			letter-spacing: 0.01rem;
+			line-height: 1.125rem;
+			padding-bottom: 0.5rem;
+
+			&.has-error {
+				color: red;
+			}
+		}
+
+		.ibp-summary-section-array-value {
+			display: flex;
+			flex-direction: column;
+
+			.has-error {
+				color: red;
+			}
+		}
+	}
+
+	.ibp-summary-section-separator {
+		margin: 1.5rem 0 2rem 0;
+	}
+
+	.ibp-generate-msp-selected-ca-text {
+		@include carbon--type-style('body-short-01');
+		color: $carbon--cool-gray-30;
+		padding-bottom: 2rem;
+	}
+}

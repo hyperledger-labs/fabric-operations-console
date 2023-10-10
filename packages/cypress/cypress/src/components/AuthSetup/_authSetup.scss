@@ -1,0 +1,101 @@
+.ibp__auth {
+	padding: 2rem 0 0 7rem;
+	max-width: 48rem;
+}
+
+.ibp__auth-welcome-message {
+	@include carbon--type-style('productive-heading-04');
+	@include carbon--font-weight('light');
+	color: $text;
+	margin-top: 3rem;
+}
+
+.ibp__auth-outline {
+	@include carbon--type-style('body-short-02');
+	color: $carbon--cool-gray-30;
+	padding: 0.75rem 0 2rem 0;
+}
+
+.ibp__auth-title {
+	@include carbon--type-style('productive-heading-04');
+	@include carbon--font-weight('light');
+	color: $text;
+	padding-top: 1.5rem;
+}
+
+.ibp__auth-desc {
+	@include carbon--type-style('body-short-02');
+	color: $text;
+	padding-top: 0.75rem;
+}
+
+.ibp__auth-configuration--input-field {
+	@include carbon--type-style('body-short-01');
+	background: $carbon--cool-gray-80;
+	border: 1px solid $carbon--cool-gray-50;
+	color: $carbon--cool-gray-50;
+	height: 2rem;
+	margin: 0.5rem 0rem 1rem 0rem;
+	padding: 0rem 1rem;
+	width: 33rem;
+}
+
+.ibp__auth-configuration--buttons-container {
+	margin-top: 2.5rem;
+	width: 33rem;
+}
+
+.ibp__auth-configuration--buttons {
+	@include carbon--type-style('body-short-01');
+	border: 0;
+	color: $text;
+	cursor: pointer;
+	height: 4rem;
+	padding: 1.2rem 0rem 1.75rem 2rem;
+	position: relative;
+	text-align: left;
+	width: 50%;
+}
+
+.ibp__auth-configuration--back-button {
+	background-color: $cancelButton;
+}
+
+.ibp__auth-configuration--back-button:hover,
+.ibp__auth-configuration--back-button:focus {
+	background-color: $cancelButtonHover;
+}
+
+.ibp__auth-configuration--continue-button {
+	background-color: $action;
+}
+
+.ibp__auth-configuration--continue-button:hover,
+.ibp__auth-configuration--continue-button:focus {
+	background-color: $actionHover;
+}
+
+.ibp__auth-configuration--back-button:disabled,
+.ibp__auth-configuration--back-button[disabled],
+.ibp__auth-configuration--continue-button:disabled,
+.ibp__auth-configuration--continue-button[disabled] {
+	background-color: $itemHover;
+	cursor: not-allowed;
+}
+
+.ibp-help-icon {
+	display: inline-flex;
+	margin-left: 0.5rem;
+	vertical-align: top;
+
+	.bx--tooltip__trigger path,
+	.bx--tooltip__trigger:hover path {
+		fill: $text;
+	}
+}
+
+.ibp-error-panel {
+	background-color: $sidePanelBackground;
+	margin-top: 1.5rem;
+	width: 33rem;
+}

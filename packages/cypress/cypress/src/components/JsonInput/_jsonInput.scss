@@ -1,0 +1,95 @@
+.bx--btn--secondary {
+	background-color: $cancelButton;
+	color: $text;
+	min-width: 100px;
+	margin-bottom: 1rem;
+}
+
+.bx--btn--secondary:hover {
+	background-color: $cancelButtonHover;
+}
+
+.bx--btn--primary {
+	background-color: $action;
+	min-width: 100px;
+}
+
+.bx--btn--primary:hover {
+	background-color: $actionHover;
+}
+
+.bx--file-filename.ibp-json-file-uploader {
+	margin-bottom: 0.5rem;
+}
+
+.ibp-json-file-container label {
+	margin-bottom: 1rem;
+}
+
+.hidden_section {
+	height: 0px;
+	overflow: hidden;
+}
+
+.ibp-link {
+	cursor: pointer;
+}
+
+.ibp-json-item {
+	background-color: $field-background;
+	border: 2px solid $field-border;
+	margin-bottom: 0.5rem;
+	position: relative;
+
+	.ibp-json-delete {
+		position: absolute;
+		right: 0.5rem;
+		top: 0.5rem;
+		cursor: pointer;
+		background-color: transparent;
+		border: none;
+	}
+}
+
+.ibp-json-input-component {
+	margin-top: 1rem;
+}
+
+.ibp-json-toggle {
+	margin-bottom: 1rem;
+}
+
+.ibp-json-error {
+	outline: 2px solid $field-error;
+	outline-offset: -2px;
+	padding-bottom: 1rem;
+	position: relative;
+
+	.ibp-json-error-detail {
+		color: $carbon--red-50;
+		margin-top: 0.5rem;
+		padding: 1rem 1rem 0;
+	}
+
+	.ibp-file-uploader-error-icon {
+		position: absolute;
+		top: 0.55rem;
+		right: 2.5rem;
+		fill: $carbon--red-50;
+	}
+}
+
+.ibp-json-delete-icon {
+	width: 1rem;
+}
+
+.ibp-file-upload-title-with-tooltip {
+	display: flex;
+	flex-direction: row;
+	margin-top: 2rem;
+
+	.bx--tooltip__label {
+		@include carbon--type-style('body-short-01');
+		@include carbon--font-weight('semibold');
+	}
+}

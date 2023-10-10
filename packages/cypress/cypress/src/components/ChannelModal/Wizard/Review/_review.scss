@@ -1,0 +1,44 @@
+.ibp-channel-review {
+	.ibp-summary-details {
+		margin-bottom: 1.5rem;
+	}
+
+	.ibp-summary-section {
+		margin-bottom: 0.5rem;
+		display: flex;
+		flex-direction: row;
+
+		.ibp-summary-section-key {
+			width: 18rem;
+			flex-shrink: 0;
+			font-size: 0.875rem;
+			color: #bebebe;
+			letter-spacing: 0.01rem;
+			line-height: 1.125rem;
+		}
+
+		.ibp-summary-section-value {
+			font-size: 0.875rem;
+			color: #f3f3f3;
+			letter-spacing: 0.01rem;
+			line-height: 1.125rem;
+
+			&.has-error {
+				color: red;
+			}
+		}
+
+		.ibp-summary-section-array-value {
+			display: flex;
+			flex-direction: column;
+
+			.has-error {
+				color: red;
+			}
+		}
+	}
+
+	.ibp-summary-section-separator {
+		margin: 1.5rem 0 2rem 0;
+	}
+}

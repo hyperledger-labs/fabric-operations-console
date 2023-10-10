@@ -1,0 +1,105 @@
+.ibp-msps-to-sign {
+	margin-top: 2rem;
+}
+
+.ibp-policy-added {
+	@include carbon--type-style('body-short-01');
+	color: $action;
+	margin-top: 1rem;
+
+	.ibp-policy-box {
+		border: 1px solid $action;
+	}
+}
+
+.ibp-policy-updated {
+	@include carbon--type-style('body-short-01');
+	color: $warning;
+	margin-top: 1rem;
+
+	.ibp-policy-box {
+		border: 1px solid $warning;
+	}
+}
+
+.ibp-policy-removed {
+	@include carbon--type-style('body-short-01');
+	color: $field-error;
+	margin-top: 1rem;
+
+	.ibp-policy-box {
+		border: 1px solid $field-error;
+	}
+}
+
+.ibp-policy-box {
+	color: $text;
+	padding: 0.5rem;
+}
+
+.ibp-channel-policy-update {
+	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;
+}
+
+.ibp-policy-table {
+	margin-top: 0.5rem;
+
+	.ibp-policy-table-row {
+		&:first-child {
+			@include carbon--font-weight('semibold');
+		}
+
+		.ibp-policy-table-cell {
+			display: inline-block;
+			width: 50%;
+			padding-top: 0.5rem;
+			padding-bottom: 0.5rem;
+
+			.ibp-policy-org {
+				input {
+					width: 100%;
+					background-color: $field-background;
+					border: solid 1px $field-border;
+					color: #fff;
+					height: 3rem;
+					outline: none;
+					width: 90%;
+					padding-left: 0.8rem;
+					opacity: 0.5;
+				}
+			}
+
+			.ibp-permission {
+				display: inline-block;
+				margin-right: 2rem;
+			}
+
+			.ibp-permission-modified {
+				color: $warning;
+				display: inline-block;
+				margin-right: 2rem;
+
+				.bx--checkbox-label:before {
+					border-color: $warning;
+				}
+
+				.bx--checkbox-label[data-contained-checkbox-state='mixed']:before,
+				.bx--checkbox-label[data-contained-checkbox-state='true']:before,
+				.bx--checkbox:checked+.bx--checkbox-label:before,
+				.bx--checkbox:indeterminate+.bx--checkbox-label:before {
+					background-color: $warning;
+				}
+			}
+		}
+	}
+}
+
+.ibp-channel20-warning {
+	margin-top: 3rem;
+
+	.ibp-side-panel-warning,
+	.bx--inline-notification {
+		max-width: 100%;
+	}
+}

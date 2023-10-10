@@ -1,0 +1,409 @@
+.ibp-panel--container {
+	background-color: rgba(0, 0, 0, 0.7);
+	bottom: 0;
+	height: 100vh;
+	position: fixed;
+	right: 0;
+	top: 0;
+	transition: background-color 0.5s ease;
+	width: 100%;
+	z-index: $firstLayer - 1;
+}
+
+.ibp-panel--content {
+	background-color: $sidePanelBackground;
+	color: $text;
+	height: calc(100vh - 4rem);
+	padding-bottom: 0;
+	padding-top: 2.5rem;
+	position: fixed;
+	right: 0;
+	top: 0;
+	width: 37rem;
+	z-index: $firstLayer;
+
+	.ibp-panel-content-flex-div {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+
+		.ibp-panel-content-children {
+			padding-left: 2rem;
+			padding-right: 2rem;
+			flex-grow: 1;
+			flex-shrink: 1;
+			overflow: auto;
+			padding-bottom: 1rem;
+		}
+
+		.ibp-panel-footer,
+		.ibp-side-panel-error {
+			flex-grow: 0;
+			flex-shrink: 0;
+		}
+	}
+
+	&.ibp-large-panel {
+		height: 100%;
+		max-width: 100%;
+		padding-bottom: 4rem;
+		width: 62rem;
+
+		.ibp-side-panel-inner-content {
+			padding-bottom: 4rem;
+		}
+	}
+
+	&.ibp-panel--content-no-buttons {
+		height: 100vh;
+	}
+
+	&.ibp-vertical-panel {
+		height: 100%;
+		left: 2rem;
+		top: 3rem;
+		width: calc(100% - 4rem);
+
+		&+.ibp-button-container {
+			right: 2rem;
+		}
+	}
+
+	&.ibp-full-page-center-panel {
+		height: 55%;
+		left: 25%;
+		top: 20%;
+		width: 50%;
+
+		&+.ibp-button-container {
+			right: 25%;
+			bottom: 25%;
+		}
+	}
+
+	.bx--snippet.bx--snippet--inline {
+		z-index: $firstLayer;
+	}
+}
+
+.ibp-panel--content.ibp-extra-large-panel {
+	height: 100%;
+	max-width: 100%;
+	padding-bottom: 4rem;
+	width: 63%;
+
+	.ibp-side-panel-inner-content {
+		padding-bottom: 4rem;
+	}
+}
+
+.ibp-large-panel {
+	height: 100%;
+	max-width: 100%;
+	padding-bottom: 6rem;
+	width: 62rem;
+
+	.ibp-side-panel-inner-content {
+		padding-bottom: 4rem;
+	}
+}
+
+.side__panel--outer--container,
+.vertical__panel--outer--container {
+
+	.ibp-large-panel-button-container,
+	.ibp-extra-large-panel-button-container,
+	.ibp-vertical-panel-button-container,
+	.ibp-full-page-center-panel-button-container {
+		width: 31rem;
+
+		&.ibp-button-container {
+			justify-content: flex-end;
+
+			.ibp-button {
+				&:first-child:last-child {
+					background-color: $action;
+					display: block;
+					flex-grow: 0;
+					flex-shrink: 0;
+					flex-basis: 50%;
+					margin-left: auto;
+				}
+			}
+		}
+	}
+
+	.ibp-vertical-panel-close {
+		right: 3rem;
+		top: 4rem;
+	}
+
+	.ibp-vertical-panel-button-container,
+	.ibp-full-page-center-panel-button-container {
+		height: 6rem;
+
+		.ibp-button {
+			height: 100%;
+		}
+	}
+}
+
+.ibp-button-container {
+	background-color: $sidePanelBackground;
+	bottom: 0;
+	display: flex;
+	justify-content: flex-start;
+	position: fixed;
+	right: 0;
+	width: 37rem;
+	z-index: $panelOpenButtonLayer;
+
+	.ibp-button {
+		border: 0;
+		color: $text;
+		cursor: pointer;
+		height: 4rem;
+		padding: 1rem 1rem 2rem 1rem;
+		position: relative;
+		text-align: left;
+		width: 50%;
+		background-color: $cancelButton;
+		transition: $basic-duo-transition;
+
+		&:focus {
+			box-shadow: inset 0px 0px 0px 2px white;
+			outline: 0;
+		}
+
+		span {
+			position: absolute;
+			top: 1rem;
+		}
+	}
+
+	.ibp-button:hover,
+	.ibp-button:focus {
+		background-color: $cancelButtonHover;
+	}
+
+	.ibp-button:first-child:last-child {
+		flex-grow: 0;
+		flex-shrink: 0;
+		flex-basis: 50%;
+		width: 50%;
+
+		&#back {
+
+			&:hover,
+			&:focus {
+				background-color: $cancelButtonHover;
+			}
+		}
+	}
+
+	.ibp-button#submit:first-child:last-child {
+		background-color: $action;
+	}
+
+	.ibp-button:last-child:not(:first-child):not(:disabled) {
+		background-color: $action;
+	}
+
+	.ibp-button:not(#cancel):last-child:focus,
+	.ibp-button:not(#cancel):last-child:hover {
+		background-color: $actionHover;
+
+		&#confirm_remove {
+
+			&:focus,
+			&:hover {
+				background-color: $hover-danger;
+			}
+		}
+
+		&#close {
+			background-color: $cancelButtonHover;
+		}
+	}
+
+	.ibp-button:disabled,
+	.ibp-button:disabled:hover {
+		//background-color: $buttonDisabled;
+		cursor: not-allowed;
+		opacity: 0.3;
+	}
+
+	.ibp-side-panel-submitting-spinner {
+		position: absolute;
+		top: 0.75rem;
+		right: 1rem;
+
+		svg {
+			stroke: $text;
+		}
+	}
+
+	.warnText {
+		font-size: .9rem;
+		top: -1.6rem;
+		position: absolute;
+		color: #f44a4a;
+		font-weight: 500;
+		margin: 0;
+		left: 0rem;
+		background: #121619;
+		padding-left: 2.5rem;
+		padding-bottom: 0.5rem;
+		width: 100%;
+	}
+}
+
+.ibp-panel--close-icon-button {
+	background-color: transparent;
+	border: 0;
+	cursor: pointer;
+	display: flex;
+	height: 1.5rem;
+	justify-content: center;
+	padding: 0;
+	position: absolute;
+	right: 1.375rem;
+	top: 0.7rem;
+	width: 1.5rem;
+	z-index: $panelOpenLayer;
+}
+
+textarea.bx--text__input {
+	resize: none;
+}
+
+@keyframes sidePanelEnter {
+	0% {
+		transform: translateX(10rem);
+	}
+
+	100% {
+		transform: translateX(0px);
+	}
+}
+
+@keyframes sidePanelLeave {
+	0% {
+		opacity: 1;
+		transform: translateX(0px);
+	}
+
+	100% {
+		opacity: 0;
+		transform: translateX(10rem);
+	}
+}
+
+@keyframes verticalPanelEnter {
+	0% {
+		transform: translateY(10rem);
+	}
+
+	100% {
+		transform: translateY(0px);
+	}
+}
+
+@keyframes verticalPanelLeave {
+	0% {
+		opacity: 1;
+		transform: translateY(0px);
+	}
+
+	100% {
+		opacity: 0;
+		transform: translateY(10rem);
+	}
+}
+
+.side__panel--transitioning--out {
+	animation: sidePanelLeave 350ms infinite;
+	animation-fill-mode: forwards;
+}
+
+.side__panel--transitioning--in {
+	animation: sidePanelEnter 350ms infinite;
+	animation-fill-mode: forwards;
+}
+
+.side__panel--large--transitioning--out {
+	animation: sidePanelLeave 600ms infinite;
+	animation-fill-mode: forwards;
+}
+
+.side__panel--large--transitioning--in {
+	animation: sidePanelEnter 600ms infinite;
+	animation-fill-mode: forwards;
+}
+
+.vertical__panel--transitioning--in {
+	animation: verticalPanelEnter 300ms infinite;
+	animation-fill-mode: forwards;
+}
+
+.vertical__panel--transitioning--out {
+	animation: verticalPanelLeave 300ms infinite;
+	animation-fill-mode: forwards;
+}
+
+.side__panel--outer--container,
+.vertical__panel--outer--container {
+	bottom: 0;
+	height: 100vh;
+	position: fixed;
+	right: 0;
+	z-index: $panelOpenLayer;
+
+	.ibp-side-panel-submitting-overlay {
+		background-color: rgba(0, 0, 0, 0.5);
+		color: #ffffff;
+		height: calc(100vh - 4rem);
+		padding-bottom: 2.5rem;
+		overflow-y: auto;
+		padding-left: 2rem;
+		padding-right: 2rem;
+		padding-top: 2.5rem;
+		position: fixed;
+		right: 0;
+		top: 0;
+		width: 100%;
+		z-index: $firstLayer;
+	}
+
+	.ibp-side-panel-submitting-overlay.ibp-large-side-panel-overlay {
+		width: 100%;
+	}
+
+	.ibp-side-panel-submitting-overlay.ibp-vertical-panel-overlay {
+		height: 100%;
+		left: 2rem;
+		top: 3rem;
+		width: calc(100% - 4rem);
+	}
+}
+
+.ibp-large-panel-error {
+	.bx--accordion {
+		padding-bottom: 10rem;
+	}
+}
+
+.vertical__panel--outer--container {
+
+	.ibp-button-container.ibp-vertical-panel-button-container,
+	.ibp-button-container.ibp-full-page-center-panel-button-container {
+		.ibp-button.ibm-label {
+			height: 6rem;
+		}
+	}
+}
+
+
+.ibp-panel-content-children.ibp-full-page-center-children {
+	padding-left: 0;
+}

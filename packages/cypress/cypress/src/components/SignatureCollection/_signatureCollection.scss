@@ -1,0 +1,191 @@
+@keyframes batchActionEnter {
+	0% {
+		transform: translateY(-4rem);
+	}
+
+	100% {
+		transform: translateY(0px);
+	}
+}
+
+.ibp-signature-header-icon {
+	height: 1.25rem;
+}
+
+.ibp-title-bar-signatures {
+	display: flex;
+	height: 3rem;
+	position: relative;
+	flex-grow: 0;
+	height: 100%;
+}
+
+.ibp-signature-container {
+	@include carbon--type-style('body-short-01');
+	background-color: $background;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	width: 100%;
+
+	.ibp-signature-container-header {
+		align-items: center;
+		background-color: $carbon--cool-gray-100;
+		display: flex;
+		flex-grow: 0;
+		flex-shrink: 0;
+		height: 3rem;
+		justify-content: space-between;
+		padding-bottom: 0.75rem;
+		padding-top: 0.25rem;
+		position: fixed;
+		width: 31.875rem;
+		z-index: $secondLayer;
+
+		&:before {
+			content: '';
+			position: absolute;
+			width: calc(100% + 4rem);
+			background: #373d42;
+			height: 1px;
+			bottom: 0;
+			left: -2rem;
+			right: 0;
+		}
+
+		.ibp-signature-container-header-value {
+			color: $carbon--cool-gray-30;
+		}
+
+		.bx--dropdown__wrapper {
+			margin-left: 10rem;
+			position: absolute;
+		}
+	}
+
+	.ibp-header-icon-button-container {
+		height: 3rem;
+		position: absolute;
+		top: 0.25rem;
+		right: 1rem;
+		padding-bottom: 0.25rem;
+		border-bottom: solid 0.25rem $action;
+	}
+
+	.ibp-signature-container-header-label {
+		@include carbon--font-weight('semibold');
+		margin-right: 1rem;
+	}
+
+	.ibp-signature-collection-body {
+		flex-grow: 1;
+		flex-shrink: 0;
+		margin-top: 3.75rem;
+		overflow: auto;
+	}
+}
+
+.ibp-signature-request-header {
+	border-bottom: 1px solid $carbon--cool-gray-80;
+	height: 3rem;
+	padding: 1rem;
+	margin-bottom: 1rem;
+	display: flex;
+	justify-content: space-between;
+}
+
+.ibp-signature-request {
+	margin-top: 0.5rem;
+}
+
+.test-button {
+	margin-left: 1rem;
+}
+
+.bx--tooltip.bx--tooltip--shown.ibp-signature-request-tooltip {
+	color: $white;
+	background-color: $itemBackground;
+	min-width: auto;
+	padding: 0.5rem 1rem;
+	text-align: center;
+	width: auto;
+}
+
+#signature-collection {
+	.ibp-panel--content {
+		padding-top: 0.75rem;
+		position: relative;
+	}
+}
+
+.ibp-signature-requests-empty-container {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	justify-content: center;
+	padding-top: 3.75rem;
+
+	.ibp-signature-empty-desc {
+		@include carbon--type-style('body-short-01');
+		color: $carbon--cool-gray-30;
+		padding-top: 0.5rem;
+		text-align: center;
+	}
+
+	.ibp-signature-requests-empty-img {
+		padding-bottom: 2rem;
+	}
+}
+
+.ibp-archive-batch-action-bar {
+	align-items: center;
+	background-color: $action;
+	display: flex;
+	height: 4rem;
+	justify-content: space-between;
+	left: 0;
+	padding: 0 1rem;
+	position: absolute;
+	right: 0;
+	top: 0;
+	transition: $basic-duo-transition;
+	z-index: $thirdLayer;
+
+	.ibp-archive-bar-item {
+		@include carbon--type-style('body-short-01');
+
+		.ibp-archive-bar-button {
+			@include carbon--type-style('body-short-01');
+			background: transparent;
+			border: 0;
+			color: $carbon--white-0;
+			cursor: pointer;
+			height: 4rem;
+			transition: $basic-duo-transition;
+
+			&:hover {
+				background-color: $actionHover;
+			}
+
+			&:focus {
+				background-color: $actionHover;
+				box-shadow: inset 0px 0px 0px 2px $carbon--white-0;
+				outline: 0;
+			}
+		}
+	}
+}
+
+.ibp-batch-action-bar-opening {
+	animation: batchActionEnter 250ms 1;
+	animation-fill-mode: both;
+	transition: $basic-duo-transition;
+}
+
+.ibp-signature-container {
+	.ibp-panel--close-icon-button {
+		position: absolute;
+		top: 0.5rem;
+	}
+}

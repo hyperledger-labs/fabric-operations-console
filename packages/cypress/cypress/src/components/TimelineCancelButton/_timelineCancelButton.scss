@@ -1,0 +1,36 @@
+.ibp-timeline-cancel-button {
+	background-color: transparent;
+	border: 0;
+	bottom: 3rem;
+	cursor: pointer;
+	height: 6rem;
+	left: 0;
+	padding: 1rem 1rem 2rem 1rem;
+	position: absolute;
+	text-align: left;
+	width: 19.5rem;
+
+	.ibp-timeline-cancel-button-label {
+		@include carbon--type-style('body-short-01');
+		color: $carbon--blue-50;
+	}
+
+	.ibp-timeline-cancel-button-label-subtext {
+		@include carbon--type-style('label-01');
+		color: $carbon--cool-gray-30;
+	}
+
+	&:hover,
+	&:focus {
+		transition: $basic-duo-transition;
+	}
+
+	&:hover {
+		background-color: $itemBackground;
+	}
+
+	&:focus {
+		box-shadow: inset 0px 0px 0px 2px white;
+		outline: 0;
+	}
+}

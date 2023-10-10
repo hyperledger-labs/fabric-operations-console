@@ -1,0 +1,84 @@
+.ibp-upload-toggle {
+	margin-bottom: 1rem;
+}
+
+.ibp-upload-pkg {
+	.bx--label {
+		color: #ffffff;
+		font-weight: 600;
+	}
+
+	.bx--label-description {
+		font-size: 0.75rem;
+	}
+
+	.ibp-pkg-item {
+		background-color: $field-background;
+		border: 2px solid $field-border;
+		margin-top: 1rem;
+		margin-bottom: 0.5rem;
+		position: relative;
+
+		.ibp-pkg-delete {
+			position: absolute;
+			right: 0.5rem;
+			top: 0.5rem;
+			cursor: pointer;
+			background-color: transparent;
+			border: none;
+
+			.ibp-pkg-delete-icon {
+				width: 1rem;
+			}
+		}
+
+		.bx--label {
+			display: none;
+		}
+
+		.bx--text-input__field-wrapper {
+			.bx--text-input__invalid-icon {
+				right: 2.5rem;
+			}
+
+			.bx--text-input--invalid {
+				padding-right: 4rem;
+			}
+		}
+	}
+}
+
+.ibp-policy-switch {
+	margin-bottom: 1rem;
+}
+
+.ibp-propose-chaincode-summary {
+	.summary-value {
+		width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+}
+
+.ibp-implicit-policy-div.ibp-specific-policy-div {
+	padding-bottom: 5rem;
+}
+
+.ibp-propose-advanced-policy-div {
+	.ibp-propose-advanced-policy-learn-more {
+		font-size: 0.75rem;
+
+		.tl-link {
+			font-size: 0.75rem;
+		}
+	}
+}
+
+.ibp-highlight-msp {
+	color: white;
+	font-weight: 600;
+}
+
+div.ibp-highlight-msp {
+	margin-bottom: 1rem;
+}

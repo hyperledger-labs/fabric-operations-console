@@ -1,0 +1,19 @@
+.ibp-visibility-toggle {
+	background-color: transparent;
+	border: none;
+	display: inline-block;
+	margin-top: 6px;
+	padding-top: 4px;
+	vertical-align: top;
+	position: absolute;
+	right: 0.25rem;
+	top: 0;
+
+	svg>g {
+		fill: $carbon--cool-gray-30;
+	}
+
+	svg:hover>g {
+		fill: $carbon--cool-gray-10;
+	}
+}

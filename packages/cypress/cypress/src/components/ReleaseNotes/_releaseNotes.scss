@@ -1,0 +1,71 @@
+//Support \/  \/  \/
+.ibp-note-header {
+	border-right: 1px solid $carbon--cool-gray-50;
+	padding-right: 1rem;
+}
+
+.ibp-note-current-version {
+	padding-bottom: 0.25rem;
+	padding-top: 0.4rem;
+}
+
+.ipb-note-current {
+	@include carbon--type-style('label-01');
+	padding: 0.25rem 0 0 1rem;
+	min-width: 5rem;
+}
+
+.ipb-note-header-container {
+	display: flex;
+	height: 3.25rem;
+}
+
+.ibp-note-container {
+	width: 100%;
+	min-height: 6rem;
+	margin-bottom: 0.5rem;
+	padding: 1rem 1rem 0rem 1rem;
+	display: flex;
+}
+
+.ibp-note-table-container {
+	max-height: 25rem;
+	overflow-y: auto;
+}
+
+.ibp-note-table-container {
+	&:hover {
+		overflow-y: scroll;
+	}
+}
+
+.ibp-note-version {
+	@include carbon--type-style('body-short-01');
+}
+
+.ibp-note-date {
+	@include carbon--type-style('label-01');
+	display: inline-block;
+	width: 10rem;
+}
+
+.ibp-note-descrption {
+	@include carbon--type-style('body-short-01');
+	display: inline-block;
+	max-width: 55rem;
+}
+
+.ibp-note-bullet {
+	margin-bottom: 0.5rem;
+	display: flex;
+}
+
+.ibp-note-bullet-point {
+	display: inline-block;
+	padding-right: 0.5rem;
+	padding-top: 0.25rem;
+}
+
+.ibp-note-bullet-text {
+	line-height: 1.5rem;
+}

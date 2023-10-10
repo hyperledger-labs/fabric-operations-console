@@ -1,0 +1,54 @@
+$background: $carbon--cool-gray-100;
+$text: $carbon--white-0;
+$inverseText: $carbon--cool-gray-90;
+$inverseBackground: $text;
+$inverseText: $background;
+$itemBackground: $carbon--cool-gray-90;
+$itemHover: $carbon--cool-gray-80;
+$action: $interactive-01;
+$actionHover: $carbon--blue-70;
+$secondaryAction: $carbon--blue-70;
+$secondaryActionHover: $carbon--blue-80;
+$navigationHover: $carbon--blue-40;
+$cancelButton: $carbon--cool-gray-60;
+$cancelButtonHover: $carbon--cool-gray-70;
+$buttonDisabled: $carbon--cool-gray-80;
+$sidePanelBackground: $carbon--cool-gray-100;
+$success: $carbon--green-50;
+$white: $carbon--white-0;
+
+// alert colors
+$running: $carbon--green-50;
+$pending: $support-03;
+$warning: $support-03;
+$warningSecondary: #735f1b;
+$stopped: $support-01;
+$stoppedSecondary: $carbon--red-80;
+
+// fields
+$field-background: $carbon--cool-gray-90;
+$field-color: $carbon--cool-gray-50;
+$field-border: transparent;
+$field-label-color: $carbon--cool-gray-30;
+$field-focus-color: $carbon--cool-gray-10;
+$field-focus-border: $carbon--white-0;
+$field-error: $support-01;
+
+// color coding
+$codeKeywordPrimary: $carbon--purple-40;
+$codeKeywordSecondary: $carbon--teal-40;
+
+// transition
+$basic-duo-transition: all 0.2s cubic-bezier(0.2, 0.2, 0.38, 0.9);
+
+// z index variables
+$pageContentLayer: 0;
+$firstLayer: 1000;
+$secondLayer: 2000;
+$thirdLayer: 3000;
+$fourthLayer: 4000;
+$fifthLayer: 5000;
+$panelOpenLayer: 6000;
+$panelOpenButtonLayer: 7000;
+$sidePanelError: 8000;
+$highestLayer: 10001;

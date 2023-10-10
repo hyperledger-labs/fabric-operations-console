@@ -1,0 +1,34 @@
+.ibp-node-orderer-tile-name,
+.ibp-node-orderer-tile-msp {
+	@include carbon--type-style('body-short-01');
+	@include carbon--font-weight('regular');
+	color: $carbon--cool-gray-30;
+}
+
+.ibp-node-orderer-tile-msp {
+	@include singleLineEllipsis;
+	padding-top: 0.5rem;
+}
+
+.ipb-node-orderer-tile-cloud-type {
+	@include carbon--font-weight('semibold');
+	bottom: 1rem;
+	color: $carbon--cool-gray-30;
+	position: absolute;
+	font-size: 0.875rem;
+}
+
+.ibp-requires-attention {
+	width: 100%;
+
+	p {
+		font-style: italic;
+		font-size: 0.875rem;
+	}
+
+	.ibp-notification-icon {
+		position: absolute;
+		top: 0;
+		right: 2rem;
+	}
+}

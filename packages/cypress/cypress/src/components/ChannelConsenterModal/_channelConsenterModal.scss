@@ -1,0 +1,19 @@
+.ibp-remove-consenter-desc,
+.ibp-remove-consenter-confirm,
+.ibp-update-consenter-desc,
+.ibp-update-consenter-confirm {
+	margin-bottom: 1rem;
+}
+
+#confirm_remove:not(:disabled) {
+	background-color: $inverse-support-01;
+}
+
+#confirm_remove:focus,
+#confirm_remove:hover:not(:disabled) {
+	background-color: $hover-danger;
+}
+
+.ibp-update-consenter-cert {
+	margin-bottom: 2rem;
+}

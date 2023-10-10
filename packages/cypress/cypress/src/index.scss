@@ -1,0 +1,765 @@
+$feature-flags: (
+	grid-columns-16: true,
+);
+@import '@carbon/themes/scss/themes.scss';
+@import '@carbon/colors/scss/colors.scss';
+@import './assets/sass/carbonTheme';
+@include carbon--theme();
+
+// import Carbon styles here
+@import './assets/sass/imports';
+
+$better_disabled_text_color: #505456;
+
+* {
+	font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+	font-size: 100%;
+}
+
+html {
+	@include carbon--type-style('body-short-02');
+	-moz-osx-font-smoothing: grayscale;
+	font-smoothing: antialiased;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+	height: 100%;
+}
+
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+h1 {
+	@include carbon--type-style('productive-heading-05');
+}
+
+h2 {
+	@include carbon--type-style('productive-heading-04');
+}
+
+h3 {
+	@include carbon--type-style('productive-heading-03');
+}
+
+h4 {
+	@include carbon--type-style('heading-02');
+}
+
+h5 {
+	@include carbon--type-style('heading-01');
+}
+
+p,
+button,
+input {
+	@include carbon--type-style('body-short-02');
+	@include carbon--font-face-sans();
+}
+
+.ibp-text-label,
+small {
+	@include carbon--type-style('body-short-01');
+}
+
+#root {
+	height: 100%;
+}
+
+// carbon overrides
+
+.bx--btn--tertiary {
+
+	&:hover,
+	&:focus {
+		color: $inverseText;
+	}
+}
+
+.bx--skeleton__placeholder,
+.bx--skeleton__text {
+	background-color: $carbon--cool-gray-70;
+}
+
+// Set correct hover color of data table rows
+.bx--data-table {
+	th {
+		background-color: $carbon--cool-gray-80;
+
+		&.bx--table-column-checkbox {
+			background-color: $carbon--cool-gray-80;
+		}
+	}
+
+	td {
+		background-color: $carbon--cool-gray-90;
+	}
+
+	tbody {
+		tr {
+			td {
+				padding-bottom: 0;
+			}
+
+			&:hover {
+				td {
+					background: $carbon--cool-gray-80;
+				}
+			}
+		}
+	}
+}
+
+.bx--text-input {
+	&::placeholder {
+		color: $better_disabled_text_color;
+	}
+}
+
+.bx--text-input,
+.bx--dropdown,
+.bx--pagination {
+	background-color: $carbon--cool-gray-90;
+}
+
+.bx--pagination {
+	.bx--select__page-number {
+		.bx--select-input {
+			border-left: 0;
+		}
+
+		.bx--select-input {
+			&:hover {
+				background-color: $carbon--cool-gray-90;
+			}
+		}
+	}
+}
+
+.bx--dropdown {
+	&:hover {
+		background-color: $carbon--cool-gray-80;
+	}
+
+	.bx--list-box__menu-item--highlighted,
+	.bx--list-box__menu {
+		background-color: $carbon--cool-gray-90;
+	}
+}
+
+.bx--data-table-container {
+	overflow: visible;
+}
+
+.bx--overflow-menu-options::before {
+	display: none;
+}
+
+.bx--overflow-menu-options .bx--overflow-menu-options__btn {
+	color: $text;
+}
+
+.bx--overflow-sdk-item-btn {
+	height: 2.95rem;
+}
+
+.bx--tabs {
+	border-bottom: 1px solid $carbon--cool-gray-70;
+
+	.bx--tabs__nav {
+		.bx--tabs__nav-item.bx--tabs__nav-item--selected {
+			@include carbon--font-weight('semibold');
+			border-bottom: 2px solid $action;
+
+			.bx--tabs__nav-link {
+				color: $white;
+				padding: 0.75rem 0.75rem 0.75rem 1rem;
+
+				&:hover,
+				&:focus {
+					border-bottom: 0;
+					box-shadow: none;
+				}
+			}
+		}
+
+		.bx--tabs__nav-item {
+			@include carbon--font-weight('regular');
+			align-items: flex-end;
+			display: flex;
+			padding: 0;
+
+			.bx--tabs__nav-link {
+				padding: 0.75rem 0.75rem 0.75rem 1rem;
+			}
+
+			&:not(.bx--tabs__nav-item--selected) {
+				.bx--tabs__nav-link {
+					border-bottom: 2px solid transparent;
+
+					&:hover {
+						border-bottom: 2px solid $white;
+						box-shadow: none;
+						color: $white;
+					}
+				}
+			}
+		}
+
+		.bx--tabs__nav-item+.bx--tabs__nav-item {
+			margin-left: 0;
+		}
+	}
+}
+
+.bx--tabs__nav-item:hover .bx--tabs__nav-link {
+	color: white;
+}
+
+.bx--tooltip__trigger {
+
+	&:hover path,
+	&:focus path {
+		fill: $carbon--cool-gray-40;
+	}
+
+	path,
+	polygon,
+	circle {
+		fill: $carbon--cool-gray-30;
+	}
+}
+
+.bx--toggle__label {
+	margin-top: 0;
+	margin-right: 1rem;
+}
+
+.bx--toggle__check {
+	display: none;
+}
+
+.bx--toggle--small:checked+.bx--toggle__label .bx--toggle__appearance:before,
+.bx--toggle:checked+.bx--toggle__label .bx--toggle__appearance:after {
+	background-color: $carbon--cool-gray-70;
+	border-color: $carbon--cool-gray-70;
+	margin-top: 0.25rem;
+}
+
+.bx--toggle--small:checked+.bx--toggle__label .bx--toggle__appearance:after {
+	background-color: $carbon--green-30;
+	border-color: $carbon--green-30;
+	margin-left: 0px;
+	-webkit-transform: translateX(17px);
+	transform: translateX(17px);
+}
+
+.bx--toggle--small:focus+.bx--toggle__label .bx--toggle__appearance:before {
+	box-shadow: 0 0 0 3px $carbon--cool-gray-40;
+	outline: 1px solid transparent;
+}
+
+.bx--tooltip {
+	@include carbon--type-style('body-short-01');
+	min-width: 15rem;
+
+	.bx--tooltip__caret {
+		background: transparent;
+		left: 10rem;
+	}
+
+	&.bx--tooltip--shown {
+		background-color: $carbon--cool-gray-10;
+		color: $inverseText;
+		line-height: 1.45;
+	}
+}
+
+.bx--dropdown__wrapper {
+	min-width: 10rem;
+
+	.bx--list-box__menu-item.bx--list-box__menu-item--highlighted {
+		&:hover {
+			background-color: $carbon--cool-gray-80;
+		}
+	}
+}
+
+.bx--tooltip__trigger {
+	align-items: flex-end;
+}
+
+.ibp-error-panel {
+	width: 100%;
+
+	.bx--inline-notification--info {
+		border: none;
+		border-left: 6px solid #ffcc00;
+		color: black;
+		margin: 1.5rem 0 0 0;
+
+		.bx--inline-notification__icon {
+			fill: #ffcc00;
+		}
+	}
+
+	.bx--inline-notification__details {
+
+		.bx--inline-notification__title,
+		.bx--inline-notification__subtitle {
+			color: $inverseText;
+		}
+	}
+
+	.bx--inline-notification--error {
+		color: black;
+		margin-bottom: 2rem;
+	}
+}
+
+.bx--snippet--inline {
+	background-color: $carbon--cool-gray-10;
+	color: $inverseText;
+
+	&:hover {
+		background-color: $carbon--cool-gray-20;
+	}
+
+	&:focus {
+		border: 2px solid $action;
+		outline: none;
+	}
+}
+
+.bx--toast-notification {
+
+	.bx--toast-notification__close-icon,
+	.bx--toast-notification__icon {
+		fill: $carbon--cool-gray-80;
+	}
+}
+
+// Link styling
+
+.ibp-link {
+	border-bottom: 1px solid transparent;
+	text-decoration: none;
+	color: $carbon--blue-40;
+	display: inline-block;
+
+	&:hover {
+		border-bottom: 1px solid $carbon--blue-40;
+		display: inline-block;
+	}
+}
+
+.ibp-button-link {
+	background: transparent;
+	border: 0;
+	border-bottom: 1px solid transparent;
+	padding: 0;
+
+	& * {
+		color: $carbon--blue-40;
+	}
+
+	&:hover {
+		border-bottom: 1px solid $carbon--blue-40;
+		display: inline-block;
+	}
+}
+
+.ibm .bx--data-table-v2 .bx--overflow-menu {
+	height: 2.75rem;
+}
+
+.ibp-node-name-removal {
+	background-color: $carbon--cool-gray-20;
+	border-radius: 4px;
+	display: inline-block;
+	margin-top: 1rem;
+	padding: 0.125rem 0.25rem;
+}
+
+.ibp-hover-text {
+	background-color: $white;
+	color: $inverseText;
+	display: block;
+	top: -3rem;
+
+	.bx--tooltip__caret {
+		left: 3rem;
+		right: auto;
+	}
+}
+
+.ibp-container-cell-item {
+	.ibp-hover-text {
+		top: auto;
+		bottom: 2rem;
+	}
+}
+
+.ibp-tooltip-wrap {
+	align-items: flex-end;
+	display: flex;
+}
+
+.ibp-node-status-container {
+	.ibp-node-status {
+		height: 1.25rem;
+		position: absolute;
+		right: 0;
+		top: 0;
+		transform: translateY(0);
+		width: 1.25rem;
+
+		&:hover+.ibp-node-status-label,
+		&:focus+.ibp-node-status-label {
+			display: block;
+			opacity: 1;
+			transform: translateY(-2.125rem);
+		}
+	}
+
+	&:focus {
+		.ibp-node-status-label {
+			display: block;
+			opacity: 1;
+			transform: translateY(-2.125rem);
+		}
+	}
+
+	.ibp-node-status.ibp-node-status-skeleton {
+		animation: skeletonShimmer 600ms linear infinite forwards alternate;
+		background-color: $carbon--cool-gray-70;
+	}
+
+	.ibp-node-status-label {
+		@include carbon--type-style('body-short-01');
+		background-color: #fff;
+		color: $inverseText;
+		padding: 0.5rem;
+		position: absolute;
+		top: 0;
+		transition: all 0.25s ease;
+		right: 0;
+		opacity: 0;
+		display: none;
+	}
+
+	.ibp-node-status-running {
+		background-color: $success;
+	}
+
+	.ibp-node-status-running-partial {
+		background-color: $warning;
+	}
+
+	.ibp-node-status-stopped {
+		background: repeating-linear-gradient(135deg, $stopped, $stopped 2px, $stoppedSecondary 2px, $stoppedSecondary 4px);
+	}
+
+	.ibp-node-status-unretrievable {
+		background: repeating-linear-gradient(135deg, $warning, $warning 2px, $warningSecondary 2px, $warningSecondary 4px);
+	}
+
+	.ibp-node-status-unknown {
+		background-color: $carbon--cool-gray-40;
+	}
+}
+
+.ibp-table-status {
+	border: 1px solid $carbon--cool-gray-40;
+	border-radius: 4px;
+	display: inline-block;
+	height: 8px;
+	margin-right: 0.5rem;
+	width: 8px;
+}
+
+.ibp-table-status-running {
+	background-color: $carbon--green-40;
+	border-color: $carbon--green-40;
+}
+
+.ibp-table-status-running_partial {
+	background-color: $warning;
+	border-color: $warning;
+}
+
+.ibp-table-status-stopped {
+	background-color: $carbon--red-50;
+	border-color: $carbon--red-50;
+}
+
+.ibp-table-status-unretrievable {
+	background: $warning;
+}
+
+.ibp-table-status-unknown,
+.ibp-table-status-status-undetected {
+	background-color: $carbon--cool-gray-40;
+}
+
+.ibp-inline--tooltip-trigger {
+	margin: 0;
+
+	.bx--tooltip__trigger {
+		align-items: center;
+		display: flex;
+		height: 1.25rem;
+		justify-content: center;
+		margin: 0;
+		width: 1.25rem;
+
+		svg {
+			height: 1.25rem;
+			width: 1.25rem;
+
+			path {
+				fill: $white;
+			}
+		}
+	}
+}
+
+.bx--tooltip.bx--tooltip--shown.ibp-inline--tooltip {
+	color: $carbon--cool-gray-80;
+	background-color: $white;
+	min-width: auto;
+	padding: 0.5rem 1rem;
+	text-align: center;
+	width: auto;
+
+	.bx--tooltip__caret {
+		left: 0;
+	}
+}
+
+.bx--btn--danger {
+	border-color: $carbon--red-60;
+}
+
+.summary-label {
+	display: inline-block;
+	padding-right: 2.5rem;
+	position: relative;
+}
+
+.ibp-patch-available-tab {
+	.bx--tabs__nav-link {
+		width: auto;
+
+		span {
+			position: relative;
+			top: -0.125rem;
+		}
+	}
+}
+
+.ibp-detail-page-icon-button {
+	justify-content: center;
+	min-width: 2rem;
+	max-width: 2rem;
+}
+
+.bx--text-input:disabled,
+.bx--checkbox:disabled+.bx--checkbox-label,
+.bx--checkbox-label[data-contained-checkbox-disabled='true'] {
+	color: $carbon--cool-gray-30;
+}
+
+.bx--checkbox:checked:focus+.bx--checkbox-label::before {
+	border-color: $action;
+}
+
+.ibp-orderer-details,
+.ibp-ca-details,
+.ibp-peer-details {
+	.bx--col-lg-4 {
+		padding-right: 0;
+	}
+}
+
+.bx--overflow-menu {
+	float: right;
+}
+
+.bx--accordion__item:not(.bx--accordion__item--active) {
+	height: 2.25rem;
+}
+
+.bx--accordion__heading {
+	height: inherit;
+	padding: 0.5rem 0;
+}
+
+.ibp--svg-white-fill {
+	fill: $carbon--white-0;
+}
+
+.ibm {
+	.bx--loading {
+		.bx--loading__svg {
+			.bx--loading__background {
+				stroke: $carbon--blue-40;
+			}
+
+			.bx--loading__stroke {
+				stroke: $carbon--white-0;
+			}
+		}
+	}
+}
+
+.ibp-third-party-ca-doc-link {
+	display: block;
+	margin-top: 1rem;
+	width: max-content;
+}
+
+.ibp-third-party-ca-doc-link:hover {
+	display: block;
+}
+
+.flex-d-column {
+	flex-direction: column;
+}
+
+.bx--tooltip__trigger.bx--tooltip__trigger--definition {
+	border-bottom-color: $carbon--blue-40;
+}
+
+#title_bar {
+	z-index: $secondLayer;
+}
+
+.bx--text-input:disabled,
+.bx--text-input[disabled] {
+	background-color: #{$carbon--cool-gray-90}80;
+	background-color: rgba(33, 39, 42, 0.5);
+	// Carbon cool gray 90 with alpha, fallback for IE, which does not support alpha values w/ hex
+	// We need this custom change until Carbon makes a disabled state that will pass color contrast a11y
+}
+
+.bx--tile--clickable,
+.bx--tile--selectable,
+.bx--tile--expandable,
+.bx--tile {
+	&:hover {
+		background-color: $carbon--cool-gray-80;
+	}
+}
+
+.bx--list-box--disabled .bx--list-box__label,
+.bx--list-box--disabled.bx--list-box--inline .bx--list-box__label,
+.bx--radio-button:disabled+.bx--radio-button__label {
+	color: $better_disabled_text_color;
+}
+
+.bx--content-switcher-btn.bx--content-switcher--selected {
+	&:focus {
+		box-shadow: inset 0 0 0 2px $action;
+	}
+}
+
+// override carbon, too dark
+.bx--dropdown--disabled .bx--dropdown-text,
+.bx--dropdown--disabled .bx--list-box__label {
+	color: $better_disabled_text_color;
+}
+
+.ibp-main svg,
+.ibp-fill-color,
+.bx--tooltip__trigger path,
+.bx--btn--secondary .bx--btn__icon path,
+.bx--list-box__menu-icon>svg,
+.bx--list-box__menu-item--active .bx--list-box__menu-item__selected-icon {
+	fill: white;
+}
+
+@media screen and (-ms-high-contrast: black-on-white) {
+
+	.ibp-main svg,
+	.ibp-fill-color,
+	.bx--tooltip__trigger path,
+	.bx--btn--secondary .bx--btn__icon path,
+	.bx--list-box__menu-icon>svg,
+	.bx--list-box__menu-item--active .bx--list-box__menu-item__selected-icon {
+		fill: black;
+	}
+
+	.bx--checkbox:disabled+.bx--checkbox-label,
+	.bx--checkbox-label[data-contained-checkbox-disabled='true'] {
+		opacity: 0.25;
+	}
+
+	.bx--dropdown--disabled {
+		outline: none;
+	}
+
+	.ibp-timeline-disabled-step {
+		opacity: 0.25;
+	}
+
+	.ibp-timeline-cancel-button:focus {
+		.ibp-timeline-cancel-button-label {
+			outline: 1px dotted;
+		}
+	}
+
+	.bx--toggle-input+.bx--toggle-input__label>.bx--toggle__switch::before {
+		background: linear-gradient(to top, $carbon--cool-gray-100, $carbon--cool-gray-90);
+	}
+
+	.bx--toggle-input:checked+.bx--toggle-input__label>.bx--toggle__switch::before {
+		background: linear-gradient(to top, $carbon--cool-gray-100, $carbon--cool-gray-90);
+	}
+
+	.bx--tile-input:checked+.bx--tile>.bx--tile__checkmark svg {
+		fill: black;
+	}
+
+	.ibp-welcome-banner-content {
+		.ibp-welcome-tile-item {
+
+			&:hover,
+			&:focus {
+				background: linear-gradient(to top, $carbon--cool-gray-100, $carbon--cool-gray-90);
+			}
+		}
+	}
+
+	.bx--dropdown__wrapper {
+		.bx--list-box__menu-item--highlighted {
+			.bx--list-box__menu-item__option {
+				text-decoration: underline;
+			}
+		}
+	}
+
+	.ibp-form-slider {
+
+		.bx--slider__thumb,
+		.bx--slider__thumb:active,
+		.bx--slider__filled-track {
+			background-color: black;
+		}
+	}
+
+	.ibm .ibp-archive-batch-action-bar .ibp-archive-bar-item .ibp-archive-bar-button {
+		border: 1px solid black;
+
+		&:focus {
+			outline: 1px dotted black;
+			outline-offset: -5px;
+		}
+	}
+}
+
+.bx--tooltip__label {
+	align-items: baseline;
+	color: $carbon--white-0;
+}

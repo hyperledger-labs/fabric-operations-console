@@ -1,0 +1,171 @@
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+		transform: translateY(-2rem);
+	}
+
+	100% {
+		opacity: 1;
+		transform: translateY(0px);
+	}
+}
+
+@keyframes fadeOut {
+	0% {
+		opacity: 1;
+	}
+
+	100% {
+		opacity: 0;
+	}
+}
+
+@keyframes bannerEnter {
+	0% {
+		transform: translateY(-21.625rem);
+	}
+
+	100% {
+		transform: translateY(0px);
+	}
+}
+
+@keyframes bannerLeave {
+	0% {
+		opacity: 1;
+		transform: translateY(0px);
+	}
+
+	100% {
+		opacity: 0;
+		transform: translateY(-21.625rem);
+	}
+}
+
+// entrance animation
+.ibp-welcome-banner-container {
+	.ibp-welcome-understand-section {
+		.ibp-welcome-tile-item {
+			animation: 0.25s ease-in-out forwards fadeIn;
+		}
+	}
+
+	.ibp-welcome-get-started-section {
+		.ibp-welcome-tile-item {
+			&:first-of-type {
+				border: 0;
+			}
+
+			&:nth-child(1) {
+				opacity: 0;
+				animation: 0.25s ease-in-out forwards fadeIn;
+				animation-delay: 0.25s;
+			}
+
+			&:nth-child(2) {
+				opacity: 0;
+				animation: 0.25s ease-in-out forwards fadeIn;
+				animation-delay: 0.5s;
+			}
+
+			&:nth-child(3) {
+				opacity: 0;
+				animation: 0.25s ease-in-out forwards fadeIn;
+				animation-delay: 0.75s;
+			}
+
+			&:nth-child(4) {
+				opacity: 0;
+				animation: 0.25s ease-in-out forwards fadeIn;
+				animation-delay: 1s;
+			}
+
+			&:nth-child(5) {
+				opacity: 0;
+				animation: 0.25s ease-in-out forwards fadeIn;
+				animation-delay: 1.25s;
+			}
+		}
+	}
+}
+
+.ibp-welcome-group-section.ibp-welcome-group-understand {
+	.ibp-welcome-tile-item {
+		&:last-of-type {
+			border-right: 1px solid $itemHover;
+		}
+	}
+}
+
+.ibp-welcome-tile-item {
+	max-width: 14rem;
+	min-width: 8.75rem;
+	margin-right: 1rem;
+	padding: 1.5rem 1rem 2.25rem 1rem;
+	cursor: pointer;
+	transition: $basic-duo-transition;
+	position: relative;
+	background: transparent;
+	border: 0;
+	color: $white;
+	text-align: left;
+	max-height: 11.25rem;
+	min-height: 11.25rem;
+
+	&:hover,
+	&:focus {
+		background: $itemHover;
+
+		.ibp-welcome-tile-launch-icon {
+			opacity: 1;
+		}
+	}
+
+	&:focus {
+		outline: 0;
+		box-shadow: inset 0px 0px 0px 2px $white;
+	}
+
+	.ibp-welcome-tile-header {
+		@include carbon--font-weight('semibold');
+		padding-bottom: 0.5rem;
+		padding-top: 0.75rem;
+	}
+
+	& p {
+		@include carbon--type-style('label-01');
+		color: $carbon--cool-gray-30;
+	}
+
+	& * {
+		@include carbon--type-style('body-short-01');
+	}
+
+	.ibp-welcome-tile-launch-icon {
+		transition: $basic-duo-transition;
+		position: absolute;
+		top: 1rem;
+		right: 1rem;
+		opacity: 0;
+		height: 12px;
+		width: 12px;
+	}
+
+	.ibp-welcome-banner-video-link {
+		@include carbon--type-style('label-01');
+		border: 0;
+		background: transparent;
+		text-align: left;
+		padding: 0;
+		color: $carbon--blue-40;
+		text-decoration: none;
+		border-bottom: 1px solid transparent;
+		cursor: pointer;
+		outline: 0;
+
+		&:hover,
+		&:focus {
+			border-bottom: 1px solid $carbon--blue-40;
+		}
+	}
+}

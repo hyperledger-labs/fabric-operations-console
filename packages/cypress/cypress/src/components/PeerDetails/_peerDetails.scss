@@ -1,0 +1,216 @@
+.ibm .ibp-peer-details-name {
+	margin-bottom: 0.5rem;
+}
+
+.ibp-peer-details-data {
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 2rem;
+	margin-top: 2rem;
+}
+
+.ibp-peer-details-status,
+.ibp-peer-details-usage {
+	margin-right: 2rem;
+
+	h4 {
+		margin-bottom: 1rem;
+	}
+}
+
+.ibp-peer-status-unknown,
+.ibp-peer-status-running,
+.ibp-peer-status-stopped {
+	background-color: $pending;
+	display: inline-block;
+	height: 0.75rem;
+	margin-right: 1rem;
+	width: 0.75rem;
+}
+
+.ibp-peer-status-running {
+	background-color: $running;
+}
+
+.ibp-peer-status-stopped {
+	background-color: $stopped;
+}
+
+.ibp-peer-details-status-link {
+	cursor: pointer;
+	margin-top: 1rem;
+	text-decoration: none;
+}
+
+.ibp-peer-details-cert-expiry-link {
+	margin-top: 1rem;
+}
+
+.ibp-peer-details-header {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 2rem;
+
+	.bx--skeleton__placeholder {
+		border-left: 0;
+		margin-left: 0;
+	}
+
+	>div {
+		align-items: baseline;
+		border-left: 1px solid $field-color;
+		color: $field-color;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		margin-left: 1rem;
+		padding-left: 1rem;
+		text-align: left;
+	}
+
+	.ibp-peer-settings-icon {
+		cursor: pointer;
+		width: 1.75rem;
+		height: 1.75rem;
+		padding: 0.25rem;
+		margin-top: -0.25rem;
+
+		.settingsIcon {
+			width: 1.25rem;
+			height: 1.25rem;
+		}
+	}
+}
+
+.ibp-peer-warning,
+.ibp-not-available {
+	margin-bottom: 1rem;
+}
+
+.ibp-usage-div {
+	margin-top: 1rem;
+
+	.ibp-item-container {
+		padding-top: 2.25rem;
+	}
+
+	.bx--table-toolbar {
+		display: none;
+	}
+
+	.ibp-container-list-add-button-img {
+		display: none;
+	}
+}
+
+.ibp-usage-buttons {
+	text-align: right;
+}
+
+#ibp-peer-usage,
+#ibp-ca-usage,
+#ibp-orderer-usage {
+	&.bx--tabs__nav-link {
+		span {
+			align-items: center;
+			display: flex;
+			position: relative;
+			top: 0.25rem;
+
+			.ibp-details-patch-container {
+				padding-left: 0.5rem;
+
+				.ibp-patch-available-tag.ibp-node-details {
+					@include carbon--font-weight('regular');
+					margin-top: 0;
+				}
+			}
+		}
+	}
+}
+
+.ibp-node-button-section {
+	.ibp-patch-button {
+		min-width: 9rem;
+
+		&.bx--btn.bx--btn--tertiary {
+
+			&:hover svg.bx--btn__icon,
+			&:focus svg.bx--btn__icon {
+				fill: $inverseText;
+			}
+		}
+	}
+}
+
+#peer-channels-container {
+	padding-top: 2rem;
+}
+
+.ibp-peer-details {
+	.ibp--node-details-sticky-container-content {
+		margin-top: 0;
+	}
+
+	.ibp-node-version-value {
+		margin-top: 1rem;
+		@include carbon--type-style('body-short-01');
+		color: $carbon--cool-gray-30;
+	}
+
+	.ibp-upgrade-available {
+		position: relative;
+		padding-bottom: 4rem;
+		background: linear-gradient(to right, #0000ff, #13171a);
+
+		.ibp-new-version-actions {
+			margin-top: 1rem;
+		}
+
+		button {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+		}
+	}
+
+	.ibp-usage-div {
+		.ibp-item-container {
+			padding-top: 0;
+		}
+	}
+
+	.ibp-node-version-and-hsm {
+		display: flex;
+		flex-direction: row;
+
+		.ibp-hsm-tab {
+			flex-direction: column;
+			padding-bottom: 5rem;
+			position: relative;
+
+			button {
+				position: absolute;
+				bottom: 0;
+				right: 0;
+			}
+		}
+
+		.ibp-hsm-tab:not(:first-child) {
+			margin-left: 2rem;
+			min-width: 60%;
+		}
+	}
+}
+
+.ibp-peer-action {
+	margin-right: 1rem;
+}
+
+.ibp-peer-no-identity {
+	margin-top: 1rem;
+
+	button {
+		margin-top: 1rem;
+	}
+}

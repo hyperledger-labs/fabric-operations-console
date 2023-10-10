@@ -1,0 +1,36 @@
+.ibp__auth-configuration--json {
+	@include carbon--type-style('body-short-01');
+	background: $carbon--cool-gray-80;
+	border: 1px solid $carbon--cool-gray-50;
+	color: $carbon--cool-gray-50;
+	margin-top: 2.5rem;
+	padding: 1rem;
+	resize: none;
+	width: 33rem;
+}
+
+.ibp__auth-json-help-icon {
+	margin-top: 2.5rem;
+}
+
+.ibp__auth-auth-manual {
+	margin-top: 2.5rem;
+}
+
+.ibp__auth-configuration--manual {
+	@include carbon--type-style('body-short-01');
+	color: $carbon--cool-gray-50;
+	cursor: pointer;
+	margin-top: 1.5rem;
+	text-decoration: underline;
+}
+
+.ibp__auth-configuration--manual-labels {
+	@include carbon--type-style('label-01');
+	color: $carbon--cool-gray-30;
+}
+
+.ibp__auth-configuration--error-message {
+	margin-top: 2rem;
+	width: 33rem;
+}

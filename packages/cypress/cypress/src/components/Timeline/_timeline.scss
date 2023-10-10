@@ -1,0 +1,128 @@
+.ibp-vertical-panel-timeline-container {
+	height: 100vh;
+	width: 19.5rem;
+	display: flex;
+	position: fixed;
+	left: 2rem;
+	top: 3rem;
+	bottom: 0;
+	border-right: 1px solid darken($carbon--cool-gray-100, 20%);
+	padding: 2.5rem 1.5rem 1.5rem 0;
+	flex-direction: column;
+
+	.ibp-vertical-panel-timeline-steps {
+		height: calc(100% - 7rem);
+		overflow-y: auto;
+		padding-left: 1.5rem;
+	}
+
+	.ibp-timeline-group-label {
+		@include carbon--type-style('label-01');
+		color: $carbon--cool-gray-30;
+	}
+
+	.ibp-template-timeline-estimate {
+		color: $carbon--cool-gray-30;
+		@include carbon--type-style('label-01');
+		padding: 0.5rem 0 1rem 0;
+	}
+
+	.ibp-timeline-step-container {
+		display: flex;
+		flex-direction: column;
+		padding: 0.25rem 0 1rem 0;
+		position: relative;
+
+		&.ibp-timeline-step-container-short {
+			padding: 0;
+		}
+
+		&.ibp-timeline-step-container-without-checks {
+			.ibp-timeline-group-step-container {
+				padding: 0.4rem 0;
+				position: relative;
+
+				.ibp-timeline-intro-step {
+					@include carbon--font-weight('semibold');
+				}
+			}
+
+			.ibp-template-timeline-label,
+			.ibp-timeline-label-only {
+				margin: 0;
+			}
+		}
+
+		&:not(.ibp-timeline-step-container-without-checks) {
+			.ibp-timeline-group-step-container {
+				display: flex;
+				align-items: center;
+				padding: 0.325rem 0;
+			}
+		}
+
+		.ibp-timeline-group-step-container {
+			.ibp-timeline-disabled-step {
+				color: $carbon--cool-gray-50;
+			}
+		}
+
+		.ibp-timeline-current-step-indicator {
+			background-color: $action;
+			height: 1.825rem;
+			left: -1.5rem;
+			max-height: 1.825rem;
+			position: absolute;
+			top: 0;
+			width: 0.1875rem;
+
+			&+.ibp-template-timeline-label {
+				font-weight: 700;
+				margin: 0;
+			}
+		}
+
+		.ibp-template-timeline-label {
+			@include carbon--type-style('body-short-01');
+			border: 0;
+			border-bottom: 1px solid transparent;
+			background: transparent;
+			padding: 0;
+			margin: 0 0 0 0.75rem;
+			color: white;
+			cursor: pointer;
+			text-align: left;
+
+			&:hover,
+			&:focus {
+				border-bottom: 1px solid $carbon--white-0;
+			}
+		}
+
+		.ibp-timeline-label-only {
+			@include carbon--type-style('body-short-01');
+			margin: 0 0 0 0.75rem;
+		}
+
+		.ibp-template-timeline-completed-step-svg {
+			fill: $carbon--blue-50;
+		}
+
+		.ibp-template-timeline-current-step {
+			background-color: $carbon--blue-50;
+			border-radius: 100%;
+			display: block;
+			height: 1rem;
+			width: 1rem;
+		}
+
+		.ibp-template-timeline-incomplete-step {
+			background-color: transparent;
+			border-radius: 100%;
+			border: 1px solid $carbon--white-0;
+			display: block;
+			height: 1rem;
+			width: 1rem;
+		}
+	}
+}

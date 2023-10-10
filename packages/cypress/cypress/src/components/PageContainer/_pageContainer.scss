@@ -1,0 +1,29 @@
+@keyframes slideInFromLeft {
+	0% {
+		transform: translate3d(-3px, 0, 0);
+		opacity: 0;
+	}
+
+	100% {
+		transform: translate3d(0, 0, 0);
+		opacity: 1;
+	}
+}
+
+.ibp-page-container {
+	padding-bottom: 4rem;
+	animation: 0.4s cubic-bezier(0.2, 0.2, 0.38, 0.9) 0s 1 slideInFromLeft;
+
+	&.bx--grid {
+		max-width: 99rem;
+		margin-right: auto;
+	}
+}
+
+@media (min-width: 1600px) {
+	.ibp-page-container {
+		&.bx--grid {
+			margin: 0;
+		}
+	}
+}

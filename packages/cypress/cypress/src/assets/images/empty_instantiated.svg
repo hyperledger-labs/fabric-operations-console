@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="206px" height="128px" viewBox="0 0 206 128" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Instantiated Smart Contract Illustration</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-19.2%" y="-31.9%" width="138.3%" height="163.9%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradient-2">
+            <stop stop-color="#50565B" offset="0%"></stop>
+            <stop stop-color="#6E757C" offset="100%"></stop>
+        </linearGradient>
+        <filter x="-19.2%" y="-31.9%" width="138.3%" height="163.9%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <filter x="-19.2%" y="-31.9%" width="138.3%" height="163.9%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <filter x="-36.4%" y="-36.4%" width="172.7%" height="172.7%" filterUnits="objectBoundingBox" id="filter-5">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Handover" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Smart-Contracts" transform="translate(-489.000000, -1193.000000)" fill-rule="nonzero">
+            <g id="Instantiated-Smart-Contract-Illustration" transform="translate(498.000000, 1200.000000)">
+                <g id="Left-Card" filter="url(#filter-1)" opacity="0.49827939" transform="translate(69.000000, 55.000000) rotate(-20.000000) translate(-69.000000, -55.000000) translate(9.000000, 19.000000)">
+                    <rect id="Rectangle" fill="#373D42" x="0" y="0" width="120" height="72" rx="1"></rect>
+                    <path d="M0,0 L119,0 C119.552285,-1.01453063e-16 120,0.44771525 120,1 L120,9 L0,9 L0,0 Z" id="Rectangle" fill="url(#linearGradient-2)"></path>
+                    <rect id="Rectangle-Copy" fill="#6E757C" x="8" y="13" width="40" height="6" rx="1"></rect>
+                    <rect id="Rectangle-Copy-4" fill="#6E757C" x="8" y="23" width="28" height="6" rx="1"></rect>
+                    <path d="M0,66 L120,66 L120,71 C120,71.5522847 119.552285,72 119,72 L1,72 C0.44771525,72 6.76353751e-17,71.5522847 0,71 L0,66 Z" id="Rectangle-Copy-7" fill="#50565B"></path>
+                    <rect id="Rectangle-Copy" fill="#6E757C" x="92" y="13" width="16" height="6" rx="1"></rect>
+                    <rect id="Rectangle-Copy-5" fill="#6E757C" x="92" y="23" width="12" height="6" rx="1"></rect>
+                    <rect id="Rectangle-Copy-3" fill="#6E757C" x="64" y="13" width="8" height="6" rx="1"></rect>
+                    <rect id="Rectangle-Copy-6" fill="#6E757C" x="64" y="23" width="8" height="6" rx="1"></rect>
+                </g>
+                <rect id="Rectangle" fill="#202529" transform="translate(119.000000, 55.000000) rotate(20.000000) translate(-119.000000, -55.000000) " x="59" y="19" width="120" height="72" rx="1"></rect>
+                <g id="Right-Card" filter="url(#filter-3)" opacity="0.5" transform="translate(119.000000, 55.000000) rotate(20.000000) translate(-119.000000, -55.000000) translate(59.000000, 19.000000)">
+                    <rect id="Rectangle" fill="#373D42" x="0" y="0" width="120" height="72" rx="1"></rect>
+                    <path d="M1,0 L119,0 C119.552285,-1.01453063e-16 120,0.44771525 120,1 L120,9 L0,9 L0,1 C-6.76353751e-17,0.44771525 0.44771525,1.01453063e-16 1,0 Z" id="Rectangle" fill="url(#linearGradient-2)"></path>
+                    <rect id="Rectangle-Copy" fill="#6E757C" x="8" y="13" width="40" height="6" rx="1"></rect>
+                    <rect id="Rectangle-Copy-4" fill="#6E757C" x="8" y="23" width="28" height="6" rx="1"></rect>
+                    <path d="M0,66 L120,66 L120,71 C120,71.5522847 119.552285,72 119,72 L1,72 C0.44771525,72 6.76353751e-17,71.5522847 0,71 L0,66 Z" id="Rectangle-Copy-7" fill="#50565B"></path>
+                    <rect id="Rectangle-Copy" fill="#6E757C" x="92" y="13" width="16" height="6" rx="1"></rect>
+                    <rect id="Rectangle-Copy-5" fill="#6E757C" x="92" y="23" width="12" height="6" rx="1"></rect>
+                    <rect id="Rectangle-Copy-3" fill="#6E757C" x="64" y="13" width="8" height="6" rx="1"></rect>
+                    <rect id="Rectangle-Copy-6" fill="#6E757C" x="64" y="23" width="8" height="6" rx="1"></rect>
+                </g>
+                <g id="Top-Card" filter="url(#filter-4)" transform="translate(34.000000, 19.000000)">
+                    <rect id="Rectangle" fill="#373D42" x="0" y="0" width="120" height="72" rx="1"></rect>
+                    <path d="M1,0 L119,0 C119.552285,-1.01453063e-16 120,0.44771525 120,1 L120,9 L0,9 L0,1 C-6.76353751e-17,0.44771525 0.44771525,1.01453063e-16 1,0 Z" id="Rectangle" fill="url(#linearGradient-2)"></path>
+                    <rect id="Rectangle-Copy" fill="#6E757C" x="8" y="13" width="40" height="6" rx="1"></rect>
+                    <rect id="Rectangle-Copy-4" fill="#6E757C" opacity="0.5" x="8" y="23" width="28" height="6" rx="1"></rect>
+                    <path d="M0,66 L120,66 L120,71 C120,71.5522847 119.552285,72 119,72 L1,72 C0.44771525,72 6.76353751e-17,71.5522847 0,71 L0,66 Z" id="Rectangle-Copy-7" fill="#50565B"></path>
+                    <rect id="Rectangle-Copy" fill="#6E757C" x="92" y="13" width="16" height="6" rx="1"></rect>
+                    <rect id="Rectangle-Copy-5" fill="#6E757C" opacity="0.5" x="92" y="23" width="12" height="6" rx="1"></rect>
+                    <rect id="Rectangle-Copy-3" fill="#6E757C" x="64" y="13" width="8" height="6" rx="1"></rect>
+                    <rect id="Rectangle-Copy-6" fill="#6E757C" opacity="0.5" x="64" y="23" width="8" height="6" rx="1"></rect>
+                </g>
+                <g id="Icon" filter="url(#filter-5)" transform="translate(102.000000, 80.000000)">
+                    <circle id="Oval" fill="#0F6FFF" cx="11" cy="11" r="11"></circle>
+                    <g id="data-set" transform="translate(5.000000, 5.000000)" fill="#FFFFFF">
+                        <path d="M10.1538462,4.15384615 L10.1538462,0 L9.23076923,0 L9.23076923,0.923076923 L7.84615385,0.923076923 L7.84615385,1.84615385 L9.23076923,1.84615385 L9.23076923,4.15384615 L7.84615385,4.15384615 L7.84615385,5.07692308 L11.5384615,5.07692308 L11.5384615,4.15384615 L10.1538462,4.15384615 Z M2.53846154,0.923076923 C3.43061383,0.923076923 4.15384615,1.64630925 4.15384615,2.53846154 C4.15384615,3.43061383 3.43061383,4.15384615 2.53846154,4.15384615 C1.64630925,4.15384615 0.923076923,3.43061383 0.923076923,2.53846154 C0.923076923,1.64630925 1.64630925,0.923076923 2.53846154,0.923076923 Z M2.53846154,0 C1.13650794,0 2.04964251e-16,1.13650794 0,2.53846154 C-4.09928501e-16,3.94041513 1.13650794,5.07692308 2.53846154,5.07692308 C3.94041513,5.07692308 5.07692308,3.94041513 5.07692308,2.53846154 C5.07692308,1.86521968 4.80947879,1.21955205 4.33342491,0.743498171 C3.85737102,0.267444287 3.2117034,0 2.53846154,0 Z M2.53846154,7.38461538 C3.43061383,7.38461538 4.15384615,8.10784771 4.15384615,9 C4.15384615,9.89215229 3.43061383,10.6153846 2.53846154,10.6153846 C1.64630925,10.6153846 0.923076923,9.89215229 0.923076923,9 C0.923076923,8.10784771 1.64630925,7.38461538 2.53846154,7.38461538 Z M2.53846154,6.46153846 C1.13650794,6.46153846 2.04964251e-16,7.5980464 0,9 C-4.09928501e-16,10.4019536 1.13650794,11.5384615 2.53846154,11.5384615 C3.94041513,11.5384615 5.07692308,10.4019536 5.07692308,9 C5.07692308,7.5980464 3.94041513,6.46153846 2.53846154,6.46153846 Z M9.46153846,7.38461538 C10.3536907,7.38461538 11.0769231,8.10784771 11.0769231,9 C11.0769231,9.89215229 10.3536907,10.6153846 9.46153846,10.6153846 C8.56938617,10.6153846 7.84615385,9.89215229 7.84615385,9 C7.84615385,8.10784771 8.56938617,7.38461538 9.46153846,7.38461538 Z M9.46153846,6.46153846 C8.05958487,6.46153846 6.92307692,7.5980464 6.92307692,9 C6.92307692,10.4019536 8.05958487,11.5384615 9.46153846,11.5384615 C10.8634921,11.5384615 12,10.4019536 12,9 C12,7.5980464 10.8634921,6.46153846 9.46153846,6.46153846 Z" id="Shape"></path>
+                    </g>
+                </g>
+                <g id="Dots" transform="translate(5.000000, 7.000000)">
+                    <circle id="Oval-Copy-15" fill="#BB8EFF" cx="178.5" cy="77.5" r="3.5"></circle>
+                    <circle id="Oval-Copy-16" fill="#373D42" cx="19.5" cy="10.5" r="3.5"></circle>
+                    <circle id="Oval-Copy-17" fill="#FFA768" cx="2.5" cy="77.5" r="2.5"></circle>
+                    <circle id="Oval-Copy-18" fill="#373D42" cx="174.5" cy="91.5" r="2.5"></circle>
+                    <circle id="Oval-Copy-19" fill="#373D42" cx="166.5" cy="9.5" r="2.5"></circle>
+                    <circle id="Oval-Copy-20" fill="#D7306D" cx="7.5" cy="2.5" r="2.5"></circle>
+                    <circle id="Oval-Copy-21" fill="#373D42" cx="81.5" cy="91.5" r="2.5"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

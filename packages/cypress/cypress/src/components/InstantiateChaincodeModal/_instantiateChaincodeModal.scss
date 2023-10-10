@@ -1,0 +1,129 @@
+.ibp-modal-desc {
+	margin-bottom: 2rem;
+}
+
+.ibp-mode-toggle {
+	margin-bottom: 2rem;
+}
+
+.ibp-simple-policy-member-list {
+	display: flex;
+	margin-top: 0.75rem;
+
+	.ibp-simple-policy-member-checkbox {
+		align-self: flex-end;
+	}
+
+	.ibp-simple-policy-member-name {
+		align-self: flex-start;
+	}
+}
+
+.ibp-simple-policy-endorsement-message {
+	margin-top: 2rem;
+}
+
+.ibp-simple-policy-member-checkbox {
+	align-self: flex-end;
+}
+
+.ibp-simple-policy-choose-endorsers {
+	display: inline-block;
+	margin: 2rem 0.5rem 0 0;
+	width: 15%;
+}
+
+.ibp-json-file-details {
+	align-items: center;
+	background: $carbon--cool-gray-80;
+	border: 1px solid $text;
+	display: flex;
+	justify-content: space-between;
+	height: 3.75rem;
+	margin-top: 1.68rem;
+	max-width: 28rem;
+
+	.ibp-json-file-name {
+		@include carbon--type-style('body-short-02');
+		padding-left: 1rem;
+	}
+}
+
+.ibp__advanced-policy---json {
+	@include carbon--type-style('body-short-01');
+	@include carbon--font-face-mono();
+	background: $carbon--cool-gray-80;
+	border: 1px solid $carbon--gray-50;
+	color: $carbon--cool-gray-10;
+	height: 23rem;
+	margin: 1rem 0;
+	padding: 1rem;
+	overflow: auto;
+	resize: none;
+	width: 100%;
+	word-break: break-all;
+}
+
+.ibp__advanced-policy-learn-more {
+	@include carbon--type-style('body-short-02');
+	color: $carbon--blue-40;
+}
+
+.ibp-chaincode-details {
+	border: 1px solid $carbon--cool-gray-70;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	margin-top: 1.68rem;
+	max-width: 28rem;
+	padding: 1.25rem;
+
+	.ibp-instantiated-label {
+		@include carbon--type-style('body-short-02');
+		color: $carbon--cool-gray-30;
+	}
+
+	.ibp-instantiated-name-version {
+		display: inline-flex;
+		padding-top: 0.5rem;
+
+		.ibp-chaincode-name {
+			@include carbon--type-style('body-short-02');
+			height: 2rem;
+			line-height: 2rem;
+
+			&.ibp-chaincode-upgrade-name {
+				margin-top: 0.75rem;
+			}
+		}
+
+		.ibp-chaincode-version {
+			@include carbon--type-style('label-01');
+			background: $carbon--cool-gray-70;
+			border-radius: 6.25rem;
+			display: flex;
+			height: 2rem;
+			line-height: 2rem;
+			margin-left: 1rem;
+			min-width: 1.875rem;
+			padding: 0 0.75rem;
+		}
+
+		.ibp-chaincode-available-versions {
+			margin-left: 1rem;
+			width: 8rem;
+		}
+	}
+}
+
+.ibp-modal-desc {
+	.ibp-instantiate-link {
+		display: block;
+		margin-top: 1rem;
+		width: max-content;
+	}
+
+	.ibp-instantiate-link:hover {
+		display: block;
+	}
+}

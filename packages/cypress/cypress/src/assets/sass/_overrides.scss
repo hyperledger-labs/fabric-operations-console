@@ -1,0 +1,32 @@
+.ibm {
+	.bx--overflow-menu-options {
+		width: 12rem;
+	}
+
+	.bx--tooltip__trigger.bx--tooltip__trigger--definition+.bx--assistive-text,
+	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--top:after,
+	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--top:focus+.bx--assistive-text,
+	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--top:focus .bx--assistive-text,
+	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--top:hover+.bx--assistive-text,
+	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--top:hover .bx--assistive-text,
+	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--bottom:after,
+	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--bottom:focus+.bx--assistive-text,
+	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--bottom:focus .bx--assistive-text,
+	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--bottom:hover+.bx--assistive-text,
+	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--bottom:hover .bx--assistive-text {
+		max-width: 20rem;
+	}
+
+	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--top+.bx--assistive-text,
+	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--bottom+.bx--assistive-text {
+		min-width: 20rem;
+	}
+}
+
+body #teconsent {
+	display: none !important;
+}
+
+.bx--toggle__switch {
+	white-space: nowrap;
+}

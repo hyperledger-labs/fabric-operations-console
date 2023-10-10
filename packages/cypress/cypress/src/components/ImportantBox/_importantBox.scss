@@ -1,0 +1,49 @@
+.ibp-important-box-container {
+	color: $text;
+	width: 100%;
+
+	.ibp-important-label {
+		@include carbon--type-style('label-01');
+		color: $warning;
+		margin-bottom: 0.5rem;
+		margin-top: 1rem;
+	}
+
+	.ibp-important-box {
+		border: 1px solid $warning;
+		margin-bottom: 1rem;
+		padding: 1rem;
+
+		.ibp-important-link {
+			@include carbon--type-style('body-short-01');
+			display: block;
+			margin-top: 1rem;
+			display: block;
+			width: max-content;
+		}
+
+		.ibp-important-text {
+			@include carbon--type-style('body-short-01');
+		}
+	}
+
+	&.ibp-important-box-container-informational {
+		.ibp-important-label {
+			color: $carbon--blue-40;
+		}
+
+		.ibp-important-box {
+			border: 1px solid $carbon--blue-40;
+		}
+	}
+
+	&.ibp-important-box-container-strict {
+		.ibp-important-label {
+			color: $carbon--red-50;
+		}
+
+		.ibp-important-box {
+			border: 1px solid $carbon--red-50;
+		}
+	}
+}

@@ -1,0 +1,23 @@
+.ibp-log-settings {
+	.ibp-simple-log-settings {
+		td {
+			padding-right: 0.5rem;
+			padding-bottom: 0.5rem;
+			vertical-align: top;
+
+			.ibp-log-settings-equal {
+				padding-top: 1rem;
+			}
+		}
+
+		.ibp-logger-delete {
+			background-color: transparent;
+			border: none;
+
+			svg {
+				width: 1rem;
+				vertical-align: middle;
+			}
+		}
+	}
+}

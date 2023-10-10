@@ -1,0 +1,24 @@
+.ibp-connection-profile {
+	.ibp-channel-list {
+		@include carbon--type-style('label-01');
+		color: #8c8c8c;
+	}
+
+	.ibp-see-more,
+	.ibp-see-less {
+		font-size: 100%;
+	}
+
+	.ibp-header-subtext {
+		margin-bottom: 1rem;
+	}
+
+	.ibp-ca-name {
+		background-color: #fff;
+		border: 2px solid transparent;
+		border-radius: 4px;
+		color: $inverseText;
+		padding-left: 0.5rem;
+		padding-right: 0.5rem;
+	}
+}

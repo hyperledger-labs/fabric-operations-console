@@ -1,0 +1,56 @@
+.ibp-modal-title {
+	margin-bottom: 2rem;
+}
+
+.ibp-modal-desc {
+	margin-bottom: 2rem;
+}
+
+.bx--file-filename.ibp-addIdentity--fileName {
+	margin-bottom: 0.5rem;
+}
+
+.ibp-panel--content {
+	.bx--file__state-container {
+		display: none;
+	}
+
+	.ibp-clear-files-button {
+		margin-top: 1.5rem;
+	}
+}
+
+.hidden_section {
+	height: 0px;
+	overflow: hidden;
+}
+
+.ibp-link {
+	cursor: pointer;
+}
+
+.ibp-identity-json {
+	margin-bottom: 0.5rem;
+
+	input {
+		color: $text;
+		background-color: transparent;
+		margin-left: 1rem;
+		outline: none;
+	}
+}
+
+.ibp-identity-modal-learn-more {
+	@include carbon--type-style('body-short-02');
+	color: $carbon--blue-40;
+	display: block;
+	line-height: 1.5rem;
+	margin-top: 1rem;
+	width: max-content;
+}
+
+.ibp-expiration-date {
+	margin-top: 0.5rem;
+	@include carbon--type-style('body-short-02');
+	color: $carbon--cool-gray-50;
+}

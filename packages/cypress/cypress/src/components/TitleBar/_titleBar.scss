@@ -1,0 +1,183 @@
+.ibp-title-bar {
+	width: 100%;
+
+	&.ibp-user-logged-in {
+		background-color: $background;
+	}
+
+	&.ibp-user-logged-out {
+		background-color: transparent;
+	}
+
+	.ibp-title-bar-login {
+		align-items: center;
+		display: flex;
+		justify-content: center;
+		position: absolute;
+		text-align: left;
+		width: inherit;
+	}
+
+	.ibm-label {
+		flex-grow: 1;
+		z-index: $secondLayer;
+
+		#product_label {
+			margin-right: 1rem;
+		}
+	}
+
+	.ibp-get-started-button {
+		&.ibp-get-started-showing {
+			background-color: $itemBackground;
+			position: relative;
+
+			&:before {
+				content: '';
+				left: 0;
+				position: absolute;
+				bottom: 0;
+				height: 2px;
+				width: 100%;
+				background-color: $action;
+			}
+		}
+
+		.bx--header__menu-item {
+			&:hover {
+				background-color: $itemBackground;
+			}
+
+			cursor: pointer;
+		}
+	}
+
+	.bx--header__menu-item-read-only {
+		a.bx--header__menu-item {
+			color: #fff;
+		}
+	}
+
+	.ibp-announcement-button {
+		background-color: $carbon--red-70;
+		color: $carbon--white-0;
+	}
+
+	#ga-product-label,
+	#beta-product-label {
+		@include carbon--font-weight('semibold');
+	}
+
+	#ibp-header-user-profile-icon {
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.bx--header__action {
+		&:hover {
+			background-color: $itemBackground;
+		}
+	}
+
+	.ibp-carbon-product-name {
+		cursor: pointer;
+		margin-left: 4rem;
+	}
+
+	.ibp-header-menu-item {
+		cursor: pointer;
+	}
+
+	.ibp-pending-notifications-container {
+		align-items: center;
+		display: flex;
+		justify-content: center;
+		position: relative;
+
+		.bx--tag.bx--tag--red.ibp-needs-attention-notification-icon {
+			background-color: $carbon--red-70;
+			color: $carbon--white-0;
+			font-size: 0.65rem;
+			height: auto;
+			min-width: 1rem;
+			padding: 0 0.5rem;
+			pointer-events: none;
+			position: absolute;
+			right: -1rem;
+			top: -0.75rem;
+		}
+	}
+
+	#ibp-get-started-menu-button {
+		.bx--text-truncate--end {
+			align-items: center;
+			display: flex;
+
+			.ibp-getting-started-button-icon {
+				margin-left: 0.5rem;
+				transition: transform 200ms ease-in;
+
+				&.ibp-getting-started-button-icon-open {
+					transform: rotate(180deg);
+				}
+			}
+		}
+	}
+
+	.readOnlyWrap {
+		font-size: 0.7rem;
+		margin-left: 1rem;
+		font-weight: 400;
+	}
+}
+
+.ibp-header-signature-button {
+	align-items: center;
+	background: transparent;
+	border: 0;
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	min-height: 3rem;
+	min-width: 3rem;
+	padding: 0;
+	transition: $basic-duo-transition;
+
+	&:hover,
+	&:focus {
+		background-color: $itemHover;
+	}
+
+	.ibp-carbon-product-name {
+		cursor: pointer;
+		margin-left: 4rem;
+
+		&:focus {
+			border-color: $carbon--white-0;
+			color: $carbon--gray-10;
+			outline: none;
+		}
+	}
+}
+
+.ibp-main {
+	.bx--header {
+		border-bottom: 0;
+		background-color: $carbon--cool-gray-100;
+
+		.bx--header__nav {
+			display: block;
+		}
+	}
+
+	.bx--header-read-only {
+		background-color: #da1e28;
+	}
+}
+
+.bx--skip-to-content {
+	color: $text;
+	background: $background;
+}

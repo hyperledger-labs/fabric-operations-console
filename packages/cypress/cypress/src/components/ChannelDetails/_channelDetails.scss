@@ -1,0 +1,14 @@
+.ibp__channel--container {
+	margin-top: 2rem;
+
+	.ibp-item-container {
+		margin-top: 2rem;
+	}
+}
+
+.ibp-node-tile-msp {
+	@include carbon--type-style('label-01');
+	@include singleLineEllipsis;
+	color: $carbon--cool-gray-30;
+	padding-top: 0.5rem;
+}

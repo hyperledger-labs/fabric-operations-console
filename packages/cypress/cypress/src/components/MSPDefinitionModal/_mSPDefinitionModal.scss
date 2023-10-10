@@ -1,0 +1,77 @@
+.ibp-modal-title {
+	margin-bottom: 2rem;
+}
+
+.ibp-modal-desc {
+	margin-bottom: 2rem;
+}
+
+.bx--btn--secondary {
+	background-color: $cancelButton;
+	color: $text;
+	min-width: 100px;
+	margin-bottom: 1rem;
+}
+
+.bx--btn--secondary:hover {
+	background-color: $cancelButtonHover;
+}
+
+.bx--btn--primary {
+	background-color: $action;
+	min-width: 100px;
+}
+
+.bx--btn--primary:hover {
+	background-color: $actionHover;
+}
+
+.ibp-panel--content {
+	.bx--file__state-container {
+		display: none;
+	}
+
+	.ibp-clear-files-button {
+		margin-top: 1.5rem;
+	}
+}
+
+.hidden_section {
+	height: 0px;
+	overflow: hidden;
+}
+
+.ibp-link {
+	cursor: pointer;
+}
+
+.ibp-msp-modal-learn-more {
+	@include carbon--type-style('body-short-02');
+	color: $carbon--blue-40;
+	display: block;
+	margin-top: 1rem;
+	width: max-content;
+}
+
+.ibp-import-msp {
+	margin-top: 2rem;
+}
+
+.ibp-note-bullet {
+	margin-bottom: 0.5rem;
+	display: flex;
+}
+
+.ibp-note-bullet-point {
+	display: inline-block;
+	padding-right: 0.5rem;
+	padding-top: 0.25rem;
+}
+
+.ibp-note-bullet-text {
+	line-height: 1.5rem;
+}
+
+.ibp-dup-msp-error {
+	margin-top: 1rem;
+}

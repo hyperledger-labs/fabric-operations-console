@@ -1,0 +1,30 @@
+.ibp-channel-chaincode-how-to-div {
+	margin-top: 1rem;
+}
+
+.ibp-channel-chaincode-version {
+	background-color: $carbon--cool-gray-70;
+	border: 2px solid transparent;
+	border-radius: 1rem;
+	line-height: 1rem;
+	padding-left: 0.5rem;
+	padding-right: 0.5rem;
+	position: absolute;
+	right: 1rem;
+	top: 1rem;
+	font-size: 0.75rem;
+	font-weight: 400;
+}
+
+.ibp-channel-chaincode-status {
+	@include carbon--type-style('label-01');
+	color: $carbon--cool-gray-30;
+	bottom: 1rem;
+	left: 1rem;
+	position: absolute;
+
+	svg {
+		margin-right: 0.25rem;
+		vertical-align: text-bottom;
+	}
+}

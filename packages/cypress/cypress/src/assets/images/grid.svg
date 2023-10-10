@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>grid</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="System-Icons" transform="translate(-259.000000, -108.000000)">
+            <g id="grid" transform="translate(255.000000, 104.000000)">
+                <g id="artwork" transform="translate(4.000000, 4.000000)" fill="#ffffff" fill-rule="nonzero">
+                    <path d="M8,0 L2,0 C0.8954305,0 0,0.8954305 0,2 L0,8 C0,9.1045695 0.8954305,10 2,10 L8,10 C9.1045695,10 10,9.1045695 10,8 L10,2 C10,0.8954305 9.1045695,0 8,0 Z M8,8 L2,8 L2,2 L8,2 L8,8 Z" id="Shape"></path>
+                    <path d="M22,0 L16,0 C14.8954305,0 14,0.8954305 14,2 L14,8 C14,9.1045695 14.8954305,10 16,10 L22,10 C23.1045695,10 24,9.1045695 24,8 L24,2 C24,0.8954305 23.1045695,0 22,0 Z M22,8 L16,8 L16,2 L22,2 L22,8 Z" id="Shape"></path>
+                    <path d="M8,14 L2,14 C0.8954305,14 0,14.8954305 0,16 L0,22 C0,23.1045695 0.8954305,24 2,24 L8,24 C9.1045695,24 10,23.1045695 10,22 L10,16 C10,14.8954305 9.1045695,14 8,14 Z M8,22 L2,22 L2,16 L8,16 L8,22 Z" id="Shape"></path>
+                    <path d="M22,14 L16,14 C14.8954305,14 14,14.8954305 14,16 L14,22 C14,23.1045695 14.8954305,24 16,24 L22,24 C23.1045695,24 24,23.1045695 24,22 L24,16 C24,14.8954305 23.1045695,14 22,14 Z M22,22 L16,22 L16,16 L22,16 L22,22 Z" id="Shape"></path>
+                </g>
+                <g id="transparent_box">
+                    <rect id="Rectangle-path" x="0" y="0" width="32" height="32"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,50 @@
+.ibp-panel--content {
+	.ibp-actions-title {
+		@include carbon--font-weight('semibold');
+		align-items: flex-start;
+		color: $field-label-color;
+		margin-bottom: 1rem;
+		font-size: 0.75rem;
+	}
+}
+
+.ibp-hidden {
+	display: none;
+}
+
+#confirm_remove:not(:disabled) {
+	background-color: $carbon--red-60;
+}
+
+#confirm_remove:focus,
+#confirm_remove:hover:not(:disabled) {
+	background-color: $carbon--red-60;
+}
+
+.ibp-remove-ca-desc,
+.ibp-update-tls-desc,
+.ibp-remove-ca-confirm {
+	margin-bottom: 1rem;
+}
+
+.ibp-ca-modal-enroll-button {
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+
+	svg {
+		margin-right: 0.5rem;
+	}
+}
+
+.ibp-no-identities {
+	margin-bottom: 1rem;
+}
+
+.ibp-ca-action.bx--btn {
+	margin-right: 1rem;
+	margin-bottom: 1rem;
+}
+
+.ibp-ca-config-override-desc-with-link {
+	margin-top: 1rem;
+}

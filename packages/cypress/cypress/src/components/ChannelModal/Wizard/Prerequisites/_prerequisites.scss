@@ -1,0 +1,55 @@
+.ibp-channel-prerequisites {
+	.ibp-channel-prerequisites-bullets {
+		margin-top: 0.5rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.ibp-channel-prerequisites-desc {
+		color: #f3f3f3;
+		font-size: 0.875rem;
+		letter-spacing: 0.01rem;
+		line-height: 1.125rem;
+		margin-top: 1rem;
+	}
+
+	.ibp-prerequisites-bullet {
+		margin-bottom: 0.5rem;
+		display: flex;
+	}
+
+	.ibp-prerequisites-bullet-point {
+		display: inline-block;
+		padding-right: 0.5rem;
+		padding-top: 0.25rem;
+	}
+
+	.ibp-prerequisites-bullet-text {
+		font-size: 0.875rem;
+		letter-spacing: 0.01rem;
+		line-height: 1.125rem;
+	}
+
+	.ibp-prerequisites-impbox {
+		margin-bottom: 2rem;
+	}
+
+	.ibp-advanced-checkbox {
+		display: flex;
+		flex-direction: row;
+		padding-top: 0.5rem;
+
+		&.label {
+			@include carbon--type-style('body-short-01');
+			padding-top: 0;
+		}
+	}
+
+	.ibp-advanced-checkbox-desc {
+		color: #f3f3f3;
+		letter-spacing: 0.02rem;
+		line-height: 1rem;
+		font-style: italic;
+		font-size: 0.75rem;
+		margin-left: 1.5rem;
+	}
+}

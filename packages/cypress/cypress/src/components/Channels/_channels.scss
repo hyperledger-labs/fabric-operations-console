@@ -1,0 +1,98 @@
+@keyframes skeletonShimmer {
+	0% {
+		opacity: 0.25;
+	}
+
+	100% {
+		opacity: 0.85;
+	}
+}
+
+.ibp-channels-orderer {
+	color: white;
+	display: flex;
+	flex-grow: 2;
+	overflow: hidden;
+	padding-top: 0.5rem;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.ibp-channel-tile-stats {
+	color: $carbon--cool-gray-40;
+	text-align: left;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	height: 90%;
+}
+
+.ibp-channel-loading-item {
+	animation: skeletonShimmer 600ms linear infinite forwards alternate;
+	background-color: $itemHover;
+	display: inline-block;
+	height: 1.25rem;
+	width: 2rem;
+}
+
+.ibp-channels-blocks {
+	.ibp-channels-block-text {
+		@include carbon--font-weight('regular');
+	}
+
+	.ibp-channel-loading-item {
+		width: 4rem;
+	}
+}
+
+.ibp-pending-channel-label {
+	@include carbon--type-style('body-short-01');
+	font-size: 0.8rem;
+}
+
+.ibp-pending-tile-clock,
+.ibp-pending-tile-success {
+	height: 1rem;
+	vertical-align: bottom;
+}
+
+.ibp-pending-tile-success {
+	margin-right: 0.6rem;
+}
+
+.ibp__channels--container .ibp-container-tile.ibp-container-tile-pending {
+	background-color: #606060;
+}
+
+.ibp__channels--container .ibp-container-tile.ibp-container-tile-archived {
+	background-color: #464646;
+}
+
+.ibp-channels-orderer {
+	white-space: initial;
+	font-size: 0.75rem;
+}
+
+#channels-container>.ibp-item-container .ibp-container-grid-large .ibp-container-tile {
+	min-height: 9rem;
+}
+
+.ibp-channels-del-channel {
+	cursor: pointer;
+	padding: 0.5rem;
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+.ibp-item-container {
+	margin-bottom: 1rem;
+}
+
+.ibp-channels-del-channel:hover {
+	background: #0f62fe;
+}
+
+.ibp-consenters {
+	font-size: 0.75rem;
+}

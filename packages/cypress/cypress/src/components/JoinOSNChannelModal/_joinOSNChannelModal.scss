@@ -1,0 +1,280 @@
+.ibp-modal-title {
+	margin-bottom: 2rem;
+}
+
+.ibp-modal-desc {
+	margin-bottom: 2rem;
+}
+
+.ibp-join_channel--button {
+	border: 0;
+	color: $text;
+	cursor: pointer;
+	height: 4rem;
+	padding: 0.75rem;
+	position: relative;
+	text-align: left;
+	width: 50%;
+}
+
+.ibp-join_channel--button span {
+	position: absolute;
+	top: 1rem;
+}
+
+.bx--btn--secondary,
+.ibp-join_channel--button.ibp-join_channel--cancel--button {
+	background-color: $cancelButton;
+}
+
+.bx--btn--secondary:hover,
+.ibp-join_channel--button.ibp-join_channel--cancel--button:hover {
+	background-color: $cancelButtonHover;
+}
+
+.bx--btn--primary,
+.ibp-join_channel--button.ibp-join_channel--submit--button {
+	background-color: $action;
+}
+
+.bx--btn--primary:hover,
+.ibp-join_channel--button.ibp-join_channel--submit--button:hover {
+	background-color: $actionHover;
+}
+
+.ibp-join_channel--button.ibp-join_channel--submit--button:disabled,
+.ibp-join_channel--button.ibp-join_channel--submit--button[disabled] {
+	background-color: $buttonDisabled;
+	cursor: not-allowed;
+}
+
+.bx--btn--primary {
+	min-width: 100px;
+}
+
+.bx--btn--secondary {
+	color: $text;
+	min-width: 100px;
+}
+
+.hidden_section {
+	height: 0px;
+	overflow: hidden;
+}
+
+.ibp-link {
+	cursor: pointer;
+}
+
+.anchor-peer-toggle {
+	margin-top: 1.5rem;
+
+	.bx--form-item {
+		flex-grow: 0;
+	}
+
+	.settings-toggle-inner {
+		align-items: center;
+		display: flex;
+		flex-direction: row;
+		margin-bottom: 1.5rem;
+	}
+
+	.settings-toggle-label {
+		@include carbon--type-style('body-short-01');
+		padding-bottom: 0.5rem;
+		width: max-content;
+	}
+}
+
+.ibp-address-override-section {
+	margin-top: 1rem;
+
+	p {
+		margin-bottom: 1rem;
+	}
+
+	.ibp-peer-mapping {
+		padding-left: 1rem;
+	}
+}
+
+.ibp-join-osn-wrap {
+	margin-bottom: 2rem;
+	border-left: 2px #505355 solid;
+	padding-left: 0.25rem;
+}
+
+.ibp-join-osn-desc p,
+.ibp-join-osn-desc span {
+	font-size: 0.875rem;
+	font-weight: 400;
+	line-height: 1rem;
+}
+
+.ibp-join-osn-cluster-check {
+	vertical-align: top;
+	cursor: pointer;
+	margin-top: 3rem;
+}
+
+.ibp-join-osn-checkmark {
+	margin-right: 0.5rem;
+	height: 1rem;
+	vertical-align: middle;
+}
+
+.ibp-form .ibp-form-field .ibp-join-osn-identity-wrap {
+	margin-top: 0;
+}
+
+.ibp-join-osn-identity-wrap {
+	display: inline-block;
+	//margin-top: -1rem;
+	width: 25rem;
+}
+
+.ibp-join-osn-cluster-wrap {
+	font-size: 1.1rem;
+	margin: 0 0.6rem;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.ibp-join-osn-node-wrap-wrap {
+	margin-left: 2rem;
+	margin-bottom: 0.5rem;
+	width: 85%;
+	max-width: 55rem;
+}
+
+.ibp-join-osn-node-wrap {
+	border: 1px solid #2f3235;
+	padding: 0.5rem;
+	position: relative;
+}
+
+.ibp-join-osn-node-wrap-success {
+	border-right: 4px solid #0f62fe;
+}
+
+.ibp-join-osn-node-wrap-error {
+	border-right: 4px solid #fb4b53;
+}
+
+.ibp-join-osn-name {
+	font-size: 1rem;
+	font-weight: 400;
+	display: inline-block;
+	margin-top: 0.1rem;
+}
+
+.ibp-join-osn-host {
+	font-size: 0.8rem;
+	color: #ccc;
+	opacity: 0.5;
+	margin-top: 0.4rem;
+}
+
+.ibp-join-osn-status {
+	width: 2rem;
+	position: absolute;
+	right: 0;
+	top: 1.3rem;
+	color: #0f62fe;
+}
+
+.ibp-join-osn-status-error {
+	color: #fb4b53;
+}
+
+.ibp-join-osn-icon {
+	display: inline-block;
+	vertical-align: top;
+	line-height: 1rem;
+	margin-right: 0.5rem;
+}
+
+.ibp-osn-join-icon-consenter {
+	color: #0043ce;
+}
+
+.ibp-osn-join-icon-follower {
+	color: #6f7172;
+}
+
+.ibp-join-osn-node-details {
+	display: block;
+	font-weight: 400;
+	margin-left: 1.7rem;
+	max-width: 92%;
+}
+
+.ibp-join-osn-label {
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.34;
+	letter-spacing: 0.32px;
+	color: #c1c7cd;
+	margin-bottom: 1.2rem;
+}
+
+.ibp-join-download {
+	font-size: 0.75rem;
+	margin-left: 1rem;
+	float: right;
+}
+
+.ibp-join-unselected-cluster {
+	opacity: 0.3;
+}
+
+.ibp-join-osn-msp-wrap {
+	max-height: 23rem;
+	overflow-y: scroll;
+	margin-top: 2rem;
+}
+
+.ibp-join-osn-clusterid {
+	min-width: 35rem;
+	padding: 1.5rem;
+	padding-top: 0rem;
+	padding-bottom: 1rem;
+}
+
+.ibp-join-osn-count {
+	font-size: 1.25rem;
+	margin-left: 1rem;
+}
+
+.ibp-join-osn-error {
+	font-size: 0.875rem;
+	font-weight: 500;
+	color: #fb4b53;
+	line-height: 1.2rem;
+}
+
+.ibp-join-osn-cluster-title {
+	font-size: 1.25rem;
+	margin-top: 2rem;
+}
+
+.ibp-join-osn-identity-wrap>.ibp-form-field {
+	margin-bottom: 0.5rem;
+}
+
+/*
+.ibp-join-osn-select-followers {
+	float: right;
+	margin-right: 10rem;
+	margin-top: -.5rem;
+}
+*/
+
+.ibp-join-osn-error-wrap {
+	color: #fb4b53;
+}
+
+.ibp-join-osn-joined {
+	opacity: 0.4;
+}

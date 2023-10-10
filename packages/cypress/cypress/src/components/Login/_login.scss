@@ -1,0 +1,82 @@
+.ibp-login-main {
+	align-items: center;
+	background: $carbon--black-100;
+	color: $text;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	height: 100%;
+	width: 100%;
+
+	#title_bar {
+		background: $carbon--black-100;
+	}
+
+	.ibp-login-content {
+		background: $carbon--cool-gray-100;
+		display: flex;
+		flex-direction: column;
+		position: relative;
+		width: 38rem;
+
+		&.ibp-change-password {
+			height: 34rem;
+		}
+
+		&.ibp-user-login {
+			height: 28rem;
+		}
+
+		.ibp-login-content-title {
+			@include carbon--type-style('productive-heading-04');
+			color: $carbon--white-0;
+			margin: 1.5rem 0 0 1.5rem;
+		}
+
+		.ibp-login-form {
+			padding: 4rem 5rem 5rem 5rem;
+		}
+
+		.ibp-login-button {
+			bottom: 0;
+			position: absolute;
+			right: 0;
+		}
+
+		.login-button {
+			@include carbon--font-weight('regular');
+			background-color: $action;
+			border: 0;
+			color: $text;
+			cursor: pointer;
+			height: 4rem;
+			padding: 1rem 1rem 2rem 1rem;
+			position: relative;
+			text-align: left;
+			transition: $basic-duo-transition;
+			width: 12rem;
+
+			&:focus {
+				box-shadow: inset 0px 0px 0px 1px white;
+				outline: 0;
+			}
+
+			span {
+				position: absolute;
+				top: 1rem;
+			}
+		}
+
+		.login-button:hover,
+		.login-button:focus {
+			background-color: $actionHover;
+		}
+
+		.login-button:disabled,
+		.login-button:disabled:hover {
+			//background-color: $buttonDisabled;
+			cursor: not-allowed;
+			opacity: 0.3;
+		}
+	}
+}

@@ -1,0 +1,46 @@
+.peer-stopped {
+	background-color: $stopped;
+}
+
+.bx--data-table-v2 {
+
+	.peer-running,
+	.peer-stopped,
+	.peer-unknown {
+		display: inline-block;
+		height: 0.75rem;
+		margin-right: 0.75rem;
+		position: relative;
+		width: 0.75rem;
+	}
+}
+
+.peer-not-associated {
+	color: $pending;
+	text-align: center;
+	bottom: 1rem;
+	left: 0;
+	width: 100%;
+	position: absolute;
+}
+
+.peer-associated {
+	text-align: center;
+	bottom: 1rem;
+	left: 0;
+	width: 100%;
+	position: absolute;
+	font-style: italic;
+}
+
+.ibp-node-peer-tile-name,
+.ibp-node-peer-tile-msp {
+	@include carbon--type-style('body-short-01');
+	@include carbon--font-weight('regular');
+	color: $carbon--cool-gray-30;
+}
+
+.ibp-node-peer-tile-msp {
+	@include singleLineEllipsis;
+	padding-top: 0.5rem;
+}

@@ -1,0 +1,108 @@
+.ibp-chaincode-modal-step {
+	@include carbon--type-style('body-short-01');
+	@include carbon--font-weight('semibold');
+	color: $carbon--cool-gray-30;
+	margin-top: 2.5rem;
+}
+
+.ibp-chaincode-modal-title {
+	@include carbon--type-style('productive-heading-05');
+	@include carbon--font-weight('light');
+	color: $text;
+	margin-top: 1.625rem;
+}
+
+.ibp-chaincode-modal-desc {
+	margin-bottom: 1.75rem;
+	margin-top: 1rem;
+}
+
+.ibp-chaincode-modal-learn-more {
+	@include carbon--type-style('body-short-02');
+	color: $carbon--blue-40;
+	display: block;
+	margin-top: 1rem;
+	width: max-content;
+}
+
+.ibp-chaincode-modal-step-desc {
+	@include carbon--type-style('productive-heading-03');
+	color: $text;
+	margin: 3rem 0 1.5rem 0;
+}
+
+.hidden_section {
+	height: 0;
+	overflow: hidden;
+}
+
+.ibp-json-file-details {
+	align-items: center;
+	background: $carbon--cool-gray-80;
+	border: 1px solid $text;
+	display: flex;
+	justify-content: space-between;
+	height: 3.75rem;
+	margin-top: 1.68rem;
+	max-width: 28rem;
+
+	.ibp-json-file-name {
+		@include carbon--type-style('body-short-02');
+		padding-left: 1rem;
+	}
+
+	.ibp-json-file-other-details {
+		display: flex;
+		line-height: 2rem;
+		padding-right: 1rem;
+
+		.ibp-json-file-version {
+			@include carbon--type-style('label-01');
+			align-items: center;
+			background: $carbon--cool-gray-70;
+			border-radius: 6.25rem;
+			display: flex;
+			height: 2rem;
+			min-width: 1.875rem;
+			padding: 0 0.75rem;
+			color: $white;
+		}
+
+		.ibp-json-file-remove-icon {
+			background-color: transparent;
+			border: none;
+			margin-left: 1rem;
+			padding-left: 0.5rem;
+			padding-right: 0.5rem;
+		}
+	}
+}
+
+.ibp-install-peer-container {
+	.bx--fieldset {
+		.bx--form-item.bx--checkbox-wrapper {
+			.bx--checkbox-label {
+				padding-left: 0;
+				padding-right: 1.5rem;
+				width: 100%;
+
+				&:before,
+				&:after {
+					left: initial;
+					right: 0;
+				}
+
+				&:after {
+					right: 0.25rem;
+				}
+			}
+
+			.bx--checkbox-label.bx--type-gamma {
+				@include carbon--type-style('productive-heading-03');
+				border-bottom: 1px solid $itemHover;
+				margin-top: 3rem;
+				padding-bottom: 0.75rem;
+			}
+		}
+	}
+}

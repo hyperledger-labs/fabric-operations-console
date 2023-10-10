@@ -1,0 +1,136 @@
+@media only screen and (min-width: 1100px) {
+	.ibp-nodes-welcome-btn-set {
+		position: absolute;
+		height: 5rem;
+		bottom: 0;
+		right: 0;
+	}
+}
+
+.ibp-nodes-section {
+	margin-bottom: 3rem;
+}
+
+.ibp-node-peer-tile,
+.ibp-node-orderer-tile,
+.ibp-peer-details-location,
+.ibp-node-upgrade,
+.ibp-details-patch-container {
+	.ibp-patch-available-tag {
+		@include carbon--type-style('label-01');
+		align-items: center;
+		background: $secondaryActionHover;
+		border-radius: 6.25rem;
+		color: $carbon--blue-30;
+		cursor: pointer;
+		display: inline-flex;
+		height: 1.5rem;
+		padding: 0 1rem;
+		width: auto;
+
+		&.ibp-node-details {
+			margin-top: 0.5rem;
+		}
+
+		&.ibp-tile-label {
+			bottom: 2.5rem;
+			position: absolute;
+		}
+	}
+}
+
+.ibp-node-current-version,
+.ibp-node-new-version {
+	border: 1px solid $carbon--cool-gray-70;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	max-width: 28rem;
+	padding: 1.25rem 1.75rem;
+
+	.ibp-node-current-version-label {
+		@include carbon--type-style('body-short-02');
+		color: $carbon--cool-gray-30;
+	}
+
+	.ibp-node-name-version {
+		display: inline-flex;
+		padding-top: 0.5rem;
+
+		.ibp-node-name {
+			@include carbon--type-style('body-short-02');
+			height: 2rem;
+			line-height: 2rem;
+
+			&.ibp-chaincode-upgrade-name {
+				margin-top: 0.75rem;
+			}
+		}
+
+		.ibp-node-version {
+			@include carbon--type-style('label-01');
+			background: $carbon--blue-80;
+			border-radius: 6.25rem;
+			display: flex;
+			height: 2rem;
+			line-height: 2rem;
+			margin-left: 1rem;
+			min-width: 1.875rem;
+			padding: 0 0.75rem;
+		}
+
+		.ibp-node-available-versions {
+			width: 90%;
+		}
+	}
+}
+
+.ibp-node-current-version {
+	margin-top: 1.68rem;
+}
+
+.ibp-node-new-version {
+	border: 1px solid $action;
+}
+
+.ibp-box-connector {
+	width: 1px;
+	height: 38px;
+	background-color: $carbon--cool-gray-70;
+	position: relative;
+	left: 14rem;
+}
+
+.ibp-new-version-release-notes {
+	@include carbon--type-style('body-short-02');
+	color: $carbon--blue-40;
+}
+
+.ibp-node-info-tab {
+	background: #202529;
+	display: flex;
+	flex-direction: row;
+	margin: 2rem 0;
+	min-height: 5rem;
+	padding: 1.5rem;
+	width: 100%;
+
+	.ibp-node-version-label {
+		@include carbon--type-style('body-short-01');
+		color: white;
+	}
+
+	.ibp-node-version-value {
+		@include carbon--type-style('body-short-01');
+		color: white;
+	}
+
+	.ibp-node-button-section {
+		margin-left: 2rem;
+	}
+
+	.ibp-node-version-section {
+		display: flex;
+		flex-direction: column;
+	}
+}

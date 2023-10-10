@@ -1,0 +1,51 @@
+.ibp-hidden {
+	display: none;
+}
+
+.ibp-actions-title {
+	@include carbon--font-weight('semibold');
+	color: $field-label-color;
+	margin-bottom: 1rem;
+}
+
+.ibp-msp-action {
+	margin-right: 1rem;
+}
+
+.ibp-msp-row {
+	display: flex;
+
+	.ibp-msp-input {
+		width: 100%;
+	}
+
+	.ibp-download-cert {
+		margin-left: 2rem;
+		padding-top: 1.75rem;
+	}
+
+	.ibp-msp-remove {
+		margin-left: 2rem;
+	}
+}
+
+.ibp__text-input {
+	@include carbon--type-style('body-short-02');
+	background: $carbon--cool-gray-90;
+	border: none;
+	color: white;
+	height: 3rem;
+	margin: 0.5rem 0rem 1rem 0rem;
+	padding: 0rem 1rem;
+	width: 100%;
+
+	&:disabled {
+		cursor: not-allowed;
+		opacity: 0.6;
+	}
+}
+
+.ibp-msp-labels {
+	@include carbon--type-style('body-short-01');
+	color: $carbon--cool-gray-30;
+}
