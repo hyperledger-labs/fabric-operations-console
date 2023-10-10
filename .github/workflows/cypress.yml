@@ -1,4 +1,4 @@
-name: Apollo CI
+name: Cypress CI
 
 on:
   pull_request:
