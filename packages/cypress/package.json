@@ -10,8 +10,8 @@
   "description": "Cypress automation POC",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint src",
-    "lint-fix": "eslint src --fix",
+    "lint": "eslint cypress",
+    "lint-fix": "eslint cypress --fix",
     "test": "echo \"Error: no test specified\" && exit 1",
     "regression": "cypress run -e TAGS=\"@regression\" --headed --browser chrome --spec 'cypress/e2e/features/*.feature'",
     "regression-headless": "cypress run -e TAGS=\"@regression\" --browser chrome --spec 'cypress/e2e/features/*.feature'",
