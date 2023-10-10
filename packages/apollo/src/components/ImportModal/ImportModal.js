@@ -68,7 +68,7 @@ class ImportModal extends React.Component {
 		let newItem;
 		try {
 			if (items.length > 0) {
-				EventsRestApi.recordActivity({ status: 'success', log: 'importing ' + items.length + ' component' + (items.length > 1 ? 's' : '') + ' from zip' });
+				EventsRestApi.recordActivity({ status: 'success', log: 'importing ' + items.length + ' item' + (items.length > 1 ? 's' : '') + ' from zip' });
 			}
 		} catch (e) {
 			console.error('unable to record import', e);
@@ -104,6 +104,15 @@ class ImportModal extends React.Component {
 								// New ordering node for existing cluster
 								newItems = await OrdererRestApi.importOrderer([item]);
 								newItem = newItems[0];
+							} else {
+								try {
+									EventsRestApi.recordActivity({
+										status: 'success',
+										log: 'skipping import of an already known ordering node "' + (item.display_name || '-') + '"'
+									});
+								} catch (e) {
+									console.error('unable to record import', e);
+								}
 							}
 						} else {
 							// Ordering node for new cluster

@@ -728,7 +728,7 @@ function setup_pillow_talk() {
 			logger.debug('[pillow] - received a restart message');
 			const notice = {
 				status: 'success',
-				message: 'restarting application via pillow talk',
+				message: 'restarting application',
 				by: doc.by,
 				severity: 'warning',
 			};
@@ -744,7 +744,7 @@ function setup_pillow_talk() {
 			logger.debug('[pillow] - received a delete all sessions message');
 			const notice = {
 				status: 'success',
-				message: 'deleting all sessions via pillow talk',
+				message: 'deleting all sessions',
 				by: doc.by,
 				severity: 'warning',
 			};
