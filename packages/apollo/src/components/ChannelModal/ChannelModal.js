@@ -1882,17 +1882,6 @@ class ChannelModal extends Component {
 		ChannelApi.createAppChannel(options)
 			.then(resp => {
 				Log.debug('Channel was created successfully: ', resp);
-				if (window.trackEvent) {
-					window.trackEvent('Created Object', {
-						objectType: 'Channel',
-						object: options.channel_id,
-						tenantId: this.props.CRN.instance_id,
-						accountGuid: this.props.CRN.account_id,
-						milestoneName: 'Create a channel',
-						url: options.orderer_url,
-						'user.email': this.props.userInfo.email,
-					});
-				}
 				this.props.updateState(SCOPE, {
 					submitting: false,
 				});

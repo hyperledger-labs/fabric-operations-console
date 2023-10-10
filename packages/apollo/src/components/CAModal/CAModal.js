@@ -114,22 +114,6 @@ export class CAModal extends React.Component {
 		}
 		CertificateAuthorityRestApi.updateCA(ca)
 			.then(() => {
-				if (window.trackEvent) {
-					window.trackEvent('Updated Object', {
-						objectType: 'Certificate Authority',
-						object:
-							this.props.ca.location === 'ibm_saas' && this.props.crn_string
-								? `${this.props.crn_string}fabric-ca:${Helper.hash_str(this.props.ca.id)}`
-								: Helper.hash_str(this.props.ca.display_name),
-						category: 'foundational',
-						tenantId: this.props.CRN.instance_id,
-						accountGuid: this.props.CRN.account_id,
-						url: this.props.ca.api_url,
-						milestoneName: 'Update certificate authority',
-						'user.email': this.props.userInfo.loggedInAs.email,
-						'meta.region': this.props.ca.location,
-					});
-				}
 				this.props.onComplete({
 					...this.props.ca,
 					...ca,
@@ -174,26 +158,6 @@ export class CAModal extends React.Component {
 		}
 
 		this.onComplete();
-		try {
-			if (window.trackEvent) {
-				window.trackEvent('Deleted Object', {
-					objectType: 'Certificate Authority',
-					object:
-						this.props.ca.location === 'ibm_saas' && this.props.crn_string
-							? `${this.props.crn_string}fabric-ca:${Helper.hash_str(this.props.ca.id)}`
-							: Helper.hash_str(this.props.ca.display_name),
-					category: 'foundational',
-					tenantId: this.props.CRN.instance_id,
-					accountGuid: this.props.CRN.account_id,
-					url: this.props.ca.api_url,
-					milestoneName: this.props.ca.location === 'ibm_saas' ? 'Delete certificate authority' : 'Remove certificate authority',
-					'user.email': this.props.userInfo.loggedInAs.email,
-					'meta.region': this.props.ca.location,
-				});
-			}
-		} catch (error) {
-			Log.warn(`${prefix} event tracking failed: ${error}`);
-		}
 	}
 
 	upgradeNode = (resolve, reject) => {

@@ -413,24 +413,6 @@ class ImportPeerModal extends React.Component {
 			newError.details = error;
 			throw newError;
 		}
-		try {
-			if (window.trackEvent) {
-				window.trackEvent('Created Object', {
-					objectType: 'Peer',
-					object: this.props.crn_string && peer.id ? `${this.props.crn_string}fabric-peer:${Helper.hash_str(peer.id)}` : Helper.hash_str(data.display_name),
-					tenantId: this.props.CRN.instance_id,
-					accountGuid: this.props.CRN.account_id,
-					milestoneName: 'Create a peer',
-					category: data.statedb,
-					environment: data.hsm && data.hsm.label ? 'hsm-enabled' : 'hsm-disabled',
-					'meta.region': this.props.location,
-					'user.email': this.props.userInfo.loggedInAs.email,
-				});
-			}
-		} catch (error) {
-			Log.warn(`event tracking failed: ${error}`);
-		}
-
 		const new_peers = [peer];
 		await this.associateNewPeers(new_peers);
 		try {
@@ -451,22 +433,6 @@ class ImportPeerModal extends React.Component {
 			});
 			PeerRestApi.importPeer(this.props.data)
 				.then(new_peers => {
-					this.props.data.forEach(json => {
-						if (window.trackEvent) {
-							window.trackEvent('Created Object', {
-								objectType: 'Peer',
-								object: this.props.crn_string
-									? `${this.props.crn_string}fabric-peer:${Helper.hash_str(json.display_name)}`
-									: Helper.hash_str(json.display_name),
-								category: 'operational',
-								tenantId: this.props.CRN.instance_id,
-								accountGuid: this.props.CRN.account_id,
-								milestoneName: 'Import Peers',
-								'meta.region': this.props.location,
-								'user.email': this.props.userInfo.loggedInAs.email,
-							});
-						}
-					});
 					this.props.onComplete(new_peers);
 					resolve();
 				})

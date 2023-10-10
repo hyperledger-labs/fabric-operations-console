@@ -389,17 +389,7 @@ class JoinChannelModal extends React.Component {
 			}
 
 			orderer = await this.retryJoin(peers, this.props.channel, allOrderers);
-			if (window.trackEvent) {
-				window.trackEvent('Updated Object', {
-					objectType: 'Channel',
-					object: this.props.channel,
-					tenantId: this.props.CRN.instance_id,
-					accountGuid: this.props.CRN.account_id,
-					milestoneName: 'Join peer to channel',
-					url: this.props.orderer.grpcwp_url,
-					'user.email': this.props.userInfo.email,
-				});
-			}
+
 			// send async event... don't wait
 			EventsRestApi.sendJoinChannelEvent(this.props.channel, peers);
 			if (this.props.make_anchor_peer) {

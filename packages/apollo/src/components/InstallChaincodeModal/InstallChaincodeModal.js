@@ -218,17 +218,7 @@ class InstallChaincodeModal extends Component {
 						.then(resp => {
 							Log.debug('Install chaincode on ', peer.id, ' response: ', resp);
 							this.props.onComplete(this.props.uploadedFileDetails.name, this.props.uploadedFileDetails.version);
-							if (window.trackEvent) {
-								window.trackEvent('Started Process', {
-									processType: 'Smart Contract',
-									process: peer,
-									tenantId: this.props.CRN.instance_id,
-									successFlag: true,
-									accountGuid: this.props.CRN.account_id,
-									milestoneName: 'Install smart contract - Success',
-									'user.email': this.props.userInfo.email,
-								});
-							}
+
 							// send async event... don't wait
 							EventsRestApi.sendInstallCCEvent(this.props.uploadedFileDetails.name, this.props.uploadedFileDetails.version, peer);
 							resolve();
@@ -256,17 +246,9 @@ class InstallChaincodeModal extends Component {
 									details: error,
 								},
 							});
-							if (window.trackEvent) {
-								window.trackEvent('Started Process', {
-									processType: 'Smart Contract',
-									process: peer,
-									tenantId: this.props.CRN.instance_id,
-									successFlag: false,
-									accountGuid: this.props.CRN.account_id,
-									milestoneName: 'Install smart contract - Fail',
-									'user.email': this.props.userInfo.email,
-								});
-							}
+
+							// send async event... don't wait
+							EventsRestApi.sendInstallCCEvent(this.props.uploadedFileDetails.name, this.props.uploadedFileDetails.version, peer, 'failed');
 							reject();
 						});
 				});
