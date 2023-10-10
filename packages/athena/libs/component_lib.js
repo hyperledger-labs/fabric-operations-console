@@ -691,7 +691,7 @@ module.exports = function (logger, ev, t) {
 
 			// build a notification doc
 			const notice = {
-				message: 'editing component: ' + (fmt_doc.display_name || fmt_doc._id),
+				message: 'editing component ' + (fmt_doc.display_name || fmt_doc._id),
 				component_id: fmt_doc._id,
 				component_type: fmt_doc.type,
 				component_display_name: fmt_doc.display_name,

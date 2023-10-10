@@ -104,6 +104,12 @@ module.exports = function (logger, ev, t) {
 					cb({ statusCode: 400, msg: input_errors, }, null);
 				} else {
 
+					// build a notification doc
+					const notice = {
+						message: 'added ' + req.body.users.length + 'users',
+					};
+					t.notifications.procrastinate(req, notice);
+
 					// update the settings doc
 					const wr_opts = {
 						db_name: ev.DB_SYSTEM,
@@ -214,6 +220,12 @@ module.exports = function (logger, ev, t) {
 						input_errors.push('uuid does not exist: ' + encodeURI(uuid));
 					} else {
 						settings_doc.access_list[email].roles = lc_roles; 			// edit the user object
+
+						// build a notification doc
+						const notice = {
+							message: 'edited user ' + uuid,
+						};
+						t.notifications.procrastinate(req, notice);
 					}
 				}
 

@@ -15,7 +15,7 @@
 */
 
 //------------------------------------------------------------
-// notification_lib.js - Library functions for notification related tasks
+// notification_lib.js - Library functions for notification related tasks (aka activity logs, aka audit logs)
 //------------------------------------------------------------
 module.exports = function (logger, ev, t) {
 	const exports = {};
@@ -163,7 +163,7 @@ module.exports = function (logger, ev, t) {
 		body: {
 			"status": "error" || "success"
 			"message": "some string to surface to a user"
-			"timestamp": 0,     // unix timestamp
+			"ts_display": 0,     // unix timestamp
 			"by": "dshuffma",
 			"component_id": "",
 			"component_type": "",
@@ -179,6 +179,7 @@ module.exports = function (logger, ev, t) {
 	exports.create = function (body, cb) {
 		const valid_status = ['error', 'success'];
 		const lc_status = (body && body.status) ? body.status.toLowerCase() : null;
+		const msg = body.message || body.log;
 		if (valid_status.indexOf(lc_status) === -1) {						// check if status is acceptable
 			const err = {
 				statusCode: 400,
@@ -186,7 +187,7 @@ module.exports = function (logger, ev, t) {
 				valid: valid_status
 			};
 			if (cb) { return cb(err, null); }
-		} else if (!body.message || typeof body.message !== 'string') {		// check if message is okay
+		} else if (!msg || typeof msg !== 'string') {						// check if message is okay
 			const err = {
 				statusCode: 400,
 				error: 'not a valid value for "message". message must be a string.',
@@ -197,7 +198,7 @@ module.exports = function (logger, ev, t) {
 			// --- Request is good, make the doc --- //
 			const doc = {
 				type: 'notification',
-				message: body.message,
+				message: msg,
 				ts_display: body.ts_display || Date.now(),							// timestamp provided from input
 				status: lc_status,
 				by: body.by || '-',
@@ -229,6 +230,17 @@ module.exports = function (logger, ev, t) {
 				if (cb) { return cb(err, wrote_doc); }
 			});
 		}
+	};
+
+	// alternative way of creating an activity doc
+	exports.createAlt = function (req, cb) {
+		const body = (req && req.body) ? req.body : {};
+		body.by = body.by || t.ot_misc.get_username_for_log(req);		// populate the username/uuid
+		body.tx_id = t.ot_misc.buildTxId(req);
+
+		exports.create(body, (err, resp) => {
+			if (cb) { return cb(err, resp); }
+		});
 	};
 
 	// ------------------------------------------
@@ -274,7 +286,6 @@ module.exports = function (logger, ev, t) {
 
 						// ------- Webhook ------- //
 						if (doc.type === 'webhook_tx') {
-							doc.id = doc.tx_id;
 							doc.ts_display = (doc.status === 'pending') ? doc.ts_started : doc.ts_completed;
 
 							const last_athena_msg = (Array.isArray(doc.athena_messages) && doc.athena_messages.length > 0) ?
@@ -282,17 +293,11 @@ module.exports = function (logger, ev, t) {
 							doc.message = doc.description + ': ' + last_athena_msg;		// build the display message
 						}
 
-						// --- Other Notification --- //
-						else if (doc.type === 'other' || doc.type === 'notification') {
-							doc.id = doc._id;
-						}
-
 						// build a local date by using the browsers local time
 						if (doc && doc.ts_display) {
 							const tmp = doc.ts_display - offset_ms;
 							doc.local_date = t.misc.formatDate(tmp, '%n/%D/%Y - %i:%m:%s %P');
 						}
-
 
 						ret.push({
 							local_date: doc.local_date,
@@ -304,6 +309,7 @@ module.exports = function (logger, ev, t) {
 							by: doc.by,
 							status: doc.status,
 							tx_id: doc.tx_id,
+							id: doc._id,
 							component_id: doc.component_id ? doc.component_id : undefined
 						});
 					}
@@ -392,6 +398,85 @@ module.exports = function (logger, ev, t) {
 				main_req._notifications = main_req._notifications.concat(fake_req._notifications); // merge
 			}
 		}
+	};
+
+	//--------------------------------------------------
+	// List all notifications
+	//--------------------------------------------------
+	/*
+	* req: {}  // request object
+	*/
+	exports.list_all = (req, cb) => {
+		const url_parts = typeof req.url === 'string' ? t.url.parse(req.url, true) : null;
+		let opts = null;
+		if (url_parts && url_parts.query) {
+			opts = url_parts.query;					// pass all query params directly into options
+		}
+		opts.SKIP_CACHE = t.ot_misc.skip_cache(req);
+
+		t.notifications.get(opts, (err, resp) => {
+			if (err) {
+				logger.error('[notification apis] - could not get notifications', err);
+				err.statusCode = err.statusCode ? err.statusCode : 500;
+				return cb(err);
+			} else {
+				return cb(null, resp);
+			}
+		});
+	};
+
+	//--------------------------------------------------
+	// Delete all notifications
+	//--------------------------------------------------
+	/*
+	* req: {}  // request object
+	*/
+	exports.delete_all = (req, cb) => {
+
+		// build a notification doc
+		const notice = { message: 'deleting all notifications' };
+		t.notifications.procrastinate(req, notice);
+
+		t.notifications.purge((err, resp) => {
+			if (err) {
+				logger.error('[notification apis] - could not delete all notifications', err);
+				err.statusCode = err.statusCode ? err.statusCode : 500;
+				return cb(err);
+			} else {
+				const ret = {
+					message: 'ok',
+					details: resp,
+				};
+				return cb(null, ret);
+			}
+		});
+	};
+
+	//--------------------------------------------------
+	// Archive notifications
+	//--------------------------------------------------
+	/*
+	* req: {}  // request object
+	*/
+	exports.archive = (req, cb) => {
+
+		// build a notification doc
+		const notice = { message: 'archiving notifications' };
+		t.notifications.procrastinate(req, notice);
+
+		t.notifications.archive_db_notifications(req.body.notification_ids, (err, res) => {
+			if (err) {
+				logger.error('[notification apis] - could not archive notifications', err);
+				err.statusCode = err.statusCode ? err.statusCode : 500;
+				return cb(err);
+			} else {
+				const ret = {
+					message: 'ok',
+					details: res,
+				};
+				return cb(null, ret);
+			}
+		});
 	};
 
 	return exports;

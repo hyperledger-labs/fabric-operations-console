@@ -21,6 +21,7 @@ import isEmail from 'validator/lib/isEmail';
 import HiddenText from '../components/HiddenText/HiddenText';
 import StitchApi from '../rest/StitchApi';
 import { VALIDATION_ERRORS } from '../rest/ValidatedRestApi';
+import { EventsRestApi } from '../rest/EventsRestApi';
 const semver = require('semver');
 const JSZip = require('jszip');
 const decompressTargz = require('decompress-targz');
@@ -259,7 +260,8 @@ const Helper = {
 	exportNode(node) {
 		let exportedNode = Helper.getExportedNode(node);
 		const type = node.type ? '_' + node.type.replace(/fabric-/, '') : '';
-		let fileName = (node.display_name || node.cluster_name || node.name) + type + '.json';
+		const nodeName = (node.display_name || node.cluster_name || node.name);
+		let fileName = nodeName + type + '.json';
 
 		exportedNode = JSON.stringify(exportedNode, null, 4);
 		let blob = new Blob([exportedNode], { type: 'application/json;' });
@@ -274,6 +276,12 @@ const Helper = {
 			createTarget.appendChild(link);
 			link.click();
 			createTarget.removeChild(link);
+
+			try {
+				EventsRestApi.recordActivity({ status: 'success', log: 'exported component ' + nodeName });
+			} catch (e) {
+				console.error('unable to record export', e);
+			}
 		}
 	},
 
@@ -345,6 +353,12 @@ const Helper = {
 						createTarget.appendChild(link);
 						link.click();
 						createTarget.removeChild(link);
+
+						try {
+							EventsRestApi.recordActivity({ status: 'success', log: 'bulk export of ' + exportedNodes.length + ' component' + (exportedNodes.length > 1 ? 's' : '') });
+						} catch (e) {
+							console.error('unable to record export', e);
+						}
 					}
 					resolve();
 				},
@@ -373,6 +387,12 @@ const Helper = {
 			createTarget.appendChild(link);
 			link.click();
 			createTarget.removeChild(link);
+
+			try {
+				EventsRestApi.recordActivity({ status: 'success', log: 'exported certificate' });
+			} catch (e) {
+				console.error('unable to record export', e);
+			}
 		}
 	},
 

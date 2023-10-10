@@ -24,7 +24,7 @@ import Helper from '../../utils/helper';
 import PageContainer from '../PageContainer/PageContainer';
 //import Logger from '../Log/Logger';
 import PageHeader from '../PageHeader/PageHeader';
-import AuditLogsApi from '../../rest/AuditLogsApi';
+import { EventsRestApi } from '../../rest/EventsRestApi';
 import ItemContainer from '../ItemContainer/ItemContainer';
 import emptyImage from '../../assets/images/empty_nodes.svg';
 import SidePanel from '../SidePanel/SidePanel';
@@ -65,7 +65,7 @@ class AuditLogs extends Component {
 	// get logs - no search/filters
 	async getLogs() {
 		try {
-			const logs = await AuditLogsApi.getLogs({ limit: this.PAGE_SIZE, skip: 0 });
+			const logs = await EventsRestApi.getLogs({ limit: this.PAGE_SIZE, skip: 0 });
 			this.props.updateState(SCOPE, {
 				logs: logs ? logs.notifications : [],
 				displayLogCount: logs ? logs.total : 0,			// the total number to display in the table (w/filters)
@@ -94,7 +94,7 @@ class AuditLogs extends Component {
 	// download ALL audit logs as a text file
 	downloadAllLogs = async log => {
 		try {
-			const logs = await AuditLogsApi.getLogs({ limit: this.numberOfTotalLogs(), skip: 0 });
+			const logs = await EventsRestApi.getLogs({ limit: this.numberOfTotalLogs(), skip: 0 });
 			this.props.updateState(SCOPE, {
 				logs: logs ? logs.notifications : [],
 			});
@@ -160,7 +160,7 @@ class AuditLogs extends Component {
 
 		// else go get the new page data
 		try {
-			const logs = await AuditLogsApi.getLogs({ limit: Number(this.PAGE_SIZE), skip: Number(skip) });
+			const logs = await EventsRestApi.getLogs({ limit: Number(this.PAGE_SIZE), skip: Number(skip) });
 			const all_logs = this.props.logs.concat(logs.notifications);
 			this.props.updateState(SCOPE, {
 				logs: logs ? all_logs : [],
@@ -319,7 +319,7 @@ class AuditLogs extends Component {
 				return await this.getLogs();							// if no search terms, do normal api
 			} else {
 				try {
-					const logs = await AuditLogsApi.getLogs({ limit: this.numberOfTotalLogs(), skip: 0, search: search });
+					const logs = await EventsRestApi.getLogs({ limit: this.numberOfTotalLogs(), skip: 0, search: search });
 					this.props.updateState(SCOPE, {
 						logs: logs ? logs.notifications : [],
 						displayLogCount: logs ? logs.returning : 0,		// in this case the total should reflect the number of logs after applying the filter

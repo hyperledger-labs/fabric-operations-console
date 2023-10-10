@@ -785,6 +785,15 @@ module.exports = function (logger, ev, t) {
 			} else {
 				req._component_display_name = doc ? doc.display_name : null;					// store name for activity tracker
 				doc.type = doc.type ? doc.type.toLowerCase() : '?';
+
+				// build a notification doc
+				const notice = {
+					message: 'editing component ' + (doc ? doc.display_name : '-'),
+					component_id: (doc ? doc._id : '-'),
+					component_display_name: (doc ? doc.display_name : '-'),
+				};
+				t.notifications.procrastinate(req, notice);
+
 				const parsed = {
 					iid: (ev.CRN && ev.CRN.instance_id) ? ev.CRN.instance_id : 'iid-not-set',
 					component_id: req.params.athena_component_id,
@@ -1469,6 +1478,15 @@ module.exports = function (logger, ev, t) {
 				return cb(err, null);
 			} else {
 				doc.type = doc.type ? doc.type.toLowerCase() : '?';
+
+				// build a notification doc
+				const notice = {
+					message: 'sending config block to component ' + (doc ? doc.display_name : '-'),
+					component_id: (doc ? doc._id : '-'),
+					component_display_name: (doc ? doc.display_name : '-'),
+				};
+				t.notifications.procrastinate(req, notice);
+
 				const parsed = {
 					iid: (ev.CRN && ev.CRN.instance_id) ? ev.CRN.instance_id : 'iid-not-set',
 					component_id: req.params.athena_component_id,
@@ -1651,12 +1669,22 @@ module.exports = function (logger, ev, t) {
 		req._include_deployment_attributes = true;
 		req._skip_cache = true;
 
+
 		// ----- Get current admin certs from deployer ----- //
 		exports.get_component_data(req, (err, data) => {
 			if (err || !data) {
 				logger.error('[deployer lib]', debug_tx_id, 'unable to get component data from deployer:', err);
 				return cb(err, null);
 			} else {
+
+				// build a notification doc
+				const notice = {
+					message: 'editing admin certs on component ' + (data && data.athena_doc ? data.athena_doc.display_name : '-'),
+					component_id: (data && data.athena_doc ? data.athena_doc._id : '-'),
+					component_display_name: (data && data.athena_doc ? data.athena_doc.display_name : '-'),
+				};
+				t.notifications.procrastinate(req, notice);
+
 				const obj = edit_admin_certs(data.deployer_data);							// do the work
 
 				if (obj.changes_made === 0) {

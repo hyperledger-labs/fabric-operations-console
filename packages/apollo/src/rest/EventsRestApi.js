@@ -14,79 +14,77 @@
  * limitations under the License.
 */
 import { RestApi } from './RestApi';
+import helper from '../utils/helper';
 
 class EventsRestApi {
-	static async sendEvent(eventOpts) {
-		try {
-			RestApi.post('/api/v2/events' + eventOpts.url, eventOpts);
-		} catch (e) {
-			// do nothing...
+
+	// get all activity logs
+	static async getLogs(opts) {
+		if (!isNaN(opts.limit)) {
+			opts.limit = Number(opts.limit);
 		}
+		if (!isNaN(opts.skip)) {
+			opts.skip = Number(opts.skip);
+		}
+		opts.timezoneOffset = new Date().getTimezoneOffset();
+		return RestApi.get('/api/v3/notifications' + helper.formatObjAsQueryParams(opts));
+	}
+
+	/* create a new activity log
+	{
+		status: 'success'
+		log: 'export a component'
+	}
+	*/
+	static async recordActivity(opts) {
+		return RestApi.post('/api/v3/notifications', opts);
 	}
 
 	static async sendCreateChannelEvent(channel_id, msp_id) {
-		const at_event = {
-			url: `/channels/${channel_id}`,
-			action_verb: 'create',
-			http_code: 200,
-			client_details: {
-				msp_id,
-			},
-		};
-		EventsRestApi.sendEvent(at_event);
+		try {
+			EventsRestApi.recordActivity({ status: 'success', log: `MSP "${msp_id}" has created channel "${channel_id}"`, code: 200 });
+		} catch (e) {
+			console.error('unable to record channel creation', e);
+		}
 	}
 
 	static async sendUpdateChannelEvent(channel_id, msp_id) {
-		const at_event = {
-			url: `/channels/${channel_id}`,
-			action_verb: 'update',
-			http_code: 200,
-			client_details: {
-				msp_id,
-			},
-		};
-		EventsRestApi.sendEvent(at_event);
+		try {
+			EventsRestApi.recordActivity({ status: 'success', log: `MSP "${msp_id}" has updated channel "${channel_id}"`, code: 200 });
+		} catch (e) {
+			console.error('unable to record channel edit', e);
+		}
 	}
 
 	static async sendJoinChannelEvent(channel_id, peers) {
-		const at_event = {
-			url: `/peer/${channel_id}`,
-			action_verb: 'enable',
-			http_code: 200,
-			client_details: {
-				peers: peers.map(peer => {
-					return { display_name: peer.display_name, msp_id: peer.msp_id };
-				}),
-			},
-		};
-		EventsRestApi.sendEvent(at_event);
+		try {
+			const peer_names = peers.map(peer => {
+				return '"' + peer.display_name + '"';
+			});
+			EventsRestApi.recordActivity({
+				status: 'success',
+				log: (peer_names.length > 1 ? 'peers' : 'peer') + `${peer_names.join(', ')} ` + (peer_names.length > 1 ? 'have' : 'has') + `joined the channel "${channel_id}"`,
+				code: 200
+			});
+		} catch (e) {
+			console.error('unable to record channel join', e);
+		}
 	}
 
 	static async sendInstallCCEvent(cc_name, cc_version, peer) {
-		const at_event = {
-			url: `/chaincode/${cc_name}_${cc_version}`,
-			action_verb: 'create',
-			http_code: 200,
-			client_details: {
-				peer: {
-					display_name: peer.display_name,
-					msp_id: peer.msp_id,
-				},
-			},
-		};
-		EventsRestApi.sendEvent(at_event);
+		try {
+			EventsRestApi.recordActivity({ status: 'success', log: `installed chaincode "${cc_name}" @ "${cc_version}" on peer "${peer.display_name}"`, code: 200 });
+		} catch (e) {
+			console.error('unable to record cc install', e);
+		}
 	}
 
 	static async sendInstantiateCCEvent(cc_name, cc_version, channel_id) {
-		const at_event = {
-			url: `/chaincode/${cc_name}_${cc_version}`,
-			action_verb: 'update',
-			http_code: 200,
-			client_details: {
-				channel: channel_id,
-			},
-		};
-		EventsRestApi.sendEvent(at_event);
+		try {
+			EventsRestApi.recordActivity({ status: 'success', log: `instantiated chaincode "${cc_name}" @ "${cc_version}" on channel "${channel_id}"`, code: 200 });
+		} catch (e) {
+			console.error('unable to record cc install', e);
+		}
 	}
 }
 
