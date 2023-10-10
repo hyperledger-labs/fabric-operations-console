@@ -40,29 +40,37 @@ class EventsRestApi {
 		return RestApi.post('/api/v3/notifications', opts);
 	}
 
-	static async sendCreateChannelEvent(channel_id, msp_id) {
+	static async sendCreateChannelEvent(channel_id, msp_id, status) {
 		try {
-			EventsRestApi.recordActivity({ status: 'success', log: `MSP "${msp_id}" has created channel "${channel_id}"`, code: 200 });
+			EventsRestApi.recordActivity({
+				status: status === 'error' ? 'error' : 'success',
+				log: `creating channel "${channel_id}" - MSP "${msp_id}"`,
+				code: 200
+			});
 		} catch (e) {
 			console.error('unable to record channel creation', e);
 		}
 	}
 
-	static async sendUpdateChannelEvent(channel_id, msp_id) {
+	static async sendUpdateChannelEvent(channel_id, msp_id, status) {
 		try {
-			EventsRestApi.recordActivity({ status: 'success', log: `MSP "${msp_id}" has updated channel "${channel_id}"`, code: 200 });
+			EventsRestApi.recordActivity({
+				status: status === 'error' ? 'error' : 'success',
+				log: `updating channel "${channel_id}" - MSP "${msp_id}" `,
+				code: 200
+			});
 		} catch (e) {
 			console.error('unable to record channel edit', e);
 		}
 	}
 
-	static async sendJoinChannelEvent(channel_id, peers) {
+	static async sendJoinChannelEvent(channel_id, peers, status) {
 		try {
 			const peer_names = peers.map(peer => {
 				return '"' + peer.display_name + '"';
 			});
 			EventsRestApi.recordActivity({
-				status: 'success',
+				status: status === 'error' ? 'error' : 'success',
 				log: (peer_names.length > 1 ? 'peers' : 'peer') + `${peer_names.join(', ')} ` + (peer_names.length > 1 ? 'have' : 'has') + `joined the channel "${channel_id}"`,
 				code: 200
 			});
@@ -71,19 +79,66 @@ class EventsRestApi {
 		}
 	}
 
-	static async sendInstallCCEvent(cc_name, cc_version, peer) {
+	static async sendInstallCCEvent(cc_name, cc_version, peer, status) {
 		try {
-			EventsRestApi.recordActivity({ status: 'success', log: `installed chaincode "${cc_name}" @ "${cc_version}" on peer "${peer.display_name}"`, code: 200 });
+			EventsRestApi.recordActivity({
+				status: status === 'error' ? 'error' : 'success',
+				log: `installing chaincode "${cc_name}" @ "${cc_version}" on peer "${peer.display_name}"`,
+				code: 200
+			});
 		} catch (e) {
 			console.error('unable to record cc install', e);
 		}
 	}
 
-	static async sendInstantiateCCEvent(cc_name, cc_version, channel_id) {
+	static async sendInstantiateCCEvent(cc_name, cc_version, channel_id, status) {
 		try {
-			EventsRestApi.recordActivity({ status: 'success', log: `instantiated chaincode "${cc_name}" @ "${cc_version}" on channel "${channel_id}"`, code: 200 });
+			EventsRestApi.recordActivity({
+				status: status === 'error' ? 'error' : 'success',
+				log: `instantiating chaincode "${cc_name}" @ "${cc_version}" on channel "${channel_id}"`,
+				code: 200
+			});
 		} catch (e) {
-			console.error('unable to record cc install', e);
+			console.error('unable to record cc instantiate', e);
+		}
+	}
+
+	static async sendRegisterUserEvent(identity, ca, status) {
+		try {
+			EventsRestApi.recordActivity({
+				status: status === 'error' ? 'error' : 'success',
+				log: `registering identity "${identity}" on CA "${(ca ? ca.id : '-')}"`,
+				api: 'POST:/api/v1/identities',
+				code: 200
+			});
+		} catch (e) {
+			console.error('unable to record ca user registration', e);
+		}
+	}
+
+	static async sendDeleteUserEvent(identity, ca, status) {
+		try {
+			EventsRestApi.recordActivity({
+				status: status === 'error' ? 'error' : 'success',
+				log: `removing identity "${identity}" on CA "${(ca ? ca.id : '-')}"`,
+				api: 'DELETE:/api/v1/identities/{id}',
+				code: 200
+			});
+		} catch (e) {
+			console.error('unable to record ca user delete', e);
+		}
+	}
+
+	static async sendEnrollUserEvent(identity, ca, status) {
+		try {
+			EventsRestApi.recordActivity({
+				status: status === 'error' ? 'error' : 'success',
+				log: `enrolling identity "${identity}" on CA "${(ca ? ca.id : '-')}"`,
+				api: 'POST:/api/v1/enroll',
+				code: 200
+			});
+		} catch (e) {
+			console.error('unable to record ca user enroll', e);
 		}
 	}
 }

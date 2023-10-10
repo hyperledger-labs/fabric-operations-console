@@ -787,12 +787,14 @@ module.exports = function (logger, ev, t) {
 				doc.type = doc.type ? doc.type.toLowerCase() : '?';
 
 				// build a notification doc
-				const notice = {
-					message: 'editing component ' + (doc ? doc.display_name : '-'),
-					component_id: (doc ? doc._id : '-'),
-					component_display_name: (doc ? doc.display_name : '-'),
-				};
-				t.notifications.procrastinate(req, notice);
+				if (doc) {
+					const notice = {
+						message: 'editing component "' + (doc._id || doc.display_name) + '"',
+						component_id: doc._id,
+						component_display_name: doc.display_name,
+					};
+					t.notifications.procrastinate(req, notice);
+				}
 
 				const parsed = {
 					iid: (ev.CRN && ev.CRN.instance_id) ? ev.CRN.instance_id : 'iid-not-set',
@@ -1678,10 +1680,11 @@ module.exports = function (logger, ev, t) {
 			} else {
 
 				// build a notification doc
+				const c_data = (data && data.athena_doc) ? data.athena_doc._id : {};
 				const notice = {
-					message: 'editing admin certs on component ' + (data && data.athena_doc ? data.athena_doc.display_name : '-'),
-					component_id: (data && data.athena_doc ? data.athena_doc._id : '-'),
-					component_display_name: (data && data.athena_doc ? data.athena_doc.display_name : '-'),
+					message: 'editing admin certs on component "' + (c_data._id || c_data.display_name || '-') + '"',
+					component_id: c_data._id || '-',
+					component_display_name: c_data.display_name || '-',
 				};
 				t.notifications.procrastinate(req, notice);
 

@@ -106,7 +106,7 @@ module.exports = function (logger, ev, t) {
 
 					// build a notification doc
 					const notice = {
-						message: 'added ' + req.body.users.length + 'users',
+						message: 'adding ' + req.body.users.length + 'users',
 					};
 					t.notifications.procrastinate(req, notice);
 
@@ -223,7 +223,7 @@ module.exports = function (logger, ev, t) {
 
 						// build a notification doc
 						const notice = {
-							message: 'edited user ' + uuid,
+							message: 'editing user ' + t.misc.censorEmail(email),
 						};
 						t.notifications.procrastinate(req, notice);
 					}
@@ -494,7 +494,7 @@ module.exports = function (logger, ev, t) {
 	exports.delete_api_key = (req, cb) => {
 
 		// build a notification doc
-		const notice = { message: 'deleting api key ' + req.params.key_id.substring(0, 4) + '***' };
+		const notice = { message: 'deleting api key ' + req.params.key_id.substring(0, 4) + '***', api: 'DELETE:/api/v3/permissions/{apikey}' };
 		t.notifications.procrastinate(req, notice);
 
 		// delete the doc
@@ -859,7 +859,7 @@ module.exports = function (logger, ev, t) {
 	exports.delete_access_token = (req, cb) => {
 
 		// build a notification doc
-		const notice = { message: 'deleting access token ' + req.params.id.substring(0, 4) + '***' };
+		const notice = { message: 'deleting access token ' + req.params.id.substring(0, 4) + '***', api: 'DELETE:/ak/api/v3/identity/token/{apikey}' };
 		t.notifications.procrastinate(req, notice);
 
 		// delete the doc

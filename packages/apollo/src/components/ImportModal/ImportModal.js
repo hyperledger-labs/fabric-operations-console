@@ -30,6 +30,7 @@ import Logger from '../Log/Logger';
 import SVGs from '../Svgs/Svgs';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
+import { EventsRestApi } from '../../rest/EventsRestApi';
 const JSZip = require('jszip');
 
 const SCOPE = 'importModal';
@@ -65,6 +66,13 @@ class ImportModal extends React.Component {
 	async createItems(items) {
 		let newItems;
 		let newItem;
+		try {
+			if (items.length > 0) {
+				EventsRestApi.recordActivity({ status: 'success', log: 'importing ' + items.length + ' component' + (items.length > 1 ? 's' : '') + ' from zip' });
+			}
+		} catch (e) {
+			console.error('unable to record import', e);
+		}
 		while (items.length > 0) {
 			const item = items.pop();
 			newItem = null;

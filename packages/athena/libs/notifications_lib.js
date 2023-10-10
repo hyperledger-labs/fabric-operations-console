@@ -129,7 +129,7 @@ module.exports = function (logger, ev, t) {
 			}
 			details_so_far.by = details_so_far.by || t.ot_misc.get_username_for_log(req);	// populate the username/uuid
 			details_so_far.tx_id = t.ot_misc.buildTxId(req);
-			if (req.method && req.path) {
+			if (req.method && req.path && !details_so_far.api) {
 				details_so_far.api = req.method + ':' + (req._wildcard_path || req.path); 	// set the api, might be helpful
 			}
 			req._notifications.push(details_so_far);
@@ -146,7 +146,7 @@ module.exports = function (logger, ev, t) {
 						opts.elapsed_ms = Date.now() - req._start_time; 					// might be helpful to know elapsed time
 					}
 				}
-				opts.status = t.ot_misc.is_error_code(opts.code) ? 'error' : 'success';		// set status string for doc
+				opts.status = opts.status || (t.ot_misc.is_error_code(opts.code) ? 'error' : 'success');		// set status string for doc
 				exports.create(opts, () => {
 					return cb_created();
 				});
@@ -198,7 +198,7 @@ module.exports = function (logger, ev, t) {
 			// --- Request is good, make the doc --- //
 			const doc = {
 				type: 'notification',
-				message: msg,
+				message: msg.substring(0, 256),										// limit length, truncate violations
 				ts_display: body.ts_display || Date.now(),							// timestamp provided from input
 				status: lc_status,
 				by: body.by || '-',
@@ -302,7 +302,7 @@ module.exports = function (logger, ev, t) {
 						ret.push({
 							local_date: doc.local_date,
 							timestamp: doc.ts_display,
-							log: doc.message,
+							log: t.misc.safe_str(doc.message, true),
 							http_details: doc.api,
 							response_code: doc.code,
 							elapsed_ms: doc.elapsed_ms,
@@ -310,7 +310,8 @@ module.exports = function (logger, ev, t) {
 							status: doc.status,
 							tx_id: doc.tx_id,
 							id: doc._id,
-							component_id: doc.component_id ? doc.component_id : undefined
+							component_id: doc.component_id ? doc.component_id : undefined,
+							component_display_name: doc.component_display_name ? doc.component_display_name : undefined,
 						});
 					}
 				}

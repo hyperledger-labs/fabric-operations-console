@@ -411,6 +411,7 @@ class JoinChannelModal extends React.Component {
 				return;
 			}
 		} catch (joinPeerError) {
+			EventsRestApi.sendJoinChannelEvent(this.props.channel, peers, 'error');
 			let error = joinPeerError.error;
 			let peerName = joinPeerError.peer.display_name;
 			Log.error(error);

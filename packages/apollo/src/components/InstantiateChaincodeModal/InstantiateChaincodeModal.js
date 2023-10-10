@@ -538,6 +538,7 @@ class InstantiateChaincodeModal extends Component {
 					if (error && error.grpc_resp && error.grpc_resp.statusMessage && error.grpc_resp.statusMessage.indexOf('signature set did not satisfy policy') >= 0) {
 						msg = 'error_sync_channel';
 					}
+					EventsRestApi.sendInstantiateCCEvent(body.chaincode_id, body.chaincode_version, body.channel_id, 'error');
 					reject({
 						title: msg,
 						details: error,

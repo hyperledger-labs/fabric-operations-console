@@ -278,7 +278,7 @@ const Helper = {
 			createTarget.removeChild(link);
 
 			try {
-				EventsRestApi.recordActivity({ status: 'success', log: 'exported component ' + nodeName });
+				EventsRestApi.recordActivity({ status: 'success', log: 'exporting component "' + (node.id || nodeName) + '"' });
 			} catch (e) {
 				console.error('unable to record export', e);
 			}
@@ -389,7 +389,7 @@ const Helper = {
 			createTarget.removeChild(link);
 
 			try {
-				EventsRestApi.recordActivity({ status: 'success', log: 'exported certificate' });
+				EventsRestApi.recordActivity({ status: 'success', log: 'exporting certificate' });
 			} catch (e) {
 				console.error('unable to record export', e);
 			}

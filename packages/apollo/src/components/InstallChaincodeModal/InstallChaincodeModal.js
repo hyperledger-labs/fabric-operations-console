@@ -248,7 +248,7 @@ class InstallChaincodeModal extends Component {
 							});
 
 							// send async event... don't wait
-							EventsRestApi.sendInstallCCEvent(this.props.uploadedFileDetails.name, this.props.uploadedFileDetails.version, peer, 'failed');
+							EventsRestApi.sendInstallCCEvent(this.props.uploadedFileDetails.name, this.props.uploadedFileDetails.version, peer, 'error');
 							reject();
 						});
 				});
