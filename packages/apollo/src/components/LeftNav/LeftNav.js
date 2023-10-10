@@ -63,7 +63,7 @@ const mainNav = [
 		newGroup: true,
 	},
 	{
-		icon: 'fingerprint', // 'terminal' looks good to
+		icon: 'find', // 'fingerprint' looks good to
 		path: '/audit',
 		id: 'audit_logs',
 		globalNavSubmenu: [],
