@@ -32,9 +32,9 @@ module.exports = function (logger, ev, t) {
 			DOMAIN: ev.DOMAIN,									// null is valid, don't make this a question mark
 			PORT: Number(ev.PORT) || '?',
 			DEPLOYER_URL: t.misc.redact_basic_auth(ev.DEPLOYER_URL) || '?',
-			DB_SYSTEM: ev.DB_SYSTEM || '?',
-			DB_COMPONENTS: ev.DB_COMPONENTS || '?',
-			DB_SESSIONS: ev.DB_SESSIONS || '?',
+			//DB_SYSTEM: ev.DB_SYSTEM || '?',
+			//DB_COMPONENTS: ev.DB_COMPONENTS || '?',
+			//DB_SESSIONS: ev.DB_SESSIONS || '?',
 			HOST_URL: ev.HOST_URL || '?',
 			CONFIGTXLATOR_URL: ev.CONFIGTXLATOR_URL || '?',
 			LANDING_URL: ev.LANDING_URL || '?',
@@ -52,14 +52,17 @@ module.exports = function (logger, ev, t) {
 			},
 			FILE_LOGGING: {
 				server: {
-					path: t.log_lib.get_log_path(),
-					file_name: t.log_lib.build_log_file_name(ev, t.log_lib.get_log_base_name('server'), 'server'),
+					// removing these two b/c "security concerns" 2023/10/10
+					//path: t.log_lib.get_log_path(),
+					//file_name: t.log_lib.build_log_file_name(ev, t.log_lib.get_log_base_name('server'), 'server'),
+
 					enabled: t.log_lib.is_file_logging_enabled(ev, 'server'),
 					level: t.log_lib.get_logging_level(ev, 'server'),
 				},
 				client: {
-					path: t.log_lib.get_log_path(),
-					file_name: t.log_lib.build_log_file_name(ev, t.log_lib.get_log_base_name('client'), 'client'),
+					// removing these two b/c "security concerns" 2023/10/10
+					//path: t.log_lib.get_log_path(),
+					//file_name: t.log_lib.build_log_file_name(ev, t.log_lib.get_log_base_name('client'), 'client'),
 					enabled: t.log_lib.is_file_logging_enabled(ev, 'client'),
 					level: t.log_lib.get_logging_level(ev, 'client'),
 				}
@@ -69,21 +72,21 @@ module.exports = function (logger, ev, t) {
 			PROXY_TLS_HTTP_URL: ev.PROXY_TLS_HTTP_URL,
 			PROXY_TLS_WS_URL: ev.PROXY_TLS_WS_URL || '?',
 			PROXY_TLS_FABRIC_REQS: ev.PROXY_TLS_FABRIC_REQS,	// false is valid, don't make this a question mark
-			IAM_URL: ev.IAM ? (ev.IAM.URL || '?') : '?',
-			IAM_CACHE_ENABLED: ev.IAM_CACHE_ENABLED,			// false is valid, don't make this a question mark
-			IBM_ID_URL: ev.IBM_ID ? (ev.IBM_ID.URL || '?') : '?',
-			IBM_ID_CALLBACK_URL: (ev.HOST_URL + ev.LOGIN_URI) || '?',
+			//IAM_URL: ev.IAM ? (ev.IAM.URL || '?') : '?',
+			//IAM_CACHE_ENABLED: ev.IAM_CACHE_ENABLED,			// false is valid, don't make this a question mark
+			//IBM_ID_URL: ev.IBM_ID ? (ev.IBM_ID.URL || '?') : '?',
+			//IBM_ID_CALLBACK_URL: (ev.HOST_URL + ev.LOGIN_URI) || '?',
 			INFRASTRUCTURE: ev.INFRASTRUCTURE || '?',
 			MAX_REQ_PER_MIN: ev.MAX_REQ_PER_MIN || '?',
-			CSP_HEADER_VALUES: ev.CSP_HEADER_VALUES || '?',
+			//CSP_HEADER_VALUES: ev.CSP_HEADER_VALUES || '?',
 			CLUSTER_DATA: ev.CLUSTER_DATA || {},
 			IGNORE_CONFIG_FILE: ev.IGNORE_CONFIG_FILE === true,	// false is valid, don't make this a question mark',
-			TRUST_UNKNOWN_CERTS: ev.TRUST_UNKNOWN_CERTS === true, // false is valid, don't make this a question mark
+			//TRUST_UNKNOWN_CERTS: ev.TRUST_UNKNOWN_CERTS === true, // false is valid, don't make this a question mark
 			MAX_REQ_PER_MIN_AK: ev.MAX_REQ_PER_MIN || '?',
 			VERSIONS: t.ot_misc.parse_versions(),
-			MEMORY_CACHE_ENABLED: ev.MEMORY_CACHE_ENABLED,		// false is valid, don't make this a question mark
-			SESSION_CACHE_ENABLED: ev.SESSION_CACHE_ENABLED,	// false is valid, don't make this a question mark
-			PROXY_CACHE_ENABLED: ev.PROXY_CACHE_ENABLED,		// false is valid, don't make this a question mark
+			//MEMORY_CACHE_ENABLED: ev.MEMORY_CACHE_ENABLED,		// false is valid, don't make this a question mark
+			//SESSION_CACHE_ENABLED: ev.SESSION_CACHE_ENABLED,	// false is valid, don't make this a question mark
+			//PROXY_CACHE_ENABLED: ev.PROXY_CACHE_ENABLED,		// false is valid, don't make this a question mark
 			TRANSACTION_VISIBILITY: ev.TRANSACTION_VISIBILITY || {},
 			INACTIVITY_TIMEOUTS: ev.INACTIVITY_TIMEOUTS,
 			FABRIC_CAPABILITIES: ev.FABRIC_CAPABILITIES,		// settings.js guarantees this field will exist
@@ -106,9 +109,9 @@ module.exports = function (logger, ev, t) {
 				}
 			},
 			THE_DEFAULT_RESOURCES_MAP: ev.THE_DEFAULT_RESOURCES_MAP || '?',
-			TRUST_PROXY: ev.TRUST_PROXY, 						// false is valid, don't make this a question mark
-			ACTIVITY_TRACKER_FILENAME: ev.ACTIVITY_TRACKER_FILENAME || '?',
-			HSM: ev.HSM,										// false is valid, don't make this a question mark
+			//TRUST_PROXY: ev.TRUST_PROXY, 						// false is valid, don't make this a question mark
+			//ACTIVITY_TRACKER_FILENAME: ev.ACTIVITY_TRACKER_FILENAME || '?',
+			//HSM: ev.HSM,										// false is valid, don't make this a question mark
 			LDAP: {
 				SEARCH_BASE: ev.LDAP.SEARCH_BASE || '?',
 				GROUP_SEARCH_BASE: ev.LDAP.GROUP_SEARCH_BASE || '?',
