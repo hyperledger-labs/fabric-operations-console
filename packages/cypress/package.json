@@ -1,5 +1,5 @@
 {
-  "name": "cypress_poc",
+  "name": "cypress",
   "browser": {
     "fs": true,
     "path": true,
@@ -7,7 +7,7 @@
   },
   "platform": "node",
   "version": "1.0.0",
-  "description": "Cypress automation POC",
+  "description": "Cypress automation tests for console",
   "main": "index.js",
   "scripts": {
     "cp": "cp ../stitch/dist/* public/",

@@ -19,6 +19,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 18.x
+      - run: npm install
       - run: npm ci --legacy-peer-deps
       - run: npm run lint
 
