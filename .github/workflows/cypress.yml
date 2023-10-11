@@ -21,8 +21,8 @@ jobs:
           node-version: 18.x
       - run: npm install
       - run: npm ci --legacy-peer-deps
-      - run: npm cpappolosrc
-      - run: npm cpesbuildjs
+      - run: npm run cpappolosrc
+      - run: npm run cpesbuildjs
       - run: npm run lint
 
   audit:
