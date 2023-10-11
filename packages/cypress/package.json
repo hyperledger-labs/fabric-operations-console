@@ -10,8 +10,7 @@
   "description": "Cypress automation tests for console",
   "main": "index.js",
   "scripts": {
-    "cpappolosrc": "cp -r ../apollo/src .",
-    "cpesbuildjs": "cp ../apollo/esbuild.js .",
+    "cpappolosrc": "cp -r ../apollo/src .;cp ../apollo/esbuild.js .;cp ../apollo/.eslintrc.json .",
     "start": "npm run cp && npm run build",
     "build": "node esbuild.js",
     "test": "jest",
