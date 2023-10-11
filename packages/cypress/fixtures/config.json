@@ -1,6 +1,6 @@
 {
-    "loginUrl": "https://ibpconsole-ibm-hlfsupport-console-console.ketul-supportcluster-68e10f583f026529fe7a89da40169ef4-0000.eu-gb.containers.appdomain.cloud/",
-    "loginUserName": "shah.ketul@ibm.com",
-    "loginDefaultPassword": "ibpconsolepassword",
-    "loginPassword": "ibpconsolePassword@1"
+    "loginUrl": "https://Your-Consoles-URL-Here",
+    "loginUserName": "Username-Here",
+    "loginDefaultPassword": "Password-Here",
+    "loginPassword": "Password-Here"
 }
