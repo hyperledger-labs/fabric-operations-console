@@ -22,7 +22,6 @@ jobs:
       - run: npm install
       - run: npm ci --legacy-peer-deps
       - run: npm run cpappolosrc
-      - run: npm run cpesbuildjs
       - run: npm run lint
 
   audit:
