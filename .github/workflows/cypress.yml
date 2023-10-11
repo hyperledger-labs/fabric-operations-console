@@ -21,6 +21,8 @@ jobs:
           node-version: 18.x
       - run: npm install
       - run: npm ci --legacy-peer-deps
+      - run: npm cp-appoloSrc
+      - run: npm cp-esbuild
       - run: npm run lint
 
   audit:
@@ -42,6 +44,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 18.x
+      - run: npm install
       - run: npm ci --legacy-peer-deps
       - run: npm run build
 
@@ -53,5 +56,6 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 18.x
+      - run: npm install
       - run: npm ci --legacy-peer-deps
       - run: npm test
