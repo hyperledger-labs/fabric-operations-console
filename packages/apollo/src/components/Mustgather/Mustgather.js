@@ -47,7 +47,6 @@ export class Mustgather extends Component {
 
 	componentDidMount() {
 		this.checkGatherStatus();
-		//this.setupBackoff();
 	}
 
 	setupBackoff() {
