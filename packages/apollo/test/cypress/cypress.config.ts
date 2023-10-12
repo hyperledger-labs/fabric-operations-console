@@ -10,6 +10,8 @@ export default defineConfig({
     viewportWidth: 1200,
     viewportHeight: 860,
     testIsolation: false,
+    supportFile: "support/e2e.js",
+    fixturesFolder: "fixtures",
     async setupNodeEvents(
       on: Cypress.PluginEvents,
       config: Cypress.PluginConfigOptions

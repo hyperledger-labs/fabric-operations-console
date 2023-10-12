@@ -11,9 +11,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "regression": "cypress run -e TAGS=\"@regression\" --headed --browser chrome --spec 'cypress/e2e/features/*.feature'",
-    "regression-headless": "cypress run -e TAGS=\"@regression\" --browser chrome --spec 'cypress/e2e/features/*.feature'",
-    "buildnetwork": "cypress run --headed --browser chrome --spec 'cypress/e2e/features/2-BuildNetwork.feature'"
+    "regression": "cypress run -e TAGS=\"@regression\" --headed --browser chrome --spec 'e2e/features/*.feature'",
+    "regression-headless": "cypress run -e TAGS=\"@regression\" --browser chrome --spec 'e2e/features/*.feature'",
+    "buildnetwork": "cypress run --headed --browser chrome --spec 'e2e/features/2-BuildNetwork.feature'"
   },
   "author": "Ketul Shah",
   "license": "ISC",
@@ -30,10 +30,10 @@
   },
   "cypress-cucumber-preprocessor": {
     "nonGlobalStepDefinitions": true,
-    "stepDefinitions": "cypress/support/step_definitions/*.js",
+    "stepDefinitions": "support/step_definitions/*.js",
     "html": {
       "enabled": true,
-      "output": "cypress/reports/cucumber-html/ibp_execution_report.html"
+      "output": "reports/cucumber-html/ibp_execution_report.html"
     }
   },
   "dependencies": {
