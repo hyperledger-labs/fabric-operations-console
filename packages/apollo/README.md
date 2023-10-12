@@ -1,3 +1,6 @@
+**Protractor reached end-of-life in August 2023.** <br>
+For Cucumber driven Cypress UI automated functional test cases of fabric operations console, please refer to guide [here](https://github.com/hyperledger-labs/fabric-operations-console/tree/main/packages/apollo/test/cypress/README.md).
+
 # UI Component for Operational Tools
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
