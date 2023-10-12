@@ -654,26 +654,6 @@ class ChannelComponent extends Component {
 		const items = [];
 		if (isCreateChannelFeatureAvailable) {
 			items.push({
-				id: 'toggle_archived_channels',
-				text: this.props.history.location.search === '?visibility=all' ? 'hide_archived_channels' : 'show_archived_channels',
-				fn: () => {
-					if (this.props.history.location.search === '?visibility=all') {
-						this.props.history.push('/channels');
-						this.props.updateState(SCOPE, {
-							showingAllChannels: false
-						});
-					} else {
-						this.props.history.push('?visibility=all');
-						if (this.props.pending_osn_channels.length === 0) {
-							this.getAllOrdererChannels({ visibility: 'all' });
-						}
-						this.props.updateState(SCOPE, {
-							showingAllChannels: true
-						});
-					}
-				},
-				icon: this.props.history.location.search === '?visibility=all' ? 'visibilityOff' : 'visibilityOn',
-			}, {
 				id: 'create_channel',
 				text: 'create_channel',
 				fn: () => {
@@ -733,13 +713,13 @@ class ChannelComponent extends Component {
 								emptyImage={emptyImage}
 								emptyTitle="empty_pending_channels_title"
 								emptyMessage="empty_pending_channels_text"
-								containerTitle={this.props.showingAllChannels ? 'osn_channels' : 'pending_osn_channels'}
+								containerTitle="pending_osn_channels"
 								containerTooltip="channels_desc_orderer"
 								tooltipDirection="right"
 								id="test__channels2--add--tile"
 								itemId="pending_osn_channels"
 								loading={this.props.orderer_loading}
-								items={this.props.showingAllChannels ? this.props.pending_osn_channels : []}
+								items={this.props.pending_osn_channels}
 								listMapping={[
 									{
 										header: 'name',
