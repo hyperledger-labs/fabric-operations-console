@@ -4,59 +4,27 @@
 			{
 				"_id": "c88180380a7ae3d355ffff438500291f",
 				"_rev": "1-b0473046fda12cebb3ee3d4d2c968763",
-				"type": "fabric-ca",
-				"short_name": "node",
-				"url": "<some url w/protocol and port here>",
-				"msp_id": "PeerOrg1",
-				"location": "<geo location description>",
-				"ca_name": "org1CA",
-				"users": [
-					{
-						"affiliation": "org1",
-						"enroll_id": "admin",
-						"enroll_secret": "bla"
-					}
-				],
-				"timestamp": 1538158288770,
-				"additional_property": "some additional property",
 				"doc": {
-					"_id": "testing id",
-					"athena_messages": [
-						"athena message"
-					],
-					"tx_id": "tx id",
-					"type": "webhook_tx",
-					"description": "some description",
-					"ts_completed": "completed"
+					"_id": "testing dummy 1",
+					"tx_id": "asdf",
+					"ts_display": 1538158288770,
+					"message": "this is a test",
+					"api": "POST:/api/v3/weapons/nuclear",
+					"code": 200,
+					"status": "success"
 				}
 			},
 			{
 				"_id": "c88180380a7ae3d355ffff438500291f",
 				"_rev": "1-b0473046fda12cebb3ee3d4d2c968763",
-				"type": "fabric-ca",
-				"short_name": "node",
-				"url": "<some url w/protocol and port here>",
-				"msp_id": "PeerOrg1",
-				"location": "<geo location description>",
-				"ca_name": "org1CA",
-				"users": [
-					{
-						"affiliation": "org1",
-						"enroll_id": "admin",
-						"enroll_secret": "bla"
-					}
-				],
-				"timestamp": 1538158288770,
-				"additional_property": "some additional property",
 				"doc": {
-					"_id": "testing id",
-					"athena_messages": [
-						"athena message"
-					],
-					"tx_id": "tx id",
-					"type": "other",
-					"description": "some description",
-					"ts_completed": "completed"
+					"_id": "testing dummy 2",
+					"tx_id": "jkl",
+					"ts_display": 1538158288770,
+					"message": "this is another test",
+					"api": "POST:/api/v3/weapons/biologic",
+					"code": 201,
+					"status": "success"
 				}
 			}
 		]
@@ -78,22 +46,24 @@
 	"get_response": {
 		"notifications": [
 			{
-				"description": "some description",
-				"id": "tx id",
-				"message": "some description: athena message",
-				"ts_completed": "completed",
-				"ts_display": "completed",
-				"type": "webhook_tx"
+				"http_details": "POST:/api/v3/weapons/nuclear",
+				"id": "testing dummy 1",
+				"local_date": "9/28/2018 - 6:11:28 PM",
+				"log": "this is a test",
+				"response_code": 200,
+				"status": "success",
+				"timestamp": 1538158288770,
+				"tx_id": "asdf"
 			},
 			{
-				"athena_messages": [
-					"athena message"
-				],
-				"description": "some description",
-				"id": "testing id",
-				"ts_completed": "completed",
-				"tx_id": "tx id",
-				"type": "other"
+				"http_details": "POST:/api/v3/weapons/biologic",
+				"id": "testing dummy 2",
+				"local_date": "9/28/2018 - 6:11:28 PM",
+				"log": "this is another test",
+				"response_code": 201,
+				"status": "success",
+				"timestamp": 1538158288770,
+				"tx_id": "jkl"
 			}
 		],
 		"returning": 2

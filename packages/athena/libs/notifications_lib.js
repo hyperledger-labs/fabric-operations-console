@@ -316,7 +316,7 @@ module.exports = function (logger, ev, t) {
 					}
 				}
 			}
-			return ret;
+			return t.misc.sortItOut(ret);
 		}
 
 		// filter the notification data down by a user search

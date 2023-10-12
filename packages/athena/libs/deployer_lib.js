@@ -1680,7 +1680,7 @@ module.exports = function (logger, ev, t) {
 			} else {
 
 				// build a notification doc
-				const c_data = (data && data.athena_doc) ? data.athena_doc._id : {};
+				const c_data = (data && data.athena_doc) ? data.athena_doc : {};
 				const notice = {
 					message: 'editing admin certs on component "' + (c_data._id || c_data.display_name || '-') + '"',
 					component_id: c_data._id || '-',
