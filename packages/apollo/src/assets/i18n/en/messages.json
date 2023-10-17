@@ -2828,12 +2828,13 @@
 	"log_title": "Activity log",
 	"view_details": "View details",
 	"by_title": "By",
-	"tx_id_title": "Transaction Id",
+	"tx_id_title": "API Id",
 	"download_page_button_txt": "Export current page",
 	"download_all_button_txt": "Export all",
 	"copy_log_button_tooltip": "Copy log data to clipboard",
 	"log_detail_desc": "The full details of this activity log are below.",
 	"log_columns_desc": "Display",
+	"audit_no_access_msg": "Only users with the \"Manager\" can view this page",
 	"hide_archived_channels": "Hide Archived Channels",
 	"show_archived_channels": "Show Archived Channels"
 }
