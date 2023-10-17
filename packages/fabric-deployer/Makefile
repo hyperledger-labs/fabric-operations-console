@@ -23,7 +23,7 @@ ARCH ?= $(shell go env GOARCH)
 BRANCH ?= $(shell git branch --show-current)
 REGISTRY ?= us.icr.io/ibp-golang
 IBP_VER ?= 2.5.3
-GO_VER ?= 1.17.7
+GO_VER ?= 1.20.6
 BUILD_ID = $(shell git rev-parse --short HEAD)
 BUILD_DATE = $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 

@@ -22,7 +22,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
 	cfg "github.com/IBM-Blockchain/fabric-deployer/config"
