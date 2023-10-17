@@ -25,65 +25,26 @@ module.exports = function (logger, ev, t) {
 	const exports = {};
 	const routes_2_ignore = prepare_routes_2_ignore();									// array of regular expressions of paths to ignore
 
-	let filename = ev.ACTIVITY_TRACKER_FILENAME ? t.path.basename(ev.ACTIVITY_TRACKER_FILENAME) : null;
-	const AT_FILENAME = (filename && filename.indexOf('.')) ? filename : 'audit.log';
-	const path2file = ev.ACTIVITY_TRACKER_FILENAME ? t.path.join(__dirname, '../logs', AT_FILENAME) : '';
-	let atLogger = null;
 	const DATE_FMT = '%Y/%M/%d-%H:%m:%s.%rZ';
+	const DOC_TYPE = 'activity-log';
 
-	// init the log file
-	if (ev.ACTIVITY_TRACKER_FILENAME && path2file) {
-		t.misc.check_dir_sync({ file_path: path2file, create: true });					// check if the path exists, create it if not
-		if (t.fs.existsSync(path2file)) {
-			logger.silly('[activity] activity tracker logs is enabled, using location:', path2file);
-		} else {
-			try {
-				t.fs.writeFileSync(path2file, '');											// init file
-				logger.debug('[activity] init log file:', path2file);
-			} catch (e) {
-				logger.error('[activity] unable to write log file:', path2file);
-				logger.error(e);
-			}
-		}
-
-		// build symbolic links if activity tracker log files are outside the athena log folder
-		//build_sym_links();
-
-		// make a winston logger for the activity tracker logs
-		atLogger = new (t.winston.Logger)({
-			level: 'debug',
-			transports: [
-				new t.winston.transports.File({
-					filename: path2file,
-					maxsize: 1024 * 1024 * 2,		// unsure of size
-					maxFiles: 5,
-					tailable: true,
-					colorize: false,
-					maxRetries: 10,
-					json: true,						// I _believe_ AT requires JSON logs
-					timestamp: function () {
-						return undefined;
-					},
-				}),
-			]
-		});
-
-		atLogger.info({
-			eventTime: t.misc.formatDate(Date.now(), DATE_FMT),
-			type: 'system',
-			message: 'console has started - process id: ' + process.env.ATHENA_ID
-		});
-	}
+	store_to_db({
+		eventTime: t.misc.formatDate(Date.now(), DATE_FMT),
+		type: DOC_TYPE,
+		message: 'fabric operations console has started - process id: ' + process.env.ATHENA_ID,
+		outcome: 'success',
+	});
 
 	//-------------------------------------------------------------
 	// build & track the event for activity tracker - (events are http requests but its not all requests, just the ones we want)
 	//-------------------------------------------------------------
 	exports.track_api = (req, res, json_resp) => {
-		if (ev.ACTIVITY_TRACKER_FILENAME && path2file) {
-			const at_event = build_event(req, res, json_resp);	// create event, strict format!
-			logger.silly('[activity] generated event for req:', t.ot_misc.buildTxId(req), path2file);
-			atLogger.debug(at_event);							// track the event by logging it to this file
-			return at_event;									// return it for tests
+		if (ev.FEATURE_FLAGS && ev.FEATURE_FLAGS.audit_logging) {
+			const at_event = build_event(req, res, json_resp);	// create event
+			logger.silly('[activity] generated event for req:', t.ot_misc.buildTxId(req));
+			store_to_db(at_event, () => {
+				return at_event;								// return it for tests
+			});													// track the event by recording it
 		}
 		return null;
 	};
@@ -109,7 +70,7 @@ module.exports = function (logger, ev, t) {
 			eventTime: t.misc.formatDate(Date.now(), DATE_FMT),
 
 			// type of log
-			type: 'http',
+			type: DOC_TYPE,
 
 			// <service name>.<object descriptor>.<action verb>
 			action: formatAction(req),
@@ -150,9 +111,6 @@ module.exports = function (logger, ev, t) {
 
 				// http status code of response
 				statusCode: httpCode,
-
-				// error message
-				//errorMsg: t.ot_misc.is_error_code(httpCode) ? json_resp : undefined,		// include error response
 			},
 
 			outcome: t.ot_misc.is_error_code(httpCode) ? 'failure' : 'success',
@@ -385,30 +343,18 @@ module.exports = function (logger, ev, t) {
 	}
 
 	//-------------------------------------------------------------
-	// build symbolic links in the log folder to the activity tracker files (iff the activity file is outside our log folder)
+	// store log to couch
 	//-------------------------------------------------------------
-	/* no longer needed
-	function build_sym_links() {
-		const log_folder = t.log_lib.get_log_path();
-		if (!path2file.includes(log_folder)) {										// test if this file is outside the log folder
-			build_link(t.path.join(ev.ACTIVITY_TRACKER_FILENAME, AT_FILENAME));
-		}
-
-		function build_link(pathToFile) {
-			if (t.fs.existsSync(pathToFile)) {										// build the link if the file exists
-				const file_name = t.path.basename(pathToFile);						// get the filename from the path
-				try {
-					const path2link = t.path.join(log_folder, file_name);
-					t.fs.symlink(pathToFile, path2link, 'file', err => {
-						logger.debug('[activity] symbolic link created', path2link);
-					});
-				} catch (e) {
-					logger.error('[activity] unable to create symbolic link:', pathToFile);
-					logger.error(e);
-				}
+	function store_to_db(data, cb) {
+		t.otcc.createNewDoc({ db_name: ev.DB_SYSTEM }, t.misc.sortKeys(data), (err, wrote_doc) => {
+			if (err) {
+				logger.error('[activity lib] - could not create notification doc', err);
+			} else {
+				//logger.debug('[activity lib] - created notification doc', wrote_doc._id);
 			}
-		}
-	}*/
+			if (cb) { return cb(err, wrote_doc); }
+		});
+	}
 
 	return exports;
 };

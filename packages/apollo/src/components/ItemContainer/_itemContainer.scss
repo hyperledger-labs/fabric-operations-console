@@ -360,7 +360,7 @@
 }
 
 
-.ibp__item--button:disabled{
+.ibp__item--button:disabled {
 	border-color: #121619 !important;
 }
 
@@ -492,6 +492,16 @@
 					cursor: pointer;
 				}
 			}
+		}
+	}
+}
+
+#audit-logs {
+	tbody {
+		font-size: 0.8rem !important;
+
+		tr {
+			height: 2rem !important;
 		}
 	}
 }
@@ -682,6 +692,6 @@
 	pointer-events: none;
 }
 
-.bx--checkbox:disabled + .bx--checkbox-label::before{
+.bx--checkbox:disabled+.bx--checkbox-label::before {
 	border-color: #575f66 !important;
 }

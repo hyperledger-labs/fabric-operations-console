@@ -209,20 +209,6 @@ class ImportCAModal extends React.Component {
 				.then(ca => {
 					IdentityApi.removeCertificateAuthorityAssociations(ca.id);
 					this.props.onComplete([ca]);
-					const resultValue = data.replica_set_cnt ? data.replica_set_cnt : 1;
-					if (window.trackEvent) {
-						window.trackEvent('Created Object', {
-							objectType: 'Certificate Authority',
-							object: this.props.crn_string && ca.id ? `${this.props.crn_string}fabric-ca:${Helper.hash_str(ca.id)}` : Helper.hash_str(data.display_name),
-							tenantId: this.props.CRN.instance_id,
-							accountGuid: this.props.CRN.account_id,
-							milestoneName: 'Create Certificate Authority',
-							resultValue: `replica-${resultValue}`,
-							category: this.props.ca_database,
-							environment: data.hsm && data.hsm.label ? 'hsm-enabled' : 'hsm-disabled',
-							'user.email': this.props.userInfo.loggedInAs.email,
-						});
-					}
 					resolve();
 				})
 				.catch(error => {
@@ -250,28 +236,6 @@ class ImportCAModal extends React.Component {
 			Log.error(`${prefix} failed: ${error}`);
 			throw error;
 		}
-
-		cas_with_location.forEach(ca => {
-			try {
-				if (window.trackEvent) {
-					window.trackEvent('Created Object', {
-						objectType: 'Certificate Authority',
-						object:
-							NodeRestApi.isCreatedComponent(ca) && this.props.crn_string
-								? `${this.props.crn_string}fabric-ca:${Helper.hash_str(ca.ca_name)}`
-								: Helper.hash_str(ca.ca_name),
-						tenantId: this.props.CRN.instance_id,
-						accountGuid: this.props.CRN.account_id,
-						url: ca.api_url,
-						milestoneName: 'Import certificate authority',
-						'meta.region': ca.location,
-						'user.email': this.props.userInfo.loggedInAs.email,
-					});
-				}
-			} catch (error) {
-				Log.warn(`${prefix} event tracking failed: ${error}`);
-			}
-		});
 		imported_cas.forEach(newCA => {
 			IdentityApi.removeCertificateAuthorityAssociations(newCA.id);
 		});

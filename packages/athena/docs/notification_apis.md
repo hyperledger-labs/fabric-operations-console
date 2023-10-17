@@ -9,6 +9,7 @@ There are two types of notifications.
 - notifications will not be built if the deployer provision call fails.
 	- this seems fine, for now
 
+
 ## 1. Get all notifications
 This will return all notifications.
 Use this api to paginate through notifications.

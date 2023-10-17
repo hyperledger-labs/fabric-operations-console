@@ -80,12 +80,14 @@ class Main extends Component {
 					max_idle_time: max_idle_time,
 					max_idle_warning_time: max_idle_warning_time,
 					in_read_only_mode: in_read_only_mode,
+					audit_logging_enabled: _.get(settings, 'FEATURE_FLAGS.audit_logging_enabled') ? true : false,
 				});
 			})
 			.catch(error => {
 				console.error(error);
 				this.props.updateState(SCOPE, {
 					in_read_only_mode: false,
+					audit_logging_enabled: false
 				});
 			});
 	}
@@ -149,7 +151,7 @@ class Main extends Component {
 					<div role="main"
 						className="ibp-main-content"
 					>
-						<LeftNav />
+						<LeftNav auditLogsEnabled={this.props.audit_logging_enabled} />
 						<div className="ibp-page-content">
 							<ScrollToTop>
 								<Switch>
@@ -248,7 +250,7 @@ class Main extends Component {
 										exact
 									/>
 									<Route exact
-										path="/audit-logs"
+										path="/audit"
 										component={AuditLogs}
 									/>
 									<Route path="*"
@@ -334,6 +336,7 @@ const dataProps = {
 	max_idle_time: PropTypes.number,
 	max_idle_warning_time: PropTypes.number,
 	in_read_only_mode: PropTypes.bool,
+	audit_logging_enabled: PropTypes.bool,
 };
 
 Main.propTypes = {

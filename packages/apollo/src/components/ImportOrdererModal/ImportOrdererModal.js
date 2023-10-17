@@ -432,27 +432,6 @@ class ImportOrdererModal extends React.Component {
 			newError.details = error;
 			throw newError;
 		}
-		try {
-			if (window.trackEvent) {
-				window.trackEvent('Created Object', {
-					objectType: 'Orderer',
-					object:
-						this.props.crn_string && data.display_name
-							? `${this.props.crn_string}fabric-orderer:${Helper.hash_str(data.display_name)}`
-							: Helper.hash_str(data.display_name),
-					tenantId: this.props.CRN.instance_id,
-					accountGuid: this.props.CRN.account_id,
-					milestoneName: 'Create an ordering service',
-					category: `raft-${this.props.raft_nodes}`,
-					environment: data.hsm && data.hsm.label ? 'hsm-enabled' : 'hsm-disabled',
-					url: data.api_url ? data.api_url : '',
-					'user.email': this.props.userInfo.loggedInAs.email,
-				});
-			}
-		} catch (error) {
-			Log.warn(`event tracking failed: ${error}`);
-		}
-
 		const new_orderers = [orderer];
 		if (this.props.identity && this.props.identity.name) {
 			this.associateNewOrderers(new_orderers);
@@ -492,29 +471,6 @@ class ImportOrdererModal extends React.Component {
 			Log.error(`${prefix} failed: ${error}`);
 			throw error;
 		}
-		this.props.data.forEach(json => {
-			try {
-				if (window.trackEvent) {
-					window.trackEvent('Created Object', {
-						objectType: 'Orderer',
-						object:
-							this.props.crn_string && json.display_name
-								? `${this.props.crn_string}fabric-orderer:${Helper.hash_str(json.display_name)}`
-								: Helper.hash_str(json.display_name),
-						category: 'foundational',
-						tenantId: this.props.CRN.instance_id,
-						accountGuid: this.props.CRN.account_id,
-						milestoneName: 'Import ordering service',
-						url: json.grpcwp_url,
-						'meta.region': json.location,
-						'user.email': this.props.userInfo.loggedInAs.email,
-					});
-				}
-			} catch (error) {
-				Log.warn(`${prefix} event tracking failed: ${error}`);
-			}
-		});
-
 		this.onComplete(orderers);
 	}
 

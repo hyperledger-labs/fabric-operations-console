@@ -23,6 +23,7 @@ import SettingsApi from '../../rest/SettingsApi';
 import Helper from '../../utils/helper';
 import LeftNavItem from '../LeftNavItem/LeftNavItem';
 import SubNavItem from '../SubNavItem/SubNavItem';
+import ActionsHelper from '../../utils/actionsHelper';
 
 const mainNav = [
 	{
@@ -56,17 +57,17 @@ const mainNav = [
 		globalNavSubmenu: [],
 	},
 	{
-		icon: 'fingerprint', // 'terminal' looks good to
-		path: '/audit-logs',
-		id: 'audit_logs',
-		globalNavSubmenu: [],
-	},
-	{
 		icon: 'member',
 		path: '/access',
 		id: 'access',
 		globalNavSubmenu: [],
 		newGroup: true,
+	},
+	{
+		icon: 'find', // 'fingerprint' looks good to
+		path: '/audit',
+		id: 'audit_logs',
+		globalNavSubmenu: [],
 	},
 	{
 		icon: 'settings',
@@ -121,18 +122,25 @@ class LeftNav extends Component {
 		return title;
 	}
 
+	// build the left navigation for the whole app
 	buildNavItems() {
 		if (this.props.submenu) {
 			return this.props.submenu;
 		}
 
-		for (let i in mainNav) {
-			if (mainNav[i] && mainNav[i].id === 'audit_logs') {
-				// todo, contextually bring back audit_logs
-				mainNav.splice(i, 1);
+		// remove audit log tab if its disabled
+		const origNav = JSON.parse(JSON.stringify(mainNav));
+		for (let i in origNav) {
+			if (origNav[i] && origNav[i].id === 'audit_logs') {
+				if (!this.props.auditLogsEnabled) {							// if its not enabled, remove the tab
+					origNav.splice(i, 1);
+				} else if (!ActionsHelper.canManageUsers(this.props.userInfo)) {	// if user is not a manager, remove the tab
+					origNav.splice(i, 1);
+				}
+				break;
 			}
 		}
-		return mainNav;
+		return origNav;
 	}
 
 	buildBackNavItem() {
@@ -187,6 +195,8 @@ const dataProps = {
 	location: PropTypes.shape({
 		pathname: PropTypes.string,
 	}),
+	auditLogsEnabled: PropTypes.bool,
+	userInfo: PropTypes.object,
 };
 
 LeftNav.propTypes = {
@@ -198,6 +208,7 @@ export default withRouter(
 	connect((state, props) => {
 		let newProps = Helper.mapStateToProps(state.leftNav, dataProps);
 		newProps['namespace'] = _.get(state, 'settings.cluster_data.namespace');
+		newProps['userInfo'] = state['userInfo'];
 		return newProps;
 	})(withLocalize(LeftNav))
 );

@@ -575,7 +575,7 @@ module.exports = function (logger, ev, t) {
 
 				// build a notification doc
 				const notice = {
-					message: 'adding a new ' + comp_doc.type + ': ' + (comp_doc.display_name || comp_doc._id),
+					message: 'adding new ' + comp_doc.type + ' "' + (comp_doc._id || comp_doc.display_name) + '"',
 					component_id: comp_doc._id,
 					component_type: comp_doc.type || null,
 					component_display_name: comp_doc.display_name || null,
@@ -662,11 +662,13 @@ module.exports = function (logger, ev, t) {
 				const key = prevent_edit_keys[i];
 				delete req.body[key];
 			}
+			let desc = [];
 			for (let key in req.body) {
 				if (t.misc.is_different(resp_getDoc[key], req.body[key])) { // log the differences for debugging
 					edits.push(t.misc.safe_str(key));
 				}
 				resp_getDoc[key] = req.body[key];							// make the changes the client wants done
+				desc.push('"' + key + '"');
 			}
 
 			const fmt_doc = exports.format_input_to_doc(resp_getDoc, null);
@@ -691,7 +693,7 @@ module.exports = function (logger, ev, t) {
 
 			// build a notification doc
 			const notice = {
-				message: 'editing component: ' + (fmt_doc.display_name || fmt_doc._id),
+				message: 'editing component "' + (fmt_doc._id || fmt_doc.display_name) + '" - ' + desc.join(', '),
 				component_id: fmt_doc._id,
 				component_type: fmt_doc.type,
 				component_display_name: fmt_doc.display_name,
@@ -853,7 +855,7 @@ module.exports = function (logger, ev, t) {
 				const type = exports.get_type_from_doc(doc) || 'component';		// try to get the component type from the doc
 				const name = doc.display_name || doc.short_name || doc._id;
 				const notice = {
-					message: 'deleting ' + type + ': ' + name,
+					message: 'deleting ' + type + ' "' + (doc._id || name) + '"',
 					component_id: doc._id,
 					component_type: doc.type,
 					component_display_name: doc.display_name,
@@ -1241,7 +1243,7 @@ module.exports = function (logger, ev, t) {
 
 		// build a notification doc
 		const notice = {
-			message: 'deleting components by tag: ' + lc_tag,
+			message: 'deleting components by tag "' + lc_tag + '"',
 			tag: lc_tag,
 		};
 		t.notifications.procrastinate(req, notice);

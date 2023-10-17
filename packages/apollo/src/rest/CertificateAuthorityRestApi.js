@@ -20,6 +20,7 @@ import Helper from '../utils/helper';
 import IdentityApi from './IdentityApi';
 import { NodeRestApi } from './NodeRestApi';
 import { RestApi } from './RestApi';
+import { EventsRestApi } from './EventsRestApi';
 const naturalSort = require('javascript-natural-sort');
 const Log = new Logger('CertificateAuthorityRestApi');
 
@@ -205,9 +206,11 @@ class CertificateAuthorityRestApi {
 		try {
 			const deleteCaIdentity = promisify(window.stitch.deleteCaIdentity);
 			const resp = await deleteCaIdentity(opts);
+			EventsRestApi.sendDeleteUserEvent(enroll_id, ca);
 			result = resp.data;
 		} catch (error) {
 			Log.error(error);
+			EventsRestApi.sendDeleteUserEvent(enroll_id, ca, 'error');
 			throw error;
 		}
 		return result;

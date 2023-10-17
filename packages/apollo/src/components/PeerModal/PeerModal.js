@@ -326,26 +326,6 @@ class PeerModal extends React.Component {
 		}
 
 		this.onComplete();
-
-		try {
-			if (window.trackEvent) {
-				window.trackEvent('Deleted Object', {
-					objectType: 'Peer',
-					object:
-						this.props.peer.location === 'ibm_saas' && this.props.crn_string && this.props.peer.id
-							? `${this.props.crn_string}fabric-peer:${Helper.hash_str(this.props.peer.id)}`
-							: Helper.hash_str(this.props.peer.display_name),
-					category: 'operational',
-					tenantId: this.props.CRN.instance_id,
-					accountGuid: this.props.CRN.account_id,
-					milestoneName: this.props.peer.location === 'ibm_saas' ? 'Delete a peer' : 'Remove a peer',
-					'meta.region': this.props.peer.location,
-					'user.email': this.props.userInfo.loggedInAs.email,
-				});
-			}
-		} catch (error) {
-			Log.warn(`${prefix} event tracking failed: ${error}`);
-		}
 	}
 
 	upgradeNode(resolve, reject) {

@@ -516,19 +516,6 @@ class InstantiateChaincodeModal extends Component {
 			ChannelApi.instantiateChaincode(body)
 				.then(resp => {
 					if (!resp.error) {
-						if (window.trackEvent) {
-							window.trackEvent('Started Process', {
-								processType: 'Smart Contract',
-								process: body.peerId,
-								tenantId: this.props.CRN.instance_id,
-								successFlag: true,
-								accountGuid: this.props.CRN.account_id,
-								milestoneName: 'Instantiate smart contract - Success',
-								environment: body.channel_id,
-								workspaceId: body.chaincode_id,
-								'user.email': this.props.userInfo.email,
-							});
-						}
 						// send async event... don't wait
 						EventsRestApi.sendInstantiateCCEvent(body.chaincode_id, body.chaincode_version, body.channel_id);
 						setTimeout(() => {
@@ -551,6 +538,7 @@ class InstantiateChaincodeModal extends Component {
 					if (error && error.grpc_resp && error.grpc_resp.statusMessage && error.grpc_resp.statusMessage.indexOf('signature set did not satisfy policy') >= 0) {
 						msg = 'error_sync_channel';
 					}
+					EventsRestApi.sendInstantiateCCEvent(body.chaincode_id, body.chaincode_version, body.channel_id, 'error');
 					reject({
 						title: msg,
 						details: error,

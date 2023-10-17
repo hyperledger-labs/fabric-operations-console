@@ -202,9 +202,7 @@ describe('notifications_lib.js', () => {
 							expectBlock: (done) => {
 								notifications.get(tools.misc.sortItOut(notification_objects.populated_rows), (err, resp) => {
 									expect(err).to.equal(null);
-									expect(JSON.stringify(tools.misc.sortItOut(resp))).to.equal(
-										JSON.stringify(tools.misc.sortItOut(notification_objects.get_response))
-									);
+									expect(JSON.parse(JSON.stringify(resp))).to.deep.equal(notification_objects.get_response);
 									done();
 								});
 							}

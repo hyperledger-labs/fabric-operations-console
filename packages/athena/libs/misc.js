@@ -200,8 +200,12 @@ module.exports = function (logger, t) {
 					return date.getUTCFullYear();
 				case 'M':								//Month 0 padded
 					return pad(date.getUTCMonth() + 1, 2);
+				case 'n':								//Month not padded
+					return date.getUTCMonth() + 1;
 				case 'd':								//Date 0 padded
 					return pad(date.getUTCDate(), 2);
+				case 'D':								//Date not padded
+					return date.getUTCDate();
 				case 'H':								//24 Hour 0 padded
 					return pad(date.getUTCHours(), 2);
 				case 'I':								//12 Hour 0 padded
@@ -209,6 +213,11 @@ module.exports = function (logger, t) {
 					if (tmp === 0) { tmp = 12; }		//00:00 should be seen as 12:00am
 					else if (tmp > 12) { tmp -= 12; }
 					return pad(tmp, 2);
+				case 'i':								//12 Hour not padded
+					tmp = date.getUTCHours();
+					if (tmp === 0) { tmp = 12; }		//00:00 should be seen as 12:00am
+					else if (tmp > 12) { tmp -= 12; }
+					return tmp;
 				case 'p':								//am / pm
 					tmp = date.getUTCHours();
 					if (tmp >= 12) { return 'pm'; }

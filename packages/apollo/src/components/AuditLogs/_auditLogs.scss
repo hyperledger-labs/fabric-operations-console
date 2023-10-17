@@ -1,3 +1,89 @@
-.tinyTextWhite {
+.logJsonQuote,
+.logJsonQuoteVal,
+.logJsonKey,
+.logJsonVal,
+.logJsonValSp {
+	font-family: monospace;
+	line-height: 1.5rem;
+}
+
+.logJsonQuote {
+	color: #3d7cf0;
+}
+
+.logJsonQuoteVal {
+	color: #bbb;
+}
+
+.logJsonKey {
+	color: #81a4ec;
+}
+
+.logJsonVal {
+	color: #fff;
+}
+
+.logJsonValSp {
+	color: #4bf4b3;
+}
+
+.logJsonColon,
+.logJsonComma,
+.logJsonBracket {
+	color: #81a4ec
+}
+
+.logJsonLine {
+	margin-left: 2rem;
+}
+
+.logCopyButton {
+	background: #212528;
+	border: 0;
+	line-height: 1rem;
+	position: absolute;
+	top: 7.1rem;
+	right: 2rem;
+	cursor: pointer;
+	color: #fff;
+	padding: 1rem;
+}
+
+.logCopyButton:hover {
+	background: #444;
+}
+
+/*
+svg.flashCopyButton {
+	g {
+		fill: #000 !important
+	}
+}*/
+
+.flashCopyButton {
+	background: #333 !important;
+}
+
+.logDetailsWrap {
+	background: #212528;
+	padding: 0.5rem;
+	max-height: 16.5rem;
+	overflow: auto;
+	margin-top: 1rem;
+}
+
+.logDescWrap {
 	font-size: 0.8rem;
+}
+
+
+.audit-style-wrap {
+	.bx--tooltip__label {
+		font-size: 1.5rem;
+	}
+}
+
+.audit-checkboxes {
+	display: inline-block !important;
+	margin-right: 2rem;
 }

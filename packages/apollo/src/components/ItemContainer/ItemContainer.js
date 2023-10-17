@@ -775,7 +775,19 @@ class ItemContainer extends Component {
 					rows={rows}
 					render={({ rows, headers, getHeaderProps, getSelectionProps, selectedRows }) => (
 						<TableContainer id={this.props.id}>
-							{this.props.containerTitle && !this.props.tileMapping && <h3 className="ibp-container-title">{translate(this.props.containerTitle)}</h3>}
+							{this.props.containerTitle && !this.props.tileMapping &&
+								<h3 className="ibp-container-title">
+									{!this.props.containerTooltip ? (
+										translate(this.props.containerTitle)
+									) : (
+										<BlockchainTooltip triggerText={translate(this.props.containerTitle)}
+											direction={this.props.tooltipDirection}
+										>
+											{translate(this.props.containerTooltip)}
+										</BlockchainTooltip>
+									)}
+								</h3>
+							}
 							{this.props.containerDesc && !this.props.containerDescLink && !this.props.tileMapping && (
 								<div className="ibp-title-desc-container">
 									<p>{translate(this.props.containerDesc)}</p>

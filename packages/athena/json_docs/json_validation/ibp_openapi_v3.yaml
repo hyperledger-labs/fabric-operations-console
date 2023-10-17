@@ -2574,7 +2574,6 @@ paths:
               examples:
                 response:
                   value:
-                    ACTIVITY_TRACKER_FILENAME: /logs
                     ATHENA_ID: 17v7e
                     AUTH_SCHEME: iam
                     CALLBACK_URI: /auth/cb
@@ -2712,7 +2711,6 @@ paths:
               examples:
                 response:
                   value:
-                    ACTIVITY_TRACKER_FILENAME: /logs
                     ATHENA_ID: 17v7e
                     AUTH_SCHEME: iam
                     CALLBACK_URI: /auth/cb
@@ -2978,7 +2976,7 @@ paths:
           schema:
             type: number
             minimum: 1
-            maximum: 1024
+            maximum: 100000
         - name: skip
           in: query
           description: '`skip` is used to paginate through a long list of sorted entries. For example, if there are 100 notifications, you can issue the API with limit=10 and skip=0 to get the first 1-10. To get the next 10, you can set limit=10 and skip=10 so that the values of entries 11-20 are returned.'
@@ -2987,8 +2985,8 @@ paths:
           explode: true
           schema:
             type: number
-            minimum: 1
-            maximum: 1024
+            minimum: 0
+            maximum: 100000
         - $ref: '#/components/parameters/QueryComponentId'
       x-sdk-operations:
         request-examples:
@@ -8790,10 +8788,7 @@ components:
       type: object
       description: Contains the details of all public settings for the UI
       properties:
-        ACTIVITY_TRACKER_FILENAME:
-          type: string
-          description: The path to the activity tracker file. This file holds details of all activity. Defaults to '?' (disabled).
-          example: '/logs'
+
         ATHENA_ID:
           type: string
           description: Random/unique id for the process running the Fabric Operations console server.

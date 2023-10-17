@@ -70,14 +70,15 @@
 	}
 
 	&.ibp-full-page-center-panel {
-		height: 55%;
+		height: 60%;
 		left: 25%;
 		top: 20%;
 		width: 50%;
 
 		&+.ibp-button-container {
 			right: 25%;
-			bottom: 25%;
+			bottom: 12%;
+			width: 50%;
 		}
 	}
 
@@ -136,6 +137,12 @@
 	.ibp-vertical-panel-close {
 		right: 3rem;
 		top: 4rem;
+	}
+
+	.ibp-full-page-center-panel-close {
+		position: fixed;
+		top: 22.5%;
+		right: 26%;
 	}
 
 	.ibp-vertical-panel-button-container,
@@ -343,6 +350,11 @@ textarea.bx--text__input {
 
 .vertical__panel--transitioning--in {
 	animation: verticalPanelEnter 300ms infinite;
+	animation-fill-mode: forwards;
+}
+
+.full__panel--transitioning--in {
+	animation: fullPanelEnter 100ms infinite;
 	animation-fill-mode: forwards;
 }
 

@@ -35,6 +35,7 @@ import Error from './Error';
 import Expand from './Expand';
 import FabricNodes from './FabricNodes';
 import Fingerprint from './Fingerprint';
+import Find from './Find';
 import Grid from './Grid';
 import Help from './Help';
 import IbmCloud from './IbmCloud';
@@ -116,6 +117,8 @@ class SVGs extends Component {
 				return this.setDimensions(<Download />, translate);
 			case 'fingerprint':
 				return this.setDimensions(<Fingerprint />, translate);
+			case 'find':
+				return this.setDimensions(<Find />, translate);
 			case 'grid':
 				return this.setDimensions(<Grid />, translate);
 			case 'help':

@@ -27,10 +27,12 @@ import Logger from '../Log/Logger';
 import SVGs from '../Svgs/Svgs';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
+import { EventsRestApi } from '../../rest/EventsRestApi';
 
 const SCOPE = 'generateCertificate';
 const Log = new Logger(SCOPE);
 
+// this is aka the enroll identity modal
 class GenerateCertificateModal extends Component {
 	constructor(props) {
 		super(props);
@@ -87,10 +89,12 @@ class GenerateCertificateModal extends Component {
 							cert: certificate.certificate,
 							private_key: certificate.private_key,
 						});
+						EventsRestApi.sendEnrollUserEvent(this.props.enroll_id, this.props.ca);
 						resolve();
 					})
 					.catch(error => {
 						Log.error(error);
+						EventsRestApi.sendEnrollUserEvent(this.props.enroll_id, this.props.ca, 'error');
 						reject({
 							title: 'error_generate_cert',
 							details: error,

@@ -75,7 +75,7 @@ export class SidePanel extends React.Component {
 					this.props.closed();
 				}
 			},
-			this.props.largePanel ? 458 : 250
+			this.props.largePanel ? 458 : 100
 		);
 	};
 
@@ -148,21 +148,19 @@ export class SidePanel extends React.Component {
 		if (this.props.isOpening) {
 			className =
 				className +
-				`${this.props.largePanel
-					? ' side__panel--large--transitioning--in'
-					: (this.props.verticalPanel || this.props.fullPageCenter)
-						? ' vertical__panel--transitioning--in'
-						: ' side__panel--transitioning--in'
+				`${this.props.largePanel ? ' side__panel--large--transitioning--in' :
+					this.props.verticalPanel ? ' vertical__panel--transitioning--in' :
+						this.props.fullPageCenter ? ' '
+							: ' side__panel--transitioning--in'
 				}`;
 		}
 		if (this.props.isClosing) {
 			className =
 				className +
-				`${this.props.largePanel
-					? ' side__panel--large--transitioning--out'
-					: (this.props.verticalPanel || this.props.fullPageCenter)
-						? ' vertical__panel--transitioning--out'
-						: ' side__panel--transitioning--out'
+				`${this.props.largePanel ? ' side__panel--large--transitioning--out' :
+					this.props.verticalPanel ? ' vertical__panel--transitioning--out' :
+						this.props.fullPageCenter ? ' '
+							: ' side__panel--transitioning--out'
 				}`;
 		}
 		if (this.props.error) {
@@ -193,7 +191,11 @@ export class SidePanel extends React.Component {
 							/>
 							{!this.props.hideClose && (
 								<button
-									className={`ibp-panel--close-icon-button ${(this.props.verticalPanel || this.props.fullPageCenter) ? 'ibp-vertical-panel-close' : ''}`}
+									className={`
+									ibp-panel--close-icon-button
+									${this.props.verticalPanel ? 'ibp-vertical-panel-close' : ''}
+									${this.props.fullPageCenter ? 'ibp-full-page-center-panel-close' : ''}
+									`}
 									onClick={this.closeSidePanel}
 									aria-label="Close"
 									style={{

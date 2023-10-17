@@ -1532,7 +1532,7 @@ paths:
           explode: true
           schema:
             type: number
-            minimum: 1
+            minimum: 0
             maximum: 1024
         - $ref: '#/components/parameters/QueryComponentId'
       x-sdk-operations:
@@ -6267,10 +6267,6 @@ components:
       type: object
       description: Contains the details of all public settings for the UI
       properties:
-        ACTIVITY_TRACKER_FILENAME:
-          type: string
-          description: The path to the activity tracker file. This file holds details of all activity. Defaults to '?' (disabled).
-          example: '/logs'
         ATHENA_ID:
           type: string
           description: Random/unique id for the process running the Fabric Operations console server.

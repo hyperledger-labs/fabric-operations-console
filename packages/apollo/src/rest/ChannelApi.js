@@ -444,6 +444,7 @@ class ChannelApi {
 					EventsRestApi.sendCreateChannelEvent(options.channel_id, c_opts.msp_id);
 				} catch (error) {
 					Log.error(error);
+					EventsRestApi.sendCreateChannelEvent(options.channel_id, c_opts.msp_id, 'error');
 					throw error;
 				}
 				Log.info('new channel signature resp:', resp3);
@@ -1525,6 +1526,7 @@ class ChannelApi {
 					return resp3.data;
 				} catch (error) {
 					Log.error(error);
+					EventsRestApi.sendUpdateChannelEvent(options.channel_id, c_opts.msp_id, 'error');
 					throw error;
 				}
 			}

@@ -27,6 +27,7 @@ import Form from '../Form/Form';
 import Logger from '../Log/Logger';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
+import { EventsRestApi } from '../../rest/EventsRestApi';
 
 const SCOPE = 'addUser';
 const Log = new Logger(SCOPE);
@@ -78,6 +79,7 @@ export class CAAddUserModal extends Component {
 			};
 			CertificateAuthorityRestApi.addUser(this.props.ca, data)
 				.then(() => {
+					EventsRestApi.sendRegisterUserEvent(this.props.enroll_id, this.props.ca);
 					CertificateAuthorityRestApi.getUsers(this.props.ca)
 						.then(users => {
 							this.props.onComplete(users);
@@ -93,6 +95,7 @@ export class CAAddUserModal extends Component {
 				})
 				.catch(error => {
 					Log.error(error);
+					EventsRestApi.sendRegisterUserEvent(this.props.enroll_id, this.props.ca, 'error');
 					let message = _.get(error, 'msg.msg');
 					let message_key = 'error_ca_add_user';
 					if (message && message.indexOf('already registered') !== -1) {

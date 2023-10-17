@@ -28,7 +28,7 @@ module.exports = (logger, ev, t) => {
 	});
 
 	//--------------------------------------------------
-	// Save client side event for event tracker
+	// Save client side event for event tracker - [legacy] - dsh do not use
 	//--------------------------------------------------
 	app.post('/api/v[123]/events/:resource/:resource_id', t.middleware.verify_view_action_session, (req, res) => {
 		req._client_event = true;						// set flag for activity tracker

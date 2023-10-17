@@ -668,26 +668,6 @@ class OrdererModal extends React.Component {
 		// todo shouldn't be this component's job.  The OrdererDetails component should already know that he should refresh his information.
 		this.onComplete(ordererList);
 
-		if (window.trackEvent && this.props.orderer.location === 'ibm_saas') {
-			try {
-				window.trackEvent('Deleted Object', {
-					objectType: 'Orderer',
-					object:
-						this.props.crn_string && this.props.orderer.cluster_id
-							? `${this.props.crn_string}fabric-orderer:${Helper.hash_str(this.props.orderer.cluster_id)}`
-							: Helper.hash_str(this.props.orderer.display_name),
-					category: 'foundational',
-					tenantId: this.props.CRN.instance_id,
-					accountGuid: this.props.CRN.account_id,
-					milestoneName: 'Delete an ordering service',
-					url: this.props.orderer.grpcwp_url,
-					'user.email': this.props.userInfo.loggedInAs.email,
-				});
-			} catch (error) {
-				Log.warn(`${prefix} event tracking failed: ${error}`);
-			}
-		}
-
 		// todo this page-altering logic should be in the OrdererDetails component.  This component is making assumptions about where it lives
 		let cluster_still_valid = false;
 		if (this.props.orderer.cluster_id) {

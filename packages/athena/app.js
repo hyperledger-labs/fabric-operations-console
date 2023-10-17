@@ -428,7 +428,6 @@ function setup_routes_and_start() {
 	tools.auth_scheme = require('./libs/auth_scheme_lib.js')(logger, ev, tools);
 	tools.keys_lib = require('./libs/keys_lib.js')(logger, ev, tools);
 	tools.logging_apis_lib = require('./libs/logging_apis_lib.js')(logger, ev, tools);
-	tools.notification_apis_lib = require('./libs/notification_apis_lib.js')(logger, ev, tools);
 	tools.other_apis_lib = require('./libs/other_apis_lib.js')(logger, ev, tools);
 	tools.permissions_lib = require('./libs/permissions_lib.js')(logger, ev, tools);
 	tools.signature_collection_lib = require('./libs/signature_collection_lib.js')(logger, ev, tools);
@@ -729,7 +728,7 @@ function setup_pillow_talk() {
 			logger.debug('[pillow] - received a restart message');
 			const notice = {
 				status: 'success',
-				message: 'restarting application via pillow talk',
+				message: 'restarting application',
 				by: doc.by,
 				severity: 'warning',
 			};
@@ -745,7 +744,7 @@ function setup_pillow_talk() {
 			logger.debug('[pillow] - received a delete all sessions message');
 			const notice = {
 				status: 'success',
-				message: 'deleting all sessions via pillow talk',
+				message: 'deleting all sessions',
 				by: doc.by,
 				severity: 'warning',
 			};

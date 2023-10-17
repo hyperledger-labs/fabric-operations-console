@@ -576,6 +576,7 @@ class SignatureRestApi {
 			const submitter_private_key = opts.client_prv_key_b64pem;
 			window.stitch.submitConfigUpdate(opts, async (err, resp) => {
 				if (err || !resp) {
+					EventsRestApi.sendUpdateChannelEvent(opts.channel_id, opts.msp_id, 'error');
 					reject(err);
 				} else {
 					const body = {

@@ -104,6 +104,12 @@ module.exports = function (logger, ev, t) {
 					cb({ statusCode: 400, msg: input_errors, }, null);
 				} else {
 
+					// build a notification doc
+					const notice = {
+						message: 'adding ' + req.body.users.length + 'users',
+					};
+					t.notifications.procrastinate(req, notice);
+
 					// update the settings doc
 					const wr_opts = {
 						db_name: ev.DB_SYSTEM,
@@ -214,6 +220,12 @@ module.exports = function (logger, ev, t) {
 						input_errors.push('uuid does not exist: ' + encodeURI(uuid));
 					} else {
 						settings_doc.access_list[email].roles = lc_roles; 			// edit the user object
+
+						// build a notification doc
+						const notice = {
+							message: 'editing user ' + t.misc.censorEmail(email),
+						};
+						t.notifications.procrastinate(req, notice);
 					}
 				}
 
@@ -482,7 +494,7 @@ module.exports = function (logger, ev, t) {
 	exports.delete_api_key = (req, cb) => {
 
 		// build a notification doc
-		const notice = { message: 'deleting api key ' + req.params.key_id.substring(0, 4) + '***' };
+		const notice = { message: 'deleting api key ' + req.params.key_id.substring(0, 4) + '***', api: 'DELETE:/api/v3/permissions/{apikey}' };
 		t.notifications.procrastinate(req, notice);
 
 		// delete the doc
@@ -847,7 +859,7 @@ module.exports = function (logger, ev, t) {
 	exports.delete_access_token = (req, cb) => {
 
 		// build a notification doc
-		const notice = { message: 'deleting access token ' + req.params.id.substring(0, 4) + '***' };
+		const notice = { message: 'deleting access token ' + req.params.id.substring(0, 4) + '***', api: 'DELETE:/ak/api/v3/identity/token/{apikey}' };
 		t.notifications.procrastinate(req, notice);
 
 		// delete the doc
