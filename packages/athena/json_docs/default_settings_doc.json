@@ -89,6 +89,7 @@
 		]
 	},
 	"feature_flags": {
+		"audit_logging_enabled": true,
 		"capabilities_enabled": true,
 		"create_channel_enabled": true,
 		"high_availability": false,
