@@ -2834,7 +2834,7 @@
 	"copy_log_button_tooltip": "Copy log data to clipboard",
 	"log_detail_desc": "The full details of this activity log are below.",
 	"log_columns_desc": "Display",
-	"audit_no_access_msg": "Only users with the \"Manager\" can view this page",
+	"audit_no_access_msg": "Only users with the \"Manager\" role can view this page.",
 	"threat_message":"This service instance must be deleted by Oct 31, 2023 to avoid a blockchain network outage",
 	"hide_archived_channels": "Hide Archived Channels",
 	"show_archived_channels": "Show Archived Channels"

@@ -122,18 +122,22 @@ class LeftNav extends Component {
 		return title;
 	}
 
+	// build the left navigation for the whole app
 	buildNavItems() {
 		if (this.props.submenu) {
 			return this.props.submenu;
 		}
-		const origNav = JSON.parse(JSON.stringify(mainNav));
 
 		// remove audit log tab if its disabled
-		if (!this.props.auditLogsEnabled) {
-			for (let i in origNav) {
-				if (origNav[i] && origNav[i].id === 'audit_logs' || !ActionsHelper.canManageUsers(this.props.userInfo)) {
+		const origNav = JSON.parse(JSON.stringify(mainNav));
+		for (let i in origNav) {
+			if (origNav[i] && origNav[i].id === 'audit_logs') {
+				if (!this.props.auditLogsEnabled) {							// if its not enabled, remove the tab
+					origNav.splice(i, 1);
+				} else if (!ActionsHelper.canManageUsers(this.props.userInfo)) {	// if user is not a manager, remove the tab
 					origNav.splice(i, 1);
 				}
+				break;
 			}
 		}
 		return origNav;
