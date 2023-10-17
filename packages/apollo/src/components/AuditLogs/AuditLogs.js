@@ -40,6 +40,7 @@ class AuditLogs extends Component {
 	PAGE_SIZE = 50;
 	debounce = null;
 
+	// dsh todo lock down page to manager only
 	async componentDidMount() {
 		this.props.showBreadcrumb('settings', {}, this.props.history.location.pathname, true);
 		this.props.updateState(SCOPE, {
@@ -152,18 +153,35 @@ class AuditLogs extends Component {
 
 		// if we already have this page data, skip
 		if (this.props.logs.length > page * this.PAGE_SIZE) {
-			this.props.updateState(SCOPE, {
-				showingPage: page - 1,
-			});
-			return;
+			let first_log_pos = page * this.PAGE_SIZE + 1;
+			if (first_log_pos < 0) { first_log_pos = 0; }
+			if (this.props.logs[first_log_pos] && this.props.logs[first_log_pos].id) {
+				this.props.updateState(SCOPE, {
+					showingPage: page - 1,
+				});
+				return;
+			}
 		}
 
 		// else go get the new page data
 		try {
 			const logs = await EventsRestApi.getLogs({ limit: Number(this.PAGE_SIZE), skip: Number(skip) });
-			const all_logs = this.props.logs.concat(logs.notifications);
+			const start_pos = skip;
+			let all_logs;
+			if (logs && Array.isArray(logs.notifications)) {
+				if (this.props.logs.length <= page * this.PAGE_SIZE) {
+					let empty = [];
+					for (let i = this.props.logs.length - 1; i < start_pos - 1; i++) {
+						empty.push({});
+					}
+					all_logs = this.props.logs.concat(empty).concat(logs.notifications);
+				} else {
+					this.props.logs.splice(start_pos, 0, ...logs.notifications);
+					all_logs = JSON.parse(JSON.stringify(this.props.logs));
+				}
+			}
 			this.props.updateState(SCOPE, {
-				logs: logs ? all_logs : [],
+				logs: Array.isArray(all_logs) ? all_logs : [],
 				displayLogCount: logs ? logs.total : 0,
 				showingPage: page + 1,
 			});
