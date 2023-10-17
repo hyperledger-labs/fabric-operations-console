@@ -41,7 +41,6 @@ class AuditLogs extends Component {
 	PAGE_SIZE = 50;
 	debounce = null;
 
-	// dsh todo lock down page to manager only
 	async componentDidMount() {
 		this.props.showBreadcrumb('settings', {}, this.props.history.location.pathname, true);
 		this.props.updateState(SCOPE, {
@@ -90,6 +89,7 @@ class AuditLogs extends Component {
 		});
 	};
 
+	// get the total number of logs (regardless of how many are on the current page)
 	numberOfTotalLogs = () => {
 		return this.props.allLogsCount || 100000;
 	}
