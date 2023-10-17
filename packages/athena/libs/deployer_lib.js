@@ -2167,7 +2167,7 @@ module.exports = function (logger, ev, t) {
 
 				// build a notification doc
 				const notice = {
-					message: 'sending actions: ' + JSON.stringify(summary) + ' to component',
+					message: 'sending actions {' + JSON.stringify(summary) + '} to "' + (doc._id || doc.display_name) + '"',
 					component_id: doc._id,
 					component_type: doc.type || null,
 					component_display_name: doc.display_name || null,

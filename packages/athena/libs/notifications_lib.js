@@ -147,6 +147,7 @@ module.exports = function (logger, ev, t) {
 					}
 				}
 				opts.status = opts.status || (t.ot_misc.is_error_code(opts.code) ? 'error' : 'success');		// set status string for doc
+				opts.user_agent = req.headers['user-agent'];
 				exports.create(opts, () => {
 					return cb_created();
 				});
@@ -211,6 +212,7 @@ module.exports = function (logger, ev, t) {
 				tx_id: body.tx_id || undefined,										// if undefined, it will be removed which is what i want
 				client_details: body.client_details || undefined,					// if undefined, it will be removed which is what i want
 				action_verb: body.action_verb || undefined,							// if undefined, it will be removed which is what i want
+				user_agent: body.user_agent || undefined,
 			};
 			t.otcc.createNewDoc({ db_name: ev.DB_SYSTEM }, t.misc.sortKeys(doc), (err, wrote_doc) => {
 				if (err) {
@@ -237,6 +239,7 @@ module.exports = function (logger, ev, t) {
 		const body = (req && req.body) ? req.body : {};
 		body.by = body.by || t.ot_misc.get_username_for_log(req);		// populate the username/uuid
 		body.tx_id = t.ot_misc.buildTxId(req);
+		body.user_agent = req.headers['user-agent'];
 
 		exports.create(body, (err, resp) => {
 			if (cb) { return cb(err, resp); }
@@ -312,6 +315,7 @@ module.exports = function (logger, ev, t) {
 							id: doc._id,
 							component_id: doc.component_id ? doc.component_id : undefined,
 							component_display_name: doc.component_display_name ? doc.component_display_name : undefined,
+							user_agent: doc.user_agent ? doc.user_agent : undefined,
 						});
 					}
 				}

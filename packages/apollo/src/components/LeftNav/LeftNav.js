@@ -23,6 +23,7 @@ import SettingsApi from '../../rest/SettingsApi';
 import Helper from '../../utils/helper';
 import LeftNavItem from '../LeftNavItem/LeftNavItem';
 import SubNavItem from '../SubNavItem/SubNavItem';
+import ActionsHelper from '../../utils/actionsHelper';
 
 const mainNav = [
 	{
@@ -130,7 +131,7 @@ class LeftNav extends Component {
 		// remove audit log tab if its disabled
 		if (!this.props.auditLogsEnabled) {
 			for (let i in origNav) {
-				if (origNav[i] && origNav[i].id === 'audit_logs') {
+				if (origNav[i] && origNav[i].id === 'audit_logs' || !ActionsHelper.canManageUsers(this.props.userInfo)) {
 					origNav.splice(i, 1);
 				}
 			}
@@ -191,6 +192,7 @@ const dataProps = {
 		pathname: PropTypes.string,
 	}),
 	auditLogsEnabled: PropTypes.bool,
+	userInfo: PropTypes.object,
 };
 
 LeftNav.propTypes = {
@@ -202,6 +204,7 @@ export default withRouter(
 	connect((state, props) => {
 		let newProps = Helper.mapStateToProps(state.leftNav, dataProps);
 		newProps['namespace'] = _.get(state, 'settings.cluster_data.namespace');
+		newProps['userInfo'] = state['userInfo'];
 		return newProps;
 	})(withLocalize(LeftNav))
 );

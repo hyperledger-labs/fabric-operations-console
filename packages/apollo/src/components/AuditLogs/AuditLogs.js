@@ -32,6 +32,7 @@ import Clipboard from '../../utils/clipboard';
 import SVGs from '../Svgs/Svgs';
 import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
 import { Checkbox, TextInput } from 'carbon-components-react';
+import ActionsHelper from '../../utils/actionsHelper';
 
 const SCOPE = 'AuditLogs';
 //const Log = new Logger(SCOPE);
@@ -54,7 +55,8 @@ class AuditLogs extends Component {
 				code: true,
 				outcome: true,
 				tx_id: false,
-			}
+			},
+			isManager: ActionsHelper.canManageUsers(this.props.userInfo),
 		});
 
 		await this.getLogs();
@@ -370,195 +372,203 @@ class AuditLogs extends Component {
 							staticHeader
 						/>
 
-						{this.props.loading &&
-							<div>
-								<SkeletonText
-									style={{
-										paddingTop: '.5rem',
-										width: '8rem',
-										height: '1rem',
-									}}
-								/>
-								<SkeletonText />
-							</div>
+						{!this.props.isManager &&
+							<p>{translate('audit_no_access_msg')}</p>
 						}
 
-						{!this.props.loading &&
+						{this.props.isManager &&
 							<div>
-								<BlockchainTooltip triggerText={translate('audit_logs_title')}
-									direction='right'
-									className='audit-style-wrap'
-								>
-									{translate('audit_table_desc')}
-								</BlockchainTooltip>
-
-								<br />
-
-								<TextInput
-									id={'activity-checkbox-search'}
-									labelText={translate('search')}
-									wrapperClassName='audit-checkboxes'
-									placeholder={translate('search_terms')}
-									onChange={evt => {
-										this.searchTable(evt);
-									}}
-								/>
-
-								<br />
-
-								<div>
-									<div className='bx--label'>{translate('log_columns_desc')}</div>
-								</div>
-								<Checkbox
-									id={'activity-checkbox-date'}
-									labelText={translate('date')}
-									wrapperClassName='audit-checkboxes'
-									value='date'
-									checked={this.props.showTableColumns ? this.props.showTableColumns.date : false}
-									onClick={event => {
-										this.onChangeTableColumn(event);
-									}}
-								/>
-								<Checkbox
-									id={'activity-checkbox-log'}
-									labelText={translate('log_title')}
-									wrapperClassName='audit-checkboxes'
-									value='log'
-									checked={this.props.showTableColumns ? this.props.showTableColumns.log : false}
-									onClick={event => {
-										this.onChangeTableColumn(event);
-									}}
-								/>
-								<Checkbox
-									id={'activity-checkbox-by'}
-									labelText={translate('by_title')}
-									wrapperClassName='audit-checkboxes'
-									value='by'
-									checked={this.props.showTableColumns ? this.props.showTableColumns.by : false}
-									onClick={event => {
-										this.onChangeTableColumn(event);
-									}}
-								/>
-								<Checkbox
-									id={'activity-checkbox-api'}
-									labelText={translate('api_title')}
-									wrapperClassName='audit-checkboxes'
-									value='api'
-									checked={this.props.showTableColumns ? this.props.showTableColumns.api : false}
-									onClick={event => {
-										this.onChangeTableColumn(event);
-									}}
-								/>
-								<Checkbox
-									id={'activity-checkbox-code'}
-									labelText={translate('response_code')}
-									wrapperClassName='audit-checkboxes'
-									value='code'
-									checked={this.props.showTableColumns ? this.props.showTableColumns.code : false}
-									onClick={event => {
-										this.onChangeTableColumn(event);
-									}}
-								/>
-								<Checkbox
-									id={'activity-checkbox-outcome'}
-									labelText={translate('outcome_title')}
-									wrapperClassName='audit-checkboxes'
-									value='outcome'
-									checked={this.props.showTableColumns ? this.props.showTableColumns.outcome : false}
-									onClick={event => {
-										this.onChangeTableColumn(event);
-									}}
-								/>
-								<Checkbox
-									id={'activity-checkbox-tx_id'}
-									labelText={translate('tx_id_title')}
-									wrapperClassName='audit-checkboxes'
-									value='tx_id'
-									checked={this.props.showTableColumns ? this.props.showTableColumns.tx_id : false}
-									onClick={event => {
-										this.onChangeTableColumn(event);
-									}}
-								/>
-
-								<ItemContainer
-									emptyImage={emptyImage}
-									emptyTitle="audit_table_tile_empty"
-									emptyMessage="audit_table_text_empty"
-									id="audit-logs"
-									itemId="audit_logs"
-									loading={this.props.loading || this.props.logsLoading}
-									items={this.props.logs}
-									menuItems={log => [
-										{
-											text: 'view_details',
-											fn: () => {
-												this.showLogDetails(log);
-											},
-										}
-									]}
-									listMapping={this.buildTableColumns()}
-									buttonText="register_user"
-									addItems={!this.props.loading && this.getButtons()}
-									isLink={true}
-									pageSize={this.PAGE_SIZE}
-									itemCount={this.props.displayLogCount}
-									onPage={this.getLogsForPage}
-								/>
-							</div>
-						}
-
-						{this.props.showDetails &&
-							<SidePanel
-								id="ibp--template-full-page-side-panel"
-								closed={() => {
-									this.props.updateState(SCOPE, {
-										showDetails: null,
-									});
-								}}
-								ref={sidePanel => (this.sidePanel = sidePanel)}
-								buttons={[
-									{
-										id: 'close-log-button',
-										text: translate('close'),
-										type: 'button',
-									}
-								]}
-								fullPageCenter
-								hideClose={false}
-							>
-								<div className="ibp-full-page-center-panel-container">
-									<h1>
-										{translate('details')}
-									</h1>
-									<p className='logDescWrap'>{translate('log_detail_desc')}</p>
-									<button className='logCopyButton'
-										onClick={() => {
-											this.props.updateState(SCOPE, {
-												copyFlash: true
-											});
-											Clipboard.copyToClipboard(JSON.stringify(log_details, null, '\t'));
-											setTimeout(() => {
-												this.props.updateState(SCOPE, {
-													copyFlash: false
-												});
-											}, 200);
-										}}
-										title={translate('copy_log_button_tooltip')}
-									>
-										<SVGs type="copy"
-											width="20px"
-											title={translate('copy_log_button_tooltip')}
+								{this.props.loading &&
+									<div>
+										<SkeletonText
+											style={{
+												paddingTop: '.5rem',
+												width: '8rem',
+												height: '1rem',
+											}}
 										/>
-									</button>
-									<div className={'logDetailsWrap' + (this.props.copyFlash ? ' flashCopyButton ' : '')}>
-										<div className='logJsonBracket'>{'{'}</div>
-										{log_details && Object.keys(log_details).map(key => {
-											return <div key={key}>{this.renderKey(key)} {this.renderValue(log_details[key], key === lastKey)}</div>
-										})}
-										<div className='logJsonBracket'>{'}'}</div>
+										<SkeletonText />
 									</div>
-								</div>
-							</SidePanel>
+								}
+
+								{!this.props.loading &&
+									<div>
+										<BlockchainTooltip triggerText={translate('audit_logs_title')}
+											direction='right'
+											className='audit-style-wrap'
+										>
+											{translate('audit_table_desc')}
+										</BlockchainTooltip>
+
+										<br />
+
+										<TextInput
+											id={'activity-checkbox-search'}
+											labelText={translate('search')}
+											wrapperClassName='audit-checkboxes'
+											placeholder={translate('search_terms')}
+											onChange={evt => {
+												this.searchTable(evt);
+											}}
+										/>
+
+										<br />
+
+										<div>
+											<div className='bx--label'>{translate('log_columns_desc')}</div>
+										</div>
+										<Checkbox
+											id={'activity-checkbox-date'}
+											labelText={translate('date')}
+											wrapperClassName='audit-checkboxes'
+											value='date'
+											checked={this.props.showTableColumns ? this.props.showTableColumns.date : false}
+											onClick={event => {
+												this.onChangeTableColumn(event);
+											}}
+										/>
+										<Checkbox
+											id={'activity-checkbox-log'}
+											labelText={translate('log_title')}
+											wrapperClassName='audit-checkboxes'
+											value='log'
+											checked={this.props.showTableColumns ? this.props.showTableColumns.log : false}
+											onClick={event => {
+												this.onChangeTableColumn(event);
+											}}
+										/>
+										<Checkbox
+											id={'activity-checkbox-by'}
+											labelText={translate('by_title')}
+											wrapperClassName='audit-checkboxes'
+											value='by'
+											checked={this.props.showTableColumns ? this.props.showTableColumns.by : false}
+											onClick={event => {
+												this.onChangeTableColumn(event);
+											}}
+										/>
+										<Checkbox
+											id={'activity-checkbox-api'}
+											labelText={translate('api_title')}
+											wrapperClassName='audit-checkboxes'
+											value='api'
+											checked={this.props.showTableColumns ? this.props.showTableColumns.api : false}
+											onClick={event => {
+												this.onChangeTableColumn(event);
+											}}
+										/>
+										<Checkbox
+											id={'activity-checkbox-code'}
+											labelText={translate('response_code')}
+											wrapperClassName='audit-checkboxes'
+											value='code'
+											checked={this.props.showTableColumns ? this.props.showTableColumns.code : false}
+											onClick={event => {
+												this.onChangeTableColumn(event);
+											}}
+										/>
+										<Checkbox
+											id={'activity-checkbox-outcome'}
+											labelText={translate('outcome_title')}
+											wrapperClassName='audit-checkboxes'
+											value='outcome'
+											checked={this.props.showTableColumns ? this.props.showTableColumns.outcome : false}
+											onClick={event => {
+												this.onChangeTableColumn(event);
+											}}
+										/>
+										<Checkbox
+											id={'activity-checkbox-tx_id'}
+											labelText={translate('tx_id_title')}
+											wrapperClassName='audit-checkboxes'
+											value='tx_id'
+											checked={this.props.showTableColumns ? this.props.showTableColumns.tx_id : false}
+											onClick={event => {
+												this.onChangeTableColumn(event);
+											}}
+										/>
+
+										<ItemContainer
+											emptyImage={emptyImage}
+											emptyTitle="audit_table_tile_empty"
+											emptyMessage="audit_table_text_empty"
+											id="audit-logs"
+											itemId="audit_logs"
+											loading={this.props.loading || this.props.logsLoading}
+											items={this.props.logs}
+											menuItems={log => [
+												{
+													text: 'view_details',
+													fn: () => {
+														this.showLogDetails(log);
+													},
+												}
+											]}
+											listMapping={this.buildTableColumns()}
+											buttonText="register_user"
+											addItems={!this.props.loading && this.getButtons()}
+											isLink={true}
+											pageSize={this.PAGE_SIZE}
+											itemCount={this.props.displayLogCount}
+											onPage={this.getLogsForPage}
+										/>
+									</div>
+								}
+
+								{this.props.showDetails &&
+									<SidePanel
+										id="ibp--template-full-page-side-panel"
+										closed={() => {
+											this.props.updateState(SCOPE, {
+												showDetails: null,
+											});
+										}}
+										ref={sidePanel => (this.sidePanel = sidePanel)}
+										buttons={[
+											{
+												id: 'close-log-button',
+												text: translate('close'),
+												type: 'button',
+											}
+										]}
+										fullPageCenter
+										hideClose={false}
+									>
+										<div className="ibp-full-page-center-panel-container">
+											<h1>
+												{translate('details')}
+											</h1>
+											<p className='logDescWrap'>{translate('log_detail_desc')}</p>
+											<button className='logCopyButton'
+												onClick={() => {
+													this.props.updateState(SCOPE, {
+														copyFlash: true
+													});
+													Clipboard.copyToClipboard(JSON.stringify(log_details, null, '\t'));
+													setTimeout(() => {
+														this.props.updateState(SCOPE, {
+															copyFlash: false
+														});
+													}, 200);
+												}}
+												title={translate('copy_log_button_tooltip')}
+											>
+												<SVGs type="copy"
+													width="20px"
+													title={translate('copy_log_button_tooltip')}
+												/>
+											</button>
+											<div className={'logDetailsWrap' + (this.props.copyFlash ? ' flashCopyButton ' : '')}>
+												<div className='logJsonBracket'>{'{'}</div>
+												{log_details && Object.keys(log_details).map(key => {
+													return <div key={key}>{this.renderKey(key)} {this.renderValue(log_details[key], key === lastKey)}</div>
+												})}
+												<div className='logJsonBracket'>{'}'}</div>
+											</div>
+										</div>
+									</SidePanel>
+								}
+							</div>
 						}
 					</div>
 				</div >
@@ -579,6 +589,8 @@ const dataProps = {
 	copyFlash: PropTypes.bool,
 	showTableColumns: PropTypes.object,
 	allLogsCount: PropTypes.number,
+	userInfo: PropTypes.object,
+	isManager: PropTypes.bool,
 };
 
 AuditLogs.propTypes = {
@@ -589,7 +601,9 @@ AuditLogs.propTypes = {
 };
 
 export default connect(state => {
-	return Helper.mapStateToProps(state[SCOPE], dataProps);
+	let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
+	newProps['userInfo'] = state['userInfo'];
+	return newProps;
 }, {
 	updateState,
 	showBreadcrumb

@@ -662,11 +662,13 @@ module.exports = function (logger, ev, t) {
 				const key = prevent_edit_keys[i];
 				delete req.body[key];
 			}
+			let desc = [];
 			for (let key in req.body) {
 				if (t.misc.is_different(resp_getDoc[key], req.body[key])) { // log the differences for debugging
 					edits.push(t.misc.safe_str(key));
 				}
 				resp_getDoc[key] = req.body[key];							// make the changes the client wants done
+				desc.push('"' + key + '"');
 			}
 
 			const fmt_doc = exports.format_input_to_doc(resp_getDoc, null);
@@ -691,7 +693,7 @@ module.exports = function (logger, ev, t) {
 
 			// build a notification doc
 			const notice = {
-				message: 'editing component ' + (fmt_doc._id || fmt_doc.display_name),
+				message: 'editing component "' + (fmt_doc._id || fmt_doc.display_name) + '" - ' + desc.join(', '),
 				component_id: fmt_doc._id,
 				component_type: fmt_doc.type,
 				component_display_name: fmt_doc.display_name,
