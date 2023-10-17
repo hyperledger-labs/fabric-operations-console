@@ -47,7 +47,6 @@ export class Mustgather extends Component {
 
 	componentDidMount() {
 		this.checkGatherStatus();
-		this.setupBackoff();
 	}
 
 	setupBackoff() {
@@ -113,6 +112,7 @@ export class Mustgather extends Component {
 	}
 
 	startGather() {
+		this.setupBackoff();
 		this.setState({
 			running: true,
 			pendingRequest: true,
