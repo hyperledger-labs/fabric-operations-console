@@ -205,7 +205,6 @@ const ev = {
 	MIN_USERNAME_LEN: 6,
 	MAX_USERNAME_LEN: 64,
 	REGEX: default_settings.regex,
-	ACTIVITY_TRACKER_FILENAME: './logs',
 	LOCKOUT_LIMIT: 4,
 	HTTP_METRICS_ROUTE: '/api/v[123]/http_metrics',
 	HEALTHCHECK_ROUTE: '/api/v3/healthcheck',

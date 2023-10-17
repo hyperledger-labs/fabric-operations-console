@@ -6,7 +6,6 @@
 	],
 	"auto_fab_up_exp_too_close_days": 5,
 	"access_list": {},
-	"activity_tracker_filename": "audit.log",
 	"app_id": {
 		"client_id": "-",
 		"oauth_url": "http://example.com",

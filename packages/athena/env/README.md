@@ -233,13 +233,6 @@ __default_settings_doc.json:__
   }
 },
 
-// the base filename for the Activity Tracker event files (aka audit logs)
-// if null events will not be logged/tracked
-// defaults 'audit.log'
-// files are always written to the folder ./packages/athena/logs/
-// see doc in ./packages/athena/docs/_event_tracking_notes.md for more information
-"activity_tracker_filename": 'audit.log'
-
 // email address on the UI to surface to users for help
 "admin_contact_email": "ibm@us.ibm.com",
 
@@ -473,6 +466,12 @@ __default_settings_doc.json:__
 
 // feature flags for the UI. do not modify unless you know the impact.
 "feature_flags": {
+
+  // if true will log user and api key activity
+  // see doc in ./packages/athena/docs/_event_tracking_notes.md for more information
+  // defaults true
+  "audit_logging_enabled": true,
+
   // if true channel/orderer/application capabilities can be selected during channel creation
   // defaults true
   "capabilities_enabled": true,
