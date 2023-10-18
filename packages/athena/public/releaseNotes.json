@@ -1,6 +1,6 @@
 [
 	{
-		"version": "1.0.6-5",
+		"version": "1.0.6-6",
 		"date": "18 Oct 2023",
 		"description": [
 			{
@@ -14,8 +14,8 @@
 		]
 	},
 	{
-		"version": "1.0.6-4",
-		"date": "02 Oct 2023",
+		"version": "1.0.6-5",
+		"date": "04 Oct 2023",
 		"description": [
 			{
 				"title": "Bug & security fixes",
@@ -25,7 +25,7 @@
 	},
 	{
 		"version": "1.0.6-1",
-		"date": "5 Sept 2023",
+		"date": "05 Sept 2023",
 		"description": [
 			{
 				"title": "Bug & security fixes",
@@ -34,8 +34,28 @@
 		]
 	},
 	{
-		"version": "1.0.5-29",
-		"date": "11 July 2023",
+		"version": "1.0.5-32",
+		"date": "25 Aug 2023",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
+		"version": "1.0.5-31",
+		"date": "09 Aug 2023",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
+		"version": "1.0.5-30",
+		"date": "27 July 2023",
 		"description": [
 			{
 				"title": "Bug & security fixes",
