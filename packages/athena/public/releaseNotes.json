@@ -1,5 +1,19 @@
 [
 	{
+		"version": "1.0.6-5",
+		"date": "18 Oct 2023",
+		"description": [
+			{
+				"title": "Activity logs",
+				"details": "Added a new \"Audit\" tab that shows user and api key activity."
+			},
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
 		"version": "1.0.6-4",
 		"date": "02 Oct 2023",
 		"description": [
