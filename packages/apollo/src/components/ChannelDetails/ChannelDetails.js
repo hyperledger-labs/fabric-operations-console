@@ -21,7 +21,7 @@ import React, { Component } from 'react';
 import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import emptySmartContractImage from '../../assets/images/empty_installed.svg';
-import { clearNotifications, showBreadcrumb, showError, showSuccess, updateState } from '../../redux/commonActions';
+import { clearNotifications, showBreadcrumb, showError, showSuccess, updateBreadcrumb, updateState } from '../../redux/commonActions';
 import ChannelApi from '../../rest/ChannelApi';
 import { MspRestApi } from '../../rest/MspRestApi';
 import { NodeRestApi } from '../../rest/NodeRestApi';
@@ -811,12 +811,17 @@ class ChannelDetails extends Component {
 		);
 	}
 
+	// redirect user to the route for this node
 	openNodeDetails = node => {
 		if (node.type === 'fabric-orderer' || node.type === 'orderer') {
-			this.props.history.push('/orderer/' + encodeURIComponent(node.id) + window.location.search);
+			const drillDownUrl = '/orderer/' + encodeURIComponent(node.cluster_id) + '/' + node.id;
+			this.props.showBreadcrumb('breadcrumb_name', { name: node.id }, drillDownUrl);
+			this.props.history.push(drillDownUrl);
 		}
 		if (node.type === 'fabric-peer' || node.type === 'peer') {
-			this.props.history.push('/peer/' + encodeURIComponent(node.id) + window.location.search);
+			const drillDownUrl = '/peer/' + encodeURIComponent(node.id) + window.location.search;
+			this.props.showBreadcrumb('breadcrumb_name', { name: node.id }, drillDownUrl);
+			this.props.history.push(drillDownUrl);
 		}
 	};
 
@@ -1403,6 +1408,7 @@ export default connect(
 		showError,
 		clearNotifications,
 		updateState,
+		updateBreadcrumb,
 		showSuccess,
 	}
 )(withLocalize(ChannelDetails));
