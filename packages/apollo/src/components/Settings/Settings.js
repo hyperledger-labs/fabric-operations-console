@@ -554,6 +554,9 @@ export class Settings extends Component {
 
 	// show the delete buttons
 	renderDeleteSection(translate) {
+		if (!ActionsHelper.canDeleteComponent(this.props.userInfo) && !ActionsHelper.canImportComponent(this.props.userInfo)) {
+			return;			// don't show if user is not a manager or writer
+		}
 
 		// if we are opening up the confirmation panel, start the timer to blink the text out
 		if (this.props.showConfirmation && this.props.txt_state === 0) {
@@ -578,16 +581,18 @@ export class Settings extends Component {
 						</BlockchainTooltip>
 					</h3>
 					<div className="settings-button-container">
-						<Button
-							id="data_delete_button1"
-							disabled={this.props.saving}
-							kind="danger"
-							onClick={async () => {
-								this.props.updateState(SCOPE, { showConfirmation: true, confirmationType: 'all' });
-							}}
-						>
-							{translate('delete_everything')}
-						</Button>
+						{ActionsHelper.canDeleteComponent(this.props.userInfo) && (
+							<Button
+								id="data_delete_button1"
+								disabled={this.props.saving}
+								kind="danger"
+								onClick={async () => {
+									this.props.updateState(SCOPE, { showConfirmation: true, confirmationType: 'all' });
+								}}
+							>
+								{translate('delete_everything')}
+							</Button>
+						)}
 						<Button
 							id="data_delete_button3"
 							disabled={this.props.saving}

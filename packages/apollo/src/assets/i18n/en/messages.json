@@ -2259,7 +2259,6 @@
 	"delete_header": "Danger zone",
 	"delete_header_tooltip": "Be careful.",
 	"delete_everything": "Delete all components",
-	"delete_imported_only": "Delete imported components only",
 	"delete_wallet": "Delete wallet",
 	"yes_confirmation": "Yes",
 	"confirmation_header_all": "Delete all components",
