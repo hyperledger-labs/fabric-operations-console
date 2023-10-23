@@ -144,7 +144,6 @@
     "form-data": "^2.3.3",
     "fs-extra": "^9.1.0",
     "fs.realpath": "^1.0.0",
-    "fsevents": "^2.3.3",
     "function-bind": "^1.1.1",
     "get-caller-file": "^2.0.5",
     "get-intrinsic": "^1.2.1",
