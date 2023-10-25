@@ -1,4 +1,4 @@
-@support @regression
+@support @regression @runOnConsole
 Feature: 2.0 Lifecycle Flow
 
     Background: Login to console
