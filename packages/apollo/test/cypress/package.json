@@ -13,7 +13,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "regression": "cypress run -e TAGS=\"@regression\" --headed --browser chrome --spec 'e2e/features/*.feature'",
     "regression-headless": "cypress run -e TAGS=\"@regression\" --browser chrome --spec 'e2e/features/*.feature'",
-    "runOnExistingConsole": "cypress run -e TAGS=\"@runOnConsole\" --browser chrome --spec 'e2e/features/*.feature'",
+    "runonexistingconsole": "cypress run -e TAGS=\"@runonconsole\" --browser chrome --spec 'e2e/features/*.feature'",
     "buildnetwork": "cypress run --headed --browser chrome --spec 'e2e/features/2-BuildNetwork.feature'"
   },
   "author": "Ketul Shah",

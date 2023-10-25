@@ -1,4 +1,4 @@
-@support @regression @runOnConsole
+@support @regression @runonconsole
 Feature: Verify miscellaneous cases of console works as expected
 
   Background: Login to console

@@ -1,4 +1,4 @@
-@support @regression @runOnConsole
+@support @regression @runonconsole
 Feature: Join a network feature
 
     Background: Login to console
