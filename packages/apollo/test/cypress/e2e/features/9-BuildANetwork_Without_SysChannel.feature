@@ -1,4 +1,4 @@
-@support @regression @runOnConsole
+@support @regression @runonconsole
 Feature: Build a network without system channel
 
     Background: Login to console

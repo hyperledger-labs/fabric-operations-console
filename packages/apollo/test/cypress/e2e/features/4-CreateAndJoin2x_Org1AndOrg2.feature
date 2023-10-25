@@ -1,4 +1,4 @@
-@support @regression @runOnConsole
+@support @regression @runonconsole
 Feature: Create and Join a 2.x channel
 
     Background: Login to console

@@ -1,4 +1,4 @@
-@support @regression @runOnConsole
+@support @regression @runonconsole
 Feature: 1.x Smart Contract flow
 
     Background: Login to console
