@@ -1,4 +1,4 @@
-@support @regression
+@support @regression @runOnConsole
 Feature: Update channel to add Org2
 
     Background: Login to console
