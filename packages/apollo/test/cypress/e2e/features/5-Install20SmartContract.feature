@@ -16,7 +16,7 @@ Feature: 2.0 Lifecycle Flow
         And I clicked the button with title 'Select an identity'
         And I clicked the div with text 'Org1 MSP Admin'
         And I clicked the button with id 'next'
-        And I upload file 'cypress/fixtures/test_data/chaincodes/fabcar_1.0.0.tgz' to 'pkg-file-uploader' input
+        And I upload file 'fixtures/test_data/chaincodes/fabcar_1.0.0.tgz' to 'pkg-file-uploader' input
         And I clicked the button with id 'next'
         And I clicked the button with id 'next'
         # And I provided 'fabcar22' for the 'Enter the identifier' input
@@ -34,7 +34,7 @@ Feature: 2.0 Lifecycle Flow
         And I clicked the button with title 'Select an identity'
         And I clicked the div with text 'Org2 MSP Admin'
         And I clicked the button with id 'next'
-        And I upload file 'cypress/fixtures/test_data/chaincodes/fabcar_1.0.0.tgz' to 'pkg-file-uploader' input
+        And I upload file 'fixtures/test_data/chaincodes/fabcar_1.0.0.tgz' to 'pkg-file-uploader' input
         And I clicked the button with id 'next'
         And I clicked the button with id 'next'
         And I clicked the button with id 'submit'
