@@ -73,7 +73,7 @@ Feature: Join a network feature
         And I clicked the button with title 'Select an MSP'
         And I clicked the div with text 'Org2 MSP'
         And I clicked the button with title 'Select a Fabric version'
-        And I clicked the div with text '2.2.13-2'
+        And I clicked the div with text '2.2'
         And I clicked the button with id 'next'
         And I clicked the button with title 'Please select an identity from your wallet'
         And I clicked the div with text 'Org2 MSP Admin'
