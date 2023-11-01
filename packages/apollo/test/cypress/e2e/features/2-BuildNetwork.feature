@@ -19,7 +19,7 @@ Feature: Build a network feature
         Then wait "5" seconds
         Then I should see a success toast with class '.bx--toast-notification__subtitle' which says "Congratulations! You have successfully created 'Org1 CA'."
         And the certificate authority with name 'Org1 CA' should have started successfully
-    
+
     Scenario: When associating and enrolling identities for Org1 CA
         And I am on the 'nodes' page
         And I clicked the 'Org1 CA' certificate authority
@@ -62,7 +62,7 @@ Feature: Build a network feature
         And I clicked the button with title 'Add peer'
         And I clicked Create a peer
         And I clicked the button with id 'next'
-        And I provided 'Peer Org1' for the 'Enter the Peer name' input        
+        And I provided 'Peer Org1' for the 'Enter the Peer name' input
         And I clicked the button with id 'next'
         And I clicked the button with title 'Select CA'
         And I clicked the dropdown item 'Org1 CA' with class '.bx--list-box__menu-item__option'
@@ -175,7 +175,7 @@ Feature: Build a network feature
         Then wait "10" seconds
         And I clicked the button with title 'Add organization'
         And I clicked the button with title 'Ordering Service MSP (osmsp)'
-        And I clicked the dropdown item 'Org1 MSP (org1msp)' with class '.bx--list-box__menu-item__option'        
+        And I clicked the dropdown item 'Org1 MSP (org1msp)' with class '.bx--list-box__menu-item__option'
         When I clicked the button with id 'submit'
         Then wait "10" seconds
         Then a tile with title 'Org1 MSP' should have been created
