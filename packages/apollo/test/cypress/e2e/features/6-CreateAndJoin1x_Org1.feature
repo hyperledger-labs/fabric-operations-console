@@ -41,8 +41,6 @@ Feature: Create and Join a 1.x channel
         And I provided 'Org2 CA Admin' for the 'Enter a name' input
         And I clicked the button with id 'associate_identity'
         And the CA admin is set as 'Org2 CA Admin'
-        When the 'admin' user was enrolled with id 'org2admin' and secret 'org2adminpw'
-        And the 'peer' user was enrolled with id 'peer2' and secret 'peer2pw'
         Then the 'admin' user with id 'org2admin' should be enrolled
         And the 'peer' user with id 'peer2' should be enrolled
 		# Import identity in wallet
