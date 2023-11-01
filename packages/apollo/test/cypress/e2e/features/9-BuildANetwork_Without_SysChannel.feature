@@ -46,7 +46,7 @@ Feature: Build a network without system channel
         And I clicked the button with title 'Select an MSP'
         And I clicked the dropdown item 'Ordering Service MSP' with class '.bx--list-box__menu-item__option'
         And I clicked the button with title 'Select a Fabric version'
-        And I clicked the dropdown item '2.5.4-2' with class '.bx--list-box__menu-item__option'
+        And I clicked the dropdown item '2.5' with class '.bx--list-box__menu-item__option'
         And I clicked the button with id 'next'
         Then wait "3" seconds
         And I clicked the button with title 'Please select an identity from your wallet'
