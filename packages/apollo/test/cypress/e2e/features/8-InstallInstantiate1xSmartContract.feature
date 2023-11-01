@@ -9,7 +9,7 @@ Feature: 1.x Smart Contract flow
 
     Scenario: Install 1.x Smart Contract on Org1 and Org2 peers
         And I clicked the button with title 'Install smart contract'
-        And I upload file 'cypress/fixtures/test_data/chaincodes/fabcar_go_2.1.1.cds' to 'file-uploader-cds' input
+        And I upload file 'fixtures/test_data/chaincodes/fabcar_go_2.1.1.cds' to 'file-uploader-cds' input
         And I clicked the button with text 'Next'
         And I click label with property 'for' and value 'installChaincode-peer-peerorg1'
         And I click label with property 'for' and value 'installChaincode-peer-peerorg2'
