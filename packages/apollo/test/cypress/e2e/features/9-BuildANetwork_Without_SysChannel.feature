@@ -201,7 +201,7 @@ Feature: Build a network without system channel
         And I clicked the button with title 'Select an identity'
         And I clicked the div with text 'Org1 MSP Admin'
         And I clicked the button with id 'next'
-        And I upload file 'cypress/fixtures/test_data/chaincodes/fabcar_1.0.0.tgz' to 'pkg-file-uploader' input
+        And I upload file 'fixtures/test_data/chaincodes/fabcar_1.0.0.tgz' to 'pkg-file-uploader' input
         And I clicked the button with id 'next'
         And I clicked the button with id 'next'
         And I clicked the button with id 'next'
@@ -220,7 +220,7 @@ Feature: Build a network without system channel
         And I clicked the button with title 'Select an identity'
         And I clicked the div with text 'Org2 MSP Admin'
         And I clicked the button with id 'next'
-        And I upload file 'cypress/fixtures/test_data/chaincodes/fabcar_1.0.0.tgz' to 'pkg-file-uploader' input
+        And I upload file 'fixtures/test_data/chaincodes/fabcar_1.0.0.tgz' to 'pkg-file-uploader' input
         And I clicked the button with id 'next'
         And I clicked the button with id 'next'
         And I clicked the button with id 'submit'
