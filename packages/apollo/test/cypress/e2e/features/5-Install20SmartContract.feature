@@ -5,9 +5,6 @@ Feature: 2.0 Lifecycle Flow
         Given I go to the console
         And I am logged in
         And I am ready to get started
-        And I am on the 'channels' page
-        And I clicked the div with id 'ibp-tile-channel2'
-        Then wait "5" seconds
 
    # Cypress launches new test runner / browser with clean state and that clears wallet that we store in browser local storage
     # https://github.com/cypress-io/cypress/issues/28186#issuecomment-1787344347
@@ -84,6 +81,9 @@ Feature: 2.0 Lifecycle Flow
 		Then wait "2" seconds
 
     Scenario: Install and Propose 2.0 Smart Contract as Org1
+		And I am on the 'channels' page
+        And I clicked the div with id 'ibp-tile-channel2'
+        Then wait "5" seconds
         And I clicked the button with title 'Propose smart contract definition'
         And I clicked the button with title 'Select an organization'
         And I clicked the div with text 'Org1 MSP (org1msp)'
@@ -103,6 +103,9 @@ Feature: 2.0 Lifecycle Flow
         Then the chaincode with name 'fabcar' should have been created in 'Proposed' state
 
     Scenario: Approve Smart Contact as Org2
+		And I am on the 'channels' page
+        And I clicked the div with id 'ibp-tile-channel2'
+        Then wait "5" seconds
         And I clicked the div with text 'fabcar'
         And I clicked the button with text 'Begin approval process'
         And I clicked the button with title 'Select an identity'
@@ -115,6 +118,9 @@ Feature: 2.0 Lifecycle Flow
         Then the chaincode with name 'fabcar' should have been created in 'Ready to commit' state
 
     Scenario: Commit Smart Contact as Org1
+        And I am on the 'channels' page
+        And I clicked the div with id 'ibp-tile-channel2'
+        Then wait "5" seconds
         And I clicked the div with text 'fabcar'
         And I clicked the button with text 'Begin commit process'
         And I clicked the button with title 'Select an organization'

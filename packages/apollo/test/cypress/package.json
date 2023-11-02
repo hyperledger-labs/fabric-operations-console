@@ -34,7 +34,7 @@
     "stepDefinitions": "support/step_definitions/*.js",
     "html": {
       "enabled": true,
-      "output": "reports/cucumber-html/ibp_execution_report.html"
+      "output": "cypress/reports/cucumber-html/ibp_execution_report.html"
     }
   },
   "dependencies": {
