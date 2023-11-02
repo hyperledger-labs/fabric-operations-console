@@ -561,7 +561,7 @@ class AuditLogs extends Component {
 											<div className={'logDetailsWrap' + (this.props.copyFlash ? ' flashCopyButton ' : '')}>
 												<div className='logJsonBracket'>{'{'}</div>
 												{log_details && Object.keys(log_details).map(key => {
-													return <div key={key}>{this.renderKey(key)} {this.renderValue(log_details[key], key === lastKey)}</div>
+													return <div key={key}>{this.renderKey(key)} {this.renderValue(log_details[key], key === lastKey)}</div>;
 												})}
 												<div className='logJsonBracket'>{'}'}</div>
 											</div>
