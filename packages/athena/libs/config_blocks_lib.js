@@ -38,6 +38,11 @@ module.exports = function (logger, ev, t) {
 		return t.misc.sortKeys(the_doc);
 	}
 
+	// get the channel
+	function safeChannel(block_doc) {
+		return '"' + t.misc.safe_str(block_doc && block_doc.channel ? block_doc.channel : '-') + '"';
+	}
+
 	//-------------------------------------------------------------
 	// Get all config block docs - raw - (the query param "visibility" will control if "inbox" or "archive" status docs are returned )
 	//-------------------------------------------------------------
@@ -128,7 +133,7 @@ module.exports = function (logger, ev, t) {
 		logger.info('[config block] attempting to create a block doc:', req.params.tx_id);
 
 		// create a notification
-		const notice = { message: 'creating a config block doc. tx_id: ' + req.params.tx_id };
+		const notice = { message: 'creating a config block doc - channel ' + safeChannel(req.body) };
 		t.notifications.procrastinate(req, notice);
 
 		const doc = format_doc(req.body);
@@ -150,10 +155,6 @@ module.exports = function (logger, ev, t) {
 	exports.deleteBlockDoc = (req, cb) => {
 		logger.info('[config block] attempting to delete a block doc:', req.params.tx_id);
 
-		// create a notification
-		const notice = { message: 'deleting a config block doc. tx_id: ' + req.params.tx_id };
-		t.notifications.procrastinate(req, notice);
-
 		// ----- Get the doc first ----- //
 		const get_opts = {
 			db_name: ev.DB_COMPONENTS,
@@ -171,6 +172,10 @@ module.exports = function (logger, ev, t) {
 					return cb({ statusCode: error_code, msg: 'problem getting the config-block doc for deletion. tx id: "' + req.params.tx_id + '"' });
 				}
 			} else {
+				// create a notification
+				const notice = { message: 'deleting a config block doc - channel ' + safeChannel(block_doc) };
+				t.notifications.procrastinate(req, notice);
+
 				local_delete_doc((del_err, del_resp) => {
 					return cb(del_err, del_resp);
 				});
@@ -216,10 +221,6 @@ module.exports = function (logger, ev, t) {
 	exports.archiveBlockDoc = (req, cb) => {
 		logger.info('[config block] attempting to archive a block doc:', req.params.tx_id);
 
-		// create a notification
-		const notice = { message: 'archiving a config block doc. tx_id: ' + req.params.tx_id };
-		t.notifications.procrastinate(req, notice);
-
 		// ----- Get the doc first ----- //
 		const get_opts = {
 			db_name: ev.DB_COMPONENTS,
@@ -237,6 +238,10 @@ module.exports = function (logger, ev, t) {
 					return cb({ statusCode: error_code, msg: 'problem getting the config-block doc for deletion. tx id: "' + req.params.tx_id + '"' });
 				}
 			} else {
+				// create a notification
+				const notice = { message: 'archiving a config block doc - channel ' + safeChannel(block_doc) };
+				t.notifications.procrastinate(req, notice);
+
 				archive_doc(block_doc, (del_err, del_resp) => {
 					return cb(del_err, del_resp);
 				});
