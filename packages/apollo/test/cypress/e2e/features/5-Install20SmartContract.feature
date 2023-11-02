@@ -42,21 +42,59 @@ Feature: 2.0 Lifecycle Flow
         And the CA admin is set as 'Org2 CA Admin'
         Then the 'admin' user with id 'org2admin' should be enrolled
         And the 'peer' user with id 'peer2' should be enrolled
-		# Import identity in wallet
-		Given I am on the 'wallet' page
-		And I clicked the button with title 'Add identity'
-		And I clicked the button with id 'addIdentity-json-upload'
-		And I upload file 'cypress/downloads/Org1 MSP Admin_identity.json' to 'addIdentity-upload' input
-		And I clicked the button with id 'add_identity'
-		And I clicked the button with title 'Add identity'
-		And I clicked the button with id 'addIdentity-json-upload'
-		And I upload file 'cypress/downloads/Ordering Service MSP Admin_identity.json' to 'addIdentity-upload' input
-		And I clicked the button with id 'add_identity'
-		And I clicked the button with title 'Add identity'
-		And I clicked the button with id 'addIdentity-json-upload'
-		And I upload file 'cypress/downloads/Org2 MSP Admin_identity.json' to 'addIdentity-upload' input
-		And I clicked the button with id 'add_identity'
+		# Create MSP definition for Org1, Ordering Service and Org2
+        And I am on the 'organizations' page
+        And I clicked the button with title 'Create MSP definition'
+        And I provided 'Ordering Service MSP' for the 'Enter name for the MSP' input
+        And I provided 'osmsp' for the 'Enter the MSP ID' input
+        Then wait "3" seconds
+        And I clicked the Next button in Create MSP definition screen
+        And I clicked the button with title 'Select a root Certificate Authority'
+        And I clicked the div with text 'Ordering Service CA'
+        Then wait "5" seconds
+        And I clicked the Next button in Create MSP definition screen
+        And I clicked the button with title 'OSadmin'
+        And I clicked the div with text 'OSadmin'
+        And I provided 'OSadminpw' for the 'Enter a secret' input
+        And I provided 'Ordering Service MSP Admin' for the 'Enter name for the identity to be stored in your Wallet' input
+        And I clicked the button with text 'Generate'
+        And I clicked the button with text 'Export'
+        And I clicked the Next button in Create MSP definition screen
+        And I click Create MSP definition button
 		Then wait "2" seconds
+        And I clicked the button with title 'Create MSP definition'
+        And I provided 'Org1 MSP' for the 'Enter name for the MSP' input
+        And I provided 'org1msp' for the 'Enter the MSP ID' input
+        And I clicked the span with text 'Next'
+        And I clicked the button with title 'Select a root Certificate Authority'
+        And I clicked the div with text 'Org1 CA'
+        And wait "3" seconds
+        And I clicked the span with text 'Next'
+        And I clicked the button with title 'org1admin'
+        And I clicked the div with text 'org1admin'
+        And I provided 'org1adminpw' for the 'Enter a secret' input
+        And I provided 'Org1 MSP Admin' for the 'Enter name for the identity to be stored in your Wallet' input
+        And I clicked the button with text 'Generate'
+        And I clicked the button with text 'Export'
+        And I clicked the button with text 'Next'
+        And I click Create MSP definition button
+        And I clicked the button with title 'Create MSP definition'
+        And I provided 'Org2 MSP' for the 'Enter name for the MSP' input
+        And I provided 'org2msp' for the 'Enter the MSP ID' input
+        And I clicked the span with text 'Next'
+        And I clicked the button with title 'Select a root Certificate Authority'
+        And I clicked the div with text 'Org2 CA'
+        And wait "3" seconds
+        And I clicked the span with text 'Next'
+        And I clicked the button with title 'org2admin'
+        And I clicked the div with text 'org2admin'
+        And I provided 'org2adminpw' for the 'Enter a secret' input
+        And I provided 'Org2 MSP Admin' for the 'Enter name for the identity to be stored in your Wallet' input
+        And I clicked the button with text 'Generate'
+        And I clicked the button with text 'Export'
+        And I clicked the span with text 'Next'
+        And I click Create MSP definition button
+		Then wait "3" seconds
 		# Associating identity for Peer and Ordering Nodes
 		And I am on the 'nodes' page
 		Given I clicked the div with id 'ibp-tile-Peer Org1'
@@ -80,7 +118,7 @@ Feature: 2.0 Lifecycle Flow
 		And I clicked the button with id 'associate_identity'
 		Then wait "2" seconds
 
-    Scenario: Install and Propose 2.0 Smart Contract as Org1
+	Scenario: Install and Propose 2.0 Smart Contract as Org1
 		And I am on the 'channels' page
         And I clicked the div with id 'ibp-tile-channel2'
         Then wait "5" seconds
