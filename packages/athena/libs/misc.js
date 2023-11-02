@@ -625,7 +625,7 @@ module.exports = function (logger, t) {
 					return email[0] + asterisks + email[pos - 1] + email.substring(pos);
 				}
 			} else {
-				if (email.length > 8) {									// api keys get limited to 8 and fixed length
+				if (email[0] === 'k' && email.length === 16) {			// api keys get limited in length
 					return email.substring(0, 8) + '***';
 				} else {
 					return email;
@@ -1235,7 +1235,7 @@ module.exports = function (logger, t) {
 	// make a string that is safe to log (str came from user input)
 	// -----------------------------------------------------
 	exports.safe_str = (input, unlimitedLength) => {
-		const regex_id = new RegExp(/[^a-zA-Z0-9-_*!@$%&()\s".:]/g);			// this might be overly restrictive but its a place to start
+		const regex_id = new RegExp(/[^a-zA-Z0-9-_*!@$%&()\s"'.:,]/g);			// this might be overly restrictive but its a place to start
 		try {
 			if (typeof input === 'string') {
 				if (unlimitedLength) {
@@ -1507,6 +1507,20 @@ module.exports = function (logger, t) {
 			} else {
 				return false;
 			}
+		}
+	};
+
+	// -----------------------------------------------------
+	// create safe string from keys of an object
+	// -----------------------------------------------------
+	exports.objKeysToString = (obj) => {
+		if (!obj) {
+			return '';
+		} else {
+			const safeKeys = Object.keys(obj).map(x => {
+				return exports.safe_str(x);
+			});
+			return '"' + safeKeys.join('", "') + '"';
 		}
 	};
 

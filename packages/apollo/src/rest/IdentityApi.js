@@ -16,6 +16,7 @@
 import _ from 'lodash';
 import StitchApi from './StitchApi';
 import UserSettingsRestApi from './UserSettingsRestApi';
+import { EventsRestApi } from './EventsRestApi';
 const naturalSort = require('javascript-natural-sort');
 
 const LOCAL_STORAGE_KEY = 'ibp_identities';
@@ -133,6 +134,13 @@ class IdentityApi {
 				});
 			});
 			await IdentityApi.save();
+
+			try {
+				EventsRestApi.recordActivity({ status: 'success', log: 'adding identity to user\'s wallet ' });
+			} catch (e) {
+				console.error('unable to record adding the identity', e);
+			}
+
 			return newIds;
 		}
 	}
@@ -162,6 +170,13 @@ class IdentityApi {
 		} else {
 			delete IdentityApi.identityData[name];
 			await IdentityApi.save();
+
+			try {
+				EventsRestApi.recordActivity({ status: 'success', log: 'removing identity from user\'s  wallet' });
+			} catch (e) {
+				console.error('unable to record removing the identity', e);
+			}
+
 			return IdentityApi.getArray();
 		}
 	}

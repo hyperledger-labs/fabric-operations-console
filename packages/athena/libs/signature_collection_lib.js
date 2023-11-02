@@ -306,9 +306,9 @@ module.exports = function (logger, ev, t) {
 							doc_to_write = append_signatures(doc_to_write);
 
 							// build a notification doc
-							const notice = { message: 'creating a signature collection for channel ' + doc_to_write.chanel };
+							const notice = { message: 'creating a signature collection for channel "' + t.misc.safe_str(doc_to_write.channel) + '"' };
 							if (isAppend) {
-								notice.message = 'edited a signature collection for channel ' + doc_to_write.chanel;
+								notice.message = 'editing a signature collection for channel "' + t.misc.safe_str(doc_to_write.channel) + '"';
 							}
 							t.notifications.procrastinate(req, notice);
 

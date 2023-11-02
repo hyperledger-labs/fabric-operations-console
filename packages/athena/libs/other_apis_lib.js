@@ -255,7 +255,7 @@ module.exports = function (logger, ev, t) {
 	exports.edit_ui_settings = (req, cb) => {
 
 		// build a notification doc
-		const notice = { message: 'editing ui settings' };
+		const notice = { message: 'editing ui settings - ' + t.misc.objKeysToString(req ? req.body : {}) };
 		t.notifications.procrastinate(req, notice);
 
 		t.logging_apis_lib.prepare_logging_setting_changes(req, (edit_err, edited_settings_doc) => {

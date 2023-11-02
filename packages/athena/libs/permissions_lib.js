@@ -103,10 +103,15 @@ module.exports = function (logger, ev, t) {
 					logger.error('[permissions] cannot add these users. bad input:', input_errors);
 					cb({ statusCode: 400, msg: input_errors, }, null);
 				} else {
+					const usernames = Object.keys(req.body.users);
+					const censored = [];
+					for (let i in usernames) {
+						censored.push(t.misc.censorEmail(usernames[i]));
+					}
 
 					// build a notification doc
 					const notice = {
-						message: 'adding ' + req.body.users.length + 'users',
+						message: 'adding new user' + (usernames.length > 1 ? 's' : '') + ' ' + censored.join(', '),
 					};
 					t.notifications.procrastinate(req, notice);
 
@@ -223,7 +228,7 @@ module.exports = function (logger, ev, t) {
 
 						// build a notification doc
 						const notice = {
-							message: 'editing user ' + t.misc.censorEmail(email),
+							message: 'editing roles for user ' + t.misc.censorEmail(email) + ' - setting ' + lc_roles.join(', '),
 						};
 						t.notifications.procrastinate(req, notice);
 					}
@@ -522,6 +527,9 @@ module.exports = function (logger, ev, t) {
 			logger.error('[pass] cannot edit passwords when auth scheme is ', ev.AUTH_SCHEME);
 			return cb({ statusCode: 400, msg: 'cannot edit passwords when auth scheme is ' + ev.AUTH_SCHEME });
 		} else {
+
+			const notice = { message: 'user is changing their password' };
+			t.notifications.procrastinate(req, notice);
 
 			// get the Athena settings doc first
 			t.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, (err, settings_doc) => {

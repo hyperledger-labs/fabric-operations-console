@@ -102,6 +102,9 @@ describe('Permission APIs', () => {
 		tools.middleware.verify_users_action_ak = function (req, res, next) {
 			return next();
 		};
+		tools.middleware.basic = function (req, res, next) {
+			return next();
+		};
 		const permission_apis = require('../../../routes/permission_apis.js')(common.logger, ev, tools);
 		this.app = common.expressApp(permission_apis);
 		setEvSettings();
