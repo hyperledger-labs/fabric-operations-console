@@ -787,6 +787,7 @@ module.exports = function (logger, ev, t) {
 				doc.type = doc.type ? doc.type.toLowerCase() : '?';
 
 				// build a notification doc
+				/* removing b/c the local edit code will generate the log and its better
 				if (doc) {
 					const notice = {
 						message: 'editing component "' + (doc._id || doc.display_name) + '"',
@@ -794,7 +795,7 @@ module.exports = function (logger, ev, t) {
 						component_display_name: doc.display_name,
 					};
 					t.notifications.procrastinate(req, notice);
-				}
+				}*/
 
 				const parsed = {
 					iid: (ev.CRN && ev.CRN.instance_id) ? ev.CRN.instance_id : 'iid-not-set',

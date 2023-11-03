@@ -1163,6 +1163,11 @@ class NodeRestApi {
 		};
 		return RestApi.post('/api/v2/proxy/', opts);
 	}
+
+	// delete all components
+	static async deleteAllComponents() {
+		return await RestApi.delete('/saas/api/v3/components/purge');
+	}
 }
 
 export { NodeRestApi, CREATED_COMPONENT_LOCATION, isCreatedComponentLocation };

@@ -121,3 +121,21 @@
 	display: inline-block;
 	margin-bottom: 1rem;
 }
+
+.deleteZone {
+	border: 2px dashed #c00;
+	padding: 1rem;
+}
+
+.dangerZone {
+	width: 100%;
+	margin: auto;
+	text-align: center;
+	color: #fff;
+	font-size: 1.5rem;
+}
+
+.confirmationDesc {
+	text-align: center;
+	margin-top: 8rem;
+}

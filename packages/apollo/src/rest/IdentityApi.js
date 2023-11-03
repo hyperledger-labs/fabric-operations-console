@@ -16,6 +16,7 @@
 import _ from 'lodash';
 import StitchApi from './StitchApi';
 import UserSettingsRestApi from './UserSettingsRestApi';
+import { EventsRestApi } from './EventsRestApi';
 const naturalSort = require('javascript-natural-sort');
 
 const LOCAL_STORAGE_KEY = 'ibp_identities';
@@ -29,7 +30,7 @@ class IdentityApi {
 	static ORDERER_NODE_TYPE = 'orderer';
 
 	static async getKey() {
-		const returnKey = function() {
+		const returnKey = function () {
 			let key = LOCAL_STORAGE_KEY;
 			if (IdentityApi.userInfo && IdentityApi.userInfo.logged) {
 				key = key + '_' + IdentityApi.userInfo.loggedInAs.email;
@@ -64,6 +65,12 @@ class IdentityApi {
 		const key = await IdentityApi.getKey();
 		const encrypted = await StitchApi.encrypt(IdentityApi.identityData);
 		localStorage.setItem(key, encrypted);
+	}
+
+	// delete/remove all identity data
+	static async clear() {
+		IdentityApi.identityData = {};
+		await IdentityApi.save();
 	}
 
 	static getArray() {
@@ -127,6 +134,13 @@ class IdentityApi {
 				});
 			});
 			await IdentityApi.save();
+
+			try {
+				EventsRestApi.recordActivity({ status: 'success', log: 'adding identity to user\'s wallet ' });
+			} catch (e) {
+				console.error('unable to record adding the identity', e);
+			}
+
 			return newIds;
 		}
 	}
@@ -156,6 +170,13 @@ class IdentityApi {
 		} else {
 			delete IdentityApi.identityData[name];
 			await IdentityApi.save();
+
+			try {
+				EventsRestApi.recordActivity({ status: 'success', log: 'removing identity from user\'s  wallet' });
+			} catch (e) {
+				console.error('unable to record removing the identity', e);
+			}
+
 			return IdentityApi.getArray();
 		}
 	}
@@ -397,7 +418,7 @@ class IdentityApi {
 
 	static async getTLSIdentity(node) {
 		const identities = await IdentityApi.getIdentities();
-		for (let i=0;i<identities.length;++i) {
+		for (let i = 0; i < identities.length; ++i) {
 			const match = await StitchApi.isIdentityFromRootCert({
 				certificate_b64pem: identities[i].cert,
 				root_certs_b64pems: _.get(node, 'msp.tlsca.root_certs'),

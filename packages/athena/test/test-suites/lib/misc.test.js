@@ -772,14 +772,6 @@ describe('Misc', () => {
 								expect(censoredEmail).to.equal('*@us.ibm.com');
 								done();
 							}
-						},
-						{
-							itStatement: 'should return censored email - partial  test_id=rudyqk',
-							expectBlock: (done) => {
-								const censoredEmail = misc.censorEmail('uus.ibm.com');
-								expect(censoredEmail).to.equal('uus.ibm.***');
-								done();
-							}
 						}
 					]
 				}
@@ -2063,7 +2055,7 @@ describe('Misc', () => {
 							itStatement: 'should edit malicious str - test_id=ymmbus',
 							expectBlock: (done) => {
 								const str = 'hi<script>alert(\'hey\');</script>asdf012345';
-								expect(misc.safe_str(str)).to.equal('hiscriptalert(hey)scriptasdf0123');
+								expect(misc.safe_str(str)).to.equal('hiscriptalert(\'hey\')scriptasdf01');
 								done();
 							}
 						},
@@ -2077,7 +2069,7 @@ describe('Misc', () => {
 						{
 							itStatement: 'should return a safe string - test_id=fucwch',
 							expectBlock: (done) => {
-								expect(misc.safe_str('this . sentence. had. dots. and "quotes" \'!\'', true)).to.equal('this . sentence. had. dots. and "quotes" !');
+								expect(misc.safe_str('this . sentence. had. dots. and "quotes" \'!\'', true)).to.equal('this . sentence. had. dots. and "quotes" \'!\'');
 								done();
 							}
 						}

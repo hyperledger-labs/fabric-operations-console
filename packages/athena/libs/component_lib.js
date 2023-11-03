@@ -666,9 +666,9 @@ module.exports = function (logger, ev, t) {
 			for (let key in req.body) {
 				if (t.misc.is_different(resp_getDoc[key], req.body[key])) { // log the differences for debugging
 					edits.push(t.misc.safe_str(key));
+					desc.push('"' + t.misc.safe_str(key) + '"');
 				}
 				resp_getDoc[key] = req.body[key];							// make the changes the client wants done
-				desc.push('"' + key + '"');
 			}
 
 			const fmt_doc = exports.format_input_to_doc(resp_getDoc, null);

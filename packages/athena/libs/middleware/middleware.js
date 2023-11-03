@@ -37,6 +37,9 @@ module.exports = function (logger, ev, t) {
 	// create a middleware that only tracks the api, no auth
 	exports.public = [storeIAMTokens, eTrack];
 
+	// create a middleware that tracks the api, with auth of any kind
+	exports.basic = [eTrack, checkAuthentication];
+
 	// create saas components
 	exports.verify_create_action_session = [eTrack, blockReadOnlyMode, isDeployerConfigured, needCreateAction, checkAuthentication, permitAction];
 	exports.verify_create_action_ak = [eTrack, blockReadOnlyMode, isDeployerConfigured, needCreateAction, allowAkToDoAction];

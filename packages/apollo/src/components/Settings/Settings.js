@@ -32,6 +32,9 @@ import PageContainer from '../PageContainer/PageContainer';
 import PageHeader from '../PageHeader/PageHeader';
 import DropdownSkeleton from 'carbon-components-react/lib/components/Dropdown/Dropdown.Skeleton';
 import ToggleSmallSkeleton from 'carbon-components-react/lib/components/ToggleSmall/ToggleSmall.Skeleton';
+import { NodeRestApi } from '../../rest/NodeRestApi';
+import IdentityApi from '../../rest/IdentityApi';
+import SidePanel from '../SidePanel/SidePanel';
 
 const SCOPE = 'comp_settings';
 const Log = new Logger(SCOPE);
@@ -43,6 +46,7 @@ const MINIMUM_MAX_IDLE_TIME = Math.floor(30);
 const MAXIMUM_MAX_IDLE_TIME = Math.floor(8 * 60 * 60);
 let progressInterval = null;
 let giveUpTimer = null;
+let txtTimer = null;
 
 export class Settings extends Component {
 	componentDidMount() {
@@ -59,6 +63,8 @@ export class Settings extends Component {
 			changed: {},
 			loading: true,
 			saving: false,
+			showConfirmation: false,
+			txt_state: 0,
 		});
 		this.getSettings();
 	}
@@ -546,9 +552,129 @@ export class Settings extends Component {
 		);
 	}
 
+	// show the delete buttons
+	renderDeleteSection(translate) {
+		if (!ActionsHelper.canDeleteComponent(this.props.userInfo) && !ActionsHelper.canImportComponent(this.props.userInfo)) {
+			return;			// don't show if user is not a manager or writer
+		}
+
+		// if we are opening up the confirmation panel, start the timer to blink the text out
+		if (this.props.showConfirmation && this.props.txt_state === 0) {
+			clearInterval(txtTimer);
+			txtTimer = setInterval(() => {
+				this.props.updateState(SCOPE, { txt_state: this.props.txt_state + 1 });
+			}, 700);
+		}
+		if (this.props.txt_state >= 5) {
+			clearInterval(txtTimer);
+		}
+
+		// render the delete all components/delete wallet buttons
+		return (
+			<div className="ibp-settings-bulk-data-container deleteZone">
+				<div className="settings-section delete-section">
+					<h3 className="settings-label">
+						<BlockchainTooltip direction="right"
+							triggerText={translate('delete_header')}
+						>
+							{translate('delete_header_tooltip')}
+						</BlockchainTooltip>
+					</h3>
+					<div className="settings-button-container">
+						{ActionsHelper.canDeleteComponent(this.props.userInfo) && (
+							<Button
+								id="data_delete_button1"
+								disabled={this.props.saving}
+								kind="danger"
+								onClick={async () => {
+									this.props.updateState(SCOPE, { showConfirmation: true, confirmationType: 'all' });
+								}}
+							>
+								{translate('delete_everything')}
+							</Button>
+						)}
+						<Button
+							id="data_delete_button3"
+							disabled={this.props.saving}
+							kind="danger"
+							onClick={async () => {
+								this.props.updateState(SCOPE, { showConfirmation: true, confirmationType: 'wallet' });
+							}}
+						>
+							{translate('delete_wallet')}
+						</Button>
+					</div>
+
+					{/*Confirmation panel here*/}
+					{this.props.showConfirmation && (
+						<SidePanel
+							id="ibp--template-full-page-side-panel"
+							closed={() => {
+								clearInterval(txtTimer);
+								this.props.updateState(SCOPE, { showConfirmation: false, txt_state: 0 });
+							}}
+							ref={sidePanel => (this.sidePanel = sidePanel)}
+							buttons={[
+								{
+									id: 'confirmation_id',
+									text: translate('yes_confirmation'),
+									type: 'submit',
+									disabled: (this.props.txt_state < 4) || this.props.saving,
+									onClick: async () => {
+										this.props.updateState(SCOPE, { saving: true });
+
+										if (this.props.confirmationType === 'all') {
+											await NodeRestApi.deleteAllComponents();
+										} else {
+											await IdentityApi.clear();
+										}
+
+										setTimeout(() => {
+											clearInterval(txtTimer);
+											this.props.updateState(SCOPE, { saving: false, showConfirmation: false, txt_state: 0 });
+										}, 700);
+									}
+								}
+							]}
+							fullPageCenter
+							submitting={this.props.saving}
+							hideClose={false}
+						>
+							<div className="ibp-full-page-center-panel-container">
+								<h2>
+									{translate(this.props.confirmationType === 'all' ? 'confirmation_header_all' : 'confirmation_header_wallet')}
+								</h2>
+
+								{/* *Blink* text here*/}
+								<h3 className='confirmationDesc'>
+									{this.props.txt_state < 1 && (
+										<span>...</span>
+									)}
+									{this.props.txt_state >= 1 && (
+										<span>{translate('confirmation_desc1')}&nbsp;</span>
+									)}
+									{this.props.txt_state >= 2 && (
+										<span>{translate('confirmation_desc2')}&nbsp;</span>
+									)}
+									{this.props.txt_state >= 3 && (
+										<span>{translate('confirmation_desc3')}</span>
+									)}
+									{this.props.txt_state >= 4 && (
+										<span>{translate('confirmation_desc4')}&nbsp;</span>
+									)}
+								</h3>
+							</div>
+						</SidePanel>
+					)}
+				</div>
+			</div >
+		);
+	}
+
 	render = () => {
 		const translate = this.props.translate;
 		const progress_width = isNaN(this.props.width) ? 0 : this.props.width;
+
 		return (
 			<PageContainer>
 				<div className="bx--row">
@@ -582,6 +708,7 @@ export class Settings extends Component {
 								</div>)}
 							</div>
 							{this.renderDataManagement(translate)}
+							{window && window.location && window.location.href && window.location.href.includes('debug') && this.renderDeleteSection(translate)}
 						</div>
 					</div>
 				</div>
@@ -605,6 +732,9 @@ const dataProps = {
 	max_idle_time: PropTypes.number,
 	width: PropTypes.number,
 	changed: PropTypes.object,
+	showConfirmation: PropTypes.bool,
+	confirmationType: PropTypes.string,
+	txt_state: PropTypes.number,
 };
 
 Settings.propTypes = {

@@ -189,7 +189,7 @@ module.exports = function (logger, ev, t) {
 	//--------------------------------------------------
 	// Change password
 	//--------------------------------------------------
-	app.put('/api/v[123]/permissions/users/password', t.middleware.checkAuthentication, (req, res) => {
+	app.put('/api/v[123]/permissions/users/password', t.middleware.basic, (req, res) => {
 		t.permissions_lib.change_password(req, (err, ret) => {
 			if (err) {
 				return res.status(t.ot_misc.get_code(err)).json(err);
