@@ -100,7 +100,7 @@ Feature: 2.0 Lifecycle Flow
         And I clicked the button with id 'next'
         And I clicked the button with id 'next'
         And I clicked the button with id 'submit'
-        Then wait "30" seconds
+        Then wait "50" seconds
         Then the chaincode with name 'fabcar' should have been created in 'Proposed' state
 
     Scenario: Approve Smart Contact as Org2
