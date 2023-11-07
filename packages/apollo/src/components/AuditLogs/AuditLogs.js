@@ -31,7 +31,7 @@ import SidePanel from '../SidePanel/SidePanel';
 import Clipboard from '../../utils/clipboard';
 import SVGs from '../Svgs/Svgs';
 import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
-import { Checkbox, TextInput } from 'carbon-components-react';
+import { Checkbox } from 'carbon-components-react';
 import ActionsHelper from '../../utils/actionsHelper';
 
 const SCOPE = 'AuditLogs';
