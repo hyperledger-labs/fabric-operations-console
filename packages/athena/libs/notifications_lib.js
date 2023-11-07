@@ -325,10 +325,11 @@ module.exports = function (logger, ev, t) {
 
 		// filter the notification data down by a user search
 		function filter(data) {
-			const search = (options && typeof options.search === 'string') ? options.search.toLowerCase().trim() : '';
+			let search = (options && typeof options.search === 'string') ? options.search.toLowerCase().trim() : '';
 			if (!search) {
 				return data;
 			}
+			search = search.replace(/"/g, '\\"');					// escape double quotes if found
 
 			const ret = [];
 			for (let i in data) {
