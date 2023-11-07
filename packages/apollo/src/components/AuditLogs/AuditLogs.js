@@ -325,32 +325,37 @@ class AuditLogs extends Component {
 		return ret;
 	}
 
-	// send search term and filter logs down before returning them
-	async searchTable(event) {
-		const search = event.target.value;
+	// search box event
+	async searchTableEvent(event) {
+		const query = event.target.value;
 		clearTimeout(this.debounce);
 
 		this.debounce = setTimeout(async () => {
-			this.props.updateState(SCOPE, {
-				logsLoading: true,
-			});
-
-			if (!search) {
-				return await this.getLogs();							// if no search terms, do normal api
-			} else {
-				try {
-					const logs = await EventsRestApi.getLogs({ limit: this.numberOfTotalLogs(), skip: 0, search: search });
-					this.props.updateState(SCOPE, {
-						logs: logs ? logs.notifications : [],
-						displayLogCount: logs ? logs.returning : 0,		// in this case the total should reflect the number of logs after applying the filter
-						showingPage: 1,
-						logsLoading: false,
-					});
-				} catch (e) {
-					console.error('unable to get logs for search', e);
-				}
-			}
+			this.searchTable(query);
 		}, 150);
+	}
+
+	// send search term and filter logs down before returning them
+	async searchTable(query) {
+		this.props.updateState(SCOPE, {
+			logsLoading: true,
+		});
+
+		if (!query) {
+			return await this.getLogs();							// if no search terms, do normal api
+		} else {
+			try {
+				const logs = await EventsRestApi.getLogs({ limit: this.numberOfTotalLogs(), skip: 0, search: query });
+				this.props.updateState(SCOPE, {
+					logs: logs ? logs.notifications : [],
+					displayLogCount: logs ? logs.returning : 0,		// in this case the total should reflect the number of logs after applying the filter
+					showingPage: 1,
+					logsLoading: false,
+				});
+			} catch (e) {
+				console.error('unable to get logs for search', e);
+			}
+		}
 	}
 
 	// --------------------------------------------------------------------------
@@ -399,18 +404,6 @@ class AuditLogs extends Component {
 										>
 											{translate('audit_table_desc')}
 										</BlockchainTooltip>
-
-										<br />
-
-										<TextInput
-											id={'activity-checkbox-search'}
-											labelText={translate('search')}
-											wrapperClassName='audit-checkboxes'
-											placeholder={translate('search_terms')}
-											onChange={evt => {
-												this.searchTable(evt);
-											}}
-										/>
 
 										<br />
 
@@ -511,6 +504,10 @@ class AuditLogs extends Component {
 											pageSize={this.PAGE_SIZE}
 											itemCount={this.props.displayLogCount}
 											onPage={this.getLogsForPage}
+											searchEnabled={true}
+											customSearch={(query) => {
+												this.searchTable(query);
+											}}
 										/>
 									</div>
 								}

@@ -180,7 +180,7 @@ class ItemContainer extends Component {
 									id={`${this.props.id}-${view}-button`}
 									className={`ibp-container-button ${current === view ? 'ibp-active-view-mode' : 'ibp-inactive-view-mode'} ${
 										view === 'variableGrid' ? 'variableGridButton' : 'listViewButton'
-									}`}
+										}`}
 									onClick={view === 'variableGrid' ? this.showGrid : this.showList}
 									aria-label={view === 'variableGrid' ? 'Toggle grid view' : 'Toggle list view'}
 								>
@@ -466,7 +466,7 @@ class ItemContainer extends Component {
 							onClick={button.fn}
 							kind={button.kind || (i !== this.props.addItems.length - 1 ? 'secondary' : 'primary')}
 							title={!button.tooltip ? (button.title ? translate(button.title) : translate(button.text)) : ''}
-							disabled={button.decoupleFromLoading ? false :(this.props.disableAddItem || this.props.loading || button.disabled)}
+							disabled={button.decoupleFromLoading ? false : (this.props.disableAddItem || this.props.loading || button.disabled)}
 						>
 							{!button.tooltip && <span className="ibp__button-text bx--type-zeta">{translate(button.text)}</span>}
 							{button.tooltip && (
@@ -679,6 +679,16 @@ class ItemContainer extends Component {
 
 	handleSearch = event => {
 		let { searchSettings } = this.props;
+
+		// use the custom search instead, reset page to 0 though
+		if (this.props.customSearch && typeof this.props.customSearch === 'function') {
+			this.updateState({
+				page: 0
+			});
+			return this.props.customSearch(event.target.value);
+		}
+
+
 		if (!searchSettings) {
 			searchSettings = this.initializeSearch();
 		}
@@ -809,9 +819,10 @@ class ItemContainer extends Component {
 								<div className="ibp__button--container">
 									{searchEnabled && (
 										<TableToolbarSearch
+											className='searchBox'
 											onChange={event => this.handleSearch(event)}
 											labelText={translate(`find_${this.props.itemId}`)}
-											placeHolderText={translate(`find_${this.props.itemId}`)}
+											persistent={true}
 										/>
 									)}
 									<div className="ibp__button--container">
@@ -984,6 +995,7 @@ ItemContainer.propTypes = {
 	widerTiles: PropTypes.bool,
 	maxTilesPerPagination: PropTypes.number,
 	translate: PropTypes.func, // Provided by withLocalize
+	customSearch: PropTypes.func,
 };
 
 export default connect(

@@ -2439,7 +2439,7 @@
 	"api_doc_header": "API documentation",
 	"api_doc_desc": "Build on top of the Fabric Operations Console",
 	"search": "Search",
-	"search_terms": "Search activity logs",
+	"find_audit_logs": "Search activity logs",
 	"error_component_delete_title": "Component delete failed",
 	"error_component_delete": "An error occurred when deleting the component \"${id}\".",
 	"error_component_removal_title": "Component removal failed",
