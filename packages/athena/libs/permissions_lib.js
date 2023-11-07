@@ -169,6 +169,12 @@ module.exports = function (logger, ev, t) {
 						uuid: t.middleware.getUuid(req) || t.uuidv4()
 					};
 
+					// build a notification doc
+					const notice = {
+						message: 'registering new user ' + t.misc.censorEmail(email),
+					};
+					t.notifications.procrastinate(req, notice);
+
 					// update the settings doc
 					const wr_opts = {
 						db_name: ev.DB_SYSTEM,
@@ -294,6 +300,7 @@ module.exports = function (logger, ev, t) {
 				return cb(err);
 			} else {
 				let input_errors = [];
+				const censored = [];
 				if (!settings_doc.access_list) {
 					settings_doc.access_list = {};									// init
 				}
@@ -313,13 +320,20 @@ module.exports = function (logger, ev, t) {
 						input_errors.push('cannot delete self: ' + encodeURI(uuid));
 					} else {
 						delete settings_doc.access_list[email];
+						censored.push(t.misc.censorEmail(email));
 					}
 				}
 
 				if (input_errors.length >= 1) {
 					logger.error('[permissions] unable to delete some users. errors:', input_errors);
-					cb({ statusCode: 400, msg: input_errors, }, null);
+					return cb({ statusCode: 400, msg: input_errors, }, null);
 				} else {
+
+					// build a notification doc
+					const notice = {
+						message: 'deleting user' + (uuids.length > 1 ? 's' : '') + ' ' + censored.join(', '),
+					};
+					t.notifications.procrastinate(req, notice);
 
 					// update the settings doc
 					const wr_opts = {
@@ -332,7 +346,7 @@ module.exports = function (logger, ev, t) {
 					}, (err_writeDoc) => {
 						if (err_writeDoc) {
 							logger.error('[permissions] cannot edit settings doc to delete users:', err_writeDoc);
-							cb({ statusCode: 500, msg: 'could not update settings doc', details: err_writeDoc }, null);
+							return cb({ statusCode: 500, msg: 'could not update settings doc', details: err_writeDoc }, null);
 						} else {
 							logger.info('[permissions] deleting users - success');
 
@@ -341,7 +355,7 @@ module.exports = function (logger, ev, t) {
 									logger.error('[permissions] error updating config settings', err);
 									return cb({ statusCode: 500, msg: 'could not update config settings' }, null);
 								} else {
-									cb(null, { message: 'ok', uuids: encodeURI(uuids) });	// all good
+									return cb(null, { message: 'ok', uuids: encodeURI(uuids) });	// all good
 								}
 							});
 						}

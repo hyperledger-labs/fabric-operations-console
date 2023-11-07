@@ -141,6 +141,31 @@ class EventsRestApi {
 			console.error('unable to record ca user enroll', e);
 		}
 	}
+
+	static async sendMustGatherEvent() {
+		try {
+			EventsRestApi.recordActivity({
+				status: 'success',
+				log: 'starting mustgather',
+				code: 200
+			});
+		} catch (e) {
+			console.error('unable to record the mustgather event', e);
+		}
+	}
+
+	static async sendMustGatherDownloadEvent() {
+		try {
+			EventsRestApi.recordActivity({
+				status: 'success',
+				log: 'downloading mustgather data',
+				code: 200
+			});
+		} catch (e) {
+			console.error('unable to record the mustgather download event', e);
+		}
+
+	}
 }
 
 export { EventsRestApi };

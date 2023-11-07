@@ -112,7 +112,7 @@ module.exports = function (logger, ev, t) {
 
 		// create notification doc
 		function log_notification() {
-			const notice = { message: 'user logging into the IBP console - sso' };
+			const notice = { message: 'user logging in - sso' };
 			t.notifications.procrastinate(req, notice);
 		}
 	};
@@ -137,7 +137,7 @@ module.exports = function (logger, ev, t) {
 	// ------------------------------------------
 	exports.local_login = function (req, res, next, passport) {
 		if (ev.AUTH_SCHEME === 'couchdb') {
-			const notice = { message: 'user logging into the IBP console - local' };
+			const notice = { message: 'user logging in - local' };
 
 			logger.debug('[passport] logging in use via couch db auth scheme');
 			const lc_email = req.body.email ? req.body.email.toLowerCase() : null;
@@ -279,7 +279,7 @@ module.exports = function (logger, ev, t) {
 
 		// create notification doc
 		function log_notification() {
-			const notice = { message: 'user logging into the IBP console - ldap' };
+			const notice = { message: 'user logging in - ldap' };
 			t.notifications.procrastinate(req, notice);
 		}
 	};
