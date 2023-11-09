@@ -183,7 +183,7 @@ class OrdererAdmins extends Component {
 								fn: this.openAddMSPModal,
 								label: 'add_orderer_admin',
 								text: 'add_orderer_admin',
-								disabled: !ActionsHelper.canEditComponent(this.props.feature_flags),
+								disabled: !ActionsHelper.canEditComponent(this.props.userInfo, this.props.feature_flags),
 							},
 						]}
 						tileMapping={{
@@ -252,7 +252,10 @@ OrdererAdmins.propTypes = {
 
 export default connect(
 	state => {
-		return Helper.mapStateToProps(state[SCOPE], dataProps);
+		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
+		newProps['userInfo'] = state['userInfo'] ? state['userInfo'] : null;
+		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;
+		return newProps;
 	},
 	{
 		updateState,

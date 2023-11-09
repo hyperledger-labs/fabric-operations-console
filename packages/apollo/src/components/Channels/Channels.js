@@ -637,7 +637,7 @@ class ChannelComponent extends Component {
 			id: 'join_channel',
 			text: 'join_channel',
 			fn: this.joinChannel,
-			disabled: !ActionsHelper.canEditComponent(this.props.feature_flags)
+			disabled: !ActionsHelper.canEditComponent(this.props.userInfo, this.props.feature_flags)
 		});
 
 		const osnadminFeatsEnabled = this.props.feature_flags ? this.props.feature_flags.osnadmin_feats_enabled : false;
@@ -679,7 +679,7 @@ class ChannelComponent extends Component {
 				fn: () => {
 					this.createChannel(null);
 				},
-				disabled: !ActionsHelper.canEditComponent(this.props.feature_flags)
+				disabled: !ActionsHelper.canEditComponent(this.props.userInfo, this.props.feature_flags)
 			});
 		}
 		return items;
@@ -975,6 +975,7 @@ export default connect(
 	state => {
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;
+		newProps['userInfo'] = state['userInfo'] ? state['userInfo'] : null;
 		newProps['signature_requests'] = state['signatureCollection'] ? state['signatureCollection']['requests'] : [];
 		newProps['host_url'] = state['settings'] ? state['settings']['host_url'] : [];
 		return newProps;

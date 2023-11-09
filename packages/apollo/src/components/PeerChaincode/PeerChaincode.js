@@ -210,7 +210,7 @@ class PeerChaincode extends Component {
 							text: 'install_chaincode',
 							fn: this.openInstallChaincodeModal,
 							label: 'install_chaincode',
-							disabled: !ActionsHelper.canEditComponent(this.props.feature_flags)
+							disabled: !ActionsHelper.canEditComponent(this.props.userInfo, this.props.feature_flags)
 						},
 					]}
 					disableAddItem={this.props.empty || this.props.parentLoading || this.props.state !== STATES.READY}
@@ -252,7 +252,10 @@ PeerChaincode.propTypes = {
 
 export default connect(
 	state => {
-		return Helper.mapStateToProps(state[SCOPE], dataProps);
+		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
+		newProps['userInfo'] = state['userInfo'] ? state['userInfo'] : null;
+		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;
+		return newProps;
 	},
 	{
 		updateState,
