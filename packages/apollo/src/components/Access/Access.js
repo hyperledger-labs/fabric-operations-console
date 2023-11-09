@@ -40,6 +40,7 @@ import * as constants from '../../utils/constants';
 const SCOPE = 'access';
 const Log = new Logger(SCOPE);
 let login_interval = null;
+let admin_count = 0;
 
 export class Access extends Component {
 	cName = 'Access';
@@ -72,6 +73,8 @@ export class Access extends Component {
 							roles: resp2.users[id].roles,
 							disabled: true,
 						});
+						if (resp2.users[id].roles.includes('manager'))
+						{ admin_count = admin_count + 1; }
 						delete resp2.users[id];
 						break;
 					}
@@ -100,6 +103,8 @@ export class Access extends Component {
 						created: new Date(resp2.users[id].created).toDateString(),
 						roles: resp2.users[id].roles,
 					});
+					if (resp2.users[id].roles.includes('manager'))
+					{ admin_count = admin_count + 1; }
 				}
 
 				this.props.updateState(SCOPE, {
@@ -159,11 +164,23 @@ export class Access extends Component {
 	};
 
 	openEditUserModal = user => {
-		this.props.updateState(SCOPE, {
-			showAddUserModal: true,
-			editMode: true,
-			user: user,
-		});
+		if (admin_count < 2 && user.roles.includes('manager'))
+		{
+			this.props.updateState(SCOPE, {
+				showAddUserModal: true,
+				editMode: true,
+				user: user,
+				disableUpdate: true,
+			});
+		}
+		else {
+			this.props.updateState(SCOPE, {
+				showAddUserModal: true,
+				editMode: true,
+				user: user,
+				disableUpdate: false,
+			});
+		}
 	};
 
 	openResetPasswordModal = user => {
@@ -452,6 +469,7 @@ export class Access extends Component {
 											} else {
 												const emails = data;
 												this.props.showSuccess(emails.length === 1 ? 'user_add_successful' : 'users_add_successful', { email: emails.join(', ') }, SCOPE);
+												admin_count = 0;
 												this.getAuthDetails(true);
 											}
 										}}
@@ -464,8 +482,10 @@ export class Access extends Component {
 										existingUsers={this.props.all_users.map(details => details.id)}
 										userDetails={this.props.user}
 										onClose={this.closeAddUserModal}
+										disableUpdate={this.props.disableUpdate}
 										onComplete={email => {
 											this.props.showSuccess('user_update_successful', { email }, SCOPE);
+											admin_count = 0;
 											this.getAuthDetails(true);
 										}}
 									/>
@@ -533,6 +553,7 @@ export class Access extends Component {
 												this.props.showSuccess((Array.isArray(removedItems) && removedItems.length > 1) ?
 													'users_removed_successful' : 'user_removed_successful', { email: removedItems.join(', ') }, SCOPE
 												);
+												admin_count = 0;
 												this.getAuthDetails(true);
 											}
 										}}
@@ -655,6 +676,7 @@ const dataProps = {
 	userInfo: PropTypes.object,
 	isManager: PropTypes.bool,
 	isWriter: PropTypes.bool,
+	disableUpdate: PropTypes.bool,
 	auth_scheme: PropTypes.string,
 	user: PropTypes.object,
 	editMode: PropTypes.bool,

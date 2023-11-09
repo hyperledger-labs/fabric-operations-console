@@ -331,6 +331,8 @@
 	"tooltip_peer_name": "Enter a peer name. This field is only used to identify the peer in this console.",
 	"tooltip_msp_id": "This is the organization MSP ID that was specified when the peer was deployed. Get this value from the peer administrator.",
 	"tooltip_proxy_url": "The gRPC web proxy URL for the peer.",
+	"only_manager_title": "You are the only Manager",
+	"only_manager_desc": "As You are the only Manager for this console, you are not allowed to modify your roles",
 	"edit_tooltip_peer_name": "Modify the name you want to use to refer to this peer in this console.",
 	"edit_tooltip_msp_id": "Modify the organization MSP ID. This value was specified when the peer was deployed.",
 	"edit_tooltip_proxy_url": "The gRPC web proxy URL for the peer.",

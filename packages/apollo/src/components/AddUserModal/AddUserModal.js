@@ -26,6 +26,7 @@ import EmailChips from '../EmailChips/EmailChips';
 import Form from '../Form/Form';
 import ImportantBox from '../ImportantBox/ImportantBox';
 import SidePanel from '../SidePanel/SidePanel';
+import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 
 const SCOPE = 'addUsers';
 
@@ -229,7 +230,7 @@ export class AddUserModal extends Component {
 	}
 
 	render = () => {
-		let disableSubmit = this.props.disableSave || this.props.submitting || !this.props.roles || !this.props.roles.length;
+		let disableSubmit = this.props.disableSave || this.props.submitting || !this.props.roles || !this.props.roles.length || this.props.disableUpdate;
 		disableSubmit = this.props.isEditing ? disableSubmit : disableSubmit || !this.props.newUsers || !this.props.newUsers.length;
 		const disableSubmitApiKey = !this.props.apikey_name || !Array.isArray(this.props.roles) || this.props.roles.length === 0;
 		const translate = this.props.translate;
@@ -322,7 +323,13 @@ export class AddUserModal extends Component {
 								/>
 							</div>
 						)}
-
+						{this.props.isEditing && this.props.disableUpdate && (
+							<div className="ibp-error-panel">
+								<SidePanelWarning title="only_manager_title"
+									subtitle="only_manager_desc"
+								/>
+							</div>
+						)}
 						<div className="ibp-auth-settings-roles-title ibp-tooltip-wrap">
 							<span className="ibp-user-tooltip">
 								<BlockchainTooltip type="definition"
@@ -339,6 +346,7 @@ export class AddUserModal extends Component {
 								className="ibp-auth-settings-role-label"
 								labelText={translate('manager')}
 								checked={this.props.roles && this.props.roles.includes('manager')}
+								disabled={this.props.disableUpdate}
 								onClick={event => {
 									this.onChangeRole('manager', event);
 								}}
