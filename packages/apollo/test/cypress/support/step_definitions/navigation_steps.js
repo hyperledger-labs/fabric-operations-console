@@ -20,24 +20,24 @@ import { Given, Then, When } from "@badeball/cypress-cucumber-preprocessor";
 Given("I go to the console", () => {
     cy.fixture("config.json").then((data) => {
       cy.visit(data.loginUrl)
-    }) 
+    })
   });
 
-Given(/^I clicked the button with (text|title|id|xpath) (?:'|")(.*?)(?:'|")$/, (property, value) => {	
+Given(/^I clicked the button with (text|title|id|xpath) (?:'|")(.*?)(?:'|")$/, (property, value) => {
   cy.clickButton(property, value);
 });
 
-Given(/^I clicked the div with (title|id|xpath) (?:'|")(.*?)(?:'|")$/, (property, value) => {	
+Given(/^I clicked the div with (title|id|xpath) (?:'|")(.*?)(?:'|")$/, (property, value) => {
   cy.wait(500)
   cy.get(`div[${property}="${value}"]`).first().click()
 });
 
-Given(/^I clicked the (div|span) with text (?:'|")(.*?)(?:'|")$/, (property, value) => {	
+Given(/^I clicked the (div|span) with text (?:'|")(.*?)(?:'|")$/, (property, value) => {
   cy.wait(1000)
   cy.get(property).contains(value).first().click()
 });
 
-Given(/^I clicked the dropdown item (?:'|")(.*?)(?:'|") with class (?:'|")(.*?)(?:'|")$/, (selectItemText, className) => {	
+Given(/^I clicked the dropdown item (?:'|")(.*?)(?:'|") with class (?:'|")(.*?)(?:'|")$/, (selectItemText, className) => {
   cy.wait(1000)
   cy.get(className).contains(selectItemText).should('be.visible').click()
 });
@@ -61,12 +61,12 @@ Given(/^I clicked Create a (peer|Certificate Authority|Ordering Service)$/, () =
   cy.get('label[for="ibm_saas"]').click();
 });
 
-Given(/^I clicked the Next button in Create MSP definition screen$/, () => {	
+Given(/^I clicked the Next button in Create MSP definition screen$/, () => {
   cy.wait(500)
   cy.get('#generateMSPModal > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2)').click()
 });
 
-Given(/^I clicked the (button|div) with class (?:'|")(.*?)(?:'|") contains text (?:'|")(.*?)(?:'|")$/, (className, buttonText) => {	
+Given(/^I clicked the (button|div) with class (?:'|")(.*?)(?:'|") contains text (?:'|")(.*?)(?:'|")$/, (className, buttonText) => {
   cy.wait(500)
   cy.get(className).contains(buttonText).should('be.visible').click()
 });
@@ -80,3 +80,8 @@ Then(/^I am on Help page$/, () => {
   cy.get('#title_bar > header > div > button:nth-child(1)').click()
   cy.wait(1000)
 });
+
+Then(/^the div with id (?:'|")(.*?)(?:'|") does not exist on page$/, value => {
+	cy.wait(1000)
+	cy.get(`div[id="${value}"]`).should('not.exist');
+  });
