@@ -1524,5 +1524,25 @@ module.exports = function (logger, t) {
 		}
 	};
 
+	// turn version into a 3 part version string
+	// 'V2_0' -> 'v2.0.0'
+	// '2.0.0' -> 'v2.0.0'
+	// 'V1_4_2' -> 'v1.4.2'
+	exports.prettyPrintVersion = (str) => {
+		if (typeof str === 'string') {
+			if (str === 'unknown') { return '-'; }
+			str = str.trim();
+			if (str[0].toUpperCase() === 'V') {
+				str = str.substring(1);			// cut off the 'V'
+			}
+			const parts = str.includes('_') ? str.split('_') : str.split('.');
+			while (parts.length < 3) {
+				parts.push('0');
+			}
+			return 'v' + parts.join('.');
+		}
+		return '-';
+	};
+
 	return exports;
 };

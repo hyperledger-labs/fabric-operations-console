@@ -899,5 +899,135 @@ module.exports = function (logger, ev, t) {
 		}
 	};
 
+	//-----------------------------------------------------------------------------
+	// Return a console/component/k8s version summary for support/debug purposes
+	//-----------------------------------------------------------------------------
+	exports.version_summary = (req, cb) => {
+		const console_data = t.ot_misc.parse_versions();
+		const ret = {
+			console: {
+				version: (console_data && console_data.tag) ? t.misc.prettyPrintVersion(console_data.tag) : '-',
+				commit: (console_data && console_data.athena) ? console_data.athena : '-',
+			},
+			components: [],
+			cluster: {
+				type: '',
+				version: ''
+			},
+			operator: {
+				version: '',
+				available_fabric_versions: {}
+			},
+			timestamp: Date.now(),
+		};
+
+		t.async.parallel([
+
+			// ---- Get component docs from athena db ---- //
+			(join) => {
+				t.component_lib.get_all_runnable_components(req, (err, resp) => {
+					if (err) {
+						logger.error('[version] unable to get runnable component docs:', err);
+						return join(null);
+					} else {
+
+						// iter on each component
+						t.async.eachLimit(resp, 8, (comp_doc, cb_version) => {
+							const comp = t.comp_fmt.fmt_component_resp(req, comp_doc);
+
+							if (!comp_doc || !comp_doc.operations_url) {
+								ret.components.push({
+									id: comp.id,
+									display_name: comp.display_name,
+									version: '-',
+									imported: comp.imported,
+									type: comp.type,
+								});
+								return cb_version();
+							} else {
+								const options = {
+									method: 'GET',
+									baseUrl: null,
+									url: t.component_lib.build_version_url(comp_doc),
+									headers: { 'Accept': 'application/json' },
+									timeout: ev.HTTP_STATUS_TIMEOUT,
+									rejectUnauthorized: false,									// self signed certs are okay
+									_name: 'status_req',
+									_max_attempts: 2,
+									_retry_codes: {												// list of codes we will retry
+										'429': '429 rate limit exceeded aka too many reqs',
+									}
+								};
+								t.misc.retry_req(options, (err_ver, resp_ver) => {
+									let body = {};
+									if (resp_ver) {
+										try {
+											body = JSON.parse(resp_ver.body);
+										} catch (e) {
+											logger.error('[version] unable to parse response from component', comp_doc.id);
+										}
+									}
+									ret.components.push({
+										id: comp.id,
+										display_name: comp.display_name,
+										version: t.misc.prettyPrintVersion(body.Version),
+										imported: comp.imported,
+										type: comp.type,
+									});
+									return cb_version();
+								});
+							}
+						}, () => {
+							return join(null, ret);
+						});
+					}
+				});
+			},
+
+			// ---- Get k8s version ---- //
+			(join) => {
+				t.deployer.get_k8s_version((err, resp) => {
+					if (err) {
+						// error already logged
+						return join(null);
+					} else {
+						ret.cluster.version = (resp && resp._version) ? t.misc.prettyPrintVersion(resp._version) : '-';
+						return join(null, resp);
+					}
+				});
+			},
+
+			// ---- Get cluster type ---- //
+			(join) => {
+				t.deployer.get_cluster_type((err, resp) => {
+					if (err) {
+						// error already logged
+						return join(null);
+					} else {
+						ret.cluster.type = (resp && resp.type) ? resp.type : '-';
+						return join(null, resp);
+					}
+				});
+			},
+
+			// ---- Get available fabric versions ---- //
+			(join) => {
+				t.deployer.get_fabric_versions(req, (err, resp) => {
+					if (err) {
+						// error already logged
+						join(null);
+					} else {
+						ret.operator.versions = (resp && resp.versions) ? resp.versions : {};
+						join(null, resp.versions);
+					}
+				});
+			}
+
+		], (_, results) => {
+			logger.info('[version] returning version summary');
+			return cb(null, t.misc.sortItOut(ret));
+		});
+	};
+
 	return exports;
 };
