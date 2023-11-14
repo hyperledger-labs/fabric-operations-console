@@ -530,7 +530,6 @@ module.exports = function (logger, ev, t) {
 
 	//-----------------------------------------------------------------------------
 	// Return the debug/support version summary
-	// dsh todo - doc this api
 	//-----------------------------------------------------------------------------
 	app.get('/api/v[3]/versions', t.middleware.verify_view_action_session, (req, res) => {
 		t.other_apis_lib.version_summary(req, (err, ret) => {

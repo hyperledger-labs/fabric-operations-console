@@ -912,10 +912,10 @@ module.exports = function (logger, ev, t) {
 			components: [],
 			cluster: {
 				type: '',
-				version: ''
+				version: '',
+				go_version: '',
 			},
 			operator: {
-				version: '',
 				available_fabric_versions: {}
 			},
 			timestamp: Date.now(),
@@ -992,6 +992,7 @@ module.exports = function (logger, ev, t) {
 						return join(null);
 					} else {
 						ret.cluster.version = (resp && resp._version) ? t.misc.prettyPrintVersion(resp._version) : '-';
+						ret.cluster.go_version = (resp && resp.goVersion) ? resp.goVersion : '-';
 						return join(null, resp);
 					}
 				});
@@ -1017,7 +1018,17 @@ module.exports = function (logger, ev, t) {
 						// error already logged
 						join(null);
 					} else {
-						ret.operator.versions = (resp && resp.versions) ? resp.versions : {};
+						const tmp = (resp && resp.versions) ? resp.versions : {};
+						const types = ['peer', 'orderer', 'ca'];
+						for (let i in types) {
+							const fab_type = types[i];
+							if (tmp && tmp[fab_type]) {
+								ret.operator.available_fabric_versions[fab_type] = [];
+								for (let ver in tmp.peer) {
+									ret.operator.available_fabric_versions[fab_type].push(t.misc.prettyPrintVersion(ver));
+								}
+							}
+						}
 						join(null, resp.versions);
 					}
 				});
