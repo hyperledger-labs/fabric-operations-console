@@ -16,11 +16,19 @@
 import * as constants from './constants';
 
 const ActionsHelper = {
-	canEditComponent(feature_flags) {
+
+	// return true if the console is in read only mode
+	inReadOnly(feature_flags) {
 		const in_read_only_mode = feature_flags ? feature_flags.read_only_enabled : false;
-		return !in_read_only_mode;
+		return in_read_only_mode;
 	},
 
+	// return true if the user has the right roles to edit a component (ca/peer/orderer)
+	canEditComponent(user, feature_flags) {
+		return ActionsHelper.canCreateComponent(user, feature_flags);
+	},
+
+	// return true if the user has the right role to create a component (ca/peer/orderer)
 	canCreateComponent(user, feature_flags) {
 		const in_read_only_mode = feature_flags ? feature_flags.read_only_enabled : false;
 		return ActionsHelper._actionCheck(user, constants.ACTION_COMPONENT_CREATE) && !in_read_only_mode;
