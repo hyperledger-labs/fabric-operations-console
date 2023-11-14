@@ -855,7 +855,7 @@ module.exports = function (logger, ev, t) {
 				const type = exports.get_type_from_doc(doc) || 'component';		// try to get the component type from the doc
 				const name = doc.display_name || doc.short_name || doc._id;
 				const notice = {
-					message: 'deleting ' + type + ' "' + (doc._id || name) + '"',
+					message: 'removing ' + type + ' "' + (doc._id || name) + '"',
 					component_id: doc._id,
 					component_type: doc.type,
 					component_display_name: doc.display_name,
