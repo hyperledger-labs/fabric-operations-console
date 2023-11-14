@@ -1168,6 +1168,11 @@ class NodeRestApi {
 	static async deleteAllComponents() {
 		return await RestApi.delete('/saas/api/v3/components/purge');
 	}
+
+	// get version summary on all components
+	static async getVersionSummary() {
+		return await RestApi.get('/api/v3/versions');
+	}
 }
 
 export { NodeRestApi, CREATED_COMPONENT_LOCATION, isCreatedComponentLocation };

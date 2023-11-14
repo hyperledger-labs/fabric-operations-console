@@ -35,6 +35,7 @@ import ToggleSmallSkeleton from 'carbon-components-react/lib/components/ToggleSm
 import { NodeRestApi } from '../../rest/NodeRestApi';
 import IdentityApi from '../../rest/IdentityApi';
 import SidePanel from '../SidePanel/SidePanel';
+import { EventsRestApi } from '../../rest/EventsRestApi';
 
 const SCOPE = 'comp_settings';
 const Log = new Logger(SCOPE);
@@ -671,6 +672,62 @@ export class Settings extends Component {
 		);
 	}
 
+	// show section on version gathering (debug)
+	renderVersionDebug(translate) {
+		return (
+			<div className="ibp-settings-bulk-data-container">
+				<div className="settings-section">
+					<h3 className="settings-label">
+						<BlockchainTooltip direction="right"
+							triggerText={translate('version_debug_msg')}
+						>
+							{translate('version_debug_tooltip')}
+						</BlockchainTooltip>
+					</h3>
+					<div className="settings-button-container">
+						<Button
+							id="version_export_button"
+							disabled={this.props.saving}
+							onClick={async () => {
+								try {
+									const resp = await NodeRestApi.getVersionSummary();
+									this.downloadVersion(resp);
+								} catch (e) {
+									Log.error('error generating version summary', e);
+								}
+							}}
+						>
+							{translate('generate')}
+						</Button>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+	// download the version summary as a json file
+	downloadVersion(json) {
+		let filename = 'versions.' + Date.now() + '.json';
+		const createTarget = document.body;
+		let link = document.createElement('a');
+		if (link.download !== undefined) {
+			let blob = new Blob([JSON.stringify(json, null, '\t')], { type: 'application/json' });
+			let url = URL.createObjectURL(blob);
+			link.setAttribute('download', filename);
+			link.setAttribute('href', url);
+			link.style.visibility = 'hidden';
+			createTarget.appendChild(link);
+			link.click();
+			createTarget.removeChild(link);
+
+			try {
+				EventsRestApi.recordActivity({ status: 'success', log: 'generating version summary' });
+			} catch (e) {
+				Log.error('unable to record version summary/gathering', e);
+			}
+		}
+	}
+
 	render = () => {
 		const translate = this.props.translate;
 		const progress_width = isNaN(this.props.width) ? 0 : this.props.width;
@@ -707,6 +764,7 @@ export class Settings extends Component {
 									</div>
 								</div>)}
 							</div>
+							{this.renderVersionDebug(translate)}
 							{this.renderDataManagement(translate)}
 							{window && window.location && window.location.href && window.location.href.includes('debug') && this.renderDeleteSection(translate)}
 						</div>

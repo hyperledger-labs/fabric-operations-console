@@ -1701,6 +1701,95 @@ module.exports = function (logger, ev, t) {
 	};
 
 	//--------------------------------------------------
+	// Get the version of a component by trying to reach its fabric version endpoint
+	//--------------------------------------------------
+	/*
+		opts: {
+			timeout_ms: 0,		// [optional] http timeout for asking the component
+			_max_attempts: 2	// [optional] max number of http reqs to send including orig and retries
+		}
+	*/
+	exports.get_version = (comp_doc, opts, cb) => {
+		if (!opts) { opts = {}; }
+		const options = {
+			method: 'GET',
+			baseUrl: null,
+			url: exports.build_version_url(comp_doc),
+			headers: { 'Accept': 'application/json' },
+			timeout: !isNaN(opts.timeout_ms) ? Number(opts.timeout_ms) : ev.HTTP_STATUS_TIMEOUT, // give up quickly b/c we don't want status api to hang
+			rejectUnauthorized: false,									// self signed certs are okay
+			_name: 'ver_req',
+			_max_attempts: opts._max_attempts || 2,
+			_retry_codes: {												// list of codes we will retry
+				'429': '429 rate limit exceeded aka too many reqs',
+				//'408': '408 timeout',									// version calls should not retry a timeout, takes too long
+			}
+		};
+
+		if (options.url === null) {										// no url to hit... error out
+			logger.error('[component] unable to get component version b/c url to use in doc is missing... id:', comp_doc._id);
+			return cb({
+				statusCode: 500,
+				version: '-'
+			});
+		} else {
+			t.misc.retry_req(options, (err, resp) => {
+				const code = t.ot_misc.get_code(resp);
+				const body = format_body(resp);
+				return cb(null, {
+					statusCode: code,
+					_body: body,
+					version_url: options.url,
+					version: t.misc.prettyPrintVersion(body ? body.Version : null),
+				});
+			});
+		}
+
+		// json parse the body if asked for
+		function format_body(resp) {
+			let body = null;
+			if (resp && resp.body) {								// parse body to JSON
+				if (typeof resp.body === 'string') {
+					try { body = JSON.parse(resp.body); }
+					catch (e) {
+						logger.error('[component] unable to format version response as JSON for component id', comp_doc._id, e);
+						return null;
+					}
+				} else {
+					return resp.body;
+				}
+			}
+			return body;
+		}
+	};
+
+	//--------------------------------------------------
+	// build a version url for the component, from a component doc
+	//--------------------------------------------------
+	exports.build_version_url = (comp_doc) => {
+		if (comp_doc) {
+
+			// if its been migrated use the legacy routes
+			if (comp_doc.migrated_from === ev.STR.LOCATION_IBP_SAAS) {
+				if (comp_doc.type === ev.STR.CA && comp_doc.api_url) {
+					return comp_doc.api_url_saas + '/version';			// CA's use this route
+				} else if (comp_doc.operations_url_saas && (comp_doc.type === ev.STR.ORDERER || comp_doc.type === ev.STR.PEER)) {
+					return comp_doc.operations_url_saas + '/version';	// peers and orderers use this route
+				}
+			}
+
+			// if it hasn't been migrated use regular routes
+			if (comp_doc.type === ev.STR.CA && comp_doc.api_url) {
+				return comp_doc.api_url + '/version';					// CA's use this route
+			} else if (comp_doc.operations_url && (comp_doc.type === ev.STR.ORDERER || comp_doc.type === ev.STR.PEER)) {
+				return comp_doc.operations_url + '/version';			// peers and orderers use this route
+			}
+		}
+
+		return null;
+	};
+
+	//--------------------------------------------------
 	// Get /cainfo data from all the CAs in the components array
 	//--------------------------------------------------
 	exports.get_each_cas_info = (req, component_docs, cb) => {
