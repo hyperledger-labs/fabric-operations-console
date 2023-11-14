@@ -964,7 +964,7 @@ class ChannelDetails extends Component {
 							id: 'add_node',
 							text: 'add_node',
 							fn: this.showJoinChannelModal,
-							disabled: !ActionsHelper.canEditComponent(this.props.feature_flags)
+							disabled: !ActionsHelper.canEditComponent(this.props.userInfo, this.props.feature_flags)
 						},
 					]}
 				/>
@@ -1401,6 +1401,7 @@ export default connect(
 		newProps['settings'] = state['settings'];
 		newProps['configtxlator_url'] = state['settings']['configtxlator_url'];
 		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;
+		newProps['userInfo'] = state['userInfo'] ? state['userInfo'] : null;
 		return newProps;
 	},
 	{

@@ -254,7 +254,7 @@ class Identities extends Component {
 									{
 										text: 'add_identity',
 										fn: this.openAddIdentity,
-										disabled: !ActionsHelper.canEditComponent(this.props.feature_flags),
+										disabled: ActionsHelper.inReadOnly(this.props.feature_flags),
 									},
 								]}
 								select={this.openIdentity}

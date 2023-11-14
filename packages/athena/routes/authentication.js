@@ -37,7 +37,7 @@ module.exports = function (logger, ev, t, passport) {
 	// Logout URL
 	//-----------------------------------------------------------------------------
 	app.get(ev.LOGOUT_URI, t.middleware.public, function (req, res) {
-		const notice = { message: 'user logging out of the IBP console' };
+		const notice = { message: 'user logging out' };
 		t.notifications.procrastinate(req, notice);
 
 		req.session.destroy(() => {														// important to call destroy so express ask for new sid

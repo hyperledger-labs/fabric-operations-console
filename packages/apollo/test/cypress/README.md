@@ -3,7 +3,7 @@
 Please follow below steps to setup / run Cucumber driven Cypress UI automated functional test cases.
 1. Clone the repository and navigate to Cypress test directory (e.g. "{clone dir}/packages/cypress")
 2. To install Cypress and other dependencies, run below command:<br> ```
-"npm install"```<br>
+"npm ci"```<br>
 3. Update the config.json file in "fixtures" folder with your console URL and login details before running the test case.
 4. In the package.json, below test suits are already defined. <br>
 ```

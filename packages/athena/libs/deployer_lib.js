@@ -652,6 +652,20 @@ module.exports = function (logger, ev, t) {
 				// error already logged
 				return cb(err);
 			} else {
+
+				// build a notification doc
+				/* removing b/c the local remove code will generate the same log
+				const type = t.component_lib.get_type_from_doc(doc) || 'component';		// try to get the component type from the doc
+				const name = doc.display_name || doc.short_name || doc._id;
+				const notice = {
+					message: 'deleting ' + type + ' "' + (doc._id || name) + '"',
+					component_id: doc._id,
+					component_type: doc.type,
+					component_display_name: doc.display_name,
+				};
+				t.notifications.procrastinate(req, notice);
+				*/
+
 				req._component_display_name = doc ? doc.display_name : null;	// store name for activity tracker
 				const options = {
 					dep_component_id: doc.dep_component_id,
@@ -950,19 +964,29 @@ module.exports = function (logger, ev, t) {
 		let deleted_components = [];
 		let errors = 0;
 
-		// build a notification doc
-		const notice = {
-			message: 'deleting components by tag: ' + lc_tag,
-			tag: lc_tag,
-		};
-		t.notifications.procrastinate(req, notice);
-
 		t.component_lib.get_components_by_tag(lc_tag, true, (err, components) => {
 			if (err) {
 				logger.error('[deployer lib] error finding components to remove by tag:', lc_tag, '. error:', err);
 				return cb(err);
 			} else {
 				logger.debug('[deployer lib] removing ' + components.length + ' components with tag:', lc_tag);
+
+				// build a notification doc
+				const firstComp = Array.isArray(components) ? components[0] : null;
+				let notice = {};
+				if (firstComp && firstComp.cluster_id === lc_tag) {
+					notice = {
+						message: 'deleting ordering service: "' + firstComp.cluster_name + '"',
+						tag: lc_tag,
+					};
+				} else {
+					notice = {
+						message: 'deleting components by tag: "' + lc_tag + '"',
+						tag: lc_tag,
+					};
+				}
+				t.notifications.procrastinate(req, notice);
+
 				t.async.eachLimit(components, 3, (component, cb_deprovision) => {	// don't overload deployer, 3 at a time seems okay
 					deprovision(component, () => {
 						return cb_deprovision();
