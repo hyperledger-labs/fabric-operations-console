@@ -21,6 +21,7 @@ import { withLocalize } from 'react-localize-redux';
 import { Backoff, ExponentialStrategy } from 'backoff';
 import MustgatherApi from '../../rest/MustgatherApi';
 import SVGs from '../Svgs/Svgs';
+import { EventsRestApi } from '../../rest/EventsRestApi';
 
 export const statuses = {
 	NO_LOGS: 'no logs',
@@ -116,7 +117,12 @@ export class Mustgather extends Component {
 		this.setState({
 			running: true,
 			pendingRequest: true,
+
 		});
+
+		// record that the user tried mustgather
+		EventsRestApi.sendMustGatherEvent();
+
 		MustgatherApi.startGather().then(() => {
 			// give the pod a chance to start
 			setTimeout(() => {
@@ -136,6 +142,11 @@ export class Mustgather extends Component {
 
 	getDownloadUrl() {
 		return '/deployer/api/v3/instance/:siid/mustgather/download';
+	}
+
+	recordDownload() {
+		EventsRestApi.sendMustGatherDownloadEvent();
+		return true;
 	}
 
 	checkGatherStatus() {
@@ -213,6 +224,7 @@ export class Mustgather extends Component {
 						target="_blank"
 						kind="secondary"
 						role="link"
+						onClick={this.recordDownload}
 						disabled={this.state.running || this.state.deleting}
 					>
 						<div className="gather-logs-button-label">{translate('mustgather_button_download')}</div>
