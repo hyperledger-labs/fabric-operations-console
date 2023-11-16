@@ -86,9 +86,9 @@ Feature: Verify Audit Log functionality works as expected
 	When I provided 'creating channel "channel1" - MSP "org1msp"' for input field with id "1"
 	Then I should see audit log row with text 'creating channel "channel1" - MSP "org1msp"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
-	# installing chaincode "fabcar" @ "2.1.1" on peer "Peer Org2"
-	When I provided 'installing chaincode "fabcar" @ "2.1.1" on peer "Peer Org2"' for input field with id "1"
-	Then I should see audit log row with text 'installing chaincode "fabcar" @ "2.1.1" on peer "Peer Org2"' and id 'audit-logs-log_title-0'
+	# installing chaincode "fabcar" @ "2.1.1" on peer "Peer Org1"
+	When I provided 'installing chaincode "fabcar" @ "2.1.1" on peer "Peer Org1"' for input field with id "1"
+	Then I should see audit log row with text 'installing chaincode "fabcar" @ "2.1.1" on peer "Peer Org1"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	# instantiating chaincode "fabcar" @ "2.1.1" on channel "channel1"
 	When I provided 'instantiating chaincode "fabcar" @ "2.1.1" on channel "channel1"' for input field with id "1"
@@ -170,6 +170,5 @@ Feature: Verify Audit Log functionality works as expected
   Scenario: Search activity log is not visible to reader user
 	When I am logged out from console
 	Given I am logged in as 'readeruser@ibm.com' user
-    And I am ready to get started
+    	And I am ready to get started
 	Then the div with id 'test__navigation--item--audit_logs' does not exist on page
-
