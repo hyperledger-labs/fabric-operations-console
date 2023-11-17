@@ -17,18 +17,9 @@
 import { Given, Then, When } from "@badeball/cypress-cucumber-preprocessor";
 import 'cypress-file-upload';
 
-Given(/^I provided (?:'|")(.*?)(?:'|") for the (?:'|")(.*?)(?:'|") input$/, (text, inputTitle) => {
+Given(/^I provided (?:'|")(.*?)(?:'|") for the (?:'|")(.*?)(?:'|") input$/, (text, inputTitle) => {	
 	cy.wait(500)
 	cy.enterInput(text, inputTitle);
-});
-
-Given(/^I provided (?:'|")(.*?)(?:'|") for input field with id (?:'|")(.*?)(?:'|")$/, (text, inputId) => {
-	try {
-		cy.wait(500)
-		cy.get(`input[id="${inputId}"]`).clear().type(text)
-		} catch (err) {
-		cy.log('Error: ', err)
-	  }
 });
 
 Given(/^I upload file (?:'|")(.*?)(?:'|") to (?:'|")(.*?)(?:'|") input$/, (filePath, inputId) => {
@@ -36,21 +27,12 @@ Given(/^I upload file (?:'|")(.*?)(?:'|") to (?:'|")(.*?)(?:'|") input$/, (fileP
 	cy.get(`input[id="${inputId}"]`).selectFile(filePath, { force: true})
 });
 
-Given(/^I click label with property (?:'|")(.*?)(?:'|") and value (?:'|")(.*?)(?:'|")$/, (property, propertyValue) => {
+Given(/^I click label with property (?:'|")(.*?)(?:'|") and value (?:'|")(.*?)(?:'|")$/, (property, propertyValue) => {	
 	cy.wait(500)
 	cy.get(`label[${property}="${propertyValue}"]`).click()
 });
 
-Then(/^I should see (div|button) with id (?:'|")(.*?)(?:'|")$/, (controlType, propertyValue) => {
+Then(/^I should see (div|button) with id (?:'|")(.*?)(?:'|")$/, (controlType, propertyValue) => {	
 	cy.wait(500)
 	cy.get(`${controlType}[id="${propertyValue}"]`).should('be.visible')
-});
-
-Then(/^I should see table with id (?:'|")(.*?)(?:'|")$/, (propertyValue) => {
-	cy.wait(500)
-	cy.get(`table[id="${propertyValue}"]`).should('be.visible')
-});
-
-Then(/^I should see audit log row with text (?:'|")(.*?)(?:'|") and id (?:'|")(.*?)(?:'|")$/, (rowText, propertyValue) => {
-	cy.get(`td[id="${propertyValue}"]`).first().contains(rowText).should('be.visible')
 });
