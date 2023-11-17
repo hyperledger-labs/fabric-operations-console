@@ -1,67 +1,10 @@
-@support @regression @runOnConsole
+@support @regression
 Feature: Join a network feature
 
     Background: Login to console
         Given I go to the console
         And I am logged in
         And I am ready to get started
-
-    # Cypress launches new test runner / browser with clean state and that clears wallet that we store in browser local storage
-    # https://github.com/cypress-io/cypress/issues/28186#issuecomment-1787344347
-    # Hence, we need to import required identities in begining of each feature file
-    Scenario: Setting up the identities
-		# Associate identigies for CAs
-        And I am on the 'nodes' page
-        And I clicked the 'Org1 CA' certificate authority
-        And I clicked the button with id 'no-identity-button'
-        And I provided 'admin' for the 'Enter an ID' input
-        And I provided 'adminpw' for the 'Enter a secret' input
-        And I provided 'Org1 CA Admin' for the 'Enter a name' input
-        And I clicked the button with id 'associate_identity'
-        And the CA admin is set as 'Org1 CA Admin'
-        Then wait "3" seconds
-        Then the 'admin' user with id 'org1admin' should be enrolled
-        And the 'peer' user with id 'peer1' should be enrolled
-        When I am on the 'nodes' page
-        And I clicked the 'Ordering Service CA' certificate authority
-        And I clicked the button with text 'Associate identity'
-        And I provided 'admin' for the 'Enter an ID' input
-        And I provided 'adminpw' for the 'Enter a secret' input
-        And I provided 'Ordering Service CA Admin' for the 'Enter a name' input
-        And I clicked the button with id 'associate_identity'
-        And the CA admin is set as 'Ordering Service CA Admin'
-        Then wait "3" seconds
-        Then the 'admin' user with id 'OSadmin' should be enrolled
-        And the 'orderer' user with id 'OS1' should be enrolled
-        And I enroll TLS identity for OS1 with secret 'OS1pw' and name 'TLSOS1'
-        Then wait "2" seconds
-		# Import identity in wallet
-		Given I am on the 'wallet' page
-		And I clicked the button with title 'Add identity'
-		And I clicked the button with id 'addIdentity-json-upload'
-		Then wait "2" seconds
-		And I upload file 'cypress/downloads/Org1 MSP Admin_identity.json' to 'addIdentity-upload' input
-		And I clicked the button with id 'add_identity'
-		And I clicked the button with title 'Add identity'
-		And I clicked the button with id 'addIdentity-json-upload'
-		And I upload file 'cypress/downloads/Ordering Service MSP Admin_identity.json' to 'addIdentity-upload' input
-		And I clicked the button with id 'add_identity'
-		Then wait "2" seconds
-		# Associating identity for Peer and Ordering Nodes
-		And I am on the 'nodes' page
-		Given I clicked the div with id 'ibp-tile-Peer Org1'
-		And I clicked the button with id 'no-identity-button'
-		And I clicked the button with title 'Please select an identity from your wallet'
-		And I clicked the div with text 'Org1 MSP Admin'
-		And I clicked the button with id 'associate_identity'
-		Then wait "2" seconds
-		Given I am on the 'nodes' page
-		And I clicked the div with id 'ibp-tile-Ordering Service'
-		And I clicked the button with id 'no-identity-button'
-		And I clicked the button with title 'Do not associate'
-		And I clicked the div with text 'Ordering Service MSP Admin'
-		And I clicked the button with id 'associate_identity'
-		Then wait "2" seconds
 
     Scenario: When creating a certificate authority for Org2
         And I am on the 'nodes' page
@@ -73,7 +16,7 @@ Feature: Join a network feature
         And I provided 'adminpw' for the 'Enter enroll secret' input
         And I clicked the button with id 'next'
         And I clicked the button with id 'submit'
-        Then wait "5" seconds
+        Then wait "5" seconds        
         Then I should see a success toast with class '.bx--toast-notification__subtitle' which says "Congratulations! You have successfully created 'Org2 CA'."
         And the certificate authority with name 'Org2 CA' should have started successfully
 
@@ -130,7 +73,7 @@ Feature: Join a network feature
         And I clicked the button with title 'Select an MSP'
         And I clicked the div with text 'Org2 MSP'
         And I clicked the button with title 'Select a Fabric version'
-        And I clicked the div with text '2.2'
+        And I clicked the div with text '2.2.13-2'
         And I clicked the button with id 'next'
         And I clicked the button with title 'Please select an identity from your wallet'
         And I clicked the div with text 'Org2 MSP Admin'
@@ -146,7 +89,7 @@ Feature: Join a network feature
         Then wait "10" seconds
         And I clicked the button with title 'Add organization'
         And I clicked the button with title 'Ordering Service MSP (osmsp)'
-        And I clicked the dropdown item 'Org2 MSP (org2msp)' with class '.bx--list-box__menu-item__option'
+        And I clicked the dropdown item 'Org2 MSP (org2msp)' with class '.bx--list-box__menu-item__option'        
         When I clicked the button with id 'submit'
         Then wait "10" seconds
         Then a tile with title 'Org2 MSP' should have been created

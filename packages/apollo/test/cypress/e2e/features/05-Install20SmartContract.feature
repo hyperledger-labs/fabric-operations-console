@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 @support @regression @runOnConsole
+=======
+@support @regression @runonconsole
+>>>>>>> origin/cypress
 Feature: 2.0 Lifecycle Flow
 
     Background: Login to console

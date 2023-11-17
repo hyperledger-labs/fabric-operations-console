@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 @support @regression @runOnConsole
+=======
+@support @regression @runonconsole
+>>>>>>> origin/cypress
 Feature: Update channel to add Org2
 
     Background: Login to console
