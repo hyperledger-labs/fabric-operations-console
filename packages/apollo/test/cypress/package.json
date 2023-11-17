@@ -13,6 +13,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "regression": "cypress run -e TAGS=\"@regression\" --headed --browser chrome --spec 'e2e/features/*.feature'",
     "regression-headless": "cypress run -e TAGS=\"@regression\" --browser chrome --spec 'e2e/features/*.feature'",
+    "runonexistingconsole": "cypress run -e TAGS=\"@runonconsole\" --headed --browser chrome --spec 'e2e/features/*.feature'",
     "buildnetwork": "cypress run --headed --browser chrome --spec 'e2e/features/2-BuildNetwork.feature'"
   },
   "author": "Ketul Shah",
@@ -33,7 +34,7 @@
     "stepDefinitions": "support/step_definitions/*.js",
     "html": {
       "enabled": true,
-      "output": "reports/cucumber-html/ibp_execution_report.html"
+      "output": "cypress/reports/cucumber-html/ibp_execution_report.html"
     }
   },
   "dependencies": {
@@ -119,7 +120,6 @@
     "error-ex": "^1.3.2",
     "error-stack-parser": "^2.1.4",
     "es-module-lexer": "^1.3.0",
-    "esbuild-darwin-64": "^0.14.54",
     "escalade": "^3.1.1",
     "escape-string-regexp": "^1.0.5",
     "eslint-scope": "^5.1.1",
@@ -145,7 +145,6 @@
     "form-data": "^2.3.3",
     "fs-extra": "^9.1.0",
     "fs.realpath": "^1.0.0",
-    "fsevents": "^2.3.3",
     "function-bind": "^1.1.1",
     "get-caller-file": "^2.0.5",
     "get-intrinsic": "^1.2.1",
@@ -305,9 +304,7 @@
     "stream": "^0.0.2",
     "string-argv": "^0.3.2",
     "string-width": "^4.2.3",
-    "string-width-cjs": "^4.2.3",
     "strip-ansi": "^6.0.1",
-    "strip-ansi-cjs": "^6.0.1",
     "strip-final-newline": "^2.0.0",
     "strip-json-comments": "^3.1.1",
     "supports-color": "^8.1.1",
@@ -342,7 +339,6 @@
     "which": "^2.0.2",
     "workerpool": "^6.2.1",
     "wrap-ansi": "^7.0.0",
-    "wrap-ansi-cjs": "^7.0.0",
     "wrappy": "^1.0.2",
     "xmlbuilder": "^15.1.1",
     "y18n": "^5.0.8",
