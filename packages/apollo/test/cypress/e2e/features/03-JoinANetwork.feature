@@ -73,7 +73,7 @@ Feature: Join a network feature
         And I provided 'adminpw' for the 'Enter enroll secret' input
         And I clicked the button with id 'next'
         And I clicked the button with id 'submit'
-        Then wait "5" seconds        
+        Then wait "5" seconds
         Then I should see a success toast with class '.bx--toast-notification__subtitle' which says "Congratulations! You have successfully created 'Org2 CA'."
         And the certificate authority with name 'Org2 CA' should have started successfully
 
@@ -130,7 +130,7 @@ Feature: Join a network feature
         And I clicked the button with title 'Select an MSP'
         And I clicked the div with text 'Org2 MSP'
         And I clicked the button with title 'Select a Fabric version'
-        And I clicked the div with text '2.2.13-2'
+        And I clicked the div with text '2.2'
         And I clicked the button with id 'next'
         And I clicked the button with title 'Please select an identity from your wallet'
         And I clicked the div with text 'Org2 MSP Admin'
@@ -146,7 +146,7 @@ Feature: Join a network feature
         Then wait "10" seconds
         And I clicked the button with title 'Add organization'
         And I clicked the button with title 'Ordering Service MSP (osmsp)'
-        And I clicked the dropdown item 'Org2 MSP (org2msp)' with class '.bx--list-box__menu-item__option'        
+        And I clicked the dropdown item 'Org2 MSP (org2msp)' with class '.bx--list-box__menu-item__option'
         When I clicked the button with id 'submit'
         Then wait "10" seconds
         Then a tile with title 'Org2 MSP' should have been created
