@@ -18,7 +18,6 @@ Feature: Verify miscellaneous cases of console works as expected
     Then wait "60" seconds
     And I clicked the div with text 'Delete mustgather pod and service'
     Then wait "5" seconds
-    And I clicked the button with text 'Start mustgather'
 
   Scenario: Import peer, certificate authority, orderer and delete them
     And I am on the 'settings' page
