@@ -170,5 +170,5 @@ Feature: Verify Audit Log functionality works as expected
   Scenario: Search activity log is not visible to reader user
 	When I am logged out from console
 	Given I am logged in as 'readeruser@ibm.com' user
-    	And I am ready to get started
+	And I am ready to get started
 	Then the div with id 'test__navigation--item--audit_logs' does not exist on page

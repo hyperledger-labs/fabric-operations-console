@@ -16,6 +16,7 @@
 
 import { Given, Then, When } from "@badeball/cypress-cucumber-preprocessor";
 
+
 Given(/^I am on the login page$/, () => {
     cy.wait(2000)
     cy.get('p').should(($div) => {

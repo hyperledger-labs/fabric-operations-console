@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-@support @regression @runOnConsole
-=======
 @support @regression @runonconsole
->>>>>>> origin/cypress
 Feature: 1.x Smart Contract flow
 
     Background: Login to console

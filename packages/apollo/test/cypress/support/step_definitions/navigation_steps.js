@@ -16,7 +16,6 @@
 
 import { Given, Then, When } from "@badeball/cypress-cucumber-preprocessor";
 
-
 Given("I go to the console", () => {
     cy.fixture("config.json").then((data) => {
       cy.visit(data.loginUrl)

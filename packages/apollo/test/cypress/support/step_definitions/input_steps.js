@@ -17,6 +17,7 @@
 import { Given, Then, When } from "@badeball/cypress-cucumber-preprocessor";
 import 'cypress-file-upload';
 
+
 Given(/^I provided (?:'|")(.*?)(?:'|") for the (?:'|")(.*?)(?:'|") input$/, (text, inputTitle) => {
 	cy.wait(500)
 	cy.enterInput(text, inputTitle);
