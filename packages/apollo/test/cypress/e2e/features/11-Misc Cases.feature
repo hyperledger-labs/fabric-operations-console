@@ -1,4 +1,4 @@
-@support @regression
+@support @regression @runonconsole
 Feature: Verify miscellaneous cases of console works as expected
 
   Background: Login to console
@@ -9,13 +9,13 @@ Feature: Verify miscellaneous cases of console works as expected
 
   Scenario: Run mustgather tool
     And I am on Help page
-    Then wait "2" seconds
+    Then wait "5" seconds
     And I clicked the button with text 'Start mustgather'
-    Then wait "30" seconds
+    Then wait "60" seconds
     And I clicked the div with text 'Download results'
     Then wait "10" seconds
     And I clicked the button with text 'Run again'
-    Then wait "30" seconds
+    Then wait "60" seconds
     And I clicked the div with text 'Delete mustgather pod and service'
     Then wait "5" seconds
     And I clicked the button with text 'Start mustgather'
@@ -26,7 +26,7 @@ Feature: Verify miscellaneous cases of console works as expected
     And I clicked the button with id 'export_button'
     Then wait "5" seconds
     And I clicked the button with text 'Import'
-    And I upload file 'cypress/fixtures/test_data/Import/Node_Import.zip' to 'file-uploader' input
+    And I upload file 'fixtures/test_data/Import/Node_Import.zip' to 'file-uploader' input
     And I clicked the button with id 'import_button'
     Then wait "30" seconds
     And I am on the 'nodes' page
