@@ -41,10 +41,7 @@ Feature: Build a network without system channel
       And I provided 'Org2 CA Admin' for the 'Enter a name' input
       And I clicked the button with id 'associate_identity'
       And the CA admin is set as 'Org2 CA Admin'
-      When the 'admin' user was enrolled with id 'org2admin' and secret 'org2adminpw'
-      And the 'peer' user was enrolled with id 'peer2' and secret 'peer2pw'
       Then the 'admin' user with id 'org2admin' should be enrolled
-      And the 'peer' user with id 'peer2' should be enrolled
       # Import identity in wallet
       Given I am on the 'wallet' page
       And I clicked the button with title 'Add identity'
@@ -109,7 +106,7 @@ Feature: Build a network without system channel
         And I clicked the button with id 'next'
         Then wait "3" seconds
         And I provided 'No_SysCh_OS' for the 'Enter an ordering service display name' input
-        And I clicked the span with text 'Without a system channel'  
+        And I clicked the span with text 'Without a system channel'
         Then wait "2" seconds
         And I clicked the button with id 'next'
         Then wait "3" seconds
@@ -168,7 +165,7 @@ Feature: Build a network without system channel
         And I clicked the span with text 'Next'
         And I clicked the span with text 'Next'
         Then I clicked Create channel button
-		Then wait "3" seconds        
+		Then wait "3" seconds
 		Then I should see Create Genesis screen with message to to join orderer
 		And I clicked the button with text 'Continue'
 		Then wait "3" seconds
