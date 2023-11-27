@@ -29,4 +29,10 @@ To run cases of specific feature file, you need to add new entry in package.json
 npm run buildnetwork
 ```
 
+To execute test cases on existing console, please run below command:
+```
+npm run runonexistingconsole
+```
+
+
 For more information about Cypress, please refer the steps mentioned [here](https://docs.cypress.io/guides/getting-started/installing-cypress).
