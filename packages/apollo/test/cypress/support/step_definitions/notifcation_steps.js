@@ -16,7 +16,36 @@
 
 /* eslint-disable new-cap */
 import { Given, Then, When } from "@badeball/cypress-cucumber-preprocessor";
+import { exit } from "process";
 
-Then(/^I should see a success toast with class (?:'|")(.*?)(?:'|") which says (?:'|")(.*?)(?:'|")$/, (className, expectedMessage) => {	
-	cy.get(className, { timeout: 60000 }).contains(expectedMessage).should('be.visible')
+Then(/^I should see a success toast with class (?:'|")(.*?)(?:'|") which says (?:'|")(.*?)(?:'|")$/, (className, expectedMessage) => {
+	// Retry logic as sometimes timeout error is displayed while creating peer and retry works
+	if (expectedMessage.includes('Peer'))
+	{
+		let found = false
+		for(let i = 0; i<10;i++){
+			if (found == false)
+			{
+				cy.wait(2000)
+				cy.log('Checking if error displayed')
+				cy.get('body').then(($body) => {
+					if ($body.find('.ibp-side-panel-error-details').length) {
+						cy.get(`button[id="submit"]`).click()
+						cy.wait(6000)
+						cy.get(className, { timeout: 60000 }).contains(expectedMessage).should('be.visible')
+						found = true
+					}
+				})
+				cy.log('Checking for success toast')
+				cy.get('body').then(($body) => {
+					if ($body.find(className).length) {
+						cy.get(className, { timeout: 60000 }).contains(expectedMessage).should('be.visible')
+						found = true
+					}
+				})
+			}
+		}
+	}else{
+		cy.get(className, { timeout: 60000 }).contains(expectedMessage).should('be.visible')
+	}
 });

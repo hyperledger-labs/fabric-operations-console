@@ -36,32 +36,32 @@ Feature: Join a network feature
         And I enroll TLS identity for OS1 with secret 'OS1pw' and name 'TLSOS1'
         Then wait "2" seconds
 		# Import identity in wallet
-		Given I am on the 'wallet' page
-		And I clicked the button with title 'Add identity'
-		And I clicked the button with id 'addIdentity-json-upload'
-		Then wait "2" seconds
-		And I upload file 'cypress/downloads/Org1 MSP Admin_identity.json' to 'addIdentity-upload' input
-		And I clicked the button with id 'add_identity'
-		And I clicked the button with title 'Add identity'
-		And I clicked the button with id 'addIdentity-json-upload'
-		And I upload file 'cypress/downloads/Ordering Service MSP Admin_identity.json' to 'addIdentity-upload' input
-		And I clicked the button with id 'add_identity'
-		Then wait "2" seconds
+        Given I am on the 'wallet' page
+        And I clicked the button with title 'Add identity'
+        And I clicked the button with id 'addIdentity-json-upload'
+        Then wait "2" seconds
+        And I upload file 'cypress/downloads/Org1 MSP Admin_identity.json' to 'addIdentity-upload' input
+        And I clicked the button with id 'add_identity'
+        And I clicked the button with title 'Add identity'
+        And I clicked the button with id 'addIdentity-json-upload'
+        And I upload file 'cypress/downloads/Ordering Service MSP Admin_identity.json' to 'addIdentity-upload' input
+        And I clicked the button with id 'add_identity'
+        Then wait "2" seconds
 		# Associating identity for Peer and Ordering Nodes
-		And I am on the 'nodes' page
-		Given I clicked the div with id 'ibp-tile-Peer Org1'
-		And I clicked the button with id 'no-identity-button'
-		And I clicked the button with title 'Please select an identity from your wallet'
-		And I clicked the div with text 'Org1 MSP Admin'
-		And I clicked the button with id 'associate_identity'
-		Then wait "2" seconds
-		Given I am on the 'nodes' page
-		And I clicked the div with id 'ibp-tile-Ordering Service'
-		And I clicked the button with id 'no-identity-button'
-		And I clicked the button with title 'Do not associate'
-		And I clicked the div with text 'Ordering Service MSP Admin'
-		And I clicked the button with id 'associate_identity'
-		Then wait "2" seconds
+        And I am on the 'nodes' page
+        Given I clicked the div with id 'ibp-tile-Peer Org1'
+        And I clicked the button with id 'no-identity-button'
+        And I clicked the button with title 'Please select an identity from your wallet'
+        And I clicked the div with text 'Org1 MSP Admin'
+        And I clicked the button with id 'associate_identity'
+        Then wait "2" seconds
+        Given I am on the 'nodes' page
+        And I clicked the div with id 'ibp-tile-Ordering Service'
+        And I clicked the button with id 'no-identity-button'
+        And I clicked the button with title 'Do not associate'
+        And I clicked the div with text 'Ordering Service MSP Admin'
+        And I clicked the button with id 'associate_identity'
+        Then wait "2" seconds
 
     Scenario: When creating a certificate authority for Org2
         And I am on the 'nodes' page
