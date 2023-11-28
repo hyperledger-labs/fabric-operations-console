@@ -136,7 +136,7 @@ func (peer *Peer) Images(version string) *current.PeerImages {
 		images.NodeEnvImage = peerVersionedImages.NodeEnvImage
 	}
 
-	if peer.Config.UseTags != nil && *peer.Config.UseTags {
+	if peer.Config.UseTags == nil || *peer.Config.UseTags == true {
 		// Set the tags
 		images.PeerInitTag = peerVersionedImages.PeerInitTag
 		images.PeerTag = peerVersionedImages.PeerTag
