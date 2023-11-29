@@ -122,7 +122,7 @@ func (o *Orderer) Images(version string) *current.OrdererImages {
 	images.EnrollerImage = ordererVersionedImages.EnrollerImage
 	images.GRPCWebImage = ordererVersionedImages.GRPCWebImage
 
-	if o.Config.UseTags != nil && *o.Config.UseTags {
+	if o.Config.UseTags == nil || *o.Config.UseTags == true {
 		// Set the tags
 		images.OrdererInitTag = ordererVersionedImages.OrdererInitTag
 		images.OrdererTag = ordererVersionedImages.OrdererTag

@@ -237,7 +237,7 @@ func (ca *CA) Images(version string) *current.CAImages {
 	images.HSMImage = caVersionedImages.HSMImage
 	images.EnrollerImage = caVersionedImages.EnrollerImage
 
-	if ca.Config.UseTags != nil && *ca.Config.UseTags {
+	if ca.Config.UseTags == nil || *ca.Config.UseTags == true {
 		// Set the tags
 		images.CAInitTag = caVersionedImages.CAInitTag
 		images.CATag = caVersionedImages.CATag
