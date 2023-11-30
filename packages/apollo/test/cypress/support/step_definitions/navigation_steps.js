@@ -84,3 +84,13 @@ Then(/^the div with id (?:'|")(.*?)(?:'|") does not exist on page$/, value => {
 	cy.wait(1000)
 	cy.get(`div[id="${value}"]`).should('not.exist');
   });
+
+Given(/^the element (div|span) with text (?:'|")(.*?)(?:'|") should be visible on page$/, (property, value) => {
+	cy.wait(500)
+	cy.get(property).contains(value).should('be.visible')
+});
+
+Given(/^I clicked element with class (?:'|")(.*?)(?:'|")$/, (className) => {
+	cy.wait(500)
+	cy.get(className).should('be.visible').click()
+  });
