@@ -227,9 +227,9 @@ module.exports = function (logger, ev, t) {
 						if (settings_doc.access_list[email].roles.includes('manager') && !lc_roles.includes('manager'))
 						{
 							let admin_count = 0;
-							for (let user in settings_doc.access_list) {
-								if (user.roles.includes('manager'))
-								{
+							for (let id in settings_doc.access_list) {
+								let user = settings_doc.access_list[id];
+								if (user && user.roles && user.roles.includes('manager')) {
 									admin_count = admin_count + 1;
 								}
 							}
