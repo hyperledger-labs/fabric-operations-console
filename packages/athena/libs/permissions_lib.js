@@ -230,13 +230,39 @@ module.exports = function (logger, ev, t) {
 					if (!email) {
 						input_errors.push('uuid does not exist: ' + encodeURI(uuid));
 					} else {
-						settings_doc.access_list[email].roles = lc_roles; 			// edit the user object
+						if (settings_doc.access_list[email].roles.includes('manager') && !lc_roles.includes('manager'))
+						{
+							let admin_count = 0;
+							for (let id in settings_doc.access_list) {
+								let user = settings_doc.access_list[id];
+								if (user && user.roles && user.roles.includes('manager')) {
+									admin_count = admin_count + 1;
+								}
+							}
+							if (admin_count < 2)
+							{
+								input_errors.push('[only manager] as you are the only manager for this console, you are not allowed to modify your roles');
+							}
+							else {
+								settings_doc.access_list[email].roles = lc_roles; 			// edit the user object
 
-						// build a notification doc
-						const notice = {
-							message: 'editing roles for user ' + t.misc.censorEmail(email) + ' - setting ' + lc_roles.join(', '),
-						};
-						t.notifications.procrastinate(req, notice);
+								// build a notification doc
+								const notice = {
+									message: 'editing roles for user ' + t.misc.censorEmail(email) + ' - setting ' + lc_roles.join(', '),
+								};
+								t.notifications.procrastinate(req, notice);
+							}
+						}
+						else
+						{
+							settings_doc.access_list[email].roles = lc_roles; 			// edit the user object
+
+							// build a notification doc
+							const notice = {
+								message: 'editing roles for user ' + t.misc.censorEmail(email) + ' - setting ' + lc_roles.join(', '),
+							};
+							t.notifications.procrastinate(req, notice);
+						}
 					}
 				}
 
