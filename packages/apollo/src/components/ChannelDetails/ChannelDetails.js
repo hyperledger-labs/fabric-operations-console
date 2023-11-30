@@ -1240,7 +1240,7 @@ class ChannelDetails extends Component {
 							hideDelete
 							hideRefreshCerts
 							feature_flags={this.props.feature_flags}
-							userInfo
+							userInfo={this.props.userInfo}
 						/>
 					</div>
 					<div className="bx--col-lg-12">
