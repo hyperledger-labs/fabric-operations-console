@@ -1,5 +1,43 @@
 [
 	{
+		"version": "1.0.8-2",
+		"date": "04 Dec 2023",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
+		"version": "1.0.8-1",
+		"date": "30 Nov 2023",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
+		"version": "1.0.7-2",
+		"date": "14 Nov 2023",
+		"description": [
+			{
+				"title": "Version summary",
+				"details": "New button under the \"Settings\" that will generate a component/console/operator version summary."
+			},
+			{
+				"title": "Activity log improvements",
+				"details": "Some of the descriptive text for activity logs were changed/fixed or added."
+			},
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},
+	{
 		"version": "1.0.7-1",
 		"date": "02 Nov 2023",
 		"description": [
