@@ -945,32 +945,12 @@ module.exports = function (logger, ev, t) {
 								});
 								return cb_version();
 							} else {
-								const options = {
-									method: 'GET',
-									baseUrl: null,
-									url: t.component_lib.build_version_url(comp_doc),
-									headers: { 'Accept': 'application/json' },
-									timeout: ev.HTTP_STATUS_TIMEOUT,
-									rejectUnauthorized: false,									// self signed certs are okay
-									_name: 'status_req',
-									_max_attempts: 2,
-									_retry_codes: {												// list of codes we will retry
-										'429': '429 rate limit exceeded aka too many reqs',
-									}
-								};
-								t.misc.retry_req(options, (err_ver, resp_ver) => {
-									let body = {};
-									if (resp_ver) {
-										try {
-											body = JSON.parse(resp_ver.body);
-										} catch (e) {
-											logger.error('[version] unable to parse response from component', comp_doc.id);
-										}
-									}
+
+								t.component_lib.get_version(comp_doc, null, (err_ver, resp_ver) => {
 									ret.components.push({
 										id: comp.id,
 										display_name: comp.display_name,
-										version: t.misc.prettyPrintVersion(body.Version),
+										version: resp_ver.version,
 										imported: comp.imported,
 										type: comp.type,
 									});

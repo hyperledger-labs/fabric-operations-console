@@ -71,7 +71,7 @@ class EventsRestApi {
 			});
 			EventsRestApi.recordActivity({
 				status: status === 'error' ? 'error' : 'success',
-				log: (peer_names.length > 1 ? 'peers' : 'peer') + `${peer_names.join(', ')} ` + (peer_names.length > 1 ? 'have' : 'has') + `joined the channel "${channel_id}"`,
+				log: (peer_names.length > 1 ? 'peers' : 'peer') + ` ${peer_names.join(', ')} ` + (peer_names.length > 1 ? 'have' : 'has') + ` joined the channel "${channel_id}"`,
 				code: 200
 			});
 		} catch (e) {
