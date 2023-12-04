@@ -253,6 +253,11 @@ module.exports = function (logger, ev, t) {
 	});
 
 	function add_components_in_bulk(req, res) {
+		if (req && req.body) {
+			for (let i in req.body) {
+				req.body[i].imported = true;								// if they are using this api, its imported
+			}
+		}
 		t.component_lib.add_bulk_components(req, (errs, ret_objects) => {
 			if (errs && errs.length > 0) {
 				return res.status(207).json({ errors: errs, successes: ret_objects });

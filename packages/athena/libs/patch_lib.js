@@ -57,7 +57,7 @@ module.exports = function (logger, ev, t) {
 		},
 
 		// name of the patch
-		'patch_location': {
+		'patch_location2': {
 
 			// description of the patch, gets stored in patch doc
 			purpose: 'this patch sorts out the "location" field madness by building new fields the console will use',
@@ -655,7 +655,7 @@ module.exports = function (logger, ev, t) {
 	}
 
 	// ----------------------------------------------------------------------------------
-	// Patch 4 - 04/26/2023
+	// Patch 4 - 04/26/2023 - updated 12/04/2023 to re-run b/c new orders were not setting the `imported` field correctly
 	// this patch sorts out the "location" field madness by building new fields the console will use
 	// the new fields that console will use instead of location are: `imported` & `cluster_type`
 	// ----------------------------------------------------------------------------------
@@ -663,7 +663,7 @@ module.exports = function (logger, ev, t) {
 		if (!cb) {
 			cb = function () { };
 		}
-		logger.debug('[patch] going to run "patch_location"');
+		logger.debug('[patch] going to run "patch_location2"');
 
 		// ---------------------------------------
 		// get settings doc
@@ -702,8 +702,8 @@ module.exports = function (logger, ev, t) {
 								const bulk_docs = { docs: [] };
 								for (let i in resp) {
 									const comp = resp[i];
-									comp.imported = comp.dep_component_id ? false : true;						// if it has a deployer id, it was NOT imported
-									if (!comp.imported) {														// only add if our console deployed it
+									comp.imported = comp.dep_component_id ? false : true;			// if it has a deployer id, it was NOT imported
+									if (!comp.imported) {											// only add these other fields if our console deployed it
 										comp.cluster_type = ret.type;
 
 										if (comp.migrated_from === ev.STR.LOCATION_IBP_SAAS) {	// if ibp console already migrated to support, set type as ibp

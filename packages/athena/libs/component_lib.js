@@ -511,9 +511,6 @@ module.exports = function (logger, ev, t) {
 		const errs = [];
 		const ret_objects = [];
 		t.async.eachLimit(components, 1, (component, onboard_cb) => {	// 1 at a time avoids white list 409s, and doc._id 409s (this is a must for raft)
-			if (component) {
-				component.imported = true;
-			}
 			req.body = component;
 			req.attempt = 0;											// reset b/c will call this more than once, each component gets x attempts
 			req._fmt_response = true;
@@ -1730,17 +1727,26 @@ module.exports = function (logger, ev, t) {
 			logger.error('[component] unable to get component version b/c url to use in doc is missing... id:', comp_doc._id);
 			return cb({
 				statusCode: 500,
-				version: '-'
+				version: '-',
+				_http_error: 502
 			});
 		} else {
 			t.misc.retry_req(options, (err, resp) => {
 				const code = t.ot_misc.get_code(resp);
 				const body = format_body(resp);
+				let ver = null;
+				if (comp_doc.type === ev.STR.CA) {					// ca's have a different response
+					ver = (body && body.result) ? body.result.Version : null;
+				} else {
+					ver = body ? body.Version : null;
+				}
+
 				return cb(null, {
 					statusCode: code,
 					_body: body,
 					version_url: options.url,
-					version: t.misc.prettyPrintVersion(body ? body.Version : null),
+					version: t.misc.prettyPrintVersion(ver),
+					_http_error: t.ot_misc.is_error_code(code) ? code : undefined,
 				});
 			});
 		}
@@ -1772,7 +1778,7 @@ module.exports = function (logger, ev, t) {
 			// if its been migrated use the legacy routes
 			if (comp_doc.migrated_from === ev.STR.LOCATION_IBP_SAAS) {
 				if (comp_doc.type === ev.STR.CA && comp_doc.api_url) {
-					return comp_doc.api_url_saas + '/version';			// CA's use this route
+					return comp_doc.api_url_saas + '/cainfo';			// CA's use this route
 				} else if (comp_doc.operations_url_saas && (comp_doc.type === ev.STR.ORDERER || comp_doc.type === ev.STR.PEER)) {
 					return comp_doc.operations_url_saas + '/version';	// peers and orderers use this route
 				}
@@ -1780,7 +1786,7 @@ module.exports = function (logger, ev, t) {
 
 			// if it hasn't been migrated use regular routes
 			if (comp_doc.type === ev.STR.CA && comp_doc.api_url) {
-				return comp_doc.api_url + '/version';					// CA's use this route
+				return comp_doc.api_url + '/cainfo';					// CA's use this route
 			} else if (comp_doc.operations_url && (comp_doc.type === ev.STR.ORDERER || comp_doc.type === ev.STR.PEER)) {
 				return comp_doc.operations_url + '/version';			// peers and orderers use this route
 			}
