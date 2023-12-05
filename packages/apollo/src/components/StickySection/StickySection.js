@@ -170,7 +170,7 @@ const StickySection = ({
 				<p className="ibp-node-detail-title">{translate(title)}</p>
 				<div className="ibp-node-detail-icons">
 					{(details && (details.id || details.name) && !loading) ? (
-						ActionsHelper.canEditComponent(userInfo, feature_flags) && <Button
+						ActionsHelper.canCreateComponent(userInfo, feature_flags) && <Button
 							id={`${details.id || details.name}-sticky-settings-button`}
 							className="ibp-detail-page-icon-button"
 							kind="secondary"
@@ -193,7 +193,7 @@ const StickySection = ({
 					)}
 					{!hideRefreshCerts &&
 						((details && (details.id || details.name) && !loading) ? (
-							ActionsHelper.canEditComponent(userInfo, feature_flags) && <Button
+							ActionsHelper.canCreateComponent(userInfo, feature_flags) && <Button
 								id={`${details.id || details.name}-sticky-refresh-button`}
 								className="ibp-detail-page-icon-button"
 								kind="secondary"

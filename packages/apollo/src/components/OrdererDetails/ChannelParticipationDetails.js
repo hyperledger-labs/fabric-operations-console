@@ -177,7 +177,7 @@ class ChannelParticipationDetails extends Component {
 									fn: () => {
 										this.joinChannel(null);
 									},
-									disabled: !ActionsHelper.canEditComponent(this.props.userInfo, this.props.feature_flags)
+									disabled: !ActionsHelper.canManageComponent(this.props.userInfo, this.props.feature_flags)
 								}]
 
 								: []

@@ -53,6 +53,7 @@ class ItemMenu extends Component {
 								}}
 								primaryFocus={index === 0}
 								requireTitle={option.requireTitle ? true : false}
+								disabled={option.disabled === true}
 							/>
 						);
 					})}

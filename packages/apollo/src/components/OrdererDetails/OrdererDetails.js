@@ -726,7 +726,7 @@ class OrdererDetails extends Component {
 							{
 								text: 'reallocate_resources',
 								fn: this.showUsageModal,
-								disabled: !ActionsHelper.canEditComponent(this.props.userInfo, this.props.feature_flags),
+								disabled: !ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags),
 							},
 						]}
 					/>
@@ -1227,6 +1227,7 @@ class OrdererDetails extends Component {
 									fn: () => {
 										this.openDeleteConsenterModal(member);
 									},
+									disabled: !ActionsHelper.canManageComponent(this.props.userInfo, this.props.feature_flags),
 								},
 							];
 						}
@@ -1239,6 +1240,7 @@ class OrdererDetails extends Component {
 								fn: () => {
 									this.openUpdateConsenterModal(member);
 								},
+								disabled: !ActionsHelper.canManageComponent(this.props.userInfo, this.props.feature_flags),
 							});
 						}
 						return items;

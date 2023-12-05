@@ -32,7 +32,7 @@ jest.mock('../../../src/utils/actionsHelper', () => {
 	return {
 		canCreateComponent: () => true,
 		canImportComponent: () => true,
-		canEditComponent: () => true,
+		canManageComponent: () => true,
 	};
 });
 

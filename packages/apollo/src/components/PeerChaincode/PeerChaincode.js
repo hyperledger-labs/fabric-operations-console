@@ -210,7 +210,7 @@ class PeerChaincode extends Component {
 							text: 'install_chaincode',
 							fn: this.openInstallChaincodeModal,
 							label: 'install_chaincode',
-							disabled: !ActionsHelper.canEditComponent(this.props.userInfo, this.props.feature_flags)
+							disabled: !ActionsHelper.canManageComponent(this.props.userInfo, this.props.feature_flags)
 						},
 					]}
 					disableAddItem={this.props.empty || this.props.parentLoading || this.props.state !== STATES.READY}

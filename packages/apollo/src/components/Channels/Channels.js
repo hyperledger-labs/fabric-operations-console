@@ -637,7 +637,7 @@ class ChannelComponent extends Component {
 			id: 'join_channel',
 			text: 'join_channel',
 			fn: this.joinChannel,
-			disabled: !ActionsHelper.canEditComponent(this.props.userInfo, this.props.feature_flags)
+			disabled: !ActionsHelper.canManageComponent(this.props.userInfo, this.props.feature_flags)
 		});
 
 		const osnadminFeatsEnabled = this.props.feature_flags ? this.props.feature_flags.osnadmin_feats_enabled : false;
@@ -679,7 +679,7 @@ class ChannelComponent extends Component {
 				fn: () => {
 					this.createChannel(null);
 				},
-				disabled: !ActionsHelper.canEditComponent(this.props.userInfo, this.props.feature_flags)
+				disabled: !ActionsHelper.canManageComponent(this.props.userInfo, this.props.feature_flags)
 			});
 		}
 		return items;
