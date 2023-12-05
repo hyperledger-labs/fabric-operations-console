@@ -164,19 +164,21 @@ const StickySection = ({
 		}
 	};
 
+	const hasPermForTrash = (details && details.imported) ? ActionsHelper.canRemoveComponent(userInfo, feature_flags) : ActionsHelper.canDeleteComponent(userInfo, feature_flags);
+
 	return (
 		<div className="ibp--node-details-sticky-container-content">
 			<div className="ibp--node-details-sticky-header">
 				<p className="ibp-node-detail-title">{translate(title)}</p>
 				<div className="ibp-node-detail-icons">
 					{(details && (details.id || details.name) && !loading) ? (
-						ActionsHelper.canCreateComponent(userInfo, feature_flags) && <Button
+						ActionsHelper.canManageComponent(userInfo, feature_flags) && <Button
 							id={`${details.id || details.name}-sticky-settings-button`}
 							className="ibp-detail-page-icon-button"
 							kind="secondary"
 							size="small"
 							renderIcon={Settings20}
-							iconDescription={translate('settings')}
+							iconDescription={translate('comp_settings_desc')}
 							tooltipPosition="bottom"
 							tooltipAlignment="center"
 							onClick={() => openSettings('settings')}
@@ -193,7 +195,7 @@ const StickySection = ({
 					)}
 					{!hideRefreshCerts &&
 						((details && (details.id || details.name) && !loading) ? (
-							ActionsHelper.canCreateComponent(userInfo, feature_flags) && <Button
+							ActionsHelper.canManageComponent(userInfo, feature_flags) && <Button
 								id={`${details.id || details.name}-sticky-refresh-button`}
 								className="ibp-detail-page-icon-button"
 								kind="secondary"
@@ -222,7 +224,7 @@ const StickySection = ({
 								kind="secondary"
 								size="small"
 								renderIcon={Download20}
-								iconDescription={translate('export')}
+								iconDescription={translate('comp_export_desc')}
 								tooltipPosition="bottom"
 								tooltipAlignment="center"
 								onClick={() => exportNode()}
@@ -239,7 +241,7 @@ const StickySection = ({
 						))}
 					{!hideDelete &&
 						((details && (details.id || details.name) && !loading) ? (
-							ActionsHelper.canDeleteComponent(userInfo, feature_flags) && <Button
+							hasPermForTrash && <Button
 								id={`${details.id || details.name}-sticky-delete-button`}
 								className="ibp-detail-page-icon-button"
 								kind="secondary"
