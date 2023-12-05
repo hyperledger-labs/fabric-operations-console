@@ -1516,6 +1516,8 @@
 	"status_pending": "Status pending",
 	"no_identity_associated": "No identity associated",
 	"details": "Details",
+	"comp_settings_desc": "View component settings",
+	"comp_export_desc": "Export the component details as json",
 	"resource_allocation": "Resource allocation",
 	"allocation": "Allocation",
 	"reallocate": "Reallocate",

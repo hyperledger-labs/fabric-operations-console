@@ -29,21 +29,22 @@ const ActionsHelper = {
 		return ActionsHelper._actionCheck(user, constants.ACTION_COMPONENT_CREATE) && !in_read_only_mode;
 	},
 
-	// not in use
-	/*canRemoveComponent(user, feature_flags) {
-		const in_read_only_mode = feature_flags ? feature_flags.read_only_enabled : false;
-		return ActionsHelper._actionCheck(user, constants.ACTION_COMPONENT_REMOVE) && !in_read_only_mode;
-	},*/
-
 	// return true if the user has the right role to manage fabric nouns (ca identities/config blocks/channels)
 	canManageComponent(user, feature_flags) {
 		const in_read_only_mode = feature_flags ? feature_flags.read_only_enabled : false;
 		return ActionsHelper._actionCheck(user, constants.ACTION_COMPONENT_MANAGE) && !in_read_only_mode;
 	},
 
+	// return true if the user has the right to delete a *deployed* component (ca/peer/orderer)
 	canDeleteComponent(user, feature_flags) {
 		const in_read_only_mode = feature_flags ? feature_flags.read_only_enabled : false;
 		return ActionsHelper._actionCheck(user, constants.ACTION_COMPONENT_DELETE) && !in_read_only_mode;
+	},
+
+	// return true if the user has the right to remove an *imported* component (ca/peer/orderer)
+	canRemoveComponent(user, feature_flags) {
+		const in_read_only_mode = feature_flags ? feature_flags.read_only_enabled : false;
+		return ActionsHelper._actionCheck(user, constants.ACTION_COMPONENT_REMOVE) && !in_read_only_mode;
 	},
 
 	canImportComponent(user, feature_flags) {
