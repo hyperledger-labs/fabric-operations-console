@@ -175,7 +175,7 @@ class PeerChannels extends Component {
 							{
 								text: 'join_channel',
 								fn: this.joinChannel,
-								disabled: !ActionsHelper.canEditComponent(this.props.userInfo, this.props.feature_flags)
+								disabled: !ActionsHelper.canManageComponent(this.props.userInfo, this.props.feature_flags)
 							},
 						]}
 						disableAddItem={this.props.empty || this.props.joinInProgress}

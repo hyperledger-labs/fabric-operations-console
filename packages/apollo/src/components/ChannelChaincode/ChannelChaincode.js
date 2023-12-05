@@ -251,7 +251,7 @@ class ChannelChaincode extends Component {
 						{
 							text: 'chaincode_propose',
 							fn: this.openProposeChaincodeModal,
-							disabled: !ActionsHelper.canEditComponent(this.props.userInfo, this.props.feature_flags)
+							disabled: !ActionsHelper.canManageComponent(this.props.userInfo, this.props.feature_flags)
 						},
 					]}
 					select={this.openChaincodeModal}

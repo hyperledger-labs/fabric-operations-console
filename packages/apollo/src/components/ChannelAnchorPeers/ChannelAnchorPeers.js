@@ -18,6 +18,7 @@ import React from 'react';
 import emptyAnchorPeerImage from '../../assets/images/empty_nodes.svg';
 import ItemContainer from '../ItemContainer/ItemContainer';
 import SVGs from '../Svgs/Svgs';
+import ActionsHelper from '../../utils/actionsHelper';
 
 const ChannelAnchorPeers = props => {
 	return (
@@ -64,6 +65,7 @@ const ChannelAnchorPeers = props => {
 					{
 						text: 'add_anchor_peer',
 						fn: props.openAddAnchorPeerModal,
+						disabled: !ActionsHelper.canManageComponent(props.userInfo, props.feature_flags),
 					},
 				]}
 			/>
@@ -77,6 +79,8 @@ ChannelAnchorPeers.propTypes = {
 	loading: PropTypes.bool,
 	disableDelete: PropTypes.bool,
 	onDeleteAnchorPeers: PropTypes.func,
+	userInfo: PropTypes.object,
+	feature_flags: PropTypes.object,
 	translate: PropTypes.func, // Provided by withLocalize
 };
 

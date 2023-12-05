@@ -155,11 +155,11 @@ small {
 .bx--overflow-menu-options::before {
 	display: none;
 }
-
+/* interferes with overflow menu when button is disabled, seems like we dont' need it, removed
 .bx--overflow-menu-options .bx--overflow-menu-options__btn {
 	color: $text;
 }
-
+*/
 .bx--overflow-sdk-item-btn {
 	height: 2.95rem;
 }

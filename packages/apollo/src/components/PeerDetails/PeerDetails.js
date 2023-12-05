@@ -396,7 +396,7 @@ class PeerDetails extends Component {
 									{
 										text: 'reallocate_resources',
 										fn: this.showUsageModal,
-										disabled: !ActionsHelper.canEditComponent(this.props.userInfo, this.props.feature_flags)
+										disabled: !ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)
 									},
 								]}
 							/>

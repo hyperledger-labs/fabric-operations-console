@@ -183,7 +183,7 @@ class OrdererAdmins extends Component {
 								fn: this.openAddMSPModal,
 								label: 'add_orderer_admin',
 								text: 'add_orderer_admin',
-								disabled: !ActionsHelper.canEditComponent(this.props.userInfo, this.props.feature_flags),
+								disabled: !ActionsHelper.canManageComponent(this.props.userInfo, this.props.feature_flags),
 							},
 						]}
 						tileMapping={{

@@ -29,6 +29,7 @@ export const ACTION_COMPONENT_REMOVE = 'blockchain.components.remove';
 export const ACTION_COMPONENT_DELETE = 'blockchain.components.delete';
 export const ACTION_COMPONENT_IMPORT = 'blockchain.components.import';
 export const ACTION_COMPONENT_EXPORT = 'blockchain.components.export';
+export const ACTION_COMPONENT_MANAGE = 'blockchain.components.manage';
 export const ACTION_OPTOOLS_RESTART = 'blockchain.optools.restart';
 export const ACTION_OPTOOLS_LOGS = 'blockchain.optools.logs';
 export const ACTION_OPTOOLS_VIEW = 'blockchain.optools.view';

@@ -147,7 +147,7 @@ class OrdererMembers extends Component {
 								fn: this.openAddMSPModal,
 								label: 'add_organization',
 								text: 'add_organization',
-								disabled: !ActionsHelper.canEditComponent(this.props.userInfo, this.props.feature_flags),
+								disabled: !ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags),
 							},
 						]}
 						tileMapping={{

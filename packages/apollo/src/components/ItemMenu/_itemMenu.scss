@@ -42,6 +42,12 @@
 	background-color: $carbon--cool-gray-80;
 
 	&:hover {
-		background-color: $carbon--cool-gray-90  !important;
+		background-color: $carbon--cool-gray-90 !important;
+	}
+}
+
+.bx--overflow-menu-options__option--disabled {
+	button {
+		color: #697075;
 	}
 }

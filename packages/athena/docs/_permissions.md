@@ -72,6 +72,7 @@ Users (and api keys) will be assigned roles, and roles will contain these action
 Users without the needed action, will not be allowed to perform that function.
   - `blockchain.components.create`
     - can **deploy** components (creates a peer/orderer/ca kubernetes deployment)
+    - can change component resources
   - `blockchain.components.delete`
     - can remove **deployed** components
   - `blockchain.components.remove`
@@ -111,6 +112,8 @@ Users without the needed action, will not be allowed to perform that function.
     - can run the component /actions api (such as restart, re-enroll, enroll
     - can create/delete config-block docs
     - can migrate a console to another cluster
+    - can install chaincode
+    - can create channels
   - `blockchain.instance.link` - a hyperion action (deprecated)
     - can create a resource, associating it with a cluster
   - `blockchain.instance.view` - a hyperion action (deprecated)

@@ -30,7 +30,7 @@ const should = chai.should();
 jest.mock('../../../src/utils/actionsHelper', () => {
 	return {
 		canCreateComponent: () => true,
-		canEditComponent: () => true,
+		canManageComponent: () => true,
 	};
 });
 

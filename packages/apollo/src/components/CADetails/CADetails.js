@@ -240,14 +240,14 @@ export class CADetails extends Component {
 				fn: () => {
 					this.generateCertificate(null);
 				},
-				disabled: !ActionsHelper.canEditComponent(this.props.userInfo, this.props.feature_flags),
+				disabled: !ActionsHelper.canManageComponent(this.props.userInfo, this.props.feature_flags),
 				decoupleFromLoading: true
 			});
 			buttons.push({
 				text: 'register_user',
 				fn: this.openAddUser,
 				icon: 'plus',
-				disabled: !ActionsHelper.canEditComponent(this.props.userInfo, this.props.feature_flags),
+				disabled: !ActionsHelper.canManageComponent(this.props.userInfo, this.props.feature_flags),
 				decoupleFromLoading: true
 			});
 		}
@@ -294,6 +294,7 @@ export class CADetails extends Component {
 									this.showDeleteUserModal(user);
 								},
 								requireTitle: true,
+								disabled: !ActionsHelper.canManageComponent(this.props.userInfo, this.props.feature_flags),
 							},
 						]}
 						listMapping={[
@@ -508,7 +509,7 @@ export class CADetails extends Component {
 									{
 										text: 'reallocate_resources',
 										fn: this.showUsageModal,
-										disabled: !ActionsHelper.canEditComponent(this.props.userInfo, this.props.feature_flags),
+										disabled: !ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags),
 									},
 								]}
 							/>
