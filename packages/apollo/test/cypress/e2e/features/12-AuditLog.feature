@@ -75,8 +75,8 @@ Feature: Verify Audit Log functionality works as expected
 	Then I should see audit log row with text 'PUT:/api/v2/signature_collections' and id 'audit-logs-api_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	# peers"Peer Org1", "Peer Org2" havejoined the channel "channel2"
-	When I provided 'peers"Peer Org1", "Peer Org2" havejoined the channel "channel2"' for input field with id "1"
-	Then I should see audit log row with text 'peers"Peer Org1", "Peer Org2" havejoined the channel "channel2"' and id 'audit-logs-log_title-0'
+	When I provided 'peers "Peer Org1", "Peer Org2" have joined the channel "channel2"' for input field with id "1"
+	Then I should see audit log row with text 'peers "Peer Org1", "Peer Org2" have joined the channel "channel2"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	# updating channel "channel2" - MSP "org2msp"
 	When I provided 'updating channel "channel2" - MSP "org2msp"' for input field with id "1"
