@@ -169,6 +169,17 @@ Feature: Verify Audit Log functionality works as expected
 	Then I should see audit log row with text 'deleting ordering service: "Ordering Service"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	Then I should see audit log row with text 'DELETE:/api/saas/v2/components/tags' and id 'audit-logs-api_title-0'
+	#adding new user - adding new user w********r@ibm.com
+	When I provided 'adding new user w********r@ibm.com' for input field with id "1"
+	Then I should see audit log row with text 'adding new user w********r@ibm.com' and id 'audit-logs-log_title-0'
+	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+	Then I should see audit log row with text 'POST:/api/v3/permissions/users' and id 'audit-logs-api_title-0'
+	#adding new user - adding new user adding new user r********r@ibm.com
+	When I provided 'adding new user r********r@ibm.com' for input field with id "1"
+	Then I should see audit log row with text 'adding new user r********r@ibm.com' and id 'audit-logs-log_title-0'
+	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+	Then I should see audit log row with text 'POST:/api/v3/permissions/users' and id 'audit-logs-api_title-0'
+
 
   Scenario: Export button works fine
 	When I clicked the div with id 'test__navigation--item--audit_logs'
