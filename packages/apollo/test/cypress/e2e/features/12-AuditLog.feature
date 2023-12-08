@@ -154,6 +154,21 @@ Feature: Verify Audit Log functionality works as expected
 	Then I should see audit log row with text 'removing fabric-peer "peer_import"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	Then I should see audit log row with text 'DELETE:/api/v2/components/peer_import' and id 'audit-logs-api_title-0'
+	#delete org1ca
+	When I provided 'removing fabric-ca "org1ca"' for input field with id "1"
+	Then I should see audit log row with text 'removing fabric-ca "org1ca"' and id 'audit-logs-log_title-0'
+	Then I should see audit log row with text 'DELETE:/api/v2/components/org1ca' and id 'audit-logs-api_title-0'
+	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+	#delete peerOrg1
+	When I provided 'deleting fabric-peer "peerorg1"' for input field with id "1"
+	Then I should see audit log row with text 'deleting fabric-peer "peerorg1"' and id 'audit-logs-log_title-0'
+	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+	Then I should see audit log row with text 'DELETE:/api/v2/components/peerorg1' and id 'audit-logs-api_title-0'
+	#delete ordering service
+	When I provided 'deleting ordering service: "Ordering Service"' for input field with id "1"
+	Then I should see audit log row with text 'deleting ordering service: "Ordering Service"' and id 'audit-logs-log_title-0'
+	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+	Then I should see audit log row with text 'DELETE:/api/saas/v2/components/tags' and id 'audit-logs-api_title-0'
 
   Scenario: Export button works fine
 	When I clicked the div with id 'test__navigation--item--audit_logs'
