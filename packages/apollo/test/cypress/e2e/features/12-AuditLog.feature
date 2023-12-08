@@ -179,7 +179,11 @@ Feature: Verify Audit Log functionality works as expected
 	Then I should see audit log row with text 'adding new user r********r@ibm.com' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	Then I should see audit log row with text 'POST:/api/v3/permissions/users' and id 'audit-logs-api_title-0'
-
+	#delete user - deleting users w********r@ibm.com, r********r@ibm.com
+	When I provided 'deleting users w********r@ibm.com, r********r@ibm.com' for input field with id "1"
+	Then I should see audit log row with text 'deleting users w********r@ibm.com, r********r@ibm.com' and id 'audit-logs-log_title-0'
+	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+	Then I should see audit log row with text 'DELETE:/api/v3/permissions/users' and id 'audit-logs-api_title-0'
 
   Scenario: Export button works fine
 	When I clicked the div with id 'test__navigation--item--audit_logs'
