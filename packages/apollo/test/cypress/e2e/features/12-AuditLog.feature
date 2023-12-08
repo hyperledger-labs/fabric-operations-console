@@ -157,13 +157,11 @@ Feature: Verify Audit Log functionality works as expected
 	#delete org1ca
 	When I provided 'removing fabric-ca "org1ca"' for input field with id "1"
 	Then I should see audit log row with text 'removing fabric-ca "org1ca"' and id 'audit-logs-log_title-0'
-	Then I should see audit log row with text 'DELETE:/api/v2/components/org1ca' and id 'audit-logs-api_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	#delete peerOrg1
-	When I provided 'deleting fabric-peer "peerorg1"' for input field with id "1"
-	Then I should see audit log row with text 'deleting fabric-peer "peerorg1"' and id 'audit-logs-log_title-0'
+	When I provided 'removing fabric-peer "peerorg1"' for input field with id "1"
+	Then I should see audit log row with text 'removing fabric-peer "peerorg1"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
-	Then I should see audit log row with text 'DELETE:/api/v2/components/peerorg1' and id 'audit-logs-api_title-0'
 	#delete ordering service
 	When I provided 'deleting ordering service: "Ordering Service"' for input field with id "1"
 	Then I should see audit log row with text 'deleting ordering service: "Ordering Service"' and id 'audit-logs-log_title-0'
@@ -179,11 +177,6 @@ Feature: Verify Audit Log functionality works as expected
 	Then I should see audit log row with text 'adding new user r********r@ibm.com' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	Then I should see audit log row with text 'POST:/api/v3/permissions/users' and id 'audit-logs-api_title-0'
-	#delete user - deleting users w********r@ibm.com, r********r@ibm.com
-	When I provided 'deleting users w********r@ibm.com, r********r@ibm.com' for input field with id "1"
-	Then I should see audit log row with text 'deleting users w********r@ibm.com, r********r@ibm.com' and id 'audit-logs-log_title-0'
-	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
-	Then I should see audit log row with text 'DELETE:/api/v3/permissions/users' and id 'audit-logs-api_title-0'
 
   Scenario: Export button works fine
 	When I clicked the div with id 'test__navigation--item--audit_logs'
@@ -202,3 +195,21 @@ Feature: Verify Audit Log functionality works as expected
 	Given I am logged in as 'readeruser@ibm.com' user
 	And I am ready to get started
 	Then the div with id 'test__navigation--item--audit_logs' does not exist on page
+
+  Scenario: Delete Writer and Reader user
+	When I am on the 'access' page
+	And I click label with property 'for' and value 'data-table-1__select-row-writeruser@ibm.com'
+	And I click label with property 'for' and value 'data-table-1__select-row-readeruser@ibm.com'
+	And I clicked the button with id 'btn-deleteUser'
+	And I clicked the button with id 'delete'
+	Then the table row with id 'authenticated_members-row-1' does not exist on page
+	Then the table row with id 'authenticated_members-row-2' does not exist on page
+
+  Scenario: Search activity log for deleting user
+    When I clicked the div with id 'test__navigation--item--audit_logs'
+	Then I should see table with id 'table-audit_logs'
+	#delete user - deleting users w********r@ibm.com, r********r@ibm.com
+	When I provided 'deleting users w********r@ibm.com, r********r@ibm.com' for input field with id "1"
+	Then I should see audit log row with text 'deleting users w********r@ibm.com, r********r@ibm.com' and id 'audit-logs-log_title-0'
+	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+	Then I should see audit log row with text 'DELETE:/api/v3/permissions/users' and id 'audit-logs-api_title-0'

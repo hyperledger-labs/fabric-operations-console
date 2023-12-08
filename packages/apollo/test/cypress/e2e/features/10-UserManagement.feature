@@ -39,12 +39,3 @@ Feature: Verify User Management functionality
 	Then I should be redirected to the login page again
 	Given I am logged in as 'readeruser@ibm.com' user
 	Then I am logged out from console
-
-  Scenario: Delete Writer and Reader user
-	When I am on the 'access' page
-	And I click label with property 'for' and value 'data-table-1__select-row-writeruser@ibm.com'
-	And I click label with property 'for' and value 'data-table-1__select-row-readeruser@ibm.com'
-	And I clicked the button with id 'btn-deleteUser'
-	And I clicked the button with id 'delete'
-	Then the table row with id 'authenticated_members-row-1' does not exist on page
-	Then the table row with id 'authenticated_members-row-2' does not exist on page

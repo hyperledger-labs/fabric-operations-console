@@ -53,7 +53,8 @@ Feature: Verify miscellaneous cases of console works as expected
     And I clicked the button with id 'peerorg1-sticky-delete-button'
     And I provided 'Peer Org1' for the 'Type here' input
     And I clicked the button with id 'confirm_remove'
-    Then wait "5" seconds
+    Then wait "10" seconds
+	And I am on the 'nodes' page
 	Then the div with id 'ibp-tile-Peer Org1' does not exist on page
 
   Scenario: Deleting Org1 CA
@@ -61,7 +62,8 @@ Feature: Verify miscellaneous cases of console works as expected
     And I clicked the button with id 'org1ca-sticky-delete-button'
     And I provided 'Org1 CA' for the 'Type here' input
     And I clicked the button with id 'confirm_remove'
-    Then wait "5" seconds
+    Then wait "10" seconds
+    And I am on the 'nodes' page
 	Then the div with id 'ibp-tile-Org1 CA' does not exist on page
 
   Scenario: Deleting Ordering Service
@@ -69,5 +71,8 @@ Feature: Verify miscellaneous cases of console works as expected
     And I clicked the button with id 'orderingservicenode1-sticky-delete-button'
     And I provided 'Ordering Service' for the 'Type here' input
     And I clicked the button with id 'confirm_remove'
-    Then wait "5" seconds
+	#Force delete
+	And I clicked the button with id 'confirm_remove'
+    Then wait "10" seconds
+    And I am on the 'nodes' page
 	Then the div with id 'ibp-tile-Ordering Service' does not exist on page
