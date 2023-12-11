@@ -197,6 +197,10 @@ Feature: Verify Audit Log functionality works as expected
 	Then the div with id 'test__navigation--item--audit_logs' does not exist on page
 
   Scenario: Delete Writer and Reader user
+	Given I am logged out from console
+    When I go to the console
+    And I am logged in
+    And I am ready to get started
 	When I am on the 'access' page
 	And I click label with property 'for' and value 'data-table-1__select-row-writeruser@ibm.com'
 	And I click label with property 'for' and value 'data-table-1__select-row-readeruser@ibm.com'
