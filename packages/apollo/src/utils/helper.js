@@ -217,7 +217,7 @@ const Helper = {
 				cluster_name: node.cluster_name,
 				client_tls_cert: node.client_tls_cert,
 				server_tls_cert: node.server_tls_cert,
-				location: node.location === 'ibm_saas' ? this.getPlatform() : node.location,
+				location: node.location,
 				id: node.id,
 				scheme_version: node.scheme_version,
 				migrated_from: node.migrated_from ? node.migrated_from : undefined,
