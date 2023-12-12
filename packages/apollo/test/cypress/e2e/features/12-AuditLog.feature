@@ -73,7 +73,7 @@ Feature: Verify Audit Log functionality works as expected
 	Then I should see audit log row with text 'creating channel "channel2" - MSP "org1msp"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	# creating a signature collection for channel "channel2" -- POST:/api/v2/signature_collections
-	When I provided 'creating a signature collection for channel "channel2"' for input field with id "1"
+	When I provided 'creating a signature collection for channel "channel2" ' for input field with id "1"
 	Then I should see audit log row with text 'creating a signature collection for channel "channel2"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'POST:/api/v2/signature_collections' and id 'audit-logs-api_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
