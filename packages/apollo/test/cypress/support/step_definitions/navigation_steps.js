@@ -94,3 +94,8 @@ Given(/^I clicked element with class (?:'|")(.*?)(?:'|")$/, (className) => {
 	cy.wait(500)
 	cy.get(className).should('be.visible').click()
   });
+
+Then(/^the table row with id (?:'|")(.*?)(?:'|") does not exist on page$/, value => {
+cy.wait(1000)
+cy.get(`tr[id="${value}"]`).should('not.exist');
+});
