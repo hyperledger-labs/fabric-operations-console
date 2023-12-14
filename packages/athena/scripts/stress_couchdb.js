@@ -33,10 +33,11 @@ const tools = {
 	fs: require('fs'),
 	path: require('path'),
 	async: require('async'),
-	request: require('request'),
+	axios: require('axios'),
 	crypto: require('crypto'),
 	winston: require('winston'),
 };
+tools.request = require('../libs/request_axios.js')(tools.axios);
 
 // logger
 let transports = [												// we always have the console transport

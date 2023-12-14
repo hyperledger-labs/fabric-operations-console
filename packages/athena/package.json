@@ -28,6 +28,7 @@
 	},
 	"dependencies": {
 		"async": "3.2.*",
+		"axios": "^1.6.2",
 		"bn.js": "4.11.*",
 		"body-parser": "^1.18.3",
 		"chokidar": "3.0.*",
@@ -47,7 +48,6 @@
 		"passport-ldapauth": "3.0.*",
 		"passport-oauth": "1.0.*",
 		"protobufjs": "^7.2.4",
-		"request": "2.88.*",
 		"selfsigned": "^1.10.8",
 		"uuid": "3.3.*",
 		"winston": "2.4.*",

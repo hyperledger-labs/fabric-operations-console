@@ -1,22 +1,3 @@
 {
-	"1091459": {
-		"active": true,
-		"notes": "Ignored since we don't use ssrf-req-filter"
-	},
-	"1091725": {
-		"active": true,
-		"notes": "same as 1091459"
-	},
-	"1092779": {
-		"active": true,
-		"notes": "same as 1091459"
-	},
-	"1092826": {
-		"active": true,
-		"notes": "same as 1091459"
-	},
-	"1092972": {
-		"active": true,
-		"notes": "same as 1091459"
-	}
+
 }
