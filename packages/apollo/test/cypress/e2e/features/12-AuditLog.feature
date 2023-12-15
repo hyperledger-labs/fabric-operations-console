@@ -72,11 +72,13 @@ Feature: Verify Audit Log functionality works as expected
 	When I provided 'creating channel "channel2" - MSP "org1msp"' for input field with id "1"
 	Then I should see audit log row with text 'creating channel "channel2" - MSP "org1msp"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+	Then I reload the page
 	# creating a signature collection for channel "channel2" -- POST:/api/v2/signature_collections
 	When I provided 'creating a signature collection for channel "channel2" ' for input field with id "1"
 	Then I should see audit log row with text 'creating a signature collection for channel "channel2"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'POST:/api/v2/signature_collections' and id 'audit-logs-api_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+	Then I reload the page
 	# editing a signature collection for channel "channel2" -- PUT:/api/v2/signature_collections/sc_7bc9843a-02d7-4f04-94ac-763241c1a949
 	When I provided 'editing a signature collection for channel "channel2"' for input field with id "1"
 	Then I should see audit log row with text 'editing a signature collection for channel "channel2"' and id 'audit-logs-log_title-0'
@@ -86,6 +88,7 @@ Feature: Verify Audit Log functionality works as expected
 	When I provided 'peers "Peer Org1", "Peer Org2" have joined the channel "channel2"' for input field with id "1"
 	Then I should see audit log row with text 'peers "Peer Org1", "Peer Org2" have joined the channel "channel2"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+	Then I reload the page
 	# updating channel "channel2" - MSP "org2msp"
 	When I provided 'updating channel "channel2" - MSP "org2msp"' for input field with id "1"
 	Then I should see audit log row with text 'updating channel "channel2" - MSP "org2msp"' and id 'audit-logs-log_title-0'
@@ -94,10 +97,12 @@ Feature: Verify Audit Log functionality works as expected
 	When I provided 'creating channel "channel1" - MSP "org1msp"' for input field with id "1"
 	Then I should see audit log row with text 'creating channel "channel1" - MSP "org1msp"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
-	# installing chaincode "fabcar" @ "2.1.1" on peer "Peer Org1"
-	When I provided 'installing chaincode "fabcar" @ "2.1.1" on peer "Peer Org1"' for input field with id "1"
-	Then I should see audit log row with text 'installing chaincode "fabcar" @ "2.1.1" on peer "Peer Org1"' and id 'audit-logs-log_title-0'
+	Then I reload the page
+	# installing chaincode "fabcar" @ "2.1.1" on peer
+	When I provided 'installing chaincode "fabcar" @ "2.1.1" on peer' for input field with id "1"
+	Then I should see audit log row with text 'installing chaincode "fabcar" @ "2.1.1" on peer' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+	Then I reload the page
 	# instantiating chaincode "fabcar" @ "2.1.1" on channel "channel1"
 	When I provided 'instantiating chaincode "fabcar" @ "2.1.1" on channel "channel1"' for input field with id "1"
 	Then I should see audit log row with text 'instantiating chaincode "fabcar" @ "2.1.1" on channel "channel1"' and id 'audit-logs-log_title-0'
