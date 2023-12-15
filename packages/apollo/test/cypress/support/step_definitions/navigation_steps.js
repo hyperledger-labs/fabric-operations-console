@@ -99,3 +99,7 @@ Then(/^the table row with id (?:'|")(.*?)(?:'|") does not exist on page$/, value
 cy.wait(1000)
 cy.get(`tr[id="${value}"]`).should('not.exist');
 });
+
+Then("I reload the page", () => {
+	cy.reload()
+});
