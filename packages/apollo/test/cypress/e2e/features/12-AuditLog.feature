@@ -23,6 +23,7 @@ Feature: Verify Audit Log functionality works as expected
   Scenario: Search activity log for adding CA, Peer, identity and Ordering Service
     When I clicked the div with id 'test__navigation--item--audit_logs'
 	Then I should see table with id 'table-audit_logs'
+	Then I reload the page
 	#Adding Org1 CA and Org2 CA
 	When I provided 'adding new fabric-ca "org2ca"' for input field with id "1"
 	Then I should see audit log row with text 'adding new fabric-ca "org2ca"' and id 'audit-logs-log_title-0'
@@ -31,6 +32,7 @@ Feature: Verify Audit Log functionality works as expected
 	Then I should see audit log row with text 'adding new fabric-ca "org1ca"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	# adding new fabric-peer "peerorg1"
+	Then I reload the page
 	When I provided 'adding new fabric-peer "peerorg1"' for input field with id "1"
 	Then I should see audit log row with text 'adding new fabric-peer "peerorg1"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
@@ -48,6 +50,7 @@ Feature: Verify Audit Log functionality works as expected
 	Then I should see audit log row with text 'POST:/api/v1/identities' and id 'audit-logs-api_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	# exporting component "Org1 MSP Admin" --
+	Then I reload the page
 	When I provided 'exporting component "Org1 MSP Admin"' for input field with id "1"
 	Then I should see audit log row with text 'exporting component "Org1 MSP Admin"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
