@@ -20,7 +20,7 @@ Feature: Verify Audit Log functionality works as expected
 	Then I should see audit log row with text 'PUT:/api/v2/permissions/users/password' and id 'audit-logs-api_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 
-  Scenario: Search activity log for adding CA, Peer, identity and Ordering Service
+  Scenario: Search activity log for adding CA
     When I clicked the div with id 'test__navigation--item--audit_logs'
 	Then I should see table with id 'table-audit_logs'
 	Then I reload the page
@@ -31,11 +31,21 @@ Feature: Verify Audit Log functionality works as expected
 	When I provided 'adding new fabric-ca "org1ca"' for input field with id "1"
 	Then I should see audit log row with text 'adding new fabric-ca "org1ca"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+
+  Scenario: Search activity log for adding Peer
+    When I clicked the div with id 'test__navigation--item--audit_logs'
+	Then I should see table with id 'table-audit_logs'
+	Then I reload the page
 	# adding new fabric-peer "peerorg1"
 	Then I reload the page
 	When I provided 'adding new fabric-peer "peerorg1"' for input field with id "1"
 	Then I should see audit log row with text 'adding new fabric-peer "peerorg1"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+
+  Scenario: Search activity log for identity and Ordering Service
+    When I clicked the div with id 'test__navigation--item--audit_logs'
+	Then I should see table with id 'table-audit_logs'
+	Then I reload the page
 	# adding identity to user's wallet
 	When I provided "adding identity to user's wallet" for input field with id "1"
 	Then I should see audit log row with text "adding identity to user's wallet" and id 'audit-logs-log_title-0'
@@ -64,7 +74,7 @@ Feature: Verify Audit Log functionality works as expected
 	Then I should see audit log row with text 'adding new fabric-orderer "orderingservicenode1"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 
-  Scenario: Search activity log for creating channel, updating channel and installing chaincode
+  Scenario: Search activity log for creating channel and joining channel
     When I clicked the div with id 'test__navigation--item--audit_logs'
 	Then I should see table with id 'table-audit_logs'
 	# updating channel "testchainid" - MSP "osmsp"
@@ -76,6 +86,29 @@ Feature: Verify Audit Log functionality works as expected
 	Then I should see audit log row with text 'creating channel "channel2" - MSP "org1msp"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	Then I reload the page
+	# peers"Peer Org1", "Peer Org2" havejoined the channel "channel2"
+	When I provided 'peers "Peer Org1", "Peer Org2" have joined the channel "channel2"' for input field with id "1"
+	Then I should see audit log row with text 'peers "Peer Org1", "Peer Org2" have joined the channel "channel2"' and id 'audit-logs-log_title-0'
+	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+	Then I reload the page
+	# creating channel "channel1" - MSP "org1msp"
+	When I provided 'creating channel "channel1" - MSP "org1msp"' for input field with id "1"
+	Then I should see audit log row with text 'creating channel "channel1" - MSP "org1msp"' and id 'audit-logs-log_title-0'
+	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+	Then I reload the page
+	# creating a config block doc - channel "channel5" - POST:/api/v3/configblocks
+	When I provided 'creating a config block doc - channel "channel5"' for input field with id "1"
+	Then I should see audit log row with text 'creating a config block doc - channel "channel5"' and id 'audit-logs-log_title-0'
+	Then I should see audit log row with text 'POST:/api/v3/configblocks' and id 'audit-logs-api_title-0'
+	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+	# archiving a config block doc - channel "channel5" -- PUT:/api/v3/configblocks/8df504bac7bf7f9616627e91470a0253
+	When I provided 'archiving a config block doc - channel "channel5"' for input field with id "1"
+	Then I should see audit log row with text 'archiving a config block doc - channel "channel5"' and id 'audit-logs-log_title-0'
+	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+
+  Scenario: Search activity log for updating channel and installing chaincode
+    When I clicked the div with id 'test__navigation--item--audit_logs'
+	Then I should see table with id 'table-audit_logs'
 	# creating a signature collection for channel "channel2" -- POST:/api/v2/signature_collections
 	When I provided 'creating a signature collection for channel "channel2" ' for input field with id "1"
 	Then I should see audit log row with text 'creating a signature collection for channel "channel2"' and id 'audit-logs-log_title-0'
@@ -87,20 +120,11 @@ Feature: Verify Audit Log functionality works as expected
 	Then I should see audit log row with text 'editing a signature collection for channel "channel2"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'PUT:/api/v2/signature_collections' and id 'audit-logs-api_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
-	# peers"Peer Org1", "Peer Org2" havejoined the channel "channel2"
-	When I provided 'peers "Peer Org1", "Peer Org2" have joined the channel "channel2"' for input field with id "1"
-	Then I should see audit log row with text 'peers "Peer Org1", "Peer Org2" have joined the channel "channel2"' and id 'audit-logs-log_title-0'
-	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	Then I reload the page
 	# updating channel "channel2" - MSP "org2msp"
 	When I provided 'updating channel "channel2" - MSP "org2msp"' for input field with id "1"
 	Then I should see audit log row with text 'updating channel "channel2" - MSP "org2msp"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
-	# creating channel "channel1" - MSP "org1msp"
-	When I provided 'creating channel "channel1" - MSP "org1msp"' for input field with id "1"
-	Then I should see audit log row with text 'creating channel "channel1" - MSP "org1msp"' and id 'audit-logs-log_title-0'
-	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
-	Then I reload the page
 	# installing chaincode "fabcar" @ "2.1.1" on peer
 	When I provided 'installing chaincode "fabcar" @ "2.1.1" on peer' for input field with id "1"
 	Then I should see audit log row with text 'installing chaincode "fabcar" @ "2.1.1" on peer' and id 'audit-logs-log_title-0'
@@ -115,17 +139,9 @@ Feature: Verify Audit Log functionality works as expected
 	Then I should see audit log row with text 'editing component "peerorg1" - "version", "replicas", "ignore_warnings"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	# editing component "orderingservicenode1" - "version", "replicas"
+	Then I reload the page
 	When I provided 'editing component "orderingservicenode1" - "version", "replicas"' for input field with id "1"
 	Then I should see audit log row with text 'editing component "orderingservicenode1" - "version", "replicas"' and id 'audit-logs-log_title-0'
-	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
-	# creating a config block doc - channel "channel5" - POST:/api/v3/configblocks
-	When I provided 'creating a config block doc - channel "channel5"' for input field with id "1"
-	Then I should see audit log row with text 'creating a config block doc - channel "channel5"' and id 'audit-logs-log_title-0'
-	Then I should see audit log row with text 'POST:/api/v3/configblocks' and id 'audit-logs-api_title-0'
-	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
-	# archiving a config block doc - channel "channel5" -- PUT:/api/v3/configblocks/8df504bac7bf7f9616627e91470a0253
-	When I provided 'archiving a config block doc - channel "channel5"' for input field with id "1"
-	Then I should see audit log row with text 'archiving a config block doc - channel "channel5"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 
   Scenario: Search activity log for export and import
