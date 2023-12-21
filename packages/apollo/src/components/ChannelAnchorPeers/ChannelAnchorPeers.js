@@ -51,7 +51,7 @@ const ChannelAnchorPeers = props => {
 					},
 				]}
 				selectItem={
-					!props.disableDelete
+					(!props.disableDelete && (props.userInfo.role !== 'reader'))
 						? {
 							id: 'deleteAnchorPeer',
 							text: props.translate('delete_anchor_peers'),
