@@ -172,15 +172,6 @@ type PeerImages struct {
 	// GRPCWebDigest is the digest tag of the grpc web proxy image
 	GRPCWebDigest string `json:"grpcwebDigest,omitempty"`
 
-	// FluentdImage is the name of the fluentd logger image
-	FluentdImage string `json:"fluentdImage,omitempty"`
-
-	// FluentdTag is the tag of the fluentd logger image
-	FluentdTag string `json:"fluentdTag,omitempty"`
-
-	// FluentdDigest is the digest tag of the fluentd logger image
-	FluentdDigest string `json:"fluentdDigest,omitempty"`
-
 	// CouchDBImage is the name of the couchdb image
 	CouchDBImage string `json:"couchdbImage,omitempty"`
 

@@ -90,10 +90,6 @@ var _ = Describe("GET API", func() {
 							Requests: res,
 							Limits:   res,
 						},
-						FluentD: &corev1.ResourceRequirements{
-							Requests: res,
-							Limits:   res,
-						},
 						Init: &corev1.ResourceRequirements{
 							Requests: res,
 							Limits:   res,

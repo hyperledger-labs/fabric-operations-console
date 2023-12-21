@@ -126,7 +126,6 @@ func (peer *Peer) Images(version string) *current.PeerImages {
 
 	if isVersion14X {
 		images.DindImage = peerVersionedImages.DindImage
-		images.FluentdImage = peerVersionedImages.FluentdImage
 	} else {
 		images.CCLauncherImage = peerVersionedImages.CCLauncherImage
 		images.FileTransferImage = peerVersionedImages.FileTransferImage
@@ -149,7 +148,6 @@ func (peer *Peer) Images(version string) *current.PeerImages {
 		}
 		if isVersion14X {
 			images.DindTag = peerVersionedImages.DindTag
-			images.FluentdTag = peerVersionedImages.FluentdTag
 		} else {
 			images.CCLauncherTag = peerVersionedImages.CCLauncherTag
 			images.FileTransferTag = peerVersionedImages.FileTransferTag
@@ -172,7 +170,6 @@ func (peer *Peer) Images(version string) *current.PeerImages {
 
 		if isVersion14X {
 			images.DindTag = peerVersionedImages.DindDigest
-			images.FluentdTag = peerVersionedImages.FluentdDigest
 		} else {
 			images.CCLauncherTag = peerVersionedImages.CCLauncherDigest
 			images.FileTransferTag = peerVersionedImages.FileTransferDigest
@@ -460,17 +457,12 @@ func (peer *Peer) GetResources(defaults current.PeerResources, override *current
 			overrideResources(resources.GRPCProxy, initResources(override.GRPCProxy))
 		}
 
-		if override.FluentD != nil {
-			overrideResources(resources.FluentD, initResources(override.FluentD))
-		}
-
 		if override.Init != nil {
 			overrideResources(resources.Init, initResources(override.Init))
 		}
 
-		// Fabric version 2.x does not require FluentD and DinD
+		// Fabric version 2.x does not require DinD
 		if util.GetMajorRelease(fabricVersion) == 2 {
-			resources.FluentD = nil
 			resources.DinD = nil
 
 			if override.CCLauncher != nil {
@@ -559,22 +551,6 @@ func (peer *Peer) GetUpdateResources(current, override *current.PeerResources) (
 			}
 			if override.GRPCProxy.Limits != nil {
 				resources.GRPCProxy.Limits = override.GRPCProxy.Limits
-			}
-		}
-
-		if override.FluentD != nil {
-			if override.FluentD.Requests == nil {
-				override.FluentD.Requests = override.FluentD.Limits
-			}
-			if override.FluentD.Limits == nil {
-				override.FluentD.Limits = override.FluentD.Requests
-			}
-
-			if override.FluentD.Requests != nil {
-				resources.FluentD.Requests = override.FluentD.Requests
-			}
-			if override.FluentD.Limits != nil {
-				resources.FluentD.Limits = override.FluentD.Limits
 			}
 		}
 
@@ -667,15 +643,11 @@ func (peer *Peer) GetIndividualResources(individualResources string, allResource
 	if allResources.DinD != nil {
 		resources.DinD = allResources.DinD
 	}
-	if allResources.FluentD != nil {
-		resources.FluentD = allResources.FluentD
-	}
 	if util.GetMajorRelease(fabricVersion) == 2 {
 		if allResources.CCLauncher != nil {
 			resources.CCLauncher = allResources.CCLauncher
 		}
 		resources.DinD = nil
-		resources.FluentD = nil
 	}
 	if allResources.Enroller != nil {
 		resources.Enroller = allResources.Enroller

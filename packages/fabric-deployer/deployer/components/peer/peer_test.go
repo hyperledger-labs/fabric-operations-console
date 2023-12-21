@@ -85,10 +85,6 @@ var _ = Describe("Peer", func() {
 				Requests: res,
 				Limits:   res,
 			},
-			FluentD: &corev1.ResourceRequirements{
-				Requests: res,
-				Limits:   res,
-			},
 			Init: &corev1.ResourceRequirements{
 				Requests: res,
 				Limits:   res,
@@ -200,10 +196,6 @@ var _ = Describe("Peer", func() {
 						Requests: res,
 						Limits:   res,
 					},
-					FluentD: &corev1.ResourceRequirements{
-						Requests: res,
-						Limits:   res,
-					},
 				},
 			}
 			body, err = json.Marshal(b)
@@ -308,10 +300,6 @@ var _ = Describe("Peer", func() {
 							Requests: res,
 							Limits:   res,
 						},
-						FluentD: &corev1.ResourceRequirements{
-							Requests: res,
-							Limits:   res,
-						},
 						GRPCProxy: &corev1.ResourceRequirements{
 							Requests: res,
 							Limits:   res,
@@ -384,7 +372,6 @@ var _ = Describe("Peer", func() {
 					GRPCProxy:  &corev1.ResourceRequirements{},
 					DinD:       &corev1.ResourceRequirements{},
 					CouchDB:    &corev1.ResourceRequirements{},
-					FluentD:    &corev1.ResourceRequirements{},
 					CCLauncher: &corev1.ResourceRequirements{},
 					Enroller:   &corev1.ResourceRequirements{},
 					HSMDaemon:  &corev1.ResourceRequirements{},
@@ -484,10 +471,6 @@ var _ = Describe("Peer", func() {
 						Requests: res,
 						Limits:   res,
 					},
-					FluentD: &corev1.ResourceRequirements{
-						Requests: res,
-						Limits:   res,
-					},
 					Init: &corev1.ResourceRequirements{
 						Requests: res,
 						Limits:   res,
@@ -577,7 +560,6 @@ var _ = Describe("Peer", func() {
 				Init:       currentResources.DeepCopy(),
 				Peer:       currentResources.DeepCopy(),
 				GRPCProxy:  currentResources.DeepCopy(),
-				FluentD:    currentResources.DeepCopy(),
 				DinD:       currentResources.DeepCopy(),
 				CouchDB:    currentResources.DeepCopy(),
 				CCLauncher: currentResources.DeepCopy(),
@@ -596,7 +578,6 @@ var _ = Describe("Peer", func() {
 				Init:       overrideResources.DeepCopy(),
 				Peer:       overrideResources.DeepCopy(),
 				GRPCProxy:  overrideResources.DeepCopy(),
-				FluentD:    overrideResources.DeepCopy(),
 				DinD:       overrideResources.DeepCopy(),
 				CouchDB:    overrideResources.DeepCopy(),
 				CCLauncher: overrideResources.DeepCopy(),
@@ -616,8 +597,6 @@ var _ = Describe("Peer", func() {
 			Expect(finalRes.Peer.Limits).To(Equal(overrideResources.Limits))
 			Expect(finalRes.GRPCProxy.Requests).To(Equal(overrideResources.Requests))
 			Expect(finalRes.GRPCProxy.Limits).To(Equal(overrideResources.Limits))
-			Expect(finalRes.FluentD.Requests).To(Equal(overrideResources.Requests))
-			Expect(finalRes.FluentD.Limits).To(Equal(overrideResources.Limits))
 			Expect(finalRes.DinD.Requests).To(Equal(overrideResources.Requests))
 			Expect(finalRes.DinD.Limits).To(Equal(overrideResources.Limits))
 			Expect(finalRes.CouchDB.Requests).To(Equal(overrideResources.Requests))
@@ -633,7 +612,6 @@ var _ = Describe("Peer", func() {
 			overridePeerres.Init.Limits = nil
 			overridePeerres.Peer.Limits = nil
 			overridePeerres.GRPCProxy.Limits = nil
-			overridePeerres.FluentD.Limits = nil
 			overridePeerres.DinD.Limits = nil
 			overridePeerres.CouchDB.Limits = nil
 			overridePeerres.CCLauncher.Limits = nil
@@ -650,8 +628,6 @@ var _ = Describe("Peer", func() {
 			Expect(finalRes.Peer.Limits).To(Equal(overrideResources.Limits))
 			Expect(finalRes.GRPCProxy.Requests).To(Equal(overrideResources.Requests))
 			Expect(finalRes.GRPCProxy.Limits).To(Equal(overrideResources.Limits))
-			Expect(finalRes.FluentD.Requests).To(Equal(overrideResources.Requests))
-			Expect(finalRes.FluentD.Limits).To(Equal(overrideResources.Limits))
 			Expect(finalRes.DinD.Requests).To(Equal(overrideResources.Requests))
 			Expect(finalRes.DinD.Limits).To(Equal(overrideResources.Limits))
 			Expect(finalRes.CouchDB.Requests).To(Equal(overrideResources.Requests))
@@ -667,7 +643,6 @@ var _ = Describe("Peer", func() {
 			overridePeerres.Init.Requests = nil
 			overridePeerres.Peer.Requests = nil
 			overridePeerres.GRPCProxy.Requests = nil
-			overridePeerres.FluentD.Requests = nil
 			overridePeerres.DinD.Requests = nil
 			overridePeerres.CouchDB.Requests = nil
 			overridePeerres.CCLauncher.Requests = nil
@@ -684,8 +659,6 @@ var _ = Describe("Peer", func() {
 			Expect(finalRes.Peer.Limits).To(Equal(overrideResources.Limits))
 			Expect(finalRes.GRPCProxy.Requests).To(Equal(overrideResources.Requests))
 			Expect(finalRes.GRPCProxy.Limits).To(Equal(overrideResources.Limits))
-			Expect(finalRes.FluentD.Requests).To(Equal(overrideResources.Requests))
-			Expect(finalRes.FluentD.Limits).To(Equal(overrideResources.Limits))
 			Expect(finalRes.DinD.Requests).To(Equal(overrideResources.Requests))
 			Expect(finalRes.DinD.Limits).To(Equal(overrideResources.Limits))
 			Expect(finalRes.CouchDB.Requests).To(Equal(overrideResources.Requests))
@@ -718,7 +691,6 @@ var _ = Describe("Peer", func() {
 				Init:       currentResources.DeepCopy(),
 				Peer:       currentResources.DeepCopy(),
 				GRPCProxy:  currentResources.DeepCopy(),
-				FluentD:    currentResources.DeepCopy(),
 				DinD:       currentResources.DeepCopy(),
 				CouchDB:    currentResources.DeepCopy(),
 				CCLauncher: currentResources.DeepCopy(),
@@ -742,7 +714,6 @@ var _ = Describe("Peer", func() {
 				Init:       overrideResources.DeepCopy(),
 				Peer:       overrideResources.DeepCopy(),
 				GRPCProxy:  overrideResources.DeepCopy(),
-				FluentD:    overrideResources.DeepCopy(),
 				DinD:       overrideResources.DeepCopy(),
 				CouchDB:    overrideResources.DeepCopy(),
 				CCLauncher: overrideResources.DeepCopy(),
@@ -770,7 +741,6 @@ var _ = Describe("Peer", func() {
 					Expect(finalRes.HSMDaemon.Requests).To(Equal(overrideResources.Requests))
 					Expect(finalRes.HSMDaemon.Limits).To(Equal(overrideResources.Limits))
 					Expect(finalRes.DinD).To(BeNil())
-					Expect(finalRes.FluentD).To(BeNil())
 				}
 
 				It("Should return the override resources over if limits and requests are set", func() {
@@ -785,7 +755,6 @@ var _ = Describe("Peer", func() {
 					overridePeerres.Init.Limits = nil
 					overridePeerres.Peer.Limits = nil
 					overridePeerres.GRPCProxy.Limits = nil
-					overridePeerres.FluentD.Limits = nil
 					overridePeerres.DinD.Limits = nil
 					overridePeerres.CouchDB.Limits = nil
 					overridePeerres.CCLauncher.Limits = nil
@@ -803,7 +772,6 @@ var _ = Describe("Peer", func() {
 					overridePeerres.Init.Requests = nil
 					overridePeerres.Peer.Requests = nil
 					overridePeerres.GRPCProxy.Requests = nil
-					overridePeerres.FluentD.Requests = nil
 					overridePeerres.DinD.Requests = nil
 					overridePeerres.CouchDB.Requests = nil
 					overridePeerres.CCLauncher.Requests = nil
@@ -833,7 +801,6 @@ var _ = Describe("Peer", func() {
 					Expect(finalRes.HSMDaemon.Requests).To(Equal(overrideResources.Requests))
 					Expect(finalRes.HSMDaemon.Limits).To(Equal(overrideResources.Limits))
 					Expect(finalRes.DinD).To(BeNil())
-					Expect(finalRes.FluentD).To(BeNil())
 					Expect(finalRes.CouchDB).To(BeNil())
 				}
 
@@ -849,7 +816,6 @@ var _ = Describe("Peer", func() {
 					overridePeerres.Init.Limits = nil
 					overridePeerres.Peer.Limits = nil
 					overridePeerres.GRPCProxy.Limits = nil
-					overridePeerres.FluentD.Limits = nil
 					overridePeerres.DinD.Limits = nil
 					overridePeerres.CouchDB.Limits = nil
 					overridePeerres.CCLauncher.Limits = nil
@@ -867,7 +833,6 @@ var _ = Describe("Peer", func() {
 					overridePeerres.Init.Requests = nil
 					overridePeerres.Peer.Requests = nil
 					overridePeerres.GRPCProxy.Requests = nil
-					overridePeerres.FluentD.Requests = nil
 					overridePeerres.DinD.Requests = nil
 					overridePeerres.CouchDB.Requests = nil
 					overridePeerres.CCLauncher.Requests = nil
@@ -896,8 +861,6 @@ var _ = Describe("Peer", func() {
 					Expect(finalRes.CouchDB.Limits).To(Equal(overrideResources.Limits))
 					Expect(finalRes.DinD.Requests).To(Equal(overrideResources.Requests))
 					Expect(finalRes.DinD.Limits).To(Equal(overrideResources.Limits))
-					Expect(finalRes.FluentD.Requests).To(Equal(overrideResources.Requests))
-					Expect(finalRes.FluentD.Limits).To(Equal(overrideResources.Limits))
 					Expect(finalRes.Enroller.Requests).To(Equal(overrideResources.Requests))
 					Expect(finalRes.Enroller.Limits).To(Equal(overrideResources.Limits))
 					Expect(finalRes.HSMDaemon.Requests).To(Equal(overrideResources.Requests))
@@ -917,7 +880,6 @@ var _ = Describe("Peer", func() {
 					overridePeerres.Init.Limits = nil
 					overridePeerres.Peer.Limits = nil
 					overridePeerres.GRPCProxy.Limits = nil
-					overridePeerres.FluentD.Limits = nil
 					overridePeerres.DinD.Limits = nil
 					overridePeerres.CouchDB.Limits = nil
 					overridePeerres.CCLauncher.Limits = nil
@@ -935,7 +897,6 @@ var _ = Describe("Peer", func() {
 					overridePeerres.Init.Requests = nil
 					overridePeerres.Peer.Requests = nil
 					overridePeerres.GRPCProxy.Requests = nil
-					overridePeerres.FluentD.Requests = nil
 					overridePeerres.DinD.Requests = nil
 					overridePeerres.CouchDB.Requests = nil
 					overridePeerres.CCLauncher.Requests = nil
@@ -960,8 +921,6 @@ var _ = Describe("Peer", func() {
 					Expect(finalRes.GRPCProxy.Limits).To(Equal(overrideResources.Limits))
 					Expect(finalRes.DinD.Requests).To(Equal(overrideResources.Requests))
 					Expect(finalRes.DinD.Limits).To(Equal(overrideResources.Limits))
-					Expect(finalRes.FluentD.Requests).To(Equal(overrideResources.Requests))
-					Expect(finalRes.FluentD.Limits).To(Equal(overrideResources.Limits))
 					Expect(finalRes.Enroller.Requests).To(Equal(overrideResources.Requests))
 					Expect(finalRes.Enroller.Limits).To(Equal(overrideResources.Limits))
 					Expect(finalRes.HSMDaemon.Requests).To(Equal(overrideResources.Requests))
@@ -982,7 +941,6 @@ var _ = Describe("Peer", func() {
 					overridePeerres.Init.Limits = nil
 					overridePeerres.Peer.Limits = nil
 					overridePeerres.GRPCProxy.Limits = nil
-					overridePeerres.FluentD.Limits = nil
 					overridePeerres.DinD.Limits = nil
 					overridePeerres.CouchDB.Limits = nil
 					overridePeerres.CCLauncher.Limits = nil
@@ -1000,7 +958,6 @@ var _ = Describe("Peer", func() {
 					overridePeerres.Init.Requests = nil
 					overridePeerres.Peer.Requests = nil
 					overridePeerres.GRPCProxy.Requests = nil
-					overridePeerres.FluentD.Requests = nil
 					overridePeerres.DinD.Requests = nil
 					overridePeerres.CouchDB.Requests = nil
 					overridePeerres.CCLauncher.Requests = nil

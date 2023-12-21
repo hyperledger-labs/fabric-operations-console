@@ -323,9 +323,6 @@ func verifyDefaultResources(resources *Resources) error {
 		if resources.Peer.DinD == nil {
 			return errors.New("no default resources set for Peer.DinD")
 		}
-		if resources.Peer.FluentD == nil {
-			return errors.New("no default resources set for Peer.FluentD")
-		}
 		if resources.Peer.GRPCProxy == nil {
 			return errors.New("no default resources set for Peer.GRPCProxy")
 		}
