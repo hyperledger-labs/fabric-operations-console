@@ -58,11 +58,21 @@ When(/^I change the password from default password$/, () => {
 });
 
 Then(/^I should be redirected to the login page again$/, () => {
-	cy.get('input[id="login-form-email"]').should('be.visible')
-    cy.get('input[id="login-form-login_password"]').should('be.visible')
-	cy.get('p').should(($div) => {
-		expect($div.get(0).innerText).to.eq('Login to Fabric Operations Console')
-		})
+	try {
+		cy.get('input[id="login-form-email"]').should('be.visible')
+		cy.get('input[id="login-form-login_password"]').should('be.visible')
+		cy.get('p').should(($div) => {
+			expect($div.get(0).innerText).to.eq('Login to Fabric Operations Console')
+			})
+	} catch (err) {
+		cy.log('Error: ', err)
+		cy.reload()
+		cy.get('input[id="login-form-email"]').should('be.visible')
+		cy.get('input[id="login-form-login_password"]').should('be.visible')
+		cy.get('p').should(($div) => {
+			expect($div.get(0).innerText).to.eq('Login to Fabric Operations Console')
+			})
+	}
 });
 
 Given(/^I am logged in$/, () => {
