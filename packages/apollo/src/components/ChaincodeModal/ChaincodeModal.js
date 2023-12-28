@@ -313,7 +313,7 @@ export class ChaincodeModal extends React.Component {
 												this.props.translate('pending_approval')
 											)}
 										</td>
-										<td>
+										{(this.props.userInfo.role !== 'reader') && (<td>
 											{!!identities.length && (
 												<button
 													id={'update-approval-' + org.msp_id}
@@ -334,7 +334,7 @@ export class ChaincodeModal extends React.Component {
 													{this.props.translate(org.signature ? 'update_proposal' : 'begin_approve')}
 												</button>
 											)}
-										</td>
+										</td>)}
 									</tr>
 								);
 							})}
