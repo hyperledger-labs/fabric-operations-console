@@ -313,7 +313,7 @@ export class ChaincodeModal extends React.Component {
 												this.props.translate('pending_approval')
 											)}
 										</td>
-										{(this.props.userInfo.role !== 'reader') && (<td>
+										{(this.props.role !== 'reader') && (<td>
 											{!!identities.length && (
 												<button
 													id={'update-approval-' + org.msp_id}
