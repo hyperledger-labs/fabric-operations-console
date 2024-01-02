@@ -1294,12 +1294,12 @@ class OrdererDetails extends Component {
 		const canDelete = canDeleteLegacy || canDeleteSystemless;
 
 		const buttonsOnTheNodesTab = [];
-		if (isScalingNodesAllowed && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) && !free) {
+		if (isScalingNodesAllowed && ActionsHelper.canImportComponent(this.props.userInfo, this.props.feature_flags) && !free) {
 			buttonsOnTheNodesTab.push({
 				text: 'add_orderer_node',
 				fn: this.openAddOrdererNode,
 			});
-		} else if (ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) && this.isSystemLess(this.props.details)) {
+		} else if (ActionsHelper.canImportComponent(this.props.userInfo, this.props.feature_flags) && this.isSystemLess(this.props.details)) {
 			buttonsOnTheNodesTab.push({
 				text: 'add_orderer_node',
 				fn: this.openAddOrdererNode,
