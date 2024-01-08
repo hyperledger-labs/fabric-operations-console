@@ -76,3 +76,8 @@ Feature: Verify miscellaneous cases of console works as expected
     Then wait "10" seconds
     And I am on the 'nodes' page
 	Then the div with id 'ibp-tile-Ordering Service' does not exist on page
+
+  Scenario: Verify Version summary button
+    And I am on the 'settings' page
+    Then the element div with text 'Version summary' should be visible on page
+    Then I clicked the button with id 'version_export_button'
