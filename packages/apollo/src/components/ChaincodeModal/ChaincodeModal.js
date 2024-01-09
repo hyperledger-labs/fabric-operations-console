@@ -37,6 +37,7 @@ import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import SVGs from '../Svgs/Svgs';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
+import ActionsHelper from '../../utils/actionsHelper';
 
 const naturalSort = require('javascript-natural-sort');
 const SCOPE = 'chaincodeModal';
@@ -313,7 +314,7 @@ export class ChaincodeModal extends React.Component {
 												this.props.translate('pending_approval')
 											)}
 										</td>
-										{(this.props.role !== 'reader') && (<td>
+										{(!ActionsHelper.canManageComponent(this.props.userInfo, this.props.feature_flags)) && (<td>
 											{!!identities.length && (
 												<button
 													id={'update-approval-' + org.msp_id}

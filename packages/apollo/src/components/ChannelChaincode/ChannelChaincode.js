@@ -281,7 +281,6 @@ class ChannelChaincode extends Component {
 						onComplete={this.getChaincodeDefinitions}
 						channelDetails={this.props.channel}
 						channelMembers={this.props.members}
-						role={this.props.userInfo.role}
 					/>
 				)}
 			</div>
