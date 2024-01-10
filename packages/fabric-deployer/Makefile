@@ -21,8 +21,6 @@ TAG ?= $(shell git rev-parse --short HEAD)
 PULL ?= $(TRAVIS_PULL_REQUEST)
 ARCH ?= $(shell go env GOARCH)
 BRANCH ?= $(shell git branch --show-current)
-REGISTRY ?= us.icr.io/ibp-golang
-IBP_VER ?= 2.5.3
 GO_VER ?= 1.20.6
 BUILD_ID = $(shell git rev-parse --short HEAD)
 BUILD_DATE = $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
@@ -30,9 +28,7 @@ BUILD_DATE = $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 DOCKER_IMAGE_REPO ?= us.icr.io
 
 BUILD_ARGS=--build-arg ARCH=$(ARCH)
-BUILD_ARGS+=--build-arg REGISTRY=$(REGISTRY)
 BUILD_ARGS+=--build-arg BUILD_ID=$(BUILD_ID)
-BUILD_ARGS+=--build-arg IBP_VER=$(IBP_VER)
 BUILD_ARGS+=--build-arg BUILD_DATE=$(BUILD_DATE)
 BUILD_ARGS+=--build-arg GO_VER=$(GO_VER)
 

@@ -65,14 +65,14 @@ func New(logger *zap.Logger, k8sClient Kube) *Operator {
 }
 
 func (o *Operator) GetHSMConfig(namespace string) (interface{}, error) {
-	cmName := "ibp-hsm-config"
+	cmName := "ibm-hlfsupport-hsm-config"
 	cm, err := o.Kube.GetConfigMap(namespace, cmName)
 	if err != nil {
 		return nil, err
 	}
-	data := cm.Data["ibp-hsm-config.yaml"]
+	data := cm.Data["ibm-hlfsupport-hsm-config.yaml"]
 	if data == "" {
-		return nil, errors.New("ibp-hsm-config.yaml not found in configmap")
+		return nil, errors.New("ibm-hlfsupport-hsm-config.yaml not found in configmap")
 	}
 
 	return data, nil
