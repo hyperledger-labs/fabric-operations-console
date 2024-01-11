@@ -37,8 +37,9 @@ const tools = {										// stateless util libs should go here
 	fs: require('fs'),
 	path: require('path'),
 	async: require('async'),
-	request: require('request'),
+	axios: require('axios'),
 };
+tools.request = require('../../../libs/request_axios.js')(tools.axios);
 tools.root_misc = require('../../../libs/root_misc.js')(logger);
 tools.misc = require('../../../libs/misc.js')(logger, tools);
 

@@ -22,7 +22,6 @@ const tools = {										// stateless util libs should go here, ~8% faster start
 	fs: require('fs'),
 	path: require('path'),
 	async: require('async'),
-	request: require('request'),
 	crypto: require('crypto'),
 	uuidv4: require('uuid/v4'),
 	yaml: require('js-yaml'),
@@ -31,7 +30,10 @@ const tools = {										// stateless util libs should go here, ~8% faster start
 	winston: require('winston'),
 	selfsigned: require('selfsigned'),
 	zlib: require('zlib'),
+	axios: require('axios'),
 };
+
+tools.request = require('./libs/request_axios.js')(tools.axios);
 
 const bodyParser = require('body-parser');
 const http = require('http');

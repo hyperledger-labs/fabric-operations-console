@@ -929,7 +929,7 @@ module.exports = function (logger, t) {
 		}
 
 	*/
-	exports.retry_req = (options, cb) => {
+	exports.retry_req = async (options, cb) => {
 		options._name = options._name || 'request';										// name for request type, for debugging
 		options._max_attempts = options._max_attempts || 3;								// only try so many times
 		options._retry_codes = options._retry_codes || {								// list of codes we will retry
@@ -955,7 +955,7 @@ module.exports = function (logger, t) {
 		}
 		t.request(options, (req_e, resp) => {
 			if (req_e) {																// detect timeout request error
-				logger.error('[' + options._name + ' ' + options._tx_id + '] unable to reach destination. error:', req_e);
+				logger.error('[' + options._name + ' ' + options._tx_id + '] unable to reach destination. error:', req_e.toString());
 				resp = resp ? resp : {};												// init if not already present
 				resp.statusCode = resp.statusCode ? resp.statusCode : 500;				// init code if empty
 				resp.body = resp.body ? resp.body : req_e;								// copy requests error to resp if its empty
