@@ -27,8 +27,6 @@
             "dindTag": "sha256:bd83e2a0eb012ffd456516b007a9a7c4cbd5aac3a83acd181a3bcc38f1522155",
             "grpcwebImage": "us.icr.io/ibp-temp/ibp-grpcweb",
             "grpcwebTag": "sha256:81e333a50cba5302bb20261838b7e47e9619fb9c79b2b3e47d9da13b7f2affd9",
-            "fluentdImage": "us.icr.io/ibp-temp/ibp-fluentd",
-            "fluentdTag": "sha256:c21587fb8ad93439680acd9afeef2df5c7bf287906471133c3402c393f57fc73",
             "couchdbImage": "us.icr.io/ibp-temp/ibp-couchdb",
             "couchdbTag": "sha256:4d6725348c61d67d0eb5493ac63ce50e0bc23b8fa25151a7b11f6dc921169ddf",
             "enrollerImage": "us.icr.io/ibp-temp/ibp-enroller",

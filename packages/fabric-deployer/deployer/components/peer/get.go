@@ -148,9 +148,6 @@ func (peer *Peer) getResources(originalCR *current.IBPPeer, response *api.Respon
 		if originalCR.Spec.Resources.DinD != nil {
 			peerResources = append(peerResources, originalCR.Spec.Resources.DinD)
 		}
-		if originalCR.Spec.Resources.FluentD != nil {
-			peerResources = append(peerResources, originalCR.Spec.Resources.FluentD)
-		}
 	}
 	if util.GetMajorRelease(originalCR.Spec.FabricVersion) == 2 {
 		if originalCR.Spec.Resources != nil {

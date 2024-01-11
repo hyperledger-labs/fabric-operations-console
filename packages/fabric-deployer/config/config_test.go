@@ -100,10 +100,6 @@ var _ = Describe("Config", func() {
 						Requests: res,
 						Limits:   res,
 					},
-					FluentD: &corev1.ResourceRequirements{
-						Requests: res,
-						Limits:   res,
-					},
 					CCLauncher: &corev1.ResourceRequirements{
 						Requests: res,
 						Limits:   res,
@@ -387,13 +383,6 @@ var _ = Describe("Config", func() {
 			err := config.VerifyDefaultStorageAndResource(defaults)
 			Expect(err).NotTo(BeNil())
 			Expect(err.Error()).To(Equal("no default resources set for Peer.DinD"))
-		})
-
-		It("returns an error if Peer.Fluentd resource values not configured", func() {
-			defaults.Resources.Peer.FluentD = nil
-			err := config.VerifyDefaultStorageAndResource(defaults)
-			Expect(err).NotTo(BeNil())
-			Expect(err.Error()).To(Equal("no default resources set for Peer.FluentD"))
 		})
 
 		It("returns an error if Peer.GRPCProxy resource values not configured", func() {
