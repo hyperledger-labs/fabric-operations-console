@@ -5,12 +5,12 @@ import createEsbuildPlugin from "@badeball/cypress-cucumber-preprocessor/esbuild
 
 export default defineConfig({
   e2e: {
-    specPattern: "**/*.feature",   
+    specPattern: "**/*.feature",
     defaultCommandTimeout: 120000,
     viewportWidth: 1200,
     viewportHeight: 860,
     testIsolation: false,
-    supportFile: "support/e2e.js",
+    supportFile: "support/index.js",
     fixturesFolder: "fixtures",
     async setupNodeEvents(
       on: Cypress.PluginEvents,

@@ -233,6 +233,12 @@ func (d *Deployer) registerEndpoints() {
 	r.Patch("/api/v3/instance/{serviceInstanceID}/type/{type}/component/{componentName}", d.PatchEndpointSection())
 	r.Patch("/api/v3/instance/{serviceInstanceID}/type/{type}/component/{componentName}/{section}", d.PatchEndpointSection())
 
+	// hsm config
+	r.Get("/api/v3/instance/{serviceInstanceID}/hsmconfig", d.HSMEndpoint(GET))
+	r.Post("/api/v3/instance/{serviceInstanceID}/hsmconfig", d.HSMEndpoint(POST))
+	r.Patch("/api/v3/instance/{serviceInstanceID}/hsmconfig", d.HSMEndpoint(PATCH))
+	r.Delete("/api/v3/instance/{serviceInstanceID}/hsmconfig", d.HSMEndpoint(DELETE))
+
 	// k8s
 	r.Get("/api/v3/instance/{serviceInstanceID}/k8s/cluster/version", d.K8sVersionEndpoint())
 	r.Get("/api/v3/instance/{serviceInstanceID}/k8s/cluster/type", d.ClusterTypeEndpoint())
@@ -334,6 +340,21 @@ func (d *Deployer) GetEndpointSection() func(http.ResponseWriter, *http.Request)
 
 func (d *Deployer) UpdateEndpointSection() func(http.ResponseWriter, *http.Request) {
 	return NewEndpoint(d.UpdateSection, d.LocalConfig.Logger).ServeHTTP
+}
+
+func (d *Deployer) HSMEndpoint(requestType string) func(http.ResponseWriter, *http.Request) {
+	switch requestType {
+	case GET:
+		return NewEndpoint(d.GetHSMConfigEndpoint, d.LocalConfig.Logger).ServeHTTP
+	case POST:
+		return NewEndpoint(d.UpdateHSMConfigEndpoint, d.LocalConfig.Logger).ServeHTTP
+	case PATCH:
+		return NewEndpoint(d.PatchHSMConfigEndpoint, d.LocalConfig.Logger).ServeHTTP
+	case DELETE:
+		return NewEndpoint(d.DeleteHSMConfigEndpoint, d.LocalConfig.Logger).ServeHTTP
+	default:
+		return nil
+	}
 }
 
 func (d *Deployer) PatchEndpointSection() func(http.ResponseWriter, *http.Request) {
@@ -550,6 +571,25 @@ func (d *Deployer) Version(w http.ResponseWriter, r *http.Request) (interface{},
 	}
 
 	return nil, 0, errors.New("Please specify a valid component type")
+}
+
+func (d *Deployer) GetHSMConfigEndpoint(w http.ResponseWriter, r *http.Request) (interface{}, int, error) {
+	return d.Operator.Get(operator.HSMCONFIG, d.Config.Namespace)
+}
+
+func (d *Deployer) UpdateHSMConfigEndpoint(w http.ResponseWriter, r *http.Request) (interface{}, int, error) {
+	// PLACEHOLDER
+	return nil, 0, errors.Errorf("Request type not yet supported: %d", http.StatusBadRequest)
+}
+
+func (d *Deployer) PatchHSMConfigEndpoint(w http.ResponseWriter, r *http.Request) (interface{}, int, error) {
+	// PLACEHOLDER
+	return nil, 0, errors.Errorf("Request type not yet supported: %d", http.StatusBadRequest)
+}
+
+func (d *Deployer) DeleteHSMConfigEndpoint(w http.ResponseWriter, r *http.Request) (interface{}, int, error) {
+	// PLACEHOLDER
+	return nil, 0, errors.Errorf("Request type not yet supported: %d", http.StatusBadRequest)
 }
 
 // ClusterVersionHandler will handle getting kubernetes cluster version

@@ -29,7 +29,7 @@ Then(/^I should see a success toast with class (?:'|")(.*?)(?:'|") which says (?
 				cy.wait(2000)
 				cy.log('Checking if error displayed')
 				cy.get('body').then(($body) => {
-					if ($body.find('.ibp-side-panel-error-details').length) {
+					if ($body.find('.ibp-side-panel-error').length) {
 						cy.get(`button[id="submit"]`).click()
 						cy.wait(6000)
 						cy.get(className, { timeout: 60000 }).contains(expectedMessage).should('be.visible')
