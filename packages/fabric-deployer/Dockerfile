@@ -28,7 +28,6 @@ RUN make build
 
 ########## Final image ##########
 FROM registry.access.redhat.com/ubi8/ubi-minimal
-ARG IBP_VER
 ARG BUILD_ID
 ARG BUILD_DATE
 

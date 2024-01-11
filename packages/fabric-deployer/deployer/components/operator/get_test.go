@@ -68,7 +68,7 @@ var _ = Describe("Get API", func() {
 					Name:      name,
 					Namespace: namespace,
 				},
-				Data: map[string]string{"ibp-hsm-config.yaml": string(configBytes)},
+				Data: map[string]string{"ibm-hlfsupport-hsm-config.yaml": string(configBytes)},
 			}
 			return cm, nil
 		}

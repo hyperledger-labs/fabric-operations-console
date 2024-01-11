@@ -49,7 +49,7 @@ var _ = Describe("Operator", func() {
 					Name:      name,
 					Namespace: namespace,
 				},
-				Data: map[string]string{"ibp-hsm-config.yaml": string(configBytes)},
+				Data: map[string]string{"ibm-hlfsupport-hsm-config.yaml": string(configBytes)},
 			}
 			return cm, nil
 		}
@@ -65,14 +65,14 @@ var _ = Describe("Operator", func() {
 		It("returns error if data is empty in config map", func() {
 			cm := &corev1.ConfigMap{
 				ObjectMeta: metav1.ObjectMeta{
-					Name:      "ibp-hsm-config",
+					Name:      "ibm-hlfsupport-hsm-config",
 					Namespace: "test-ns",
 				},
 			}
 			mockKube.GetConfigMapReturns(cm, nil)
 			_, err := testOperator.GetHSMConfig("test-ns")
 			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).To(Equal("ibp-hsm-config.yaml not found in configmap"))
+			Expect(err.Error()).To(Equal("ibm-hlfsupport-hsm-config.yaml not found in configmap"))
 		})
 
 		It("returns config", func() {
