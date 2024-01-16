@@ -51,7 +51,7 @@ const ChannelAnchorPeers = props => {
 					},
 				]}
 				selectItem={
-					!props.disableDelete
+					(!props.disableDelete && ActionsHelper.canManageComponent(props.userInfo, props.feature_flags))
 						? {
 							id: 'deleteAnchorPeer',
 							text: props.translate('delete_anchor_peers'),
