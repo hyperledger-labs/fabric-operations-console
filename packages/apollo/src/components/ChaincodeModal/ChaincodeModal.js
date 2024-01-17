@@ -314,7 +314,7 @@ export class ChaincodeModal extends React.Component {
 												this.props.translate('pending_approval')
 											)}
 										</td>
-										{(!ActionsHelper.canManageComponent(this.props.userInfo, this.props.feature_flags)) && (<td>
+										{(ActionsHelper.canManageComponent(this.props.userInfo, this.props.feature_flags)) && (<td>
 											{!!identities.length && (
 												<button
 													id={'update-approval-' + org.msp_id}
