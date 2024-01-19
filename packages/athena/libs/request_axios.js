@@ -30,13 +30,11 @@ module.exports = function (axios) {
 		// convert `body` -> `data`
 		if (options && options.body) {
 			options.data = options.body;
-			delete options.body;
 		}
 
 		// convert `uri` -> `url`
 		if (options && options.uri) {
 			options.url = options.uri;
-			delete options.uri;
 		}
 
 		// merge `baseUrl` with `url`, axios doesn't play nice otherwise
@@ -115,6 +113,11 @@ module.exports = function (axios) {
 			if (resp.status) {
 				resp.statusCode = resp.status;
 				delete resp.status;
+			}
+
+			// undo the `body` -> `data` INPUT arg conversion
+			if (options && options.data) {
+				options.data = undefined;
 			}
 
 			/*if (resp.body && resp.headers['content-type'] && resp.headers['content-type'].includes('grpc-web') ||
