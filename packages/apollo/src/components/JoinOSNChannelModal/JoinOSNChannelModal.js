@@ -770,6 +770,10 @@ class JoinOSNChannelModal extends React.Component {
 			if (join_successes > 0 && tx_id) {
 				try {
 					await ConfigBlockApi.archive(tx_id);
+
+					// then reload them to force cache update
+					await ConfigBlockApi.getAll({ cache: 'skip' });
+					await ConfigBlockApi.getAll({ cache: 'skip', visibility: 'all' });		// do both types
 				} catch (e) {
 					Log.error(e);
 				}

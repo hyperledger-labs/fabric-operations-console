@@ -140,5 +140,32 @@ module.exports = (logger, ev, t) => {
 		});
 	}
 
+	//--------------------------------------------------
+	// Update a config block doc (change visibility from archive to inbox, happens when an OS nodes removes itself from the channel)
+	//--------------------------------------------------
+	app.patch('/api/v[123]/configblocks/:tx_id', t.middleware.verify_manage_action_session, (req, res) => {
+		unarchiveConfigBlock(req, res);
+	});
+	app.patch('/ak/api/v[123]/configblocks/:tx_id', t.middleware.verify_manage_action_ak, (req, res) => {
+		unarchiveConfigBlock(req, res);
+	});
+
+	function unarchiveConfigBlock(req, res) {
+		if (t.ot_misc.is_v2plus_route(req)) {
+			req._validate_path = '/ak/api/' + t.validate.pick_ver(req) + '/configblocks/{id}';
+			logger.debug('[pre-flight] setting validate route:', req._validate_path);
+		}
+
+		t.validate.request(req, res, null, () => {
+			t.config_blocks_lib.unarchiveBlockDoc(req, (err, ret) => {
+				if (err) {
+					return res.status(t.ot_misc.get_code(err)).json(err);
+				} else {
+					return res.status(200).json(ret);
+				}
+			});
+		});
+	}
+
 	return app;
 };

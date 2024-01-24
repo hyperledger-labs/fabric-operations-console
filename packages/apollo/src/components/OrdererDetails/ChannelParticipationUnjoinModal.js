@@ -30,6 +30,7 @@ import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import { OrdererRestApi } from '../../rest/OrdererRestApi';
 import { NodeRestApi } from '../../rest/NodeRestApi';
 import ImportantBox from '../ImportantBox/ImportantBox';
+import ConfigBlockApi from '../../rest/ConfigBlockApi';
 
 const SCOPE = 'ChannelParticipationUnjoinModal';
 
@@ -83,15 +84,55 @@ class ChannelParticipationUnjoinModal extends Component {
 					this.props.updateState(SCOPE, { error: unjoinResp.error });
 				} else {
 
+					// update the orderer as systemless
 					if (this.props.channelInfo.systemChannel) {
 						try {
-							// update the orderer as systemless
 							await NodeRestApi.updateNode({ id: osn.id, systemless: true });
 						} catch (e) {
 							console.error(e);
 						}
 					}
 
+					try {
+						// first find all the local config blocks...
+						const local_config_block_docs = await ConfigBlockApi.getAll({ cache: 'skip', visibility: 'all' });
+
+						// filter the docs down to the ones that references this channel
+						if (local_config_block_docs && local_config_block_docs.blocks) {
+							const docs_with_channel = local_config_block_docs.blocks.filter(x => {
+								return x.channel === this.props.channelInfo.name;
+							});
+
+							// filter the docs down to the ones that references this cluster id
+							if (Array.isArray(docs_with_channel)) {
+								const docs_with_OS = docs_with_channel.filter(x => {
+									if (x.extra_consenter_data && osn) {
+										for (let i in x.extra_consenter_data) {			// dsh todo - what if there are other clusters?
+											return x.extra_consenter_data[i]._cluster_id === osn.cluster_id;
+										}
+									}
+									return false;
+								});
+
+								let config_block_doc = null;
+								for (let i in docs_with_OS) {
+									config_block_doc = docs_with_OS[i];
+									break;
+								}
+
+								// if we found the doc then un-archive it since the OS is leaving
+								if (config_block_doc && config_block_doc.id) {
+
+									// un-archive the local config block if one is found
+									await ConfigBlockApi.unarchive(config_block_doc.id, osn.cluster_id);
+									// re-pull all blocks to reload cache
+									await ConfigBlockApi.getAll({ cache: 'skip', visibility: 'all' });
+								}
+							}
+						}
+					} catch (e) {
+						console.error(e);
+					}
 					this.props.onComplete();
 					this.props.onClose();
 				}

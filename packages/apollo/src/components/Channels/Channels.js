@@ -477,15 +477,16 @@ class ChannelComponent extends Component {
 			<div className="ibp-channel-tile-stats">
 				<div className="ibp-channels-orderer">
 					<div>{(cluster_names && cluster_names.length > 0) ? cluster_names.join(', ') : ''}</div>
-					<div className="ibp-channels-del-channel"
+					{!archived && <div className="ibp-channels-del-channel"
 						onClick={(e) => {
 							e.stopPropagation();
 							this.removeConfigBlock(channel.id);
 							return false;
 						}}
 					>
-						{!archived && <TrashCan20 />}
+						<TrashCan20 />
 					</div>
+					}
 				</div>
 				<ItemTileLabels
 					custom={
@@ -687,15 +688,22 @@ class ChannelComponent extends Component {
 
 	// get all pending channels for orderers
 	getAllOrdererChannels = async (opts) => {
-		this.props.updateState(SCOPE, { orderer_loading: true, pending_osn_channels: [] });
-		const config_blocks = await ConfigBlockApi.getAll(opts);
-		if (config_blocks && Array.isArray(config_blocks.blocks)) {
-			for (let i in config_blocks.blocks) {
-				config_blocks.blocks[i].name = config_blocks.blocks[i].channel;
-				config_blocks.blocks[i].pending = true;
+		this.props.updateState(SCOPE, { orderer_loading: true, pending_osn_channels: [], all_local_blocks: [] });
+		const pending_blocks = [];
+
+		// get all then separate them on visibility
+		const all_blocks = await ConfigBlockApi.getAll({ visibility: 'all' });
+		if (all_blocks && Array.isArray(all_blocks.blocks)) {
+			for (let i in all_blocks.blocks) {
+				all_blocks.blocks[i].name = all_blocks.blocks[i].channel;
+
+				if (all_blocks.blocks[i].visibility === 'inbox') {
+					all_blocks.blocks[i].pending = true;
+					pending_blocks.push(all_blocks.blocks[i]);
+				}
 			}
 		}
-		this.props.updateState(SCOPE, { orderer_loading: false, pending_osn_channels: config_blocks.blocks });
+		this.props.updateState(SCOPE, { orderer_loading: false, pending_osn_channels: pending_blocks, all_local_blocks: all_blocks.blocks });
 	}
 
 	// remove this pending join by removing the config block
@@ -739,7 +747,7 @@ class ChannelComponent extends Component {
 								id="test__channels2--add--tile"
 								itemId="pending_osn_channels"
 								loading={this.props.orderer_loading}
-								items={this.props.showingAllChannels ? this.props.pending_osn_channels : []}
+								items={this.props.showingAllChannels ? this.props.all_local_blocks : this.props.pending_osn_channels}
 								listMapping={[
 									{
 										header: 'name',
@@ -943,6 +951,7 @@ const dataProps = {
 	loading: PropTypes.bool,
 	orderer_loading: PropTypes.bool,
 	pending_osn_channels: PropTypes.array,
+	all_local_blocks: PropTypes.array,
 	joinChannelModal: PropTypes.bool,
 	joinOsnModal: PropTypes.bool,
 	importOrdererModal: PropTypes.bool,
