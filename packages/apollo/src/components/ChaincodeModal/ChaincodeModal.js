@@ -1165,6 +1165,8 @@ export default connect(
 		newProps['configtxlator_url'] = state['settings']['configtxlator_url'];
 		newProps['host_url'] = state['settings'] ? state['settings']['host_url'] : null;
 		newProps['signature_requests'] = state['signatureCollection'] ? state['signatureCollection']['requests'] : null;
+		newProps['userInfo'] = state['userInfo'] ? state['userInfo'] : null;
+		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;
 		return newProps;
 	},
 	{
