@@ -500,9 +500,12 @@ class JoinOSNChannelModal extends React.Component {
 			clone._selected = selected;
 
 			if (node_obj && channel_data && channel_data.nodes && channel_data.nodes[node_obj._id]) {
-				if (channel_data.nodes[node_obj._id]._channel_resp && channel_data.nodes[node_obj._id]._channel_resp.name) {
-					clone._status = constants.OSN_JOIN_SUCCESS;
-					clone._selected = false;			// don't select a;ready joined nodes
+				if (channel_data.nodes[node_obj._id]._channel_resp) {
+					if (channel_data.nodes[node_obj._id]._channel_resp.status === constants.FAB_JOINED_STATUS ||
+						channel_data.nodes[node_obj._id]._channel_resp.status === constants.FAB_JOINING_STATUS) {
+						clone._status = constants.OSN_JOIN_SUCCESS;
+						clone._selected = false;			// don't select a;ready joined nodes
+					}
 				}
 			}
 

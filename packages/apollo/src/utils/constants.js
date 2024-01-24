@@ -67,6 +67,8 @@ export const SECONDARY_STATUS_PERIOD = 1 * 60 * 1000;
 export const OSN_JOIN_SUCCESS = 'success';
 export const OSN_JOIN_PENDING = 'pending';
 export const OSN_JOIN_ERROR = 'failed';
+export const FAB_JOINED_STATUS = 'active';
+export const FAB_JOINING_STATUS = 'onboarding';
 
 // migration status summary
 export const STATUS_IN_PROGRESS = 'in-progress';
