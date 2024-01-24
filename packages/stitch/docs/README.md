@@ -3702,7 +3702,20 @@ stitch.getOSNChannel(opts, (err, data) => {
 	},
 	stitch_msg: "ok"       // error/success message for your req
 }
-// see https://github.com/hyperledger/fabric/blob/main/orderer/common/types/channelinfo.go
+/* below is pulled from fabric:
+// "active" - The orderer is active in the channel's consensus protocol, or following the cluster,
+// with block height > the join-block number. (Height is last block number +1).
+
+// "onboarding" - The orderer is catching up with the cluster by pulling blocks from other orderers,
+// with block height <= the join-block number.
+
+// "inactive" - The orderer is not storing any blocks for this channel.
+
+// "failed" - The last orderer operation against the channel failed.
+
+for more info on response:
+	https://github.com/hyperledger/fabric/blob/main/orderer/common/types/channelinfo.go
+*/
 ```
 
 <a name="joinOSNChannel"></a>

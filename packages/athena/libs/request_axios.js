@@ -21,11 +21,13 @@
 module.exports = function (axios) {
 	const ARRAY_BUFFER_TYPE = 'arraybuffer';	// axios types: 'arraybuffer', 'document', 'json', 'text', 'stream'
 	const TEXT_TYPE = 'text';					// axios types: 'arraybuffer', 'document', 'json', 'text', 'stream'
+	const https = require('https');
 
 	return async (options, cb) => {
 		// ----------------------------------------------------------
 		// convert axios input arguments to request module input arguments
 		// ----------------------------------------------------------
+		let agentOptions = {};
 
 		// convert `body` -> `data`
 		if (options && options.body) {
@@ -51,6 +53,40 @@ module.exports = function (axios) {
 		// let grpc responses remain binary
 		if (options && options.json === false) {
 			options.responseType = ARRAY_BUFFER_TYPE;
+		}
+
+		//------------------------------------------------------------
+		// convert request style tls options to axios style
+		//------------------------------------------------------------
+		if (typeof options.rejectUnauthorized === 'boolean') {
+			agentOptions.rejectUnauthorized = options.rejectUnauthorized;
+		}
+		if (typeof options.requestCert === 'boolean') {
+			agentOptions.requestCert = options.requestCert;
+		}
+		if (typeof options.cert === 'string') {
+			agentOptions.cert = options.cert;
+		}
+		if (typeof options.key === 'string') {
+			agentOptions.key = options.key;
+		}
+		if (typeof options.ca === 'string') {
+			agentOptions.ca = options.ca;
+		}
+		if (typeof options.keepAlive === 'boolean') {
+			agentOptions.keepAlive = options.keepAlive;
+		}
+		if (typeof options.pfx === 'string') {
+			agentOptions.pfx = options.pfx;
+		}
+		if (typeof options.passphrase === 'string') {
+			agentOptions.passphrase = options.passphrase;
+		}
+		if (typeof options.secureOptions === 'number') {
+			agentOptions.secureOptions = options.secureOptions;
+		}
+		if (Object.keys(agentOptions).length > 0) {					// if we need a https agent, make one
+			options.httpsAgent = new https.Agent(agentOptions);
 		}
 
 
