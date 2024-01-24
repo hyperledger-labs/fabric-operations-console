@@ -152,6 +152,11 @@ class OSNJoin extends Component {
 					extra_consenter_data: nodes_arr,
 					tx_id: tx_id,
 				});
+
+				// then reload them to force cache update
+				await ConfigBlockApi.getAll({ cache: 'skip' });
+				await ConfigBlockApi.getAll({ cache: 'skip', visibility: 'all' });		// do both types
+
 				return apiResp;
 			} else {
 				return null;

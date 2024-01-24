@@ -64,6 +64,11 @@ class ConfigBlockApi {
 	static async archive(tx_id) {
 		return await RestApi.put('/api/v3/configblocks/' + tx_id);
 	}
+
+	// remove OS from config block metadata
+	static async unarchive(tx_id, leaving_cluster_id) {
+		return await RestApi.patch('/api/v3/configblocks/' + tx_id, /*{ leaving_cluster_id: leaving_cluster_id }*/);
+	}
 }
 
 export default ConfigBlockApi;

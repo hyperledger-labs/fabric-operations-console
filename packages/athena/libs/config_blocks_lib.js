@@ -235,7 +235,7 @@ module.exports = function (logger, ev, t) {
 					return cb({ statusCode: error_code, msg: 'config-block by this tx id does not exist. tx id: "' + req.params.tx_id + '"' });
 				} else {
 					logger.error('[config block] error trying to find block doc to archive it:', error_code, err_getBlockDoc);
-					return cb({ statusCode: error_code, msg: 'problem getting the config-block doc for deletion. tx id: "' + req.params.tx_id + '"' });
+					return cb({ statusCode: error_code, msg: 'problem getting the config-block doc for status change. tx id: "' + req.params.tx_id + '"' });
 				}
 			} else {
 				// create a notification
@@ -259,7 +259,65 @@ module.exports = function (logger, ev, t) {
 					logger.error('[config block] error trying to archive config block doc:', error_code, err_writeDoc);
 					return cb({ statusCode: error_code, msg: 'problem archiving the config-block doc. tx id: "' + req.params.tx_id + '"' });
 				} else {
-					logger.error('[config block] success, created block. tx_id: ' + req.params.tx_id);
+					logger.error('[config block] success, edited block. tx_id: ' + req.params.tx_id);
+					return cb(null, format_response(wroteDoc));
+				}
+			});
+		}
+	};
+
+	//--------------------------------------------------
+	// UnArchive the config block doc (changes visibility to "inbox")
+	//--------------------------------------------------
+	exports.unarchiveBlockDoc = (req, cb) => {
+		logger.info('[config block] attempting to unarchive a block doc:', req.params.tx_id);
+
+		// ----- Get the doc first ----- //
+		const get_opts = {
+			db_name: ev.DB_COMPONENTS,
+			_id: req.params.tx_id,
+			SKIP_CACHE: true
+		};
+		t.otcc.getDoc(get_opts, (err_getBlockDoc, block_doc) => {
+			if (err_getBlockDoc) {
+				const error_code = t.ot_misc.get_code(err_getBlockDoc);
+				if (error_code === 404) {
+					logger.warn('[config block] block doc (to unarchive) does not exist:', error_code);
+					return cb({ statusCode: error_code, msg: 'config-block by this tx id does not exist. tx id: "' + req.params.tx_id + '"' });
+				} else {
+					logger.error('[config block] error trying to find block doc to unarchive it:', error_code, err_getBlockDoc);
+					return cb({ statusCode: error_code, msg: 'problem getting the config-block doc for status change. tx id: "' + req.params.tx_id + '"' });
+				}
+			} else {
+				update_doc(block_doc, (del_err, del_resp) => {
+					return cb(del_err, del_resp);
+				});
+			}
+		});
+
+		// change visibility of the local doc in our db to "inbox"
+		function update_doc(config_block_doc, loc_cb) {
+			// if a cluster is leaving, update the doc metadata
+			/*if (req.body.leaving_cluster_id) {
+				for (let i in config_block_doc.extra_consenter_data) {
+					if (config_block_doc.extra_consenter_data[i]._cluster_id === req.body.leaving_cluster_id) {
+						config_block_doc.extra_consenter_data.splice(i, i);
+						break;
+					}
+				}
+			}*/
+
+			// change visibility of the local doc in our db to "inbox"
+			config_block_doc.visibility = ev.STR.TX_INBOX;
+			config_block_doc.archived_ts = null;
+
+			t.otcc.writeDoc({ db_name: ev.DB_COMPONENTS }, config_block_doc, (err_writeDoc, wroteDoc) => {
+				if (err_writeDoc) {
+					const error_code = t.ot_misc.get_code(err_writeDoc);
+					logger.error('[config block] error trying to unarchive config block doc:', error_code, err_writeDoc);
+					return cb({ statusCode: error_code, msg: 'problem reversing archive status of the config-block doc. tx id: "' + req.params.tx_id + '"' });
+				} else {
+					logger.error('[config block] success, edited block. tx_id: ' + req.params.tx_id);
 					return cb(null, format_response(wroteDoc));
 				}
 			});

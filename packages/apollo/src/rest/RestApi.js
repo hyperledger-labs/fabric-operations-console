@@ -195,6 +195,10 @@ class RestApi {
 		return this.httpSendOld(url, 'PUT', body, headers);
 	}
 
+	static async patch(url, body, headers) {
+		return this.httpSendOld(url, 'PATCH', body, headers);
+	}
+
 	static async delete(url, body, headers) {
 		return this.httpSendOld(url, 'DELETE', body, headers);
 	}
