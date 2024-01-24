@@ -37,6 +37,7 @@ import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import SVGs from '../Svgs/Svgs';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
+import ActionsHelper from '../../utils/actionsHelper';
 
 const naturalSort = require('javascript-natural-sort');
 const SCOPE = 'chaincodeModal';
@@ -313,7 +314,7 @@ export class ChaincodeModal extends React.Component {
 												this.props.translate('pending_approval')
 											)}
 										</td>
-										<td>
+										{(ActionsHelper.canManageComponent(this.props.userInfo, this.props.feature_flags)) && (<td>
 											{!!identities.length && (
 												<button
 													id={'update-approval-' + org.msp_id}
@@ -334,7 +335,7 @@ export class ChaincodeModal extends React.Component {
 													{this.props.translate(org.signature ? 'update_proposal' : 'begin_approve')}
 												</button>
 											)}
-										</td>
+										</td>)}
 									</tr>
 								);
 							})}
@@ -1164,6 +1165,8 @@ export default connect(
 		newProps['configtxlator_url'] = state['settings']['configtxlator_url'];
 		newProps['host_url'] = state['settings'] ? state['settings']['host_url'] : null;
 		newProps['signature_requests'] = state['signatureCollection'] ? state['signatureCollection']['requests'] : null;
+		newProps['userInfo'] = state['userInfo'] ? state['userInfo'] : null;
+		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;
 		return newProps;
 	},
 	{
