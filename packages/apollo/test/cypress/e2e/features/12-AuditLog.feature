@@ -193,6 +193,7 @@ Feature: Verify Audit Log functionality works as expected
 	Then I should see audit log row with text 'removing fabric-ca "ca_import"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'DELETE:/api/v2/components/ca_import' and id 'audit-logs-api_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+	Then I reload the page
 	# deleting fabric-peer "peer_import" =- DELETE:/api/v2/components/peer_import
 	When I provided 'removing fabric-peer "peer_import"' for input field with id "1"
 	Then I should see audit log row with text 'removing fabric-peer "peer_import"' and id 'audit-logs-log_title-0'
@@ -203,6 +204,7 @@ Feature: Verify Audit Log functionality works as expected
 	Then I should see audit log row with text 'removing fabric-ca "org1ca"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	#delete peerOrg1
+	Then I reload the page
 	When I provided 'removing fabric-peer "peerorg1"' for input field with id "1"
 	Then I should see audit log row with text 'removing fabric-peer "peerorg1"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
