@@ -48,15 +48,16 @@ tools.root_misc = require('../libs/root_misc.js')(logger);
 tools.misc = require('../libs/misc.js')(logger, tools);
 tools.ot_misc = require('../libs/ot_misc.js')(logger, tools);
 
-
 const opts = {
 	method: 'GET',
 	uri: 'http://localhost:3000/api/v3/settings',
+	body: { 'this': 'should remain' },
 };
 tools.misc.retry_req(opts, (err, resp) => {
 	console.log('returned to code');
 	let response = resp ? resp.body : null;
 	let code = tools.ot_misc.get_code(resp);
+	console.log('body after:', opts.body);
 
 	if (err) {
 		console.log('comm error', err);
