@@ -369,7 +369,7 @@ module.exports = function (logger, ev, t) {
 				key_src: key_src,
 				cached_ts: Date.now(),								// remember when we stored it
 			};
-			t.proxy_cache.set(key, data2cache, 2 * 60);				// expiration is in sec
+			t.proxy_cache.set(key, data2cache, 90);				// expiration is in sec
 		}
 	};
 
