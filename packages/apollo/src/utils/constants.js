@@ -85,3 +85,6 @@ export const STEP_FAILED = 'step-error';
 export const AUTH_COUCHDB = 'couchdb';
 export const AUTH_OAUTH = 'oauth';
 export const AUTH_IAM = 'iam';
+
+export const DEPLOYING = 'deploy';
+export const IMPORTING = 'import';

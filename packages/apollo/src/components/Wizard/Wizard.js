@@ -310,6 +310,9 @@ class Wizard extends Component {
 							})}
 						</div>
 					)}
+					{total === 1 && (
+						<div className="ibp-wizard-step">&nbsp;</div>
+					)}
 					{!!this.props.title && <h1 className="ibp-wizard-title">{translate(this.props.title)}</h1>}
 					<FocusComponent setFocus={this.props.setFocus}>{this.renderChildren(translate)}</FocusComponent>
 

@@ -24,7 +24,7 @@ import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import { CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';
 import IdentityApi from '../../rest/IdentityApi';
-import { isCreatedComponentLocation, NodeRestApi } from '../../rest/NodeRestApi';
+import { NodeRestApi } from '../../rest/NodeRestApi';
 import ActionsHelper from '../../utils/actionsHelper';
 import Helper from '../../utils/helper';
 import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
@@ -38,6 +38,7 @@ import TranslateLink from '../TranslateLink/TranslateLink';
 import UsageForm from '../UsageForm/UsageForm';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
+import * as constants from '../../utils/constants';
 
 const SCOPE = 'importCAModal';
 const Log = new Logger(SCOPE);
@@ -49,7 +50,6 @@ class ImportCAModal extends React.Component {
 			data: [],
 			disableSubmit: true,
 			loading: false,
-			location: this.getInitialLocation(),
 			admin_id: null,
 			admin_secret: null,
 			enroll_id: null,
@@ -90,20 +90,14 @@ class ImportCAModal extends React.Component {
 			editedConfigOverride: null,
 			display_name: null,
 			version: null,
+
+			// default to selecting the deploying component option (if the user has that perm), else default select the import component option
+			add_type: ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) ? constants.DEPLOYING : constants.IMPORTING,
 		});
 		this.calculateUsageTotals(usageDefaults);
 		if (!this.props.feature_flags.import_only_enabled) {
 			this.getVersions();
 		}
-	}
-
-	getInitialLocation() {
-		// check if import only is enabled first so we don't try to show any saas options to add
-		if (this.props.feature_flags.import_only_enabled) {
-			return Helper.getSupportedCAs()[0];
-		}
-
-		return this.props.feature_flags.saas_enabled ? 'ibm_saas' : Helper.getSupportedCAs()[0];
 	}
 
 	getVersions() {
@@ -157,7 +151,7 @@ class ImportCAModal extends React.Component {
 	};
 
 	async onSubmit() {
-		if (!isCreatedComponentLocation(this.props.location)) {
+		if (this.props.add_type !== constants.DEPLOYING) {
 			return this.onImportSubmit();
 		}
 		return this.onCreateSubmit();
@@ -223,15 +217,9 @@ class ImportCAModal extends React.Component {
 
 	async onImportSubmit() {
 		const prefix = 'Importing CA:';
-		const cas_with_location = this.props.data.map(ca => {
-			return {
-				...ca,
-				location: ca.location || this.props.location,
-			};
-		});
 		let imported_cas;
 		try {
-			imported_cas = await CertificateAuthorityRestApi.importCA(cas_with_location);
+			imported_cas = await CertificateAuthorityRestApi.importCA(this.props.data);
 		} catch (error) {
 			Log.error(`${prefix} failed: ${error}`);
 			throw error;
@@ -242,11 +230,13 @@ class ImportCAModal extends React.Component {
 		this.onComplete(imported_cas);
 	}
 
+	// render the correct next step based on the add CA type they selected
 	renderCAInformation(translate) {
-		if (this.props.location !== 'ibm_saas') {
-			return this.renderImportCAInformation(translate);
+		if (this.props.add_type === constants.DEPLOYING) {
+			return this.renderCreateCAInformation(translate);
+		} else if (this.props.add_type === constants.IMPORTING) {
+			return this.renderImportFileUpload(translate);
 		}
-		return this.renderCreateCAInformation(translate);
 	}
 
 	renderAdvancedCheckboxes(translate) {
@@ -452,8 +442,7 @@ class ImportCAModal extends React.Component {
 		);
 	}
 
-	renderImportCAInformation(translate) {
-		const supported_cas = Helper.getSupportedCAs();
+	renderImportFileUpload(translate) {
 		return (
 			<WizardStep type="WizardStep"
 				disableSubmit={this.props.disableSubmit}
@@ -550,71 +539,47 @@ class ImportCAModal extends React.Component {
 					singleInput={true}
 					fileUploadTooltip="import_ca_file_tooltip"
 				/>
-				{supported_cas.length > 1 && this.props.data && this.props.data.length > 0 && !this.props.data[0].location && (
-					<Form
-						scope={SCOPE}
-						id={SCOPE + '-location'}
-						fields={[
-							{
-								name: 'location',
-								type: 'dropdown',
-								tooltip: 'import_ca_location_tooltip',
-								options: supported_cas,
-								translateOptions: true,
-								required: true,
-								label: 'import_ca_location',
-							},
-						]}
-					/>
-				)}
 			</WizardStep>
 		);
 	}
 
-	caLocationChange = location => {
-		this.props.updateState(SCOPE, {
-			location,
-		});
-	};
-
-	renderCAType(translate) {
-		const supported_cas = Helper.getSupportedCAs();
-		if (!this.props.feature_flags.saas_enabled && supported_cas.length === 1) {
-			return;
-		}
+	// render the choose between importing an already running CA or deploying a new CA
+	renderChooseAddType(translate) {
 		return (
 			<WizardStep type="WizardStep"
 				title="add_ca"
-				disableSubmit={!this.props.location}
+				disableSubmit={!this.props.add_type}
 			>
 				<p className="ibp-modal-desc">{translate('import_ca_desc')}</p>
 				<TileGroup
-					name="ca_locations"
+					name="add_type"
 					className="ibp-ca-locations"
-					onChange={this.caLocationChange}
-					valueSelected={this.props.location}
+					onChange={(add_type) => {
+						this.props.updateState(SCOPE, {
+							add_type,
+						});
+					}}
+					valueSelected={this.props.add_type}
 					legend={translate('select_ca_type')}
 				>
-					{this.props.feature_flags.saas_enabled && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) && (
-						<RadioTile value="ibm_saas"
-							id="ibm_saas"
-							name="ca_location"
-							className="ibp-ca-location"
-						>
-							<p>{translate('create_ca')}</p>
-							<Add20 className="ibp-fill-color ibp-import-node-add-icon" />
-						</RadioTile>
-					)}
-					{ActionsHelper.canImportComponent(this.props.userInfo, this.props.feature_flags) && (
-						<RadioTile value={supported_cas[0]}
-							id={supported_cas[0]}
-							name="ca_location"
-							className="ibp-ca-location"
-						>
-							<p>{translate('import_ca')}</p>
-							<Upload20 className="ibp-fill-color ibp-import-node-add-icon" />
-						</RadioTile>
-					)}
+					<RadioTile value={constants.DEPLOYING}
+						id="deploy-id"
+						className="ibp-ca-location"
+						disabled={!ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)}
+					>
+						<p>{translate('create_ca')}</p>
+						<Add20 className="ibp-fill-color ibp-import-node-add-icon" />
+					</RadioTile>
+
+					<RadioTile value={constants.IMPORTING}
+						id="import-id"
+						className="ibp-ca-location"
+						disabled={!ActionsHelper.canImportComponent(this.props.userInfo, this.props.feature_flags)}
+					>
+						<p>{translate('import_ca')}</p>
+						<Upload20 className="ibp-fill-color ibp-import-node-add-icon" />
+					</RadioTile>
+
 				</TileGroup>
 			</WizardStep>
 		);
@@ -636,13 +601,13 @@ class ImportCAModal extends React.Component {
 	}
 
 	renderSummary(translate) {
-		if (this.props.location !== 'ibm_saas') {
+		if (this.props.add_type !== constants.DEPLOYING) {
 			return;
 		}
 		let default_cpu = this.props.usage_total_cpu;
 		let default_memory = this.props.usage_total_memory;
 		let default_storage = this.props.usage_total_storage;
-		if (this.props.advanced_ca_config.resource_allocation) {
+		if (this.props.advanced_ca_config && this.props.advanced_ca_config.resource_allocation) {
 			const usageDefaults = UsageForm.getUsageDefaults();
 			if (Number(this.props.usage.ca.cpu) !== Number(usageDefaults.ca.cpu)) {
 				default_cpu = undefined;
@@ -798,7 +763,7 @@ class ImportCAModal extends React.Component {
 	}
 
 	renderUsage(translate) {
-		if (this.props.location !== 'ibm_saas') {
+		if (this.props.add_type !== constants.DEPLOYING) {
 			return;
 		}
 		if (this.props.clusterType === 'free') {
@@ -828,7 +793,7 @@ class ImportCAModal extends React.Component {
 
 	getSubmitButtonLabel() {
 		let label = 'add_ca';
-		if (this.props.location === 'ibm_saas' && this.props.clusterType !== 'free') {
+		if (this.props.add_type === constants.DEPLOYING && this.props.clusterType !== 'free') {
 			label = label + '_cost';
 		}
 		return label;
@@ -930,13 +895,13 @@ class ImportCAModal extends React.Component {
 	};
 
 	renderDatabase(translate) {
-		if (this.props.location !== 'ibm_saas') {
+		if (this.props.add_type !== constants.DEPLOYING) {
 			return;
 		}
 		if (this.props.clusterType === 'free') {
 			return;
 		}
-		if (!this.props.advanced_ca_config.database) {
+		if (!this.props.advanced_ca_config && !this.props.advanced_ca_config.database) {
 			return;
 		}
 		if (!this.props.feature_flags.high_availability) {
@@ -1037,13 +1002,13 @@ class ImportCAModal extends React.Component {
 	}
 
 	renderZones(translate) {
-		if (this.props.location !== 'ibm_saas') {
+		if (this.props.add_type !== constants.DEPLOYING) {
 			return;
 		}
 		if (this.props.clusterType === 'free') {
 			return;
 		}
-		if (!this.props.advanced_ca_config.zone) {
+		if (!this.props.advanced_ca_config && !this.props.advanced_ca_config.zone) {
 			return;
 		}
 		if (!this.props.feature_flags.high_availability) {
@@ -1058,7 +1023,7 @@ class ImportCAModal extends React.Component {
 					id: `${zone}`,
 					label: zone,
 				};
-			  })
+			})
 			: [];
 		zones.unshift({
 			id: 'default',
@@ -1122,13 +1087,13 @@ class ImportCAModal extends React.Component {
 	}
 
 	renderHSM(translate) {
-		if (this.props.location !== 'ibm_saas') {
+		if (this.props.add_type !== constants.DEPLOYING) {
 			return;
 		}
 		if (this.props.clusterType === 'free') {
 			return;
 		}
-		if (!this.props.advanced_ca_config.hsm) {
+		if (!this.props.advanced_ca_config && !this.props.advanced_ca_config.hsm) {
 			return;
 		}
 		return (
@@ -1171,7 +1136,7 @@ class ImportCAModal extends React.Component {
 				onSubmit={() => this.onSubmit()}
 				submitButtonLabel={translate(this.getSubmitButtonLabel())}
 			>
-				{this.renderCAType(translate)}
+				{this.renderChooseAddType(translate)}
 				{this.renderCAInformation(translate)}
 				{this.renderDatabase(translate)}
 				{this.renderZones(translate)}
@@ -1187,7 +1152,6 @@ const dataProps = {
 	data: PropTypes.array,
 	disableSubmit: PropTypes.bool,
 	loading: PropTypes.bool,
-	location: PropTypes.string,
 	admin_id: PropTypes.string,
 	admin_secret: PropTypes.string,
 	advancedValid: PropTypes.bool,
@@ -1221,6 +1185,7 @@ const dataProps = {
 	editedConfigOverride: PropTypes.object,
 	versions: PropTypes.array,
 	version: PropTypes.object,
+	add_type: PropTypes.string,
 };
 
 ImportCAModal.propTypes = {
