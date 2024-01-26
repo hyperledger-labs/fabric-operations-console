@@ -26,7 +26,8 @@ const ActionsHelper = {
 	// return true if the user has the right role to create a component (ca/peer/orderer)
 	canCreateComponent(user, feature_flags) {
 		const in_read_only_mode = feature_flags ? feature_flags.read_only_enabled : false;
-		return ActionsHelper._actionCheck(user, constants.ACTION_COMPONENT_CREATE) && !in_read_only_mode;
+		const import_only_enabled = feature_flags ? feature_flags.import_only_enabled : false;
+		return ActionsHelper._actionCheck(user, constants.ACTION_COMPONENT_CREATE) && !in_read_only_mode && !import_only_enabled;
 	},
 
 	// return true if the user has the right role to manage fabric nouns (ca identities/config blocks/channels)

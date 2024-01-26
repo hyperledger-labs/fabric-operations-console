@@ -86,6 +86,11 @@ fieldset.ibp-peer-locations {
 			background-color: $itemHover;
 		}
 
+		&.bx--tile--disabled{
+			background: transparent;
+			color: #555;
+		}
+
 		.ibp-import-node-add-icon {
 			bottom: 1rem;
 			position: absolute;
