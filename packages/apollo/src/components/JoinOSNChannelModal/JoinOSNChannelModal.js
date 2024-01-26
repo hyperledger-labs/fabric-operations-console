@@ -254,8 +254,8 @@ class JoinOSNChannelModal extends React.Component {
 		let link = document.getElementById('ibp-download-genesis-link2');
 		if (link) {
 			const d = new Date();
-			const dateStr = d.toLocaleDateString().split('/').join('-') + '-' + d.toLocaleTimeString().replace(/[:\s]/g, '');
-			let name = 'IBP_' + channel_name + '_genesis_' + dateStr + '.json';
+			const dateStr = d.toLocaleDateString().replace(/[/_]/g, '-') + '-' + d.toLocaleTimeString().replace(/[:\sAPM]/g, '');
+			let name = 'FOC.' + channel_name + '_genesis_' + dateStr + '.json';
 			const blob = new Blob([JSON.stringify(block, null, '\t')], { type: 'text/plain' });
 			let url = URL.createObjectURL(blob);
 			link.setAttribute('href', url);
