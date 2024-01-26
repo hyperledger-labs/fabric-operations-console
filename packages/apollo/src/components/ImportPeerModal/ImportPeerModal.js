@@ -25,7 +25,7 @@ import { showError, updateState } from '../../redux/commonActions';
 import { CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';
 import IdentityApi from '../../rest/IdentityApi';
 import { MspRestApi } from '../../rest/MspRestApi';
-import { isCreatedComponentLocation, NodeRestApi } from '../../rest/NodeRestApi';
+import { NodeRestApi } from '../../rest/NodeRestApi';
 import { PeerRestApi } from '../../rest/PeerRestApi';
 import ActionsHelper from '../../utils/actionsHelper';
 import Helper from '../../utils/helper';
@@ -41,10 +41,14 @@ import TranslateLink from '../TranslateLink/TranslateLink';
 import UsageForm from '../UsageForm/UsageForm';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
+import * as constants from '../../utils/constants';
 
 const SCOPE = 'importPeerModal';
 const Log = new Logger(SCOPE);
 const semver = require('semver');
+
+// dsh todo remove saas_enabled feature flag?
+
 
 class ImportPeerModal extends React.Component {
 	componentDidMount() {
@@ -53,7 +57,6 @@ class ImportPeerModal extends React.Component {
 			loading: true,
 			identity: null,
 			identityValid: false,
-			location: this.getInitialLocation(),
 			cas: [],
 			msps: [],
 			users: [],
@@ -88,6 +91,9 @@ class ImportPeerModal extends React.Component {
 			editedConfigOverride: null,
 			version: null,
 			breaking_version: false,
+
+			// default to selecting the deploying component option (if the user has that perm), else default select the import component option
+			add_type: ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) ? constants.DEPLOYING : constants.IMPORTING,
 		});
 		this.getCAWithUsers();
 		if (!this.props.feature_flags.import_only_enabled) {
@@ -128,15 +134,6 @@ class ImportPeerModal extends React.Component {
 				valid: true,
 			},
 		};
-	}
-
-	getInitialLocation() {
-		// check if import only is enabled first so we don't try to show any saas options to add
-		if (this.props.feature_flags.import_only_enabled) {
-			return Helper.getSupportedPeers()[0];
-		}
-
-		return this.props.feature_flags.saas_enabled ? 'ibm_saas' : Helper.getSupportedPeers()[0];
 	}
 
 	getVersions() {
@@ -346,10 +343,10 @@ class ImportPeerModal extends React.Component {
 	}
 
 	async onSubmit() {
-		if (isCreatedComponentLocation(this.props.location)) {
-			return this.onCreateSubmit();
+		if (this.props.add_type !== constants.DEPLOYING) {
+			return this.onImportSubmit();
 		}
-		return this.onImportSubmit();
+		return this.onCreateSubmit();
 	}
 
 	getCreateData() {
@@ -426,11 +423,6 @@ class ImportPeerModal extends React.Component {
 
 	onImportSubmit() {
 		return new Promise((resolve, reject) => {
-			this.props.data.forEach(peer => {
-				if (!peer.location) {
-					peer.location = this.props.location;
-				}
-			});
 			PeerRestApi.importPeer(this.props.data)
 				.then(new_peers => {
 					this.props.onComplete(new_peers);
@@ -446,51 +438,44 @@ class ImportPeerModal extends React.Component {
 		});
 	}
 
-	peerLocationChange = location => {
-		this.props.updateState(SCOPE, {
-			location,
-		});
-	};
-
-	renderChooseLocation(translate) {
-		const supported_peers = Helper.getSupportedPeers();
-		if (!this.props.feature_flags.saas_enabled && supported_peers.length === 1) {
-			return;
-		}
+	// render the choose between importing an already running peer or deploying a new peer
+	renderChooseAddType(translate) {
 		return (
 			<WizardStep type="WizardStep"
 				title="import_peer_config"
-				disableSubmit={!this.props.location}
+				disableSubmit={!this.props.add_type}
 			>
 				<p className="ibp-modal-desc">{translate('import_peer_desc_1')}</p>
 				<p className="ibp-modal-desc">{translate('import_peer_desc_2')}</p>
 				<TileGroup
-					name="peer_locations"
+					name="add_type"
 					className="ibp-peer-locations"
-					onChange={this.peerLocationChange}
-					valueSelected={this.props.location}
+					onChange={(add_type) => {
+						this.props.updateState(SCOPE, {
+							add_type,
+						});
+					}}
+					valueSelected={this.props.add_type}
 					legend={translate('select_peer_type')}
 				>
-					{this.props.feature_flags.saas_enabled && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) && (
-						<RadioTile value="ibm_saas"
-							id="ibm_saas"
-							name="peer_location"
-							className="ibp-peer-location"
-						>
-							<p>{translate('create_peer')}</p>
-							<Add20 className="ibp-fill-color ibp-import-node-add-icon" />
-						</RadioTile>
-					)}
-					{ActionsHelper.canImportComponent(this.props.userInfo, this.props.feature_flags) && (
-						<RadioTile value={supported_peers[0]}
-							id={supported_peers[0]}
-							name="peer_location"
-							className="ibp-peer-location"
-						>
-							<p>{translate('import_peer')}</p>
-							<Upload20 className="ibp-fill-color ibp-import-node-add-icon" />
-						</RadioTile>
-					)}
+					<RadioTile value={constants.DEPLOYING}
+						id="deploy-id"
+						className="ibp-peer-location"
+						disabled={!ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)}
+					>
+						<p>{translate('create_peer')}</p>
+						<Add20 className="ibp-fill-color ibp-import-node-add-icon" />
+					</RadioTile>
+
+					<RadioTile value={constants.IMPORTING}
+						id="import-id"
+						className="ibp-peer-location"
+						disabled={!ActionsHelper.canImportComponent(this.props.userInfo, this.props.feature_flags)}
+					>
+						<p>{translate('import_peer')}</p>
+						<Upload20 className="ibp-fill-color ibp-import-node-add-icon" />
+					</RadioTile>
+
 				</TileGroup>
 				{this.props.joinChannel && <SidePanelWarning title="please_note"
 					subtitle="join_requires_peer"
@@ -501,7 +486,7 @@ class ImportPeerModal extends React.Component {
 
 	checkForRequirements = () => {
 		return new Promise((resolve, reject) => {
-			if (this.props.location === 'ibm_saas') {
+			if (this.props.add_type === constants.DEPLOYING) {
 				if (!this.props.cas.length && !this.props.third_party_ca) {
 					this.props.updateState(SCOPE, { caError: 'needCADesc' });
 				}
@@ -521,7 +506,7 @@ class ImportPeerModal extends React.Component {
 	};
 
 	renderDatabase(translate) {
-		if (this.props.location !== 'ibm_saas') {
+		if (this.props.add_type !== constants.DEPLOYING) {
 			return;
 		}
 		if (!this.props.advanced_config.database) {
@@ -568,7 +553,7 @@ class ImportPeerModal extends React.Component {
 	}
 
 	renderZones(translate) {
-		if (this.props.location !== 'ibm_saas') {
+		if (this.props.add_type !== constants.DEPLOYING) {
 			return;
 		}
 		if (!this.props.advanced_config.zone) {
@@ -757,7 +742,7 @@ class ImportPeerModal extends React.Component {
 	}
 
 	renderHSM(translate) {
-		if (this.props.location !== 'ibm_saas') {
+		if (this.props.add_type !== constants.DEPLOYING) {
 			return;
 		}
 		if (this.props.clusterType === 'free') {
@@ -804,7 +789,6 @@ class ImportPeerModal extends React.Component {
 	}
 
 	renderImportPeerInformation(translate) {
-		const supported_peers = Helper.getSupportedPeers();
 		return (
 			<div>
 				<p className="ibp-modal-desc">{translate('import_peer_json')}</p>
@@ -915,28 +899,11 @@ class ImportPeerModal extends React.Component {
 					singleInput={true}
 					fileUploadTooltip="import_peer_file_tooltip"
 				/>
-				{supported_peers.length > 1 && this.props.data && this.props.data.length > 0 && !this.props.data[0].location && (
-					<Form
-						scope={SCOPE}
-						id={SCOPE + '-location'}
-						fields={[
-							{
-								name: 'location',
-								type: 'dropdown',
-								tooltip: 'import_peer_location_tooltip',
-								options: supported_peers,
-								translateOptions: true,
-								required: true,
-								label: 'import_peer_location',
-							},
-						]}
-					/>
-				)}
 			</div>
 		);
 	}
 
-
+	// render the correct next step based on the add Peer type they selected
 	renderPeerInformation(translate) {
 		return (
 			<WizardStep type="WizardStep"
@@ -946,7 +913,7 @@ class ImportPeerModal extends React.Component {
 			>
 				{this.props.feature_flags.import_only_enabled
 					? this.renderImportPeerInformation(translate)
-					: this.props.location === 'ibm_saas' ? this.renderAddPeerInformation(translate) : this.renderImportPeerInformation(translate)
+					: this.props.add_type === constants.DEPLOYING ? this.renderAddPeerInformation(translate) : this.renderImportPeerInformation(translate)
 				}
 			</WizardStep>
 		);
@@ -960,7 +927,7 @@ class ImportPeerModal extends React.Component {
 	};
 
 	renderAssociatePeer(translate) {
-		if (this.props.location !== 'ibm_saas') {
+		if (this.props.add_type !== constants.DEPLOYING) {
 			return;
 		}
 		return (
@@ -1139,7 +1106,7 @@ class ImportPeerModal extends React.Component {
 	}
 
 	renderSaasCA(translate) {
-		if (this.props.location !== 'ibm_saas') {
+		if (this.props.add_type !== constants.DEPLOYING) {
 			return;
 		}
 		if (this.props.third_party_ca) {
@@ -1238,7 +1205,7 @@ class ImportPeerModal extends React.Component {
 	}
 
 	renderTLSThirdPartyCA(translate) {
-		if (this.props.location !== 'ibm_saas') {
+		if (this.props.add_type !== constants.DEPLOYING) {
 			return;
 		}
 		if (!this.props.third_party_ca) {
@@ -1306,7 +1273,7 @@ class ImportPeerModal extends React.Component {
 	}
 
 	renderSaasSummary(translate) {
-		if (this.props.location !== 'ibm_saas') {
+		if (this.props.add_type !== constants.DEPLOYING) {
 			return;
 		}
 		let default_cpu = this.props.usage_total_cpu;
@@ -1534,7 +1501,7 @@ class ImportPeerModal extends React.Component {
 	}
 
 	renderUsage(translate) {
-		if (this.props.location !== 'ibm_saas') {
+		if (this.props.add_type !== constants.DEPLOYING) {
 			return;
 		}
 		if (this.props.clusterType !== 'paid') {
@@ -1571,7 +1538,7 @@ class ImportPeerModal extends React.Component {
 
 	getSubmitButtonLabel() {
 		let label = 'add_peer';
-		if (this.props.location === 'ibm_saas' && this.props.clusterType === 'paid') {
+		if (this.props.add_type === constants.DEPLOYING && this.props.clusterType === 'paid') {
 			label = label + '_cost';
 		}
 		return label;
@@ -1595,7 +1562,7 @@ class ImportPeerModal extends React.Component {
 				onSubmit={() => this.onSubmit()}
 				submitButtonLabel={translate(this.getSubmitButtonLabel())}
 			>
-				{this.renderChooseLocation(translate)}
+				{this.renderChooseAddType(translate)}
 				{this.renderPeerInformation(translate)}
 				{this.renderDatabase(translate)}
 				{this.renderZones(translate)}
@@ -1614,7 +1581,6 @@ const dataProps = {
 	data: PropTypes.array,
 	dataValid: PropTypes.bool,
 	loading: PropTypes.bool,
-	location: PropTypes.string,
 	step: PropTypes.number,
 	identity: PropTypes.object,
 	identityValid: PropTypes.bool,
@@ -1653,6 +1619,7 @@ const dataProps = {
 	versions: PropTypes.array,
 	version: PropTypes.object,
 	breaking_version: PropTypes.bool,
+	add_type: PropTypes.string,
 };
 
 ImportPeerModal.propTypes = {
