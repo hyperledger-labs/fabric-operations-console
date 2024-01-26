@@ -346,7 +346,9 @@ const Helper = {
 						document.querySelector('.side__panel--outer--container') || document.querySelector('.vertical__panel--outer--container') || document.body;
 					let link = document.createElement('a');
 					if (link.download !== undefined) {
-						let zipName = 'IBP_' + new Date().toLocaleDateString() + '_' + new Date().toLocaleTimeString() + '.zip';
+						const d = new Date();
+						const dateStr = d.toLocaleDateString().replace(/[/_]/g, '-') + '-' + d.toLocaleTimeString().replace(/[:\sAPM]/g, '');
+						let zipName = 'FOC.' + dateStr + '.zip';
 						let url = URL.createObjectURL(blob);
 						link.setAttribute('href', url);
 						link.setAttribute('download', zipName);
