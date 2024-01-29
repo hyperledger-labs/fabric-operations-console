@@ -51,7 +51,6 @@
 	"git.enableSmartCommit": true,
 	"workbench.editor.enablePreview": false,
 	"workbench.statusBar.visible": true,
-	"workbench.activityBar.visible": true,
 	"html.format.wrapLineLength": 170,
 	"telemetry.enableTelemetry": false,
 	"typescript.validate.enable": true,
@@ -85,5 +84,6 @@
 		"blockchainTerms"
 	],
 	"diffEditor.ignoreTrimWhitespace": false,
-	"search.useIgnoreFiles": false
+	"search.useIgnoreFiles": false,
+	"git.alwaysSignOff": true
 }
