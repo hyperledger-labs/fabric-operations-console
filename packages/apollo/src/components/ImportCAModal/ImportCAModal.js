@@ -901,7 +901,7 @@ class ImportCAModal extends React.Component {
 		if (this.props.clusterType === 'free') {
 			return;
 		}
-		if (!this.props.advanced_ca_config && !this.props.advanced_ca_config.database) {
+		if (!this.props.advanced_ca_config || !this.props.advanced_ca_config.database) {
 			return;
 		}
 		if (!this.props.feature_flags.high_availability) {
@@ -1008,7 +1008,7 @@ class ImportCAModal extends React.Component {
 		if (this.props.clusterType === 'free') {
 			return;
 		}
-		if (!this.props.advanced_ca_config && !this.props.advanced_ca_config.zone) {
+		if (!this.props.advanced_ca_config || !this.props.advanced_ca_config.zone) {
 			return;
 		}
 		if (!this.props.feature_flags.high_availability) {
@@ -1093,7 +1093,7 @@ class ImportCAModal extends React.Component {
 		if (this.props.clusterType === 'free') {
 			return;
 		}
-		if (!this.props.advanced_ca_config && !this.props.advanced_ca_config.hsm) {
+		if (!this.props.advanced_ca_config || !this.props.advanced_ca_config.hsm) {
 			return;
 		}
 		return (
