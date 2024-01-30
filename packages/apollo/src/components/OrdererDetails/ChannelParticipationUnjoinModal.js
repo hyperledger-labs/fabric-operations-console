@@ -31,6 +31,7 @@ import { OrdererRestApi } from '../../rest/OrdererRestApi';
 import { NodeRestApi } from '../../rest/NodeRestApi';
 import ImportantBox from '../ImportantBox/ImportantBox';
 import ConfigBlockApi from '../../rest/ConfigBlockApi';
+import { EventsRestApi } from '../../rest/EventsRestApi';
 
 const SCOPE = 'ChannelParticipationUnjoinModal';
 
@@ -80,8 +81,10 @@ class ChannelParticipationUnjoinModal extends Component {
 				// TODO: consolidate error handling
 				// cannot remove: system channel exists
 				// cannot remove: channel does not exist
+				let errorStatus = '';
 				if (_.get(unjoinResp, 'error') !== undefined) {
 					this.props.updateState(SCOPE, { error: unjoinResp.error });
+					errorStatus = 'error';
 				} else {
 
 					// update the orderer as systemless
@@ -136,6 +139,7 @@ class ChannelParticipationUnjoinModal extends Component {
 					this.props.onComplete();
 					this.props.onClose();
 				}
+				EventsRestApi.sendUnJoinChannelEvent(this.props.channelInfo.name, this.props.myNodeList, errorStatus);
 			});
 		} catch (e) {
 			//error
