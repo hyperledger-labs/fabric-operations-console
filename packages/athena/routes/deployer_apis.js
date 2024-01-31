@@ -293,8 +293,17 @@ module.exports = (logger, ev, t) => {
 	// Proxy mustgather file download through to deployer
 	//--------------------------------------------------
 	app.get('/deployer/api/v3/instance/:siid/mustgather/download', t.middleware.verify_create_action_session, (req, res) => {
-		const downloadUrl = `${encodeURI(t.misc.format_url(ev.DEPLOYER_URL))}/api/v3/instance/${req.params.siid}/mustgather/download`;
-		t.request.get(downloadUrl).pipe(res);
+		req.originalUrl = `/proxy/${encodeURI(t.misc.format_url(ev.DEPLOYER_URL))}/api/v3/instance/${req.params.siid}/mustgather/download`;
+		t.proxy_lib.proxy_call(req, (ret) => {
+			if (ret.headers) {
+				res.set(ret.headers);
+			}
+			if (!ret.response) {
+				res.status(ret.statusCode).send();
+			} else {
+				res.status(ret.statusCode).send(ret.response);
+			}
+		});
 	});
 
 	//--------------------------------------------------
