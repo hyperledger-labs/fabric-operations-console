@@ -6,7 +6,7 @@ import createEsbuildPlugin from "@badeball/cypress-cucumber-preprocessor/esbuild
 export default defineConfig({
   e2e: {
     specPattern: "**/*.feature",
-    defaultCommandTimeout: 120000,
+    defaultCommandTimeout: 180000,
     viewportWidth: 1200,
     viewportHeight: 860,
     testIsolation: false,

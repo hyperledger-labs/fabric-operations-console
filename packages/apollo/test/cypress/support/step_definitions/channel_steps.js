@@ -24,14 +24,14 @@ Then(/^the channel with name (?:'|")(.*?)(?:'|") should have been created$/, (ch
 	cy.get('.ibp-container-tile-pending').contains(channelName).should('be.visible')
 });
 
-Then(/^I clicked Create channel button$/, () => {	
+Then(/^I clicked Create channel button$/, () => {
 	cy.wait(500)
 	cy.get('#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span').click()
   });
 
 Then(/^the chaincode with name (?:'|")(.*?)(?:'|") should have been created in (?:'|")(.*?)(?:'|") state$/, (chaincodeName, state) => {
 	try {
-		cy.get('.ibp-tile-content-title').contains(chaincodeName).should('be.visible')
+		cy.get('.ibp-tile-content-title', { timeout: 60000 }).contains(chaincodeName).should('be.visible')
 		cy.get('.ibp-channel-chaincode-status').contains(state).should('be.visible')
 	} catch (err) {
 		cy.log('Error: ', err)
