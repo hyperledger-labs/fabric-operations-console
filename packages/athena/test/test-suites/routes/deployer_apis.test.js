@@ -1461,15 +1461,16 @@ describe('Deployer APIs', () => {
 						{
 							itStatement: 'should return a 200 status when download is called test_id=uhhxgc',
 							callFunction: () => {
-								tools.stubs.request = sinon.stub(tools, 'request');
-								const pipe = (res) => res.status(200).send('body');
-								tools.stubs.request.get = sinon.stub().returns({ pipe });
-
+								tools.stubs.get_code.restore();
+								tools.stubs.retry_req.callsArgWith(1, null, {
+									statusCode: 200,
+									body: JSON.stringify({ something: 'here' })
+								});
 							},
 							expectBlock: (res) => {
 								expect(res.status).to.equal(200);
-								expect(res.text).to.equal('body');
-								tools.stubs.request.restore();
+								expect(res.text).to.equal('{"something":"here"}');
+								tools.stubs.retry_req.restore();
 							}
 						},
 					]
