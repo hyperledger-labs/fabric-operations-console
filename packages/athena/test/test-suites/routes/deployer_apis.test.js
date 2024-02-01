@@ -1201,11 +1201,11 @@ describe('Deployer APIs', () => {
 	// -------------------------------------------------------------------------------------
 
 	const testCollection = [
-		// POST /api/saas/v2/components
+		// POST /api/v2/kubernetes/components
 		{
-			suiteDescribe: 'POST /api/saas/v2/components',
-			mainDescribe: 'Run POST /api/saas/v2/components ',
-			arrayOfRoutes: ['/api/saas/v2/components'],
+			suiteDescribe: 'POST /api/v2/kubernetes/components',
+			mainDescribe: 'Run POST /api/v2/kubernetes/components ',
+			arrayOfRoutes: ['/api/v2/kubernetes/components'],
 			executeRequest: (routeInfo, done) => {
 				chai.request(this.app)
 					.post(routeInfo.route)
@@ -1220,10 +1220,10 @@ describe('Deployer APIs', () => {
 				}
 			]
 		},
-		// POST /ak/api/saas/v2/components, etc..
+		// POST /ak/api/v2/kubernetes/components, etc..
 		{
-			suiteDescribe: 'POST /ak/api/saas/v2/components',
-			mainDescribe: 'Run POST /ak/api/saas/v2/components ',
+			suiteDescribe: 'POST /ak/api/v2/kubernetes/components',
+			mainDescribe: 'Run POST /ak/api/v2/kubernetes/components ',
 			arrayOfRoutes: [
 				'/ak/api/v2/kubernetes/components',
 				'/ak/api/v2/kubernetes/components/fabric-ca',
@@ -1244,11 +1244,11 @@ describe('Deployer APIs', () => {
 				}
 			]
 		},
-		// PUT /api/saas/v2/components/:athena_component_id
+		// PUT /api/v2/kubernetes/components/:athena_component_id
 		{
-			suiteDescribe: 'PUT /api/saas/v2/components/:athena_component_id',
-			mainDescribe: 'Run PUT /api/saas/v2/components/:athena_component_id ',
-			arrayOfRoutes: ['/api/saas/v2/components/org1_peer'],
+			suiteDescribe: 'PUT /api/v2/kubernetes/components/:athena_component_id',
+			mainDescribe: 'Run PUT /api/v2/kubernetes/components/:athena_component_id ',
+			arrayOfRoutes: ['/api/v2/kubernetes/components/org1_peer'],
 			executeRequest: (routeInfo, done) => {
 				chai.request(this.app)
 					.put(routeInfo.route)
@@ -1287,11 +1287,11 @@ describe('Deployer APIs', () => {
 				}
 			]
 		},
-		// PUT /api/saas/v2/components/:athena_component_id/config
+		// PUT /api/v2/kubernetes/components/:athena_component_id/config
 		{
-			suiteDescribe: 'PUT /api/saas/v2/components/:athena_component_id/config',
-			mainDescribe: 'Run PUT /api/saas/v2/components/:athena_component_id/config ',
-			arrayOfRoutes: ['/api/saas/v2/components/org1_peer/config'],
+			suiteDescribe: 'PUT /api/v2/kubernetes/components/:athena_component_id/config',
+			mainDescribe: 'Run PUT /api/v2/kubernetes/components/:athena_component_id/config ',
+			arrayOfRoutes: ['/api/v2/kubernetes/components/org1_peer/config'],
 			executeRequest: (routeInfo, done) => {
 				chai.request(this.app)
 					.put(routeInfo.route)
@@ -1306,7 +1306,7 @@ describe('Deployer APIs', () => {
 				}
 			]
 		},
-		// PUT /api/saas/v2/components/:athena_component_id/config
+		// PUT /api/v2/kubernetes/components/:athena_component_id/config
 		{
 			suiteDescribe: 'PUT /ak/api/v2/kubernetes/components/:athena_component_id/config',
 			mainDescribe: 'Run PUT /ak/api/v2/kubernetes/components/:athena_component_id/config ',
@@ -1325,11 +1325,11 @@ describe('Deployer APIs', () => {
 				}
 			]
 		},
-		// DELETE /saas/api/v2/components/purge -  Delete all components (saas and non-saas)
+		// DELETE /api/v2/kubernetes/components/purge -  Delete all components (imported and deployed)
 		{
-			suiteDescribe: 'DELETE /saas/api/v2/components/purge',
-			mainDescribe: 'Run DELETE /saas/api/v2/components/purge ',
-			arrayOfRoutes: ['/saas/api/v2/components/purge'],
+			suiteDescribe: 'DELETE /api/v2/kubernetes/components/purge',
+			mainDescribe: 'Run DELETE /api/v2/kubernetes/components/purge ',
+			arrayOfRoutes: ['/api/v2/kubernetes/components/purge'],
 			executeRequest: (routeInfo, done) => {
 				chai.request(this.app)
 					.delete(routeInfo.route)
@@ -1344,10 +1344,10 @@ describe('Deployer APIs', () => {
 				}
 			]
 		},
-		// DELETE /ak/saas/api/v2/components/purge -  Delete all components (saas and non-saas)
+		// DELETE /ak/api/v2/kubernetes/components/purge -  Delete all components (imported and deployed)
 		{
-			suiteDescribe: 'DELETE /ak/saas/api/v2/components/purge',
-			mainDescribe: 'Run DELETE /ak/saas/api/v2/components/purge ',
+			suiteDescribe: 'DELETE /ak/api/v2/kubernetes/components/purge',
+			mainDescribe: 'Run DELETE /ak/api/v2/kubernetes/components/purge ',
 			arrayOfRoutes: ['/ak/api/v2/kubernetes/components/purge'],
 			executeRequest: (routeInfo, done) => {
 				chai.request(this.app)
@@ -1363,11 +1363,11 @@ describe('Deployer APIs', () => {
 				}
 			]
 		},
-		// DELETE /api/saas/v2/components/:component_id -  Delete a component
+		// DELETE /api/v2/kubernetes/components/:component_id -  Delete a component
 		{
-			suiteDescribe: 'DELETE /api/saas/v2/components/:component_id',
-			mainDescribe: 'Run DELETE /api/saas/v2/components/:component_id ',
-			arrayOfRoutes: ['/api/saas/v2/components/org1_peer'],
+			suiteDescribe: 'DELETE /api/v2/kubernetes/components/:component_id',
+			mainDescribe: 'Run DELETE /api/v2/kubernetes/components/:component_id ',
+			arrayOfRoutes: ['/api/v2/kubernetes/components/org1_peer'],
 			executeRequest: (routeInfo, done) => {
 				chai.request(this.app)
 					.delete(routeInfo.route)
@@ -1383,7 +1383,7 @@ describe('Deployer APIs', () => {
 				}
 			]
 		},
-		// DELETE /ak/api/saas/v2/components/:component_id -  Delete a component
+		// DELETE /ak/api/v2/kubernetes/components/:component_id -  Delete a component
 		{
 			suiteDescribe: 'DELETE /ak/api/v2/kubernetes/components/:component_id',
 			mainDescribe: 'Run DELETE /ak/api/v2/kubernetes/components/:component_id ',
@@ -1403,11 +1403,11 @@ describe('Deployer APIs', () => {
 				}
 			]
 		},
-		// DELETE /api/saas/v2/components/tags/:tag -  Bulk delete
+		// DELETE /api/v2/kubernetes/components/tags/:tag -  Bulk delete
 		{
-			suiteDescribe: 'DELETE /api/saas/v2/components/tags/:tag',
-			mainDescribe: 'Run DELETE /api/saas/v2/components/tags/:tag ',
-			arrayOfRoutes: ['/api/saas/v2/components/tags/org1_peer'],
+			suiteDescribe: 'DELETE /api/v2/kubernetes/components/tags/:tag',
+			mainDescribe: 'Run DELETE /api/v2/kubernetes/components/tags/:tag ',
+			arrayOfRoutes: ['/api/v2/kubernetes/components/tags/org1_peer'],
 			executeRequest: (routeInfo, done) => {
 				chai.request(this.app)
 					.delete(routeInfo.route)
@@ -1545,11 +1545,11 @@ describe('Deployer APIs', () => {
 				}
 			]
 		},
-		// PUT  /api/saas/v2/components/tags/:tag - Bulk edit components via a deployer request
+		// PUT  /api/v2/kubernetes/components/tags/:tag - Bulk edit components via a deployer request
 		{
-			suiteDescribe: 'PUT /api/saas/v2/components/tags/:tag',
-			mainDescribe: 'Run PUT /api/saas/v2/components/tags/:tag ',
-			arrayOfRoutes: ['/api/saas/v2/components/tags/test_tag'],
+			suiteDescribe: 'PUT /api/v2/kubernetes/components/tags/:tag',
+			mainDescribe: 'Run PUT /api/v2/kubernetes/components/tags/:tag ',
+			arrayOfRoutes: ['/api/v2/kubernetes/components/tags/test_tag'],
 			executeRequest: (routeInfo, done) => {
 				chai.request(this.app)
 					.put(routeInfo.route)
@@ -1581,11 +1581,11 @@ describe('Deployer APIs', () => {
 				}
 			]
 		},
-		// GET /api/saas/v2/components
+		// GET /api/v2/kubernetes/components
 		{
-			suiteDescribe: 'GET /api/saas/v2/components',
-			mainDescribe: 'Run GET /api/saas/v2/components ',
-			arrayOfRoutes: ['/api/saas/v2/components'],
+			suiteDescribe: 'GET /api/v2/kubernetes/components',
+			mainDescribe: 'Run GET /api/v2/kubernetes/components ',
+			arrayOfRoutes: ['/api/v2/kubernetes/components'],
 			executeRequest: (routeInfo, done) => {
 				chai.request(this.app)
 					.get(routeInfo.route)
@@ -1595,7 +1595,7 @@ describe('Deployer APIs', () => {
 			},
 			testData: [
 				{
-					arrayOfInfoToTest: get_all_components_with_dep()	// its w/deps b/c its the /saas/ route
+					arrayOfInfoToTest: get_all_components_with_dep()	// its w/deps b/c its the deploy component route
 				}
 			]
 		},
@@ -1618,11 +1618,11 @@ describe('Deployer APIs', () => {
 			]
 		},
 		/* removed api 01/29/2020 - might come back
-		// GET /api/saas/v2/components/:athena_component_id
+		// GET /api/v2/kubernetes/components/:athena_component_id
 		{
-			suiteDescribe: 'GET /api/saas/v2/components/:athena_component_id',
-			mainDescribe: 'Run GET /api/saas/v2/components/:athena_component_id',
-			arrayOfRoutes: ['/api/saas/v2/components/some_athena_component_id'],
+			suiteDescribe: 'GET /api/v2/kubernetes/components/:athena_component_id',
+			mainDescribe: 'Run GET /api/v2/kubernetes/components/:athena_component_id',
+			arrayOfRoutes: ['/api/v2/kubernetes/components/some_athena_component_id'],
 			executeRequest: (routeInfo, done) => {
 				chai.request(this.app)
 					.get(routeInfo.route)
@@ -1654,11 +1654,11 @@ describe('Deployer APIs', () => {
 				}
 			]
 		},*/
-		// POST /api/saas/v2/components/raft_clusters/:cluster_id/fabric-orderer
+		// POST /api/v2/kubernetes/components/raft_clusters/:cluster_id/fabric-orderer
 		{
-			suiteDescribe: 'POST /api/saas/v2/components/raft_clusters/:cluster_id/fabric-orderer',
-			mainDescribe: 'Run POST /api/saas/v2/components/raft_clusters/:cluster_id/fabric-orderer',
-			arrayOfRoutes: ['/api/saas/v2/components/raft_clusters/cluster_one/fabric-orderer'],
+			suiteDescribe: 'POST /api/v2/kubernetes/components/raft_clusters/:cluster_id/fabric-orderer',
+			mainDescribe: 'Run POST /api/v2/kubernetes/components/raft_clusters/:cluster_id/fabric-orderer',
+			arrayOfRoutes: ['/api/v2/kubernetes/components/raft_clusters/cluster_one/fabric-orderer'],
 			executeRequest: (routeInfo, done) => {
 				chai.request(this.app)
 					.post(routeInfo.route)
@@ -1673,7 +1673,7 @@ describe('Deployer APIs', () => {
 				}
 			]
 		},
-		// POST /api/saas/v2/components/raft_clusters/:cluster_id/fabric-orderer
+		// POST /api/v2/kubernetes/components/raft_clusters/:cluster_id/fabric-orderer
 		{
 			suiteDescribe: 'POST /ak/api/v2/kubernetes/components/raft_clusters/:cluster_id/fabric-orderer',
 			mainDescribe: 'Run POST /ak/api/v2/kubernetes/components/raft_clusters/:cluster_id/fabric-orderer',
@@ -1692,11 +1692,11 @@ describe('Deployer APIs', () => {
 				}
 			]
 		},
-		// PUT /api/saas/v2/components/:athena_component_id/certs
+		// PUT /api/v2/kubernetes/components/:athena_component_id/certs
 		{
-			suiteDescribe: 'PUT /api/saas/v2/components/:athena_component_id/certs',
-			mainDescribe: 'Run PUT /api/saas/v2/components/:athena_component_id/certs',
-			arrayOfRoutes: ['/api/saas/v2/components/component_one/certs'],
+			suiteDescribe: 'PUT /api/v2/kubernetes/components/:athena_component_id/certs',
+			mainDescribe: 'Run PUT /api/v2/kubernetes/components/:athena_component_id/certs',
+			arrayOfRoutes: ['/api/v2/kubernetes/components/component_one/certs'],
 			executeRequest: (routeInfo, done) => {
 				chai.request(this.app)
 					.put(routeInfo.route)
@@ -1711,7 +1711,7 @@ describe('Deployer APIs', () => {
 				}
 			]
 		},
-		// PUT /api/saas/v2/components/:athena_component_id/certs
+		// PUT /api/v2/kubernetes/components/:athena_component_id/certs
 		{
 			suiteDescribe: 'PUT /ak/api/v2/kubernetes/components/:athena_component_id/certs',
 			mainDescribe: 'Run PUT /ak/api/v2/kubernetes/components/:athena_component_id/certs',

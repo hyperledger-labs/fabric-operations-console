@@ -1187,7 +1187,7 @@ class OrdererRestApi {
 		const headers = {
 			'cache-control': 'no-cache',
 		};
-		return RestApi.put(`/api/saas/v2/components/${ordererId}/config`, body, headers);
+		return RestApi.put(`/api/v3/kubernetes/components/${ordererId}/config`, body, headers);
 	}
 
 	static async getOrdererURL(orderer, consenters) {

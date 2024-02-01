@@ -501,7 +501,7 @@ class NodeRestApi {
 		const prefix = `Create ${node.display_name}:`;
 		try {
 			Log.info(`${prefix} sending request`);
-			const result = await ValidatedRestApi.post('/api/saas/v3/components', node);
+			const result = await ValidatedRestApi.post('/api/v3/kubernetes/components', node);
 			NodeRestApi.node_cache.expires = 0;
 			NodeRestApi.skip_cache = true;
 			if (result && result.created && _.isArray(result.created)) {
@@ -582,7 +582,7 @@ class NodeRestApi {
 		const prefix = `Remove component ${id}:`;
 		try {
 			Log.info(`${prefix} sending request`);
-			const resp = await FormattedRestApi.delete(`/api/v2/components/${id}`);
+			const resp = await FormattedRestApi.delete(`/api/v3/components/${id}`);
 			NodeRestApi.node_cache.expires = 0;
 			NodeRestApi.skip_cache = true;
 			return resp;
@@ -611,7 +611,7 @@ class NodeRestApi {
 		const prefix = `Delete component ${id}${force ? ' forced' : ''}:`;
 		try {
 			Log.info(`${prefix} sending request`);
-			const resp = await FormattedRestApi.delete(`/api/saas/v2/components/${id}${force ? '?force=yes' : ''}`);
+			const resp = await FormattedRestApi.delete(`/api/v3/kubernetes/components/${id}${force ? '?force=yes' : ''}`);
 			NodeRestApi.node_cache.expires = 0;
 			NodeRestApi.skip_cache = true;
 			return resp;
@@ -640,7 +640,7 @@ class NodeRestApi {
 		const prefix = `Delete components w/ tag ${tag}${force ? ' forced' : ''}:`;
 		try {
 			Log.info(`${prefix} sending request`);
-			const resp = await FormattedRestApi.delete(`/api/saas/v2/components/tags/${tag}${force ? '?force=yes' : ''}`);
+			const resp = await FormattedRestApi.delete(`/api/v3/kubernetes/components/tags/${tag}${force ? '?force=yes' : ''}`);
 			NodeRestApi.node_cache.expires = 0;
 			NodeRestApi.skip_cache = true;
 			return resp && resp.removed;
@@ -725,7 +725,7 @@ class NodeRestApi {
 				url: node.operations_url + '/version',
 				method: 'GET',
 			};
-			const resp = await RestApi.post('/api/v2/proxy/', opts);
+			const resp = await RestApi.post('/api/v3/proxy/', opts);
 			const version = resp ? JSON.parse(JSON.stringify(resp)) : null;
 			if (version && version.Version && typeof version.Version === 'string') {
 				return version.Version.toLowerCase().trim();
@@ -806,7 +806,7 @@ class NodeRestApi {
 				url: node.operations_url + '/healthz',
 				method: 'GET',
 			};
-			return RestApi.post('/api/v2/proxy/', opts);
+			return RestApi.post('/api/v3/proxy/', opts);
 		} else {
 			// we do not have url to use for health check, so just
 			// resolve it as null
@@ -838,7 +838,7 @@ class NodeRestApi {
 				};
 			}
 		});
-		return RestApi.put(`/api/saas/v3/components/${node.id}`, data);
+		return RestApi.put(`/api/v3/kubernetes/components/${node.id}`, data);
 	}
 
 	static getAllAvailableVersions() {
@@ -846,7 +846,7 @@ class NodeRestApi {
 			return NodeRestApi.versions.promise;
 		}
 		const promise = new Promise(resolve => {
-			const url = '/api/saas/v3/fabric/versions';
+			const url = '/api/v3/kubernetes/fabric/versions';
 			const headers = {
 				'cache-control': 'no-cache',
 			};
@@ -919,10 +919,10 @@ class NodeRestApi {
 		if (node.raft) {
 			// todo move this logic into the orderer lib
 			node.raft.forEach(raft_node => {
-				all.push(RestApi.put(`/api/saas/v3/components/${raft_node.id}`, body, headers));
+				all.push(RestApi.put(`/api/v3/kubernetes/components/${raft_node.id}`, body, headers));
 			});
 		} else {
-			all.push(RestApi.put(`/api/saas/v3/components/${node.id}`, body, headers));
+			all.push(RestApi.put(`/api/v3/kubernetes/components/${node.id}`, body, headers));
 		}
 		return (await Promise.all(all))[0];
 	}
@@ -969,7 +969,7 @@ class NodeRestApi {
 		const headers = {
 			'cache-control': 'no-cache',
 		};
-		return RestApi.put(`/api/saas/v2/components/${node_id}/certs`, body, headers);
+		return RestApi.put(`/api/v3/kubernetes/components/${node_id}/certs`, body, headers);
 	}
 
 	/* Upload admin certs and enable node ou(single call, one restart) */
@@ -983,7 +983,7 @@ class NodeRestApi {
 		const headers = {
 			'cache-control': 'no-cache',
 		};
-		return RestApi.put(`/api/saas/v3/components/${node_id}`, body, headers);
+		return RestApi.put(`/api/v3/kubernetes/components/${node_id}`, body, headers);
 	}
 
 	static async getTLSSignedCertFromDeployer(nodes) {
@@ -1063,7 +1063,7 @@ class NodeRestApi {
 	}
 
 	static async updateConfigOverride(node) {
-		await RestApi.put(`/api/saas/v2/components/${node.id}`, {
+		await RestApi.put(`/api/v3/kubernetes/components/${node.id}`, {
 			config_override: node.config_override,
 		});
 		NodeRestApi.skip_cache = true;
@@ -1071,7 +1071,7 @@ class NodeRestApi {
 	}
 
 	static async updateTLSCertificate(node, tls_cert) {
-		await RestApi.put(`/api/saas/v3/components/${node.id}`, {
+		await RestApi.put(`/api/v3/kubernetes/components/${node.id}`, {
 			crypto: {
 				enrollment: {
 					ca: {
@@ -1098,7 +1098,7 @@ class NodeRestApi {
 		if (tls_key) {
 			keys.tls_key = tls_key;
 		}
-		await RestApi.put(`/api/saas/v3/components/${node.id}`, {
+		await RestApi.put(`/api/v3/kubernetes/components/${node.id}`, {
 			crypto: {
 				msp: {
 					component: keys,
@@ -1110,7 +1110,7 @@ class NodeRestApi {
 	}
 
 	static async performActions(node, actions) {
-		const url = '/api/saas/v3/components/' + node.type + '/' + node.id + '/actions';
+		const url = '/api/v3/kubernetes/components/' + node.type + '/' + node.id + '/actions';
 		let result = await RestApi.post(url, actions);
 		NodeRestApi.skip_cache = true;
 		return result;
@@ -1141,7 +1141,7 @@ class NodeRestApi {
 			ca: _.get(node, 'msp.tlsca.root_certs[0]'),
 			skip_cache: true,
 		};
-		let resp = await RestApi.post('/api/v2/proxy/', opts);
+		let resp = await RestApi.post('/api/v3/proxy/', opts);
 		try {
 			// older instances return the format in text (not JSON)
 			resp = JSON.parse(resp);
@@ -1161,12 +1161,12 @@ class NodeRestApi {
 			body: { spec: log_settings },
 			skip_cache: true,
 		};
-		return RestApi.post('/api/v2/proxy/', opts);
+		return RestApi.post('/api/v3/proxy/', opts);
 	}
 
 	// delete all components
 	static async deleteAllComponents() {
-		return await RestApi.delete('/saas/api/v3/components/purge');
+		return await RestApi.delete('/api/v3/kubernetes/components/purge');
 	}
 
 	// get version summary on all components

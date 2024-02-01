@@ -17,7 +17,7 @@ import { RestApi } from './RestApi';
 
 class UserSettingsRestApi {
 	static async getUserInfo() {
-		return RestApi.get('/api/v2/users/info?preventCache=' + new Date().getTime());
+		return RestApi.get('/api/v3/users/info?preventCache=' + new Date().getTime());
 	}
 
 	static async getUsersIAMInfo() {
@@ -25,11 +25,11 @@ class UserSettingsRestApi {
 	}
 
 	static async getApplicationSettings() {
-		return RestApi.get('/api/v2/settings');
+		return RestApi.get('/api/v3/settings');
 	}
 
 	static async getDefaultPassword() {
-		return RestApi.get('/api/v2/private-settings');
+		return RestApi.get('/api/v3/private-settings');
 	}
 
 	static async recordIdentityExport() {

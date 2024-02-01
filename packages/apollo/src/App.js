@@ -209,7 +209,7 @@ class App extends Component {
 	// setup the loglevel-plugin-remote (storing client side logs on the server)
 	setupRemoteLogging() {
 		const remote_logging_options = {
-			url: '/api/v1/logs', // http url to send logs, relative route okay
+			url: '/api/v3/logs', // http url to send logs, relative route okay
 			method: 'POST', // http method to send logs
 			headers: {}, // http headers to send w/logs
 			timeout: 5000, // http req timeout, [ms]

@@ -491,7 +491,7 @@ The "tags" will not be built in the generate collection
 - `(skip-me)` - an api built for internal use, should not be doc'd for an end user
 - `(legacy)` - an api built for an older version of OpTools, should not be doc'd for an end user
 - `(unused)` - an api built for a future version of OpTools, should not be doc'd for an end user
-- `(software-only)` - an api built for Software and shouldn't be used on SaaS
+- `(software-only)` - an api built for Software/Support and should not be used on IBP (SaaS) [SaaS is now legacy, so this note is not very useful]
 
 ### API
 - **Method**: GET

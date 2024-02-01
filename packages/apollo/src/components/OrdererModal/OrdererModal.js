@@ -306,7 +306,7 @@ class OrdererModal extends React.Component {
 
 		let statuses = null;
 		try {
-			statuses = await RestApi.post('/api/v2/components/status', { components });
+			statuses = await RestApi.post('/api/v3/components/status', { components });
 		} catch (e) {
 			Log.error(e);
 		}

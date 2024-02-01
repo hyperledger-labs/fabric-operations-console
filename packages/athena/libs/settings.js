@@ -313,7 +313,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 					RAFT: 'etcdraft',									// deployer uses this value for orderertype
 					ATHENA_RAFT: 'raft',								// athena uses this value for orderer_type
 					CREATE_ACTION: 'blockchain.components.create',
-					DELETE_ACTION: 'blockchain.components.delete',		// delete is for saas/created
+					DELETE_ACTION: 'blockchain.components.delete',		// delete is for deployed
 					REMOVE_ACTION: 'blockchain.components.remove',		// remove is for imported
 					IMPORT_ACTION: 'blockchain.components.import',
 					EXPORT_ACTION: 'blockchain.components.export',
@@ -757,9 +757,9 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 		const siid = (settings_doc && settings_doc.crn && settings_doc.crn.instance_id) ? settings_doc.crn.instance_id : '';
 		const host_url = process.env.HOST_URL || settings_doc.host_url || '';
 
-		if (settings_doc && settings_doc.auth_scheme === 'iam') {		// if we are using iam for auth, it's ibm saas/ibp (probably prod or staging)
+		if (settings_doc && settings_doc.auth_scheme === 'iam') {		// if we are using iam for auth, it's ibp (probably prod or staging)
 			console_type = 'ibp';
-		} else if (siid) {												// if we have a service instance id, its ibm saas/ibp (probably dev)
+		} else if (siid) {												// if we have a service instance id, its ibp (probably dev)
 			console_type = 'ibp';
 		} else if (settings_doc && settings_doc.console_build_type) {	// if we have a console build type, its probably one of the ibm products:
 			if (host_url.includes('hlfsupport')) {						// its an ibm support console

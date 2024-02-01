@@ -28,7 +28,7 @@ class LoginApi {
 		const prefix = `login ${email}:`;
 		try {
 			Log.info(`${prefix} Logging in`);
-			const response = await RestApi.post('/api/v2/auth/login', {
+			const response = await RestApi.post('/api/v3/auth/login', {
 				email: email,
 				pass: password,
 			});
@@ -112,7 +112,7 @@ class LoginApi {
 		const prefix = 'changePassword:';
 		try {
 			Log.info(`${prefix} Attempting to update password`);
-			const response = await RestApi.put('/api/v2/permissions/users/password', {
+			const response = await RestApi.put('/api/v3/permissions/users/password', {
 				pass: currentPassword,
 				desired_pass: newPassword,
 			});
@@ -180,7 +180,7 @@ class LoginApi {
 		const prefix = 'changePassword:';
 		try {
 			Log.info(`${prefix} Attempting to test password`);
-			const response = await RestApi.post('/api/v2/permissions/users/password', {
+			const response = await RestApi.post('/api/v3/permissions/users/password', {
 				desired_pass: newPassword,
 			});
 			Log.info(`${prefix} Password test succeeded:`, response);
@@ -200,7 +200,7 @@ class LoginApi {
 		const prefix = 'resetPassword';
 		try {
 			Log.info(`${prefix} Resetting password`);
-			const resp = await RestApi.put('/api/v2/permissions/users/password/reset', {
+			const resp = await RestApi.put('/api/v3/permissions/users/password/reset', {
 				users: [uuid],
 			});
 			Log.info(`${prefix} Password reset successfully:`, resp);

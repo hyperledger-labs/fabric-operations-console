@@ -23,6 +23,7 @@ servers:
 
 security:
   - BearerAuth: []
+  - BasicAuth: []
 
 tags:
   - name: Manage component
@@ -788,7 +789,7 @@ paths:
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
                             \"display_name\": \"My Other CA\",
-                            \"tags\": [\"fabric-ca\", \"saas\", \"blue_team\", \"dev\"]
+                            \"tags\": [\"fabric-ca\", \"blue_team\", \"dev\"]
                           }"
       responses:
         200:
@@ -1265,7 +1266,7 @@ paths:
                       -H "Authorization: Bearer {Access-Token}" \
                       -d "{
                             \"display_name\": \"My Other Peer\",
-                            \"tags\": [\"fabric-peer\", \"saas\", \"red_team\", \"prod\"]
+                            \"tags\": [\"fabric-peer\", \"red_team\", \"prod\"]
                           }"
       responses:
         200:
@@ -11301,3 +11302,6 @@ components:
     BearerAuth:
       type: http
       scheme: bearer
+    BasicAuth:
+      type: http
+      scheme: basic

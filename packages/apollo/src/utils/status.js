@@ -250,7 +250,7 @@ const NodeStatus = {
 		const id = new Date().getTime().toString();
 		this.in_progress[id] = true;
 
-		RestApi.post('/api/v2/components/status', { components })
+		RestApi.post('/api/v3/components/status', { components })
 			.then(results => {
 				if (this.in_progress[id]) {
 					const resource_checks = [];
