@@ -28,6 +28,7 @@ import PageHeader from '../PageHeader/PageHeader';
 import ReleaseNotes from '../ReleaseNotes/ReleaseNotes';
 import SVGs from '../Svgs/Svgs';
 import TranslateLink from '../TranslateLink/TranslateLink';
+import ActionsHelper from '../../utils/actionsHelper';
 
 const SCOPE = 'comp_settings';
 const Log = new Logger(SCOPE);
@@ -168,7 +169,7 @@ class Support extends Component {
 								/>}
 							</div>
 							{this.renderSupportSection(translate)}
-							{this.props.mustgather_enabled && <Mustgather />}
+							{this.props.mustgather_enabled && ActionsHelper.canManageUsers(this.props.userInfo) && <Mustgather />}
 						</div>
 					</div>
 					<div className="bx--col-lg-12">
@@ -204,6 +205,7 @@ export default connect(
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['isAdmin'] = state['settings'].isAdmin;
 		newProps['console_type'] = state['settings'].console_type;
+		newProps['userInfo'] = state['userInfo'] ? state['userInfo'] : null;
 		return newProps;
 	},
 	{
