@@ -3159,6 +3159,7 @@ paths:
                 $ref: '#/components/schemas/Forbidden'
 
     post:
+      x-pentest-ignore: true
       tags:
         - Administer the console
       summary: Create a signature collection tx
@@ -3307,6 +3308,7 @@ paths:
 
   /ak/api/v3/signature_collections/{id}:
     put:
+      x-pentest-ignore: true
       tags:
         - Administer the console
       summary: Edit a signature collection tx
@@ -4854,6 +4856,7 @@ paths:
   /ak/api/v3/link/resources/{encoded_crn}:
     post:
       x-hidden: true
+      x-pentest-ignore: true
       tags:
         - Administer the console
       summary: Link resource to cluster
@@ -5563,7 +5566,7 @@ components:
         - leveldb
     log_levels:
       type: string
-      description: 'Valid log levels: "error", "warn", "info", "verbose", "debug", or "silly".'
+      description: 'Valid * server * log levels: "error", "warn", "info", "verbose", "debug", or "silly".'
       example: silly
       enum:
         - error
@@ -5572,6 +5575,15 @@ components:
         - verbose
         - debug
         - silly
+    client_log_levels:
+      type: string
+      description: 'Valid * client * log levels: "error", "warn", "info", or "debug".'
+      example: debug
+      enum:
+        - error
+        - warn
+        - info
+        - debug
     identity_attrs:
       type: object
       properties:
@@ -9399,7 +9411,7 @@ components:
           description: If `true` logging will be stored to a file on the file system.
           example: true
         level:
-          $ref: '#/components/schemas/log_levels'
+          $ref: '#/components/schemas/client_log_levels'
         unique_name:
           type: boolean
           description: If `true` log file names will have a random suffix.

@@ -184,8 +184,8 @@ describe('Logging APIs', () => {
 				}
 			},
 			{
-				itStatement: 'should return a status of 400 - invalid log level test_id=qwrfqf',
-				body: { client: { enabled: true, unique_name: true, level: 'invalid' } },
+				itStatement: 'should return a status of 400 - invalid server log level test_id=qwrfqf',
+				body: { server: { level: 'invalid' } },
 				username: 'admin',
 				password: 'random',
 				callFunction: () => {
@@ -194,6 +194,25 @@ describe('Logging APIs', () => {
 				},
 				expectBlock: (res) => {
 					expect(res.status).to.equal(400);
+					expect(res.body.msgs[0]).to.equal(
+						'Expected parameter \'server.level\' to be one of these values: \'error\', \'warn\', \'info\', \'verbose\', \'debug\', \'silly\'.'
+					);
+				}
+			},
+			{
+				itStatement: 'should return a status of 400 - invalid client log level test_id=jrgtvc',
+				body: { client: { level: 'silly' } },
+				username: 'admin',
+				password: 'random',
+				callFunction: () => {
+					tools.stubs.getDoc.callsArgWith(1, null, athena_settings.before_logging);
+					tools.stubs.writeDoc.callsArgWith(2, null, athena_settings.after_logging);
+				},
+				expectBlock: (res) => {
+					expect(res.status).to.equal(400);
+					expect(res.body.msgs[0]).to.equal(
+						'Expected parameter \'client.level\' to be one of these values: \'error\', \'warn\', \'info\', \'debug\'.'
+					);
 				}
 			},
 		];
