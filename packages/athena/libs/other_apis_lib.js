@@ -774,7 +774,7 @@ module.exports = function (logger, ev, t) {
 								if (process.env.CONFIGURE_FILE.indexOf('.json') >= 0) {
 									t.fs.writeFileSync(process.env.CONFIGURE_FILE, settings.config.data, 'utf8');	// if its json, simply write it
 								} else {
-									const yaml = t.yaml.safeDump(settings.config.data);			// if its a yaml, convert json to yaml first
+									const yaml = t.yaml.dump(settings.config.data);				// if its a yaml, convert json to yaml first
 									t.fs.writeFileSync(process.env.CONFIGURE_FILE, yaml, 'utf8');
 								}
 								logger.info('[settings edit] successfully wrote config file');
@@ -821,7 +821,7 @@ module.exports = function (logger, ev, t) {
 				components: openapi.components,
 			};
 			try {
-				return t.yaml.safeDump(swagger_file);				// convert json to yaml
+				return t.yaml.dump(swagger_file);				// convert json to yaml
 			} catch (e) {
 				logger.error('unable to work with swagger file:', e);
 			}
