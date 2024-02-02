@@ -1108,6 +1108,7 @@ module.exports = function (logger, ev, t) {
 		// now that we have the data, rebuild the white list
 		function process_data(components, sig_docs, cb_built) {
 			const urls2add = {};									// grab all the urls we might add for any component, use map to avoid duplicates
+			urls2add[t.misc.fmt_url(ev.DEPLOYER_URL)] = true;
 
 			for (let i in components) {								// add urls from component docs
 				const comp_doc = components[i];
