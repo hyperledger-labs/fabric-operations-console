@@ -23,7 +23,7 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Create a component via a deployer request
 	//--------------------------------------------------
-	app.post('/api/saas/v1/components', t.middleware.verify_create_action_session, (req, res) => {
+	app.post('/api/v1/kubernetes/components', t.middleware.verify_create_action_session, (req, res) => {
 		provision(req, res);
 	});
 
@@ -56,7 +56,7 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Update a component via a deployer request (can update fabric versions or resources)
 	//--------------------------------------------------
-	app.put('/api/saas/v1/components/:athena_component_id', t.middleware.verify_create_action_session, (req, res) => {
+	app.put('/api/v1/kubernetes/components/:athena_component_id', t.middleware.verify_create_action_session, (req, res) => {
 		update(req, res);
 	});
 	const ak_component_urls = [
@@ -86,7 +86,7 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Get deployer data on a component - via a deployer request
 	//--------------------------------------------------
-	app.get('/api/saas/v1/components/:athena_component_id', t.middleware.verify_view_action_session_dep, (req, res) => {
+	app.get('/api/v1/kubernetes/components/:athena_component_id', t.middleware.verify_view_action_session_dep, (req, res) => {
 		get_comp_data(req, res);
 	});
 	app.get('/ak/api/v1/kubernetes/components/:athena_component_id', t.middleware.verify_view_action_ak_dep, (req, res) => {

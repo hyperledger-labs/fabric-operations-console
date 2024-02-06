@@ -7,7 +7,7 @@
 ## 1. Save client side logs to file system
 Send client side logs to the server to be logged to the file system.
 - **Method**: POST
-- **Route**: `/api/v1/logs`
+- **Route**: `/api/v[123]/logs`
 - **Auth**: login session
 - **Body**:
 ```js
@@ -24,7 +24,7 @@ Send client side logs to the server to be logged to the file system.
 Get a UI server log file by its filename.
 Response is html (not json).
 - **Method**: GET
-- **Route**: `/api/v1/logs`
+- **Route**: `/api/v[123]/logs`
 - **Auth**: needs action `blockchain.optools.logs`
 - **Body**: n/a
 - **Response**:
@@ -36,7 +36,7 @@ Response is html (not json).
 Get a UI server log file by its filename.
 Response is text (not json).
 - **Method**: GET
-- **Route**: `/api/v1/logs/:logFileName`
+- **Route**: `/api/v[123]/logs/:logFileName`
 - **Auth**: needs action `blockchain.optools.logs`
 - **Body**: n/a
 - **Response**:
@@ -48,7 +48,7 @@ Response is text (not json).
 Use this api to change logging settings.
 - **! [NOTE] ! This api will restart athena**
 - **Method**: PUT
-- **Route**: `/api/v1/logs/file_settings`
+- **Route**: `/api/v[123]/logs/file_settings`
 - **Auth**: needs action `blockchain.optools.logs`
 - **Body**:
 ```js

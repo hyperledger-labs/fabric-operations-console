@@ -80,7 +80,7 @@ class SettingsApi {
 			return SettingsApi.feature_flags.promise;
 		}
 		const promise = new Promise(resolve => {
-			const url = '/api/v2/settings?preventCache=' + new Date().getTime();
+			const url = '/api/v3/settings?preventCache=' + new Date().getTime();
 			const headers = {
 				'cache-control': 'no-cache',
 			};

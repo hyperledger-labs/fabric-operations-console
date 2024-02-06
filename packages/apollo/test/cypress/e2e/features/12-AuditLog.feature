@@ -12,12 +12,12 @@ Feature: Verify Audit Log functionality works as expected
 	#Login entry
 	And I provided 'user logging in - local' for input field with id "1"
 	Then I should see audit log row with text 'user logging in - local' and id 'audit-logs-log_title-0'
-	Then I should see audit log row with text 'POST:/api/v2/auth/login' and id 'audit-logs-api_title-0'
+	Then I should see audit log row with text 'POST:/api/v3/auth/login' and id 'audit-logs-api_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	#Change password entry
 	When I provided 'user is changing their password' for input field with id "1"
 	Then I should see audit log row with text 'user is changing their password' and id 'audit-logs-log_title-0'
-	Then I should see audit log row with text 'PUT:/api/v2/permissions/users/password' and id 'audit-logs-api_title-0'
+	Then I should see audit log row with text 'PUT:/api/v3/permissions/users/password' and id 'audit-logs-api_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 
   Scenario: Search activity log for adding CA
@@ -109,16 +109,16 @@ Feature: Verify Audit Log functionality works as expected
   Scenario: Search activity log for updating channel and installing chaincode
     When I clicked the div with id 'test__navigation--item--audit_logs'
 	Then I should see table with id 'table-audit_logs'
-	# creating a signature collection for channel "channel2" -- POST:/api/v2/signature_collections
+	# creating a signature collection for channel "channel2" -- POST:/api/v3/signature_collections
 	When I provided 'creating a signature collection for channel "channel2" ' for input field with id "1"
 	Then I should see audit log row with text 'creating a signature collection for channel "channel2"' and id 'audit-logs-log_title-0'
-	Then I should see audit log row with text 'POST:/api/v2/signature_collections' and id 'audit-logs-api_title-0'
+	Then I should see audit log row with text 'POST:/api/v3/signature_collections' and id 'audit-logs-api_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	Then I reload the page
-	# editing a signature collection for channel "channel2" -- PUT:/api/v2/signature_collections/sc_7bc9843a-02d7-4f04-94ac-763241c1a949
+	# editing a signature collection for channel "channel2" -- PUT:/api/v3/signature_collections/sc_7bc9843a-02d7-4f04-94ac-763241c1a949
 	When I provided 'editing a signature collection for channel "channel2"' for input field with id "1"
 	Then I should see audit log row with text 'editing a signature collection for channel "channel2"' and id 'audit-logs-log_title-0'
-	Then I should see audit log row with text 'PUT:/api/v2/signature_collections' and id 'audit-logs-api_title-0'
+	Then I should see audit log row with text 'PUT:/api/v3/signature_collections' and id 'audit-logs-api_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	Then I reload the page
 	# updating channel "channel2" - MSP "org2msp"
@@ -183,22 +183,22 @@ Feature: Verify Audit Log functionality works as expected
   Scenario: Search activity log for deleting CA, Peer and Ordering Service node
     When I clicked the div with id 'test__navigation--item--audit_logs'
 	Then I should see table with id 'table-audit_logs'
-	# deleting fabric-orderer "os_import_1" - DELETE:/api/v2/components/os_import_1
+	# deleting fabric-orderer "os_import_1" - DELETE:/api/v3/components/os_import_1
 	When I provided 'removing fabric-orderer "os_import_1"' for input field with id "1"
 	Then I should see audit log row with text 'removing fabric-orderer "os_import_1"' and id 'audit-logs-log_title-0'
-	Then I should see audit log row with text 'DELETE:/api/v2/components/os_import_1' and id 'audit-logs-api_title-0'
+	Then I should see audit log row with text 'DELETE:/api/v3/components/os_import_1' and id 'audit-logs-api_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
-	# deleting fabric-ca "ca_import" - DELETE:/api/v2/components/ca_import
+	# deleting fabric-ca "ca_import" - DELETE:/api/v3/components/ca_import
 	When I provided 'removing fabric-ca "ca_import"' for input field with id "1"
 	Then I should see audit log row with text 'removing fabric-ca "ca_import"' and id 'audit-logs-log_title-0'
-	Then I should see audit log row with text 'DELETE:/api/v2/components/ca_import' and id 'audit-logs-api_title-0'
+	Then I should see audit log row with text 'DELETE:/api/v3/components/ca_import' and id 'audit-logs-api_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	Then I reload the page
-	# deleting fabric-peer "peer_import" =- DELETE:/api/v2/components/peer_import
+	# deleting fabric-peer "peer_import" =- DELETE:/api/v3/components/peer_import
 	When I provided 'removing fabric-peer "peer_import"' for input field with id "1"
 	Then I should see audit log row with text 'removing fabric-peer "peer_import"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
-	Then I should see audit log row with text 'DELETE:/api/v2/components/peer_import' and id 'audit-logs-api_title-0'
+	Then I should see audit log row with text 'DELETE:/api/v3/components/peer_import' and id 'audit-logs-api_title-0'
 	#delete org1ca
 	When I provided 'removing fabric-ca "org1ca"' for input field with id "1"
 	Then I should see audit log row with text 'removing fabric-ca "org1ca"' and id 'audit-logs-log_title-0'
@@ -212,7 +212,7 @@ Feature: Verify Audit Log functionality works as expected
 	When I provided 'deleting ordering service: "Ordering Service"' for input field with id "1"
 	Then I should see audit log row with text 'deleting ordering service: "Ordering Service"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
-	Then I should see audit log row with text 'DELETE:/api/saas/v2/components/tags' and id 'audit-logs-api_title-0'
+	Then I should see audit log row with text 'DELETE:/api/v3/kubernetes/components/tags' and id 'audit-logs-api_title-0'
 
   Scenario: Search activity log for adding user
     When I clicked the div with id 'test__navigation--item--audit_logs'

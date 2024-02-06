@@ -325,7 +325,7 @@ module.exports = function (logger, ev, t) {
 			'/grpcwp/*',
 			'/configtxlator/*',
 			'/api/v[123]/components/status',
-			'/api/v1/logs',
+			'/api/v[123]/logs',
 			'/',
 		];
 		const ret = [];

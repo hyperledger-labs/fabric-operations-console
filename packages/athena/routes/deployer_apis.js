@@ -23,7 +23,7 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Create a component via a deployer request
 	//--------------------------------------------------
-	app.post('/api/saas/v[23]/components', t.middleware.verify_create_action_session, (req, res) => {
+	app.post('/api/v[23]/kubernetes/components', t.middleware.verify_create_action_session, (req, res) => {
 		provision(req, res);
 	});
 
@@ -67,7 +67,7 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Update a component via a deployer request (can update fabric versions, resources, etc)
 	//--------------------------------------------------
-	app.put('/api/saas/v[23]/components/:athena_component_id', t.middleware.verify_create_action_session, (req, res) => {
+	app.put('/api/v[23]/kubernetes/components/:athena_component_id', t.middleware.verify_create_action_session, (req, res) => {
 		update(req, res);
 	});
 	const ak_component_urls = [
@@ -126,7 +126,7 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Delete all components (saas and non-saas)
 	//--------------------------------------------------
-	app.delete('/saas/api/v[123]/components/purge', t.middleware.verify_delete_action_session, (req, res) => {
+	app.delete('/api/v[123]/kubernetes/components/purge', t.middleware.verify_delete_action_session, (req, res) => {
 		t.deployer.deprovision_all_components(req, (errObj, ret) => {
 			if (errObj) {
 				res.status(t.ot_misc.get_code(errObj)).json(errObj);
@@ -148,7 +148,7 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Delete a component via a deployer request
 	//--------------------------------------------------
-	app.delete('/api/saas/v[123]/components/:component_id', t.middleware.verify_delete_action_session, (req, res) => {
+	app.delete('/api/v[123]/kubernetes/components/:component_id', t.middleware.verify_delete_action_session, (req, res) => {
 		t.deployer.deprovision_component(req, (errObj, ret) => {
 			if (errObj) {
 				res.status(t.ot_misc.get_code(errObj)).json(errObj);
@@ -183,7 +183,7 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Bulk Delete components via a deployer request
 	//--------------------------------------------------
-	app.delete('/api/saas/v[123]/components/tags/:tag', t.middleware.verify_delete_action_session, (req, res) => {
+	app.delete('/api/v[123]/kubernetes/components/tags/:tag', t.middleware.verify_delete_action_session, (req, res) => {
 		bulk_delete_components(req, res);
 	});
 	app.delete('/ak/api/v[123]/kubernetes/components/tags/:tag', t.middleware.verify_delete_action_ak, (req, res) => {
@@ -214,7 +214,7 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Bulk edit components via a deployer request
 	//--------------------------------------------------
-	app.put('/api/saas/v[123]/components/tags/:tag', t.middleware.verify_create_action_session, (req, res) => {
+	app.put('/api/v[123]/kubernetes/components/tags/:tag', t.middleware.verify_create_action_session, (req, res) => {
 		bulk_edit(req, res);
 	});
 	app.put('/ak/api/v[123]/kubernetes/components/tags/:tag', t.middleware.verify_create_action_ak, (req, res) => {
@@ -240,7 +240,7 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Get all k8s deployments (aka get all components) - (only returns provisioned components, will not list imported components)
 	//--------------------------------------------------
-	app.get('/api/saas/v[123]/components', t.middleware.verify_view_action_session_dep, (req, res) => {
+	app.get('/api/v[123]/kubernetes/components', t.middleware.verify_view_action_session_dep, (req, res) => {
 		get_all_components(req, res);
 	});
 	app.get('/ak/api/v[123]/kubernetes/components', t.middleware.verify_view_action_ak_dep, (req, res) => {
@@ -268,7 +268,7 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Send/submit genesis or config block to an orderer node (aka finish raft append)
 	//--------------------------------------------------
-	app.put('/api/saas/v[123]/components/:athena_component_id/config', t.middleware.verify_view_action_session_dep, (req, res) => {
+	app.put('/api/v[123]/kubernetes/components/:athena_component_id/config', t.middleware.verify_view_action_session_dep, (req, res) => {
 		t.deployer.send_config_block(req, (errObj, ret) => {
 			if (errObj) {
 				res.status(t.ot_misc.get_code(errObj)).json(errObj);
@@ -451,8 +451,8 @@ module.exports = (logger, ev, t) => {
 	// [do not use - use the pre-create raft api instead] (leaving code here for testing)
 	//--------------------------------------------------
 	const session_paths = [
-		'/api/saas/v1/components/raft_clusters/:cluster_id/orderer',					// legacy path
-		'/api/saas/v[123]/components/raft_clusters/:cluster_id/fabric-orderer'			// normal path
+		'/api/v1/kubernetes/components/raft_clusters/:cluster_id/orderer',					// legacy path
+		'/api/v[123]/kubernetes/components/raft_clusters/:cluster_id/fabric-orderer'			// normal path
 	];
 	const ak_paths = [
 		'/ak/api/v1/kubernetes/components/raft_clusters/:cluster_id/orderer',			// legacy path
@@ -480,7 +480,7 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Edit admin certs
 	//--------------------------------------------------
-	app.put('/api/saas/v[123]/components/:athena_component_id/certs', t.middleware.verify_manage_action_session_dep, (req, res) => {
+	app.put('/api/v[123]/kubernetes/components/:athena_component_id/certs', t.middleware.verify_manage_action_session_dep, (req, res) => {
 		edit_admin_certs(req, res);
 	});
 	app.put('/ak/api/v[123]/kubernetes/components/:athena_component_id/certs', t.middleware.verify_manage_action_ak_dep, (req, res) => {
@@ -507,7 +507,7 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Get fabric versions supported by deployer
 	//--------------------------------------------------
-	app.get('/api/saas/v[123]/fabric/versions', t.middleware.verify_view_action_session_dep, (req, res) => {
+	app.get('/api/v[123]/kubernetes/fabric/versions', t.middleware.verify_view_action_session_dep, (req, res) => {
 		get_fab_versions(req, res);
 	});
 	app.get('/ak/api/v[123]/kubernetes/fabric/versions', t.middleware.verify_view_action_ak_dep, (req, res) => {
@@ -535,9 +535,9 @@ module.exports = (logger, ev, t) => {
 	// Submit action to a component (like restart or reenroll)
 	//--------------------------------------------------
 	const action_urls_ses = [
-		'/api/saas/v[3]/components/fabric-ca/:athena_component_id/actions',
-		'/api/saas/v[3]/components/fabric-orderer/:athena_component_id/actions',
-		'/api/saas/v[3]/components/fabric-peer/:athena_component_id/actions',
+		'/api/v[3]/kubernetes/components/fabric-ca/:athena_component_id/actions',
+		'/api/v[3]/kubernetes/components/fabric-orderer/:athena_component_id/actions',
+		'/api/v[3]/kubernetes/components/fabric-peer/:athena_component_id/actions',
 	];
 	const action_urls_ak = [
 		'/ak/api/v[3]/kubernetes/components/fabric-ca/:athena_component_id/actions',
@@ -579,7 +579,7 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Get kubernetes version data
 	//--------------------------------------------------
-	app.get('/api/saas/v[3]/kubernetes/version', t.middleware.verify_view_action_session_dep, (req, res) => {
+	app.get('/api/v[3]/kubernetes/version', t.middleware.verify_view_action_session_dep, (req, res) => {
 		get_k8s_versions(req, res);
 	});
 	app.get('/ak/api/v[3]/kubernetes/version', t.middleware.verify_view_action_ak_dep, (req, res) => {
@@ -599,7 +599,7 @@ module.exports = (logger, ev, t) => {
 	//--------------------------------------------------
 	// Get cluster type (ibmcloud [aka iks] vs openshift)
 	//--------------------------------------------------
-	app.get('/api/saas/v[3]/kubernetes/type', t.middleware.verify_view_action_session_dep, (req, res) => {
+	app.get('/api/v[3]/kubernetes/type', t.middleware.verify_view_action_session_dep, (req, res) => {
 		get_cluster_type(req, res);
 	});
 	app.get('/ak/api/v[3]/kubernetes/type', t.middleware.verify_view_action_ak_dep, (req, res) => {

@@ -54,7 +54,7 @@ The process above describes the OpTools ID. However there is another ID for the 
 
 - **Method**: `"POST"`
 - **Routes**:
-	- `/api/saas/v[123]/components`
+	- `/api/v[123]/kubernetes/components`
 		- session auth based api used by UI, `type` must be in body
 	- `/ak/api/v[123]/kubernetes/components`
 		- api key auth based api, `type` must be in body
@@ -582,7 +582,7 @@ This API will delete the OpTools` doc of the component, unlike the proxy deploye
 
 - **Method**: `"DELETE"`
 - **Route**:
-	- `/api/saas/v[123]/components/:athena_component_id?force=yes`
+	- `/api/v[123]/kubernetes/components/:athena_component_id?force=yes`
 	- `/ak/api/v[123]/kubernetes/components/:athena_component_id?force=yes`
 - **Auth**: must have action `blockchain.components.delete`
 - **Query Params**
@@ -603,7 +603,7 @@ Update/edit a component via deployer.
 This api can change the cpu/memory settings, Fabric version of the component and more!
 
 - **Method**: `"PUT"`
-- **Route**: `/api/saas/v1/components/:athena_component_id`
+- **Route**: `/api/v1/kubernetes/components/:athena_component_id`
 - **Auth**: must have action `blockchain.components.create`
 - **Body**:
 ```js
@@ -665,7 +665,7 @@ Expect a http status code of **207** when mixed results occur.
 
 - **Method**: `"DELETE"`
 - **Route**: ]
-	- `/api/saas/v[123]/components/tags/:tag?force=yes`
+	- `/api/v[123]/kubernetes/components/tags/:tag?force=yes`
 	- `/ak/api/v[123]/kubernetes/components/tags/:tag?force=yes`
 - **Auth**: must have action `blockchain.components.delete`
 - **Query Params**
@@ -723,7 +723,7 @@ Thus all components with a matching entry will get updated.
 Expect a http status code of **207** when mixed results occur.
 
 - **Method**: `"PUT"`
-- **Route**: `/api/saas/v1/components/tags/:tag` || `/ak/api/v1/kubernetes/components/tags/:tag`
+- **Route**: `/api/v1/kubernetes/components/tags/:tag` || `/ak/api/v1/kubernetes/components/tags/:tag`
 - **Auth**: must have action `blockchain.components.create`
 - **Body**:
 ```js
@@ -786,7 +786,7 @@ However, it can be called on any component.
 - if using v2, use the [get-a-component #4](./component_apis.md#get) api w/query parameters `deployment_attrs=include`.
 
 - **Method**: `"GET"`
-- **Route**: `/api/saas/v1/components/:component_id` || `/ak/api/v1/kubernetes/components/:component_id`
+- **Route**: `/api/v1/kubernetes/components/:component_id` || `/ak/api/v1/kubernetes/components/:component_id`
 - **Auth**: must have action `blockchain.optools.view`
 - **Body**: n/a
 - **Response**:
@@ -847,7 +847,7 @@ This api will send a config block (or genesis block) to a pre-created raft order
 This is for finishing the append-raft-flow.
 
 - **Method**: `"PUT"`
-- **Route**: `/api/saas/v[123]/components/:component_id/config` || `/ak/api/v[123]/kubernetes/components/:component_id/config`
+- **Route**: `/api/v[123]/kubernetes/components/:component_id/config` || `/ak/api/v[123]/kubernetes/components/:component_id/config`
 - **Auth**: must have action `blockchain.components.create`
 - **Body**:
 ```js
@@ -871,7 +871,7 @@ Pre-create a raft orderer && send it an old config block at the same time.
 **Removed. The raft-append-flow should use api [1b](#immediate2) instead.**
 
 - **Method**: `"POST"`
-- **Route**: `/api/saas/v1/components/raft_clusters/:cluster_id/orderer` || `/ak/api/v1/kubernetes/components/raft_clusters/:cluster_id/orderer`
+- **Route**: `/api/v1/kubernetes/components/raft_clusters/:cluster_id/orderer` || `/ak/api/v1/kubernetes/components/raft_clusters/:cluster_id/orderer`
 	- [important] use the SAME cluster id of the existing raft cluster in the path!
 - **Auth**: must have action `blockchain.components.create`
 - **Body**: _removed_
@@ -883,7 +883,7 @@ This api will get various data from Kubernetes on all components.
 Same as API #2 (get kubernetes data), but for all known components.
 
 - **Method**: `"GET"`
-- **Route**: `/api/saas/v[123]/components` || `/ak/api/v[123]/kubernetes/components`
+- **Route**: `/api/v[123]/kubernetes/components` || `/ak/api/v[123]/kubernetes/components`
 - **Auth**: must have action `blockchain.optools.view`
 - **Body**: n/a
 - **Response**:
@@ -907,7 +907,7 @@ Duplicate certificates will also be skipped.
 Note: the list of current certificates can be retrieved with [API #2 (get deployer data)](#get_deployer_data).
 
 - **Method**: `"PUT"`
-- **Route**: `/api/saas/v[123]/components/:athena_component_id/certs` || `/ak/api/v[123]/kubernetes/components/:athena_component_id/certs`
+- **Route**: `/api/v[123]/kubernetes/components/:athena_component_id/certs` || `/ak/api/v[123]/kubernetes/components/:athena_component_id/certs`
 - **Auth**: must have action `blockchain.components.create`
 - **Body**:
 ```js
@@ -964,7 +964,7 @@ This api can be used to returned the UI to a clean-ish state.
 Though system information like notifications, users, and api keys will remain.
 
 - **Method**: DELETE
-- **Route**: `/saas/api/v1/components/purge?force=yes` || `ak/api/v1/kubernetes/components/purge?force=yes`
+- **Route**: `/api/v1/kubernetes/components/purge?force=yes` || `ak/api/v1/kubernetes/components/purge?force=yes`
 - **Auth**: must have action `blockchain.components.delete`
 - **Query Params**
 	- `force` - if `"yes"` the deployer response will be ignored and the comp doc will be deleted regardless of deployer errors. defaults `"no"`
@@ -988,7 +988,7 @@ This will get the list of supported Fabric versions on deployer.
 You can use the versions listed in this response in the create or update component API calls.
 
 - **Method**: GET
-- **Route**: `/api/saas/v[123]/fabric/versions` || `/ak/api/v[123]/kubernetes/fabric/versions`
+- **Route**: `/api/v[123]/kubernetes/fabric/versions` || `/ak/api/v[123]/kubernetes/fabric/versions`
 - **Auth**: must have action `blockchain.optools.view`
 - **Query Params**
 	- `cache=skip` - set to `skip` if you do not want to use the cached data
@@ -1039,9 +1039,9 @@ Multiple actions at once allowed.
 
 - **Method**: POST
 - **Route**:
-	- `/api/saas/v[3]/components/fabric-ca/:athena_component_id/actions`
-	- `/api/saas/v[3]/components/fabric-orderer/:athena_component_id/actions`
-	- `/api/saas/v[3]/components/fabric-peer/:athena_component_id/actions`
+	- `/api/v[3]/kubernetes/components/fabric-ca/:athena_component_id/actions`
+	- `/api/v[3]/kubernetes/components/fabric-orderer/:athena_component_id/actions`
+	- `/api/v[3]/kubernetes/components/fabric-peer/:athena_component_id/actions`
 	- `/ak/api/v[3]/kubernetes/components/fabric-ca/:athena_component_id/actions`
 	- `/ak/api/v[3]/kubernetes/components/fabric-orderer/:athena_component_id/actions`
 	- `/ak/api/v[3]/kubernetes/components/fabric-peer/:athena_component_id/actions`

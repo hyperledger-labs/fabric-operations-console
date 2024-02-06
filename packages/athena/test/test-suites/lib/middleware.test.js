@@ -398,10 +398,10 @@ describe('Middleware', () => {
 			]
 		},
 
-		// create saas components
+		// deploy components
 		{
-			suiteDescribe: 'create saas components',
-			mainDescribe: 'Run create saas components ',
+			suiteDescribe: 'deploy components',
+			mainDescribe: 'Run deploy components ',
 			testData: [
 				{
 					arrayOfInfoToTest: [

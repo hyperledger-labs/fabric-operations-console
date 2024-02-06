@@ -28,8 +28,8 @@ However there are no plans to make `v3` atm.
 	- these routes are affected:
 		- import-a-component `POST /api/v2/components`
 		- edit-a-component `PUT /api/v2/components/:id`
-		- create-a-k8s-component `POST /api/saas/v2/components`
-		- edit-a-k8s-component `PUT /api/saas/v2/components/:id`
+		- create-a-k8s-component `POST /api/v2/kubernetes/components`
+		- edit-a-k8s-component `PUT /api/v2/kubernetes/components/:id`
 - **the Get-all-components api response changed:**
 	- was an array of docs: `[ {json_doc_here} ]`
 	- now its an object with an array of docs: `{"components": [ {json_doc_here} ] }`

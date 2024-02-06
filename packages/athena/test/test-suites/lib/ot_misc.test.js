@@ -681,7 +681,7 @@ describe('ot_misc.js', () => {
 				{
 					arrayOfInfoToTest: [
 						{
-							itStatement: 'should pull out api version from v2 saas a route test_id=uscqth',
+							itStatement: 'should pull out api version from v2 deploy a route test_id=uscqth',
 							expectBlock: (done) => {
 								const ver = 'v2';
 								expect(ot_misc.get_api_version({ path: '/api/' + ver + '/components' })).to.equal(ver);
@@ -689,10 +689,10 @@ describe('ot_misc.js', () => {
 							}
 						},
 						{
-							itStatement: 'should pull out api version from v2 saas b route test_id=bjsraw',
+							itStatement: 'should pull out api version from v2 deploy b route test_id=bjsraw',
 							expectBlock: (done) => {
 								const ver = 'v2';
-								expect(ot_misc.get_api_version({ path: '/api/saas/' + ver + '/components' })).to.equal(ver);
+								expect(ot_misc.get_api_version({ path: '/api/' + ver + '/kubernetes/components' })).to.equal(ver);
 								done();
 							}
 						},

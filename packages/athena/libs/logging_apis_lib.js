@@ -80,7 +80,7 @@ module.exports = function (logger, ev, t) {
 		for (let i in sorted) {
 			list += `
 					<p>
-						<a href="` + prefix + '/api/v1/logs/' + sorted[i].name + '" target="_blank">' + sorted[i].name + `</a>
+						<a href="` + prefix + '/api/v3/logs/' + sorted[i].name + '" target="_blank">' + sorted[i].name + `</a>
 						 - ` + sorted[i].date_time + ' - (' + sorted[i].size + `)
 					</p>`;
 		}

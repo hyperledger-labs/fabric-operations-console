@@ -1035,7 +1035,6 @@ module.exports = function (logger, t) {
 	exports.get_api_version = function (req) {
 		const version_regex = [
 			'^/ak/api/(v\\d+)',
-			'^/api/saas/(v\\d+)',
 			'^/api/(v\\d+)'
 		];
 

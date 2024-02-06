@@ -94,7 +94,7 @@ const ev = {
 		RAFT: 'etcdraft',									// deployer uses this value for orderertype
 		ATHENA_RAFT: 'raft',								// athena uses this value for orderer_type
 		CREATE_ACTION: 'blockchain.components.create',
-		DELETE_ACTION: 'blockchain.components.delete',		// delete is for saas/created
+		DELETE_ACTION: 'blockchain.components.delete',		// delete is for deployed/created
 		REMOVE_ACTION: 'blockchain.components.remove',		// remove is for imported
 		IMPORT_ACTION: 'blockchain.components.import',
 		EXPORT_ACTION: 'blockchain.components.export',

@@ -202,7 +202,7 @@ describe('validation_lib.js', () => {
 								req = { path: '/api/v2/kubernetes/components/fabric-ca' };
 								expect(tools.validate.pick_ver(req)).to.equal('v2');
 
-								req = { path: '/api/saas/v2/kubernetes/components/fabric-ca' };
+								req = { path: '/api/v2/kubernetes/components/fabric-ca' };
 								expect(tools.validate.pick_ver(req)).to.equal('v2');
 								return done();
 							}
@@ -216,7 +216,7 @@ describe('validation_lib.js', () => {
 								req = { path: '/api/v3/kubernetes/components/fabric-ca' };
 								expect(tools.validate.pick_ver(req)).to.equal('v3');
 
-								req = { path: '/api/saas/v3/kubernetes/components/fabric-ca' };
+								req = { path: '/api/v3/kubernetes/components/fabric-ca' };
 								expect(tools.validate.pick_ver(req)).to.equal('v3');
 								return done();
 							}
@@ -230,7 +230,7 @@ describe('validation_lib.js', () => {
 								req = { path: '/api/v9/kubernetes/components/fabric-ca' };
 								expect(tools.validate.pick_ver(req)).to.equal('v3');
 
-								req = { path: '/api/saas/v9/kubernetes/components/fabric-ca' };
+								req = { path: '/api/v9/kubernetes/components/fabric-ca' };
 								expect(tools.validate.pick_ver(req)).to.equal('v3');
 								return done();
 							}
