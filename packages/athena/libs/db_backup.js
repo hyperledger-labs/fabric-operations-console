@@ -855,7 +855,7 @@ module.exports = function (logger, ev, t) {
 						logger.error('[backup] unable to add attachment error:', err, resp);
 						return cb(err, resp);
 					} else {
-						return cb(null, { message: 'ok', att_name: req.params.att_name });
+						return cb(null, { message: 'ok', att_name: t.misc.safe_str(req.params.att_name) });
 					}
 				});
 			}
