@@ -131,7 +131,7 @@ function check_ref(field_name, ref) {
 	const ignore_fields = [
 		'ca', 'tlsca', 'peer', 'orderer', 'name', 'apiurl', 'operationsurl', 'grpcwpurl', 'id', 'server', 'client', 'crypto', 'proxy',
 		'version', 'configoverride', 'keepalive', 'certfile', 'debug', 'metrics', 'keyfile', 'displayname', 'authentication', 'statedb',
-		'orderers2sign', 'orgs2sign', 'limits', 'requests', 'timestamp', 'nodeou', 'general', 'msp', 'rootcerts', 'component'
+		'orderers2sign', 'orgs2sign', 'limits', 'requests', 'timestamp', 'nodeou', 'general', 'msp', 'rootcerts', 'component', 'level'
 	];
 	const lc_field_name = field_name.toLowerCase().replace(/_/g, '');	// remove underscores and bring to lowercase to create a broader comparison
 

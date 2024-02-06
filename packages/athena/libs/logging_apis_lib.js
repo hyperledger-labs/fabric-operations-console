@@ -179,27 +179,15 @@ module.exports = function (logger, ev, t) {
 				return cb(err);
 			} else {
 				delete doc.log_changes;			// reset incase its already set, shouldn't be though
-				const input_errors = t.log_lib.validate_log_settings(req.body);
 
-				if (input_errors.length > 0) {
-					logger.error('[logging] invalid logging settings', input_errors);
-					const input_error = {
-						statusCode: 400,
-						error: 'invalid logging settings',
-						details: input_errors,
-					};
-					return cb(input_error);
-				} else {
+				// now replace the logging settings
+				const server_settings = t.misc.safe_dot_nav(req.body, ['body.file_logging.server', 'body.server']);
+				doc = replace_settings(doc, server_settings, 'server');
 
-					// now replace the logging settings
-					const server_settings = t.misc.safe_dot_nav(req.body, ['body.file_logging.server', 'body.server']);
-					doc = replace_settings(doc, server_settings, 'server');
+				const client_settings = t.misc.safe_dot_nav(req.body, ['body.file_logging.client', 'body.client']);
+				doc = replace_settings(doc, client_settings, 'client');
 
-					const client_settings = t.misc.safe_dot_nav(req.body, ['body.file_logging.client', 'body.client']);
-					doc = replace_settings(doc, client_settings, 'client');
-
-					return cb(null, doc);													// all good
-				}
+				return cb(null, doc);													// all good
 			}
 		});
 

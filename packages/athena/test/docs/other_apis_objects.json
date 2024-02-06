@@ -228,7 +228,7 @@
 		"msgs": [
 			"Expected parameter 'file_logging.client.enabled' to be of type: 'boolean', but instead was: 'string'.",
 			"Expected parameter 'file_logging.client.level' to be of type: 'string', but instead was: 'object'.",
-			"Expected parameter 'file_logging.client.level' to be one of these values: 'error', 'warn', 'info', 'verbose', 'debug', 'silly'.",
+			"Expected parameter 'file_logging.client.level' to be one of these values: 'error', 'warn', 'info', 'debug'.",
 			"Expected parameter 'file_logging.client.unique_name' to be of type: 'boolean', but instead was: 'string'.",
 			"Expected parameter 'file_logging.server.enabled' to be of type: 'boolean', but instead was: 'string'.",
 			"Expected parameter 'file_logging.server.level' to be one of these values: 'error', 'warn', 'info', 'verbose', 'debug', 'silly'.",

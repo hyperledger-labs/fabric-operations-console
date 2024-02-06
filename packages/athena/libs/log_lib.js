@@ -237,47 +237,5 @@ module.exports = function (t) {
 		});
 	};
 
-	//------------------------------------------------------------
-	// check if the log settings are okay
-	//------------------------------------------------------------
-	exports.validate_log_settings = (settings) => {
-		let errors = [];
-
-		// now replace the logging settings
-		const server_settings = t.misc.safe_dot_nav(settings, ['settings.server', 'settings.file_logging.server']);
-		check_settings(server_settings, 'server');
-
-		const client_settings = t.misc.safe_dot_nav(settings, ['settings.client', 'settings.file_logging.client']);
-		check_settings(client_settings, 'client');
-
-		return errors;
-
-		// replace the setting in the doc object
-		function check_settings(settings, type) {
-			if (settings) {											// it is optional to have each server/client field
-				if (typeof settings.enabled !== 'undefined') {
-					if (typeof settings.enabled !== 'boolean') {
-						errors.push('the ' + type + ' log setting "enabled" must be a boolean');
-					}
-				}
-				if (typeof settings.unique_name !== 'undefined') {
-					if (typeof settings.unique_name !== 'boolean') {
-						errors.push('the ' + type + ' log setting "unique_name" must be a boolean');
-					}
-				}
-				if (typeof settings.level !== 'undefined') {
-					if (typeof settings.level !== 'string') {
-						errors.push('the ' + type + ' log setting "level" must be a string');
-					} else {
-						const lc_new_level = settings.level.toLowerCase();
-						if (!exports.valid_levels[type].includes(lc_new_level)) {
-							errors.push('the ' + type + ' log setting "level" must be one of:' + JSON.stringify(exports.valid_levels[type]));
-						}
-					}
-				}
-			}
-		}
-	};
-
 	return exports;
 };
