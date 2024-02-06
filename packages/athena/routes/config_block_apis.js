@@ -75,7 +75,6 @@ module.exports = (logger, ev, t) => {
 			req._validate_path = '/ak/api/' + t.validate.pick_ver(req) + '/configblocks/{id}';
 			logger.debug('[pre-flight] setting validate route:', req._validate_path);
 		}
-
 		t.validate.request(req, res, null, () => {
 			t.config_blocks_lib.createConfigBlockDoc(req, (err, ret) => {
 				if (err) {
