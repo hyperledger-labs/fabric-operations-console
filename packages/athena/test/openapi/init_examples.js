@@ -202,7 +202,7 @@ function edit_swagger(ref, example, openapi_txt) {
 	let example_yaml = '';
 
 	try {
-		example_yaml = yaml.safeDump({
+		example_yaml = yaml.dump({
 			examples: {
 				response: {
 					value: example
