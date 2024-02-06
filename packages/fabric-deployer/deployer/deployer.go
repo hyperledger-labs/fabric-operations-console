@@ -650,9 +650,7 @@ func (d *Deployer) DownloadMustgatherHandler() func(http.ResponseWriter, *http.R
 }
 
 func (d *Deployer) GetMustgatherStatus(w http.ResponseWriter, r *http.Request) (interface{}, int, error) {
-	d.Logger.Infof("incoming request to get mustgather status")
 	status, err := d.Mustgather.Status()
-	d.Logger.Infof("request to get mustgather status completed")
 	return status, 200, err
 }
 
