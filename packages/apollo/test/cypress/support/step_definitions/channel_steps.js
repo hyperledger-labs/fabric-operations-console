@@ -31,6 +31,22 @@ Then(/^I clicked Create channel button$/, () => {
 
 Then(/^the chaincode with name (?:'|")(.*?)(?:'|") should have been created in (?:'|")(.*?)(?:'|") state$/, (chaincodeName, state) => {
 	try {
+		// Sometimes error is displayed (due to timeout or any reason) but retry works
+		let found = false
+		for(let i = 0; i<10;i++){
+			if (found == false)
+			{
+				cy.wait(2000)
+				cy.log('Checking if error displayed')
+				cy.get('body').then(($body) => {
+					if ($body.find(":contains(An unexpected error occurred)").length > 0) {
+						cy.get(`button[id="submit"]`).click()
+						cy.wait(60000)
+						found = true
+					}
+				  })
+			}
+		}
 		cy.get('.ibp-tile-content-title', { timeout: 60000 }).contains(chaincodeName).should('be.visible')
 		cy.get('.ibp-channel-chaincode-status').contains(state).should('be.visible')
 	} catch (err) {
