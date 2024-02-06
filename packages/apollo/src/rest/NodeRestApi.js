@@ -1063,7 +1063,7 @@ class NodeRestApi {
 	}
 
 	static async updateConfigOverride(node) {
-		await RestApi.put(`/api/v3/kubernetes/components/${node.id}`, {
+		await RestApi.put(`/api/v2/kubernetes/components/${node.id}`, {
 			config_override: node.config_override,
 		});
 		NodeRestApi.skip_cache = true;

@@ -283,7 +283,7 @@ class CertificateAuthorityRestApi {
 			if (ca.replicas) {
 				data.replicas = ca.replicas;
 			}
-			const url = `/api/v3/kubernetes/components/${ca.id}`;
+			const url = `/api/v2/kubernetes/components/${ca.id}`;
 			await RestApi.put(url, data);
 		}
 		return ca;
