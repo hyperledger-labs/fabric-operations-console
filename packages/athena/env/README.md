@@ -492,6 +492,9 @@ __default_settings_doc.json:__
   // defaults false
   "hsm_enabled": true,
 
+  // legacy - i don't know what this did, but its no longer used - dsh
+  "infra_import_options": {"supported_cas": [], "supported_orderers": [], "supported_peers": [],}
+
   // if true the Fabric 2.0 chaincode lifecycle wizard elements will appear
   // defaults true
   "lifecycle2_0_enabled": true,
