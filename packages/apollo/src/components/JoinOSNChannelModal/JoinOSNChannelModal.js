@@ -35,6 +35,7 @@ import { NodeRestApi } from '../../rest/NodeRestApi';
 import async from 'async';
 import { promisify } from 'util';
 import ConfigBlockApi from '../../rest/ConfigBlockApi';
+import { EventsRestApi } from '../../rest/EventsRestApi';
 
 const SCOPE = 'joinOSNChannelModal';
 const Log = new Logger(SCOPE);
@@ -726,6 +727,7 @@ class JoinOSNChannelModal extends React.Component {
 	// dsh todo - remove async each limit and do a for loop with awaits
 	async onSubmit(self, cb) {
 		const {
+			selectedCluster,
 			joinOsnMap,
 			b_genesis_block,
 		} = self.props;
@@ -735,6 +737,15 @@ class JoinOSNChannelModal extends React.Component {
 		});
 		let join_errors = 0;
 		let join_successes = 0;
+
+		let peersToBeAdd = joinOsnMap[selectedCluster.cluster_id].nodes.filter(_node => _node._status !== constants.OSN_JOIN_SUCCESS);
+
+		peersToBeAdd = peersToBeAdd.map(_peer => {
+			return {
+				..._peer,
+				display_name: _peer.name
+			};
+		});
 
 		// iter over the selected clusters
 		async.eachLimit(joinOsnMap, 1, (cluster, cluster_cb) => {
@@ -783,11 +794,14 @@ class JoinOSNChannelModal extends React.Component {
 				submitting: false,
 			});
 
+			let resp = null;
+			let responseStatus = '';
 			if (join_errors > 0) {
-				return cb({ failures: true }, null);
-			} else {
-				return cb(null, null);
+				resp = { failures: true };
+				responseStatus = 'error';
 			}
+			EventsRestApi.sendJoinChannelEvent(self.props.channel_id, peersToBeAdd, responseStatus);
+			return cb(resp, null);
 		});
 
 		// convert json to pb && then send joinOSNChannel call && reflect the status in the UI

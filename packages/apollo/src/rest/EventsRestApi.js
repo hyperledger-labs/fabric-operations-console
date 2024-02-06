@@ -68,11 +68,26 @@ class EventsRestApi {
 		try {
 			const peer_names = peers.map(peer => {
 				return '"' + peer.display_name + '"';
-			});
+			}).join(', ');
 			EventsRestApi.recordActivity({
 				status: status === 'error' ? 'error' : 'success',
-				log: (peer_names.length > 1 ? 'peers' : 'peer') + ` ${peer_names.join(', ')} ` + (peer_names.length > 1 ? 'have' : 'has') + ` joined the channel "${channel_id}"`,
-				code: 200
+				log: `${peers.length > 1 ? 'peers' : 'peer'} ${peer_names} ${peers.length > 1 ? 'have' : 'has'} ${status === 'error' ? 'failed to ' : ''} joined the channel "${channel_id}"`,
+				code: status === 'error' ? 403 : 200
+			});
+		} catch (e) {
+			console.error('unable to record channel join', e);
+		}
+	}
+
+	static async sendUnJoinChannelEvent(channel_id, peers, status) {
+		try {
+			const peer_names = peers.map(peer => {
+				return '"' + peer.display_name + '"';
+			}).join(', ');
+			EventsRestApi.recordActivity({
+				status: status === 'error' ? 'error' : 'success',
+				log: `${peers.length > 1 ? 'peers' : 'peer'} ${peer_names} ${peers.length > 1 ? 'have' : 'has'} ${status === 'error' ? 'failed to ' : ''} disconnect from the channel "${channel_id}"`,
+				code: status === 'error' ? 403 : 200
 			});
 		} catch (e) {
 			console.error('unable to record channel join', e);
