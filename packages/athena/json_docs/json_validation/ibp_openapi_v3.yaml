@@ -4915,6 +4915,57 @@ paths:
               schema:
                 $ref: '#/components/schemas/Bad'
 
+  /ak/api/v3/configblocks/{id}:
+    post:
+      tags:
+        - Manage component
+      summary: Get a single config block tx
+      description: Create Channel with single config block
+      operationId: create_channel
+      parameters:
+        - $ref: "#/components/parameters/PathTxId"
+      requestBody:
+        description: The action to perform.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoreChannelConfigBlock"
+        required: true
+      x-sdk-operations:
+        request-examples:
+          curl:
+            - name: Example request
+              example:
+                - type: code
+                  lang: curl
+                  source:
+                    - |-
+                      curl -X POST "https://{REPLACE_HOSTNAME_AND_PORT}/api/v[123]/configblocks/{tx_id}" \
+                      -H "Content-Type: application/json" \
+                      -H "Authorization: Bearer {Access-Token}" \
+                      -d "{
+                            \"channel": "mychannel",
+                            \"block_b64": "string"
+                          }"
+      responses:
+        200:
+          description: Channel created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreChannelConfigBlockResponse"
+        401:
+          description: Request is unauthorized (invalid credentials).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+        403:
+          description: Request is bad (invalid syntax).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
   #
   #
   #
@@ -11043,6 +11094,46 @@ components:
           type: string
           description: The latest config block of the system channel. Base 64 encoded. To obtain this block, you must use a **Fabric API**. This config block should list this ordering node as a valid consenter on the system-channel.
           example: bWFzc2l2ZSBiaW5hcnkgb2YgYSBjb25maWcgYmxvY2sgd291bGQgYmUgaGVyZSBpZiB0aGlzIHdhcyByZWFsLCBwbGVhc2UgZG9udCBzZW5kIHRoaXM=
+
+    StoreChannelConfigBlock:
+      type: object
+      required:
+        - channel
+        - block_b64
+      properties:
+        channel:
+          type: string
+          x-validate_regex_must_pass: channel_name
+          x-validate_regex_error_msg: "The channel name can contain only lowercase characters, numbers, or dashes, and should start with a letter."
+        block_b64:
+          type: string
+    StoreChannelConfigBlockResponse:
+      type: object
+      properties:
+        block_b64:
+          type: string
+          example: accepted
+        channel:
+          type: string
+          description: name of the channel.
+          example: mychannel
+        id:
+          type: string
+          description: id of the channel.
+          example: channelid
+        timestamp:
+          type: number
+          description: UNIX timestamp of component creation, UTC, ms.
+          example: 1549490200312
+        type:
+          type: string
+          description: block type
+          example: config-block
+        visibility:
+          type: string
+          description: visiblity level
+          example: inbox
+
   #
   #
   #

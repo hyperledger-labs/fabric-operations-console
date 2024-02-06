@@ -327,6 +327,7 @@ module.exports = (logger, ev, t, opts) => {
 			const lc_req_url = req._validate_path ? req._validate_path.toLowerCase() : null;
 			const lc_req_method = req.method ? req.method.toLowerCase() : null;
 			const flat_openapi = validate.pick_openapi_file(req);
+
 			if (flat_openapi.paths[lc_req_url] && flat_openapi.paths[lc_req_url][lc_req_method]) {
 				if (flat_openapi.paths[lc_req_url][lc_req_method].body) {
 					logger.debug('[validate] found matching openapi route for body validation: ' + lc_req_url + ', method: ' + lc_req_method);
@@ -1102,17 +1103,6 @@ module.exports = (logger, ev, t, opts) => {
 		} else {
 			return 'v3';								// default
 		}
-	};
-
-	/**
-	 * Test RegExp on value
-	 * @param {RegExp} regEx to be apply
-	 * @param {string} value to test
-	 * @returns {boolean} outcome of test regex
-	 */
-	validate.validateRegex = (regEx, value) => {
-		const regex = new RegExp(regEx);
-		return regex.test(value);
 	};
 
 	// --------------------------------------------

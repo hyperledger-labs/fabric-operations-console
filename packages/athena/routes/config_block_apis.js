@@ -77,18 +77,13 @@ module.exports = (logger, ev, t) => {
 		}
 
 		t.validate.request(req, res, null, () => {
-			const validChannelName = t.validate.validateRegex(/^[a-z][a-z0-9-.]+$/g, req.body.channel);
-			if (validChannelName) {
-				t.config_blocks_lib.createConfigBlockDoc(req, (err, ret) => {
-					if (err) {
-						return res.status(t.ot_misc.get_code(err)).json(err);
-					} else {
-						return res.status(200).json(ret);
-					}
-				});
-			} else {
-				return res.status(400).json({ message: 'The channel name could be lowercase characters, numbers, or dashes, & should start with a letter.' });
-			}
+			t.config_blocks_lib.createConfigBlockDoc(req, (err, ret) => {
+				if (err) {
+					return res.status(t.ot_misc.get_code(err)).json(err);
+				} else {
+					return res.status(200).json(ret);
+				}
+			});
 		});
 	}
 
