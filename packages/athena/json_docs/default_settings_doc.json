@@ -247,6 +247,11 @@
 			"source": "^[a-z][a-z0-9_-]+$",
 			"flags": "",
 			"notes": "couchdb needs it to start with a letter, must be lower case, can contain numbers (deployer restrictions n/a)"
+		},
+		"channel_name": {
+			"source": "^[a-z][a-z0-9-.]+$",
+			"flags": "",
+			"notes": "The channel name can contain only lowercase characters, numbers, or dashes, and should start with a letter."
 		}
 	},
 	"region": "local",
