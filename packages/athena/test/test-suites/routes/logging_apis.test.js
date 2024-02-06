@@ -91,8 +91,8 @@ describe('Logging APIs', () => {
 				},
 				expectBlock: (res) => {
 					const received_text = res.text.replace(/\s/g, '');
-					let html = '<html><body><h2>LogFiles</h2><h3>AthenaInstance:undefined</h3><p><ahref="/api/v1/logs/client.log"target="_blank">';
-					html += 'client.log</a>-1234-(NaNMB)</p><p><ahref="/api/v1/logs/server.log"target="_blank">server.log</a>-1234-(NaNMB)</p></body></html>';
+					let html = '<html><body><h2>LogFiles</h2><h3>AthenaInstance:undefined</h3><p><ahref="/api/v3/logs/client.log"target="_blank">';
+					html += 'client.log</a>-1234-(NaNMB)</p><p><ahref="/api/v3/logs/server.log"target="_blank">server.log</a>-1234-(NaNMB)</p></body></html>';
 					expect(res.status).to.equal(200);
 					expect(received_text).to.equal(html);
 				}
@@ -200,11 +200,11 @@ describe('Logging APIs', () => {
 	};
 
 	const testCollection = [
-		// POST /api/v1/logs
+		// POST /api/v3/logs
 		{
-			suiteDescribe: 'POST /api/v1/logs',
-			mainDescribe: 'Run POST /api/v1/logs ',
-			arrayOfRoutes: ['/api/v1/logs'],
+			suiteDescribe: 'POST /api/v3/logs',
+			mainDescribe: 'Run POST /api/v3/logs ',
+			arrayOfRoutes: ['/api/v3/logs'],
 			executeRequest: (routeInfo, done) => {
 				chai.request(this.app)
 					.post(routeInfo.route)
@@ -266,11 +266,11 @@ describe('Logging APIs', () => {
 				}
 			]
 		},
-		// GET /api/v1/logs - Get the latest log files
+		// GET /api/v3/logs - Get the latest log files
 		{
-			suiteDescribe: 'GET /api/v1/logs',
-			mainDescribe: 'Run GET /api/v1/logs ',
-			arrayOfRoutes: ['/api/v1/logs'],
+			suiteDescribe: 'GET /api/v3/logs',
+			mainDescribe: 'Run GET /api/v3/logs ',
+			arrayOfRoutes: ['/api/v3/logs'],
 			executeRequest: (routeInfo, done) => {
 				chai.request(this.app)
 					.get(routeInfo.route)
@@ -280,41 +280,15 @@ describe('Logging APIs', () => {
 			},
 			testData: [
 				{
-					arrayOfInfoToTest: get_latest_log_files('/api/v1/logs')
+					arrayOfInfoToTest: get_latest_log_files('/api/v3/logs')
 				}
 			]
 		},
-		// GET /api/v1/logs/:logFile - Get the desired log file
+		// GET /api/v3/logs/:logFile - Get the desired log file
 		{
-			suiteDescribe: 'GET /api/v1/logs/:logFile',
-			mainDescribe: 'Run GET /api/v1/logs/:logFile ',
-			arrayOfRoutes: ['/api/v1/logs/logFile'],
-			executeRequest: (routeInfo, done) => {
-				chai.request(this.app)
-					.get(routeInfo.route)
-					.end((err, resp) => {
-						myutils.handleResponse(err, resp, routeInfo, done);
-					});
-			},
-			testData: [
-				{
-					arrayOfInfoToTest: [
-						{
-							itStatement: 'should return a status of 200 and the correct response test_id=kfyplp',
-							expectBlock: (res) => {
-								expect(res.statusCode).to.equal(200);
-								expect(res.text).to.include('this is the current server time');
-							}
-						}
-					]
-				}
-			]
-		},
-		// GET /ak/api/v1/logs/:logFile - Get the desired log file
-		{
-			suiteDescribe: 'GET /ak/api/v1/logs/:logFile',
-			mainDescribe: 'Run GET /ak/api/v1/logs/:logFile ',
-			arrayOfRoutes: ['/ak/api/v1/logs/logFile'],
+			suiteDescribe: 'GET /api/v3/logs/:logFile',
+			mainDescribe: 'Run GET /api/v3/logs/:logFile ',
+			arrayOfRoutes: ['/api/v3/logs/logFile'],
 			executeRequest: (routeInfo, done) => {
 				chai.request(this.app)
 					.get(routeInfo.route)
@@ -336,11 +310,37 @@ describe('Logging APIs', () => {
 				}
 			]
 		},
-		// PUT /api/v1/logs/file_settings - Change the file logging settings
+		// GET /ak/api/v3/logs/:logFile - Get the desired log file
 		{
-			suiteDescribe: 'PUT /api/v1/logs/file_settings',
-			mainDescribe: 'PUT /api/v1/logs/file_settings ',
-			arrayOfRoutes: ['/api/v1/logs/file_settings'],
+			suiteDescribe: 'GET /ak/api/v3/logs/:logFile',
+			mainDescribe: 'Run GET /ak/api/v3/logs/:logFile ',
+			arrayOfRoutes: ['/ak/api/v3/logs/logFile'],
+			executeRequest: (routeInfo, done) => {
+				chai.request(this.app)
+					.get(routeInfo.route)
+					.end((err, resp) => {
+						myutils.handleResponse(err, resp, routeInfo, done);
+					});
+			},
+			testData: [
+				{
+					arrayOfInfoToTest: [
+						{
+							itStatement: 'should return a status of 200 and the correct response test_id=kfyplp',
+							expectBlock: (res) => {
+								expect(res.statusCode).to.equal(200);
+								expect(res.text).to.include('this is the current server time');
+							}
+						}
+					]
+				}
+			]
+		},
+		// PUT /api/v3/logs/file_settings - Change the file logging settings
+		{
+			suiteDescribe: 'PUT /api/v3/logs/file_settings',
+			mainDescribe: 'PUT /api/v3/logs/file_settings ',
+			arrayOfRoutes: ['/api/v3/logs/file_settings'],
 			executeRequest: (routeInfo, done) => {
 				chai.request(this.app)
 					.put(routeInfo.route)
@@ -356,11 +356,11 @@ describe('Logging APIs', () => {
 				}
 			]
 		},
-		// PUT /ak/api/v1/logs/file_settings - Change the file logging settings
+		// PUT /ak/api/v3/logs/file_settings - Change the file logging settings
 		{
-			suiteDescribe: 'PUT /ak/api/v1/logs/file_settings',
-			mainDescribe: 'PUT /ak/api/v1/logs/file_settings ',
-			arrayOfRoutes: ['/ak/api/v1/logs/file_settings'],
+			suiteDescribe: 'PUT /ak/api/v3/logs/file_settings',
+			mainDescribe: 'PUT /ak/api/v3/logs/file_settings ',
+			arrayOfRoutes: ['/ak/api/v3/logs/file_settings'],
 			executeRequest: (routeInfo, done) => {
 				chai.request(this.app)
 					.put(routeInfo.route)
