@@ -1104,6 +1104,17 @@ module.exports = (logger, ev, t, opts) => {
 		}
 	};
 
+	/**
+	 * Test RegExp on value
+	 * @param {RegExp} regEx to be apply
+	 * @param {string} value to test
+	 * @returns {boolean} outcome of test regex
+	 */
+	validate.validateRegex = (regEx, value) => {
+		const regex = new RegExp(regEx);
+		return regex.test(value);
+	};
+
 	// --------------------------------------------
 	// start
 	// --------------------------------------------

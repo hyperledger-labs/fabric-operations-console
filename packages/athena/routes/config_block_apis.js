@@ -75,14 +75,20 @@ module.exports = (logger, ev, t) => {
 			req._validate_path = '/ak/api/' + t.validate.pick_ver(req) + '/configblocks/{id}';
 			logger.debug('[pre-flight] setting validate route:', req._validate_path);
 		}
+
 		t.validate.request(req, res, null, () => {
-			t.config_blocks_lib.createConfigBlockDoc(req, (err, ret) => {
-				if (err) {
-					return res.status(t.ot_misc.get_code(err)).json(err);
-				} else {
-					return res.status(200).json(ret);
-				}
-			});
+			const validChannelName = t.validate.validateRegex(/^[a-z][a-z0-9-.]+$/g, req.body.channel);
+			if (validChannelName) {
+				t.config_blocks_lib.createConfigBlockDoc(req, (err, ret) => {
+					if (err) {
+						return res.status(t.ot_misc.get_code(err)).json(err);
+					} else {
+						return res.status(200).json(ret);
+					}
+				});
+			} else {
+				return res.status(400).json({ message: 'The channel name could be lowercase characters, numbers, or dashes, & should start with a letter.' });
+			}
 		});
 	}
 
