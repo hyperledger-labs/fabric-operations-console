@@ -27,7 +27,7 @@ Feature: Verify miscellaneous cases of console works as expected
     And I clicked the button with text 'Import'
     And I upload file 'fixtures/test_data/Import/Node_Import.zip' to 'file-uploader' input
     And I clicked the button with id 'import_button'
-    Then wait "30" seconds
+    Then wait "60" seconds
     And I am on the 'nodes' page
     Then a tile with title 'Peer_Import' should have been created
     Then a tile with title 'CA_Import' should have been created

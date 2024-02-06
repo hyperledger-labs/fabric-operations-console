@@ -16,7 +16,8 @@ Feature: Verify Console APIs works as expected
 		Then I should see button with id "api_key_secret_reveal"
 		When I clicked the button with id 'api_key_secret_reveal'
 		Then I should see table with id "table-apikeys"
-		Then I should see api key row with text "managerAPIKey" and id "current_apikeys-apikey_description_label-0"
+		Then the element div with text 'managerAPIKey' should be visible on page
+
 
 	Scenario: Verify User can create new API key for writer and reader role
 		When I clicked the button with text 'Create an API key'

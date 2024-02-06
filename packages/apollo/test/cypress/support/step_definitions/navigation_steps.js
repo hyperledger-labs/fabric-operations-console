@@ -57,7 +57,7 @@ Then(/^a tile with title (?:'|")(.*?)(?:'|") should have been created$/, tileTit
 
 Given(/^I clicked Create a (peer|Certificate Authority|Ordering Service)$/, () => {
   cy.wait(500)
-  cy.get('label[for="ibm_saas"]').click();
+  cy.get('label[for="deploy-id"]').click();
 });
 
 Given(/^I clicked the Next button in Create MSP definition screen$/, () => {
