@@ -647,7 +647,7 @@ function setHeaders(req, res, next) {
 	}
 	if (setNoCache) {																	// if asking for JSON, add no cache headers
 		no_cache_headers(res);
-		res.setHeader('Content-Security-Policy', 'default-src \'self\'; frame-ancestors \'none\'');	// suggestion by dsh
+		res.setHeader('Content-Security-Policy', 'default-src \'self\'; frame-ancestors \'none\'; object-src \'none\'');	// suggestion by dsh
 	} else {
 		if (ev && Array.isArray(ev.CSP_HEADER_VALUES)) {
 			res.setHeader('Content-Security-Policy', ev.CSP_HEADER_VALUES.join(';'));	// theres a bunch of things in here for the "Braze" tool
