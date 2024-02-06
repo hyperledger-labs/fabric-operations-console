@@ -329,7 +329,7 @@ module.exports = (logger, ev, t, opts) => {
 			const flat_openapi = validate.pick_openapi_file(req);
 			if (flat_openapi.paths[lc_req_url] && flat_openapi.paths[lc_req_url][lc_req_method]) {
 				if (flat_openapi.paths[lc_req_url][lc_req_method].body) {
-					logger.debug(`[validate] found matching openapi route for body validation:  ${lc_req_url} , method:  ${lc_req_method}`);
+					logger.debug('[validate] found matching openapi route for body validation: ' + lc_req_url + ', method: ' + lc_req_method);
 					const body_errors = validate_input_field([], req.body, flat_openapi.paths[lc_req_url][lc_req_method].body, req, 0);
 					errors = errors.concat(body_errors);
 					was_looked_at = true;
@@ -338,7 +338,7 @@ module.exports = (logger, ev, t, opts) => {
 
 			if (flat_openapi.paths[lc_req_url] && flat_openapi.paths[lc_req_url][lc_req_method]) {
 				if (flat_openapi.paths[lc_req_url][lc_req_method].query) {
-					logger.debug(`[validate] found matching openapi route for body validation:  ${lc_req_url} , method:  ${lc_req_method}`);
+					logger.debug('[validate] found matching openapi route for query validation: ' + lc_req_url + ', method: ' + lc_req_method);
 					const query_errors = validate_input_field([], req.query, flat_openapi.paths[lc_req_url][lc_req_method].query, req, 0);
 					errors = errors.concat(query_errors);
 					was_looked_at = true;
