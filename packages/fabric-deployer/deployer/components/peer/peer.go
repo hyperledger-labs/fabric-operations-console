@@ -23,8 +23,8 @@ import (
 	"strings"
 	"time"
 
-	config "github.com/IBM-Blockchain/fabric-operator/api/peer/v1"
-	v2config "github.com/IBM-Blockchain/fabric-operator/api/peer/v2"
+	config "github.com/IBM-Blockchain/fabric-operator/pkg/apis/peer/v1"
+	v2config "github.com/IBM-Blockchain/fabric-operator/pkg/apis/peer/v2"
 	"github.com/pkg/errors"
 
 	dconfig "github.com/IBM-Blockchain/fabric-deployer/config"

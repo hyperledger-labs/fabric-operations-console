@@ -30,8 +30,8 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/peer/api"
-	v2peer "github.com/IBM-Blockchain/fabric-operator/api/peer/v2"
 	current "github.com/IBM-Blockchain/fabric-operator/api/v1beta1"
+	v2peer "github.com/IBM-Blockchain/fabric-operator/pkg/apis/peer/v2"
 
 	corev1 "k8s.io/api/core/v1"
 )

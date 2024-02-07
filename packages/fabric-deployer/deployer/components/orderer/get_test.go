@@ -34,8 +34,8 @@ import (
 	cfg "github.com/IBM-Blockchain/fabric-deployer/config"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/orderer"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/orderer/mocks"
-	ordererconfig "github.com/IBM-Blockchain/fabric-operator/api/orderer/v1"
 	current "github.com/IBM-Blockchain/fabric-operator/api/v1beta1"
+	ordererconfig "github.com/IBM-Blockchain/fabric-operator/pkg/apis/orderer/v1"
 )
 
 var _ = Describe("GET API", func() {

@@ -28,8 +28,8 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/ca/api"
-	v1 "github.com/IBM-Blockchain/fabric-operator/api/ca/v1"
 	current "github.com/IBM-Blockchain/fabric-operator/api/v1beta1"
+	v1 "github.com/IBM-Blockchain/fabric-operator/pkg/apis/ca/v1"
 )
 
 var _ = Describe("Update APIs", func() {
