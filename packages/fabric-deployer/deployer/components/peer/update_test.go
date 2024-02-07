@@ -34,8 +34,8 @@ import (
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/peer"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/peer/api"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/peer/mocks"
-	v1 "github.com/IBM-Blockchain/fabric-operator/api/peer/v1"
 	current "github.com/IBM-Blockchain/fabric-operator/api/v1beta1"
+	v1 "github.com/IBM-Blockchain/fabric-operator/pkg/apis/peer/v1"
 )
 
 var _ = Describe("Update API", func() {

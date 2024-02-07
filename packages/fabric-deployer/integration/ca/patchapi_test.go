@@ -28,8 +28,8 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/ca/api"
-	v1ca "github.com/IBM-Blockchain/fabric-operator/api/ca/v1"
 	current "github.com/IBM-Blockchain/fabric-operator/api/v1beta1"
+	v1ca "github.com/IBM-Blockchain/fabric-operator/pkg/apis/ca/v1"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"

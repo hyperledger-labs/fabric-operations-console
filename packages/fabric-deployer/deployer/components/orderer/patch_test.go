@@ -35,8 +35,8 @@ import (
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/orderer"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/orderer/api"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/orderer/mocks"
-	v2orderer "github.com/IBM-Blockchain/fabric-operator/api/orderer/v2"
 	current "github.com/IBM-Blockchain/fabric-operator/api/v1beta1"
+	v2orderer "github.com/IBM-Blockchain/fabric-operator/pkg/apis/orderer/v2"
 )
 
 var _ = Describe("Patch API", func() {

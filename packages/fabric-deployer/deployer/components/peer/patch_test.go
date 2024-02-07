@@ -35,8 +35,8 @@ import (
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/peer"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/peer/api"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/peer/mocks"
-	v2peer "github.com/IBM-Blockchain/fabric-operator/api/peer/v2"
 	current "github.com/IBM-Blockchain/fabric-operator/api/v1beta1"
+	v2peer "github.com/IBM-Blockchain/fabric-operator/pkg/apis/peer/v2"
 )
 
 var _ = Describe("Patch API", func() {

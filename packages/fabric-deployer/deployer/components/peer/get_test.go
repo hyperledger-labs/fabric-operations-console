@@ -35,8 +35,8 @@ import (
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/common"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/peer"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/peer/mocks"
-	configpeer "github.com/IBM-Blockchain/fabric-operator/api/peer/v1"
 	current "github.com/IBM-Blockchain/fabric-operator/api/v1beta1"
+	configpeer "github.com/IBM-Blockchain/fabric-operator/pkg/apis/peer/v1"
 )
 
 var _ = Describe("GET API", func() {

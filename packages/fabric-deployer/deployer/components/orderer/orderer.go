@@ -30,9 +30,9 @@ import (
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/common"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/components/orderer/api"
 	"github.com/IBM-Blockchain/fabric-deployer/deployer/util"
-	config "github.com/IBM-Blockchain/fabric-operator/api/orderer/v1"
-	v2config "github.com/IBM-Blockchain/fabric-operator/api/orderer/v2"
 	current "github.com/IBM-Blockchain/fabric-operator/api/v1beta1"
+	config "github.com/IBM-Blockchain/fabric-operator/pkg/apis/orderer/v1"
+	v2config "github.com/IBM-Blockchain/fabric-operator/pkg/apis/orderer/v2"
 
 	"go.uber.org/zap"
 
