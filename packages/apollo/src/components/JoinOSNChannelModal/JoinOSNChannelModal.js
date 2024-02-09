@@ -738,14 +738,17 @@ class JoinOSNChannelModal extends React.Component {
 		let join_errors = 0;
 		let join_successes = 0;
 
-		let peersToBeAdd = joinOsnMap[selectedCluster.cluster_id].nodes.filter(_node => _node._status !== constants.OSN_JOIN_SUCCESS);
+		let orderersToBeAdd = [];
+		if (selectedCluster) {
+			orderersToBeAdd = joinOsnMap[selectedCluster.cluster_id].nodes.filter(_node => _node._status !== constants.OSN_JOIN_SUCCESS);
 
-		peersToBeAdd = peersToBeAdd.map(_peer => {
-			return {
-				..._peer,
-				display_name: _peer.name
-			};
-		});
+			orderersToBeAdd = orderersToBeAdd.map(_peer => {
+				return {
+					..._peer,
+					display_name: _peer.name
+				};
+			});
+		}
 
 		// iter over the selected clusters
 		async.eachLimit(joinOsnMap, 1, (cluster, cluster_cb) => {
@@ -800,7 +803,10 @@ class JoinOSNChannelModal extends React.Component {
 				resp = { failures: true };
 				responseStatus = 'error';
 			}
-			EventsRestApi.sendJoinChannelEvent(self.props.channel_id, peersToBeAdd, responseStatus);
+
+			if (orderersToBeAdd.length) {
+				EventsRestApi.sendJoinChannelEvent(self.props.channel_id, orderersToBeAdd, responseStatus, 'orderer');
+			}
 			return cb(resp, null);
 		});
 
