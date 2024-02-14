@@ -484,25 +484,25 @@ class SignatureDetailModal extends React.Component {
 		});
 	};
 
-	buildMessage(member_diff, type, status = 'success') {
+	buildMessage(diff, type, status = 'success') {
 		const opt = {
 			log: type,
 			status,
 			code: status === 'success' ? 200 : 500
 		};
-		if (member_diff.added) {
+		if (diff.added) {
 			if (status === 'success') {
 				opt.log = `${opt.log} added to channel`;
 			} else {
 				opt.log = `${opt.log} failed to add in channel`;
 			}
-		} else if (member_diff.updated) {
+		} else if (diff.updated) {
 			if (status === 'success') {
 				opt.log = `${opt.log} updated to channel`;
 			} else {
 				opt.log = `${opt.log} failed to update in channel`;
 			}
-		} else if (member_diff.removed) {
+		} else if (diff.removed) {
 			if (status === 'success') {
 				opt.log = `${opt.log} removed from channel`;
 			} else {
