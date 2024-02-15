@@ -25,6 +25,7 @@ import { CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRest
 import ChannelApi from '../../rest/ChannelApi';
 import IdentityApi from '../../rest/IdentityApi';
 import SignatureRestApi from '../../rest/SignatureRestApi';
+import { EventsRestApi } from '../../rest/EventsRestApi';
 import StitchApi from '../../rest/StitchApi';
 import Clipboard from '../../utils/clipboard';
 import Helper from '../../utils/helper';
@@ -396,6 +397,7 @@ class SignatureDetailModal extends React.Component {
 						}
 					});
 				}
+
 				SignatureRestApi.signRequest(this.props.request, data)
 					.then(() => {
 						if (this.props.onComplete) {
@@ -417,8 +419,26 @@ class SignatureDetailModal extends React.Component {
 						});
 					});
 			} else {
+				const member_diff = this.getMemberDifferences();
+				const acl_diff = this.getACLDifferences();
+				const block_params_diff = this.getBlockParameterDifferences();
+				const raft_params_diff = this.getRaftParameterDifferences();
+				const policy_diff = this.getPolicyDifferences();
+				const capability_diff = this.getCapabilityDifferences();
+				const consenter_diff = this.getConsenterDifferences();
+				const msp_diff = this.getMSPDifferences();
+				const orderer_msp_diff = this.getOrdererMSPDifferences();
 				SignatureRestApi.submitRequest(this.props.request, this.props.submit_msp, this.props.submit_identity)
 					.then(() => {
+						this.buildMessage(member_diff, 'Member');
+						this.buildMessage(acl_diff, 'ACL');
+						this.buildMessage(block_params_diff, 'Block Params');
+						this.buildMessage(raft_params_diff, 'Raft Params');
+						this.buildMessage(policy_diff, 'Policy');
+						this.buildMessage(capability_diff, 'Capability');
+						this.buildMessage(consenter_diff, 'Consenter');
+						this.buildMessage(msp_diff, 'MSP');
+						this.buildMessage(orderer_msp_diff, 'Orderer MSP');
 						if (this.props.onComplete) {
 							this.props.onComplete(true);
 						}
@@ -426,6 +446,15 @@ class SignatureDetailModal extends React.Component {
 					})
 					.catch(err => {
 						Log.error(err);
+						this.buildMessage(member_diff, 'Member', 'error');
+						this.buildMessage(acl_diff, 'ACL', 'error');
+						this.buildMessage(block_params_diff, 'Block Params', 'error');
+						this.buildMessage(raft_params_diff, 'Raft Params', 'error');
+						this.buildMessage(policy_diff, 'Policy', 'error');
+						this.buildMessage(capability_diff, 'Capability', 'error');
+						this.buildMessage(consenter_diff, 'Consenter', 'error');
+						this.buildMessage(msp_diff, 'MSP', 'error');
+						this.buildMessage(orderer_msp_diff, 'Orderer MSP', 'error');
 						let details = err;
 						let title = 'error_signature_failed';
 						if (_.has(err, 'stitch_msg') && _.includes(err.stitch_msg, 'no Raft leader')) {
@@ -454,6 +483,37 @@ class SignatureDetailModal extends React.Component {
 			}
 		});
 	};
+
+	buildMessage(diff, type, status = 'success') {
+		const opt = {
+			log: type,
+			status,
+			code: status === 'success' ? 200 : 500
+		};
+		if (diff.added) {
+			if (status === 'success') {
+				opt.log = `${opt.log} added to channel`;
+			} else {
+				opt.log = `${opt.log} failed to add in channel`;
+			}
+		} else if (diff.updated) {
+			if (status === 'success') {
+				opt.log = `${opt.log} updated to channel`;
+			} else {
+				opt.log = `${opt.log} failed to update in channel`;
+			}
+		} else if (diff.removed) {
+			if (status === 'success') {
+				opt.log = `${opt.log} removed from channel`;
+			} else {
+				opt.log = `${opt.log} failed to remove from channel`;
+			}
+		} else {
+			return;
+		}
+		opt.log = `${opt.log} ${this.props.request.channel}`;
+		EventsRestApi.recordActivity(opt);
+	}
 
 	getChannelRoles(data) {
 		const roles = {};
@@ -893,7 +953,7 @@ class SignatureDetailModal extends React.Component {
 	}
 
 	getMSPDifferences() {
-		const diff = [];
+		const diff = {};
 		if (this.props.request.json_diff.msp) {
 			diff.updated = [];
 			let current = this.props.request.json_diff.msp.current;
