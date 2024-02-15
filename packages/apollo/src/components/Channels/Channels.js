@@ -769,7 +769,7 @@ class ChannelComponent extends Component {
 										custom: channel => {
 											return (
 												<div>
-													{
+													{channel && channel.extra_consenter_data ?
 														channel.extra_consenter_data.map(orderer => {
 															return (
 																<p
@@ -779,7 +779,7 @@ class ChannelComponent extends Component {
 																	{orderer.name} --- {orderer.host}:{orderer.port}
 																</p>
 															);
-														})
+														}) : null
 													}
 												</div>
 											);
