@@ -104,6 +104,7 @@
 		- will generate an error if the current version and desired version match a breaking upgrade rule.
 */
 module.exports = (logger, ev, t, opts) => {
+	console.time('validation_lib');
 	const validate = {};
 	let flat_swag = {
 		v2: {
@@ -121,10 +122,13 @@ module.exports = (logger, ev, t, opts) => {
 	// load a swagger json/yaml files from paths
 	//-------------------------------------------------------------
 	validate.load_swagger_paths = (swagger_file_paths) => {
+		console.log('validate.load_swagger_paths', swagger_file_paths);
 		let obj = null;
 		for (let ver in swagger_file_paths) {
 			try {
+				console.time('parse_yaml_to_json from PATH');
 				obj = parse_to_json(t.fs.readFileSync(swagger_file_paths[ver], 'utf8'));
+				console.timeEnd('parse_yaml_to_json from PATH');
 			} catch (e) {
 				logger.error('\n');
 				logger.error('[validate] unable to load file from path. e:', e);
@@ -142,7 +146,9 @@ module.exports = (logger, ev, t, opts) => {
 		let obj = null;
 		for (let ver in swagger_files) {
 			try {
+				console.time('parse_yaml_to_json1');
 				obj = parse_to_json(swagger_files[ver]);
+				console.timeEnd('parse_yaml_to_json1');
 			} catch (e) {
 				logger.error('\n');
 				logger.error('[validate] unable to load file. e:', e);
@@ -1107,12 +1113,22 @@ module.exports = (logger, ev, t, opts) => {
 	// --------------------------------------------
 	// start
 	// --------------------------------------------
+	// console.log('opts.file_names', opts.file_names, opts.files);
+	console.log('====================================================================');
+	console.log('swagger_file_paths');
+	console.log('opts.file_names', opts.file_names);
+	// console.log('opts.files', opts.files);
 	if (opts.file_names) {
+		console.log('1122 line');
+		console.timeEnd('validation_lib');
 		validate.load_swagger_paths(opts.file_names);
 	} else if (opts.files) {
+		console.log('1126 line');
+		console.timeLog('validation_lib');
 		validate.load_swaggers(opts.files);
 	}
 	for (let ver in flat_swag) {
+		console.timeLog('validation_lib');
 		logger.info('[validate] loaded OpenAPI/Swagger file. Version:', flat_swag[ver] ? flat_swag[ver].version : '-');
 		//t.fs.writeFileSync('./test_swagger_flat_' + ver + '.json', JSON.stringify(flat_swag[ver], null, '\t')); // debug
 	}

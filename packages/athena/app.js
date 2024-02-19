@@ -147,8 +147,15 @@ app.use(bodyParser.raw({ type: 'application/grpc-web+proto', limit: grpcMaxSize 
 app.use('/proxy/', bodyParser.raw({ type: 'multipart/form-data', limit: grpcMaxSize }));// leave as buffer (w/o this line req.body is empty)
 app.set('env', 'production');														// don't echo express errors to the client
 app.use(compression());
+console.time('app_time_logging');
+console.log('Application logging started');
+console.timeLog('app_time_logging');
 look_for_couchdb(() => {
+	console.log('look_for_couchdb done');
+	console.timeLog('app_time_logging');
 	get_db_settings(() => {
+		console.log('get_db_settings done');
+		console.timeLog('app_time_logging');
 		setup_routes_and_start();
 	});
 });
@@ -156,37 +163,47 @@ look_for_couchdb(() => {
 // load the config file (yaml or json) and store it
 function load_config(file_name) {
 	console.log('reading config file:', file_name);					// we don't have a logger yet, use console
+	console.time('total_load_config');
 	const temp = _load_config(file_name);
 	if (temp) {
 		tools.config_file = temp;
 	} else {
 		process.exit();
 	}
+	console.timeEnd('total_load_config');
 }
 
 // get the config file (yaml or json)
 function _load_config(file_name) {
+	console.time('_load_config');
+	let data = null;
 	if (file_name.indexOf('.json') >= 0) {
 		try {
-			return JSON.parse(tools.fs.readFileSync(file_name));
+			data = JSON.parse(tools.fs.readFileSync(file_name));
+			console.timeLog('_load_config');
 		} catch (e) {												// we don't have a logger yet, use console
 			console.error('Error - Unable to load json configuration file', file_name);
 			console.error(e);
 		}
 	} else {
 		try {														// use yaml ib if its not json
-			return tools.yaml.load(tools.fs.readFileSync(file_name, 'utf8'));
+
+			data = tools.yaml.load(tools.fs.readFileSync(file_name, 'utf8'));
+			console.timeLog('_load_config');
 		} catch (e) {
 			console.error('Error - Unable to load yaml configuration file', file_name);
 			console.error(e);
+			data = null;
 		}
 	}
-	return null;
+	console.timeEnd('_load_config');
+	return data;
 }
 
 //--------------------------------------------------------
 // Make sure CouchDB is running & reachable - gives CouchDB time to be found, otherwise terminates the process
 //--------------------------------------------------------
+
 function look_for_couchdb(cb) {
 	const startTime = Date.now();
 	logger.info('[couchdb loop] pinging couchdb - will start server when we get a good response from the database');
@@ -217,7 +234,7 @@ function look_for_couchdb(cb) {
 						}
 					});
 				}
-			}, 4000);
+			}, 1000);
 		}
 	});
 }
@@ -263,6 +280,8 @@ function get_db_settings(cb) {
 // Setup the routes and start the webserver
 //-------------------------------------------------
 function setup_routes_and_start() {
+	console.log('setup_routes_and_start Started');
+	console.timeLog('app_time_logging');
 	logger = tools.log_lib.build_server_logger(ev);
 	tools.client_logger = tools.log_lib.build_client_logger(ev);	// rebuild loggers using db settings
 
@@ -386,8 +405,14 @@ function setup_routes_and_start() {
 		res.status(204).end();
 	});
 
+	console.log('setup_routes_and_start Running');
+	console.timeLog('app_time_logging');
 	setup_session();
+	console.log('setup_routes_and_start Running');
+	console.timeLog('app_time_logging');
 	setup_debug_log();
+	console.log('setup_routes_and_start Running');
+	console.timeLog('app_time_logging');
 	setup_passport();
 
 	// parse ace_config on homepage route, its not served here though - this might be legacy...
@@ -447,9 +472,19 @@ function setup_routes_and_start() {
 	tools.migration_lib = require('./libs/migration_lib.js')(logger, ev, tools);
 	tools.jupiter_lib = require('./libs/jupiter_lib.js')(logger, ev, tools);
 
+	console.log('setup_routes_and_start Running');
+	console.timeLog('app_time_logging');
 	update_settings_doc(() => {
+		console.log('update_settings_doc Finished');
+		console.timeLog('app_time_logging');
+
+		console.log('setup_routes_and_start Running');
+		console.timeLog('app_time_logging');
+		// To up athena messaging listener
 		setup_pillow_talk();
 	});
+
+
 
 	// Used to update the passport when the URL changes
 	tools.update_passport = () => {
@@ -576,8 +611,12 @@ function setup_routes_and_start() {
 		return res.status(404).send('404 Route Not Found :(');
 	});
 
+	console.log('setup_routes_and_start > protobufjs.load > Started');
+	console.timeLog('app_time_logging');
 	// load protobuf files, needed for signature validation
 	protobufjs.load('../stitch/dist/v2.0-protobuf-bundle.json', (pb_error, pb_root) => {
+	console.log('setup_routes_and_start > protobufjs.load > completed');
+	console.timeLog('app_time_logging');
 		if (pb_error) {
 			logger.error('[startup] could not load pb files, error:', pb_error);
 		} else {
@@ -595,7 +634,11 @@ function setup_routes_and_start() {
 
 	// on startup get the list of deployer components - this preheats the cache
 	clearTimeout(load_cache_timer);
+	console.log('setup_routes_and_start > load_cache_timer > Started');
+	console.timeLog('app_time_logging');
 	load_cache_timer = setTimeout(() => {
+	console.log('setup_routes_and_start > load_cache_timer > Finished');
+	console.timeLog('app_time_logging');
 		load_component_cache();
 	}, 1000 * Math.random() * 60 * 2);								// delay call on start, to scatter calls from multiple athenas starting at once
 
@@ -604,10 +647,13 @@ function setup_routes_and_start() {
 		load_component_cache();
 		tools.patch_lib.auto_upgrade_orderers();
 	}, (1000 * 60 * 60 * 24) + (1000 * Math.random() * 60 * 2));	// once per day + scatter calls from multi athenas
+
 }
 
 // preload or update the component cache
 function load_component_cache() {
+	console.log('load_component_cache Started');
+	console.timeLog('app_time_logging');
 	if (tools.ot_misc.server_is_closed()) {							// skip performing db operations if the server is closed
 		logger.debug('[components] closed. skipping the cache update.');
 	} else {
@@ -618,11 +664,17 @@ function load_component_cache() {
 			logger.debug('[components] import only mode detected');
 			logger.debug('[components] loading cache... (no dep)');
 			const opts = { _skip_cache: true };
-			tools.component_lib.get_all_components(opts, () => { });
+			tools.component_lib.get_all_components(opts, () => {
+				console.log('tools.component_lib.get_all_components Completed');
+				console.timeLog('app_time_logging');
+			});
 		} else {
 			logger.debug('[components] loading cache... (w/dep)');
 			const opts = { _skip_cache: true, _include_deployment_attributes: true };
-			tools.deployer.get_all_components(opts, () => { });
+			tools.deployer.get_all_components(opts, () => {
+				console.log('tools.deployer.get_all_components Completed');
+				console.timeLog('app_time_logging');
+			});
 		}
 	}
 }
@@ -661,11 +713,14 @@ function setHeaders(req, res, next) {
 // this is to be used for catching ENV variables that differ from db settings doc.
 // the config yaml vars are already good to go w/o this code
 function update_settings_doc(cb) {
+	console.log('update_settings_doc Started');
+	console.timeLog('app_time_logging');
 	tools.otcc.getDoc({ db_name: ev.DB_SYSTEM, _id: process.env.SETTINGS_DOC_ID, SKIP_CACHE: true }, function (err, settings_doc) {
 		if (err) {
 			logger.error('[startup] an error occurred obtaining the "' + process.env.SETTINGS_DOC_ID + '"', err, settings_doc);
 			return cb();
 		} else {
+			// TODO: It is OR condition for value not matched.
 			const field = [];
 			if (settings_doc.host_url !== ev.HOST_URL) {
 				field.push('host_url');
@@ -723,8 +778,11 @@ function update_settings_doc(cb) {
 
 // listen for athena messages
 function setup_pillow_talk() {
+	console.log('setup_pillow_talk Started');
+	console.timeLog('app_time_logging');
 	tools.pillow.listen((_, doc) => {
-
+		console.log('setup_pillow_talk finished and server started');
+		console.timeLog('app_time_logging');
 		// --- Restart --- //
 		if (doc.message_type === 'restart') {
 			logger.debug('[pillow] - received a restart message');
@@ -891,6 +949,8 @@ function make_rate_limiter(log_msg, max_req) {
 // Debug Logs - fires on most routes
 //---------------------
 function setup_debug_log() {
+	console.log('setup_debug_log started');
+	console.timeLog('app_time_logging');
 	app.use(function (err, req, res, next) {			// we have to register function with 4 inputs (has error)
 		return log_req(err, req, res, next);
 	});
@@ -927,12 +987,16 @@ function setup_debug_log() {
 			return next();
 		}
 	}
+	console.log('setup_debug_log completed');
+	console.timeLog('app_time_logging');
 }
 
 //---------------------
 // Passport
 //---------------------
 function setup_passport() {
+	console.log('setup_passport started');
+	console.timeLog('app_time_logging');
 	if (ev.AUTH_SCHEME === 'appid') {
 		logger.error('[passport setup] "appid" is no longer supported 08/29/2019');
 	} else if (ev.AUTH_SCHEME === 'ibmid' && ev.IBM_ID.CLIENT_ID && ev.IBM_ID.CLIENT_SECRET) {
@@ -1132,12 +1196,16 @@ function setup_passport() {
 	} else {
 		logger.error('[passport setup] value for "auth_scheme" is not understood or there is incomplete data for the chosen scheme.', ev.AUTH_SCHEME);
 	}
+	console.log('setup_passport finished');
+	console.timeLog('app_time_logging');
 }
 
 //---------------------
 // Prepare the session/cookies
 //---------------------
 function setup_session() {
+	console.log('setup_session Started');
+	console.timeLog('app_time_logging');
 	let security = true;
 	if (!tools.ot_misc.use_tls_webserver(ev)) {
 		security = false;
@@ -1193,12 +1261,16 @@ function setup_session() {
 	app.use(sessionMiddleware);
 	app.use(passport.initialize());
 	app.use(passport.session());
+	console.log('setup_session calling finished');
+	console.timeLog('app_time_logging');
 }
 
 //---------------------
 // Setup our TLS cert (if needed)
 //---------------------
 function setup_tls_and_start_app(attempt) {
+	console.log('setup_tls_and_start_app Started');
+	console.timeLog('app_time_logging');
 	logger.info('[tls] setting up tls for server (if needed), attempt:', attempt);
 	if (attempt >= 5) {
 		logger.error('[tls] too many attempts during tls setup, something is wrong. killing the process.');
@@ -1274,6 +1346,8 @@ function setup_tls_and_start_app(attempt) {
 // Start HTTP Server
 //---------------------
 function start_app() {
+	console.log('start_app Started');
+	console.timeLog('app_time_logging');
 	logger.info('[startup] Athena Instance ID:', process.env.ATHENA_ID);
 	logger.debug('[startup] server utc timestamp:', Date.now());
 
@@ -1372,9 +1446,15 @@ function start_app() {
 		});
 	}, 1000 * Math.random() * 10);	// delay call on start to scatter calls from multiple athenas starting at once
 
+	console.log('start_ws_server Started');
+	console.timeLog('app_time_logging');
 	start_ws_server();				// next run the webserver (httpServer must be defined first)
+	console.log('config_watcher Started');
+	console.timeLog('app_time_logging');
 	config_watcher();
 	setTimeout(() => { 				// not sure why, but cert file is getting written twice. once AFTER its generated during start up
+		console.log('tls_file_watcher Started with 1000 * 5 time delay');
+		console.timeLog('app_time_logging');
 		tls_file_watcher(); 		// delay this watch until things settle
 	}, 1000 * 5);
 	clearInterval(check_tls_interval);
