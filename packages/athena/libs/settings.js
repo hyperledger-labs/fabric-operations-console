@@ -23,7 +23,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 	const update_min = 90;
 	const update_ms = 1000 * 60 * update_min;		// time in ms to fetch new settings (note new settings will be pushed to athena under normal conditions)
 	const db_names = [];
-	let update_debounce = null;
+	// let update_debounce = null;
 	let cbs = [];
 
 	let settings = {											// defaults env settings
@@ -45,6 +45,9 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 	for (const key in settings) {									// overwrite settings[key] with env[key] if env[key] exists
 		if (process.env[key]) { settings[key] = process.env[key]; }	// gets replaced here
 	}
+
+	console.log('=========Settings settingssettingssettings');
+	console.log('settings', settings);
 
 	//------------------------------------------------------
 	// compact all databases
@@ -68,21 +71,25 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 			exitIfError: true,
 		}
 	*/
-	settings.update = function (options, cb) {
-		clearTimeout(update_debounce);
+	settings.update = async (options, cb) => {
+		console.time('settings.update');
+		console.log('settings.update = function (options, cb) {');
+		// clearTimeout(update_debounce);
 		//logger.debug('[settings] - debouncing settings update'); // removed - minimize logs
 		if (cb) {
 			cbs.push(cb);								// remember our callback
 		}
 
-		update_debounce = setTimeout(() => {			// debounce the update function
-			settings.update_settings(options, (err, resp) => {
-				for (let i in cbs) {					// hit all callbacks
-					cbs[i](err, resp);
-				}
-				cbs = [];								// clear all callbacks
-			});
-		}, 200);
+		// update_debounce = setTimeout(() => {			// debounce the update function
+		console.timeLog('settings.update');
+		settings.update_settings(options, (err, resp) => {
+			console.timeLog('settings.update');
+			for (let i in cbs) {					// hit all callbacks
+				cbs[i](err, resp);
+			}
+			cbs = [];								// clear all callbacks
+		});
+		// }, 200);
 	};
 
 	settings.update_settings = (options, cb) => {
@@ -541,6 +548,8 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 				}
 			}
 		});
+
+
 
 		//-----------------------------
 		// Check the settings one more time
