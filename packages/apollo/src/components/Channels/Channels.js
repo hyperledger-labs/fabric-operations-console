@@ -929,6 +929,7 @@ class ChannelComponent extends Component {
 									this.props.updateState(SCOPE, {
 										joinOsnModal: false,
 									});
+									this.getAllOrdererChannels({ cache: 'skip' });
 								}}
 								onComplete={() => {
 									this.getAllOrdererChannels({ cache: 'skip' });
