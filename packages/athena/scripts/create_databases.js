@@ -25,9 +25,6 @@ module.exports = (logger, t) => {
 		const config_map = require('../json_docs/default_settings_doc.json').db_defaults;	// init with the defaults
 		const db_custom_names = require('../json_docs/default_settings_doc.json').db_custom_names;
 
-		console.log('config_map', config_map);
-		console.log('db_custom_names', db_custom_names);
-
 		const errs = [];
 
 		// check if config file db names are replacing names in the default file
@@ -56,8 +53,6 @@ module.exports = (logger, t) => {
 			}
 		}
 
-		console.log('config_map', config_map);
-
 		// ----- check/create each database ---------
 		t.async.eachLimit(config_map, 8, (db_part, cb_createDB) => {
 
@@ -81,7 +76,6 @@ module.exports = (logger, t) => {
 			});
 		}, () => {
 
-			console.time('setup.checkDocs');
 			// -------- check/create each document -----------
 			t.async.eachOfLimit(config_map, 8, (db_part, db, cb_docs_created) => {
 				if (!db_part.design_docs || db_part.design_docs.length === 0) {			// no docs to make
@@ -108,7 +102,6 @@ module.exports = (logger, t) => {
 
 	// check if docs exist for db
 	setup.checkDocs = (errs, db_name, docs_to_create, cb) => {
-		console.timeLog('setup.checkDocs');
 		t.async.eachLimit(docs_to_create, 8, (doc, cb_createDocs) => {
 			let fs_doc = '';
 			if (doc && doc.indexOf('.json') >= 0) {
@@ -120,12 +113,8 @@ module.exports = (logger, t) => {
 				}
 			} else {
 				try {
-					console.log('yaml load start');
-					console.timeLog('setup.checkDocs');
 					const temp = t.fs.readFileSync(t.path.join(__dirname, doc), 'utf8');
 					fs_doc = t.yaml.load(temp);
-					console.timeLog('setup.checkDocs');
-					console.log('yaml load ends');
 				} catch (e) {
 					logger.error('[db startup] unable to read yaml file. cannot add to database.', doc, e);
 					return cb_createDocs();
@@ -149,8 +138,6 @@ module.exports = (logger, t) => {
 				_id: fs_doc._id
 			};
 			couch_lib.getDoc(read_wr_opts, (err_getDoc, resp_getDoc) => {
-				console.log('fs_doc._id', fs_doc._id);
-				console.log('err_getDoc', err_getDoc);
 				// --- Does not exist ---- //
 				if (err_getDoc && err_getDoc.statusCode === 404) {
 					if (fs_doc && fs_doc._id === '00_settings_athena') {		// this doc is a little different
@@ -188,13 +175,10 @@ module.exports = (logger, t) => {
 							logger.debug(`[db startup] design doc: ${fs_doc._id} in db: ${db_name} is okay`);
 							return cb_createDocs();
 						} else {
-							console.log('*********');
-							console.timeLog('setup.checkDocs');
 							logger.warn(`[db startup] updating design doc: ${resp_getDoc._id} in db: ${db_name}`);
 							fs_doc._rev = resp_getDoc._rev;									// copy rev from latest version
 							writeDoc(read_wr_opts, t.misc.sortKeys(fs_doc), (w_err) => {
 								if (w_err) { errs.push(w_err); }
-								console.timeLog('setup.checkDocs');
 								return cb_createDocs();
 							});
 						}
@@ -221,8 +205,6 @@ module.exports = (logger, t) => {
 
 					// ---- All Other Docs here ---- //
 					else {
-						console.log('err_getDoc====', err_getDoc);
-						console.log('t.misc.are_design_docs_equal(fs_doc, resp_getDoc)', t.misc.are_design_docs_equal(fs_doc, resp_getDoc));
 						if (t.misc.are_design_docs_equal(fs_doc, resp_getDoc)) {
 							logger.debug(`[db startup] design doc: ${fs_doc._id} in db: ${db_name} is okay`);
 							return cb_createDocs();

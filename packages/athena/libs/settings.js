@@ -46,9 +46,6 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 		if (process.env[key]) { settings[key] = process.env[key]; }	// gets replaced here
 	}
 
-	console.log('=========Settings settingssettingssettings');
-	console.log('settings', settings);
-
 	//------------------------------------------------------
 	// compact all databases
 	//------------------------------------------------------
@@ -72,8 +69,6 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 		}
 	*/
 	settings.update = async (options, cb) => {
-		console.time('settings.update');
-		console.log('settings.update = function (options, cb) {');
 		// clearTimeout(update_debounce);
 		//logger.debug('[settings] - debouncing settings update'); // removed - minimize logs
 		if (cb) {
@@ -81,9 +76,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 		}
 
 		// update_debounce = setTimeout(() => {			// debounce the update function
-		console.timeLog('settings.update');
 		settings.update_settings(options, (err, resp) => {
-			console.timeLog('settings.update');
 			for (let i in cbs) {					// hit all callbacks
 				cbs[i](err, resp);
 			}
