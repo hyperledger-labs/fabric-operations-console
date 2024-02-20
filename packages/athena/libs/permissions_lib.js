@@ -230,8 +230,7 @@ module.exports = function (logger, ev, t) {
 					if (!email) {
 						input_errors.push('uuid does not exist: ' + encodeURI(uuid));
 					} else {
-						if (settings_doc.access_list[email].roles.includes('manager') && !lc_roles.includes('manager'))
-						{
+						if (settings_doc.access_list[email].roles.includes('manager') && !lc_roles.includes('manager')) {
 							let admin_count = 0;
 							for (let id in settings_doc.access_list) {
 								let user = settings_doc.access_list[id];
@@ -239,8 +238,7 @@ module.exports = function (logger, ev, t) {
 									admin_count = admin_count + 1;
 								}
 							}
-							if (admin_count < 2)
-							{
+							if (admin_count < 2) {
 								input_errors.push('[only manager] as you are the only manager for this console, you are not allowed to modify your roles');
 							}
 							else {
@@ -253,8 +251,7 @@ module.exports = function (logger, ev, t) {
 								t.notifications.procrastinate(req, notice);
 							}
 						}
-						else
-						{
+						else {
 							settings_doc.access_list[email].roles = lc_roles; 			// edit the user object
 
 							// build a notification doc
@@ -779,88 +776,56 @@ module.exports = function (logger, ev, t) {
 	};
 
 	//--------------------------------------------------
-	// Store a new access token
+	// Store a new access token (exchange apikey for bearer token)
 	//--------------------------------------------------
 	exports.create_access_token = (req, cb) => {
-		let input_errors = [];
 		let roles = (req && req.body && req.body.roles) ? req.body.roles : null;
 		let expiration_secs = (req && req.body && !isNaN(req.body.expiration_secs)) ? req.body.expiration_secs : 3600;
 		const parsed_auth = t.auth_header_lib.parse_auth(req);
 		const lc_username = (parsed_auth && parsed_auth.name) ? parsed_auth.name.toLowerCase() : null;
-		const MAX_EXPIRATION_SECS = 60 * 60 * 24 * 15;
 
-		// init roles from user
+		// init roles as manager, else use the ones provided
 		if (!Array.isArray(roles) || roles.length === 0) {
-			roles = ev.ACCESS_LIST[lc_username].roles;
+			roles = [ev.STR.MANAGER_ROLE, ev.STR.WRITER_ROLE, ev.STR.READER_ROLE];
 		}
 
-		const lc_roles = validate_roles(roles);		// check the input roles
-		if (lc_roles === false) {
-			input_errors.push('invalid roles for api key. valid roles:' + JSON.stringify(Object.keys(ev.ROLES_TO_ACTIONS)));
-		} else if (lc_roles.length === 0) {
-			input_errors.push('must have at least 1 role for key.');
-		}
+		const access_token_doc = exports.generate_access_token(lc_username, roles, expiration_secs);
 
-		// check if user has these roles (this is overly protective, to even create a token the user needs "manager" which is the highest)
-		if (input_errors.length === 0) {
-			for (let i in roles) {
-				const role = roles[i];
-				if (!ev.ACCESS_LIST[lc_username].roles.includes(role)) {
-					logger.warn('[permissions] user doe not have role. roles:', ev.ACCESS_LIST[lc_username].roles);
-					input_errors.push('invalid roles, cannot set a role that the creating user does not have.');
-					break;
-				}
+		// build a notification doc
+		const notice = {
+			message: 'creating access token ' + access_token_doc._id.substring(0, 4) + '***',
+		};
+		t.notifications.procrastinate(req, notice);
+
+		// write the access token doc
+		const wr_opts = {
+			db_name: ev.DB_SYSTEM,
+			doc: access_token_doc
+		};
+		t.otcc.createNewDoc(wr_opts, access_token_doc, (err_writeDoc, resp_writeDoc) => {
+			if (err_writeDoc) {
+				logger.error('[permissions] unable to write new access token doc', err_writeDoc);
+				return cb(err_writeDoc);
+			} else {
+				logger.info('[permissions]  creating the access token doc - success');
+				const ret = {
+					access_token: resp_writeDoc._id,		// the id is the token!
+					refresh_token: 'not_supported',
+					token_type: 'Bearer',
+					expires_in: resp_writeDoc.expires_in,
+					expiration: resp_writeDoc.expiration,
+					scope: 'foc bearer',
+
+					roles: resp_writeDoc.roles,
+					message: 'ok'
+				};
+				return cb(null, ret);
 			}
-		}
-
-		// check expiration
-		if (expiration_secs < 0 || expiration_secs > MAX_EXPIRATION_SECS) {
-			input_errors.push('invalid expiration. must be between 0 and ' + MAX_EXPIRATION_SECS + ' seconds.');
-		}
-
-		if (input_errors.length >= 1) {
-			logger.error('[permissions] cannot create access token. bad input:', input_errors);
-			cb({ statusCode: 400, msg: input_errors, }, null);
-		} else {
-
-			const access_token_doc = exports.generate_access_token(lc_username, roles, expiration_secs);
-
-			// build a notification doc
-			const notice = {
-				message: 'creating access token ' + access_token_doc._id.substring(0, 4) + '***',
-			};
-			t.notifications.procrastinate(req, notice);
-
-			// write the access token doc
-			const wr_opts = {
-				db_name: ev.DB_SYSTEM,
-				doc: access_token_doc
-			};
-			t.otcc.createNewDoc(wr_opts, access_token_doc, (err_writeDoc, resp_writeDoc) => {
-				if (err_writeDoc) {
-					logger.error('[permissions] unable to write new access token doc', err_writeDoc);
-					return cb(err_writeDoc);
-				} else {
-					logger.info('[permissions]  creating the access token doc - success');
-					const ret = {
-						access_token: resp_writeDoc._id,		// the id is the token!
-						refresh_token: 'not_supported',
-						token_type: 'Bearer',
-						expires_in: resp_writeDoc.expires_in,
-						expiration: resp_writeDoc.expiration,
-						scope: 'ibp bearer',
-
-						roles: resp_writeDoc.roles,
-						message: 'ok'
-					};
-					return cb(null, ret);
-				}
-			});
-		}
+		});
 	};
 
 	//--------------------------------------------------
-	// Generate access token for exchange
+	// Generate access token for exchange - [access tokens expire]
 	//--------------------------------------------------
 	exports.generate_access_token = (lc_name, roles, expires_in) => {
 		const token = t.misc.generateRandomString(32);		// this is the token, its a secret
