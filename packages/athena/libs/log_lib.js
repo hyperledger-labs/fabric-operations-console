@@ -53,17 +53,16 @@ module.exports = function (t) {
 		const LOG_PATH = exports.get_log_path();
 		const LOG_FILE_BASE = exports.get_log_base_name('server');
 		const LOG_FILE_NAME = exports.build_log_file_name(ev, LOG_FILE_BASE, 'server');
-		const d = new Date();
-		const timezoneOffset = d.getTimezoneOffset();
+		const timeFormatter = function () {
+			return exports.formatDate(Date.now(), '%Y/%M/%d-%H:%m:%s.%r');	// logs are timestamp w/UTC
+		};
 
 		let transports = [												// we always have the console transport
 			new (winston.transports.Console)({
 				colorize: true,
 				stderrLevels: [],
 				consoleWarnLevels: [],
-				timestamp: function () {
-					return exports.formatDate(Date.now() - timezoneOffset * 60 * 1000, '%H:%m:%s');	// logs are timestamp local timezone!
-				},
+				timestamp: timeFormatter
 			})
 		];
 
@@ -76,9 +75,7 @@ module.exports = function (t) {
 					tailable: true,
 					colorize: false,
 					maxRetries: 20,
-					timestamp: function () {
-						return exports.formatDate(Date.now(), '%Y/%M/%d-%H:%m:%s.%rZ');	// logs are timestamp w/UTC
-					},
+					timestamp: timeFormatter,
 					json: false,
 				})
 			);
@@ -193,8 +190,10 @@ module.exports = function (t) {
 		return fmt.replace(/%([a-zA-Z])/g, function (_, fmtCode) {
 			let tmp;
 			switch (fmtCode) {
-				case 'Y':
+				case 'Y':								// Year YYYY
 					return date.getUTCFullYear();
+				case 'y':								// Year YY
+					return date.getUTCFullYear().toString().substring(2);
 				case 'M':								//Month 0 padded
 					return pad(date.getUTCMonth() + 1, 2);
 				case 'd':								//Date 0 padded
