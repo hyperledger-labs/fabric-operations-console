@@ -265,23 +265,28 @@ module.exports = function (logger, ev, t) {
 	// Store/create a access token  in the database (aka bearer token)
 	//--------------------------------------------------
 	app.post('/api/v3/identity/token', t.middleware.verify_apiKey_action_session, (req, res) => {
-		t.permissions_lib.create_access_token(req, (err, ret) => {
-			if (err) {
-				return res.status(t.ot_misc.get_code(err)).json(err);
-			} else {
-				return res.status(200).json(ret);
-			}
-		});
+		exchange_for_token(req, res);
 	});
 	app.post('/ak/api/v3/identity/token', t.middleware.verify_apiKey_action_ak, (req, res) => {
-		t.permissions_lib.create_access_token(req, (err, ret) => {
-			if (err) {
-				return res.status(t.ot_misc.get_code(err)).json(err);
-			} else {
-				return res.status(200).json(ret);
-			}
-		});
+		exchange_for_token(req, res);
 	});
+
+	function exchange_for_token(req, res) {
+		if (t.ot_misc.is_v2plus_route(req)) {
+			req._validate_path = '/ak/api/' + t.validate.pick_ver(req) + '/identity/token';
+			logger.debug('[pre-flight] setting validate route:', req._validate_path);
+		}
+
+		t.validate.request(req, res, null, () => {
+			t.permissions_lib.create_access_token(req, (err, ret) => {
+				if (err) {
+					return res.status(t.ot_misc.get_code(err)).json(err);
+				} else {
+					return res.status(200).json(ret);
+				}
+			});
+		});
+	}
 
 	//--------------------------------------------------
 	// Delete a access token  from the database (aka bearer token)

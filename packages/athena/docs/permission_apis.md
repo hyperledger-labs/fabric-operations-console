@@ -82,9 +82,6 @@ Note that the `access_token` will expire in 1 hour with the default settings.
 // [option 1] - JSON body - (see option 2 below...)
 // -------------------------------------------
 {
-    // [required] "apikey" - set your username + colon + password
-    "apikey": "username:password",
-
     // [optional]
     // defaults to 'urn:ibm:params:oauth:grant-type:apikey'
     // dsh this is currently unused but included to match the standard IAM signature

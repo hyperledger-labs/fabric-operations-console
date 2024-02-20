@@ -5275,6 +5275,104 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Forbidden'
+  /ak/api/v3/identity/token:
+    post:
+      tags:
+        - Administer the console
+      summary: Create bearer token
+      description: Exchange api key for a bearer/access token. Bearer tokens have expirations and are more secure than api keys.
+      operationId: create_token
+      requestBody:
+        description: The settings to use to create the bearer/access token.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAccessBody"
+        required: true
+      responses:
+        200:
+          description: Bearer/access token created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateAccessResponse"
+        401:
+          description: Request is unauthorized (invalid credentials).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+        403:
+          description: Request is bad (invalid syntax).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+  /ak/api/v3/identity/token/{id}:
+    get:
+      tags:
+        - Administer the console
+      summary: Get bearer token details
+      description: See metadata about a bearer token.
+      operationId: get_token
+      parameters:
+        - name: id
+          in: path
+          description: The bearer token to investigate.
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Bearer/access token details were retreived successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetAccessResponse"
+        401:
+          description: Request is unauthorized (invalid credentials).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+        403:
+          description: Request is bad (invalid syntax).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+    delete:
+      tags:
+        - Administer the console
+      summary: Delete bearer token
+      description: Delete/invalidate a bearer token before its expiration.
+      operationId: delete_token
+      parameters:
+        - name: id
+          in: path
+          description: The bearer token to invalidate.
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Bearer/access token deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteAccessResponse"
+        401:
+          description: Request is unauthorized (invalid credentials).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+        403:
+          description: Request is bad (invalid syntax).
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
 #
 #
 #
@@ -11008,6 +11106,70 @@ components:
           example: <api_secret here>
         roles:
           $ref: '#/components/schemas/api_roles'
+    CreateAccessBody:
+      type: object
+      properties:
+        roles:
+          $ref: '#/components/schemas/api_roles'
+        expiration_secs:
+          type: number
+          example: 3600
+          description: Specifies the revocation pool size.
+          minimum: 10
+          maximum: 1296000 # spam prevention limiter
+    CreateAccessResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: <bearer token here>
+        refresh_token:
+          type: string
+          example: <refresh token here>
+        token_type:
+          type: string
+          example: Bearer
+        expires_in:
+          type: number
+          example: 3600
+        expiration:
+          type: string
+          example: 1708445284703
+        scope:
+          type: string
+          example: foc bearer
+        roles:
+          $ref: '#/components/schemas/api_roles'
+        message:
+          $ref: '#/components/schemas/message_ok'
+    GetAccessResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: <bearer token here>
+        roles:
+          $ref: '#/components/schemas/api_roles'
+        creation:
+          type: string
+          example: 1708442928513
+        expiration:
+          type: string
+          example: 1708446528513
+        time_left:
+          type: string
+          example: 57 mins
+        created_by:
+          type: string
+          example: <username here>
+    DeleteAccessResponse:
+      type: object
+      properties:
+        message:
+          $ref: '#/components/schemas/message_ok'
+        delete:
+          type: string
+          example: <bearer token here>
     GetApiKeyResponse:
       type: object
       properties:
