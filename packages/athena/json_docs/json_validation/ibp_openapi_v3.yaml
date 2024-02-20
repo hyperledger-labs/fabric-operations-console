@@ -11114,7 +11114,7 @@ components:
         expiration_secs:
           type: number
           example: 3600
-          description: Specifies the revocation pool size.
+          description: After these many seconds the token will not longer be valid.
           minimum: 10
           maximum: 1296000 # spam prevention limiter
     CreateAccessResponse:
