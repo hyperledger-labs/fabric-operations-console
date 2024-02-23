@@ -439,6 +439,69 @@ class StitchApi {
 			return null;
 		}
 	}
+
+	// ---------------------------
+	// Retry errors on any stitch function but use a new orderer each time
+	// ---------------------------
+	// - if the last orderer fails by throwing an error, throw that error out
+	// - if te last orderer fails with an error response, return error response
+	/*
+	opts = {
+		orderer_urls: ["orderer-url-1", "orderer-url-2"],			// array of orderers to try, they are tried in order
+		stitchFunction: <function>,									// stitch function to call
+		stitchArgument: {},											// input argument to pass to the function
+		logName: 'someFunctionName',								// [optional] name of the function, only used for better logs
+	}
+	*/
+	static async retryOrdererGeneric(opts) {
+		if (typeof opts.stitchFunction !== 'function') {
+			const msg = '[orderer-retry] unexpected usage, stitchFunction is not a function';
+			Log.error(msg);
+			throw new Error(msg);
+		}
+		if (!opts.orderer_urls || !Array.isArray(opts.orderer_urls) || !opts.orderer_urls.length === 0) {
+			const msg = '[orderer-retry] unexpected usage, orderer_urls is not an array of urls';
+			Log.error(msg);
+			throw new Error(msg);
+		}
+		let logName = opts.logName || '-';
+		let final_error = null;
+		let throw_error = false;
+
+		for (let i in opts.orderer_urls) {
+			const thisCallsArgs = JSON.parse(JSON.stringify(opts.stitchArgument));	// deep copy
+			thisCallsArgs.orderer_host = opts.orderer_urls[i];						// use this orderer now
+			const id = Number(i) + 1;
+			Log.debug(`[orderer-retry] trying ${logName} ${id} with orderer: ${thisCallsArgs.orderer_host}`);
+			try {
+				const stitch_promise = promisify(opts.stitchFunction);
+				const resp = await stitch_promise(thisCallsArgs);
+
+				// if there are no errors, return, else stay in the loop
+				if (resp && resp.error === false) {
+					return resp;
+				} else {
+					Log.error(resp);
+					Log.error(`[orderer-retry] ${logName} ${id} failed {error response}, trying it with another orderer.`);
+					final_error = resp;
+					throw_error = false;
+				}
+			} catch (error) {
+				Log.error(error);
+				Log.error(`[orderer-retry] ${logName} ${id} failed {caught error}, trying it with another orderer.`);
+				final_error = error;
+				throw_error = true;
+			}
+		}
+
+		// no calls succeeded, give up
+		Log.error(`[orderer-retry] all ${opts.orderer_urls.length} retries of ${logName} failed. throwing error.`);
+		if (throw_error) {
+			throw final_error;
+		} else {
+			return final_error;
+		}
+	}
 }
 
 export default StitchApi;

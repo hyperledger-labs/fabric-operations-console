@@ -444,15 +444,24 @@ export class ChaincodeModal extends React.Component {
 	}
 
 	onCommit = async () => {
-		let orderer = null;
-		for (let o = 0; o < this.props.channel.orderers.length && !orderer; o++) {
-			if (this.props.channel.orderers[o].msp_id === this.props.commit_org.msp_id) {
-				orderer = this.props.channel.orderers[o];
-			}
+
+		// now find all consenting orderers on the channel and use them for retries
+		let validOrderers = [];
+		let validOrdererUrls = [];
+		if (this.props.channel && Array.isArray(this.props.channel.orderers)) {	// check msp id
+			validOrderers = this.props.channel.orderers.filter(x => {
+				return x.msp_id === this.props.commit_org.msp_id;
+			});
 		}
-		if (!orderer) {
-			orderer = this.props.channel.orderers[0];
+		validOrdererUrls = validOrderers.map(x => {
+			return x.url2use;													// grab these urls
+		});
+
+		// if none.. at least try the first one
+		if (validOrdererUrls.length === 0 && this.props.channel.orderers && this.props.channel.orderers[0] && this.props.channel.orderers[0].url2use) {
+			validOrdererUrls.push(this.props.channel.orderers[0].url2use);
 		}
+
 		const hosts = [];
 		const orgs2sign = _.get(this.props, 'signatureRequest.orgs2sign');
 		if (orgs2sign) {
@@ -469,7 +478,7 @@ export class ChaincodeModal extends React.Component {
 			client_cert_b64pem: this.props.commit_identity.cert,
 			client_prv_key_b64pem: this.props.commit_identity.private_key,
 			hosts,
-			orderer_host: orderer.url2use,
+			orderer_host: null, 				// gets set later
 			channel_id: this.props.channel.id,
 			chaincode_id: this.props.ccd.chaincode_id,
 			chaincode_sequence: this.props.ccd.chaincode_sequence,
@@ -479,7 +488,13 @@ export class ChaincodeModal extends React.Component {
 			collections_obj: this.props.ccd.collections_obj,
 			proxy_route: this.props.host_url + '/grpcwp', // route to our local proxy route (optools)
 		};
-		const resp = await StitchApi.lc_commitChaincodeDefinition(opts);
+		const resp = await StitchApi.retryOrdererGeneric({
+			orderer_urls: validOrdererUrls,
+			stitchFunction: window.stitch.lc_commitChaincodeDefinition,
+			stitchArgument: opts,
+			logName: 'lc_commitChaincodeDefinition',
+		});
+
 		if (resp.error) {
 			Log.error(resp);
 			throw Error(resp);
