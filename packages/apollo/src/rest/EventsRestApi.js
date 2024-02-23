@@ -71,7 +71,7 @@ class EventsRestApi {
 			}).join(', ');
 			EventsRestApi.recordActivity({
 				status: status === 'error' ? 'error' : 'success',
-				log: `${peers.length > 1 ? 'peers' : 'peer'} ${peer_names} ${peers.length > 1 ? 'have' : 'has'} ${status === 'error' ? 'failed to ' : ''} joined the channel "${channel_id}"`,
+				log: `${peers.length > 1 ? 'peers' : 'peer'} ${peer_names} ${peers.length > 1 ? 'have' : 'has'} ${status === 'error' ? 'failed to ' : ''}joined the channel "${channel_id}"`,
 				code: status === 'error' ? 403 : 200
 			});
 		} catch (e) {
@@ -86,7 +86,7 @@ class EventsRestApi {
 			}).join(', ');
 			EventsRestApi.recordActivity({
 				status: status === 'error' ? 'error' : 'success',
-				log: `${peers.length > 1 ? 'peers' : 'peer'} ${peer_names} ${peers.length > 1 ? 'have' : 'has'} ${status === 'error' ? 'failed to ' : ''} disconnect from the channel "${channel_id}"`,
+				log: `${peers.length > 1 ? 'peers' : 'peer'} ${peer_names} ${peers.length > 1 ? 'have' : 'has'} ${status === 'error' ? 'failed to ' : ''}disconnect from the channel "${channel_id}"`,
 				code: status === 'error' ? 403 : 200
 			});
 		} catch (e) {
