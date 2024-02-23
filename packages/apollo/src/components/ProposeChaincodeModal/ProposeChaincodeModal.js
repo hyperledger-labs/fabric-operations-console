@@ -27,7 +27,6 @@ import { PeerRestApi } from '../../rest/PeerRestApi';
 import SignatureRestApi from '../../rest/SignatureRestApi';
 import Helper from '../../utils/helper';
 import PolicyHelper from '../../utils/policy';
-import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
 import FileUploader from '../FileUploader/FileUploader';
 import Form from '../Form/Form';
 import ImportantBox from '../ImportantBox/ImportantBox';
@@ -54,7 +53,7 @@ class ProposeChaincodeModal extends React.Component {
 			pkg_id: null,
 			pkg_version: null,
 			parsing: false,
-			init_required: false,
+			init_required: false,							// 2024/02/22 - this is now always false, we do not want customers to set init_required as true
 			install_all_peers: true,
 			selected_peers: [...this.props.peerList],
 			policy: 'explicit',
@@ -219,7 +218,7 @@ class ProposeChaincodeModal extends React.Component {
 			private_data_json: this.props.private_data_json,
 			selected_peers: this.props.selected_peers,
 			configtxlator_url: this.props.configtxlator_url,
-			init_required: this.props.init_required ? this.props.init_required : false,
+			init_required: this.props.init_required,
 		};
 		if (this.props.existing_proposals && this.props.existing_proposals[this.props.pkg_id]) {
 			opts.tx_id = this.props.existing_proposals[this.props.pkg_id].tx_id;
@@ -532,29 +531,6 @@ class ProposeChaincodeModal extends React.Component {
 						},
 					]}
 				/>
-				<div className="ibp-form">
-					<div className="ibp-form-field">
-						<BlockchainTooltip noIcon
-							type="definition"
-							tooltipText={<span>{this.props.translate('init_required')}</span>}
-						>
-							{this.props.translate('init_required')}
-						</BlockchainTooltip>
-						<Toggle
-							id="toggle-init-required"
-							toggled={this.props.init_required}
-							onToggle={() => {
-								this.props.updateState(SCOPE, {
-									init_required: !this.props.init_required,
-								});
-							}}
-							onChange={() => {}}
-							aria-label={this.props.translate('init_required')}
-							labelA={this.props.translate('no')}
-							labelB={this.props.translate('yes')}
-						/>
-					</div>
-				</div>
 			</WizardStep>
 		);
 	}
