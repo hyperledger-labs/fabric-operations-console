@@ -27,7 +27,6 @@ import { PeerRestApi } from '../../rest/PeerRestApi';
 import SignatureRestApi from '../../rest/SignatureRestApi';
 import Helper from '../../utils/helper';
 import PolicyHelper from '../../utils/policy';
-import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
 import FileUploader from '../FileUploader/FileUploader';
 import Form from '../Form/Form';
 import ImportantBox from '../ImportantBox/ImportantBox';
