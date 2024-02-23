@@ -1774,7 +1774,7 @@ class ChannelApi {
 
 	/*
 	opts = {
-			orderer_host: opts.orderer_url,
+			orderer_hosts: [orderer_url],
 			channel_id: opts.channel_id,
 			chaincode_id: opts.chaincode_id,
 			chaincode_version: opts.chaincode_version,
@@ -1791,7 +1791,8 @@ class ChannelApi {
 			client_cert_b64pem: peer.cert,
 			client_prv_key_b64pem: peer.private_key,
 			host: peer.url2use,
-			orderer_host: opts.orderer_url,
+			orderer_host: null,							// populated later
+			_orderer_hosts: opts.orderer_hosts, 		// not used, but useful to see in logs
 			channel_id: opts.channel_id,
 			chaincode_id: opts.chaincode_id,
 			chaincode_version: opts.chaincode_version,
@@ -1804,24 +1805,23 @@ class ChannelApi {
 		if (opts.chaincode_function) {
 			instantiate_opts.chaincode_function = opts.chaincode_function;
 		}
+
 		if (opts.proposal_type === 'deploy') {
 			Log.debug('Sending request to instantiate chaincode', instantiate_opts);
-			try {
-				const instantiateChaincode = promisify(window.stitch.instantiateChaincode);
-				return await instantiateChaincode(instantiate_opts);
-			} catch (error) {
-				Log.error(error);
-				throw error;
-			}
+			return await StitchApi.retryOrdererGeneric({
+				orderer_urls: opts.orderer_hosts,
+				stitchFunction: window.stitch.instantiateChaincode,
+				stitchArgument: instantiate_opts,
+				logName: 'instantiateChaincode',
+			});
 		} else {
 			Log.debug('Sending request to upgrade chaincode', instantiate_opts);
-			try {
-				const upgradeChaincode = promisify(window.stitch.upgradeChaincode);
-				return await upgradeChaincode(instantiate_opts);
-			} catch (error) {
-				Log.error(error);
-				throw error;
-			}
+			return await StitchApi.retryOrdererGeneric({
+				orderer_urls: opts.orderer_hosts,
+				stitchFunction: window.stitch.upgradeChaincode,
+				stitchArgument: instantiate_opts,
+				logName: 'upgradeChaincode',
+			});
 		}
 	}
 
@@ -2109,6 +2109,19 @@ class ChannelApi {
 		if (!orderer) {
 			orderer = channel.orderers[0];
 		}
+
+		// now find all consenting orderers on the channel and use them for retries
+		let validOrderers = [];
+		let validOrdererUrls = [];
+		if (channel && Array.isArray(channel.orderers)) {				// check msp id
+			validOrderers = channel.orderers.filter(x => {
+				return x.msp_id === opts.msp_id;
+			});
+		}
+		validOrdererUrls = validOrderers.map(x => {
+			return x.url2use;							// grab these urls
+		});
+
 		if (!channel.endorsement_policies[opts.msp_id]) {
 			await ChannelApi.addOrgEndorsementPolicy({
 				...opts,
@@ -2122,12 +2135,13 @@ class ChannelApi {
 		} else {
 			chaincode_sequence = await ChannelApi.getNextAvailableChaincodeSequence(opts.channel_id, opts.id);
 		}
+
 		let approve_opts = {
 			msp_id: opts.msp_id,
 			client_cert_b64pem: opts.cert,
 			client_prv_key_b64pem: opts.private_key,
 			host: opts.selected_peers[0].url2use,
-			orderer_host: orderer.url2use,
+			orderer_host: null, 				// gets set later
 			channel_id: opts.channel_id,
 			chaincode_sequence: chaincode_sequence.toString(),
 			chaincode_id: opts.id,
@@ -2143,8 +2157,15 @@ class ChannelApi {
 		if (opts.private_data_json) {
 			approve_opts.collections_obj = Helper.convertCollectionToSnake(opts.private_data_json);
 		}
+
 		try {
-			const def = await StitchApi.lc_approveChaincodeDefinition(approve_opts);
+			const def = await StitchApi.retryOrdererGeneric({
+				orderer_urls: validOrdererUrls,
+				stitchFunction: window.stitch.lc_approveChaincodeDefinition,
+				stitchArgument: approve_opts,
+				logName: 'lc_approveChaincodeDefinition',
+			});
+
 			if (def.error) {
 				Log.error(def);
 				//throw Error(def);

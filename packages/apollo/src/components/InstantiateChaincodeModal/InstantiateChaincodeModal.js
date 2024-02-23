@@ -492,16 +492,18 @@ class InstantiateChaincodeModal extends Component {
 			this.props.showError('error_occurred_during_upgrade', {}, SCOPE);
 		}
 
-		let consenterUrl;
-		if (_.has(this.props.selectedOrderer, 'raft') && this.props.selectedChannel.ordererAddresses) {
-			// Use the orderer node that is in the channel consenter set
-			const orderer = this.props.selectedOrderer.raft.find(x => this.props.selectedChannel.ordererAddresses.includes(_.toLower(x.backend_addr)));
-			consenterUrl = orderer.url2use;
+		// now find all consenting orderers on the channel and use them for retries
+		let validOrdererUrls = [];
+		if (this.props.selectedChannel && Array.isArray(this.props.selectedChannel.orderers)) {
+			validOrdererUrls = this.props.selectedChannel.orderers.map(x => {
+				return x.url2use;							// grab these urls
+			});
 		}
+
 		return new Promise((resolve, reject) => {
 			const body = {
 				peerId: this.props.selectedPeer.id,
-				orderer_url: consenterUrl ? consenterUrl : this.props.selectedOrderer.url2use,
+				orderer_hosts: validOrdererUrls,
 				channel_id: this.props.isUpgrade ? this.props.instantiatedChaincode.channel : this.props.selectedChannel.id,
 				chaincode_id: this.props.isUpgrade ? this.props.instantiatedChaincode.name : this.props.installedChaincode.name,
 				chaincode_version: this.props.isUpgrade ? this.props.selectedVersion.name : this.props.installedChaincode.version,
