@@ -1,20 +1,15 @@
 [
 	{
-		"version": "1.0.8-14",
-		"date": "21 Feb 2024",
-		"description": [
-			{
-				"title": "Bug & security fixes",
-				"details": "Miscellaneous fixes & performance improvement"
-			}
-		]
-	}, {
-		"version": "1.0.8-13",
-		"date": "19 Feb 2024",
+		"version": "1.0.8-15",
+		"date": "23 Feb 2024",
 		"description": [
 			{
 				"title": "Bug & security fixes",
 				"details": "Miscellaneous fixes & dependency updates."
+			},
+			{
+				"title": "Removed init_required flag",
+				"details": "Chaincode that uses the 2.0 lifecycle will no longer be able to use the `init_required` flag during chaincode definition creation."
 			}
 		]
 	},
