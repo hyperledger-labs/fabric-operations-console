@@ -54,7 +54,7 @@ class WelcomeBannerContent extends Component {
 		} else if (type === 'deploySm') {
 			window.open(translate('2deployDocs', { DOC_PREFIX: this.props.docPrefix }));
 		} else if (type === 'goFurther') {
-			window.open(translate('apiDocs', { BMIX_URL: this.props.bmixUrl }));
+			window.open(translate('api_docs_link'));
 		} else if (type === 'channelDocs') {
 			window.open(translate('channelDocs', { DOC_PREFIX: this.props.docPrefix }));
 		} else if (type === 'growDocs') {
