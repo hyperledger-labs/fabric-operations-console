@@ -459,7 +459,7 @@ class StitchApi {
 			Log.error(msg);
 			throw new Error(msg);
 		}
-		if (!opts.orderer_urls || !Array.isArray(opts.orderer_urls) || !opts.orderer_urls.length === 0) {
+		if (!opts.orderer_urls || !Array.isArray(opts.orderer_urls) || opts.orderer_urls.length === 0) {
 			const msg = '[orderer-retry] unexpected usage, orderer_urls is not an array of urls';
 			Log.error(msg);
 			throw new Error(msg);

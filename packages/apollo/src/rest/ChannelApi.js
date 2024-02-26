@@ -2111,16 +2111,12 @@ class ChannelApi {
 		}
 
 		// now find all consenting orderers on the channel and use them for retries
-		let validOrderers = [];
 		let validOrdererUrls = [];
-		if (channel && Array.isArray(channel.orderers)) {				// check msp id
-			validOrderers = channel.orderers.filter(x => {
-				return x.msp_id === opts.msp_id;
+		if (channel && Array.isArray(channel.orderers)) {
+			validOrdererUrls = channel.orderers.map(x => {
+				return x.url2use;							// grab these urls
 			});
 		}
-		validOrdererUrls = validOrderers.map(x => {
-			return x.url2use;							// grab these urls
-		});
 
 		if (!channel.endorsement_policies[opts.msp_id]) {
 			await ChannelApi.addOrgEndorsementPolicy({
@@ -2165,7 +2161,6 @@ class ChannelApi {
 				stitchArgument: approve_opts,
 				logName: 'lc_approveChaincodeDefinition',
 			});
-
 			if (def.error) {
 				Log.error(def);
 				//throw Error(def);
@@ -2176,6 +2171,7 @@ class ChannelApi {
 				throw error;
 			}
 		}
+
 		if (opts.tx_id) {
 			await SignatureRestApi.deleteRequest({
 				tx_id: opts.tx_id,

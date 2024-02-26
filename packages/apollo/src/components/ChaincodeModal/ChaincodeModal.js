@@ -446,20 +446,11 @@ export class ChaincodeModal extends React.Component {
 	onCommit = async () => {
 
 		// now find all consenting orderers on the channel and use them for retries
-		let validOrderers = [];
 		let validOrdererUrls = [];
 		if (this.props.channel && Array.isArray(this.props.channel.orderers)) {	// check msp id
-			validOrderers = this.props.channel.orderers.filter(x => {
-				return x.msp_id === this.props.commit_org.msp_id;
+			validOrdererUrls = this.props.channel.orderers.map(x => {
+				return x.url2use;												// grab these urls
 			});
-		}
-		validOrdererUrls = validOrderers.map(x => {
-			return x.url2use;													// grab these urls
-		});
-
-		// if none.. at least try the first one
-		if (validOrdererUrls.length === 0 && this.props.channel.orderers && this.props.channel.orderers[0] && this.props.channel.orderers[0].url2use) {
-			validOrdererUrls.push(this.props.channel.orderers[0].url2use);
 		}
 
 		const hosts = [];
