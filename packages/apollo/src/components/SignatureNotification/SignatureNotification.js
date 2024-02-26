@@ -74,11 +74,11 @@ class SignatureNotification extends Component {
 					if (approved) {
 						title = translate('signature_request_approved', { channel: request.channel });
 					} else {
-						if (submitter) {
-							title = translate('signature_request_submitted_by', { org: request.originator_msp });
-						} else {
-							title = translate('signature_request_received_by', { org: received_by });
-						}
+						//if (submitter) {
+						title = translate('signature_request_submitted_by', { org: request.originator_msp });
+						//} else {
+						//	title = translate('signature_request_received_by', { org: received_by || '-' });
+						//}
 					}
 				}
 				if (approved && request.status === 'open') {
@@ -212,11 +212,11 @@ class SignatureNotification extends Component {
 								? new Date(request.distribution_responses[last].timestamp).toLocaleString(undefined, {
 									hour: 'numeric',
 									minute: '2-digit',
-								  })
+								})
 								: new Date(request.lastTimestamp).toLocaleString(undefined, {
 									hour: 'numeric',
 									minute: '2-digit',
-								  })}
+								})}
 						</div>
 					</div>
 				)}
