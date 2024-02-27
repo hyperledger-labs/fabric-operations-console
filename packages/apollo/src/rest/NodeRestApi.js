@@ -235,9 +235,10 @@ class NodeRestApi {
 	 * Get a sorted list of all the components of a given type
 	 * @param {string[]} types The fabric types of nodes to return
 	 * @param {boolean} skip_cache True if we need to force a new REST call
+	 * @param {boolean} flat True if we want each node in an ordering service cluster to be its own element in the response, false if we want them nested under a parent node
 	 * @returns {Promise<Component[]>} Sorted list of all components of a given type
 	 */
-	static async getNodes(types, skip_cache) {
+	static async getNodes(types, skip_cache, flat) {
 		let nodes = [];
 		try {
 			nodes = await NodeRestApi.getAllNodesClientCache(skip_cache);
@@ -255,9 +256,24 @@ class NodeRestApi {
 				throw error;
 			}
 		}
+
 		// filter down nodes only to the types asked for
 		const filteredNodes = (Array.isArray(types) && types.length > 0) ? nodes.filter(n => n && types.includes(n.type)) : nodes;
-		return this.formatNodes(filteredNodes);
+		const tmp = await this.formatNodes(filteredNodes);
+
+		// if flat is asked for, return each nested ordering node at the top level
+		if (flat) {
+			let ret = [];
+			for (let i in tmp) {
+				ret.push(tmp[i]);					// add this node regardless
+				if (tmp[i].raft) {
+					ret = ret.concat(tmp[i].raft);	// add each of the children if found
+				}
+			}
+			return ret;
+		} else {
+			return tmp;
+		}
 	}
 
 	/**

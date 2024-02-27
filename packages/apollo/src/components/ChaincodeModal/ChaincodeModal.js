@@ -97,7 +97,7 @@ export class ChaincodeModal extends React.Component {
 			channel = this.props.channelDetails;
 		} else {
 			try {
-				channel = await ChannelApi.getChannel(this.props.channelId);
+				channel = await ChannelApi.getChannelDetails(this.props.channelId);
 				this.props.updateState(SCOPE, {
 					channel,
 				});
