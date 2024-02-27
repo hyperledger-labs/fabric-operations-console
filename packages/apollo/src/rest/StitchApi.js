@@ -472,7 +472,8 @@ class StitchApi {
 			const thisCallsArgs = JSON.parse(JSON.stringify(opts.stitchArgument));	// deep copy
 			thisCallsArgs.orderer_host = opts.orderer_urls[i];						// use this orderer now
 			const id = Number(i) + 1;
-			Log.debug(`[orderer-retry] trying ${logName} ${id} with orderer: ${thisCallsArgs.orderer_host}`);
+			const tag = id + '/' + opts.orderer_urls.length;
+			Log.debug(`[orderer-retry] trying ${logName} ${tag} with orderer: ${thisCallsArgs.orderer_host}`);
 			try {
 				const stitch_promise = promisify(opts.stitchFunction);
 				const resp = await stitch_promise(thisCallsArgs);
@@ -482,13 +483,13 @@ class StitchApi {
 					return resp;
 				} else {
 					Log.error(resp);
-					Log.error(`[orderer-retry] ${logName} ${id} failed {error response}, trying it with another orderer.`);
+					Log.error(`[orderer-retry] ${logName} ${tag} failed {error response}, trying it with another orderer.`);
 					final_error = resp;
 					throw_error = false;
 				}
 			} catch (error) {
 				Log.error(error);
-				Log.error(`[orderer-retry] ${logName} ${id} failed {caught error}, trying it with another orderer.`);
+				Log.error(`[orderer-retry] ${logName} ${tag} failed {caught error}, trying it with another orderer.`);
 				final_error = error;
 				throw_error = true;
 			}

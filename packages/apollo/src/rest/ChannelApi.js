@@ -42,7 +42,7 @@ class ChannelApi {
 	}
 
 	static async getChannel(id, peerId) {
-		const nodes = await NodeRestApi.getNodes();
+		const nodes = await NodeRestApi.getNodes(null, null, true);
 		const peers = await PeerRestApi.getPeersWithCerts();
 		let o_channelList = [];
 		let errors = [];
@@ -246,6 +246,127 @@ class ChannelApi {
 				errors,
 			};
 			return channelResp;
+		}
+	}
+
+	// faster version of getChannel - channel id must be provided
+	static async getChannelDetails(channel_id) {
+		const ordering_nodes = await NodeRestApi.getNodes(['fabric-orderer'], null, true);
+		const peers = await PeerRestApi.getPeersWithCerts();
+		let channelData = null;
+		let errors = [];
+		if (!channel_id) {
+			throw new Error('unable to get channel details - incorrect usage, channel_id is missing');
+		}
+
+		await async.eachLimit(
+			peers,
+			6,
+			// asyncify to get around babel converting these functions to non-async: https://caolan.github.io/async/v2/docs.html#asyncify
+			async.asyncify(async peer => {
+				const opts = {
+					msp_id: peer.msp_id,
+					client_cert_b64pem: peer.cert,
+					client_prv_key_b64pem: peer.private_key,
+					host: peer.url2use,
+					channel_id: channel_id
+				};
+				const certAvailable = Helper.isCertAvailable(opts);
+				if (!certAvailable) {
+					let peerError = {};
+					peerError.id = peer.id;
+					peerError.name = peer.name;
+					peerError.message_key = 'missing_cert';
+					errors.push(peerError);
+					return;
+				}
+
+				let channel_resp = null;
+				let config_envelop = null;
+				try {
+					const getChannelConfigFromPeer = promisify(window.stitch.getChannelConfigFromPeer);
+					channel_resp = await getChannelConfigFromPeer(opts);
+				} catch (error) {
+					Log.error(error);
+					Log.error('unable to get config block from peer, will try another');
+					errors.push(error);
+				}
+
+				if (channel_resp) {
+					config_envelop = channel_resp?.data?.block?.data?.data_list[0].envelope?.payload?.data;
+					const l_orderers = this.getOrdererAddresses(config_envelop?.config);
+
+					// init channel data
+					if (!channelData || !Array.isArray(channelData.peers)) {
+						channelData = {
+							id: channel_id,
+							name: channel_id,
+							peers: [peer],
+							orderers: [],					// populated later
+							ordererAddresses: l_orderers,
+						};
+					} else {
+						// already got channel info, add this peer to the list
+						channelData.peers.push(peer);
+					}
+				}
+
+				// now add details for each orderer in the config block to our response
+				if (channelData && Array.isArray(channelData.ordererAddresses)) {
+					for (let i in channelData.ordererAddresses) {
+						const orderer_url = channelData.ordererAddresses[i];
+						for (let i in ordering_nodes) {
+							const orderer = ordering_nodes[i];
+
+							// add orderer if the address in the config block matches the backend_addr console has in our database
+							if (_.toLower(orderer.backend_addr) === _.toLower(orderer_url)) {
+
+								// if it doesn't already exist, add it
+								if (!channelData.orderers.find(x => x.id === orderer.id)) {
+									channelData.orderers.push(orderer);
+								}
+							}
+						}
+					}
+				}
+
+				// figure out cert warning stuff
+				let cert_warning = false;
+				const endorsement_policies = {};
+				const app_groups = _.get(config_envelop.config, 'channel_group.groups_map.Application.groups_map');
+				const orderer_groups = _.get(config_envelop.config, 'channel_group.groups_map.Orderer.groups_map');
+				const application_capability = _.get(
+					config_envelop.config,
+					'channel_group.groups_map.Application.values_map.Capabilities.value.capabilities_map'
+				);
+				for (let app in app_groups) {
+					const admins = app_groups[app].values_map.MSP.value.admins_list;
+					const node_ou = _.get(app_groups[app], 'values_map.MSP.value.fabric_node_ous.enable', false);
+					if (Helper.getLongestExpiry(admins) < constants.CERTIFICATE_WARNING_DAYS && !node_ou) {
+						cert_warning = true;
+					}
+					endorsement_policies[app] = !!_.get(app_groups[app], 'policies_map.Endorsement');
+				}
+				for (let app in orderer_groups) {
+					const admins = orderer_groups[app].values_map.MSP.value.admins_list;
+					const node_ou = _.get(orderer_groups[app], 'values_map.MSP.value.fabric_node_ous.enable', false);
+					if (Helper.getLongestExpiry(admins) < constants.CERTIFICATE_WARNING_DAYS && !node_ou) {
+						cert_warning = true;
+					}
+				}
+				channelData.capability = {
+					application: Helper.getCapabilityHighestVersion(application_capability),
+				};
+				channelData.cert_warning = cert_warning;
+				channelData.endorsement_policies = endorsement_policies;
+			})
+		);
+
+		Log.info('getChannelDetails: finished on ' + channel_id);
+		if (channelData) {
+			return channelData;
+		} else {
+			throw String('unable to get details on channel');
 		}
 	}
 
@@ -2099,7 +2220,7 @@ class ChannelApi {
 	}
 
 	static async createOrApproveChaincodeProposal(opts) {
-		const channel = await ChannelApi.getChannel(opts.channel_id);
+		const channel = await ChannelApi.getChannelDetails(opts.channel_id);
 		let orderer = null;
 		for (let o = 0; o < channel.orderers.length && !orderer; o++) {
 			if (channel.orderers[o].msp_id === opts.msp_id) {
