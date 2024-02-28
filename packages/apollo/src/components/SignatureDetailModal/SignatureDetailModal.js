@@ -543,7 +543,7 @@ class SignatureDetailModal extends React.Component {
 
 	getMemberDifferences() {
 		const diff = {};
-		if (this.props.request.json_diff.members) {
+		if (this.props?.request?.json_diff?.members) {
 			const current_roles = this.getChannelRoles(this.props.request.json_diff.members.current);
 			const updated_roles = this.getChannelRoles(this.props.request.json_diff.members.updated);
 			for (let msp_id in updated_roles) {
@@ -676,7 +676,7 @@ class SignatureDetailModal extends React.Component {
 
 	getACLDifferences() {
 		const diff = {};
-		if (this.props.request.json_diff.acl) {
+		if (this.props?.request?.json_diff?.acl) {
 			let current = this.props.request.json_diff.acl.current;
 			if (!current) {
 				current = {};
@@ -714,7 +714,7 @@ class SignatureDetailModal extends React.Component {
 
 	getBlockParameterDifferences() {
 		const diff = {};
-		if (this.props.request.json_diff.block_params) {
+		if (this.props?.request?.json_diff?.block_params) {
 			let current = this.props.request.json_diff.block_params.current;
 			if (!current) {
 				current = {};
@@ -753,7 +753,7 @@ class SignatureDetailModal extends React.Component {
 
 	getRaftParameterDifferences() {
 		const diff = {};
-		if (this.props.request.json_diff.raft_params) {
+		if (this.props?.request?.json_diff?.raft_params) {
 			let current = this.props.request.json_diff.raft_params.current;
 			if (!current) {
 				current = {};
@@ -798,7 +798,7 @@ class SignatureDetailModal extends React.Component {
 
 	getPolicyDifferences() {
 		const diff = {};
-		if (this.props.request.json_diff.policy) {
+		if (this.props?.request?.json_diff?.policy) {
 			let current = this.props.request.json_diff.policy.current;
 			if (!current) {
 				current = {};
@@ -818,7 +818,7 @@ class SignatureDetailModal extends React.Component {
 
 	getCapabilityDifferences() {
 		const diff = {};
-		if (this.props.request.json_diff.capabilities) {
+		if (this.props?.request?.json_diff?.capabilities) {
 			let currentCapabilities = this.props.request.json_diff.capabilities.current;
 			let current = {
 				channel: Helper.getCapabilityHighestVersion(currentCapabilities.channel),
@@ -885,7 +885,7 @@ class SignatureDetailModal extends React.Component {
 
 	getConsenterDifferences() {
 		const diff = {};
-		if (this.props.request.json_diff.consenters) {
+		if (this.props?.request?.json_diff?.consenters) {
 			let current = {};
 			this.props.request.json_diff.consenters.current.forEach(x => {
 				current[x.host + ':' + x.port] = x;
@@ -929,7 +929,7 @@ class SignatureDetailModal extends React.Component {
 
 	getOrdererMSPDifferences() {
 		const diff = {};
-		if (this.props.request.json_diff.orderer_msps) {
+		if (this.props?.request?.json_diff?.orderer_msps) {
 			const current = this.props.request.json_diff.orderer_msps.current;
 			const updated = this.props.request.json_diff.orderer_msps.updated;
 			for (let msp_id in updated) {
@@ -954,7 +954,7 @@ class SignatureDetailModal extends React.Component {
 
 	getMSPDifferences() {
 		const diff = {};
-		if (this.props.request.json_diff.msp) {
+		if (this.props?.request?.json_diff?.msp) {
 			diff.updated = [];
 			let current = this.props.request.json_diff.msp.current;
 			if (!current) {
