@@ -481,6 +481,9 @@ class SignatureDetailModal extends React.Component {
 						});
 					});
 			}
+		}).catch(e => {
+			Log.error('unable to submit - caught error during signature submission');
+			Log.error(e);
 		});
 	};
 
