@@ -414,10 +414,16 @@ class ChannelComponent extends Component {
 	// build peer channel tiles
 	buildCustomTile(channel) {
 		const translate = this.props.translate;
+		const osNames = new Set();
+
+		channel.orderers.forEach(orderer => {
+			osNames.add(orderer.cluster_name ? orderer.cluster_name : this.limit_len(orderer.name));
+		});
+
 		return (
 			<div className="ibp-channel-tile-stats">
 				<div className="ibp-channels-orderer">
-					<div>{channel.orderers ? channel.orderers.map(orderer => (orderer.cluster_name ? orderer.cluster_name : limit_len(orderer.name))).join(', ') : ''}</div>
+					{osNames.size ? Array.from(osNames).join(', ') : ''}
 				</div>
 				<ItemTileLabels
 					certificateWarning={channel.cert_warning}
@@ -445,13 +451,14 @@ class ChannelComponent extends Component {
 			</div>
 		);
 
-		// limit length of the orderer id on tile
-		function limit_len(str) {
-			if (typeof str === 'string' && str.length > 42) {
-				return str.substring(0, 42) + '...';
-			}
-			return str;
+	}
+
+	// limit length of the orderer id on tile
+	limit_len(str) {
+		if (typeof str === 'string' && str.length > 42) {
+			return str.substring(0, 42) + '...';
 		}
+		return str;
 	}
 
 	// build the channel tiles for orderers
@@ -830,15 +837,15 @@ class ChannelComponent extends Component {
 									{
 										header: 'ordering_service_title',
 										custom: channel => {
+											const osNames = new Set();
+
+											channel.orderers.forEach(orderer => {
+												osNames.add(orderer.cluster_name ? orderer.cluster_name : this.limit_len(orderer.name));
+											});
 											// this section only fires if te table layout (aka list) button was selected, we default to the other layout, the tile layout
 											return (
 												<div>
-													{channel.orderers.map((orderer, i) => (
-														<>
-															<span key={i}>{orderer.name}</span>
-															{channel.orderers.length > 1 && channel.orderers.length !== i + 1 && ', '}
-														</>
-													))}
+													{osNames.size ? Array.from(osNames).join(', ') : ''}
 												</div>
 											);
 										},
