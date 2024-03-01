@@ -265,9 +265,10 @@ class NodeRestApi {
 		if (flat) {
 			let ret = [];
 			for (let i in tmp) {
-				ret.push(tmp[i]);					// add this node regardless
 				if (tmp[i].raft) {
-					ret = ret.concat(tmp[i].raft);	// add each of the children if found
+					ret = ret.concat(tmp[i].raft);	// add all children if found (parent node is inside array)
+				} else {
+					ret.push(tmp[i]);				// add this node
 				}
 			}
 			return ret;

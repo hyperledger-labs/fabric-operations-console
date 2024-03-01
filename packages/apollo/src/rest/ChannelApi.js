@@ -330,35 +330,37 @@ class ChannelApi {
 					}
 				}
 
-				// figure out cert warning stuff
-				let cert_warning = false;
-				const endorsement_policies = {};
-				const app_groups = _.get(config_envelop.config, 'channel_group.groups_map.Application.groups_map');
-				const orderer_groups = _.get(config_envelop.config, 'channel_group.groups_map.Orderer.groups_map');
-				const application_capability = _.get(
-					config_envelop.config,
-					'channel_group.groups_map.Application.values_map.Capabilities.value.capabilities_map'
-				);
-				for (let app in app_groups) {
-					const admins = app_groups[app].values_map.MSP.value.admins_list;
-					const node_ou = _.get(app_groups[app], 'values_map.MSP.value.fabric_node_ous.enable', false);
-					if (Helper.getLongestExpiry(admins) < constants.CERTIFICATE_WARNING_DAYS && !node_ou) {
-						cert_warning = true;
+				// if we have data, figure out cert warning stuff
+				if (channelData && config_envelop) {
+					let cert_warning = false;
+					const endorsement_policies = {};
+					const app_groups = _.get(config_envelop.config, 'channel_group.groups_map.Application.groups_map');
+					const orderer_groups = _.get(config_envelop.config, 'channel_group.groups_map.Orderer.groups_map');
+					const application_capability = _.get(
+						config_envelop.config,
+						'channel_group.groups_map.Application.values_map.Capabilities.value.capabilities_map'
+					);
+					for (let app in app_groups) {
+						const admins = app_groups[app].values_map.MSP.value.admins_list;
+						const node_ou = _.get(app_groups[app], 'values_map.MSP.value.fabric_node_ous.enable', false);
+						if (Helper.getLongestExpiry(admins) < constants.CERTIFICATE_WARNING_DAYS && !node_ou) {
+							cert_warning = true;
+						}
+						endorsement_policies[app] = !!_.get(app_groups[app], 'policies_map.Endorsement');
 					}
-					endorsement_policies[app] = !!_.get(app_groups[app], 'policies_map.Endorsement');
-				}
-				for (let app in orderer_groups) {
-					const admins = orderer_groups[app].values_map.MSP.value.admins_list;
-					const node_ou = _.get(orderer_groups[app], 'values_map.MSP.value.fabric_node_ous.enable', false);
-					if (Helper.getLongestExpiry(admins) < constants.CERTIFICATE_WARNING_DAYS && !node_ou) {
-						cert_warning = true;
+					for (let app in orderer_groups) {
+						const admins = orderer_groups[app].values_map.MSP.value.admins_list;
+						const node_ou = _.get(orderer_groups[app], 'values_map.MSP.value.fabric_node_ous.enable', false);
+						if (Helper.getLongestExpiry(admins) < constants.CERTIFICATE_WARNING_DAYS && !node_ou) {
+							cert_warning = true;
+						}
 					}
+					channelData.capability = {
+						application: Helper.getCapabilityHighestVersion(application_capability),
+					};
+					channelData.cert_warning = cert_warning;
+					channelData.endorsement_policies = endorsement_policies;
 				}
-				channelData.capability = {
-					application: Helper.getCapabilityHighestVersion(application_capability),
-				};
-				channelData.cert_warning = cert_warning;
-				channelData.endorsement_policies = endorsement_policies;
 			})
 		);
 
