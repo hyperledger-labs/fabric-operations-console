@@ -1004,7 +1004,7 @@ module.exports = function (logger, ev, t) {
 							const fab_type = types[i];
 							if (tmp && tmp[fab_type]) {
 								ret.operator.available_fabric_versions[fab_type] = [];
-								for (let ver in tmp.fab_type) {
+								for (let ver in tmp[fab_type]) {
 									ret.operator.available_fabric_versions[fab_type].push(t.misc.prettyPrintVersion(ver));
 								}
 							}
