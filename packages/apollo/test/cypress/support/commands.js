@@ -36,9 +36,9 @@ Cypress.Commands.add('clickButton', (property, attributeValue) => {
   try{
     cy.wait(1000)
     if (property == "text"){
-        cy.get('button').contains(attributeValue).click()
+        cy.get('button').contains(attributeValue).should('be.visible').click()
     }else{
-      cy.get(`button[${property}="${attributeValue}"]`).click()
+      cy.get(`button[${property}="${attributeValue}"]`).should('be.visible').click()
     }
   }catch (err)
   {
@@ -47,7 +47,7 @@ Cypress.Commands.add('clickButton', (property, attributeValue) => {
 })
 
 //Enter text into input / text field
-Cypress.Commands.add('enterInput', (text, inputTitle) => {	
+Cypress.Commands.add('enterInput', (text, inputTitle) => {
 	try {
     cy.wait(500)
     cy.get(`input[title="${inputTitle}"]`).clear().type(text)

@@ -138,6 +138,7 @@ Feature: Build a network without system channel
         And I provided 'channel5' for the 'Enter a name for your channel' input
         And I clicked the button with title 'Select from available ordering services'
         And I clicked the div with id 'downshift-0-item-0'
+		Then wait "5" seconds
         And I clicked the span with text 'Next'
         And I clicked the button with title 'Select MSP'
         And I clicked the div with text 'Org1 MSP (org1msp)'
@@ -158,6 +159,8 @@ Feature: Build a network without system channel
         And I clicked the span with text 'Next'
         And I clicked the div with id 'selectedApplicationCapability'
         And I clicked the div with text '2.0.0'
+        And I clicked the div with id 'selectedOrdererCapability'
+		And I clicked element with class '#selectedOrdererCapability > div > div:nth-child(2)'
         And I clicked the span with text 'Next'
         And I clicked the span with text 'Next'
         And I clicked the span with text 'Next'
@@ -172,6 +175,7 @@ Feature: Build a network without system channel
         When I clicked the button with id 'submit'
 		Then wait "5" seconds
         Then I should see a success toast with class '.bx--toast-notification__title' which says "You have successfully joined channel5."
+		Then wait "3" seconds
 
 	Scenario: Verify Orderer without system channel has joined channel
 		And I clicked the 'No_SysCh_OS' orderer

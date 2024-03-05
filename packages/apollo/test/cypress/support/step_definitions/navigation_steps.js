@@ -87,12 +87,12 @@ Then(/^the div with id (?:'|")(.*?)(?:'|") does not exist on page$/, value => {
 
 Given(/^the element (div|span) with text (?:'|")(.*?)(?:'|") should be visible on page$/, (property, value) => {
 	cy.wait(500)
-	cy.get(property).contains(value).should('be.visible')
+	cy.get(property).first().contains(value).should('be.visible')
 });
 
 Given(/^I clicked element with class (?:'|")(.*?)(?:'|")$/, (className) => {
 	cy.wait(500)
-	cy.get(className).should('be.visible').click()
+	cy.get(className).first().should('be.visible').click()
   });
 
 Then(/^the table row with id (?:'|")(.*?)(?:'|") does not exist on page$/, value => {
