@@ -2135,12 +2135,6 @@ module.exports = function (logger, ev, t) {
 							default: false,
 							version: '1.4.12-11'
 						}
-					},
-					ca:{
-						'1.5.9': {
-							default: true,
-							version: '1.5.9'
-						}
 					}
 				}
 			});*/
