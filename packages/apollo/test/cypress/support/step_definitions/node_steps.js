@@ -30,3 +30,12 @@ Given(/^I clicked the (?:'|")(.*?)(?:'|") (certificate authority|orderer|peer)$/
         cy.log('Error: ', err)
     }
 });
+
+Given(/^I clicked the node (?:'|")(.*?)(?:'|")$/, (nodeName) => {
+    try{
+        cy.get(`div[id="ibp-tile-${nodeName}"]`).should('be.visible')
+        cy.get(`div[id="ibp-tile-${nodeName}"]`).click()
+    }catch (err){
+        cy.log('Error: ', err)
+    }
+});

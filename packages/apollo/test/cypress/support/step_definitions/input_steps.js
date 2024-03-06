@@ -37,6 +37,13 @@ Given(/^I upload file (?:'|")(.*?)(?:'|") to (?:'|")(.*?)(?:'|") input$/, (fileP
 	cy.get(`input[id="${inputId}"]`).selectFile(filePath, { force: true})
 });
 
+Given(/^I upload file (?:'|")(.*?)(?:'|")$/, (filePath) => {
+	cy.wait(1000)
+	//cy.get('#upload').selectFile(filePath)
+	cy.get('input[type=file]').selectFile(filePath, { force: true })
+	//cy.get('input[type=file]').invoke('show').selectFile(filePath)
+});
+
 Given(/^I click label with property (?:'|")(.*?)(?:'|") and value (?:'|")(.*?)(?:'|")$/, (property, propertyValue) => {
 	cy.wait(500)
 	cy.get(`label[${property}="${propertyValue}"]`).click()
