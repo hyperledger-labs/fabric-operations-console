@@ -283,7 +283,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 				if (!settings.FABRIC_CAPABILITIES.orderer) { settings.FABRIC_CAPABILITIES.orderer = []; }
 
 				// the type of console build we are in
-				settings.CONSOLE_TYPE = settings.getConsoleType(settings) || 'hlfoc';	// valid options, "hlfoc", "ibp", "support", or "software"
+				settings.CONSOLE_TYPE = settings.getConsoleType(settings) || 'hlfoc';	// valid options, "hlfoc", "ibp", "support"
 				// the source of an ibm console image build, not always set
 				settings.CONSOLE_BUILD_TYPE = athena.console_build_type || '';			// valid options, "saas", "non-saas", empty string
 
@@ -752,24 +752,19 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 	}
 
 	// --------------------------------------------------------------------------------------------
-	// detect the correct console image type - returns one of "hlfoc", "ibp", "support", or "software"
+	// detect the correct console image type - returns one of "hlfoc", "ibp", "support"
 	// --------------------------------------------------------------------------------------------
 	settings.getConsoleType = (settings_doc) => {
 		let console_type = 'hlfoc';										// default console type is hyperledger fabric operations console (our open source one)
-		const siid = (settings_doc && settings_doc.crn && settings_doc.crn.instance_id) ? settings_doc.crn.instance_id : '';
-		const host_url = process.env.HOST_URL || settings_doc.host_url || '';
 
-		if (settings_doc && settings_doc.auth_scheme === 'iam') {		// if we are using iam for auth, it's ibp (probably prod or staging)
-			console_type = 'ibp';
-		} else if (siid) {												// if we have a service instance id, its ibp (probably dev)
-			console_type = 'ibp';
-		} else if (settings_doc && settings_doc.console_build_type) {	// if we have a console build type, its probably one of the ibm products:
-			if (host_url.includes('hlfsupport')) {						// its an ibm support console
+		if (settings_doc) {
+			if (settings_doc.console_build_type === 'non-saas') {
 				console_type = 'support';
-			} else {
-				console_type = 'software';								// else its an ibm software console
+			} else if (settings_doc.console_build_type === 'saas') {
+				console_type = 'ibp';
 			}
 		}
+
 		return console_type;
 	};
 
