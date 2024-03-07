@@ -144,7 +144,13 @@ class App extends Component {
 
 		let crn = settings.CRN;
 		if (!crn.account_id) { crn.account_id = 'n/a'; }
-		const docUrlRoot = settings.CONSOLE_TYPE === 'hlfoc' ? 'https://github.com/hyperledger-labs/fabric-operations-console' : 'https://www.ibm.com/docs/en/hlf-support/1.0.0';
+		const docUrlMap = {
+			'ibp': 'https://cloud.ibm.com/docs/blockchain',
+			'support': 'https://www.ibm.com/docs/en/hlf-support/1.0.0',
+			'software': 'https://www.ibm.com/docs/en/blockchain-platform/2.5.4',
+			'hlfoc': 'https://www.ibm.com/docs/en/hlf-support/1.0.0',
+		};
+		const docUrlRoot = (settings.CONSOLE_TYPE && docUrlMap[settings.CONSOLE_TYPE]) ? docUrlMap[settings.CONSOLE_TYPE] : docUrlMap.hlfoc;
 
 		const modifiedCrnString = settings.CRN_STRING && settings.CRN_STRING.indexOf('::') !== -1 && settings.CRN_STRING.slice(0, -1);
 		let features = {
