@@ -34,6 +34,7 @@ You can use the following steps to provision a network using Fabric test-network
 * jq
 * docker
 * docker-compose (V2)
+* Node.js v18 or higher
 * _[WSL2](https://docs.microsoft.com/en-us/windows/wsl/install-win10) (Windows only)_
 
 ## Setup
