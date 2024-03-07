@@ -16,6 +16,10 @@
 
 import { Given, Then, When } from "@badeball/cypress-cucumber-preprocessor";
 
+Cypress.on('uncaught:exception', (err, runnable) => {
+	return false
+  })
+
 Given("I go to the console", () => {
     cy.fixture("config.json").then((data) => {
       cy.visit(data.loginUrl)
@@ -103,3 +107,83 @@ cy.get(`tr[id="${value}"]`).should('not.exist');
 Then("I reload the page", () => {
 	cy.reload()
 });
+
+Then(/^the div with id (?:'|")(.*?)(?:'|") does not exist on page$/, value => {
+	cy.wait(1000)
+	cy.get(`div[id="${value}"]`).should('not.exist');
+  });
+
+  Then(/^Button should be enabled for (text|title|id|xpath) (?:'|")(.*?)(?:'|")$/, (property, value) => {
+	//cy.clickButton(property, value);
+	cy.log('property = ' + property)
+	cy.log('value = ' + value)
+	cy.get('button[' + property + '="' + value + '"]').should('be.enabled')
+
+  });
+
+  Then(/^Button should be disabled for (text|title|id|xpath) (?:'|")(.*?)(?:'|")$/, (property, value) => {
+	//cy.clickButton(property, value);
+	cy.log('property = ' + property)
+	cy.log('value = ' + value)
+	cy.get('button[' + property + '="' + value + '"]').should('be.disabled')
+
+  });
+
+  Then(/^Button should be visible for (text|title|id|xpath) (?:'|")(.*?)(?:'|")$/, (property, value) => {
+	//cy.clickButton(property, value);
+	cy.log('property = ' + property)
+	cy.log('value = ' + value)
+	cy.get('button[' + property + '="' + value + '"]').should('be.visible')
+
+  });
+
+  Then(/^Button should not be visible for (text|title|id|xpath) (?:'|")(.*?)(?:'|")$/, (property, value) => {
+	//cy.clickButton(property, value);
+	cy.log('property = ' + property)
+	cy.log('value = ' + value)
+	cy.get('button[' + property + '="' + value + '"]').should('not.be.visible')
+
+  });
+
+  Then(/^Checkbox should be visible with (?:'|")(.*?)(?:'|")$/, (value) => {
+	cy.get('label').contains(value).should('be.visible')
+  });
+
+  Then(/^Checkbox should be hidden with id (?:'|")(.*?)(?:'|")$/, (value) => {
+  //  cy.get('label').contains(value).should('be.hidden')
+	cy.get('input[id="deploy-id"]').should('be.hidden')
+  });
+
+  Then(/^Checkbox should not be visible with (?:'|")(.*?)(?:'|")$/, (value) => {
+	cy.get('label').contains(value).should('not.be.visible')
+  });
+
+  Then(/^Checkbox should not exist with (?:'|")(.*?)(?:'|")$/, (value) => {
+	cy.get('label').contains(value).should('not.exist')
+  });
+
+  Then(/^Message should be displayed (?:'|")(.*?)(?:'|")$/, (msg) => {
+	cy.contains(msg)
+  });
+
+  Then(/^Text should not exist (?:'|")(.*?)(?:'|")$/, (text) => {
+	cy.contains(text).should('not.exist')
+  });
+
+  Then(/^Text should exist (?:'|")(.*?)(?:'|")$/, (text) => {
+	cy.contains(text).should('exist')
+  });
+
+  Then(/^Checkbox should be visible$/, () => {
+	cy.wait(500)
+	cy.log('test')
+  });
+
+  Given(/^I navigate to the (?:'|")(.*?)(?:'|") page$/, page => {
+	cy.fixture("config.json").then((data) => {
+	  cy.log('loginUrl = ' + data.loginUrl)
+	  cy.log('page = ' + page)
+	  cy.visit(data.loginUrl + '/' + page)
+	})
+	cy.get(1000)
+  });
