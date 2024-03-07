@@ -36,9 +36,9 @@ Cypress.Commands.add('clickButton', (property, attributeValue) => {
   try{
     cy.wait(1000)
     if (property == "text"){
-        cy.get('button').contains(attributeValue).should('be.visible').click()
+        cy.get('button').contains(attributeValue).scrollIntoView().should('be.visible').click()
     }else{
-      cy.get(`button[${property}="${attributeValue}"]`).should('be.visible').click()
+      cy.get(`button[${property}="${attributeValue}"]`).scrollIntoView().should('be.visible').click()
     }
   }catch (err)
   {
