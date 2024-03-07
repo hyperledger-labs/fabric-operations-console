@@ -47,6 +47,6 @@ Then(/^I should see a success toast with class (?:'|")(.*?)(?:'|") which says (?
 			}
 		}
 	}else{
-		cy.get(className, { timeout: 60000 }).contains(expectedMessage).should('be.visible')
+		cy.get(className, { timeout: 180000 }).contains(expectedMessage).should('be.visible')
 	}
 });

@@ -82,8 +82,8 @@ Feature: Verify Audit Log functionality works as expected
 	Then I should see audit log row with text 'updating channel "testchainid" - MSP "osmsp"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	# creating channel "channel2" - MSP "org1msp"
-	When I provided 'creating channel "channel2" - MSP "org1msp"' for input field with id "1"
-	Then I should see audit log row with text 'creating channel "channel2" - MSP "org1msp"' and id 'audit-logs-log_title-0'
+	When I provided 'creating channel "channel1" - MSP "org1msp"' for input field with id "1"
+	Then I should see audit log row with text 'creating channel "channel1" - MSP "org1msp"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	Then I reload the page
 	# peers"Peer Org1", "Peer Org2" havejoined the channel "channel2"

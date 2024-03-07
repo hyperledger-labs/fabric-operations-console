@@ -88,6 +88,7 @@ Feature: Create and Join a 2.x channel
         And I provided 'channel2' for the 'Enter a name for your channel' input
         And I clicked the button with title 'Select from available ordering services'
         And I clicked the div with id 'downshift-0-item-0'
+		Then wait "3" seconds
         And I clicked the span with text 'Next'
         And I clicked the button with title 'Select MSP'
         And I clicked the div with text 'Org1 MSP (org1msp)'
@@ -108,16 +109,38 @@ Feature: Create and Join a 2.x channel
         And I clicked the span with text 'Next'
         And I clicked the div with id 'selectedApplicationCapability'
         And I clicked the div with text '2.0.0'
+        And I clicked the div with id 'selectedOrdererCapability'
+		And I clicked element with class '#selectedOrdererCapability > div > div:nth-child(2)'
         And I clicked the span with text 'Next'
         And I clicked the span with text 'Next'
         And I clicked the span with text 'Next'
         And I clicked the span with text 'Next'
         And I clicked the span with text 'Next'
-        And I clicked the span with text 'Next'
+        And I clicked the button with title 'Select the MSP'
+        And I clicked the div with text 'Ordering Service MSP (osmsp)'
+		And I clicked the span with text 'Next'
+		And I clicked the span with text 'Next'
         Then I clicked Create channel button
-        # And I clicked the button with text 'Create channel'
-        Then I should see a success toast with class '.bx--toast-notification__title' which says "You have successfully initiated a request to create channel2. Join a peer to this channel by clicking the pending channel tile below."
-        And the channel with name 'channel2' should have been created
+		Then wait "10" seconds
+		Then I should see a success toast with class '.bx--toast-notification__title' which says "You have successfully initiated a request to create channel2. This request requires the signature of an ordering service MSP. After the request has been signed and submitted, you will see a pending channel tile. Clicking on this tile will allow you to join a peer to the channel."
+		Then wait "5" seconds
+		# Approving New channel request
+		When I clicked the button with id 'ibp-header-signature-collection-icon'
+		And I clicked element with class '.ibp-signature-collection-notification-link'
+		Then wait "5" seconds
+		And I clicked the button with title 'Select identity to sign with'
+		And I clicked the div with text 'Ordering Service MSP Admin'
+		Then I clicked the button with id 'submit'
+		Then wait "5" seconds
+		When I clicked element with class '.ibp-signature-collection-notification-link'
+		Then wait "5" seconds
+		And I clicked the button with title 'Select MSP'
+		And I clicked the div with text 'Org2 MSP'
+		And I clicked the button with title 'Select an identity'
+		And I clicked the div with text 'Org2 MSP Admin'
+		Then I clicked the button with id 'submit'
+		Then wait "5" seconds
+		Then the element div with text 'channel2' should be visible on page
 
     Scenario: When joining a channel (channel2)
         And I am on the 'channels' page
@@ -127,3 +150,4 @@ Feature: Create and Join a 2.x channel
         And I clicked the span with text 'Peer Org2'
         When I clicked the button with id 'submit'
         Then I should see a success toast with class '.bx--toast-notification__title' which says "You have successfully joined channel2."
+		Then the element div with text 'channel2' should be visible on page
