@@ -1953,7 +1953,7 @@
 	"system_channel_orderer_capability_tooltip": "The capability level for the orderer cluster, defining how the ordering service processes transactions. It is recommended to choose the latest available capability level. Similarly, it is recommended to have ordering nodes at the latest possible Fabric level.",
 	"system_channel_channel_capability_tooltip": "The capability level for the channel group, encompassing processes shared by the ordering service and the peers. It is recommended to choose the latest available capability level. Similarly, it is recommended to have ordering nodes and peers at the latest possible Fabric level.",
 	"system_channel_capabilities_warning": "Before updating capabilities, contact the consortium members to ensure that nodes owned by them are compatible with these capabilities.",
-	"troubleshooting_link": "${DOC_PREFIX}?topic=help-troubleshooting",
+	"troubleshooting_link": "https://www.ibm.com/docs/en/hlf-support/1.0.0?topic=tutorials-getting-started",
 	"hlfoc_doc_link": "https://github.com/hyperledger-labs/fabric-operations-console",
 	"arrowLeft": "Arrow left",
 	"arrowRight": "Arrow right",

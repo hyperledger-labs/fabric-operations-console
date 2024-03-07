@@ -117,14 +117,11 @@ class Support extends Component {
 
 	// create the support link for the type of console build this is
 	getSupportURL() {
-		const supportUrlMap = {
-			'ibp': 'https://cloud.ibm.com/unifiedsupport/supportcenter',
-			'support': 'https://www.ibm.com/mysupport',
-			'software': 'https://www.ibm.com/mysupport',
-			'hlfoc': 'https://github.com/hyperledger-labs/fabric-operations-console/issues',
-		};
-		const supportUrl = (this.props.console_type && supportUrlMap[this.props.console_type]) ?
-			supportUrlMap[this.props.console_type] : supportUrlMap.hlfoc;
+		let supportUrl = 'https://www.ibm.com/docs/en/hlf-support/1.0.0?topic=help-getting-support';
+
+		if (this.props.console_type === 'hlfoc') {
+			supportUrl = 'https://github.com/hyperledger-labs/fabric-operations-console/issues';
+		}
 		return supportUrl;
 	}
 
