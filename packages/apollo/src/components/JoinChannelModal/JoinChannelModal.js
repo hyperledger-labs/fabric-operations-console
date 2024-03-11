@@ -101,115 +101,6 @@ class JoinChannelModal extends React.Component {
 		return requests;
 	};
 
-	async populatePendingChannels(joinedChannels) {
-		const orderers = await OrdererRestApi.getOrderers(false);
-		if (!this.mounted) {
-			return;
-		}
-
-		// Build list that includes all raft nodes from all the console ordering services
-		let all_nodes = [];
-		orderers.forEach(orderer => {
-			if (_.has(orderer, 'raft')) {
-				orderer.raft.forEach(x => all_nodes.push(x));
-			} else {
-				all_nodes.push(orderer);
-			}
-		});
-
-		// Get pending channels from notifications instead of local storage
-		const pendingChannels = [];
-		let signature_requests = await this.getCreateChannelRequests();
-		signature_requests.forEach(notification => {
-			let notification_orderers = [];
-			if (_.has(notification, 'consenters')) {
-				notification.consenters.forEach(url => {
-					let orderer_details = all_nodes.find(x => _.toLower(x.backend_addr) === _.toLower(url));
-					if (orderer_details) {
-						notification_orderers.push(orderer_details);
-					} else {
-						notification_orderers.push({ backend_addr: url, name: url });
-					}
-				});
-			} else {
-				// If there were pending tiles before migrating to 2.1.3, handle them the old way so that we dont loose the tile after migration
-				notification.orderers.forEach(url => {
-					let orderer_details = all_nodes.find(x => {
-						const url1 = x.url2use.substring(x.url2use.indexOf('/grpcwp/') + 8); // Proxy ports have changed, so compare only url after /grpcwp/
-						const url2 = url.indexOf('/grpcwp/') > 0 ? url.substring(url.indexOf('/grpcwp/') + 8) : url;
-						return _.toLower(decodeURIComponent(url1)) === _.toLower(decodeURIComponent(url2));
-					});
-					if (orderer_details) {
-						notification_orderers.push(orderer_details);
-					} else {
-						notification_orderers.push({ backend_addr: url, name: url });
-					}
-				});
-			}
-			let matchingJoinedChannel =
-				joinedChannels && joinedChannels.length
-					? joinedChannels.find(channel => {
-						let allChannelOrderers = [];
-						if (channel.orderers) {
-							channel.orderers.forEach(orderer => {
-								if (_.has(orderer, 'raft')) {
-									orderer.raft.forEach(y => allChannelOrderers.push(y));
-								} else {
-									allChannelOrderers.push(orderer);
-								}
-							});
-						}
-						let joinedChannelOrderers = allChannelOrderers.map(orderer => (orderer.backend_addr ? orderer.backend_addr : orderer.name));
-						let pendingChannelOrderers = notification_orderers
-							? notification_orderers.map(orderer => (orderer ? (orderer.backend_addr ? orderer.backend_addr : orderer.name) : ''))
-							: [];
-						let match = channel.name === notification.channel && _.intersection(pendingChannelOrderers, joinedChannelOrderers).length > 0;
-						return match;
-					})
-					: null;
-			if (!matchingJoinedChannel) {
-				pendingChannels.push({
-					id: notification.channel,
-					name: notification.channel,
-					orderers: notification_orderers,
-					pending: true,
-				});
-			}
-		});
-
-		let allChannels = _.size(joinedChannels) > 0 ? joinedChannels.concat(pendingChannels) : pendingChannels;
-		// Filter out the pending channels whose orderers are not imported in this console
-		let filteredChannels = [];
-		if (_.size(all_nodes) > 0) {
-			const all_nodes_grpcurls = all_nodes.map(x => x.grpcwp_url); // To support older notifications that dont have consenters data
-			const all_nodes_backendaddr = all_nodes.map(x => x.backend_addr);
-			const all_nodes_url2use = all_nodes.map(x => x.url2use);
-			const consoleOrdererAddresses = all_nodes_backendaddr.concat(all_nodes_grpcurls).concat(all_nodes_url2use);
-
-			filteredChannels = allChannels.filter(channel => {
-				let channelOrdererAddresses = channel.orderers.map(x => x.backend_addr);
-				return channel.pending ? _.intersection(consoleOrdererAddresses, channelOrdererAddresses).length > 0 : channel;
-			});
-		} else {
-			filteredChannels = allChannels.filter(channel => {
-				return channel.pending ? false : channel;
-			});
-		}
-		// Pending tile should show only one associated orderer(which includes all the raft nodes)
-		pendingChannels.forEach(pc => {
-			let pc_cluster_ids = pc.orderers.map(x => x.cluster_id);
-			orderers.forEach(orderer => {
-				if (pc_cluster_ids.includes(orderer.cluster_id)) {
-					pc.orderers = [orderer];
-				}
-			});
-		});
-
-		Log.debug('All channels:', allChannels);
-		Log.debug('Filtered channels:', filteredChannels);
-		return filteredChannels;
-	};
-
 	async calculateCapabilityWarning(channel_config, orderer, selectedPeers, channel) {
 		let all_warning_20 = false;
 		let all_warning_20_details = [];
@@ -366,14 +257,15 @@ class JoinChannelModal extends React.Component {
 			if (e.message_key) {
 				title = e.message_key;
 			} else if (e.grpc_resp && e.grpc_resp.status === 404) {
-				title = 'error_join_channel_not_found';
+				title = 'channel_not_found_under_orderer';
 			}
 			return Promise.reject({
 				details: e,
 				title,
 				translateOptions: {
-					peerName: peerDetails.display_name,
-					nodeName: selectedOrderer.node_id,
+					channelId: selectedChannel,
+					ordererId: selectedOrderer.node_id,
+					peerName: peerDetails.display_name
 				},
 			});
 		}
@@ -423,7 +315,6 @@ class JoinChannelModal extends React.Component {
 		if (!this.props.existingChannel) {
 			try {
 				const { channels } = await ChannelApi.getAllChannels();
-				await this.populatePendingChannels(channels);
 				const matchedChannel = channels.find(_channel => _channel.id === this.props.channel && _channel.orderers.some(_orderer => _orderer.node_id === this.props.orderer.node_id));
 
 				let existingMembers = [];
@@ -603,6 +494,8 @@ class JoinChannelModal extends React.Component {
 				details: error,
 				translateOptions: {
 					peerName: peerName,
+					channelId: this.props.channel,
+					ordererId: this.props.orderer.node_id
 				},
 			});
 		}
