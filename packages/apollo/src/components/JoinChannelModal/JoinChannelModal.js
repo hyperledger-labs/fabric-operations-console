@@ -25,7 +25,6 @@ import { EventsRestApi } from '../../rest/EventsRestApi';
 import { MspRestApi } from '../../rest/MspRestApi';
 import { OrdererRestApi } from '../../rest/OrdererRestApi';
 import { PeerRestApi } from '../../rest/PeerRestApi';
-import SignatureRestApi from '../../rest/SignatureRestApi';
 import Helper from '../../utils/helper';
 import NodeStatus from '../../utils/status';
 import ConfigOverride from '../ConfigOverride/ConfigOverride';
@@ -85,21 +84,6 @@ class JoinChannelModal extends React.Component {
 			});
 		}
 	}
-
-
-	async getCreateChannelRequests() {
-		let requests = [];
-		if (this.props.signature_requests && this.props.signature_requests.length) {
-			this.props.signature_requests.forEach(req => {
-				if (this.isVisibleCreateRequest(req)) {
-					requests.push(req);
-				}
-			});
-		} else {
-			requests = await SignatureRestApi.getCreateChannelRequests();
-		}
-		return requests;
-	};
 
 	async calculateCapabilityWarning(channel_config, orderer, selectedPeers, channel) {
 		let all_warning_20 = false;
