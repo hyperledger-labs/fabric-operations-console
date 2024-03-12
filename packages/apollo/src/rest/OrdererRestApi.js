@@ -635,7 +635,7 @@ class OrdererRestApi {
 			Log.error(error);
 			throw error;
 		}
-		return resp.data.data[0].payload.data.config;
+		return resp?.data?.data[0]?.payload?.data?.config || {};
 	}
 
 	/*

@@ -2854,5 +2854,6 @@
 	"version_debug_msg": "Version summary",
 	"version_debug_tooltip": "Use this tool to export a version summary which shows the versions of each of your component. This summary is helpful for debugging/support purposes.",
 	"hide_archived_channels": "Hide Archived Channels",
-	"show_archived_channels": "Show Archived Channels"
+	"show_archived_channels": "Show Archived Channels",
+	"channel_not_found_under_orderer": "Channel '${channelId}' not found within selected orderer '${ordererId}'"
 }

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import { ToggleSmall } from 'carbon-components-react';
-import ToggleSmallSkeleton from 'carbon-components-react/lib/components/ToggleSmall/ToggleSmall.Skeleton';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -41,6 +40,7 @@ const Log = new Logger(SCOPE);
 
 class JoinChannelModal extends React.Component {
 	async componentDidMount() {
+		this.mounted = true;
 		const orderers = await OrdererRestApi.getOrderers(true);
 		let channel = this.props.isPending ? this.props.pendingChannelName : this.props.isAddingNode ? this.props.existingChannel : '';
 		this.props.updateState(SCOPE, {
@@ -57,6 +57,7 @@ class JoinChannelModal extends React.Component {
 			addressOverrides: [],
 			channel_warning_20_details: [],
 			channel_warning_20: false,
+			loading: false
 		});
 		let orderer = this.props.orderer;
 		if (this.props.isAddingNode && this.props.existingOrderer) {
@@ -74,6 +75,7 @@ class JoinChannelModal extends React.Component {
 		}
 	}
 	componentWillUnmount() {
+		this.mounted = false;
 		if (!this.props.isPending) {
 			this.props.updateState(SCOPE, {
 				channel: '',
@@ -239,14 +241,15 @@ class JoinChannelModal extends React.Component {
 			if (e.message_key) {
 				title = e.message_key;
 			} else if (e.grpc_resp && e.grpc_resp.status === 404) {
-				title = 'error_join_channel_not_found';
+				title = 'channel_not_found_under_orderer';
 			}
 			return Promise.reject({
 				details: e,
 				title,
 				translateOptions: {
-					peerName: peerDetails.display_name,
-					nodeName: selectedOrderer.node_id,
+					channelId: selectedChannel,
+					ordererId: selectedOrderer.node_id,
+					peerName: peerDetails.display_name
 				},
 			});
 		}
@@ -290,6 +293,27 @@ class JoinChannelModal extends React.Component {
 		await this.calculateCapabilityWarning(current_config, this.props.orderer, selectedPeers, this.props.channel);
 	}
 
+	async onChannelNext() {
+		// fetch channel list and find out channel name and update existing member of channel into store to filter out peer selection list
+		this.props.updateState(SCOPE, { loading: true });
+		if (!this.props.existingChannel) {
+			try {
+				const { channels } = await ChannelApi.getAllChannels();
+				const matchedChannel = channels.find(_channel => _channel.id === this.props.channel && _channel.orderers.some(_orderer => _orderer.node_id === this.props.orderer.node_id));
+
+				let existingMembers = [];
+				if (matchedChannel) {
+					existingMembers = matchedChannel.peers;
+				}
+
+				this.props.updateState(SCOPE, { loading: false, existingMembers });
+			} catch (error) {
+				Log.error(error);
+			}
+		}
+		return this.filterPeers();
+	}
+
 	// Filter out peers that do not belong to channel members
 	async filterPeers(channel, orderer) {
 		let selectedChannel = channel ? channel : this.props.channel;
@@ -309,28 +333,40 @@ class JoinChannelModal extends React.Component {
 			let options = {
 				ordererId: selectedOrderer.node_id,
 				channelId: selectedChannel,
-				configtxlator_url: this.props.configtxlator_url,
+				configtxlator_url: this.props.configtxlator_url
 			};
 			let config = await OrdererRestApi.getChannelConfig(options);
-			if (this.props.existingMembers) {
-				let memberIds = this.props.existingMembers.map(x => x.id);
-				let peers = this.props.peers.filter(peer => memberIds.includes(peer.msp_id));
-				return this.getNodeStatus(peers);
-			} else {
+			let memberIds = this.props.existingMembers.map(x => x.id);
+			let peers = this.props.peer ? this.props.peer : this.props.peers;
+			peers = peers.filter(peer => !memberIds.includes(peer.id));
+
+
+			if (config && config.channel_group) {
 				let members = [];
 				let orgNodes = config.channel_group.groups.Application.groups;
 				let orgs = Object.keys(orgNodes);
 				for (let i in orgs) {
 					members.push(orgs[i]);
 				}
-				let selectedPeers = this.props.peer ? this.props.peer : this.props.peers;
-				let peers = members && members.length > 0 ? selectedPeers.filter(peer => members.includes(peer.msp_id)) : selectedPeers;
-				return this.getNodeStatus(peers);
+				const finalPeers = members && members.length > 0 ? peers.filter(peer => members.includes(peer.msp_id)) : peers;
+				return this.getNodeStatus(finalPeers);
+			} else {
+				const err = new Error('Channel not found in selected orderer');
+				err.code = 'channel_not_found_under_orderer';
+
+				throw err;
 			}
 		} catch (error) {
 			this.props.updateState(SCOPE, { loading: false });
 			Log.error('An error occurred when filtering peer list', error);
-			return;
+			return Promise.reject({
+				title: error.code || 'error_join_channel_not_found',
+				details: error,
+				translateOptions: {
+					channelId: selectedChannel,
+					ordererId: selectedOrderer.node_id
+				},
+			});
 		}
 	}
 
@@ -442,6 +478,8 @@ class JoinChannelModal extends React.Component {
 				details: error,
 				translateOptions: {
 					peerName: peerName,
+					channelId: this.props.channel,
+					ordererId: this.props.orderer.node_id
 				},
 			});
 		}
@@ -504,7 +542,7 @@ class JoinChannelModal extends React.Component {
 		this.checkPeerMappings(change.selectedPeers);
 	};
 
-	onChannelChange = (change, valid) => {
+	onChannelChange = async (change, valid) => {
 		this.props.updateState(SCOPE, { disableSubmit: !valid });
 	};
 
@@ -603,45 +641,7 @@ class JoinChannelModal extends React.Component {
 					(!isPeerContext && (!this.props.peerValid || _.size(this.props.filteredPeers) === 0)) || this.props.submitting || this.props.channel_warning_20
 				}
 			>
-				{isPeerContext ? (
-					<>
-						{/* The multi select box is for display purpose only */}
-						<Form
-							scope={SCOPE}
-							id={SCOPE + '-peer'}
-							fields={[
-								{
-									name: 'displayPeer',
-									type: 'multiselect',
-									options: this.props.peer,
-									default: this.props.peer,
-									disabledIds: this.props.peer.map(x => x.id),
-									hideLabel: true,
-									required: false,
-								},
-							]}
-						/>
-						<div className="anchor-peer-toggle">
-							<h4 className="settings-toggle-label">{translate('make_anchor_peers')}</h4>
-							{this.props.loading && <ToggleSmallSkeleton />}
-							{!this.props.loading && (
-								<div className="settings-toggle-inner">
-									<ToggleSmall
-										id="toggle-input"
-										toggled={this.props.make_anchor_peer}
-										onToggle={() => {
-											this.toggleAnchorPeer();
-										}}
-										onChange={() => { }}
-										aria-label={translate('make_anchor_peers')}
-										labelA={translate('no')}
-										labelB={translate('yes')}
-									/>
-								</div>
-							)}
-						</div>
-					</>
-				) : _.size(this.props.filteredPeers) > 0 || this.props.loading ? (
+				{_.size(this.props.filteredPeers) > 0 || this.props.loading ? (
 					<>
 						<Form
 							scope={SCOPE}
@@ -721,6 +721,7 @@ class JoinChannelModal extends React.Component {
 		);
 	}
 
+
 	renderSelectChannel(translate) {
 		if (this.props.hideChannelStep || this.props.isPending) {
 			return;
@@ -733,7 +734,7 @@ class JoinChannelModal extends React.Component {
 				headerLinkText={translate('find_out_more')}
 				title={translate('select_channel')}
 				disableSubmit={this.props.disableSubmit}
-				onNext={() => this.filterPeers()}
+				onNext={() => this.onChannelNext()}
 			>
 				<Form
 					scope={SCOPE}
@@ -810,6 +811,9 @@ const dataProps = {
 	addressOverrides: PropTypes.array,
 	channel_warning_20: PropTypes.bool,
 	channel_warning_20_details: PropTypes.array,
+	existingMembers: PropTypes.any,
+	channelList: PropTypes.array,
+	selectedChannel: PropTypes.any
 };
 
 JoinChannelModal.propTypes = {
