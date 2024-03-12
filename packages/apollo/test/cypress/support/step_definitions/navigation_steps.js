@@ -174,11 +174,6 @@ Then(/^the div with id (?:'|")(.*?)(?:'|") does not exist on page$/, value => {
 	cy.contains(text).should('exist')
   });
 
-  Then(/^Checkbox should be visible$/, () => {
-	cy.wait(500)
-	cy.log('test')
-  });
-
   Given(/^I navigate to the (?:'|")(.*?)(?:'|") page$/, page => {
 	cy.fixture("config.json").then((data) => {
 	  cy.log('loginUrl = ' + data.loginUrl)

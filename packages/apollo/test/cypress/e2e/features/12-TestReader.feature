@@ -1,4 +1,4 @@
-@support @runonconsole
+@support @runonconsole @runonconsole @usermanagement
 Feature: Verify allowed functions for Reader user
 
   Background: Login to console
@@ -140,5 +140,3 @@ Feature: Verify allowed functions for Reader user
     Then Text should not exist 'Update package details'
     Then wait "10" seconds
 		Then I clicked the button with id 'cancel'
-
-
