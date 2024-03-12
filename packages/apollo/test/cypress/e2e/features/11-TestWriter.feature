@@ -1,4 +1,4 @@
-@support @runonconsole @runonconsole @usermanagement
+@support @runonconsole @regression @usermanagement
 Feature: Verify allowed functions for Writer user
 
   Background: Login to console
