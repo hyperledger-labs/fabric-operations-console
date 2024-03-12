@@ -1,5 +1,18 @@
 [
 	{
+		"version": "1.0.8-20",
+		"date": "12 Mar 2024",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			},
+			{
+				"title": "Peer join channel update",
+				"details": "Handle existing Channel member at the time of joining."
+			}
+		]
+	}, {
 		"version": "1.0.8-19",
 		"date": "28 Feb 2024",
 		"description": [
