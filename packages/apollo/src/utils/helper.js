@@ -1473,8 +1473,6 @@ const Helper = {
 			input.pipe(unzip);
 		}
 
-		// return this.tarTest(unzip);
-
 		const extract = tarStream.extract();
 		const files = [];
 
