@@ -24,7 +24,8 @@ import { VALIDATION_ERRORS } from '../rest/ValidatedRestApi';
 import { EventsRestApi } from '../rest/EventsRestApi';
 const semver = require('semver');
 const JSZip = require('jszip');
-const decompressTargz = require('decompress-targz');
+const zlib = require('zlib');
+const tarStream = require('tar-stream');
 
 const Buffer = window.Buffer || require('buffer').Buffer;
 
@@ -1458,10 +1459,68 @@ const Helper = {
 		return hashHex;
 	},
 
+	/**
+	 * Extracts a gzipped tar archive to a given buffer.
+	 * @param {string|Buffer|stream.Readable} input - A readable stream, buffer or string containing the gzipped tar archive.
+	 * @returns {Promise<Array>} A promise that resolves with an array of objects representing each file in the tar archive.
+	 */
+	async extractTargz(input) {
+		const unzip = zlib.createGunzip();
+
+		if (Buffer.isBuffer(input)) {
+			unzip.end(input);
+		} else {
+			input.pipe(unzip);
+		}
+
+		// return this.tarTest(unzip);
+
+		const extract = tarStream.extract();
+		const files = [];
+
+		extract.on('entry', (header, stream, cb) => {
+			const chunk = [];
+
+			stream.on('data', data => chunk.push(data));
+			stream.on('end', () => {
+				const file = {
+					data: Buffer.concat(chunk),
+					mode: header.mode,
+					mtime: header.mtime,
+					path: header.name,
+					type: header.type
+				};
+
+				if (header.type === 'symlink' || header.type === 'link') {
+					file.linkname = header.linkname;
+				}
+
+				files.push(file);
+				cb();
+			});
+		});
+
+		if (Buffer.isBuffer(unzip)) {
+			extract.end(unzip);
+		} else {
+			unzip.pipe(extract);
+		}
+
+		return new Promise((resolve, reject) => {
+			if (!Buffer.isBuffer(unzip)) {
+				unzip.on('error', reject);
+			}
+
+			extract.on('finish', () => resolve(files));
+			extract.on('error', reject);
+		});
+
+	},
+
 	async readLocalChaincodePackageFile(file) {
 		const buffer = await Helper.readLocalBinaryFile(file, CHAINCODE_LIMIT);
 		const uint8 = new Uint8Array(buffer);
-		const files = await decompressTargz()(buffer);
+		const files = await this.extractTargz(buffer);
 		let pkg_id = null;
 		let pkg_version = null;
 		let metadata = null;
