@@ -1,4 +1,4 @@
-@support @runonconsole
+@support @runonconsole @regression @usermanagement
 Feature: Verify allowed functions for Writer user
 
   Background: Login to console
@@ -172,7 +172,7 @@ Feature: Verify allowed functions for Writer user
 		And I upload file 'fixtures/test_data/Import/Ordering_Service_1_orderer_to_import.json'
     Then wait "5" seconds
     And I clicked the button with id 'submit'
-  
+
   Scenario: Deleting imported Ordering Service
     And I navigate to the 'nodes' page
     And I clicked the 'Ordering Service' orderer
@@ -254,4 +254,3 @@ Feature: Verify allowed functions for Writer user
     Then Button should be enabled for id 'update-approval-org1msp'
     Then wait "10" seconds
 		Then I clicked the button with id 'cancel'
-
