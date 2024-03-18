@@ -144,11 +144,7 @@ func (peer *Peer) getResources(originalCR *current.IBPPeer, response *api.Respon
 			peerResources = append(peerResources, originalCR.Spec.Resources.GRPCProxy)
 		}
 	}
-	if util.GetMajorRelease(originalCR.Spec.FabricVersion) == 1 {
-		if originalCR.Spec.Resources.DinD != nil {
-			peerResources = append(peerResources, originalCR.Spec.Resources.DinD)
-		}
-	}
+
 	if util.GetMajorRelease(originalCR.Spec.FabricVersion) == 2 {
 		if originalCR.Spec.Resources != nil {
 			if originalCR.Spec.Resources.CCLauncher != nil {
