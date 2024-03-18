@@ -85,6 +85,5 @@
 	],
 	"diffEditor.ignoreTrimWhitespace": false,
 	"search.useIgnoreFiles": false,
-	"git.alwaysSignOff": true,
-	"wcaForGP.enable": true
+	"git.alwaysSignOff": true
 }
