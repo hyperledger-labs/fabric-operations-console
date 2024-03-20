@@ -46,7 +46,7 @@ class SignatureNotification extends Component {
 		const {
 			approved,
 			last,
-			received_by,
+			//received_by,
 			request,
 			required,
 			resendRequest,
@@ -54,7 +54,7 @@ class SignatureNotification extends Component {
 			showAuditLog,
 			showDetails,
 			skeleton,
-			submitter,
+			//submitter,
 			translate,
 			type,
 		} = this.props;
