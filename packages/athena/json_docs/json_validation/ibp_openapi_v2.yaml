@@ -3244,6 +3244,13 @@ components:
         type: string
         description: User defined strings that can be used to search/filter components. When editing this field set the complete (desired) tags array. Will always conform to lowercase.
         maxLength: 32 # artificial limit, we want users to use short tags
+    preferred_url:
+      type: string
+      description: 'The style/format of a url to return for a *migrated* component. Does not apply to non-migrated components. Set to "os" to return open-source operator urls for these field: `api_url`, `operations_url` and `osnadmin_url`. Otherwise migrated components will return the legacy ("saas") style urls.'
+      example: os
+      enum:
+        - os
+        - legacy
     display_name_ca:
       type: string
       description: A descriptive name for this CA. The Fabric Operations console tile displays this name.
@@ -5634,6 +5641,8 @@ components:
           $ref: '#/components/schemas/location_saas'
         tags:
           $ref: '#/components/schemas/tags'
+        preferred_url:
+          $ref: '#/components/schemas/preferred_url'
 
     EditOrdererDataBody:
       description: Body schema to edit local data on an orderer node
@@ -5668,6 +5677,8 @@ components:
           $ref: '#/components/schemas/server_tls_cert'
         client_tls_cert:
           $ref: '#/components/schemas/client_tls_cert'
+        preferred_url:
+          $ref: '#/components/schemas/preferred_url'
 
     EditPeerBody:
       description: Body schema to edit local data on a peer
@@ -5688,6 +5699,8 @@ components:
           $ref: '#/components/schemas/location_saas'
         tags:
           $ref: '#/components/schemas/tags'
+        preferred_url:
+          $ref: '#/components/schemas/preferred_url'
 
     EditMspBody:
       description: Body schema to edit local data on an MSP
