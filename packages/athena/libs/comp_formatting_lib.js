@@ -118,16 +118,24 @@ module.exports = function (logger, ev, t) {
 				}
 			}
 
-			// legacy ingress URL handling (switch urls for legacy component compatibility)
-			// if component is migrated from IBP under IKS, return the IKS SaaS operator style URLs, else return open source operator style
+			// by default we use the *open source* style urls, however if a component is migrated we don't UNLESS it also has the preferred_url set
 			if (doc.migrated_from === ev.STR.LOCATION_IBP_SAAS) {
-				doc.api_url = doc.api_url_saas || doc.api_url;
-				doc.operations_url = doc.operations_url_saas || doc.operations_url;
-				doc.osnadmin_url = doc.osnadmin_url_saas || doc.osnadmin_url;
+				if (doc.preferred_url === ev.STR.OPEN_SOURCE_STYLE) {
+					// use the *open source* style urls
+					// <os urls are already set, do nothing>
+				} else {
+					// use the *legacy* style urls
+					doc.api_url = doc.api_url_saas || doc.api_url;
+					doc.operations_url = doc.operations_url_saas || doc.operations_url;
+					doc.osnadmin_url = doc.osnadmin_url_saas || doc.osnadmin_url;
 
-				// grpcwp_url is different, since console controls it entirely, we should always use the open source operator style (the new style)
-				// b/c there is no good reason not to transition, and this makes 1 less corner case to worry about going forward
-				// doc.grpcwp_url = doc.grpcwp_url_saas || undefined;		// don't uncomment, use this field as is
+					// grpcwp_url is different, since console controls it entirely, we should always use the open source operator style (the new style)
+					// b/c there is no good reason not to transition, and this makes 1 less corner case to worry about going forward
+					// doc.grpcwp_url = doc.grpcwp_url_saas || undefined;
+				}
+			} else {
+				// use the *open source* style urls
+				// <os urls are already set, do nothing>
 			}
 
 			// remove legacy ingress routes from output, the URL switching was handled above (if applicable)

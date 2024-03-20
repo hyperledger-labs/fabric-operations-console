@@ -341,6 +341,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 					INFRA_OPENSHIFT: 'openshift',						// indicates that deployed components will be hosted by redhat openshift
 					INFRA_K8S: 'k8s',									// indicates that deployed components will be hosted by generic kubernetes
 					PAID_K8S: 'paid',
+					OPEN_SOURCE_STYLE: 'os',							// "os" means an open-source style url should be returned for this saas/migrated comp
 					GET_ALL_COMPONENTS_KEY: 'GET /api/vx/instance/iid/type/all',
 					GET_FAB_VERSIONS_KEY: 'GET /api/vx/instance/iid/type/all/versions',
 					EVENT_COMP_DEL: 'component_delete',					// delete event is for k8s delete
