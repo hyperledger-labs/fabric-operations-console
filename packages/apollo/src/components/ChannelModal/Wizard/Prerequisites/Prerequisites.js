@@ -108,6 +108,9 @@ class Prerequisites extends Component {
 				<TranslateLink text="prerequisites_para1"
 					className="ibp-channel-section-desc-with-link"
 				/>
+				<TranslateLink text="prerequisites_para1.5"
+					className="ibp-channel-section-desc-with-link"
+				/>
 				<p id="prerequisites_para2"
 					className="ibp-channel-prerequisites-desc"
 				>
