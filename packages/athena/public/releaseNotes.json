@@ -1,15 +1,23 @@
 [
 	{
-		"version": "1.0.8-20",
-		"date": "12 Mar 2024",
+		"version": "1.0.9",
+		"date": "22 Mar 2024",
 		"description": [
 			{
 				"title": "Bug & security fixes",
 				"details": "Miscellaneous fixes & dependency updates."
 			},
 			{
-				"title": "Peer join channel update",
-				"details": "Handle existing Channel member at the time of joining."
+				"title": "Show message, if TLS certificate missing on joining OS",
+				"details": "Show message, if TLS certificate missing on joining OS to channel"
+			},
+			{
+				"title": "Channel appear twice",
+				"details": "Channel appear twice after unjoin from ordering nodes"
+			},
+			{
+				"title": "Wrong support doc link",
+				"details": "console support link pointing to wrong doc url"
 			}
 		]
 	}, {
