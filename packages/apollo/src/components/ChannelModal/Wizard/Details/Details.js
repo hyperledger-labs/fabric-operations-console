@@ -34,7 +34,6 @@ const Log = new Logger(SCOPE);
 // panel stores allows the user to select the channel name and ordering cluster to use for a create channel
 class Details extends Component {
 	onChangeChannelDetails = async (value) => {
-		console.log('values >>', value);
 		const { checkHealth, getOrderingServiceDetails } = this.props;
 		if (value.channelName) {
 			this.validateChannelName(value);
