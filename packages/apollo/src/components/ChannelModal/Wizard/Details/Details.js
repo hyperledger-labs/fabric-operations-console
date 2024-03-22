@@ -24,6 +24,7 @@ import Helper from '../../../../utils/helper';
 import Form from '../../../Form/Form';
 import Logger from '../../../Log/Logger';
 import SidePanelWarning from '../../../SidePanelWarning/SidePanelWarning';
+import IdentityApi from '../../../../rest/IdentityApi';
 const SCOPE = 'channelModal';
 
 const Log = new Logger(SCOPE);
@@ -32,11 +33,23 @@ const Log = new Logger(SCOPE);
 //
 // panel stores allows the user to select the channel name and ordering cluster to use for a create channel
 class Details extends Component {
-	onChangeChannelDetails = value => {
+	onChangeChannelDetails = async (value) => {
+		console.log('values >>', value);
 		const { checkHealth, getOrderingServiceDetails } = this.props;
 		if (value.channelName) {
 			this.validateChannelName(value);
 		} else if (value.selectedOrderer) {
+			this.props.updateState(SCOPE, {
+				isTlsMissing: false
+			});
+			if (value.selectedOrderer.systemless) {
+				const orderer_tls_identity = await IdentityApi.getTLSIdentity(value.selectedOrderer);
+				if (!orderer_tls_identity) {
+					this.props.updateState(SCOPE, {
+						isTlsMissing: true
+					});
+				}
+			}
 			checkHealth(value.selectedOrderer);
 			getOrderingServiceDetails(value.selectedOrderer);
 		}
@@ -82,7 +95,7 @@ class Details extends Component {
 	};
 
 	render() {
-		const { channelOrderer, isChannelUpdate, checkingOrdererStatus, loadingConsenters, orderers, channelNameError, isOrdererUnavailable, translate } = this.props;
+		const { channelOrderer, isChannelUpdate, checkingOrdererStatus, loadingConsenters, orderers, channelNameError, isOrdererUnavailable, translate, isTlsMissing } = this.props;
 		const associatedOrdererNotFound = isChannelUpdate && !channelOrderer;
 		const multipleOrderersAssociationsFound = isChannelUpdate && _.size(channelOrderer) > 1;
 		const fields = [
@@ -137,6 +150,10 @@ class Details extends Component {
 							/>
 						</div>
 					)}
+
+					{isTlsMissing && (<SidePanelWarning title="tls_identity_not_found"
+						subtitle={translate('orderer_tls_admin_identity_not_found')}
+					/>)}
 				</div>
 			</div>
 		);
@@ -154,6 +171,7 @@ const dataProps = {
 	checkingOrdererStatus: PropTypes.bool,
 	loadingConsenters: PropTypes.bool,
 	advanced: PropTypes.bool,
+	isTlsMissing: PropTypes.bool
 };
 
 Details.propTypes = {

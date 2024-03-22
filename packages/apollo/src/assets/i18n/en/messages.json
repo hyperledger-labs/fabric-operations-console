@@ -2855,5 +2855,6 @@
 	"version_debug_tooltip": "Use this tool to export a version summary which shows the versions of each of your component. This summary is helpful for debugging/support purposes.",
 	"hide_archived_channels": "Hide Archived Channels",
 	"show_archived_channels": "Show Archived Channels",
-	"channel_not_found_under_orderer": "Channel '${channelId}' not found within selected orderer '${ordererId}'"
+	"channel_not_found_under_orderer": "Channel '${channelId}' not found within selected orderer '${ordererId}'",
+	"orderer_tls_admin_identity_not_found_in_selected_clusters": "Unable to join channel because cluster ${clusters} does not have TLS Identity"
 }
