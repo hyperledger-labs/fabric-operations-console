@@ -283,7 +283,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 				if (!settings.FABRIC_CAPABILITIES.orderer) { settings.FABRIC_CAPABILITIES.orderer = []; }
 
 				// the type of console build we are in
-				settings.CONSOLE_TYPE = settings.getConsoleType(settings) || 'hlfoc';	// valid options, "hlfoc", "ibp", "support"
+				settings.CONSOLE_TYPE = settings.getConsoleType(athena) || 'hlfoc';	// valid options, "hlfoc", "ibp", "support"
 				// the source of an ibm console image build, not always set
 				settings.CONSOLE_BUILD_TYPE = athena.console_build_type || '';			// valid options, "saas", "non-saas", empty string
 
