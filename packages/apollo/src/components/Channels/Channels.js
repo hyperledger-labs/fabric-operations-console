@@ -694,12 +694,12 @@ class ChannelComponent extends Component {
 	}
 
 	// get all pending channels for orderers
-	getAllOrdererChannels = async (opts) => {
+	getAllOrdererChannels = async (opts = {}) => {
 		this.props.updateState(SCOPE, { orderer_loading: true, pending_osn_channels: [], all_local_blocks: [] });
 		const pending_blocks = [];
 
 		// get all then separate them on visibility
-		const all_blocks = await ConfigBlockApi.getAll({ visibility: 'all' });
+		const all_blocks = await ConfigBlockApi.getAll({ ...opts, visibility: 'all' });
 		if (all_blocks && Array.isArray(all_blocks.blocks)) {
 			for (let i in all_blocks.blocks) {
 				all_blocks.blocks[i].name = all_blocks.blocks[i].channel;
