@@ -220,7 +220,6 @@ a newer version.
                 "peer": {},
                 "couchdb": {},              // only passed if statedb is set to couchdb
                 "proxy": {},
-                "dind": {},                 // only for 1.4.x peer
                 "chaincodelauncher": {}     // only for 2.x peer
             },
             "storage": {     // optional, see storage limits
@@ -356,7 +355,6 @@ Useful documentation for possible updates:
                 "peer": {},
                 "couchdb": {},
                 "proxy": {},
-                "dind": {},
             },
             "configoverride": {},           // optional, core yaml configs
             "hsm": {                        // optional, hsm  params change  (proxy configs)

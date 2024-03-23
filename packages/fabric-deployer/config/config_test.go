@@ -88,10 +88,6 @@ var _ = Describe("Config", func() {
 						Requests: res,
 						Limits:   res,
 					},
-					DinD: &corev1.ResourceRequirements{
-						Requests: res,
-						Limits:   res,
-					},
 					CouchDB: &corev1.ResourceRequirements{
 						Requests: res,
 						Limits:   res,
@@ -376,13 +372,6 @@ var _ = Describe("Config", func() {
 			err := config.VerifyDefaultStorageAndResource(defaults)
 			Expect(err).NotTo(BeNil())
 			Expect(err.Error()).To(Equal("no default resources set for Peer.Peer"))
-		})
-
-		It("returns an error if Peer.DinD resource values not configured", func() {
-			defaults.Resources.Peer.DinD = nil
-			err := config.VerifyDefaultStorageAndResource(defaults)
-			Expect(err).NotTo(BeNil())
-			Expect(err.Error()).To(Equal("no default resources set for Peer.DinD"))
 		})
 
 		It("returns an error if Peer.GRPCProxy resource values not configured", func() {

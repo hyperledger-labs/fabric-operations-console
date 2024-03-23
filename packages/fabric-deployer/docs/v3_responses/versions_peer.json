@@ -8,8 +8,6 @@
           "peerInitTag": "sha256:75a24e088353294113ca399c64a6ea918435dd59f2839a3bb6af2b95135e236b",
           "peerImage": "us.icr.io/ibp-temp/ibp-peer",
           "peerTag": "sha256:59dd67649a2b920108f806062edadc85093195b684962512a210773ce17ec81c",
-          "dindImage": "us.icr.io/ibp-temp/ibp-dind",
-          "dindTag": "sha256:bd83e2a0eb012ffd456516b007a9a7c4cbd5aac3a83acd181a3bcc38f1522155",
           "grpcwebImage": "us.icr.io/ibp-temp/ibp-grpcweb",
           "grpcwebTag": "sha256:81e333a50cba5302bb20261838b7e47e9619fb9c79b2b3e47d9da13b7f2affd9",
           "couchdbImage": "us.icr.io/ibp-temp/ibp-couchdb",
