@@ -259,7 +259,7 @@ class ChannelComponent extends Component {
 	};
 
 	getAllPeerChannels = () => {
-		this.props.updateState(SCOPE, { loading: true, orderer_loading: true });
+		this.props.updateState(SCOPE, { loading: true });
 		ChannelApi.getAllChannels()
 			.then(channelResp => {
 				if (!this.mounted) {
@@ -896,6 +896,7 @@ class ChannelComponent extends Component {
 									this.props.showSuccess('channel_join_request_submitted', { channelName }, SCOPE, null, true);
 									this.props.updateState(SCOPE, { filteredChannels: [], allChannels: [] });
 									this.getAllPeerChannels();
+									this.getAllOrdererChannels({ cache: 'skip' });
 								}}
 								peers={this.props.peers}
 								orderers={this.props.orderers}
@@ -926,6 +927,7 @@ class ChannelComponent extends Component {
 											allChannels: [],
 										});
 										this.getAllPeerChannels();
+										this.getAllOrdererChannels({ cache: 'skip' });
 									}
 								}}
 							/>
