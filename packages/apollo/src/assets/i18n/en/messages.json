@@ -457,7 +457,7 @@
 	"select_osn_placeholder": "Select an orderer",
 	"select_ch_placeholder": "Select a channel",
 	"general_join_fail_title": "Joining Orderer Failure",
-	"general_join_failure": "One or more orderers failed to join the channel. Check that the orderers are running/online and that they have \"Chanel Participation\" features enabled.",
+	"general_join_failure": "One or more orderers failed to join the channel. Check that the orderers are running/online and that they have \"Channel Participation\" features enabled.",
 	"find_out_more": "Find out more here",
 	"select_peer_to_join": "Choose from available peers",
 	"select_orderer": "Select from available ordering services",
