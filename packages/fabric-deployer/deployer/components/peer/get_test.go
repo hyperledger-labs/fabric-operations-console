@@ -74,10 +74,6 @@ var _ = Describe("GET API", func() {
 				},
 				Resources: &cfg.Resources{
 					Peer: &current.PeerResources{
-						DinD: &corev1.ResourceRequirements{
-							Requests: res,
-							Limits:   res,
-						},
 						Peer: &corev1.ResourceRequirements{
 							Requests: res,
 							Limits:   res,

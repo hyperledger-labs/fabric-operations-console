@@ -56,7 +56,6 @@ var _ = Describe("Deployer", func() {
 					},
 					Peer: &current.PeerResources{
 						Peer:      &corev1.ResourceRequirements{},
-						DinD:      &corev1.ResourceRequirements{},
 						CouchDB:   &corev1.ResourceRequirements{},
 						GRPCProxy: &corev1.ResourceRequirements{},
 					},
