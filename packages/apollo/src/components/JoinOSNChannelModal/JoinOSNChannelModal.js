@@ -161,14 +161,12 @@ class JoinOSNChannelModal extends React.Component {
 		if (config_block_b64) {
 			const allOrderers = await this.getAllOrderers();
 			const all_identities = await IdentityApi.getIdentities();
-
 			const json_block = await this.parseProto(config_block_b64);
 			const channel_id = _.get(json_block, 'data.data[0].payload.header.channel_header.channel_id');
 			const channel_map = await ChannelParticipationApi.map1Channel(all_identities, allOrderers, channel_id);
 
 			const consenters = _.get(json_block, 'data.data[0].payload.data.config.channel_group.groups.Orderer.values.ConsensusType.value.metadata.consenters');
 			joinOsnMap = await this.organize_osns(consenters, allOrderers, json_block, channel_map);
-
 
 			const possibleNodes = this.countPossibleNodes(joinOsnMap);
 			const selectedNodes = this.countSelectedOrderers(joinOsnMap);
@@ -188,12 +186,13 @@ class JoinOSNChannelModal extends React.Component {
 				possible_nodes: possibleNodes,
 				follower_count: this.countFollowers(joinOsnMap),		// this isn't used anymore... remove?
 				b_genesis_block: window.stitch.base64ToUint8Array(config_block_b64),
+				json_genesis_block: json_block,
 				select_all_toggle: possibleNodes === selectedNodes,
 				block_error: '',
 				block_error_title: '',
 				submitting: false,
 				loading: false,
-				missingONTLSIdentities
+				missingONTLSIdentities,
 			});
 
 			return json_block;
@@ -700,9 +699,15 @@ class JoinOSNChannelModal extends React.Component {
 
 	// select or unselect the node
 	toggleNode = (node_id, cluster_id, evt) => {
-		let { joinOsnMap, missingONTLSIdentities } = this.props;
+		let { joinOsnMap, missingONTLSIdentities, json_genesis_block, missingOSOrgIdentities } = this.props;
+		const mspIds = Object.keys(json_genesis_block.data.data[0].payload.data.config.channel_group.groups.Orderer.groups);
+
 		let missingTLSCertClusters = new Set(missingONTLSIdentities);
+		const missingOSOrgClusters = new Set(missingOSOrgIdentities);
 		if (joinOsnMap && joinOsnMap[cluster_id]) {
+
+			// any of the node is selected then update cluster.selected flag
+
 			const totalSelectedAlreadyNodes = joinOsnMap[cluster_id].nodes.filter(_node => _node._selected && _node._id !== node_id);
 			for (let i in joinOsnMap[cluster_id].nodes) {
 				// To validate cluster does have TLS cert or not
@@ -717,15 +722,23 @@ class JoinOSNChannelModal extends React.Component {
 
 					joinOsnMap[cluster_id].nodes[i]._selected = !joinOsnMap[cluster_id].nodes[i]._selected;
 
-
-
 					const selectedOsns = this.countSelectedOrderers(joinOsnMap);
+					joinOsnMap[cluster_id].selected = this.isClusterSelected(joinOsnMap[cluster_id].nodes);
+
+					if (joinOsnMap[cluster_id].nodes[i]._selected && !mspIds.includes(joinOsnMap[cluster_id].nodes[i].msp_id)) {
+						missingOSOrgClusters.add(joinOsnMap[cluster_id].nodes[i].name);
+					} else {
+						missingOSOrgClusters.delete(joinOsnMap[cluster_id].nodes[i].name);
+					}
+
 					this.props.updateState(SCOPE, {
 						select_all_toggle: this.props.possible_nodes === selectedOsns,
 						joinOsnMap: JSON.parse(JSON.stringify(joinOsnMap)),
 						count: selectedOsns,
-						missingONTLSIdentities: Array.from(missingTLSCertClusters)
+						missingONTLSIdentities: Array.from(missingTLSCertClusters),
+						missingOSOrgIdentities: Array.from(missingOSOrgClusters)
 					});
+
 
 					break;
 				}
@@ -735,25 +748,44 @@ class JoinOSNChannelModal extends React.Component {
 
 	// select or deselect all nodes
 	toggleSelected = () => {
-		let { joinOsnMap } = this.props;
+		let { joinOsnMap, json_genesis_block } = this.props;
 
+		const mspIds = Object.keys(json_genesis_block.data.data[0].payload.data.config.channel_group.groups.Orderer.groups);
+
+		const missingOSOrgClusters = new Set([]);
 		const missingTLSCertClusters = new Set([]);
 		for (let cluster_id in joinOsnMap) {
 			for (let i in joinOsnMap[cluster_id].nodes) {
-				joinOsnMap[cluster_id].nodes[i]._selected = !this.props.select_all_toggle;
+				if (joinOsnMap[cluster_id].nodes[i]._status !== constants.OSN_JOIN_SUCCESS) {
+					joinOsnMap[cluster_id].nodes[i]._selected = !this.props.select_all_toggle;
+				}
 				// Validate TLS cert missing for selected cluster
 				if (!this.props.select_all_toggle && !joinOsnMap[cluster_id].tls_identity) {
 					missingTLSCertClusters.add(joinOsnMap[cluster_id].cluster_name);
+				} else {
+					missingTLSCertClusters.delete(joinOsnMap[cluster_id].cluster_name);
+				}
+				if (!this.props.select_all_toggle && !mspIds.includes(joinOsnMap[cluster_id].nodes[i].msp_id)) {
+					missingOSOrgClusters.add(joinOsnMap[cluster_id].nodes[i].name);
+				} else {
+					missingOSOrgClusters.delete(joinOsnMap[cluster_id].nodes[i].name);
 				}
 			}
+			joinOsnMap[cluster_id].selected = this.isClusterSelected(joinOsnMap[cluster_id].nodes);
 		}
 
 		this.props.updateState(SCOPE, {
 			select_all_toggle: !this.props.select_all_toggle,
 			joinOsnMap: JSON.parse(JSON.stringify(joinOsnMap)),
 			count: this.countSelectedOrderers(joinOsnMap),
-			missingONTLSIdentities: Array.from(missingTLSCertClusters)
+			missingONTLSIdentities: Array.from(missingTLSCertClusters),
+			missingOSOrgIdentities: Array.from(missingOSOrgClusters)
 		});
+	}
+
+	isClusterSelected(nodes) {
+		const totalSelectedNodes = nodes.filter(node => node._selected);
+		return totalSelectedNodes.length > 0;
 	}
 
 	// perform the osnadmin join-channel apis on the channel (config block is a genesis block)
@@ -763,7 +795,9 @@ class JoinOSNChannelModal extends React.Component {
 			selectedCluster,
 			joinOsnMap,
 			b_genesis_block,
+			json_genesis_block
 		} = self.props;
+		const mspIds = Object.keys(json_genesis_block.data.data[0].payload.data.config.channel_group.groups.Orderer.groups);
 		self.props.updateState(SCOPE, {
 			submitting: true,
 			joinOsnMap: JSON.parse(JSON.stringify(reset(joinOsnMap))),
@@ -785,10 +819,10 @@ class JoinOSNChannelModal extends React.Component {
 
 		// iter over the selected clusters
 		async.eachLimit(joinOsnMap, 1, (cluster, cluster_cb) => {
-			if (!cluster.selected || !cluster.tls_identity) {
+			// if (!cluster.selected || !cluster.tls_identity) {
+			if (!cluster.tls_identity) {
 				return cluster_cb();
 			}
-
 			// iter over the selected nodes in the selected cluster
 			async.eachOfLimit(cluster.nodes, 1, (node, i, node_cb) => {
 				if (node._status === constants.OSN_JOIN_SUCCESS) {
@@ -796,16 +830,21 @@ class JoinOSNChannelModal extends React.Component {
 				} else if (!node._selected) {
 					return node_cb();				// node is not selected
 				} else {
-					perform_join(cluster, node, i, () => {
-						setTimeout(() => {
-							// joinOsnMap was changed, now reflect the change
-							self.props.updateState(SCOPE, {
-								joinOsnMap: JSON.parse(JSON.stringify(joinOsnMap)),
-							});
+					// 	const msps = Object.keys(channel_genesis_block.data.data[0].payload.data.config.channel_group.groups.Orderer.groups);
+					if (mspIds.includes(node.msp_id)) {
+						perform_join(cluster, node, i, () => {
+							setTimeout(() => {
+								// joinOsnMap was changed, now reflect the change
+								self.props.updateState(SCOPE, {
+									joinOsnMap: JSON.parse(JSON.stringify(joinOsnMap)),
+								});
 
-							return node_cb();
-						}, 300 + Math.random() * 2000);		// slow down
-					});
+								return node_cb();
+							}, 300 + Math.random() * 2000);		// slow down
+						});
+					} else {
+						return cluster_cb();
+					}
 				}
 			}, () => {
 				return cluster_cb();
@@ -987,7 +1026,8 @@ class JoinOSNChannelModal extends React.Component {
 			block_error_title,
 			drill_down_flow,
 			show_channels_nav_link,
-			missingONTLSIdentities
+			missingONTLSIdentities,
+			missingOSOrgIdentities
 		} = this.props;
 
 		return (
@@ -997,7 +1037,7 @@ class JoinOSNChannelModal extends React.Component {
 				//title={translate('select_osn')}
 				//desc={translate('select_osn_desc')}
 				//tooltip={translate('select_orderer_tooltip')}
-				disableSubmit={count === 0 || block_error || (missingONTLSIdentities && missingONTLSIdentities.length === count)}
+				disableSubmit={count === 0 || block_error || (missingONTLSIdentities && missingONTLSIdentities.length === count) || (missingOSOrgIdentities && missingOSOrgIdentities.length)}
 			>
 				{this.props.loading && <Loading withOverlay={false}
 					className="ibp-wizard-loading"
@@ -1074,6 +1114,10 @@ class JoinOSNChannelModal extends React.Component {
 				{(missingONTLSIdentities && missingONTLSIdentities.length) ? (<SidePanelWarning title="tls_identity_not_found"
 					subtitle={translate('orderer_tls_admin_identity_not_found_in_selected_clusters', { clusters: `${missingONTLSIdentities.join(', ')}` })}
 				/>) : null}
+
+				{(missingOSOrgIdentities && missingOSOrgIdentities.length) ? (<SidePanelWarning title="orderer_org_not_found_in_channel"
+					subtitle={translate('orderer_org_not_found_in_selected_nodes', { nodes: `${missingOSOrgIdentities.join(', ')}` })}
+				/>) : null}
 			</WizardStep>
 		);
 	}
@@ -1117,6 +1161,9 @@ class JoinOSNChannelModal extends React.Component {
 					statusTitle = 'failed_join';
 				}
 				const hasJoinedChannel = (node._status === constants.OSN_JOIN_SUCCESS);
+
+				// const validateMSP =
+				// node._consenter
 
 				return (
 					<div className={'ibp-join-osn-node-wrap-wrap'}
@@ -1228,6 +1275,7 @@ const dataProps = {
 
 	config_block_b64: PropTypes.object,
 	b_genesis_block: PropTypes.blob,
+	json_genesis_block: PropTypes.object,
 	configtxlator_url: PropTypes.string,
 	select_all_toggle: PropTypes.bool,
 	channel_id: PropTypes.string,
@@ -1239,7 +1287,8 @@ const dataProps = {
 	joinOsnMap: PropTypes.Object,
 
 	consenters: PropTypes.array,
-	missingONTLSIdentities: array
+	missingONTLSIdentities: array,
+	missingOSOrgIdentities: array
 };
 
 JoinOSNChannelModal.propTypes = {
