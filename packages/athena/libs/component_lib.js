@@ -1679,7 +1679,7 @@ module.exports = function (logger, ev, t) {
 		if (comp_doc) {
 
 			// if its been migrated use the legacy routes
-			if (comp_doc.migrated_from === ev.STR.LOCATION_IBP_SAAS) {
+			if (comp_doc.migrated_from === ev.STR.LOCATION_IBP_SAAS && comp_doc.preferred_url !== ev.STR.OPEN_SOURCE_STYLE) {
 				if (comp_doc.type === ev.STR.CA && comp_doc.api_url_saas) {
 					return comp_doc.api_url_saas + '/cainfo';			// CA's use this route
 				} else if (comp_doc.operations_url_saas && (comp_doc.type === ev.STR.ORDERER || comp_doc.type === ev.STR.PEER)) {
