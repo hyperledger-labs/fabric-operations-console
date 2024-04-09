@@ -371,19 +371,16 @@ class UpdateChannelMspModal extends React.Component {
 		return fields;
 	}
 
-	 populateMSPAdmins ()
-	{
+	populateMSPAdmins() {
 		const mspCerts = [];
-		const admin_identites =[];
-		if (this.props.orgNodes[this.props.msp.id])
-		{
+		const admin_identites = [];
+		if (this.props.orgNodes && this.props.orgNodes[this.props.msp.id]) {
 			mspCerts.root_certs = this.props.orgNodes[this.props.msp.id].values_map.MSP.value.root_certs_list;
 			mspCerts.intermediate_certs = this.props.orgNodes[this.props.msp.id].values_map.MSP.value.intermediate_certs_list;
 			IdentityApi.getIdentitiesForMsp(mspCerts).then(mspIdentities => {
 				mspIdentities.forEach(value => {
 					const parsed_msp_cert = StitchApi.parseCertificate(value.cert);
-					if (admin_identites.length < 6)
-					{
+					if (admin_identites.length < 6) {
 						if (parsed_msp_cert.subject_parts.OU === 'admin') {
 							admin_identites.push(value.name);
 						}
