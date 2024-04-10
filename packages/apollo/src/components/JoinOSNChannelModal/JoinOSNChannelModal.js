@@ -161,6 +161,7 @@ class JoinOSNChannelModal extends React.Component {
 		if (config_block_b64) {
 			const allOrderers = await this.getAllOrderers();
 			const all_identities = await IdentityApi.getIdentities();
+
 			const json_block = await this.parseProto(config_block_b64);
 			const channel_id = _.get(json_block, 'data.data[0].payload.header.channel_header.channel_id');
 			const channel_map = await ChannelParticipationApi.map1Channel(all_identities, allOrderers, channel_id);
@@ -819,7 +820,6 @@ class JoinOSNChannelModal extends React.Component {
 
 		// iter over the selected clusters
 		async.eachLimit(joinOsnMap, 1, (cluster, cluster_cb) => {
-			// if (!cluster.selected || !cluster.tls_identity) {
 			if (!cluster.tls_identity) {
 				return cluster_cb();
 			}
@@ -830,7 +830,6 @@ class JoinOSNChannelModal extends React.Component {
 				} else if (!node._selected) {
 					return node_cb();				// node is not selected
 				} else {
-					// 	const msps = Object.keys(channel_genesis_block.data.data[0].payload.data.config.channel_group.groups.Orderer.groups);
 					if (mspIds.includes(node.msp_id)) {
 						perform_join(cluster, node, i, () => {
 							setTimeout(() => {
@@ -1161,9 +1160,6 @@ class JoinOSNChannelModal extends React.Component {
 					statusTitle = 'failed_join';
 				}
 				const hasJoinedChannel = (node._status === constants.OSN_JOIN_SUCCESS);
-
-				// const validateMSP =
-				// node._consenter
 
 				return (
 					<div className={'ibp-join-osn-node-wrap-wrap'}
