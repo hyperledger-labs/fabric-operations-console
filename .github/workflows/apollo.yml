@@ -14,9 +14,9 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Use Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
       - run: npm ci --legacy-peer-deps
@@ -26,19 +26,19 @@ jobs:
     name: NPM Audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Use Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
-          node-version: 16.x
+          node-version: 18.x
       - run: npm audit --production
 
   build-code:
     name: Build code
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 18.x
       - run: npm ci --legacy-peer-deps
@@ -48,8 +48,8 @@ jobs:
     name: Unit tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 18.x
       - run: npm ci --legacy-peer-deps

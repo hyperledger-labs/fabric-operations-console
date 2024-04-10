@@ -12,8 +12,8 @@ jobs:
       matrix:
         project: [apollo, athena, stitch]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 18.x
       - name: Audit NPM
@@ -25,11 +25,11 @@ jobs:
     name: Detect Secrets
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          python-version: 3.11
-      - uses: actions/setup-node@v2
+          python-version: 3.12
+      - uses: actions/setup-node@v4
         with:
           node-version: 18.x
       - name: Install detect-secrets

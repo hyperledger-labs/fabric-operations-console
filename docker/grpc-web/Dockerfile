@@ -1,12 +1,8 @@
-FROM golang:1.14-alpine as builder
+FROM golang:1.21.9-alpine as builder
 
 RUN apk update && apk add --no-cache alpine-sdk bash curl git ca-certificates openssl musl-dev && \
 	rm -rf /var/lib/apt/lists/*
 
-# RUN apt install -y \
-# 	openssl
-
-RUN go get -u github.com/golang/dep/cmd/dep
 RUN git clone https://github.com/improbable-eng/grpc-web.git /go/src/github.com/improbable-eng/grpc-web
 
 RUN cd /go/src/github.com/improbable-eng/grpc-web/go/grpcwebproxy && \
@@ -14,7 +10,7 @@ RUN cd /go/src/github.com/improbable-eng/grpc-web/go/grpcwebproxy && \
 
 RUN cd /go/src/github.com/improbable-eng/grpc-web/misc && ./gen_cert.sh
 
-FROM golang:1.14-alpine
+FROM golang:1.21.9-alpine
 
 COPY --from=builder /go/src/github.com/improbable-eng/grpc-web/go/grpcwebproxy/grpcwebproxy /usr/bin/grpcwebproxy
 COPY --from=builder /go/src/github.com/improbable-eng/grpc-web/misc/localhost.crt /certs/localhost.crt
