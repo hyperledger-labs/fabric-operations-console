@@ -10,22 +10,22 @@ defaults:
     shell: bash
 
 env:
-  DB_CONNECTION_STRING: http://127.0.0.1:5984/
+  DB_CONNECTION_STRING: http://admin:password@127.0.0.1:5984/
 
 jobs:
   test-suite:
     name: Test suite
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Use Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
       - name: Setup CouchDB
-        uses: cobot/couchdb-action@v4
+        uses: iamssen/couchdb-github-action@master
         with:
-          couchdb version: '2.3.1'
+          couchdb-version: '3.3'
       - run: curl ${{ env.DB_CONNECTION_STRING }}
       - run: npm config set registry https://registry.npmjs.org/
       - run: npm ci
@@ -37,15 +37,15 @@ jobs:
     name: Start Athena
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Use Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
       - name: Setup CouchDB
-        uses: cobot/couchdb-action@v4
+        uses: iamssen/couchdb-github-action@master
         with:
-          couchdb version: '2.3.1'
+          couchdb-version: '3.3'
       - run: curl ${{ env.DB_CONNECTION_STRING }}
       - run: npm config set registry https://registry.npmjs.org/
       - run: npm ci
@@ -55,7 +55,7 @@ jobs:
     name: NPM Audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
@@ -66,9 +66,9 @@ jobs:
     name: Validate OpenAPI
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Use Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
       - run: npm config set registry https://registry.npmjs.org/
@@ -83,9 +83,9 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Use Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
       - run: npm ci

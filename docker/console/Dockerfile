@@ -32,11 +32,6 @@ RUN ls -l $STITCH_DIR/dist
 # ---------------------
 # --- Build Apollo ---
 # ---------------------
-# we need to add python for apollo's npm install when using redhat's node 12 image
-USER 0
-RUN dnf install python2 -y \
-	&& export PATH="$PATH:/usr/bin/python2"
-
 USER 1001
 WORKDIR $APOLLO_DIR
 COPY --chown=1001:0 ./apollo .
@@ -83,11 +78,11 @@ WORKDIR $SERVER_HOME
 COPY --chown=1001:0 ./athena $SERVER_HOME
 
 USER 0
-RUN (dnf update || true)\
+RUN (dnf update -y || true)\
 	&& npm ci --omit dev \
 	# Make sure we can see what packages are getting installed
 	&& npm ls --production > npm_ls_prod.txt \
-	&& (dnf clean all || true)
+	&& (dnf clean all -y || true)
 RUN chmod -R 777 ./logs
 RUN chmod -R 777 ./_backups
 
