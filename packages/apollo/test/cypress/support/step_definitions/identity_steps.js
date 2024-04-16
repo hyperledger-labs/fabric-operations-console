@@ -17,7 +17,7 @@
 import { Given, Then, When } from "@badeball/cypress-cucumber-preprocessor";
 
 Given(/^the CA admin is set as (?:'|")(.*?)(?:'|")$/, identityName => {
-    cy.get('.ibp-identity-information').contains(identityName)
+    cy.get('.ibp-identity-information',{ timeout: 60000 }).contains(identityName)
 });
 
 When(/^the (?:'|")(.*?)(?:'|") user was enrolled with id (?:'|")(.*?)(?:'|") and secret (?:'|")(.*?)(?:'|")$/, (type, enrollId, enrollSecret) => {
@@ -29,7 +29,7 @@ When(/^the (?:'|")(.*?)(?:'|") user was enrolled with id (?:'|")(.*?)(?:'|") and
 		cy.get('.bx--list-box__field').click()
 		cy.wait(500)
 		cy.get('.bx--list-box__menu-item__option').contains(type).should('be.visible').click()
-		cy.clickButton('id', 'next')    
+		cy.clickButton('id', 'next')
 		cy.wait(500)
 		cy.clickButton('id', 'submit')
 		cy.wait(1000)

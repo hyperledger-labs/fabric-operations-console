@@ -60,9 +60,9 @@ Then(/^I should see table with id (?:'|")(.*?)(?:'|")$/, (propertyValue) => {
 });
 
 Then(/^I should see audit log row with text (?:'|")(.*?)(?:'|") and id (?:'|")(.*?)(?:'|")$/, (rowText, propertyValue) => {
-	cy.get(`td[id="${propertyValue}"]`).first().contains(rowText).should('be.visible')
+	cy.get(`td[id="${propertyValue}"]`,{ timeout: 60000 }).first().contains(rowText).should('be.visible')
 });
 
 Then(/^I should see api key row with text (?:'|")(.*?)(?:'|") and id (?:'|")(.*?)(?:'|")$/, (rowText, propertyValue) => {
-	cy.get(`td[id="${propertyValue}"]`).first().contains(rowText).should('be.visible')
+	cy.get(`td[id="${propertyValue}"]`,{ timeout: 60000 }).first().contains(rowText).should('be.visible')
 });

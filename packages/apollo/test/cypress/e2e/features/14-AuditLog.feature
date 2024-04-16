@@ -87,6 +87,9 @@ Feature: Verify Audit Log functionality works as expected
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	Then I reload the page
 	# peers"Peer Org1", "Peer Org2" havejoined the channel "channel2"
+	When I am on the 'access' page
+	When I clicked the div with id 'test__navigation--item--audit_logs'
+	Then I should see table with id 'table-audit_logs'
 	When I provided 'peers "Peer Org1", "Peer Org2" have joined the channel "channel2"' for input field with id "1"
 	Then I should see audit log row with text 'peers "Peer Org1", "Peer Org2" have joined the channel "channel2"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
