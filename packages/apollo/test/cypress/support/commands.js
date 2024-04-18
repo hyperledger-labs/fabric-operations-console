@@ -50,6 +50,7 @@ Cypress.Commands.add('clickButton', (property, attributeValue) => {
 Cypress.Commands.add('enterInput', (text, inputTitle) => {
 	try {
     cy.wait(500)
+	cy.get(`input[title="${inputTitle}"]`).should('be.visible')
     cy.get(`input[title="${inputTitle}"]`).clear().type(text)
 		//cy.get(`input[title="${inputTitle}"]`).type(text)
 	} catch (err) {

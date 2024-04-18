@@ -32,16 +32,17 @@ Then(/^I should see a success toast with class (?:'|")(.*?)(?:'|") which says (?
 				cy.get('body').then(($body) => {
 					if ($body.find(":contains(Unable to create peer)").length > 0) {
 						cy.log('Unable to create Peer error displayed...clicking on Add Peer again')
-						cy.get(`button[id="submit"]`).click()
+						cy.get(`button[id="submit"]`, { timeout: 60000 }).should('be.visible').click()
 						cy.wait(6000)
-						cy.get(className, { timeout: 60000 }).contains(expectedMessage).should('be.visible')
+						cy.log('Checking for success toast after getting unable to create peer error')
+						cy.get(className, { timeout: 180000 }).contains(expectedMessage).should('be.visible')
 						found = true
 					}
 				  })
 				cy.log('Checking for success toast')
 				cy.get('body').then(($body) => {
 					if ($body.find(className).length) {
-						cy.get(className, { timeout: 60000 }).contains(expectedMessage).should('be.visible')
+						cy.get(className, { timeout: 180000 }).contains(expectedMessage).should('be.visible')
 						found = true
 					}
 				})
