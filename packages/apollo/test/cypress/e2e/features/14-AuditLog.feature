@@ -73,10 +73,19 @@ Feature: Verify Audit Log functionality works as expected
 	When I provided 'adding new fabric-orderer "orderingservicenode1"' for input field with id "1"
 	Then I should see audit log row with text 'adding new fabric-orderer "orderingservicenode1"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+	Then I am logged out from console
 
   Scenario: Search activity log for creating channel and joining channel
     When I clicked the div with id 'test__navigation--item--audit_logs'
 	Then I should see table with id 'table-audit_logs'
+	# peers"Peer Org1", "Peer Org2" havejoined the channel "channel2"
+	When I am on the 'access' page
+	When I clicked the div with id 'test__navigation--item--audit_logs'
+	Then I should see table with id 'table-audit_logs'
+	When I provided 'peers "Peer Org1", "Peer Org2" have joined the channel "channel2"' for input field with id "1"
+	Then I should see audit log row with text 'peers "Peer Org1", "Peer Org2" have joined the channel "channel2"' and id 'audit-logs-log_title-0'
+	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+	Then I reload the page
 	# updating channel "testchainid" - MSP "osmsp"
 	When I provided 'updating channel "testchainid" - MSP "osmsp"' for input field with id "1"
 	Then I should see audit log row with text 'updating channel "testchainid" - MSP "osmsp"' and id 'audit-logs-log_title-0'
@@ -84,14 +93,6 @@ Feature: Verify Audit Log functionality works as expected
 	# creating channel "channel2" - MSP "org1msp"
 	When I provided 'creating channel "channel1" - MSP "org1msp"' for input field with id "1"
 	Then I should see audit log row with text 'creating channel "channel1" - MSP "org1msp"' and id 'audit-logs-log_title-0'
-	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
-	Then I reload the page
-	# peers"Peer Org1", "Peer Org2" havejoined the channel "channel2"
-	When I am on the 'access' page
-	When I clicked the div with id 'test__navigation--item--audit_logs'
-	Then I should see table with id 'table-audit_logs'
-	When I provided 'peers "Peer Org1", "Peer Org2" have joined the channel "channel2"' for input field with id "1"
-	Then I should see audit log row with text 'peers "Peer Org1", "Peer Org2" have joined the channel "channel2"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 	Then I reload the page
 	# creating channel "channel1" - MSP "org1msp"

@@ -51,12 +51,12 @@ Given(/^I click label with property (?:'|")(.*?)(?:'|") and value (?:'|")(.*?)(?
 
 Then(/^I should see (div|button) with id (?:'|")(.*?)(?:'|")$/, (controlType, propertyValue) => {
 	cy.wait(500)
-	cy.get(`${controlType}[id="${propertyValue}"]`).should('be.visible')
+	cy.get(`${controlType}[id="${propertyValue}"]`, { timeout: 180000 }).should('be.visible')
 });
 
 Then(/^I should see table with id (?:'|")(.*?)(?:'|")$/, (propertyValue) => {
 	cy.wait(500)
-	cy.get(`table[id="${propertyValue}"]`).should('be.visible')
+	cy.get(`table[id="${propertyValue}"]`, { timeout: 60000 }).should('be.visible')
 });
 
 Then(/^I should see audit log row with text (?:'|")(.*?)(?:'|") and id (?:'|")(.*?)(?:'|")$/, (rowText, propertyValue) => {

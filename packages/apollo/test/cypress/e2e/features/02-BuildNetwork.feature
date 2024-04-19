@@ -52,6 +52,7 @@ Feature: Build a network feature
         And I provided 'org1adminpw' for the 'Enter a secret' input
         And I provided 'Org1 MSP Admin' for the 'Enter name for the identity to be stored in your Wallet' input
         And I clicked the button with text 'Generate'
+		Then I should see button with id "btn-export-certificate"
         And I clicked the button with text 'Export'
         And I clicked the button with text 'Next'
         And I click Create MSP definition button

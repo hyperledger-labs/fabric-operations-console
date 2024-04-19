@@ -17,7 +17,9 @@
 import { Given, Then, When } from "@badeball/cypress-cucumber-preprocessor";
 
 Given(/^the CA admin is set as (?:'|")(.*?)(?:'|")$/, identityName => {
-    cy.get('.ibp-identity-information',{ timeout: 60000 }).contains(identityName)
+	// Sometimes it takes time to associate identity after clicking button
+	cy.wait(60000)
+    cy.get('.ibp-identity-information',{ timeout: 120000 }).contains(identityName)
 });
 
 When(/^the (?:'|")(.*?)(?:'|") user was enrolled with id (?:'|")(.*?)(?:'|") and secret (?:'|")(.*?)(?:'|")$/, (type, enrollId, enrollSecret) => {

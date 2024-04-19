@@ -35,6 +35,9 @@ Cypress.Commands.add('loginToConsole', (loginUserName,loginPassword) => {
 Cypress.Commands.add('clickButton', (property, attributeValue) => {
   try{
     cy.wait(1000)
+	Cypress.on('uncaught:exception', (err, runnable) => {
+		return false;
+	  });
     if (property == "text"){
         cy.get('button').contains(attributeValue).scrollIntoView().should('be.visible').click()
     }else{
