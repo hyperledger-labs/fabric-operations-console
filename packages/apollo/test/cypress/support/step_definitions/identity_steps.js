@@ -72,7 +72,7 @@ When(/^I enroll TLS identity for OS1 with secret (?:'|")(.*?)(?:'|") and name (?
 	cy.get('.bx--list-box__menu-item__option').contains('TLS Certificate Authority').click()
 	cy.enterInput(enrollSecret, 'Enter a secret');
 	cy.clickButton('id', 'next')
-	cy.wait(500)
+	cy.wait(60000)
 	cy.enterInput(enrollName, 'Enter a name');
 	cy.clickButton('id', 'submit'); //Add identity to Wallet
 	cy.wait(2000)
