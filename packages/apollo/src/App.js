@@ -16,7 +16,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import withLocalize from './hoc/withLocalize'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import './app.scss';
@@ -33,7 +33,7 @@ import StitchApi from './rest/StitchApi';
 import UserSettingsRestApi from './rest/UserSettingsRestApi';
 import ActionsHelper from './utils/actionsHelper';
 import Helper from './utils/helper';
-import localization from './utils/localization';
+// import localization from './utils/localization';
 import NodeStatus from './utils/status';
 
 const SCOPE = 'app';
@@ -44,7 +44,7 @@ class App extends Component {
 	cName = 'App';
 	constructor(props) {
 		super(props);
-		localization.init(props);
+		// localization.init(props);
 
 		this.state = {
 			authScheme: null,

@@ -50,33 +50,6 @@ fs.writeFileSync(indexOutputFilePath, indexHtml);
 console.log('[builder] Cache busting is done');
 
 // ---------------------------------
-// Edit localization file - dirty... dsh todo rethink this!!
-// ---------------------------------
-/*
-// INJECT TRANSLATIONS IF FILES PRESENT
-const Data = {};
-*/
-if (fs.existsSync('./src/assets/i18n/de/messages.json')) {
-	let localizationJs = fs.readFileSync('./src/utils/localization.js', 'utf8');
-	localizationJs = localizationJs.replace(/const Data = {};/, `
-const Data = {
-	'en': require('../assets/i18n/en/messages.json'),
-	'de': require('../assets/i18n/de/messages.json'),
-	'es': require('../assets/i18n/es/messages.json'),
-	'fr': require('../assets/i18n/fr/messages.json'),
-	'it': require('../assets/i18n/it/messages.json'),
-	'ja': require('../assets/i18n/ja/messages.json'),
-	'ko': require('../assets/i18n/ko/messages.json'),
-	'pt-br': require('../assets/i18n/pt-br/messages.json'),
-	'zh-cn': require('../assets/i18n/zh-cn/messages.json'),
-	'zh-tw': require('../assets/i18n/zh-tw/messages.json'),
-};
-Data['pt'] = Data['pt-br'];Data['zh'] = Data['zh-cn'];Data['en-us'] = Data['en'];`);
-	fs.writeFileSync('./src/utils/localization.js', localizationJs);
-	console.log('[builder] Localization files added');
-}
-
-// ---------------------------------
 // The build
 // ---------------------------------
 require('esbuild').build({

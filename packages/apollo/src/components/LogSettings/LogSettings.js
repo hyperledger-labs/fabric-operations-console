@@ -15,7 +15,7 @@
 */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import withLocalize from '../../hoc/withLocalize';
 import { connect } from 'react-redux';
 import { ContentSwitcher, Dropdown, Switch, TextInput } from 'carbon-components-react';
 import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';

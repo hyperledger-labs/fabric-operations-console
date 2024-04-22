@@ -16,11 +16,11 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import Helper from '../../utils/helper';
 import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
 import Form from '../Form/Form';
+import { useTranslation } from 'react-i18next';
 
 class UsageForm extends Component {
 	static DEFAULT_USAGE_SAAS = {
@@ -140,14 +140,16 @@ class UsageForm extends Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const { t } = useTranslation();
 		return (
 			<div className="ibp-usage-form">
 				{!this.props.titleTooltip ? (
-					this.props.title && <h3 className="ibp-usage-title">{translate(this.props.title)}</h3>
+					this.props.title && <h3 className="ibp-usage-title">
+						{t(this.props.title)}
+						</h3>
 				) : (
 					<h3 className="ibp-usage-title">
-						<BlockchainTooltip triggerText={translate(this.props.title ? this.props.title : '')}>{translate(this.props.titleTooltip)}</BlockchainTooltip>
+						<BlockchainTooltip triggerText={t(this.props.title ? this.props.title : '')}>{t(this.props.titleTooltip)}</BlockchainTooltip>
 					</h3>
 				)}
 				<Form
@@ -187,7 +189,6 @@ UsageForm.propTypes = {
 	onChange: PropTypes.func,
 	reallocate: PropTypes.object,
 	nostorage: PropTypes.bool,
-	translate: PropTypes.func, // Provided by withLocalize
 };
 
 export default connect((state, props) => {
@@ -196,4 +197,4 @@ export default connect((state, props) => {
 		scope,
 		...Helper.mapStateToProps(state[scope], dataProps),
 	};
-})(withLocalize(UsageForm));
+})(UsageForm);

@@ -17,7 +17,7 @@ import React, { Component } from 'react';
 import { Button } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withLocalize } from 'react-localize-redux';
+import withLocalize from '../../hoc/withLocalize';
 import SVGs from '../Svgs/Svgs';
 import { Checkbox } from 'carbon-components-react';
 import Catalog20 from '@carbon/icons-react/lib/catalog/20';

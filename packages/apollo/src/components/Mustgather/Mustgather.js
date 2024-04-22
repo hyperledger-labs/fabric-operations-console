@@ -17,7 +17,7 @@ import { Button, Loading } from 'carbon-components-react';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withLocalize } from 'react-localize-redux';
+import withLocalize from '../../hoc/withLocalize';
 import { Backoff, ExponentialStrategy } from 'backoff';
 import MustgatherApi from '../../rest/MustgatherApi';
 import SVGs from '../Svgs/Svgs';

@@ -18,7 +18,7 @@ import SkeletonPlaceholder from 'carbon-components-react/lib/components/Skeleton
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import withLocalize from '../../hoc/withLocalize';
 import { connect } from 'react-redux';
 import emptySmartContractImage from '../../assets/images/empty_installed.svg';
 import { clearNotifications, showBreadcrumb, showError, showSuccess, updateBreadcrumb, updateState } from '../../redux/commonActions';

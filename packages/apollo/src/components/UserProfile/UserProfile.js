@@ -15,7 +15,7 @@
 */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withLocalize } from 'react-localize-redux';
+import withLocalize from '../../hoc/withLocalize';
 import Helper from '../../utils/helper';
 import ChangePasswordModal from '../ChangePasswordModal/ChangePasswordModal';
 import { connect } from 'react-redux';

@@ -17,7 +17,7 @@ import async from 'async';
 import { Button } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import withLocalize from '../../hoc/withLocalize';
 import { connect } from 'react-redux';
 import RequiresAttentionImage from '../../assets/images/requires_attention.svg';
 import { clearNotifications, showBreadcrumb, showError, updateState } from '../../redux/commonActions';

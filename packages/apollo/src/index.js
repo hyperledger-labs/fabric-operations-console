@@ -15,18 +15,16 @@
 */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { LocalizeProvider } from 'react-localize-redux';
 import { Provider } from 'react-redux';
 import App from './App';
 import './index.scss';
 import store from './redux/Store';
 import { unregister as unregisterServiceWorker } from './registerServiceWorker';
+import './utils/i18n';
 
 ReactDOM.render(
 	<Provider store={store}>
-		<LocalizeProvider>
-			<App />
-		</LocalizeProvider>
+		<App />
 	</Provider>,
 	document.getElementById('root')
 );

@@ -18,7 +18,7 @@ import { InlineNotification } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Helper from '../../utils/helper';
-import { withLocalize } from 'react-localize-redux';
+import withLocalize from '../../hoc/withLocalize';
 
 export class SidePanelError extends React.Component {
 	componentDidMount() {

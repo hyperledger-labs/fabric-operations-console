@@ -20,12 +20,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { createPortal } from 'react-dom';
 import { connect } from 'react-redux';
-import { Translate } from 'react-localize-redux';
 import Helper from '../../utils/helper';
 import { updateSidePanel } from '../SidePanel/sidePanelActions';
 import SidePanelError from '../SidePanelError/SidePanelError';
 import SVGs from '../Svgs/Svgs';
 import { setInStorage } from '../../utils/localStorage';
+import { withTranslation } from 'react-i18next';
 
 const portalRoot = document.querySelector('#ibp-portal-container');
 
@@ -166,50 +166,49 @@ export class SidePanel extends React.Component {
 		if (this.props.error) {
 			className = `${className} ${this.props.largePanel ? ' ibp-large-panel-error' : ''}`;
 		}
-		const { toBeArchivedList, showRequests } = this.props;
+		const { toBeArchivedList, showRequests, t } = this.props;
+
 		return createPortal(
-			<Translate>
-				{({ translate }) => (
-					<FocusTrap
-						active={this.props.disable_focus_trap ? false : true}
-						focusTrapOptions={{
-							escapeDeactivates: false,
+			<FocusTrap
+				active={this.props.disable_focus_trap ? false : true}
+				focusTrapOptions={{
+					escapeDeactivates: false,
+				}}
+			>
+				<div
+					id={this.props.id}
+					className={className}
+					role="dialog"
+					aria-label={`${t('product_label')} ${t('panel')}`}
+				>
+					<div
+						className="ibp-panel--container"
+						style={{
+							backgroundColor: `rgba(0,0,0,${this.props.rgbaVal})`,
 						}}
-					>
-						<div
-							id={this.props.id}
-							className={className}
-							role="dialog"
-							aria-label={`${translate('product_label')} ${translate('panel')}`}
-						>
-							<div
-								className="ibp-panel--container"
-								style={{
-									backgroundColor: `rgba(0,0,0,${this.props.rgbaVal})`,
-								}}
-								onClick={this.props.clickAway ? this.closeSidePanel : null}
-							/>
-							{!this.props.hideClose && (
-								<button
-									className={`
+						onClick={this.props.clickAway ? this.closeSidePanel : null}
+					/>
+					{!this.props.hideClose && (
+						<button
+							className={`
 									ibp-panel--close-icon-button
 									${this.props.verticalPanel ? 'ibp-vertical-panel-close' : ''}
 									${this.props.fullPageCenter ? 'ibp-full-page-center-panel-close' : ''}
 									`}
-									onClick={this.closeSidePanel}
-									aria-label="Close"
-									style={{
-										zIndex: (showRequests && toBeArchivedList && toBeArchivedList.length < 1) || !showRequests ? 6000 : 0,
-									}}
-								>
-									<SVGs type="close"
-										height="16px"
-										width="16px"
-									/>
-								</button>
-							)}
-							<div
-								className={`
+							onClick={this.closeSidePanel}
+							aria-label="Close"
+							style={{
+								zIndex: (showRequests && toBeArchivedList && toBeArchivedList.length < 1) || !showRequests ? 6000 : 0,
+							}}
+						>
+							<SVGs type="close"
+								height="16px"
+								width="16px"
+							/>
+						</button>
+					)}
+					<div
+						className={`
 									ibp-panel--content
 									${this.props.largePanel ? 'ibp-large-panel' : ''}
 									${this.props.extraLargePanel ? 'ibp-extra-large-panel' : ''}
@@ -217,31 +216,29 @@ export class SidePanel extends React.Component {
 									${this.props.verticalPanel ? 'ibp-vertical-panel' : ''}
 									${this.props.fullPageCenter ? 'ibp-full-page-center-panel' : ''}
 								`}
-							>
-								<div className="ibp-panel-content-flex-div">
-									<div className={`
+					>
+						<div className="ibp-panel-content-flex-div">
+							<div className={`
 										ibp-panel-content-children
 										${this.props.fullPageCenter ? 'ibp-full-page-center-children' : ''}
 											`}
-									>
-										{this.props.children}
-									</div>
-									{this.renderFooter()}
-									{this.renderErrors()}
-								</div>
+							>
+								{this.props.children}
 							</div>
-							{this.renderButtons()}
-							{this.props.submitting && (
-								<div
-									className={`ibp-side-panel-submitting-overlay
+							{this.renderFooter()}
+							{this.renderErrors()}
+						</div>
+					</div>
+					{this.renderButtons()}
+					{this.props.submitting && (
+						<div
+							className={`ibp-side-panel-submitting-overlay
 										${this.props.largePanel ? 'ibp-large-side-panel-overlay' : ''}
 										${(this.props.verticalPanel || this.props.fullPageCenter) ? 'ibp-vertical-panel-overlay' : ''}`}
-								/>
-							)}
-						</div>
-					</FocusTrap>
-				)}
-			</Translate>,
+						/>
+					)}
+				</div>
+			</FocusTrap>,
 			portalRoot ? portalRoot : document.body
 		);
 	}
@@ -287,4 +284,4 @@ export default connect(
 	{
 		forwardRef: true,
 	}
-)(SidePanel);
+)(withTranslation()(SidePanel));

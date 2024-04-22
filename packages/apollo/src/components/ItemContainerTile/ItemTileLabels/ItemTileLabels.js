@@ -17,7 +17,8 @@ import { Cloud16, DocumentImport16, IbmCloud16, WarningAltFilled16, WarningFille
 import Helper from '../../../utils/helper';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+// import withLocalize from '../../hoc/withLocalize';
+import withLocalize from '../../../hoc/withLocalize';
 import { useSelector } from 'react-redux';
 import _ from 'lodash';
 import * as constants from '../../../utils/constants';
