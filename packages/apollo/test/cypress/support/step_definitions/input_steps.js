@@ -25,7 +25,8 @@ Given(/^I provided (?:'|")(.*?)(?:'|") for the (?:'|")(.*?)(?:'|") input$/, (tex
 
 Given(/^I provided (?:'|")(.*?)(?:'|") for input field with id (?:'|")(.*?)(?:'|")$/, (text, inputId) => {
 	try {
-		cy.wait(500)
+		cy.wait(1000)
+		cy.get(`input[id="${inputId}"]`,{ timeout: 180000 }).should('be.visible')
 		cy.get(`input[id="${inputId}"]`).clear().type(text)
 		} catch (err) {
 		cy.log('Error: ', err)

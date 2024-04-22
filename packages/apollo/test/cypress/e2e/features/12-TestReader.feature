@@ -3,7 +3,7 @@ Feature: Verify allowed functions for Reader user
 
   Background: Login to console
     Given I go to the console
-	  And I am logged in as 'readeruser@ibm.com' user
+	And I am logged in as 'readeruser@ibm.com' user
     And I am ready to get started
 
     Scenario: Setting up the identities
