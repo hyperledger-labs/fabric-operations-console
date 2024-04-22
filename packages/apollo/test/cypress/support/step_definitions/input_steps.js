@@ -33,6 +33,16 @@ Given(/^I provided (?:'|")(.*?)(?:'|") for input field with id (?:'|")(.*?)(?:'|
 	  }
 });
 
+Given(/^I provided (?:'|")(.*?)(?:'|") for input field with class (?:'|")(.*?)(?:'|")$/, (text, className) => {
+	try {
+		cy.wait(1000)
+		cy.get(className,{ timeout: 180000 }).should('be.visible').click()
+		cy.get(className,{ timeout: 180000 }).clear().type(text)
+		} catch (err) {
+		cy.log('Error: ', err)
+	  }
+});
+
 Given(/^I upload file (?:'|")(.*?)(?:'|") to (?:'|")(.*?)(?:'|") input$/, (filePath, inputId) => {
 	cy.wait(1000)
 	cy.get(`input[id="${inputId}"]`).selectFile(filePath, { force: true})
