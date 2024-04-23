@@ -19,7 +19,7 @@ Feature: Build a network without system channel
       And I provided 'adminpw' for the 'Enter a secret' input
       And I provided 'Org1 CA Admin' for the 'Enter a name' input
       And I clicked the button with id 'associate_identity'
-      And the CA admin is set as 'Org1 CA Admin'
+	  And the CA admin is set as 'Org1 CA Admin'
       Then the 'admin' user with id 'org1admin' should be enrolled
       And the 'peer' user with id 'peer1' should be enrolled
       When I am on the 'nodes' page

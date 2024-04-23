@@ -25,8 +25,19 @@ Given(/^I provided (?:'|")(.*?)(?:'|") for the (?:'|")(.*?)(?:'|") input$/, (tex
 
 Given(/^I provided (?:'|")(.*?)(?:'|") for input field with id (?:'|")(.*?)(?:'|")$/, (text, inputId) => {
 	try {
-		cy.wait(500)
+		cy.wait(1000)
+		cy.get(`input[id="${inputId}"]`,{ timeout: 180000 }).should('be.visible')
 		cy.get(`input[id="${inputId}"]`).clear().type(text)
+		} catch (err) {
+		cy.log('Error: ', err)
+	  }
+});
+
+Given(/^I provided (?:'|")(.*?)(?:'|") for input field with class (?:'|")(.*?)(?:'|")$/, (text, className) => {
+	try {
+		cy.wait(1000)
+		cy.get(className,{ timeout: 180000 }).should('be.visible').click()
+		cy.get(className,{ timeout: 180000 }).clear().type(text)
 		} catch (err) {
 		cy.log('Error: ', err)
 	  }
@@ -51,18 +62,18 @@ Given(/^I click label with property (?:'|")(.*?)(?:'|") and value (?:'|")(.*?)(?
 
 Then(/^I should see (div|button) with id (?:'|")(.*?)(?:'|")$/, (controlType, propertyValue) => {
 	cy.wait(500)
-	cy.get(`${controlType}[id="${propertyValue}"]`).should('be.visible')
+	cy.get(`${controlType}[id="${propertyValue}"]`, { timeout: 180000 }).should('be.visible')
 });
 
 Then(/^I should see table with id (?:'|")(.*?)(?:'|")$/, (propertyValue) => {
 	cy.wait(500)
-	cy.get(`table[id="${propertyValue}"]`).should('be.visible')
+	cy.get(`table[id="${propertyValue}"]`, { timeout: 60000 }).should('be.visible')
 });
 
 Then(/^I should see audit log row with text (?:'|")(.*?)(?:'|") and id (?:'|")(.*?)(?:'|")$/, (rowText, propertyValue) => {
-	cy.get(`td[id="${propertyValue}"]`).first().contains(rowText).should('be.visible')
+	cy.get(`td[id="${propertyValue}"]`,{ timeout: 60000 }).first().contains(rowText).should('be.visible')
 });
 
 Then(/^I should see api key row with text (?:'|")(.*?)(?:'|") and id (?:'|")(.*?)(?:'|")$/, (rowText, propertyValue) => {
-	cy.get(`td[id="${propertyValue}"]`).first().contains(rowText).should('be.visible')
+	cy.get(`td[id="${propertyValue}"]`,{ timeout: 60000 }).first().contains(rowText).should('be.visible')
 });

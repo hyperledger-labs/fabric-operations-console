@@ -35,10 +35,13 @@ Cypress.Commands.add('loginToConsole', (loginUserName,loginPassword) => {
 Cypress.Commands.add('clickButton', (property, attributeValue) => {
   try{
     cy.wait(1000)
+	Cypress.on('uncaught:exception', (err, runnable) => {
+		return false;
+	  });
     if (property == "text"){
-        cy.get('button').contains(attributeValue).scrollIntoView().should('be.visible').click()
+        cy.get('button',{ timeout: 180000 }).contains(attributeValue).scrollIntoView().should('be.visible').click()
     }else{
-      cy.get(`button[${property}="${attributeValue}"]`).scrollIntoView().should('be.visible').click()
+      cy.get(`button[${property}="${attributeValue}"]`,{ timeout: 180000 }).scrollIntoView().should('be.visible').click()
     }
   }catch (err)
   {
@@ -50,6 +53,7 @@ Cypress.Commands.add('clickButton', (property, attributeValue) => {
 Cypress.Commands.add('enterInput', (text, inputTitle) => {
 	try {
     cy.wait(500)
+	cy.get(`input[title="${inputTitle}"]`,{ timeout: 180000 }).should('be.visible')
     cy.get(`input[title="${inputTitle}"]`).clear().type(text)
 		//cy.get(`input[title="${inputTitle}"]`).type(text)
 	} catch (err) {

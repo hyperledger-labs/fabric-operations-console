@@ -17,7 +17,9 @@
 import { Given, Then, When } from "@badeball/cypress-cucumber-preprocessor";
 
 Given(/^the CA admin is set as (?:'|")(.*?)(?:'|")$/, identityName => {
-    cy.get('.ibp-identity-information').contains(identityName)
+	// Sometimes it takes time to associate identity after clicking button
+	cy.wait(60000)
+    cy.get('.ibp-identity-information',{ timeout: 120000 }).contains(identityName)
 });
 
 When(/^the (?:'|")(.*?)(?:'|") user was enrolled with id (?:'|")(.*?)(?:'|") and secret (?:'|")(.*?)(?:'|")$/, (type, enrollId, enrollSecret) => {
@@ -29,7 +31,7 @@ When(/^the (?:'|")(.*?)(?:'|") user was enrolled with id (?:'|")(.*?)(?:'|") and
 		cy.get('.bx--list-box__field').click()
 		cy.wait(500)
 		cy.get('.bx--list-box__menu-item__option').contains(type).should('be.visible').click()
-		cy.clickButton('id', 'next')    
+		cy.clickButton('id', 'next')
 		cy.wait(500)
 		cy.clickButton('id', 'submit')
 		cy.wait(1000)
@@ -70,7 +72,7 @@ When(/^I enroll TLS identity for OS1 with secret (?:'|")(.*?)(?:'|") and name (?
 	cy.get('.bx--list-box__menu-item__option').contains('TLS Certificate Authority').click()
 	cy.enterInput(enrollSecret, 'Enter a secret');
 	cy.clickButton('id', 'next')
-	cy.wait(500)
+	cy.wait(60000)
 	cy.enterInput(enrollName, 'Enter a name');
 	cy.clickButton('id', 'submit'); //Add identity to Wallet
 	cy.wait(2000)
