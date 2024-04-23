@@ -16,7 +16,7 @@
 import { Dropdown } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import withLocalize from '../../hoc/withLocalize';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import NotificationEmptyImage from '../../assets/images/notification_empty.svg';

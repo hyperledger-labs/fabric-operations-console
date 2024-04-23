@@ -17,7 +17,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withLocalize } from 'react-localize-redux';
+import withLocalize from '../../hoc/withLocalize';
 
 class ImportantBox extends Component {
 	render() {

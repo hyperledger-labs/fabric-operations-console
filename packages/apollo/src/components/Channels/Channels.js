@@ -17,7 +17,7 @@ import async from 'async';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import withLocalize from '../../hoc/withLocalize';
 import { connect } from 'react-redux';
 import emptyImage from '../../assets/images/empty_channels.svg';
 import { clearNotifications, showBreadcrumb, showError, showInfo, showSuccess, showWarning, updateState } from '../../redux/commonActions';

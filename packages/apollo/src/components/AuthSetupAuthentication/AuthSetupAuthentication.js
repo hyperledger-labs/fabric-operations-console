@@ -15,7 +15,7 @@
 */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import withLocalize from '../../hoc/withLocalize';
 
 class AuthSetupAuthentication extends Component {
 	cName = 'AuthSetupAuthentication';

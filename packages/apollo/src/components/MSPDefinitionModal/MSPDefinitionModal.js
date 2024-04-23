@@ -17,7 +17,7 @@ import { Checkbox, CodeSnippet } from 'carbon-components-react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import withLocalize from '../../hoc/withLocalize';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import ChannelApi from '../../rest/ChannelApi';

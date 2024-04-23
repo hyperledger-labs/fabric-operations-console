@@ -17,7 +17,7 @@ import { WarningFilled16 } from '@carbon/icons-react/es';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import withLocalize from '../../hoc/withLocalize';
 import { connect } from 'react-redux';
 import emptySmartContractImage from '../../assets/images/empty_installed.svg';
 import { showError, updateState } from '../../redux/commonActions';

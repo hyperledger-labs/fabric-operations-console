@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Helper from '../../../../utils/helper';
 import { updateState } from '../../../../redux/commonActions';
-import { withLocalize } from 'react-localize-redux';
+import withLocalize from '../../../../hoc/withLocalize';
 import TranslateLink from '../../../TranslateLink/TranslateLink';
 import * as constants from '../../../../utils/constants';
 import { Checkbox } from 'carbon-components-react';

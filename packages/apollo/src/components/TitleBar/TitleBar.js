@@ -26,7 +26,7 @@ import {
 } from 'carbon-components-react/lib/components/UIShell';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import withLocalize from '../../hoc/withLocalize';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { updateState } from '../../redux/commonActions';

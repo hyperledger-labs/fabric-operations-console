@@ -20,7 +20,7 @@ import Trash20 from '@carbon/icons-react/lib/trash-can/20';
 import { Button, SkeletonPlaceholder, SkeletonText } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import withLocalize from '../../hoc/withLocalize';
 import SVGs from '../Svgs/Svgs';
 import IdentityExpiration from '../IdentityExpiration/IdentityExpiration';
 import ActionsHelper from '../../utils/actionsHelper';

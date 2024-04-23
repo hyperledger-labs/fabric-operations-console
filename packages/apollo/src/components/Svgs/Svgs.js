@@ -68,7 +68,7 @@ import VisibilityOn from './VisibilityOn';
 import VisibilityOff from './VisibilityOff';
 import Wallet from './Wallet';
 import Warning from './Warning';
-import { withLocalize } from 'react-localize-redux';
+import withLocalize from '../../hoc/withLocalize';
 
 class SVGs extends Component {
 	setDimensions(component, translate) {
