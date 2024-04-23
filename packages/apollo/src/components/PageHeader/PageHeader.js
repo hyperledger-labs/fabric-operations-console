@@ -17,7 +17,6 @@ import { InlineNotification, NotificationActionButton } from 'carbon-components-
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-// import withLocalize from '../../hoc/withLocalize';
 import withLocalize from '../../hoc/withLocalize';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';

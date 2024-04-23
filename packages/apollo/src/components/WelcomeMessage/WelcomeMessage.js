@@ -15,7 +15,6 @@
 */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-// import withLocalize from '../../hoc/withLocalize';
 import withLocalize from '../../hoc/withLocalize';
 import { connect } from 'react-redux';
 import { showBreadcrumb, updateState } from '../../redux/commonActions';

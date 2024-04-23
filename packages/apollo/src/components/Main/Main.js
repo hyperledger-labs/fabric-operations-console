@@ -18,7 +18,6 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import IdleTimer from 'react-idle-timer';
-// import withLocalize from '../../hoc/withLocalize';
 import withLocalize from '../../hoc/withLocalize';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
