@@ -25,7 +25,6 @@ import { updateSidePanel } from '../SidePanel/sidePanelActions';
 import SidePanelError from '../SidePanelError/SidePanelError';
 import SVGs from '../Svgs/Svgs';
 import { setInStorage } from '../../utils/localStorage';
-import { withTranslation } from 'react-i18next';
 
 const portalRoot = document.querySelector('#ibp-portal-container');
 
@@ -166,7 +165,7 @@ export class SidePanel extends React.Component {
 		if (this.props.error) {
 			className = `${className} ${this.props.largePanel ? ' ibp-large-panel-error' : ''}`;
 		}
-		const { toBeArchivedList, showRequests, t } = this.props;
+		const { toBeArchivedList, showRequests } = this.props;
 
 		return createPortal(
 			<FocusTrap
@@ -179,7 +178,6 @@ export class SidePanel extends React.Component {
 					id={this.props.id}
 					className={className}
 					role="dialog"
-					aria-label={`${t('product_label')} ${t('panel')}`}
 				>
 					<div
 						className="ibp-panel--container"
@@ -285,4 +283,4 @@ export default connect(
 	{
 		forwardRef: true,
 	}
-)(withTranslation()(SidePanel));
+)(SidePanel);
