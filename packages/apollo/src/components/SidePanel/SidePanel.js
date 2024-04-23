@@ -268,6 +268,7 @@ SidePanel.propTypes = {
 	...dataProps,
 	closed: PropTypes.func,
 	updateSidePanel: PropTypes.func,
+	t: PropTypes.func
 };
 
 export default connect(
