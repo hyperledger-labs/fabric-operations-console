@@ -86,7 +86,9 @@ Feature: 2.0 Lifecycle Flow
         And I clicked the div with id 'ibp-tile-channel2'
         Then wait "5" seconds
         And I clicked the button with title 'Propose smart contract definition'
+		Then wait "2" seconds
         And I clicked the button with title 'Select an organization'
+		Then wait "1" seconds
         And I clicked the div with text 'Org1 MSP (org1msp)'
         And I clicked the button with title 'Select an identity'
         And I clicked the div with text 'Org1 MSP Admin'

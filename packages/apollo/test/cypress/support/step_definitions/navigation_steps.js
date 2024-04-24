@@ -37,7 +37,7 @@ Given(/^I clicked the div with (title|id|xpath) (?:'|")(.*?)(?:'|")$/, (property
 
 Given(/^I clicked the (div|span) with text (?:'|")(.*?)(?:'|")$/, (property, value) => {
   cy.wait(1000)
-  cy.get(property).contains(value).first().click()
+  cy.get(property,{ timeout: 180000 }).contains(value).first().click()
 });
 
 Given(/^I clicked the dropdown item (?:'|")(.*?)(?:'|") with class (?:'|")(.*?)(?:'|")$/, (selectItemText, className) => {
