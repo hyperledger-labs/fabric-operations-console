@@ -23,7 +23,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const styles = {
 	chipInputText: {
-		color: '#8C8C8C',
+		color: '#8C8C8C !important',
 		fontSize: '0.875rem',
 		lineHeight: '1.125rem',
 		marginTop: '0.5rem',
@@ -33,14 +33,14 @@ const styles = {
 		whiteSpace: 'nowrap',
 	},
 	chipInputRoot: {
-		border: '1px solid #8C8C8C',
+		border: '1px solid #8C8C8C !important',
 		background: '#242a2e',
 		color: '#BEBEBE',
 		fontSize: '0.75rem',
 		lineHeight: '1rem',
-		marginTop: '0.5rem',
+		marginTop: '0.5rem !important',
 		minHeight: '9.25rem',
-		padding: '0 1rem',
+		padding: '0 1rem !important',
 		resize: 'none',
 		width: '30rem',
 	},
@@ -60,6 +60,7 @@ class EmailChips extends Component {
 				<div>
 					<ChipInput
 						id={this.props.id}
+						className={classes.chipInputText}
 						classes={{
 							input: classes.chipInputText,
 							root: classes.chipInputRoot,
@@ -101,7 +102,7 @@ class EmailChips extends Component {
 						chipRenderer={({ value, handleClick, handleDelete }, key) => (
 							<Chip
 								key={key}
-								style={{ margin: '8px 8px 0 0', float: 'left' }}
+								style={{ margin: '8px 8px 0 0', float: 'left', backgroundColor: '#e0e0e0' }}
 								avatar={<Avatar size={32}>{value[0].toUpperCase()}</Avatar>}
 								onClick={handleClick}
 								onDelete={handleDelete}
