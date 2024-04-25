@@ -288,12 +288,12 @@ describe('JsonInput component', () => {
 			const component = shallow(<JsonInput {...props} />);
 			const jsonUploadJSX = mount(component.instance().renderJSONUpload(translateStub));
 			jsonUploadJSX
-				.find('_default')
+				.find('default')
 				.at(0)
 				.props()
 				.text.should.deep.equal('error_single_input_box');
 			jsonUploadJSX
-				.find('_default')
+				.find('default')
 				.at(0)
 				.contains('ImportantBox component goes here')
 				.should.deep.equal(true);

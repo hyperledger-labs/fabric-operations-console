@@ -6,6 +6,8 @@
 		"@carbon/elements": "^10.12.0",
 		"@carbon/icons": "^10.11.0",
 		"@carbon/icons-react": "^10.11.0",
+		"@emotion/react": "^11.11.4",
+		"@emotion/styled": "^11.11.5",
 		"@mnajdova/enzyme-adapter-react-18": "^0.2.0",
 		"@mui/material": "^5.15.15",
 		"@mui/styles": "^5.15.15",
