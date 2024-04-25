@@ -100,6 +100,7 @@ class JoinOSNChannelModal extends React.Component {
 			selected_osn: null,
 			joinChannelDetails: null,
 			joinOsnMap: null,
+			missingOSOrgIdentities: []
 		});
 	}
 
@@ -172,6 +173,7 @@ class JoinOSNChannelModal extends React.Component {
 			const possibleNodes = this.countPossibleNodes(joinOsnMap);
 			const selectedNodes = this.countSelectedOrderers(joinOsnMap);
 			const missingONTLSIdentities = [];
+			const missingOSOrgIdentities = [];
 			if (selectedNodes) {
 				// Verify TLS Cert is missing from selected cluster
 				for (const cluster in joinOsnMap) {
@@ -194,6 +196,7 @@ class JoinOSNChannelModal extends React.Component {
 				submitting: false,
 				loading: false,
 				missingONTLSIdentities,
+				missingOSOrgIdentities
 			});
 
 			return json_block;
@@ -366,7 +369,7 @@ class JoinOSNChannelModal extends React.Component {
 				consenter.name = node_data.name;
 				consenter._consenter = true;
 				consenter.osnadmin_url = node_data.osnadmin_url;
-				consenter._msp_id = node_data.msp_id;
+				consenter.msp_id = node_data.msp_id;
 
 				const cluster_id = node_data._cluster_id;
 				if (!ret[cluster_id]) {
@@ -542,7 +545,7 @@ class JoinOSNChannelModal extends React.Component {
 		// dsh todo use root cert
 		function msp_is_consenter(msp_id, consenters) {
 			for (let i in consenters) {
-				if (consenters[i]._msp_id === msp_id) {
+				if (consenters[i].msp_id === msp_id) {
 					return true;
 				}
 			}
@@ -760,16 +763,20 @@ class JoinOSNChannelModal extends React.Component {
 				if (joinOsnMap[cluster_id].nodes[i]._status !== constants.OSN_JOIN_SUCCESS) {
 					joinOsnMap[cluster_id].nodes[i]._selected = !this.props.select_all_toggle;
 				}
-				// Validate TLS cert missing for selected cluster
-				if (!this.props.select_all_toggle && !joinOsnMap[cluster_id].tls_identity) {
-					missingTLSCertClusters.add(joinOsnMap[cluster_id].cluster_name);
-				} else {
-					missingTLSCertClusters.delete(joinOsnMap[cluster_id].cluster_name);
-				}
-				if (!this.props.select_all_toggle && !mspIds.includes(joinOsnMap[cluster_id].nodes[i].msp_id)) {
-					missingOSOrgClusters.add(joinOsnMap[cluster_id].nodes[i].name);
-				} else {
-					missingOSOrgClusters.delete(joinOsnMap[cluster_id].nodes[i].name);
+				if (joinOsnMap[cluster_id].nodes[i]._status !== constants.OSN_JOIN_SUCCESS) {
+					// Validate TLS cert missing for selected cluster
+					if (!this.props.select_all_toggle && !joinOsnMap[cluster_id].tls_identity) {
+						missingTLSCertClusters.add(joinOsnMap[cluster_id].cluster_name);
+					} else {
+						missingTLSCertClusters.delete(joinOsnMap[cluster_id].cluster_name);
+					}
+
+					const mspId = joinOsnMap[cluster_id].nodes[i].msp_id || joinOsnMap[cluster_id].nodes[i].msp_id;
+					if (!this.props.select_all_toggle && !mspIds.includes(mspId)) {
+						missingOSOrgClusters.add(joinOsnMap[cluster_id].nodes[i].name);
+					} else {
+						missingOSOrgClusters.delete(joinOsnMap[cluster_id].nodes[i].name);
+					}
 				}
 			}
 			joinOsnMap[cluster_id].selected = this.isClusterSelected(joinOsnMap[cluster_id].nodes);
