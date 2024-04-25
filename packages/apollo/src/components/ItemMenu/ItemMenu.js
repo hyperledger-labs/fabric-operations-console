@@ -16,7 +16,7 @@
 import { Loading, OverflowMenu, OverflowMenuItem } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import withLocalize from '../../hoc/withLocalize';
+import { withLocalize } from 'react-localize-redux';
 
 class ItemMenu extends Component {
 	render() {

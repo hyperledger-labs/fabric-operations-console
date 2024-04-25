@@ -19,7 +19,7 @@ import { Checkbox, Loading, RadioTile, TileGroup, ToggleSmall } from 'carbon-com
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import withLocalize from '../../hoc/withLocalize';
+import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { showError, updateState } from '../../redux/commonActions';
 import { CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';

@@ -14,20 +14,23 @@
  * limitations under the License.
 */
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
 import PropTypes from 'prop-types';
+import { Provider } from 'react-redux';
+import { LocalizeProvider } from 'react-localize-redux';
+import store from './Store';
+import LocalizeWrapper from './LocalizeWrapper';
 
-const ChannelOrdererUrl = () => {
-	return (
-		<div className="ibp-channel-orderer-url-container">
-			<h2>{this.props.translate('orderer_url')}</h2>
-			<p>Insert url here</p>
-		</div>
-	);
+const ProviderWrapper = ({ children }) => (
+	<Provider store={store}>
+		<LocalizeProvider>
+			<LocalizeWrapper>{children}</LocalizeWrapper>
+		</LocalizeProvider>
+	</Provider>
+);
+
+ProviderWrapper.propTypes = {
+	children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
+	store: PropTypes.object,
 };
 
-ChannelOrdererUrl.propTypes = {
-	translate: PropTypes.func, // Provided by withLocalize
-};
-
-export default withLocalize(ChannelOrdererUrl);
+export default ProviderWrapper;
