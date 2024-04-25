@@ -17,7 +17,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import withLocalize from '../../hoc/withLocalize';
+import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { showError, showInfo, showSuccess, updateState } from '../../redux/commonActions';

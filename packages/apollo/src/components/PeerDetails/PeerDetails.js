@@ -17,7 +17,7 @@ import { Button, SkeletonPlaceholder, SkeletonText, Tab, Tabs } from 'carbon-com
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import withLocalize from '../../hoc/withLocalize';
+import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { clearNotifications, showBreadcrumb, showError, showSuccess, updateBreadcrumb, updateState } from '../../redux/commonActions';
 import { NodeRestApi } from '../../rest/NodeRestApi';

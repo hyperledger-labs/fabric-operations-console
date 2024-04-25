@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import withLocalize from '../../hoc/withLocalize';
+import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { showError } from '../../redux/commonActions';
@@ -28,7 +28,7 @@ import AuthSetupSuccess from '../AuthSetupSuccess/AuthSetupSuccess';
 import Stepper from '../Stepper/Stepper';
 import TitleBar from '../TitleBar/TitleBar';
 
-const theme = createTheme({
+const theme = createMuiTheme({
 	typography: {
 		useNextVariants: true,
 	},
@@ -111,7 +111,7 @@ export class AuthSetup extends Component {
 	render = () => {
 		const translate = this.props.translate;
 		return (
-			<ThemeProvider theme={theme}>
+			<MuiThemeProvider theme={theme}>
 				<div>
 					<Router>
 						<TitleBar hideButtons />
@@ -143,7 +143,7 @@ export class AuthSetup extends Component {
 						/>}
 					</div>
 				</div>
-			</ThemeProvider>
+			</MuiThemeProvider>
 		);
 	};
 }

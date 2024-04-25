@@ -17,7 +17,7 @@ import { ContentSwitcher, Switch, TextArea, TextInput, Toggle } from 'carbon-com
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import withLocalize from '../../hoc/withLocalize';
+import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { promisify } from 'util';
 import { updateState } from '../../redux/commonActions';

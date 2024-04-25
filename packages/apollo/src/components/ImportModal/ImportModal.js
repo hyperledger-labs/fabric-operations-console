@@ -16,7 +16,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import withLocalize from '../../hoc/withLocalize';
+import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import { CA_TYPE, CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';

@@ -17,7 +17,7 @@ import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import withLocalize from '../../hoc/withLocalize';
+import { withLocalize } from 'react-localize-redux';
 import { ToastNotification, InlineLoading } from 'carbon-components-react';
 import { updateState } from '../../redux/commonActions';
 

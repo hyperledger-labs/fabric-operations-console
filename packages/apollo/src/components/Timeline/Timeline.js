@@ -15,7 +15,7 @@
 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import withLocalize from '../../hoc/withLocalize';
+import { withLocalize } from 'react-localize-redux';
 import TimelineCancelButton from '../TimelineCancelButton/TimelineCancelButton';
 import CheckmarkOutline16 from '@carbon/icons-react/lib/checkmark--outline/16';
 

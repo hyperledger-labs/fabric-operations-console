@@ -14,7 +14,7 @@
 import _ from 'lodash';
 import PropTypes, { array } from 'prop-types';
 import React from 'react';
-import withLocalize from '../../hoc/withLocalize';
+import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { updateState, showSuccess } from '../../redux/commonActions';
 import { OrdererRestApi } from '../../rest/OrdererRestApi';
