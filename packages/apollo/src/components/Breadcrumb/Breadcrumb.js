@@ -15,7 +15,7 @@
 */
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, SkeletonText } from 'carbon-components-react';
@@ -23,7 +23,7 @@ import { updateState } from '../../redux/commonActions';
 
 const SCOPE = 'breadcrumb';
 
-const BlockchainBreadcrumb = ({ translate }) => {
+const BlockchainBreadcrumb = ({ t:translate }) => {
 	const history = useHistory();
 	const dispatch = useDispatch();
 	const list = useSelector(state => state.breadcrumb && state.breadcrumb.list);
@@ -94,7 +94,7 @@ const BlockchainBreadcrumb = ({ translate }) => {
 BlockchainBreadcrumb.propTypes = {
 	history: PropTypes.any,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
-export default withLocalize(BlockchainBreadcrumb);
+export default withTranslation()(BlockchainBreadcrumb);

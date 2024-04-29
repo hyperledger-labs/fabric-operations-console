@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Helper from '../../../../utils/helper';
 import { updateState } from '../../../../redux/commonActions';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import TranslateLink from '../../../TranslateLink/TranslateLink';
 import * as constants from '../../../../utils/constants';
 import { Checkbox } from 'carbon-components-react';
@@ -147,7 +147,7 @@ const dataProps = {
 BlockCuttingParams.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -157,4 +157,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(BlockCuttingParams));
+)(withTranslation()(BlockCuttingParams));

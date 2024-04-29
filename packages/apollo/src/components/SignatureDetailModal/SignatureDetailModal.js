@@ -18,7 +18,7 @@ import _ from 'lodash';
 import parse from 'parse-duration';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import { CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';
@@ -1335,7 +1335,7 @@ class SignatureDetailModal extends React.Component {
 			title = 'new_channel_pending_request';
 			desc = 'new_channel_pending_request_desc';
 		}
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		let disableSubmit = false;
 		if (!approved || !ordererApproved) {
 			if (!this.props.signatureData && !this.props.ordererData) {
@@ -1405,7 +1405,7 @@ SignatureDetailModal.propTypes = {
 	onClose: PropTypes.func,
 	onComplete: PropTypes.func,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -1422,4 +1422,4 @@ export default connect(
 	{
 		forwardRef: true,
 	}
-)(withLocalize(SignatureDetailModal));
+)(withTranslation()(SignatureDetailModal));

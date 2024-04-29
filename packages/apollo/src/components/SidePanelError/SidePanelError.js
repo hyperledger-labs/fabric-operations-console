@@ -18,15 +18,16 @@ import { InlineNotification } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Helper from '../../utils/helper';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 
 export class SidePanelError extends React.Component {
 	componentDidMount() {
 		this.showDetails = false;
 	}
 
-	getErrorTitle(translate) {
+	getErrorTitle() {
 		const error = this.props.error;
+		const translate = this.props.t;
 		// Support translated errors
 		if (error instanceof Error && error.translation) {
 			const translation = error.translation;
@@ -44,8 +45,9 @@ export class SidePanelError extends React.Component {
 		return JSON.stringify(error);
 	}
 
-	getSubtitle(translate) {
+	getSubtitle() {
 		const error = this.props.error;
+		const translate = this.props.t;
 		if (error instanceof Error && error.translation && error.translation.message && error.translation.params) {
 			return translate(error.translation.message, error.translation.params);
 		}
@@ -59,9 +61,9 @@ export class SidePanelError extends React.Component {
 			return <div />;
 		}
 
-		const translate = this.props.translate;
-		const title = this.getErrorTitle(translate);
-		const subtitle = this.getSubtitle(translate);
+		const translate = this.props.t;
+		const title = this.getErrorTitle();
+		const subtitle = this.getSubtitle();
 		let details;
 		// If we're using the old, {title, details} error object, just pass the details through
 		if (this.props.error && this.props.error.details) details = Helper.formatErrorDetails(this.props.error.details, translate);
@@ -115,7 +117,7 @@ export class SidePanelError extends React.Component {
 
 SidePanelError.propTypes = {
 	error: PropTypes.any,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
-export default withLocalize(SidePanelError);
+export default withTranslation()(SidePanelError);

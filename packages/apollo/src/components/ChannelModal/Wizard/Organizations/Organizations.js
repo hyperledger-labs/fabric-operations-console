@@ -19,7 +19,7 @@ import { Button, Checkbox } from 'carbon-components-react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../../../redux/commonActions';
 import Helper from '../../../../utils/helper';
@@ -146,7 +146,7 @@ export class Organizations extends Component {
 	};
 
 	render() {
-		const { loading, noOperatorError, duplicateMSPError, msps, orgs, selectedOrg, missingDefinitionError, isChannelUpdate, translate } = this.props;
+		const { loading, noOperatorError, duplicateMSPError, msps, orgs, selectedOrg, missingDefinitionError, isChannelUpdate, t: translate } = this.props;
 		return (
 			<div className="ibp-channel-organizations">
 				<p className="ibp-channel-section-title">{translate('channel_organizations')}</p>
@@ -305,7 +305,7 @@ const dataProps = {
 Organizations.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -315,4 +315,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(Organizations));
+)(withTranslation()(Organizations));

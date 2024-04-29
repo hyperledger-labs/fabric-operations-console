@@ -16,7 +16,7 @@
 import { OverflowMenu, OverflowMenuItem } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import emptyImage from '../../assets/images/empty_installed.svg';
 import { clearNotifications, showSuccess, updateState } from '../../redux/commonActions';
@@ -81,7 +81,7 @@ class Chaincodes extends Component {
 	};
 
 	overflowMenu = installed_chaincode => {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		let overflow = (
 			<OverflowMenu ariaLabel={translate('actions')}
 				flipped={true}
@@ -188,7 +188,7 @@ Chaincodes.propTypes = {
 	updateState: PropTypes.func,
 	showSuccess: PropTypes.func,
 	clearNotifications: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -203,4 +203,4 @@ export default connect(
 		showSuccess,
 		clearNotifications,
 	}
-)(withLocalize(Chaincodes));
+)(withTranslation()(Chaincodes));

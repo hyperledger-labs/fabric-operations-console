@@ -17,7 +17,7 @@
 import { ToggleSmall } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import { NodeRestApi } from '../../rest/NodeRestApi';
@@ -89,7 +89,7 @@ class HSMConfig extends Component {
 			<div>
 				{!!this.props.hsm_settings && (
 					<div className="ibp-form ibp-hsm-toggle-form">
-						<label className="ibp-form-label">{this.props.translate('use_hsm_settings')}</label>
+						<label className="ibp-form-label">{this.props.t('use_hsm_settings')}</label>
 						<div className="ibp-form-input">
 							<ToggleSmall
 								id="use_hsm_settings"
@@ -111,9 +111,9 @@ class HSMConfig extends Component {
 									this.props.updateState(this.props.scope, { hsm });
 								}}
 								onChange={() => {}}
-								aria-label={this.props.translate('use_hsm_settings')}
-								labelA={this.props.translate('no')}
-								labelB={this.props.translate('yes')}
+								aria-label={this.props.t('use_hsm_settings')}
+								labelA={this.props.t('no')}
+								labelB={this.props.t('yes')}
 							/>
 						</div>
 					</div>
@@ -151,7 +151,7 @@ const dataProps = {
 HSMConfig.propTypes = {
 	...dataProps,
 	scope: PropTypes.string,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -162,4 +162,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(HSMConfig));
+)(withTranslation()(HSMConfig));

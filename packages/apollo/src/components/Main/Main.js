@@ -18,7 +18,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import IdleTimer from 'react-idle-timer';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { showError, showSuccess, updateState } from '../../redux/commonActions';
@@ -140,7 +140,7 @@ class Main extends Component {
 	};
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<Router>
 				<div className="ibm ibp-main">
@@ -343,7 +343,7 @@ Main.propTypes = {
 	...dataProps,
 	userInfo: PropTypes.object,
 	host_url: PropTypes.string,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -358,4 +358,4 @@ export default connect(
 		showError,
 		updateState,
 	}
-)(withLocalize(Main));
+)(withTranslation()(Main));

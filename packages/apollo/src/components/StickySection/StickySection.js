@@ -20,7 +20,7 @@ import Trash20 from '@carbon/icons-react/lib/trash-can/20';
 import { Button, SkeletonPlaceholder, SkeletonText } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import SVGs from '../Svgs/Svgs';
 import IdentityExpiration from '../IdentityExpiration/IdentityExpiration';
 import ActionsHelper from '../../utils/actionsHelper';
@@ -41,7 +41,7 @@ const StickySection = ({
 	hideExport,
 	hideRefreshCerts,
 	type,
-	translate,
+	t: translate,
 	calloutGroups,
 	quickActions,
 	custom,
@@ -372,7 +372,7 @@ StickySection.propTypes = {
 	custom: PropTypes.func,
 	userInfo: PropTypes.object,
 	feature_flags: PropTypes.object,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
-export default withLocalize(StickySection);
+export default withTranslation()(StickySection);

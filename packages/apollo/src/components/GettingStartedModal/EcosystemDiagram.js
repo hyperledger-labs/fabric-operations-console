@@ -16,7 +16,7 @@
 /* eslint-disable max-len */ // Of course svg content is going to get a little long.  This is just noise.
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import Helper from '../../utils/helper';
@@ -47,7 +47,7 @@ class EcosystemDiagram extends Component {
 	};
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<div className="diagram--outer-svg-container">
 				<svg
@@ -2040,7 +2040,7 @@ const dataProps = {
 EcosystemDiagram.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -2050,4 +2050,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(EcosystemDiagram));
+)(withTranslation()(EcosystemDiagram));

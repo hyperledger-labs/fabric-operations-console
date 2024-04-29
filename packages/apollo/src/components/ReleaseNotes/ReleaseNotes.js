@@ -16,7 +16,7 @@
 import { SkeletonText } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 
 const ReleaseNotes = props => {
 	const loading = props.loading || !props.releaseNotes || !props.releaseNotes.length;
@@ -86,7 +86,7 @@ const ReleaseNotes = props => {
 ReleaseNotes.propTypes = {
 	loading: PropTypes.bool,
 	releaseNotes: PropTypes.object,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
-export default withLocalize(ReleaseNotes);
+export default withTranslation()(ReleaseNotes);

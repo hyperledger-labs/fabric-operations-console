@@ -16,7 +16,7 @@
 import { Button } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import { CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';
@@ -309,7 +309,7 @@ class GenerateCertificateModal extends Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<Wizard
 				title={this.props.selectedUser ? 'generate_cert' : 'reenroll'}
@@ -348,7 +348,7 @@ GenerateCertificateModal.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
 	closed: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -358,4 +358,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(GenerateCertificateModal));
+)(withTranslation()(GenerateCertificateModal));

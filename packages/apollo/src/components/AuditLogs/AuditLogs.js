@@ -16,7 +16,7 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { showBreadcrumb, updateState } from '../../redux/commonActions';
 import { SkeletonText } from 'carbon-components-react';
@@ -243,7 +243,7 @@ class AuditLogs extends Component {
 
 	// dynamically build the columns based on the selected options
 	buildTableColumns() {
-		//const translate = this.props.translate;
+		//const translate = this.props.t;
 		const ret = [];
 		if (this.props.showTableColumns) {
 			if (this.props.showTableColumns.date) {
@@ -362,7 +362,7 @@ class AuditLogs extends Component {
 	// Main Migration Content
 	// --------------------------------------------------------------------------
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		const tmp = this.props.showDetails ? this.format_logs_for_export([this.props.showDetails]) : null;
 		const log_details = tmp ? tmp[0] : '';
 		const keys = Object.keys(log_details);
@@ -593,7 +593,7 @@ const dataProps = {
 AuditLogs.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
-	translate: PropTypes.func,
+	t: PropTypes.func,
 	history: PropTypes.object,
 };
 
@@ -604,4 +604,4 @@ export default connect(state => {
 }, {
 	updateState,
 	showBreadcrumb
-})(withLocalize(AuditLogs));
+})(withTranslation()(AuditLogs));

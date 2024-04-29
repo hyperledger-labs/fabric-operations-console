@@ -17,7 +17,7 @@ import { OverflowMenu, OverflowMenuItem } from 'carbon-components-react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import emptyImage from '../../assets/images/empty_instantiated.svg';
 import { clearNotifications, showSuccess, updateState } from '../../redux/commonActions';
@@ -51,7 +51,7 @@ class InstantiatedChaincodes extends Component {
 	};
 
 	buildUpgradeAvailableLabel = chaincode => {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		if (!chaincode.disabled) {
 			return <span className="ibp-upgrade-available-label">{translate('upgrade_available')}</span>;
 		}
@@ -72,7 +72,7 @@ class InstantiatedChaincodes extends Component {
 	};
 
 	overflowMenu = instantiated_chaincode => {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		if (instantiated_chaincode.disabled) {
 			return;
 		}
@@ -169,7 +169,7 @@ InstantiatedChaincodes.propTypes = {
 	showSuccess: PropTypes.func,
 	reload: PropTypes.func,
 	clearNotifications: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -181,4 +181,4 @@ export default connect(
 		updateState,
 		showSuccess,
 	}
-)(withLocalize(InstantiatedChaincodes));
+)(withTranslation()(InstantiatedChaincodes));

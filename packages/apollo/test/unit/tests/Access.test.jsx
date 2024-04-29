@@ -119,7 +119,7 @@ describe('Access component', () => {
 			user: {},
 			editMode: true,
 			history: { location: { pathname: 'path' }, listen: mySandBox.stub() },
-			translate: translateStub,
+			t: translateStub,
 			updateState: () => mySandBox.stub(),
 			showError: () => mySandBox.stub(),
 			showBreadcrumb: mySandBox.stub(),

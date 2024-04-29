@@ -18,7 +18,7 @@ import _ from 'lodash';
 import { WarningFilled16 } from '@carbon/icons-react/es';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import IdentityApi from '../../rest/IdentityApi';
@@ -99,7 +99,7 @@ class IdentityExpiration extends Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<div>
 				{!this.props.admin && <div className="ibp-identity-admin">{translate('non_admin_identity')}</div>}
@@ -123,7 +123,7 @@ IdentityExpiration.propTypes = {
 	...dataProps,
 	identity: PropTypes.string,
 	details: PropTypes.object,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -134,4 +134,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(IdentityExpiration));
+)(withTranslation()(IdentityExpiration));

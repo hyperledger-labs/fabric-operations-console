@@ -16,7 +16,7 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import { ChannelParticipationApi } from '../../rest/ChannelParticipationApi';
@@ -108,7 +108,7 @@ class ChannelParticipationDetails extends Component {
 
 	// build the button/icons in each channel tile
 	buildCustomTile = (channel) => {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<div>
 				{channel.type === 'system_channel' && (
@@ -238,7 +238,7 @@ ChannelParticipationDetails.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
 	unJoinComplete: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -251,4 +251,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(ChannelParticipationDetails));
+)(withTranslation()(ChannelParticipationDetails));

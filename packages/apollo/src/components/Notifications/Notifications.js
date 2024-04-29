@@ -17,7 +17,7 @@ import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { ToastNotification, InlineLoading } from 'carbon-components-react';
 import { updateState } from '../../redux/commonActions';
 
@@ -87,7 +87,7 @@ const Notifications = ({ translate }) => {
 };
 
 Notifications.propTypes = {
-	translate: PropTypes.func,
+	t: PropTypes.func,
 };
 
-export default withLocalize(Notifications);
+export default withTranslation()(Notifications);

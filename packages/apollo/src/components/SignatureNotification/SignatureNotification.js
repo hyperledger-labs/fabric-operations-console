@@ -17,7 +17,7 @@ import React, { Component } from 'react';
 import { Button } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import SVGs from '../Svgs/Svgs';
 import { Checkbox } from 'carbon-components-react';
 import Catalog20 from '@carbon/icons-react/lib/catalog/20';
@@ -259,7 +259,7 @@ const dataProps = {
 
 SignatureNotification.propTypes = {
 	...dataProps,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -272,4 +272,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(SignatureNotification));
+)(withTranslation()(SignatureNotification));

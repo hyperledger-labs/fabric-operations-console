@@ -19,7 +19,7 @@ import { Checkbox, Loading, RadioTile, TileGroup, ToggleSmall } from 'carbon-com
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { showError, updateState } from '../../redux/commonActions';
 import { CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';
@@ -420,7 +420,7 @@ class ImportOrdererModal extends React.Component {
 			orderer = await OrdererRestApi.createOrderer(data);
 		} catch (error) {
 			Log.error(`${error}`);
-			let newError = new Error(this.props.translate('error_create_orderer'));
+			let newError = new Error(this.props.t('error_create_orderer'));
 			newError.title = 'error_create_orderer';
 			newError.details = error;
 			throw newError;
@@ -1963,7 +1963,7 @@ class ImportOrdererModal extends React.Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		if (this.props.feature_flags.import_only_enabled) {
 			return (
 				<Wizard onClose={this.props.onClose}
@@ -2058,7 +2058,7 @@ ImportOrdererModal.propTypes = {
 	raftParent: PropTypes.object,
 	appendingNode: PropTypes.bool,
 	systemChannel: PropTypes.bool,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -2078,4 +2078,4 @@ export default connect(
 		showError,
 		updateState,
 	}
-)(withLocalize(ImportOrdererModal));
+)(withTranslation()(ImportOrdererModal));

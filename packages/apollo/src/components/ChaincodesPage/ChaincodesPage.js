@@ -17,7 +17,7 @@ import async from 'async';
 import { Button } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import RequiresAttentionImage from '../../assets/images/requires_attention.svg';
 import { clearNotifications, showBreadcrumb, showError, updateState } from '../../redux/commonActions';
@@ -149,7 +149,7 @@ class ChaincodesPage extends Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<PageContainer setFocus={!this.props.loading}>
 				<div className="bx--row">
@@ -233,7 +233,7 @@ ChaincodesPage.propTypes = {
 	showError: PropTypes.func,
 	updateState: PropTypes.func,
 	clearNotifications: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -250,4 +250,4 @@ export default connect(
 		showError,
 		updateState,
 	}
-)(withLocalize(ChaincodesPage));
+)(withTranslation()(ChaincodesPage));

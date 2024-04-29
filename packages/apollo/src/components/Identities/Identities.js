@@ -17,7 +17,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import emptyImage from '../../assets/images/empty_identities.svg';
 import { clearNotifications, showBreadcrumb, showError, updateState } from '../../redux/commonActions';
@@ -178,7 +178,7 @@ class Identities extends Component {
 	buildCustomTile(identity) {
 		const parsedCert = window.stitch.parseCertificate(identity.cert);
 		const issuer = parsedCert.issuer;
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		const from_ca = identity.from_ca ? identity.from_ca.join(',') : '';
 		const label = _.endsWith(issuer, '-tlsca') ? 'from_tls_ca' : 'from_ca';
 		return (
@@ -279,7 +279,7 @@ Identities.propTypes = {
 	showBreadcrumb: PropTypes.func,
 	showError: PropTypes.func,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -294,4 +294,4 @@ export default connect(
 		showError,
 		updateState,
 	}
-)(withLocalize(Identities));
+)(withTranslation()(Identities));

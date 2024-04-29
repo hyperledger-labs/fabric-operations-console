@@ -18,7 +18,7 @@ import { Checkbox } from 'carbon-components-react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../../../redux/commonActions';
 import Helper from '../../../../utils/helper';
@@ -154,7 +154,7 @@ const dataProps = {
 Prerequisites.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -164,4 +164,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(Prerequisites));
+)(withTranslation()(Prerequisites));

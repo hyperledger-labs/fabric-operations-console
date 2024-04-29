@@ -16,7 +16,7 @@
 import { Button, SkeletonText } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { clearNotifications, showBreadcrumb, showError, updateState } from '../../redux/commonActions';
 import SettingsApi from '../../rest/SettingsApi';
@@ -145,7 +145,7 @@ class Support extends Component {
 	}
 
 	render = () => {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<PageContainer>
 				<PageHeader
@@ -194,7 +194,7 @@ const dataProps = {
 
 Support.propTypes = {
 	...dataProps,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -211,4 +211,4 @@ export default connect(
 		showError,
 		updateState,
 	}
-)(withLocalize(Support));
+)(withTranslation()(Support));

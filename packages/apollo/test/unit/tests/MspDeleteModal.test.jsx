@@ -82,7 +82,7 @@ describe('MspDeleteModal component', () => {
 			onComplete: onCloseMSPModalStub,
 
 			updateState: updateStateStub,
-			translate: translateStub,
+			t: translateStub,
 		};
 	});
 

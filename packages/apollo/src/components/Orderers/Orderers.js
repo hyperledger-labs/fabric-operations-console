@@ -16,7 +16,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { clearNotifications, showError, showInfo, showSuccess, updateState } from '../../redux/commonActions';
 import { OrdererRestApi } from '../../rest/OrdererRestApi';
@@ -181,7 +181,7 @@ class Orderers extends Component {
 
 	getOrdererStatus = orderer => {
 		let status = orderer.status;
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		let className = 'ibp-node-status-skeleton';
 
 		if (status === false) {
@@ -293,7 +293,7 @@ class Orderers extends Component {
 									return (
 										<span>
 											<div className={'ibp-table-status ibp-table-status-' + status} />
-											{this.props.translate(status)}
+											{this.props.t(status)}
 										</span>
 									);
 								},
@@ -324,7 +324,7 @@ Orderers.propTypes = {
 	clearNotifications: PropTypes.func,
 	showError: PropTypes.func,
 	showInfo: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -341,4 +341,4 @@ export default connect(
 		showSuccess,
 		updateState,
 	}
-)(withLocalize(Orderers));
+)(withTranslation()(Orderers));

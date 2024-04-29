@@ -17,7 +17,7 @@ import { CodeSnippet, SkeletonText, ToggleSmall } from 'carbon-components-react'
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import { CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';
@@ -1551,7 +1551,7 @@ class PeerModal extends React.Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<Wizard
 				onClose={this.props.onClose}
@@ -1621,7 +1621,7 @@ PeerModal.propTypes = {
 	onComplete: PropTypes.func,
 	onClose: PropTypes.func,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -1638,4 +1638,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(PeerModal));
+)(withTranslation()(PeerModal));

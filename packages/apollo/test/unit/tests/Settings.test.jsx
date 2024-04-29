@@ -103,7 +103,7 @@ describe('Settings component', () => {
 			isAdmin: true,
 			userInfo: { canImportComponent: true },
 			history: { location: { pathname: 'path' }, listen: mySandBox.stub() },
-			translate: translateStub,
+			t: translateStub,
 			showExportModal: false,
 			showImportModal: false,
 			updateState: () => mySandBox.stub(),

@@ -16,7 +16,7 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { showBreadcrumb, updateState } from '../../redux/commonActions';
 import { MigrationApi } from '../../rest/MigrationApi';
@@ -396,7 +396,7 @@ class MigrationPage extends Component {
 	// Main Migration Content
 	// --------------------------------------------------------------------------
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		const hasMigrationPerm = this.has_migration_permission();
 		const migrationStatusStr = this.props.overallMigrationStatus;
 		const minCaVersion = (this.props.settings && this.props.settings.MIGRATION_MIN_VERSIONS) ? this.props.settings.MIGRATION_MIN_VERSIONS['fabric-ca'] : '-';
@@ -717,7 +717,7 @@ class MigrationPage extends Component {
 	// Migration wizard
 	// --------------------------------------------------------------------------
 	renderSidePanel() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		const hasValidFabricVersions = this.props.hasValidFabricVersions;
 		const hasValidK8s = this.props.hasValidK8s;
 		const hasIamTokens = (this.props.userData && this.props.userData.iamAccessToken && this.props.userData.iamRefreshToken) ? true : false;
@@ -985,7 +985,7 @@ class MigrationPage extends Component {
 	// Delete service instance instructions/warnings
 	// --------------------------------------------------------------------------
 	renderDeleteContent() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<div>
 				<div className="ibp-modal-title twistyContent">
@@ -1067,7 +1067,7 @@ const dataProps = {
 MigrationPage.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
-	translate: PropTypes.func,
+	t: PropTypes.func,
 	history: PropTypes.object,
 };
 
@@ -1076,4 +1076,4 @@ export default connect(state => {
 }, {
 	updateState,
 	showBreadcrumb
-})(withLocalize(MigrationPage));
+})(withTranslation()(MigrationPage));

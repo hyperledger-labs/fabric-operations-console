@@ -38,7 +38,7 @@ describe('Organizations component', () => {
 		});
 		props = {
 			updateState: updateStateStub,
-			translate: translateStub,
+			t: translateStub,
 		};
 	});
 

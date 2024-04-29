@@ -17,7 +17,7 @@ import { Checkbox, CodeSnippet, ContentSwitcher, SkeletonText, Switch } from 'ca
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import { CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';
@@ -707,7 +707,7 @@ export class CAModal extends React.Component {
 			enroll_in_progress: false,
 			enroll_certificate: null,
 			enroll_private_key: null,
-			enroll_identity_name: this.props.ca.display_name + ' ' + (this.props.translate ? this.props.translate('admin') : 'Admin'),
+			enroll_identity_name: this.props.ca.display_name + ' ' + (this.props.t ? this.props.t('admin') : 'Admin'),
 			enroll_identity_valid: false,
 			identityValid: false,
 		};
@@ -743,7 +743,7 @@ export class CAModal extends React.Component {
 							Log.error(error);
 							let details = error;
 							if (error.title) {
-								details.error = this.props.translate(error.title);
+								details.error = this.props.t(error.title);
 							}
 							reject({
 								title: 'error_add_identity',
@@ -1255,7 +1255,7 @@ export class CAModal extends React.Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<Wizard
 				onClose={this.props.onClose}
@@ -1308,7 +1308,7 @@ CAModal.propTypes = {
 	onComplete: PropTypes.func,
 	onClose: PropTypes.func,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -1324,4 +1324,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(CAModal));
+)(withTranslation()(CAModal));

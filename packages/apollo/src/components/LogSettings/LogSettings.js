@@ -15,7 +15,7 @@
 */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { ContentSwitcher, Dropdown, Switch, TextInput } from 'carbon-components-react';
 import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
@@ -254,9 +254,9 @@ class LogSettings extends Component {
 					<div className="ibp-form-field">
 						<label className="ibp-form-label">
 							<BlockchainTooltip type="definition"
-								tooltipText={this.props.translate('logger_overrides_tooltip')}
+								tooltipText={this.props.t('logger_overrides_tooltip')}
 							>
-								{this.props.translate('logger_overrides')}
+								{this.props.t('logger_overrides')}
 							</BlockchainTooltip>
 						</label>
 					</div>
@@ -269,10 +269,10 @@ class LogSettings extends Component {
 											<TextInput
 												id={override.key}
 												defaultValue={override.logger}
-												placeholder={this.props.translate('logger_placeholder')}
-												aria-label={this.props.translate('logger_name')}
+												placeholder={this.props.t('logger_placeholder')}
+												aria-label={this.props.t('logger_name')}
 												invalid={override.error ? true : false}
-												invalidText={override.error ? this.props.translate('input_error_invalid') : undefined}
+												invalidText={override.error ? this.props.t('input_error_invalid') : undefined}
 												onChange={evt => {
 													overrides[index].logger = evt.target.value;
 													if (!overrides[index].level) {
@@ -288,13 +288,13 @@ class LogSettings extends Component {
 										<td>
 											{index < overrides.length - 1 && (
 												<Dropdown
-													label={this.props.translate('log_level_override', { logger: override.logger })}
+													label={this.props.t('log_level_override', { logger: override.logger })}
 													id={override.key}
 													name={override.key}
-													ariaLabel={this.props.translate('log_level_override', { logger: override.logger })}
+													ariaLabel={this.props.t('log_level_override', { logger: override.logger })}
 													items={LOG_LEVELS}
 													selectedItem={override.level || this.props.default_log_level}
-													itemToString={item => this.props.translate(item)}
+													itemToString={item => this.props.t(item)}
 													onChange={change => {
 														overrides[index].level = change.selectedItem;
 														this.update({
@@ -309,7 +309,7 @@ class LogSettings extends Component {
 												<button
 													id={'logger-delete-button-' + index}
 													className="ibp-logger-delete"
-													title={this.props.translate('remove')}
+													title={this.props.t('remove')}
 													onClick={() => {
 														overrides.splice(index, 1);
 														this.update({
@@ -380,12 +380,12 @@ class LogSettings extends Component {
 					<Switch kind="button"
 						id="ibp-log-settings-simple"
 						name="simple"
-						text={this.props.translate('simple')}
+						text={this.props.t('simple')}
 					/>
 					<Switch kind="button"
 						id="ibp-log-settings-advanced"
 						name="advanced"
-						text={this.props.translate('advanced')}
+						text={this.props.t('advanced')}
 					/>
 				</ContentSwitcher>
 				{this.props.view === 0 && this.renderSimple()}
@@ -406,7 +406,7 @@ LogSettings.propTypes = {
 	...dataProps,
 	log_spec: PropTypes.string,
 	onChange: PropTypes.func,
-	translate: PropTypes.func,
+	t: PropTypes.func,
 	updateState: PropTypes.func,
 };
 
@@ -418,4 +418,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(LogSettings));
+)(withTranslation()(LogSettings));

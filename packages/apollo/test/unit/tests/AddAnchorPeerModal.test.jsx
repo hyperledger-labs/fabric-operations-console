@@ -105,7 +105,7 @@ describe('AddAnchorPeerModal component', () => {
 			orderer: orderers[0],
 			consenters: [],
 			updateState: updateStateStub,
-			translate: translateStub,
+			t: translateStub,
 		};
 	});
 

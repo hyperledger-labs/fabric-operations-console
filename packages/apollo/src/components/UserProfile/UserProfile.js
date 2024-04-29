@@ -15,7 +15,7 @@
 */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import Helper from '../../utils/helper';
 import ChangePasswordModal from '../ChangePasswordModal/ChangePasswordModal';
 import { connect } from 'react-redux';
@@ -182,7 +182,7 @@ UserProfile.propTypes = {
 	updateState: PropTypes.func,
 	showSuccess: PropTypes.func,
 	showError: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -194,4 +194,4 @@ export default connect(
 		showSuccess,
 		showError,
 	}
-)(withLocalize(UserProfile));
+)(withTranslation()(UserProfile));

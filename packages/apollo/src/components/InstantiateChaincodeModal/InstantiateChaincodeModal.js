@@ -17,7 +17,7 @@ import { ContentSwitcher, InlineNotification, SkeletonPlaceholder, Switch } from
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { showError, updateState } from '../../redux/commonActions';
 import ChannelApi from '../../rest/ChannelApi';
@@ -903,7 +903,7 @@ class InstantiateChaincodeModal extends Component {
 			if (data.selectedMembers && data.selectedMembers.length) {
 				for (let i = 1; i <= data.selectedMembers.length; i++) {
 					endorsementCounts.push({
-						name: this.props.translate('endorsement_policy', {
+						name: this.props.t('endorsement_policy', {
 							count: i,
 							total: data.selectedMembers.length,
 						}),
@@ -1046,7 +1046,7 @@ class InstantiateChaincodeModal extends Component {
 	};
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<Wizard
 				title={this.props.isUpgrade ? 'upgrade_smc' : 'instantiate_smc'}
@@ -1141,7 +1141,7 @@ InstantiateChaincodeModal.propTypes = {
 	onClose: PropTypes.func,
 	updateState: PropTypes.func,
 	showError: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -1157,4 +1157,4 @@ export default connect(
 		updateState,
 		showError,
 	}
-)(withLocalize(InstantiateChaincodeModal));
+)(withTranslation()(InstantiateChaincodeModal));

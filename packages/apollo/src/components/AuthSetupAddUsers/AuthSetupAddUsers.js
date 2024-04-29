@@ -16,7 +16,7 @@
 import { InlineNotification } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import Helper from '../../utils/helper';
@@ -42,7 +42,7 @@ class AuthSetupAddUsers extends Component {
 	}
 
 	render = () => {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<div>
 				<p className="ibp__auth-title">{translate('admin_details')}</p>
@@ -97,7 +97,7 @@ AuthSetupAddUsers.propTypes = {
 	updateState: PropTypes.func,
 	onBack: PropTypes.func,
 	onNext: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -107,4 +107,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(AuthSetupAddUsers));
+)(withTranslation()(AuthSetupAddUsers));

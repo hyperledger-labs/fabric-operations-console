@@ -17,7 +17,7 @@ import async from 'async';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import emptyImage from '../../assets/images/empty_channels.svg';
 import { clearNotifications, showBreadcrumb, showError, showInfo, showSuccess, showWarning, updateState } from '../../redux/commonActions';
@@ -413,7 +413,7 @@ class ChannelComponent extends Component {
 
 	// build peer channel tiles
 	buildCustomTile(channel) {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		const osNames = new Set();
 
 		channel.orderers.forEach(orderer => {
@@ -463,7 +463,7 @@ class ChannelComponent extends Component {
 
 	// build the channel tiles for orderers
 	buildJoinOrdererTile(channel) {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		const archived = channel.visibility === 'archive';
 		let date_str = '';
 		try {
@@ -987,7 +987,7 @@ ChannelComponent.propTypes = {
 	showSuccess: PropTypes.func,
 	clearNotifications: PropTypes.func,
 	showBreadcrumb: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -1008,4 +1008,4 @@ export default connect(
 		updateState,
 		showSuccess,
 	}
-)(withLocalize(ChannelComponent));
+)(withTranslation()(ChannelComponent));

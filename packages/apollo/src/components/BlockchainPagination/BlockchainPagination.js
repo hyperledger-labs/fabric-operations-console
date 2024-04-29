@@ -150,7 +150,7 @@ BlockchainPagination.propTypes = {
 	pageSizes: PropTypes.array,
 	page: PropTypes.number,
 	onChange: PropTypes.func,
-	translate: PropTypes.func,
+	t: PropTypes.func,
 };
 
 export default BlockchainPagination;

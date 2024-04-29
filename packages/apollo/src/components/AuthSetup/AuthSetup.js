@@ -16,7 +16,7 @@
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { showError } from '../../redux/commonActions';
@@ -109,7 +109,7 @@ export class AuthSetup extends Component {
 	};
 
 	render = () => {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<MuiThemeProvider theme={theme}>
 				<div>
@@ -155,7 +155,7 @@ AuthSetup.propTypes = {
 	secret: PropTypes.string,
 	tenantId: PropTypes.string,
 	showError: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -171,4 +171,4 @@ export default connect(
 	{
 		showError,
 	}
-)(withLocalize(AuthSetup));
+)(withTranslation()(AuthSetup));

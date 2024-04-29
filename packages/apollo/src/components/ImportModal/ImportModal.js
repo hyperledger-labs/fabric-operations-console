@@ -16,7 +16,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import { CA_TYPE, CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';
@@ -541,7 +541,7 @@ class ImportModal extends React.Component {
 	};
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<Wizard
 				title="import"
@@ -610,7 +610,7 @@ ImportModal.propTypes = {
 	onComplete: PropTypes.func,
 	onClose: PropTypes.func,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -620,4 +620,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(ImportModal));
+)(withTranslation()(ImportModal));

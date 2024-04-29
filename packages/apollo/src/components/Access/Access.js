@@ -16,7 +16,7 @@
 import { Loading, OverflowMenu, OverflowMenuItem, SkeletonText } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { clearNotifications, showBreadcrumb, showError, showSuccess, updateState } from '../../redux/commonActions';
 import ConfigureAuthApi from '../../rest/ConfigureAuthApi';
@@ -234,7 +234,7 @@ export class Access extends Component {
 
 	// build the cell contents for the attention column
 	buildAttentionCell = (user) => {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 
 		// is a new registered user
 		if ((!Array.isArray(user.roles) || user.roles.length === 0)) {
@@ -256,7 +256,7 @@ export class Access extends Component {
 	};
 
 	overflowMenu = user => {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		let overflow = (
 			<OverflowMenu id={`overflow-user-${user.id}`}
 				flipped={true}
@@ -302,7 +302,7 @@ export class Access extends Component {
 		const isIbmId = this.props.auth_scheme === 'ibmid';
 		const isIam = this.props.auth_scheme === constants.AUTH_IAM;
 		const isCouchDb = this.props.auth_scheme === constants.AUTH_COUCHDB;
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		const inReadOnlyMode = this.props.in_read_only_mode;
 		return (
 			<div className="ibp-access-row">
@@ -371,7 +371,7 @@ export class Access extends Component {
 
 	render() {
 		const isIam = this.props.auth_scheme === constants.AUTH_IAM;
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		const hasPendingUsers = Array.isArray(this.props.all_users) && this.props.all_users.filter(x => {		// see if any usernames are pending (have no roles)
 			return (!Array.isArray(x.roles) || x.roles.length === 0);
 		}).length > 0;
@@ -700,7 +700,7 @@ Access.propTypes = {
 	updateState: PropTypes.func,
 	showError: PropTypes.func,
 	showBreadcrumb: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 export default connect(
 	state => {
@@ -716,7 +716,7 @@ export default connect(
 		showSuccess,
 		updateState,
 	}
-)(withLocalize(Access));
+)(withTranslation()(Access));
 
 export function AuthenticatedUsers(props) {
 	return (

@@ -16,7 +16,7 @@
 import { CodeSnippet } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import IdentityApi from '../../rest/IdentityApi';
@@ -307,7 +307,7 @@ class IdentityModal extends React.Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<SidePanel
 				id="identity_Modal"
@@ -343,7 +343,7 @@ IdentityModal.propTypes = {
 	onComplete: PropTypes.func,
 	onClose: PropTypes.func,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -353,4 +353,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(IdentityModal));
+)(withTranslation()(IdentityModal));

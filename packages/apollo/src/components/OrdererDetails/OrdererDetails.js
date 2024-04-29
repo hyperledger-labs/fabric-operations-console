@@ -18,7 +18,7 @@ import { Button, CodeSnippet, SkeletonText, Tab, Tabs } from 'carbon-components-
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { promisify } from 'util';
 import RequiresAttentionImage from '../../assets/images/requires_attention.svg';
@@ -484,7 +484,7 @@ class OrdererDetails extends Component {
 	};
 
 	buildCustomTile(msp) {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<div>
 				<p className="bx--type-zeta ibp-node-orderer-tile-name">{msp.msp}</p>
@@ -787,7 +787,7 @@ class OrdererDetails extends Component {
 		if (!node.operations_url) {
 			className = 'ibp-node-status-unretrievable';
 		}
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return status ? (
 			<div className="ibp-node-status-container">
 				<span className={`ibp-node-status ${className}`}
@@ -987,7 +987,7 @@ class OrdererDetails extends Component {
 			}
 			if (_.has(error, 'stitch_msg') && _.includes(error.stitch_msg, 'permission denied')) {
 				title = 'add_node_error';
-				details = this.props.translate('add_node_system_channel_access_denied');
+				details = this.props.t('add_node_system_channel_access_denied');
 			}
 			if (_.has(error, 'stitch_msg') && _.includes(error.stitch_msg, 'duplicate consenter')) {
 				duplicate_consenter = true;
@@ -1289,7 +1289,7 @@ class OrdererDetails extends Component {
 		}
 		const isScalingNodesAllowed = this.props.scaleRaftNodesEnabled;
 		const canDeleteLegacy = (this.props.selectedNode && this.props.selectedNode.location !== 'ibm_saas') || isScalingNodesAllowed;
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		const canDeleteSystemless = !this.props.systemChannel;
 		const canDelete = canDeleteLegacy || canDeleteSystemless;
 
@@ -1697,7 +1697,7 @@ OrdererDetails.propTypes = {
 	showWarning: PropTypes.func,
 	updateBreadcrumb: PropTypes.func,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -1721,4 +1721,4 @@ export default connect(
 		updateBreadcrumb,
 		updateState,
 	}
-)(withLocalize(OrdererDetails));
+)(withTranslation()(OrdererDetails));

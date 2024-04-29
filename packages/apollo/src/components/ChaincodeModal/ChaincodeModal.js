@@ -17,7 +17,7 @@ import { ContentSwitcher, SkeletonText, Switch, TextArea, TextInput, Toggle } fr
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import ChannelApi from '../../rest/ChannelApi';
@@ -288,9 +288,9 @@ export class ChaincodeModal extends React.Component {
 		return (
 			<div className="ibp-chaincode-approval">
 				{Helper.renderFieldSummary(
-					this.props.translate,
+					this.props.t,
 					{
-						status: this.props.translate(committed ? 'chaincode_committed' : ready_to_commit ? 'chaincode_ready' : 'proposed_with_policy', {
+						status: this.props.t(committed ? 'chaincode_committed' : ready_to_commit ? 'chaincode_ready' : 'proposed_with_policy', {
 							n: required_signatures,
 						}),
 					},
@@ -309,9 +309,9 @@ export class ChaincodeModal extends React.Component {
 										<td className="ibp-chaincode-approval-org">{org.msp_id}</td>
 										<td>
 											{org.signature ? (
-												<span className="ibp-chaincode-approval-true">{this.props.translate('approved')}</span>
+												<span className="ibp-chaincode-approval-true">{this.props.t('approved')}</span>
 											) : (
-												this.props.translate('pending_approval')
+												this.props.t('pending_approval')
 											)}
 										</td>
 										{(ActionsHelper.canManageComponent(this.props.userInfo, this.props.feature_flags)) && (<td>
@@ -332,7 +332,7 @@ export class ChaincodeModal extends React.Component {
 														}
 													}}
 												>
-													{this.props.translate(org.signature ? 'update_proposal' : 'begin_approve')}
+													{this.props.t(org.signature ? 'update_proposal' : 'begin_approve')}
 												</button>
 											)}
 										</td>)}
@@ -355,14 +355,14 @@ export class ChaincodeModal extends React.Component {
 		let committed = this.props.committed;
 		let policy = this.props.ccd.validation_parameter;
 		if (policy === '/Channel/Application/Endorsement') {
-			policy = this.props.translate('use_default_policy');
+			policy = this.props.t('use_default_policy');
 		}
 
 		return (
 			<WizardStep
 				type="WizardStep"
-				title={this.props.translate(committed ? 'chaincode_definition' : 'chaincode_proposal')}
-				nextButtonLabel={this.props.translate('begin_commit')}
+				title={this.props.t(committed ? 'chaincode_definition' : 'chaincode_proposal')}
+				nextButtonLabel={this.props.t('begin_commit')}
 			>
 				{this.props.loading ? (
 					<div className="ibp-chaincode-approval">
@@ -379,20 +379,20 @@ export class ChaincodeModal extends React.Component {
 				) : (
 					<div className="summary-section">
 						<ImportantBox
-							text={this.props.translate('approval_error_no_channel', {
+							text={this.props.t('approval_error_no_channel', {
 								channelName: this.props.channelId,
 							})}
 						/>
 					</div>
 				)}
-				{Helper.renderFieldSummary(this.props.translate, this.props, 'channel_name', 'channelId')}
-				{Helper.renderFieldSummary(this.props.translate, this.props.ccd, 'pkg_id', 'chaincode_id')}
-				{Helper.renderFieldSummary(this.props.translate, this.props.ccd, 'pkg_version', 'chaincode_version')}
-				{Helper.renderFieldSummary(this.props.translate, this.props.ccd, 'init_required', 'init_required')}
-				{Helper.renderFieldSummary(this.props.translate, { policy }, 'transaction_endorsement_policy', 'policy')}
+				{Helper.renderFieldSummary(this.props.t, this.props, 'channel_name', 'channelId')}
+				{Helper.renderFieldSummary(this.props.t, this.props.ccd, 'pkg_id', 'chaincode_id')}
+				{Helper.renderFieldSummary(this.props.t, this.props.ccd, 'pkg_version', 'chaincode_version')}
+				{Helper.renderFieldSummary(this.props.t, this.props.ccd, 'init_required', 'init_required')}
+				{Helper.renderFieldSummary(this.props.t, { policy }, 'transaction_endorsement_policy', 'policy')}
 				{this.props.ccd && this.props.ccd.collections_obj && (
 					<div className="summary-section">
-						<p className="summary-label">{this.props.translate('propose_private_data')}</p>
+						<p className="summary-label">{this.props.t('propose_private_data')}</p>
 						<p className="summary-value">
 							<TextArea
 								id="private-data-collections"
@@ -400,7 +400,7 @@ export class ChaincodeModal extends React.Component {
 								className="bx--text__input ibm-label"
 								value={JSON.stringify(this.props.ccd.collections_obj, null, 4)}
 								readOnly
-								labelText={this.props.translate('propose_private_data')}
+								labelText={this.props.t('propose_private_data')}
 								hideLabel={true}
 							/>
 						</p>
@@ -623,13 +623,13 @@ export class ChaincodeModal extends React.Component {
 		return (
 			<WizardStep
 				type="WizardStep"
-				title={this.props.translate('commit_proposal')}
+				title={this.props.t('commit_proposal')}
 				disableSubmit={!this.props.commit_org || !this.props.commit_identity}
 				onCancel={() => {
 					this.props.updateState(SCOPE, { show_commit: false });
 				}}
 			>
-				<p className="ibp-modal-text">{this.props.translate('commit_proposal_desc')}</p>
+				<p className="ibp-modal-text">{this.props.t('commit_proposal_desc')}</p>
 				<MSPAndIdentityPair
 					id="commit_chaincode"
 					scope={SCOPE}
@@ -659,7 +659,7 @@ export class ChaincodeModal extends React.Component {
 		return (
 			<WizardStep
 				type="WizardStep"
-				title={this.props.translate(this.props.selected.signature ? 'update_proposal' : 'approve_proposal')}
+				title={this.props.t(this.props.selected.signature ? 'update_proposal' : 'approve_proposal')}
 				disableSubmit={!peers.length || !_.isObject(this.props.approve_identity)}
 				onCancel={() => {
 					this.props.updateState(SCOPE, {
@@ -668,8 +668,8 @@ export class ChaincodeModal extends React.Component {
 					});
 				}}
 			>
-				<p className="ibp-modal-text">{this.props.translate(this.props.selected.signature ? 'update_chaincode_desc' : 'approve_chaincode_desc_1')}</p>
-				{Helper.renderFieldSummary(this.props.translate, this.props, 'approve_org', 'selected.msp_id')}
+				<p className="ibp-modal-text">{this.props.t(this.props.selected.signature ? 'update_chaincode_desc' : 'approve_chaincode_desc_1')}</p>
+				{Helper.renderFieldSummary(this.props.t, this.props, 'approve_org', 'selected.msp_id')}
 				<Form
 					id="proposal-identity-form"
 					scope={SCOPE}
@@ -709,9 +709,9 @@ export class ChaincodeModal extends React.Component {
 				<FileUploader
 					id="pkg-file-uploader"
 					className="ibp-pkg-file-uploader"
-					labelTitle={this.props.translate('chaincode_package')}
-					labelDescription={this.props.translate('chaincode_package_desc')}
-					buttonLabel={this.props.translate('add_file')}
+					labelTitle={this.props.t('chaincode_package')}
+					labelDescription={this.props.t('chaincode_package_desc')}
+					buttonLabel={this.props.t('add_file')}
 					accept={['.gz']}
 					name="file"
 					multiple={false}
@@ -727,14 +727,14 @@ export class ChaincodeModal extends React.Component {
 						<TextInput
 							id="chaincode-pkg"
 							defaultValue={this.props.pkg.name}
-							labelText={this.props.translate('chaincode_package')}
-							aria-label={this.props.translate('chaincode_package')}
+							labelText={this.props.t('chaincode_package')}
+							aria-label={this.props.t('chaincode_package')}
 							readOnly={true}
 						/>
 						<button
 							id="chaincode-pkg-delete"
 							className="ibp-pkg-delete"
-							title={this.props.translate('remove')}
+							title={this.props.t('remove')}
 							onClick={() => {
 								this.props.updateState(SCOPE, { pkg: null });
 							}}
@@ -810,7 +810,7 @@ export class ChaincodeModal extends React.Component {
 		return (
 			<div className="ibp-existing-pkg">
 				{this.props.existing_pkgs && !this.props.existing_pkgs.length && !this.props.loading_pkgs ? (
-					<p>{this.props.translate('no_existing_packages')}</p>
+					<p>{this.props.t('no_existing_packages')}</p>
 				) : (
 					<Form
 						scope={SCOPE}
@@ -862,16 +862,16 @@ export class ChaincodeModal extends React.Component {
 			pkg_required = false;
 		}
 
-		let desc = this.props.translate('approve_install_desc');
+		let desc = this.props.t('approve_install_desc');
 		if (!this.props.selected.signature) {
-			desc = desc + ' ' + this.props.translate('approve_install_desc_2');
+			desc = desc + ' ' + this.props.t('approve_install_desc_2');
 		}
 
 		return (
 			<WizardStep
 				type="WizardStep"
-				title={this.props.translate('install_chaincode')}
-				tooltip={this.props.translate('upload_package_tooltip2')}
+				title={this.props.t('install_chaincode')}
+				tooltip={this.props.t('upload_package_tooltip2')}
 				disableSubmit={pkg_required && !_.isObject(this.props.pkg)}
 				onNext={() => {
 					if (_.isObject(this.props.pkg)) {
@@ -890,7 +890,7 @@ export class ChaincodeModal extends React.Component {
 				<p className="ibp-modal-text">{desc}</p>
 				{pkg && (
 					<div className="summary-section">
-						<p className="summary-label">{this.props.translate('chaincode_package')}</p>
+						<p className="summary-label">{this.props.t('chaincode_package')}</p>
 						<p className="summary-value"
 							title={pkg.tooltip}
 						>
@@ -902,7 +902,7 @@ export class ChaincodeModal extends React.Component {
 					<div className="ibp-form">
 						<div className="ibp-form-field">
 							<div>
-								<label className="ibp-form-label">{this.props.translate('approve_with_install')}</label>
+								<label className="ibp-form-label">{this.props.t('approve_with_install')}</label>
 							</div>
 							<Toggle
 								id="approve_with_pkg"
@@ -916,9 +916,9 @@ export class ChaincodeModal extends React.Component {
 									});
 								}}
 								onChange={() => { }}
-								aria-label={this.props.translate('approve_with_install')}
-								labelA={this.props.translate('no')}
-								labelB={this.props.translate('yes')}
+								aria-label={this.props.t('approve_with_install')}
+								labelA={this.props.t('no')}
+								labelB={this.props.t('yes')}
 							/>
 						</div>
 					</div>
@@ -941,12 +941,12 @@ export class ChaincodeModal extends React.Component {
 							<Switch kind="button"
 								id="propose-upload"
 								name="upload"
-								text={this.props.translate('upload')}
+								text={this.props.t('upload')}
 							/>
 							<Switch kind="button"
 								id="propose-existing"
 								name="existing"
-								text={this.props.translate('existing_package')}
+								text={this.props.t('existing_package')}
 							/>
 						</ContentSwitcher>
 						{this.props.upload_pkg ? this.renderUploadPackage() : this.renderExistingPackage(pkg)}
@@ -986,21 +986,21 @@ export class ChaincodeModal extends React.Component {
 				title="install_chaincode"
 				disableSubmit={disableSubmit}
 			>
-				<p className="ibp-modal-text">{this.props.translate('propose_install_desc')}</p>
+				<p className="ibp-modal-text">{this.props.t('propose_install_desc')}</p>
 				<ImportantBox kind="informational"
 					text="propose_install_important"
 					link="propose_install_important_link"
 				/>
 				{!!installed_peers.length && (
 					<div className="summary-section">
-						<p className="summary-label">{this.props.translate('peers_installed_on')}</p>
+						<p className="summary-label">{this.props.t('peers_installed_on')}</p>
 						<p className="summary-value">{installed_peers.map(p => p.display_name).join(', ')}</p>
 					</div>
 				)}
 				<div className="ibp-form">
 					<div className="ibp-form-field">
 						<div>
-							<label className="ibp-form-label">{this.props.translate('propose_install_all_peers')}</label>
+							<label className="ibp-form-label">{this.props.t('propose_install_all_peers')}</label>
 						</div>
 						<Toggle
 							id="toggle-install-all-peers"
@@ -1015,9 +1015,9 @@ export class ChaincodeModal extends React.Component {
 								this.props.updateState(SCOPE, data);
 							}}
 							onChange={() => { }}
-							aria-label={this.props.translate('propose_install_all_peers')}
-							labelA={this.props.translate('no')}
-							labelB={this.props.translate('yes')}
+							aria-label={this.props.t('propose_install_all_peers')}
+							labelA={this.props.t('no')}
+							labelB={this.props.t('yes')}
 						/>
 					</div>
 				</div>
@@ -1073,15 +1073,15 @@ export class ChaincodeModal extends React.Component {
 				title="summary"
 			>
 				<div className="ibp-propose-chaincode-summary">
-					{Helper.renderFieldSummary(this.props.translate, this.props, 'approve_org', 'selected.msp_id')}
-					{Helper.renderFieldSummary(this.props.translate, this.props, 'approve_identity', 'approve_identity.name')}
-					{Helper.renderFieldSummary(this.props.translate, this.props, 'chaincode_package', 'pkg.name')}
-					{Helper.renderFieldSummary(this.props.translate, this.props.ccd, 'init_required', 'init_required')}
+					{Helper.renderFieldSummary(this.props.t, this.props, 'approve_org', 'selected.msp_id')}
+					{Helper.renderFieldSummary(this.props.t, this.props, 'approve_identity', 'approve_identity.name')}
+					{Helper.renderFieldSummary(this.props.t, this.props, 'chaincode_package', 'pkg.name')}
+					{Helper.renderFieldSummary(this.props.t, this.props.ccd, 'init_required', 'init_required')}
 					{this.props.pkg &&
 						this.props.pkg.name &&
 						this.props.selected_peers &&
 						!!this.props.selected_peers.length &&
-						Helper.renderFieldSummary(this.props.translate, this.props, 'install_on', 'selected_peers')}
+						Helper.renderFieldSummary(this.props.t, this.props, 'install_on', 'selected_peers')}
 				</div>
 			</WizardStep>
 		);
@@ -1093,7 +1093,7 @@ export class ChaincodeModal extends React.Component {
 		if (this.props.signatureRequest) {
 			if (!this.props.committed) {
 				if (this.props.signatureRequest.signature_count >= this.props.signatureRequest.current_policy.number_of_signatures) {
-					button = this.props.translate(this.props.show_commit ? 'commit_proposal' : 'begin_commit');
+					button = this.props.t(this.props.show_commit ? 'commit_proposal' : 'begin_commit');
 					onSubmit = this.props.show_commit
 						? this.onCommit
 						: () => {
@@ -1104,7 +1104,7 @@ export class ChaincodeModal extends React.Component {
 			}
 		}
 		if (this.props.selected) {
-			button = this.props.translate(this.props.selected.signature ? 'update_proposal' : 'approve_proposal');
+			button = this.props.t(this.props.selected.signature ? 'update_proposal' : 'approve_proposal');
 			onSubmit = this.onApprove;
 		}
 		return (
@@ -1160,7 +1160,7 @@ ChaincodeModal.propTypes = {
 	onClose: PropTypes.func,
 	onComplete: PropTypes.func,
 	updateState: PropTypes.func,
-	translate: PropTypes.func,
+	t: PropTypes.func,
 	channelDetails: PropTypes.object,
 	channelMembers: PropTypes.array,
 };
@@ -1178,4 +1178,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(ChaincodeModal));
+)(withTranslation()(ChaincodeModal));

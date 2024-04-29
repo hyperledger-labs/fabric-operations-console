@@ -15,7 +15,7 @@
 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import TimelineCancelButton from '../TimelineCancelButton/TimelineCancelButton';
 import CheckmarkOutline16 from '@carbon/icons-react/lib/checkmark--outline/16';
 
@@ -123,7 +123,7 @@ Timeline.propTypes = {
 		currentStepIndex: PropTypes.number,
 	}),
 	progressWithChecks: PropTypes.bool,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
-export default withLocalize(Timeline);
+export default withTranslation()(Timeline);

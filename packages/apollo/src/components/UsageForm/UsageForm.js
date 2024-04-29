@@ -16,7 +16,7 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import Helper from '../../utils/helper';
 import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
@@ -140,7 +140,7 @@ class UsageForm extends Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<div className="ibp-usage-form">
 				{!this.props.titleTooltip ? (
@@ -187,7 +187,7 @@ UsageForm.propTypes = {
 	onChange: PropTypes.func,
 	reallocate: PropTypes.object,
 	nostorage: PropTypes.bool,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect((state, props) => {
@@ -196,4 +196,4 @@ export default connect((state, props) => {
 		scope,
 		...Helper.mapStateToProps(state[scope], dataProps),
 	};
-})(withLocalize(UsageForm));
+})(withTranslation()(UsageForm));
