@@ -18,7 +18,7 @@ import { Button, CodeSnippet, SkeletonText, Tab, Tabs } from 'carbon-components-
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import withLocalize from '../../hoc/withLocalize';
+import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { promisify } from 'util';
 import RequiresAttentionImage from '../../assets/images/requires_attention.svg';

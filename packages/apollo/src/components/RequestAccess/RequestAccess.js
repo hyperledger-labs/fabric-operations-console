@@ -15,7 +15,7 @@
 */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import withLocalize from '../../hoc/withLocalize';
+import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import TitleBar from '../TitleBar/TitleBar';

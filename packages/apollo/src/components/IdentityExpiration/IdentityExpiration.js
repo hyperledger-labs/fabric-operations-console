@@ -18,7 +18,7 @@ import _ from 'lodash';
 import { WarningFilled16 } from '@carbon/icons-react/es';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import withLocalize from '../../hoc/withLocalize';
+import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import IdentityApi from '../../rest/IdentityApi';

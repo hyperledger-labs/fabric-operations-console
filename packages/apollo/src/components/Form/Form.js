@@ -18,7 +18,7 @@ import DropdownSkeleton from 'carbon-components-react/lib/components/Dropdown/Dr
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import withLocalize from '../../hoc/withLocalize';
+import { withLocalize } from 'react-localize-redux';
 import { connect } from 'react-redux';
 import PlusIcon from '../../assets/images/plus.svg';
 import { updateState } from '../../redux/commonActions';

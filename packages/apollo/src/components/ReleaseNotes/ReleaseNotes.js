@@ -16,7 +16,7 @@
 import { SkeletonText } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React from 'react';
-import withLocalize from '../../hoc/withLocalize';
+import { withLocalize } from 'react-localize-redux';
 
 const ReleaseNotes = props => {
 	const loading = props.loading || !props.releaseNotes || !props.releaseNotes.length;

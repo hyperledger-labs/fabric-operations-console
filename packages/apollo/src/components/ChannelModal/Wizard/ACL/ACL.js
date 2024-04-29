@@ -20,7 +20,7 @@ import _ from 'lodash';
 import { connect } from 'react-redux';
 import Helper from '../../../../utils/helper';
 import { updateState } from '../../../../redux/commonActions';
-import withLocalize from '../../../../hoc/withLocalize';
+import { withLocalize } from 'react-localize-redux';
 import TranslateLink from '../../../TranslateLink/TranslateLink';
 import ImportantBox from '../../../ImportantBox/ImportantBox';
 import SidePanelWarning from '../../../SidePanelWarning/SidePanelWarning';

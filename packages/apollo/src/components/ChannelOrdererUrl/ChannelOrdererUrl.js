@@ -14,7 +14,7 @@
  * limitations under the License.
 */
 import React from 'react';
-import withLocalize from '../../hoc/withLocalize';
+import { withLocalize } from 'react-localize-redux';
 import PropTypes from 'prop-types';
 
 const ChannelOrdererUrl = () => {
