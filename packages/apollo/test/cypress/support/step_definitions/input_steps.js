@@ -72,7 +72,7 @@ Then(/^I should see table with id (?:'|")(.*?)(?:'|")$/, (propertyValue) => {
 });
 
 Then(/^I should see audit log row with text (?:'|")(.*?)(?:'|") and id (?:'|")(.*?)(?:'|")$/, (rowText, propertyValue) => {
-	cy.get(`td[id="${propertyValue}"]`,{ timeout: 180000 }).first().contains(rowText).should('be.visible')
+	cy.get("#table-audit_logs",{ timeout: 180000 }).find("tr").find("td").contains(rowText).should('be.visible');
 });
 
 Then(/^I should see api key row with text (?:'|")(.*?)(?:'|") and id (?:'|")(.*?)(?:'|")$/, (rowText, propertyValue) => {
