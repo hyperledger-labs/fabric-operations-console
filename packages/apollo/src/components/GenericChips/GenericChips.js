@@ -16,9 +16,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ChipInput from 'material-ui-chip-input';
-import Chip from '@material-ui/core/Chip';
-import withStyles from '@material-ui/core/styles/withStyles';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import Chip from '@mui/material/Chip';
+import withStyles from '@mui//styles/withStyles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const styles = {
 	chipInputText: {
@@ -45,7 +45,7 @@ const styles = {
 	},
 };
 
-const theme = createMuiTheme({
+const theme = createTheme({
 	typography: {
 		useNextVariants: true,
 	},
@@ -55,7 +55,7 @@ class GenericChips extends Component {
 	render = () => {
 		const { classes } = this.props;
 		return (
-			<MuiThemeProvider theme={theme}>
+			<ThemeProvider theme={theme}>
 				<div>
 					<ChipInput
 						id={this.props.id}
@@ -96,7 +96,7 @@ class GenericChips extends Component {
 						)}
 					/>
 				</div>
-			</MuiThemeProvider>
+			</ThemeProvider>
 		);
 	};
 }
