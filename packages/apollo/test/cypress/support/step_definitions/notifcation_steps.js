@@ -33,7 +33,7 @@ Then(/^I should see a success toast with class (?:'|")(.*?)(?:'|") which says (?
 					if ($body.find(":contains(Unable to create peer)").length > 0) {
 						cy.log('Unable to create Peer error displayed...clicking on Add Peer again')
 						cy.get(`button[id="submit"]`, { timeout: 60000 }).should('be.visible').click()
-						cy.wait(60000)
+						cy.wait(10000)
 						cy.log('Checking for success toast after getting unable to create peer error')
 						cy.get(className, { timeout: 180000 }).contains(expectedMessage).should('be.visible')
 						found = true
