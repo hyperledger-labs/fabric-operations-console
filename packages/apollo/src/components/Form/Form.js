@@ -18,7 +18,7 @@ import DropdownSkeleton from 'carbon-components-react/lib/components/Dropdown/Dr
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withTranslation } from 'react-i18next';
+import { withTranslation, Trans } from 'react-i18next';
 import { connect } from 'react-redux';
 import PlusIcon from '../../assets/images/plus.svg';
 import { updateState } from '../../redux/commonActions';
@@ -1507,7 +1507,7 @@ class Form extends Component {
 										{field.tooltip ? (
 											<BlockchainTooltip direction={field.tooltipDirection}
 												type="definition"
-												tooltipText={translate(field.tooltip, field.tooltipOptions)}
+												tooltipText={<Trans>{translate(field.tooltip, field.tooltipOptions)}</Trans>}
 											>
 												{label}
 											</BlockchainTooltip>

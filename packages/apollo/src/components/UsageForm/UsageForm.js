@@ -16,7 +16,7 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withTranslation } from 'react-i18next';
+import { Trans } from 'react-i18next';
 import { connect } from 'react-redux';
 import Helper from '../../utils/helper';
 import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
@@ -140,14 +140,15 @@ class UsageForm extends Component {
 	}
 
 	render() {
-		const translate = this.props.t;
 		return (
 			<div className="ibp-usage-form">
 				{!this.props.titleTooltip ? (
-					this.props.title && <h3 className="ibp-usage-title">{translate(this.props.title)}</h3>
+					this.props.title && <h3 className="ibp-usage-title"><Trans>{this.props.title}</Trans></h3>
 				) : (
 					<h3 className="ibp-usage-title">
-						<BlockchainTooltip triggerText={translate(this.props.title ? this.props.title : '')}>{translate(this.props.titleTooltip)}</BlockchainTooltip>
+						<BlockchainTooltip triggerText={<Trans>{this.props.title ? this.props.title : ''}</Trans>}>
+							<Trans>{this.props.titleTooltip}</Trans>
+						</BlockchainTooltip>
 					</h3>
 				)}
 				<Form
@@ -196,4 +197,4 @@ export default connect((state, props) => {
 		scope,
 		...Helper.mapStateToProps(state[scope], dataProps),
 	};
-})(withTranslation()(UsageForm));
+})(UsageForm);

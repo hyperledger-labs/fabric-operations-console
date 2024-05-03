@@ -17,7 +17,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
+import { withTranslation, Trans } from 'react-i18next';
 
 class ImportantBox extends Component {
 	render() {
@@ -32,7 +32,7 @@ class ImportantBox extends Component {
 				<p className="ibp-important-label">{translate('important')}</p>
 				<div className="ibp-important-box">
 					<p className="ibp-important-text">
-						{this.props.text && translate(this.props.text, this.props.opts)}
+						<Trans>{this.props.text && translate(this.props.text, this.props.opts)}</Trans>
 						{this.props.link && (
 							<a
 								href={translate(this.props.link, { DOC_PREFIX: this.props.docPrefix })}

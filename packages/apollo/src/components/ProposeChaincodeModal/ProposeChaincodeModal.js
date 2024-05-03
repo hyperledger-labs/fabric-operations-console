@@ -17,7 +17,7 @@ import { ContentSwitcher, Switch, TextArea, TextInput, Toggle } from 'carbon-com
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withTranslation } from 'react-i18next';
+import { withTranslation, Trans } from 'react-i18next';
 import { connect } from 'react-redux';
 import { promisify } from 'util';
 import { updateState } from '../../redux/commonActions';
@@ -981,9 +981,12 @@ class ProposeChaincodeModal extends React.Component {
 										<div className="ibp-highlight-msp">{send_to.join(', ')}</div>
 									</>
 								)}
-								{this.props.t('this_proposal', {
-									org: this.props.propose_org ? <span className="ibp-highlight-msp">{this.props.propose_org.msp_id}</span> : null,
-								})}
+								<Trans>{this.props.t('this_proposal')}
+								{/* , { */}
+									{/* org: this.props.propose_org ? <span className="ibp-highlight-msp">{this.props.propose_org.msp_id}</span> : null, */}
+								{/* })} */}
+								{this.props.propose_org ? <span className="ibp-highlight-msp">{this.props.propose_org.msp_id}</span>: null}
+								</Trans>
 							</>
 						}
 					/>

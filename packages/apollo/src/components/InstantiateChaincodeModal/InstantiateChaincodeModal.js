@@ -17,7 +17,7 @@ import { ContentSwitcher, InlineNotification, SkeletonPlaceholder, Switch } from
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withTranslation } from 'react-i18next';
+import { Trans, withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { showError, updateState } from '../../redux/commonActions';
 import ChannelApi from '../../rest/ChannelApi';
@@ -1059,9 +1059,9 @@ class InstantiateChaincodeModal extends Component {
 				<p className="ibp-modal-desc">
 					{this.props.isUpgrade ? (
 						<>
-							{translate('upgrade_chaincode_desc_1', { name: this.props.instantiatedChaincode.name, channel: this.props.instantiatedChaincode.channel })}
-							{translate('upgrade_chaincode_desc_2', { channel: this.props.instantiatedChaincode.channel })}
-							{translate('upgrade_chaincode_desc_3')}
+							<Trans>{translate('upgrade_chaincode_desc_1', { name: this.props.instantiatedChaincode.name, channel: this.props.instantiatedChaincode.channel })}</Trans>
+							<Trans>{translate('upgrade_chaincode_desc_2', { channel: this.props.instantiatedChaincode.channel })}</Trans>
+							<Trans>{translate('upgrade_chaincode_desc_3')}</Trans>
 						</>
 					) : (
 						translate('instantiate_chaincode_desc')

@@ -24,6 +24,7 @@ import LoginApi from '../../rest/LoginApi';
 import { Modal } from 'carbon-components-react';
 import Logger from '../Log/Logger';
 import { NodeRestApi } from '../../rest/NodeRestApi';
+import RenderHTML from "../RenderHTML/RenderHTML";
 
 const SCOPE = 'userProfile';
 const Log = new Logger(SCOPE);
@@ -94,7 +95,7 @@ class UserProfile extends Component {
 	}
 
 	render() {
-		const { name, email, logout_url, canLogout, canChangePassword, translate } = this.props;
+		const { name, email, logout_url, canLogout, canChangePassword, t:translate } = this.props;
 		return (
 			<div id="ibp-user-profile"
 				className={`ibp-user-info-detail-container ${canLogout ? 'ibp-user-info-detail-container-longer' : ''}`}
@@ -157,7 +158,7 @@ class UserProfile extends Component {
 						danger
 						open
 					>
-						<p>{translate('logout_modal', { bust: Date.now() })}</p>
+						<p><RenderHTML value={translate('logout_modal', { bust: Date.now() })}/></p>
 					</Modal>
 				)}
 			</div>

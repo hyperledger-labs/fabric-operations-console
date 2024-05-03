@@ -17,7 +17,7 @@ import React, { Component } from 'react';
 import { Button } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
+import { withTranslation, Trans } from 'react-i18next';
 import SVGs from '../Svgs/Svgs';
 import { Checkbox } from 'carbon-components-react';
 import Catalog20 from '@carbon/icons-react/lib/catalog/20';
@@ -95,7 +95,7 @@ class SignatureNotification extends Component {
 			<>
 				{request && !request.resending && (
 					<div className={`ibp-signature-request-notification ibp-signature-request-notification-${type}`}>
-						<div className="ibp-signature-request-notification-title">{title}</div>
+						<div className="ibp-signature-request-notification-title"><Trans>{title}</Trans></div>
 						<div className="ibp-signature-request-notification-text">
 							{type === 'failedToSend' ? (
 								<>
@@ -109,17 +109,17 @@ class SignatureNotification extends Component {
 									))}
 								</>
 							) : request && request.ccd ? (
-								translate('chaincode_proposal_text', {
+								<Trans>{translate('chaincode_proposal_text', {
 									id: request.ccd.chaincode_id,
 									version: request.ccd.chaincode_version,
 									channel: request.channel,
 									org: request.originator_msp,
-								})
+								})}</Trans>
 							) : (
-								translate(request.json_diff ? 'proposed_channel_update' : 'channel_created', {
+								<Trans>{translate(request.json_diff ? 'proposed_channel_update' : 'channel_created', {
 									channel: request.channel,
 									org: request.originator_msp,
-								})
+								})}</Trans>
 							)}
 						</div>
 						{request.status === 'open' && type !== 'failedToSend' && (
@@ -200,7 +200,7 @@ class SignatureNotification extends Component {
 								type === 'failedToSend' ? resendRequest(request) : showDetails(request);
 							}}
 						>
-							<p className="ibp-signature-collection-notification-link-text">{type === 'failedToSend' ? translate('try_again') : translate(label)}</p>
+							<p className="ibp-signature-collection-notification-link-text"><Trans>{type === 'failedToSend' ? translate('try_again') : translate(label)}</Trans></p>
 							<SVGs type={type === 'failedToSend' ? 'restart' : 'arrowRight'}
 								extendClass={{ 'ibp-signature-link-icon': true }}
 								width="16px"

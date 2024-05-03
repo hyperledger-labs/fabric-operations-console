@@ -18,7 +18,7 @@ import { Button, CodeSnippet, SkeletonText, Tab, Tabs } from 'carbon-components-
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withTranslation } from 'react-i18next';
+import { withTranslation, Trans } from 'react-i18next';
 import { connect } from 'react-redux';
 import { promisify } from 'util';
 import RequiresAttentionImage from '../../assets/images/requires_attention.svg';
@@ -911,7 +911,7 @@ class OrdererDetails extends Component {
 			<div className="missing-endorsement-policy">
 				<div>
 					<h3>{translate('missing_endorsement_policy_title')}</h3>
-					<p>{translate('missing_endorsement_policy_desc', { orgs: this.props.missingEndorsementOrgs.join(',') })}</p>
+					<p><Trans>{translate('missing_endorsement_policy_desc', { orgs: this.props.missingEndorsementOrgs.join(',') })}</Trans></p>
 				</div>
 				<RequiresAttentionImage className="ibp-requires-attention-image ibp-requires-attention-small-image"
 					alt=""

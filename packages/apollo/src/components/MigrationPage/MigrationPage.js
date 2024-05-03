@@ -16,7 +16,7 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withTranslation } from 'react-i18next';
+import { withTranslation, Trans } from 'react-i18next';
 import { connect } from 'react-redux';
 import { showBreadcrumb, updateState } from '../../redux/commonActions';
 import { MigrationApi } from '../../rest/MigrationApi';
@@ -690,7 +690,7 @@ class MigrationPage extends Component {
 										<br />
 										<p>{translate('mig_wallet_instructions2')}</p>
 										<br />
-										<p>{translate('mig_wallet_instructions3')}</p>
+										<p><Trans>{translate('mig_wallet_instructions3')}</Trans></p>
 										<div className="leftParagraph">
 											<p className="leftParagraph">
 												- New console: <a href={this.props.newConsoleURL}
@@ -1005,7 +1005,7 @@ class MigrationPage extends Component {
 						</a>
 					</p>
 					<br />
-					<p>{translate('mig_warn_txt')}</p>
+					<p><Trans>{translate('mig_warn_txt')}</Trans></p>
 					<br />
 					<div className="leftParagraphMore">
 						<h4>{translate('mig_exported_wallets')}</h4>

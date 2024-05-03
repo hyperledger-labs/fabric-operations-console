@@ -22,7 +22,7 @@ import { useSelector } from 'react-redux';
 import _ from 'lodash';
 import * as constants from '../../../utils/constants';
 
-const ItemTileLabels = ({ certificateWarning, custom, isPatchAvailable, location, nodeOU, pending, translate, type }) => {
+const ItemTileLabels = ({ certificateWarning, custom, isPatchAvailable, location, nodeOU, pending, t:translate, type }) => {
 	const platform = useSelector(state => state['settings'] && state['settings'].platform);
 
 	const renderLocation = () => {
