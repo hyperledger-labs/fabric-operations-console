@@ -33,6 +33,7 @@ import PageContainer from '../PageContainer/PageContainer';
 import PageHeader from '../PageHeader/PageHeader';
 import ActionsHelper from '../../utils/actionsHelper';
 import { NodeRestApi } from '../../rest/NodeRestApi';
+import withRouter from '../../hoc/withRouter';
 
 const SCOPE = 'identities';
 const Log = new Logger(SCOPE);
@@ -294,4 +295,4 @@ export default connect(
 		showError,
 		updateState,
 	}
-)(withTranslation()(Identities));
+)(withTranslation()(withRouter(Identities)));

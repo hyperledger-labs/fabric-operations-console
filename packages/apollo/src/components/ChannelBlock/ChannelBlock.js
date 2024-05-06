@@ -28,6 +28,7 @@ import PageContainer from '../PageContainer/PageContainer';
 import PageHeader from '../PageHeader/PageHeader';
 import TransactionModal from '../TransactionModal/TransactionModal';
 import emptyImage from '../../assets/images/empty_nodes.svg';
+import withRouter from '../../hoc/withRouter';
 
 const SCOPE = 'channelBlock';
 const Log = new Logger(SCOPE);
@@ -230,4 +231,4 @@ export default connect(
 		showError,
 		updateState,
 	}
-)(withTranslation()(ChannelBlock));
+)(withTranslation()(withRouter(ChannelBlock)));

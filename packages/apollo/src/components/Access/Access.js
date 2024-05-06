@@ -36,6 +36,7 @@ import DeleteAccessModal from '../DeleteAccessModal/DeleteAccessModal';
 import SidePanel from '../SidePanel/SidePanel';
 import Form from '../Form/Form';
 import * as constants from '../../utils/constants';
+import withRouter from '../../hoc/withRouter';
 
 const SCOPE = 'access';
 const Log = new Logger(SCOPE);
@@ -716,7 +717,7 @@ export default connect(
 		showSuccess,
 		updateState,
 	}
-)(withTranslation()(Access));
+)(withTranslation()(withRouter(Access)));
 
 export function AuthenticatedUsers(props) {
 	return (

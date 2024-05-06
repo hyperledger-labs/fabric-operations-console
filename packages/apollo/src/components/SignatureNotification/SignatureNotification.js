@@ -55,7 +55,7 @@ class SignatureNotification extends Component {
 			showDetails,
 			skeleton,
 			//submitter,
-			translate,
+			t: translate,
 			type,
 		} = this.props;
 		let title = '';

@@ -29,6 +29,7 @@ import ReleaseNotes from '../ReleaseNotes/ReleaseNotes';
 import SVGs from '../Svgs/Svgs';
 import TranslateLink from '../TranslateLink/TranslateLink';
 import ActionsHelper from '../../utils/actionsHelper';
+import withRouter from '../../hoc/withRouter';
 
 const SCOPE = 'comp_settings';
 const Log = new Logger(SCOPE);
@@ -211,4 +212,4 @@ export default connect(
 		showError,
 		updateState,
 	}
-)(withTranslation()(Support));
+)(withTranslation()(withRouter(Support)));

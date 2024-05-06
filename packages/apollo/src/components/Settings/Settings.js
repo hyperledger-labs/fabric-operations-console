@@ -36,6 +36,7 @@ import { NodeRestApi } from '../../rest/NodeRestApi';
 import IdentityApi from '../../rest/IdentityApi';
 import SidePanel from '../SidePanel/SidePanel';
 import { EventsRestApi } from '../../rest/EventsRestApi';
+import withRouter from '../../hoc/withRouter';
 
 const SCOPE = 'comp_settings';
 const Log = new Logger(SCOPE);
@@ -816,4 +817,4 @@ export default connect(
 		updateState,
 		showSuccess,
 	}
-)(withTranslation()(Settings));
+)(withTranslation()(withRouter(Settings)));

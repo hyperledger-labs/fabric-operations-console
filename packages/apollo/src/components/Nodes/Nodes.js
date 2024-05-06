@@ -26,13 +26,14 @@ import PeersComponent from '../Peers/Peers';
 import WelcomeMessage from '../WelcomeMessage/WelcomeMessage';
 import ServiceInstanceRestApi from '../../rest/ServiceInstanceApi';
 import Logger from '../Log/Logger';
+import withRouter from '../../hoc/withRouter';
 
 const SCOPE = 'main';
 const Log = new Logger(SCOPE);
 
 class Nodes extends Component {
 	componentDidMount() {
-		this.props.showBreadcrumb('nodes', {}, this.props.history.location.pathname, true);
+		this.props.showBreadcrumb('nodes', {}, this.props.location.pathname, true);
 		ServiceInstanceRestApi.getClusterStatus()
 			.then(resp => {
 				if (resp.info.state !== 'normal') {
@@ -114,4 +115,4 @@ export default connect(
 		showError,
 		updateState,
 	}
-)(Nodes);
+)(withRouter(Nodes));

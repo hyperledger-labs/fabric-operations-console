@@ -44,6 +44,7 @@ import PageContainer from '../PageContainer/PageContainer';
 import PageHeader from '../PageHeader/PageHeader';
 import StickySection from '../StickySection/StickySection';
 import ActionsHelper from '../../utils/actionsHelper';
+import withRouter from '../../hoc/withRouter';
 
 const SCOPE = 'channelDetails';
 const Log = new Logger(SCOPE);
@@ -1417,4 +1418,4 @@ export default connect(
 		updateBreadcrumb,
 		showSuccess,
 	}
-)(withTranslation()(ChannelDetails));
+)(withTranslation()(withRouter(ChannelDetails)));

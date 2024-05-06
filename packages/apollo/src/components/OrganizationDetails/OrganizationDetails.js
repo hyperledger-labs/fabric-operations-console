@@ -39,6 +39,7 @@ import PageContainer from '../PageContainer/PageContainer';
 import PageHeader from '../PageHeader/PageHeader';
 import PeersComponent from '../Peers/Peers';
 import StickySection from '../StickySection/StickySection';
+import withRouter from '../../hoc/withRouter';
 
 const SCOPE = 'organizationDetails';
 const Log = new Logger(SCOPE);
@@ -443,4 +444,4 @@ export default connect(
 		updateBreadcrumb,
 		clearNotifications,
 	}
-)(withTranslation()(OrganizationDetails));
+)(withTranslation()(withRouter(OrganizationDetails)));

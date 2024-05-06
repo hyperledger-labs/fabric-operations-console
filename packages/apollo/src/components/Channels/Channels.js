@@ -40,6 +40,7 @@ import ConfigBlockApi from '../../rest/ConfigBlockApi';
 import { TrashCan20 } from '@carbon/icons-react/es';
 import JoinOSNChannelModal from '../JoinOSNChannelModal/JoinOSNChannelModal';
 import ActionsHelper from '../../utils/actionsHelper';
+import withRouter from '../../hoc/withRouter';
 
 const url = require('url');
 const SCOPE = 'channels';
@@ -1008,4 +1009,4 @@ export default connect(
 		updateState,
 		showSuccess,
 	}
-)(withTranslation()(ChannelComponent));
+)(withTranslation()(withRouter(ChannelComponent)));

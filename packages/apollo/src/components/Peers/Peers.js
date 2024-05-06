@@ -30,6 +30,7 @@ import NodeStatus from '../../utils/status';
 import emptyPeerImage from '../../assets/images/empty_nodes.svg';
 import ItemTileLabels from '../ItemContainerTile/ItemTileLabels/ItemTileLabels';
 import * as constants from '../../utils/constants';
+import withRouter from '../../hoc/withRouter';
 
 const SCOPE = 'peers';
 const Log = new Logger(SCOPE);
@@ -168,6 +169,8 @@ class Peers extends Component {
 	};
 
 	openPeerDetails = peer => {
+		// this.props.navigate('/peer', {peerId: peer.id});
+		// this.props.history.push('/peer', {peerId: peer.id});
 		this.props.history.push('/peer/' + encodeURIComponent(peer.id) + window.location.search);
 	};
 
@@ -369,4 +372,4 @@ export default connect(
 		showSuccess,
 		updateState,
 	}
-)(withTranslation()(Peers));
+)(withTranslation()(withRouter(Peers)));

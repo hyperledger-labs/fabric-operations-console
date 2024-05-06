@@ -56,6 +56,7 @@ import StickySection from '../StickySection/StickySection';
 import SVGs from '../Svgs/Svgs';
 import TranslateLink from '../TranslateLink/TranslateLink';
 import ChannelParticipationDetails from './ChannelParticipationDetails';
+import withRouter from '../../hoc/withRouter';
 
 const SCOPE = 'ordererDetails';
 const Log = new Logger(SCOPE);
@@ -1721,4 +1722,4 @@ export default connect(
 		updateBreadcrumb,
 		updateState,
 	}
-)(withTranslation()(OrdererDetails));
+)(withTranslation()(withRouter(OrdererDetails)));

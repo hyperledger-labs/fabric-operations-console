@@ -31,6 +31,7 @@ import Logger from '../Log/Logger';
 import PageContainer from '../PageContainer/PageContainer';
 import PageHeader from '../PageHeader/PageHeader';
 import SVGs from '../Svgs/Svgs';
+import withRouter from '../../hoc/withRouter';
 const naturalSort = require('javascript-natural-sort');
 
 const SCOPE = 'chaincodespage';
@@ -250,4 +251,4 @@ export default connect(
 		showError,
 		updateState,
 	}
-)(withTranslation()(ChaincodesPage));
+)(withTranslation()(withRouter(ChaincodesPage)));

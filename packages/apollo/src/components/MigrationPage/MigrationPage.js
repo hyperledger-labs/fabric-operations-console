@@ -35,6 +35,7 @@ import { RestApi } from '../../rest/RestApi';
 import TranslateLink from '../TranslateLink/TranslateLink';
 import * as constants from '../../utils/constants';
 import SVGs from '../Svgs/Svgs';
+import withRouter from '../../hoc/withRouter';
 const SCOPE = 'MigrationPage';
 const Log = new Logger(SCOPE);
 
@@ -1076,4 +1077,4 @@ export default connect(state => {
 }, {
 	updateState,
 	showBreadcrumb
-})(withTranslation()(MigrationPage));
+})(withTranslation()(withRouter(MigrationPage)));

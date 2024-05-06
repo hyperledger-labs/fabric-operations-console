@@ -33,6 +33,7 @@ import SVGs from '../Svgs/Svgs';
 import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
 import { Checkbox } from 'carbon-components-react';
 import ActionsHelper from '../../utils/actionsHelper';
+import withRouter from '../../hoc/withRouter';
 
 const SCOPE = 'AuditLogs';
 //const Log = new Logger(SCOPE);
@@ -604,4 +605,4 @@ export default connect(state => {
 }, {
 	updateState,
 	showBreadcrumb
-})(withTranslation()(AuditLogs));
+})(withTranslation()(withRouter(AuditLogs)));

@@ -39,6 +39,7 @@ import ReallocateModal from '../ReallocateModal/ReallocateModal';
 import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import StickySection from '../StickySection/StickySection';
 import TranslateLink from '../TranslateLink/TranslateLink';
+import withRouter from '../../hoc/withRouter';
 
 const SCOPE = 'peerDetails';
 const Log = new Logger(SCOPE);
@@ -64,6 +65,7 @@ class PeerDetails extends Component {
 	}
 
 	refresh = skipStatusCache => {
+		console.log('this.props.match', this.props.match);
 		NodeStatus.cancel();
 		this.props.updateState(SCOPE, { loading: true, usageInfo: null });
 		PeerRestApi.getPeerDetails(this.props.match.params.peerId, false, skipStatusCache)
@@ -753,4 +755,4 @@ export default connect(
 		updateState,
 		clearNotifications,
 	}
-)(withTranslation()(PeerDetails));
+)(withTranslation()(withRouter(PeerDetails)));

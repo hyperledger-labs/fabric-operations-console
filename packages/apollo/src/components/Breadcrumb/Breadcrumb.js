@@ -17,14 +17,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem, SkeletonText } from 'carbon-components-react';
 import { updateState } from '../../redux/commonActions';
 
 const SCOPE = 'breadcrumb';
 
 const BlockchainBreadcrumb = ({ t:translate }) => {
-	const history = useHistory();
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const list = useSelector(state => state.breadcrumb && state.breadcrumb.list);
 
@@ -33,7 +33,7 @@ const BlockchainBreadcrumb = ({ t:translate }) => {
 		if (index < current) {
 			list.splice(index, list.length - index);
 			dispatch(updateState(SCOPE, { list: [...list] }));
-			history.go(index - current);
+			navigate(index - current);
 		}
 	};
 
@@ -92,7 +92,7 @@ const BlockchainBreadcrumb = ({ t:translate }) => {
 };
 
 BlockchainBreadcrumb.propTypes = {
-	history: PropTypes.any,
+	// history: PropTypes.any,
 	updateState: PropTypes.func,
 	t: PropTypes.func, // Provided by withTranslation()
 };

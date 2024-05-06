@@ -42,6 +42,7 @@ import ReallocateModal from '../ReallocateModal/ReallocateModal';
 import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import StickySection from '../StickySection/StickySection';
 import UserDetailsModal from '../UserDetailsModal/UserDetailsModal';
+import withRouter from '../../hoc/withRouter';
 
 const SCOPE = 'caDetails';
 const Log = new Logger(SCOPE);
@@ -793,4 +794,4 @@ export default connect(
 		showError,
 		showSuccess,
 	}
-)(withTranslation()(CADetails));
+)(withTranslation()(withRouter(CADetails)));
