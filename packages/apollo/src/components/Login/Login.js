@@ -55,8 +55,8 @@ export class Login extends Component {
 			Log.info(`Logging in as ${this.props.email}`);
 			const resp = await LoginApi.login(this.props.email, this.props.login_password);
 			Log.debug(`Logged in as ${this.props.email}:`, resp);
-			// window.location.href = '/nodes';
-			window.location.reload(true);
+			window.location.href = '/nodes';
+			// window.location.reload(true);
 		} catch (error) {
 			Log.error(`Failed to log in as ${this.props.email}: ${error}`);
 			this.props.updateState(SCOPE, {
