@@ -94,6 +94,10 @@ module.exports = function (logger, ev, t) {
 	exports.verify_apiKey_action_session = [eTrack, blockReadOnlyMode, needApiKeyAction, checkAuthentication, permitAction];
 	exports.verify_apiKey_action_ak = [eTrack, blockReadOnlyMode, needApiKeyAction, allowAkToDoAction];
 
+	// manage generate bearer token using api key
+	exports.verify_apiKey_bearer_action_session = [eTrack, blockReadOnlyMode, needViewAction, checkAuthentication, permitAction];
+	exports.verify_apiKey_bearer_action_ak = [eTrack, blockReadOnlyMode, needViewAction, allowAkToDoAction];
+
 	// manage notifications
 	exports.verify_notifications_action_session = [eTrack, needNotificationAction, checkAuthentication, permitAction];
 	exports.verify_notifications_action_ak = [eTrack, needNotificationAction, allowAkToDoAction];
@@ -292,7 +296,6 @@ module.exports = function (logger, ev, t) {
 				return exports.unauthorized(res);
 			} else {
 				req.using_api_key = user.name;
-
 				// [1] - check if using support key
 				if (user.name === ev.SUPPORT_KEY) {
 					if (!validSupportKey(req)) {									// check the support key first
@@ -341,7 +344,6 @@ module.exports = function (logger, ev, t) {
 							return exports.unauthorized(res);
 						} else {
 							const valid_secret = t.misc.verify_secret(user.pass, doc.salt, doc.hashed_secret);
-
 							if (!valid_secret) {											// invalid secret
 								logger.error('[middle] invalid api key secret for api key id:', user.name);
 								return exports.unauthorized(res);

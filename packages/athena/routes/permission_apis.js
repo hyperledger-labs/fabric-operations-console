@@ -145,7 +145,7 @@ module.exports = function (logger, ev, t) {
 	//--------------------------------------------------
 	// Get all api keys from the db
 	//--------------------------------------------------
-	app.get('/api/v[123]/permissions/keys', t.middleware.verify_view_action_session, (req, res) => {
+	app.get('/api/v[123]/permissions/keys', t.middleware.verify_apiKey_action_session, (req, res) => {
 		t.permissions_lib.get_api_keys(req, (err, ret) => {
 			if (err) {
 				return res.status(t.ot_misc.get_code(err)).json(err);
@@ -154,7 +154,8 @@ module.exports = function (logger, ev, t) {
 			}
 		});
 	});
-	app.get('/ak/api/v[123]/permissions/keys', t.middleware.verify_view_action_ak, (req, res) => {
+
+	app.get('/ak/api/v[123]/permissions/keys', t.middleware.verify_apiKey_action_ak, (req, res) => {
 		t.permissions_lib.get_api_keys(req, (err, ret) => {
 			if (err) {
 				return res.status(t.ot_misc.get_code(err)).json(err);
@@ -264,10 +265,10 @@ module.exports = function (logger, ev, t) {
 	//--------------------------------------------------
 	// Store/create a access token  in the database (aka bearer token)
 	//--------------------------------------------------
-	app.post('/api/v3/identity/token', t.middleware.verify_apiKey_action_session, (req, res) => {
+	app.post('/api/v3/identity/token', t.middleware.verify_apiKey_bearer_action_session, (req, res) => {
 		exchange_for_token(req, res);
 	});
-	app.post('/ak/api/v3/identity/token', t.middleware.verify_apiKey_action_ak, (req, res) => {
+	app.post('/ak/api/v3/identity/token', t.middleware.verify_apiKey_bearer_action_ak, (req, res) => {
 		exchange_for_token(req, res);
 	});
 
