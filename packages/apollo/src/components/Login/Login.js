@@ -50,13 +50,14 @@ export class Login extends Component {
 
 	componentWillUnmount() { }
 
-	async onLogin(e) {
+	async onLogin() {
 		try {
 			Log.info(`Logging in as ${this.props.email}`);
 			const resp = await LoginApi.login(this.props.email, this.props.login_password);
 			Log.debug(`Logged in as ${this.props.email}:`, resp);
-			window.location.href = '/nodes';
+			// window.location.href = '/nodes';
 			// window.location.reload(true);
+			this.props.onLogin();
 		} catch (error) {
 			Log.error(`Failed to log in as ${this.props.email}: ${error}`);
 			this.props.updateState(SCOPE, {
@@ -65,7 +66,7 @@ export class Login extends Component {
 		}
 	}
 
-	async onChangePassword(e) {
+	async onChangePassword() {
 		try {
 			Log.info('Changing password');
 			const resp = await LoginApi.changePassword(this.props.currentPassword, this.props.newPassword);
@@ -267,6 +268,7 @@ Login.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
 	t: PropTypes.func, // Provided by withTranslation()
+	onLogin: PropTypes.func
 };
 
 export default connect(
