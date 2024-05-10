@@ -198,7 +198,7 @@ export class AddUserModal extends Component {
 							submitting: false,
 							error: {
 								title: 'error_add_users',
-								details: error.message ? error.message : error,
+								details: error.msg ? error.msg : error,
 							},
 						});
 					});

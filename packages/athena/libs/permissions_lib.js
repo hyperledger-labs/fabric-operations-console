@@ -101,7 +101,7 @@ module.exports = function (logger, ev, t) {
 
 				if (input_errors.length >= 1) {
 					logger.error('[permissions] cannot add these users. bad input:', input_errors);
-					cb({ statusCode: 400, message: input_errors, }, null);
+					cb({ statusCode: 400, msg: input_errors, }, null);
 				} else {
 					const usernames = Object.keys(req.body.users);
 					const censored = [];
@@ -126,13 +126,13 @@ module.exports = function (logger, ev, t) {
 					}, (err_writeDoc) => {
 						if (err_writeDoc) {
 							logger.error('[permissions] cannot edit settings doc to add users:', err_writeDoc);
-							cb({ statusCode: 500, message: 'could not update settings doc', details: err_writeDoc }, null);
+							cb({ statusCode: 500, msg: 'could not update settings doc', details: err_writeDoc }, null);
 						} else {
 							logger.info('[permissions] adding users - success');
 
 							ev.update(null, err => {								// reload ev settings
 								if (err) {
-									return cb({ statusCode: 500, message: 'could not update config settings' }, null);
+									return cb({ statusCode: 500, msg: 'could not update config settings' }, null);
 								} else {
 									cb(null, { message: 'ok' });					// all good
 								}

@@ -54,6 +54,10 @@ class App extends Component {
 	async componentDidMount() {
 		NodeStatus.initialize(this.props.dispatch);
 
+		this.initializeAppData()
+	}
+
+	async initializeAppData() {
 		try {
 			const userInfo = await this.getUserInfo();
 			this.props.updateState('userInfo', userInfo);
@@ -295,7 +299,9 @@ class App extends Component {
 
 				// if using local username/password, send user to our login prompt
 				if (this.state.authScheme.type === 'couchdb') {
-					return <Login />;
+					return <Login onLogin={()=> {
+						this.initializeAppData()
+					}} />;
 				}
 
 				// if using sso, send user to sso's login prompt
@@ -313,7 +319,6 @@ class App extends Component {
 
 			// if user is logged in
 			else {
-
 				// if user is logged in but has no access
 				if (!ActionsHelper.canViewOpTools(this.props.userInfo)) {
 					return (
@@ -328,8 +333,7 @@ class App extends Component {
 				// if user is logged in but is using the default password, send user to change pass prompt
 				if (this.state.authScheme.type === 'couchdb' && this.props.userInfo && this.props.userInfo.logged && this.props.userInfo.password_type === 'default') {
 					return <Login hostUrl={this.state.authScheme.host_url}
-						changePassword={true}
-					/>;
+						changePassword={true} />;
 				}
 
 				// if user is logged in and can view the app, render the the app
