@@ -101,7 +101,7 @@ module.exports = function (logger, ev, t) {
 
 				if (input_errors.length >= 1) {
 					logger.error('[permissions] cannot add these users. bad input:', input_errors);
-					cb({ statusCode: 400, msg: input_errors, }, null);
+					cb({ statusCode: 400, message: input_errors, }, null);
 				} else {
 					const usernames = Object.keys(req.body.users);
 					const censored = [];
@@ -126,13 +126,13 @@ module.exports = function (logger, ev, t) {
 					}, (err_writeDoc) => {
 						if (err_writeDoc) {
 							logger.error('[permissions] cannot edit settings doc to add users:', err_writeDoc);
-							cb({ statusCode: 500, msg: 'could not update settings doc', details: err_writeDoc }, null);
+							cb({ statusCode: 500, message: 'could not update settings doc', details: err_writeDoc }, null);
 						} else {
 							logger.info('[permissions] adding users - success');
 
 							ev.update(null, err => {								// reload ev settings
 								if (err) {
-									return cb({ statusCode: 500, msg: 'could not update config settings' }, null);
+									return cb({ statusCode: 500, message: 'could not update config settings' }, null);
 								} else {
 									cb(null, { message: 'ok' });					// all good
 								}
@@ -784,11 +784,24 @@ module.exports = function (logger, ev, t) {
 		const parsed_auth = t.auth_header_lib.parse_auth(req);
 		const lc_username = (parsed_auth && parsed_auth.name) ? parsed_auth.name.toLowerCase() : null;
 
-		// init roles as manager, else use the ones provided
 		if (!Array.isArray(roles) || roles.length === 0) {
-			roles = [ev.STR.MANAGER_ROLE, ev.STR.WRITER_ROLE, ev.STR.READER_ROLE];
+			t.otcc.getDoc({									// find the api key, its id should be in the username field
+				db_name: ev.DB_SYSTEM,
+				_id: parsed_auth.name,
+			}, (err, doc) => {
+				if (err || !doc) {													// invalid username
+					logger.error(`[permissions] problem getting the api key doc for key id ${parsed_auth.name}`);
+					return cb(err);
+				}
+				return create_token_doc(req, lc_username, doc.roles, expiration_secs, cb);
+			});
+		} else {
+			return create_token_doc(req, lc_username, roles, expiration_secs, cb);
 		}
 
+	};
+
+	const create_token_doc = (req, lc_username, roles, expiration_secs, cb) => {
 		const access_token_doc = exports.generate_access_token(lc_username, roles, expiration_secs);
 
 		// build a notification doc
