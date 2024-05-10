@@ -15,13 +15,13 @@
 */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 
 class AuthSetupAuthentication extends Component {
 	cName = 'AuthSetupAuthentication';
 
 	render = () => {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<div>
 				<p className="ibp__auth-title">{translate('authentication')}</p>
@@ -56,7 +56,7 @@ class AuthSetupAuthentication extends Component {
 
 AuthSetupAuthentication.propTypes = {
 	onNext: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
-export default withLocalize(AuthSetupAuthentication);
+export default withTranslation()(AuthSetupAuthentication);

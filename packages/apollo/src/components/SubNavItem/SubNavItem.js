@@ -15,13 +15,13 @@
 */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
 import SVGs from '../Svgs/Svgs';
 
 class SubNavItem extends Component {
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<div className="ibp-left-nav-item">
 				<NavLink tabIndex="0"
@@ -49,7 +49,7 @@ SubNavItem.propTypes = {
 	itemId: PropTypes.string,
 	path: PropTypes.string,
 	icon: PropTypes.string,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
-export default withLocalize(SubNavItem);
+export default withTranslation()(SubNavItem);

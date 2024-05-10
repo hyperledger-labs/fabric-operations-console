@@ -15,13 +15,13 @@
 */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { Link, NavLink } from 'react-router-dom';
 import SVGs from '../Svgs/Svgs';
 
 class LeftNavItem extends Component {
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		if (this.props.globalNavSubmenu) {
 			return (
 				<div
@@ -75,7 +75,7 @@ LeftNavItem.propTypes = {
 	globalNavSubmenu: PropTypes.array,
 	newGroup: PropTypes.bool,
 	bottomGroup: PropTypes.bool,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
-export default withLocalize(LeftNavItem);
+export default withTranslation()(LeftNavItem);

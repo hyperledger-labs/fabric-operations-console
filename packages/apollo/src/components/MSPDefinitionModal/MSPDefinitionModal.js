@@ -17,7 +17,7 @@ import { Checkbox, CodeSnippet } from 'carbon-components-react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import ChannelApi from '../../rest/ChannelApi';
@@ -578,7 +578,7 @@ export class MSPDefinitionModal extends Component {
 	};
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<SidePanel
 				id="import-msp-definition"
@@ -627,7 +627,7 @@ MSPDefinitionModal.propTypes = {
 	onComplete: PropTypes.func,
 	onClose: PropTypes.func,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -640,4 +640,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(MSPDefinitionModal));
+)(withTranslation()(MSPDefinitionModal));

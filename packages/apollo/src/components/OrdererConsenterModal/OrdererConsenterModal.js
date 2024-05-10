@@ -16,7 +16,7 @@
 import { CodeSnippet } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import { OrdererRestApi } from '../../rest/OrdererRestApi';
@@ -200,7 +200,7 @@ class OrdererConsenterModal extends React.Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		const mode = this.props.mode;
 		return (
 			<Wizard
@@ -232,7 +232,7 @@ OrdererConsenterModal.propTypes = {
 	onClose: PropTypes.func,
 	orderer: PropTypes.object,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -244,4 +244,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(OrdererConsenterModal));
+)(withTranslation()(OrdererConsenterModal));

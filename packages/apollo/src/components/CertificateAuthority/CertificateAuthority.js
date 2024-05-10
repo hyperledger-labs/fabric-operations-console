@@ -16,7 +16,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { clearNotifications, showError, showInfo, showSuccess, updateState } from '../../redux/commonActions';
 import { CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';
@@ -155,7 +155,7 @@ export class CertificateAuthority extends Component {
 				className = 'ibp-node-status-' + ca.status;
 			}
 		}
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return ca && ca.status !== undefined ? (
 			<div className="ibp-node-status-container">
 				<span className={`ibp-node-status	${className}`}
@@ -236,7 +236,7 @@ export class CertificateAuthority extends Component {
 									return (
 										<span>
 											<div className={'ibp-table-status ibp-table-status-' + status} />
-											{this.props.translate(status)}
+											{this.props.t(status)}
 										</span>
 									);
 								},
@@ -266,7 +266,7 @@ CertificateAuthority.propTypes = {
 	showInfo: PropTypes.func,
 	showSuccess: PropTypes.func,
 	clearNotifications: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 	onCreate: PropTypes.func,
 };
 
@@ -284,4 +284,4 @@ export default connect(
 		showSuccess,
 		updateState,
 	}
-)(withLocalize(CertificateAuthority));
+)(withTranslation()(CertificateAuthority));

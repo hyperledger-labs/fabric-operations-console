@@ -17,7 +17,7 @@ import { ToggleSmall } from 'carbon-components-react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation, Trans } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import ChannelApi from '../../rest/ChannelApi';
@@ -628,11 +628,11 @@ class JoinChannelModal extends React.Component {
 			<WizardStep
 				type="WizardStep"
 				headerDesc={
-					this.props.isPending
+					<Trans>{this.props.isPending
 						? translate('join_channel_step3_direct_desc', { channelName: this.props.channel })
 						: this.props.isAddingNode
 							? translate('add_node_to_channel_desc', { channelName: this.props.channel })
-							: translate('join_channel_step3_desc', { channelName: this.props.channel })
+							: translate('join_channel_step3_desc', { channelName: this.props.channel })}</Trans>
 				}
 				headerLink={translate('_JOIN_CHANNEL_LINK', { DOC_PREFIX: this.props.docPrefix })}
 				headerLinkText={translate('find_out_more')}
@@ -753,7 +753,7 @@ class JoinChannelModal extends React.Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<Wizard
 				title="join_channel_title"
@@ -821,7 +821,7 @@ JoinChannelModal.propTypes = {
 	onComplete: PropTypes.func,
 	onClose: PropTypes.func,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -836,4 +836,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(JoinChannelModal));
+)(withTranslation()(JoinChannelModal));

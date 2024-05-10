@@ -19,7 +19,7 @@ import { Checkbox, RadioTile, TileGroup } from 'carbon-components-react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { showError, updateState } from '../../redux/commonActions';
 import { CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';
@@ -405,7 +405,7 @@ class ImportPeerModal extends React.Component {
 			peer = await PeerRestApi.createPeer(data);
 		} catch (error) {
 			Log.error(`${error}`);
-			let newError = new Error(this.props.translate('error_create_peer'));
+			let newError = new Error(this.props.t('error_create_peer'));
 			newError.title = 'error_create_peer';
 			newError.details = error;
 			throw newError;
@@ -1545,7 +1545,7 @@ class ImportPeerModal extends React.Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		if (this.props.feature_flags.import_only_enabled) {
 			return (
 				<Wizard onClose={this.props.onClose}
@@ -1628,7 +1628,7 @@ ImportPeerModal.propTypes = {
 	onClose: PropTypes.func,
 	updateState: PropTypes.func,
 	showError: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -1648,4 +1648,4 @@ export default connect(
 		showError,
 		updateState,
 	}
-)(withLocalize(ImportPeerModal));
+)(withTranslation()(ImportPeerModal));

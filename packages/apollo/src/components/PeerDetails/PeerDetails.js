@@ -17,7 +17,7 @@ import { Button, SkeletonPlaceholder, SkeletonText, Tab, Tabs } from 'carbon-com
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { clearNotifications, showBreadcrumb, showError, showSuccess, updateBreadcrumb, updateState } from '../../redux/commonActions';
 import { NodeRestApi } from '../../rest/NodeRestApi';
@@ -39,6 +39,7 @@ import ReallocateModal from '../ReallocateModal/ReallocateModal';
 import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import StickySection from '../StickySection/StickySection';
 import TranslateLink from '../TranslateLink/TranslateLink';
+import withRouter from '../../hoc/withRouter';
 
 const SCOPE = 'peerDetails';
 const Log = new Logger(SCOPE);
@@ -64,6 +65,7 @@ class PeerDetails extends Component {
 	}
 
 	refresh = skipStatusCache => {
+		console.log('this.props.match', this.props.match);
 		NodeStatus.cancel();
 		this.props.updateState(SCOPE, { loading: true, usageInfo: null });
 		PeerRestApi.getPeerDetails(this.props.match.params.peerId, false, skipStatusCache)
@@ -137,7 +139,7 @@ class PeerDetails extends Component {
 	}
 
 	getActionLink(status) {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		if (status === 'running')
 			return (
 				<div className="ibp-peer-details-status-link">
@@ -521,7 +523,7 @@ class PeerDetails extends Component {
 				}}
 			/>
 		);
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		const notAvailable = this.props.notAvailable || (details && details.status === 'unknown');
 		return (
 			<PageContainer>
@@ -731,7 +733,7 @@ PeerDetails.propTypes = {
 	showError: PropTypes.func,
 	showSuccess: PropTypes.func,
 	clearNotifications: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -753,4 +755,4 @@ export default connect(
 		updateState,
 		clearNotifications,
 	}
-)(withLocalize(PeerDetails));
+)(withTranslation()(withRouter(PeerDetails)));

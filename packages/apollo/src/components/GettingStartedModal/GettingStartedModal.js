@@ -17,7 +17,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { showError, showInfo, showSuccess, updateState } from '../../redux/commonActions';
@@ -154,7 +154,7 @@ class GettingStartedModal extends Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<SidePanel
 				id='ibp--template-side-panel-container'
@@ -200,7 +200,7 @@ GettingStartedModal.propTypes = {
 	onComplete: PropTypes.func,
 	onClose: PropTypes.func,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -225,4 +225,4 @@ export default connect(
 			),
 		};
 	}
-)(withLocalize(GettingStartedModal));
+)(withTranslation()(GettingStartedModal));

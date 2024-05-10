@@ -14,7 +14,7 @@
 import _ from 'lodash';
 import PropTypes, { array } from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState, showSuccess } from '../../redux/commonActions';
 import { OrdererRestApi } from '../../rest/OrdererRestApi';
@@ -1229,7 +1229,7 @@ class JoinOSNChannelModal extends React.Component {
 
 	// main render
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		const on_submit = promisify(this.onSubmit);
 
 		return (
@@ -1303,7 +1303,7 @@ JoinOSNChannelModal.propTypes = {
 	joinChannelDetails: PropTypes.object,
 	selectedCluster: PropTypes.object,
 	selectedConfigBlockDoc: PropTypes.object,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -1320,4 +1320,4 @@ export default connect(
 		updateState,
 		showSuccess,
 	}
-)(withLocalize(JoinOSNChannelModal));
+)(withTranslation()(JoinOSNChannelModal));

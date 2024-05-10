@@ -15,7 +15,7 @@
 */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { showSuccess, updateState } from '../../redux/commonActions';
 import { PeerRestApi } from '../../rest/PeerRestApi';
@@ -174,4 +174,4 @@ export default connect(
 		updateState,
 		showSuccess,
 	}
-)(withLocalize(ChannelMembers));
+)(withTranslation()(ChannelMembers));

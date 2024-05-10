@@ -16,7 +16,7 @@
 import { Checkbox } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { showWarning, updateState } from '../../redux/commonActions';
 import { CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';
@@ -222,7 +222,7 @@ class ExportModal extends React.Component {
 	};
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<Wizard title="export"
 				onClose={this.props.onClose}
@@ -316,7 +316,7 @@ ExportModal.propTypes = {
 	onClose: PropTypes.func,
 	showWarning: PropTypes.func,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -327,4 +327,4 @@ export default connect(
 		showWarning,
 		updateState,
 	}
-)(withLocalize(ExportModal));
+)(withTranslation()(ExportModal));

@@ -15,7 +15,7 @@
 */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { showBreadcrumb, updateState } from '../../redux/commonActions';
 import Helper from '../../utils/helper';
@@ -43,7 +43,7 @@ class WelcomeMessage extends Component {
 	};
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<>
 				{this.props.opToolsVersion === 'v1.0' ? (
@@ -108,7 +108,7 @@ WelcomeMessage.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
 	clicked: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 WelcomeMessage.defaultProps = {
@@ -130,4 +130,4 @@ export default connect(
 		showBreadcrumb,
 		updateState,
 	}
-)(withLocalize(WelcomeMessage));
+)(withTranslation()(WelcomeMessage));

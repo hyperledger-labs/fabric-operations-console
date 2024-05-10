@@ -16,7 +16,7 @@
 import { Dropdown } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import NotificationEmptyImage from '../../assets/images/notification_empty.svg';
@@ -465,7 +465,7 @@ class SignatureCollection extends Component {
 		}
 		const shouldArchive = this.props.sc_filter && this.props.sc_filter.id !== 'archived' ? true : false;
 		const { showArchiveConfirmation } = this.props;
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<div>
 				<SidePanel
@@ -558,7 +558,7 @@ const dataProps = {
 
 SignatureCollection.propTypes = {
 	...dataProps,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -573,4 +573,4 @@ export default connect(
 			...bindActionCreators({ showError, updateState }, dispatch),
 		};
 	}
-)(withLocalize(SignatureCollection));
+)(withTranslation()(SignatureCollection));

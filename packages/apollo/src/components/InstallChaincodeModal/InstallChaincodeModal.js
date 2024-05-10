@@ -15,7 +15,7 @@
  */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import { EventsRestApi } from '../../rest/EventsRestApi';
@@ -387,7 +387,7 @@ class InstallChaincodeModal extends Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<Wizard
 				error={this.props.error}
@@ -432,7 +432,7 @@ InstallChaincodeModal.propTypes = {
 	onComplete: PropTypes.func,
 	onClose: PropTypes.func,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -446,4 +446,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(InstallChaincodeModal));
+)(withTranslation()(InstallChaincodeModal));

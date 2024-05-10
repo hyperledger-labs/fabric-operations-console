@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { createPortal } from 'react-dom';
 import { connect } from 'react-redux';
-import { Translate } from 'react-localize-redux';
+import { Translation } from 'react-i18next';
 import Helper from '../../utils/helper';
 import { updateSidePanel } from '../SidePanel/sidePanelActions';
 import SidePanelError from '../SidePanelError/SidePanelError';
@@ -168,8 +168,8 @@ export class SidePanel extends React.Component {
 		}
 		const { toBeArchivedList, showRequests } = this.props;
 		return createPortal(
-			<Translate>
-				{({ translate }) => (
+			<Translation>
+				{(t) => (
 					<FocusTrap
 						active={this.props.disable_focus_trap ? false : true}
 						focusTrapOptions={{
@@ -180,7 +180,7 @@ export class SidePanel extends React.Component {
 							id={this.props.id}
 							className={className}
 							role="dialog"
-							aria-label={`${translate('product_label')} ${translate('panel')}`}
+							aria-label={`${t('product_label')} ${t('panel')}`}
 						>
 							<div
 								className="ibp-panel--container"
@@ -241,7 +241,7 @@ export class SidePanel extends React.Component {
 						</div>
 					</FocusTrap>
 				)}
-			</Translate>,
+			</Translation>,
 			portalRoot ? portalRoot : document.body
 		);
 	}

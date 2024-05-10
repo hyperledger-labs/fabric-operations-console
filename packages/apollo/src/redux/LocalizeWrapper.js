@@ -15,7 +15,7 @@
 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import localization from '../utils/localization';
 
 class LocalizeWrapper extends React.Component {
@@ -33,4 +33,4 @@ LocalizeWrapper.propTypes = {
 	children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
 };
 
-export default withLocalize(LocalizeWrapper);
+export default withTranslation()(LocalizeWrapper);

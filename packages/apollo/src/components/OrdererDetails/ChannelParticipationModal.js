@@ -16,7 +16,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { SkeletonPlaceholder } from 'carbon-components-react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import Helper from '../../utils/helper';
 import Form from '../Form/Form';
@@ -88,7 +88,7 @@ class ChannelParticipationModal extends Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<SidePanel
 				id="ChannelParticipationModal"
@@ -117,11 +117,11 @@ const dataProps = {
 ChannelParticipationModal.propTypes = {
 	...dataProps,
 	onClose: PropTypes.func,
-	translate: PropTypes.func,
+	t: PropTypes.func,
 };
 
 export default connect(
 	state => {
 		return Helper.mapStateToProps(state[SCOPE], dataProps);
 	}
-)(withLocalize(ChannelParticipationModal));
+)(withTranslation()(ChannelParticipationModal));

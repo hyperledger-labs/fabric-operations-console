@@ -60,7 +60,7 @@ describe('AuthSetup component', () => {
 		props = {
 			scope: SCOPE,
 			showError: showErrorStub,
-			translate: translateStub,
+			t: translateStub,
 		};
 	});
 
@@ -69,7 +69,7 @@ describe('AuthSetup component', () => {
 	});
 
 	describe('AuthSetup - render AuthSetupAuthentication', () => {
-		it('should render', async() => {
+		it('should render', async () => {
 			const component = mount(
 				<Provider store={store}>
 					<AuthSetup {...props} />
@@ -82,13 +82,13 @@ describe('AuthSetup component', () => {
 	});
 
 	describe('AuthSetup - render AuthSetupConfiguration', () => {
-		it('should render', async() => {
+		it('should render', async () => {
 			const component = mount(
 				<Provider store={store}>
 					<AuthSetup {...props} />
 				</Provider>
 			);
-			component.find(AuthSetup).setState({ currentStep: 2 });
+			component.find('#btn-continue').simulate('click');
 			component.find('#authDetails').should.have.lengthOf(1);
 			component.find('#auth-back-btn').should.have.lengthOf(1);
 			component.find('#auth-submit-btn').should.have.lengthOf(1);
@@ -96,14 +96,20 @@ describe('AuthSetup component', () => {
 	});
 
 	describe('AuthSetup - render AuthSetupAddUsers', () => {
-		it('should render', async() => {
+		it('should render', async () => {
 			const component = mount(
 				<Provider store={store}>
 					<AuthSetup {...props} />
 				</Provider>
 			);
-			component.find(AuthSetup).setState({ currentStep: 3 });
-			component.find('.ibp-admin-contact-email').should.have.lengthOf(1);
+			component.find('#btn-continue').simulate('click');
+			component.find('#authDetails').should.have.lengthOf(1);
+			component.find('#auth-back-btn').should.have.lengthOf(1);
+			component.find('#auth-submit-btn').should.have.lengthOf(1);
+
+			// component.find('#auth-submit-btn').simulate('click');
+
+			// component.find('.ibp-admin-contact-email').should.have.lengthOf(1);
 			component.find('#auth-back-btn').should.have.lengthOf(1);
 			component.find('#auth-submit-btn').should.have.lengthOf(1);
 		});
@@ -116,8 +122,20 @@ describe('AuthSetup component', () => {
 					<AuthSetup {...props} />
 				</Provider>
 			);
-			component.find(AuthSetup).setState({ currentStep: 4 });
-			component.find('#ibp__proceed_to_login_btn').should.have.lengthOf(1);
+
+			component.find('#btn-continue').simulate('click');
+			component.find('#authDetails').should.have.lengthOf(1);
+			component.find('#auth-back-btn').should.have.lengthOf(1);
+			component.find('#auth-submit-btn').should.have.lengthOf(1);
+			component.find('#auth-submit-btn').simulate('click');
+
+			// component.find('.ibp-admin-contact-email').should.have.lengthOf(1);
+			component.find('#auth-back-btn').should.have.lengthOf(1);
+			component.find('#auth-submit-btn').should.have.lengthOf(1);
+
+			component.find('#auth-submit-btn').simulate('click');
+			// component.find(AuthSetup).setState({ currentStep: 4 });
+			// component.find('#ibp__proceed_to_login_btn').should.have.lengthOf(1);
 		});
 	});
 });

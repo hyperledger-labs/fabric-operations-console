@@ -16,9 +16,10 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
+import withRouter from '../../hoc/withRouter';
 import SettingsApi from '../../rest/SettingsApi';
 import Helper from '../../utils/helper';
 import LeftNavItem from '../LeftNavItem/LeftNavItem';
@@ -98,7 +99,7 @@ class LeftNav extends Component {
 
 	// change <title> of the browser tab
 	async getPageTitle(path) {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		let title = translate('product_label');
 		let pathArray = path.split('/');
 		let suffix = pathArray[1];
@@ -154,7 +155,7 @@ class LeftNav extends Component {
 
 	render() {
 		const items = this.buildNavItems();
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<div role="navigation"
 				className="ibp-left-nav"
@@ -201,7 +202,7 @@ const dataProps = {
 
 LeftNav.propTypes = {
 	...dataProps,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default withRouter(
@@ -210,5 +211,5 @@ export default withRouter(
 		newProps['namespace'] = _.get(state, 'settings.cluster_data.namespace');
 		newProps['userInfo'] = state['userInfo'];
 		return newProps;
-	})(withLocalize(LeftNav))
+	})(withTranslation()(LeftNav))
 );

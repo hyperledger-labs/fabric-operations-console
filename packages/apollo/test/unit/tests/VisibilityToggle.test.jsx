@@ -40,7 +40,7 @@ describe('VisibilityToggle component', () => {
 			text: 'some text',
 			hidden: 'some hidden content',
 
-			translate: translateStub,
+			t: translateStub,
 		};
 	});
 

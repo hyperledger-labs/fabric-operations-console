@@ -17,7 +17,7 @@ import { ContentSwitcher, Switch, TextInput } from 'carbon-components-react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import Helper from '../../utils/helper';
@@ -404,7 +404,7 @@ export class JsonInput extends React.Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<div>
 				{this.props.onlyFileUpload && this.renderJSONUpload(translate)}
@@ -523,7 +523,7 @@ JsonInput.propTypes = {
 	onChange: PropTypes.func,
 	updateState: PropTypes.func,
 	readOnly: PropTypes.bool,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -533,4 +533,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(JsonInput));
+)(withTranslation()(JsonInput));

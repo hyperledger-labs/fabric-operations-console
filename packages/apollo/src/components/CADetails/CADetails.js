@@ -17,7 +17,7 @@ import { Button, SkeletonPlaceholder, SkeletonText, Tab, Tabs } from 'carbon-com
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import emptyImage from '../../assets/images/empty_msps.svg';
 import { clearNotifications, showBreadcrumb, showError, showSuccess, updateBreadcrumb, updateState } from '../../redux/commonActions';
@@ -42,6 +42,7 @@ import ReallocateModal from '../ReallocateModal/ReallocateModal';
 import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import StickySection from '../StickySection/StickySection';
 import UserDetailsModal from '../UserDetailsModal/UserDetailsModal';
+import withRouter from '../../hoc/withRouter';
 
 const SCOPE = 'caDetails';
 const Log = new Logger(SCOPE);
@@ -591,7 +592,7 @@ export class CADetails extends Component {
 			/>
 		);
 		const database = _.get(this.props, 'details.config_override.ca.db.type');
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<PageContainer>
 				<PageHeader
@@ -772,7 +773,7 @@ CADetails.propTypes = {
 	showError: PropTypes.func,
 	clearNotifications: PropTypes.func,
 	showSuccess: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -793,4 +794,4 @@ export default connect(
 		showError,
 		showSuccess,
 	}
-)(withLocalize(CADetails));
+)(withTranslation()(withRouter(CADetails)));

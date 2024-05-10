@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Helper from '../../../../utils/helper';
 import { updateState } from '../../../../redux/commonActions';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import _ from 'lodash';
 
 const SCOPE = 'channelModal';
@@ -314,7 +314,7 @@ const dataProps = {
 
 Review.propTypes = {
 	...dataProps,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -324,4 +324,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(Review));
+)(withTranslation()(Review));

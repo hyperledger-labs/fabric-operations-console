@@ -15,7 +15,7 @@
 */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import Helper from '../../utils/helper';
 import Form from '../Form/Form';
@@ -62,7 +62,7 @@ class UserDetailsModal extends Component {
 				readonly: true,
 			});
 		}
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<SidePanel
 				id={SCOPE}
@@ -94,9 +94,9 @@ const dataProps = {
 
 UserDetailsModal.propTypes = {
 	...dataProps,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(state => {
 	return Helper.mapStateToProps(state[SCOPE], dataProps);
-})(withLocalize(UserDetailsModal));
+})(withTranslation()(UserDetailsModal));

@@ -151,7 +151,7 @@ describe('CADetails component', () => {
 			showSuccess: mySandBox.stub(),
 			updateBreadcrumb: mySandBox.stub(),
 			updateState: updateStateStub,
-			translate: translateStub,
+			t: translateStub,
 		};
 	});
 

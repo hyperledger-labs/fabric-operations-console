@@ -102,7 +102,7 @@ describe('Login component', () => {
 			hostUrl: undefined,
 			changePassword: undefined,
 			confirmPassword: undefined,
-			translate: translateStub,
+			t: translateStub,
 			updateState: updateStateStub,
 		};
 	});

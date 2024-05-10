@@ -18,9 +18,10 @@ import _ from 'lodash';
 import parse from 'parse-duration';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
+import withRouter from '../../hoc/withRouter';
 import { promisify } from 'util';
 import { updateState } from '../../redux/commonActions';
 import { CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';
@@ -2508,7 +2509,7 @@ class OrdererModal extends React.Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<Wizard
 				onClose={this.props.onClose}
@@ -2603,7 +2604,7 @@ OrdererModal.propTypes = {
 	singleNodeRaft: PropTypes.bool,
 	systemChannel: PropTypes.bool,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default withRouter(
@@ -2626,5 +2627,5 @@ export default withRouter(
 		{
 			updateState,
 		}
-	)(withLocalize(OrdererModal))
+	)(withTranslation()(OrdererModal))
 );

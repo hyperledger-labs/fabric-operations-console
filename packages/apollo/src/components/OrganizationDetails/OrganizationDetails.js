@@ -18,7 +18,7 @@ import { Button, SkeletonText } from 'carbon-components-react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import emptyImage from '../../assets/images/empty_nodes.svg';
 import { clearNotifications, showBreadcrumb, showError, showSuccess, updateBreadcrumb, updateState } from '../../redux/commonActions';
@@ -39,6 +39,7 @@ import PageContainer from '../PageContainer/PageContainer';
 import PageHeader from '../PageHeader/PageHeader';
 import PeersComponent from '../Peers/Peers';
 import StickySection from '../StickySection/StickySection';
+import withRouter from '../../hoc/withRouter';
 
 const SCOPE = 'organizationDetails';
 const Log = new Logger(SCOPE);
@@ -224,7 +225,7 @@ class OrganizationDetails extends Component {
 		if (!node.operations_url) {
 			className = 'ibp-node-status-unretrievable';
 		}
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return status ? (
 			<div className="ibp-node-status-container">
 				<span className={`ibp-node-status ${className}`}
@@ -277,7 +278,7 @@ class OrganizationDetails extends Component {
 				}}
 			/>
 		);
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<PageContainer>
 				<div className="ibp-msp-details bx--row">
@@ -425,7 +426,7 @@ OrganizationDetails.propTypes = {
 	showError: PropTypes.func,
 	showSuccess: PropTypes.func,
 	clearNotifications: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -443,4 +444,4 @@ export default connect(
 		updateBreadcrumb,
 		clearNotifications,
 	}
-)(withLocalize(OrganizationDetails));
+)(withTranslation()(withRouter(OrganizationDetails)));

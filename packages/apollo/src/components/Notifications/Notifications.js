@@ -17,13 +17,13 @@ import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation, Trans } from 'react-i18next';
 import { ToastNotification, InlineLoading } from 'carbon-components-react';
 import { updateState } from '../../redux/commonActions';
 
 const SCOPE = 'notifications';
 
-const Notifications = ({ translate }) => {
+const Notifications = ({ t: translate }) => {
 	const dispatch = useDispatch();
 	const list = useSelector(state => state[SCOPE] && state[SCOPE].list);
 	const clearNotifications = id => {
@@ -60,8 +60,8 @@ const Notifications = ({ translate }) => {
 					<ToastNotification
 						id={'notification_' + notify.id}
 						kind={notify.type}
-						title={translate(notify.message, notify.options)}
-						subtitle={notify.details ? translate(notify.details, notify.options) : ''}
+						title={<Trans>{translate(notify.message, notify.options)}</Trans>}
+						subtitle={notify.details ? <Trans>{translate(notify.details, notify.options)}</Trans> : ''}
 						iconDescription={translate('close')}
 						onCloseButtonClick={() => {
 							clearNotifications(notify.id);
@@ -87,7 +87,7 @@ const Notifications = ({ translate }) => {
 };
 
 Notifications.propTypes = {
-	translate: PropTypes.func,
+	t: PropTypes.func,
 };
 
-export default withLocalize(Notifications);
+export default withTranslation()(Notifications);

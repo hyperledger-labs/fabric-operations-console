@@ -15,7 +15,7 @@
 */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import NotFoundImg from '../../assets/images/404_illustration.svg';
@@ -29,7 +29,7 @@ export class NotFound extends Component {
 	};
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<section className="not-found-container">
 				<div className="ibp-404-content-container">
@@ -74,11 +74,11 @@ const dataProps = {
 NotFound.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(state => {
 	let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 	newProps['docPrefix'] = state['settings'] ? state['settings']['docPrefix'] : null;
 	return newProps;
-}, null)(withLocalize(NotFound));
+}, null)(withTranslation()(NotFound));

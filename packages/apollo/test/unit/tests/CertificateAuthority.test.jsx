@@ -134,7 +134,7 @@ describe('CertificateAuthority component', () => {
 			showError: mySandBox.stub(),
 			showSuccess: mySandBox.stub(),
 			updateState: updateStateStub,
-			translate: translateStub,
+			t: translateStub,
 		};
 	});
 

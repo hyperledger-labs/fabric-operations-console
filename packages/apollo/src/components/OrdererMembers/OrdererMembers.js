@@ -16,7 +16,7 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import emptyImage from '../../assets/images/empty_msps.svg';
 import { showError, updateState } from '../../redux/commonActions';
@@ -216,4 +216,4 @@ export default connect(
 		updateState,
 		showError,
 	}
-)(withLocalize(OrdererMembers));
+)(withTranslation()(OrdererMembers));

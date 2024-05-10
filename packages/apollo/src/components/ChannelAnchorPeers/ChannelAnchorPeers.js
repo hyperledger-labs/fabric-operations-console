@@ -81,7 +81,7 @@ ChannelAnchorPeers.propTypes = {
 	onDeleteAnchorPeers: PropTypes.func,
 	userInfo: PropTypes.object,
 	feature_flags: PropTypes.object,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default ChannelAnchorPeers;

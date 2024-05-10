@@ -18,9 +18,9 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import IdleTimer from 'react-idle-timer';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { showError, showSuccess, updateState } from '../../redux/commonActions';
 import LoginApi from '../../rest/LoginApi';
 import SettingsApi from '../../rest/SettingsApi';
@@ -140,7 +140,7 @@ class Main extends Component {
 	};
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<Router>
 				<div className="ibm ibp-main">
@@ -154,109 +154,108 @@ class Main extends Component {
 						<LeftNav auditLogsEnabled={this.props.audit_logging_enabled} />
 						<div className="ibp-page-content">
 							<ScrollToTop>
-								<Switch>
+								<Routes>
 									<Route exact
 										path="/"
-										render={() => <Redirect to="/nodes" />}
+										render={() => <Navigate to="/nodes" />}
 									/>
 									<Route path="/nodes"
-										component={Nodes}
+										element={<Nodes />}
 										exact
 									/>
-									<Route exact
-										path="/peer/:peerId"
-										component={PeerDetails}
+									<Route path="/peer/:peerId"
+										element={<PeerDetails />}
 									/>
 									<Route exact
 										path="/orderer/:clusterIdPath"
-										component={OrdererDetails}
+										element={<OrdererDetails/>}
 									/>
 									<Route exact
 										path="/orderer/:clusterIdPath/:nodeId"
-										component={OrdererDetails}
+										element={<OrdererDetails/>}
 									/>
 									{/* /debug is a debugging route that exposes a link in the left pane to download the config block of the channel */}
 									<Route exact
 										path="/debug/orderer/:clusterIdPath/:channelId?"
-										component={OrdererDetails}
+										element={<OrdererDetails/>}
 									/>
 									<Route path="/ca/:caId"
-										component={CADetails}
+										element={<CADetails/>}
 									/>
 									<Route path="/channels"
-										component={Channels}
+										element={<Channels/>}
 										exact
 									/>
 									{/* 2023/05/01 the /users route is now legacy, renamed to /access */}
 									<Route path="/users"
-										component={Access}
+										element={<Access/>}
 										exact
 									/>
 									<Route path="/access"
-										component={Access}
+										element={<Access/>}
 										exact
 									/>
 									<Route path="/peer/:peerId/channel/:channelId"
-										component={ChannelDetails}
+										element={<ChannelDetails/>}
 										exact
 									/>
 									{/* /debug is a debugging route that exposes a link in the left pane to download the config block of the channel */}
 									<Route path="/debug/peer/:peerId/channel/:channelId"
-										component={ChannelDetails}
+										element={<ChannelDetails/>}
 										exact
 									/>
 									<Route path="/peer/:peerId/channel/:channelId/block/:blockNumber"
-										component={ChannelBlock}
+										element={<ChannelBlock/>}
 										exact
 									/>
 									<Route path="/channel/:channelId"
-										component={ChannelDetails}
+										element={<ChannelDetails/>}
 										exact
 									/>
 									<Route path="/channel/:channelId/block/:blockNumber"
-										component={ChannelBlock}
+										element={<ChannelBlock/>}
 										exact
 									/>
 									<Route path="/smart-contracts"
-										component={ChaincodesPage}
+										element={<ChaincodesPage/>}
 										exact
 									/>
 									<Route path="/settings"
-										component={Settings}
+										element={<Settings/>}
 										exact
 									/>
 									<Route path="/wallet"
-										component={Identities}
+										element={<Identities/>}
 										exact
 									/>
 									<Route path="/organizations"
-										component={Msps}
+										element={<Msps/>}
 										exact
 									/>
 									<Route exact
 										path="/organization/:mspId"
-										component={OrganizationDetails}
+										element={<OrganizationDetails/>}
 									/>
 									<Route path="/support"
-										component={Support}
+										element={<Support/>}
 										exact
 									/>
 									<Route path="/export-identities"
-										component={Settings}
+										element={<Settings/>}
 										exact
 									/>
 									<Route path="/migration"
-										component={MigrationPage}
+										element={<MigrationPage/>}
 										exact
 									/>
 									<Route exact
 										path="/audit"
-										component={AuditLogs}
+										element={<AuditLogs/>}
 									/>
 									<Route path="*"
-										component={NotFound}
+										element={<NotFound/>}
 									/>
-								</Switch>
+								</Routes>
 							</ScrollToTop>
 						</div>
 					</div>
@@ -343,7 +342,7 @@ Main.propTypes = {
 	...dataProps,
 	userInfo: PropTypes.object,
 	host_url: PropTypes.string,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -358,4 +357,4 @@ export default connect(
 		showError,
 		updateState,
 	}
-)(withLocalize(Main));
+)(withTranslation()(Main));
