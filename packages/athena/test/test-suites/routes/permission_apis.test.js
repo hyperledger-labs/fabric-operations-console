@@ -234,15 +234,15 @@ describe('Permission APIs', () => {
 					common.ev.AUTH_SCHEME = 'appid';
 					const settings = JSON.parse(JSON.stringify(auth_scheme_objects.athena_system));
 					tools.stubs.getDoc.callsArgWith(1, null, settings);
-					tools.stubs.repeatWriteSafe.callsArgWith(2, { statusCode: 500, message: 'problem adding users' });
+					tools.stubs.repeatWriteSafe.callsArgWith(2, { statusCode: 500, msg: 'problem adding users' });
 				},
 				expectBlock: (res) => {
 					expect(res.status).to.equal(500);
 					expect(JSON.stringify(res.body)).to.equal(
 						JSON.stringify({
 							'statusCode': 500,
-							'message': 'could not update settings doc',
-							'details': { 'statusCode': 500, 'message': 'problem adding users' }
+							'msg': 'could not update settings doc',
+							'details': { 'statusCode': 500, 'msg': 'problem adding users' }
 						})
 					);
 				}
@@ -266,11 +266,11 @@ describe('Permission APIs', () => {
 					const settings = JSON.parse(JSON.stringify(auth_scheme_objects.athena_system));
 					tools.stubs.getDoc.callsArgWith(1, null, settings);
 					tools.stubs.repeatWriteSafe.callsArgWith(2, null);
-					tools.stubs.update.callsArgWith(1, { statusCode: 500, message: 'problem updating' });
+					tools.stubs.update.callsArgWith(1, { statusCode: 500, msg: 'problem updating' });
 				},
 				expectBlock: (res) => {
 					expect(res.status).to.equal(500);
-					expect(JSON.stringify(res.body)).to.equal(JSON.stringify({ 'statusCode': 500, 'message': 'could not update config settings' }));
+					expect(JSON.stringify(res.body)).to.equal(JSON.stringify({ 'statusCode': 500, 'msg': 'could not update config settings' }));
 				}
 			},
 			{
@@ -304,7 +304,7 @@ describe('Permission APIs', () => {
 				expectBlock: (res) => {
 					expect(res.status).to.equal(400);
 					expect(JSON.stringify(res.body)).to.equal(JSON.stringify({
-						'statusCode': 400, 'message': [
+						'statusCode': 400, 'msg': [
 							'username cannot contain a colon: this:is:invalid',
 							'username cannot be less than 6 characters: bad',
 							'username cannot be greater than 64 characters: invalid-invalid-...',
