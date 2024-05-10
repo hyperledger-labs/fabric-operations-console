@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
@@ -28,7 +28,7 @@ import AuthSetupSuccess from '../AuthSetupSuccess/AuthSetupSuccess';
 import Stepper from '../Stepper/Stepper';
 import TitleBar from '../TitleBar/TitleBar';
 
-const theme = createMuiTheme({
+const theme = createTheme({
 	typography: {
 		useNextVariants: true,
 	},
@@ -111,7 +111,7 @@ export class AuthSetup extends Component {
 	render = () => {
 		const translate = this.props.t;
 		return (
-			<MuiThemeProvider theme={theme}>
+			<ThemeProvider theme={theme}>
 				<div>
 					<Router>
 						<TitleBar hideButtons />
@@ -143,7 +143,7 @@ export class AuthSetup extends Component {
 						/>}
 					</div>
 				</div>
-			</MuiThemeProvider>
+			</ThemeProvider>
 		);
 	};
 }
