@@ -15,7 +15,7 @@
 */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ChipInput from 'material-ui-chip-input';
+import ChipInput from '../ChipInput';
 import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
 import withStyles from '@mui/styles/withStyles';
