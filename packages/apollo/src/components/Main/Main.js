@@ -17,7 +17,7 @@ import { Link, Modal } from 'carbon-components-react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import IdleTimer from 'react-idle-timer';
+import { withIdleTimer } from 'react-idle-timer';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
@@ -263,7 +263,7 @@ class Main extends Component {
 
 					{this.props.inactivity_timeouts_enabled && (
 						<div>
-							<IdleTimer
+							<withIdleTimer
 								ref={ref => {
 									this.idleWarningTimer = ref;
 								}}
@@ -273,7 +273,7 @@ class Main extends Component {
 								debounce={1000}
 								timeout={this.props.max_idle_warning_time}
 							/>
-							<IdleTimer
+							<withIdleTimer
 								ref={ref => {
 									this.idleTimer = ref;
 								}}
