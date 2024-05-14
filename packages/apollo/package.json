@@ -11,7 +11,7 @@
 		"@eslint/js": "^9.2.0",
 		"@mui/material": "^5.15.17",
 		"@mui/styles": "^5.15.17",
-		"async": "^3.2.0",
+		"async": "^3.2.5",
 		"backoff": "^2.5.0",
 		"bytes": "^3.1.2",
 		"carbon-components": "^10.12.0",
