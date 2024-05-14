@@ -174,6 +174,7 @@ export class SidePanel extends React.Component {
 						active={this.props.disable_focus_trap ? false : true}
 						focusTrapOptions={{
 							escapeDeactivates: false,
+							fallbackFocus: 'body'
 						}}
 					>
 						<div
