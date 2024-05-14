@@ -88,7 +88,7 @@ class GenericChips extends Component {
 						onDelete={deletedChip => this.props.handleDeleteChip(deletedChip)}
 						chipRenderer={({ value, handleClick, handleDelete }, key) => (
 							<Chip key={key}
-								style={{ margin: '8px 8px 0 0', float: 'left' }}
+								style={{ margin: '8px 8px 0 0', float: 'left', backgroundColor: '#e2e2e2' }}
 								onClick={handleClick}
 								onDelete={handleDelete}
 								label={value}

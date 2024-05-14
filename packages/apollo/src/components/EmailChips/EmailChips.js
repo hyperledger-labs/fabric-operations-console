@@ -101,7 +101,7 @@ class EmailChips extends Component {
 						chipRenderer={({ value, handleClick, handleDelete }, key) => (
 							<Chip
 								key={key}
-								style={{ margin: '8px 8px 0 0', float: 'left' }}
+								style={{ margin: '8px 8px 0 0', float: 'left', backgroundColor: '#e2e2e2' }}
 								avatar={<Avatar size={32}>{value[0].toUpperCase()}</Avatar>}
 								onClick={handleClick}
 								onDelete={handleDelete}

@@ -54,7 +54,7 @@ class App extends Component {
 	async componentDidMount() {
 		NodeStatus.initialize(this.props.dispatch);
 
-		this.initializeAppData()
+		this.initializeAppData();
 	}
 
 	async initializeAppData() {
@@ -191,7 +191,7 @@ class App extends Component {
 			let serviceInfo = null;
 			try {
 				serviceInfo = await NodeRestApi.getServiceInstanceInfo();
-			} catch (err) {
+			} catch {
 				serviceInfo = { info: { isPaid: false } };
 			}
 			features.cluster_data.type = _.get(serviceInfo, 'info.isPaid') ? 'paid' : 'free';
@@ -256,7 +256,7 @@ class App extends Component {
 					try {
 						const temp = JSON.stringify(text).replace(/\\"/g, '"');
 						return temp.substring(1, 1) + temp.substring(1, temp.length - 1);
-					} catch (e) {
+					} catch {
 						return text;
 					}
 				}
@@ -267,7 +267,7 @@ class App extends Component {
 		try {
 			window.remote.apply(window.log, remote_logging_options);
 			window.log.setLevel('debug');
-		} catch (e) {
+		} catch {
 			// might already be applied
 		}
 
@@ -299,7 +299,7 @@ class App extends Component {
 
 				// if using local username/password, send user to our login prompt
 				if (this.state.authScheme.type === 'couchdb') {
-					return <Login onLogin={()=> {
+					return <Login onLogin={() => {
 						this.initializeAppData()
 					}} />;
 				}
