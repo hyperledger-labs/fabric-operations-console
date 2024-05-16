@@ -117,7 +117,7 @@ class Capabilities extends Component {
 			selectedApplicationCapability,
 			selectedOrdererCapability,
 			isChannelUpdate,
-			translate,
+			t: translate,
 		} = this.props;
 		const use_default = {
 			name: translate('use_default'),

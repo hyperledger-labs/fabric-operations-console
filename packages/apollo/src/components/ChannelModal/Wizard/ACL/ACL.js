@@ -144,7 +144,7 @@ class ACL extends Component {
 	};
 
 	render() {
-		const { aclErrors, selectedACLResource, availableACLResources, selectedACLPolicy, availableACLPolicies, selectedACLRole, acls, translate } = this.props;
+		const { aclErrors, selectedACLResource, availableACLResources, selectedACLPolicy, availableACLPolicies, selectedACLRole, acls, t: translate } = this.props;
 		return (
 			<div className="ibp-channel-acls">
 				<p className="ibp-channel-section-title">{translate('channel_acls')}</p>

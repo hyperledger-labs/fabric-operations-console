@@ -63,7 +63,7 @@ class Review extends Component {
 			duplicateMSPError,
 			missingDefinitionError,
 			aclErrors,
-			translate,
+			t: translate,
 			invalid_consenter,
 			use_default_consenters,
 			lifecycle_policy,

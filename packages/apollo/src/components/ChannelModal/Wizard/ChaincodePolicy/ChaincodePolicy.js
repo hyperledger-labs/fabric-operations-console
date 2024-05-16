@@ -27,7 +27,7 @@ const SCOPE = 'channelModal';
 
 class ChaincodePolicy extends Component {
 	render() {
-		const { translate, policy, orgs, setType, setMembers, lifecycle_policy, endorsement_policy } = this.props;
+		const { t: translate, policy, orgs, setType, setMembers, lifecycle_policy, endorsement_policy } = this.props;
 		const members = policy === 'lifecycle_policy' ? lifecycle_policy.members : endorsement_policy.members;
 		const max = members ? members.length : 1;
 		const options = max > 0 ? [] : [''];

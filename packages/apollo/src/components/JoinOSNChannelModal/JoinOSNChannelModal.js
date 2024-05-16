@@ -1148,7 +1148,7 @@ class JoinOSNChannelModal extends React.Component {
 
 	// create the line for an orderer node
 	renderNodesSection(nodes, cluster) {
-		const { translate } = this.props;
+		const { t: translate } = this.props;
 
 		if (Array.isArray(nodes)) {
 			return (nodes.map((node, i) => {

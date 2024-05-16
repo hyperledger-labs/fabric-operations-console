@@ -172,7 +172,7 @@ export class OrdererOrganizations extends Component {
 	};
 
 	render() {
-		const { loading, noAdminError, noOrderersError, duplicateMSPError, msps, ordering_orgs, selectedOrg, missingDefinitionError, isChannelUpdate, translate } = this.props;
+		const { loading, noAdminError, noOrderersError, duplicateMSPError, msps, ordering_orgs, selectedOrg, missingDefinitionError, isChannelUpdate, t: translate } = this.props;
 
 		// hide orgs that are already selected
 		const msp_opts = msps ? msps.filter(x =>

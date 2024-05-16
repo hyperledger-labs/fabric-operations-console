@@ -68,7 +68,7 @@ class OSNJoin extends Component {
 	// main render
 	render() {
 		const {
-			translate,
+			t: translate,
 			channel_id,
 			block_error,
 		} = this.props;

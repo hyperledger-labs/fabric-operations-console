@@ -26,7 +26,7 @@ const SCOPE = 'channelModal';
 
 class Policy extends Component {
 	render() {
-		const { memberCounts, orgs, customPolicy, customPolicyDefault, translate } = this.props;
+		const { memberCounts, orgs, customPolicy, customPolicyDefault, t: translate } = this.props;
 		return (
 			<div className="ibp-channel-policy">
 				<p className="ibp-channel-section-title">{translate('channel_update_policy')}</p>

@@ -101,7 +101,7 @@ class Prerequisites extends Component {
 	};
 
 	render() {
-		const { advanced, translate } = this.props;
+		const { advanced, t: translate } = this.props;
 		return (
 			<div className="ibp-channel-prerequisites">
 				<p className="ibp-channel-section-title">{translate('prerequisites')}</p>

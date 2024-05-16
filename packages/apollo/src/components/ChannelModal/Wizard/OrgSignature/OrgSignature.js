@@ -50,7 +50,7 @@ class OrgSignature extends Component {
 	}
 
 	render() {
-		const { msps, orgs, mspIdentities, selectedChannelCreator, selectedIdentity, isChannelUpdate, translate } = this.props;
+		const { msps, orgs, mspIdentities, selectedChannelCreator, selectedIdentity, isChannelUpdate, t: translate } = this.props;
 		const fields = [
 			{
 				name: 'selectedChannelCreator',
