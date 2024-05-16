@@ -155,9 +155,9 @@ class Main extends Component {
 						<div className="ibp-page-content">
 							<ScrollToTop>
 								<Routes>
-									<Route exact
+									<Route
 										path="/"
-										render={() => <Navigate to="/nodes" />}
+										render={() => <Navigate to="/nodes" replace={true} />}
 									/>
 									<Route path="/nodes"
 										element={<Nodes />}
