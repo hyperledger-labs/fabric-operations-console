@@ -21,7 +21,7 @@ import { withTranslation } from 'react-i18next';
 const ReleaseNotes = props => {
 	const loading = props.loading || !props.releaseNotes || !props.releaseNotes.length;
 	const releaseNotes = props.releaseNotes ? props.releaseNotes : [];
-	const translate = props.translate;
+	const translate = props.t;
 	return (
 		<div>
 			<div className="ipb-note-header-container">

@@ -17,7 +17,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 
-const TimelineCancelButton = ({ onClose, closeMessage, translate }) => {
+const TimelineCancelButton = ({ onClose, closeMessage, t: translate }) => {
 	return (
 		<button className="ibp-timeline-cancel-button"
 			onClick={() => onClose()}

@@ -19,7 +19,7 @@ import { withTranslation } from 'react-i18next';
 import TimelineCancelButton from '../TimelineCancelButton/TimelineCancelButton';
 import CheckmarkOutline16 from '@carbon/icons-react/lib/checkmark--outline/16';
 
-const Timeline = ({ steps, onClose, selectedTimelineStep, header, estTime, progressWithChecks, translate }) => {
+const Timeline = ({ steps, onClose, selectedTimelineStep, header, estTime, progressWithChecks, t: translate }) => {
 	return (
 		<div className="ibp-vertical-panel-timeline-container">
 			<div className="ibp-vertical-panel-timeline-steps">
