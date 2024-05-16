@@ -114,7 +114,7 @@ class Consenters extends Component {
 			overrideRaftDefaults,
 			updateState,
 			snapshot_interval_size,
-			translate,
+			t: translate,
 			use_default_consenters,
 			use_osnadmin,
 		} = this.props;

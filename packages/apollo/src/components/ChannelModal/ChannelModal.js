@@ -2270,7 +2270,7 @@ class ChannelModal extends Component {
 	// render all the step components
 	render() {
 		const isHigherCapabilityAvailable = this.isAnyHigherCapabilityAvailable();
-		const { isChannelUpdate, translate } = this.props;
+		const { isChannelUpdate, t: translate } = this.props;
 
 		return (
 			<SidePanel

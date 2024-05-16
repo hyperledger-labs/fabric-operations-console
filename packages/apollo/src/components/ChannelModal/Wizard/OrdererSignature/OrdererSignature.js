@@ -30,7 +30,7 @@ const SCOPE = 'channelModal';
 // this panel allow selecting what org to use for the *orderer* signature
 class OrdererSignature extends Component {
 	render() {
-		const { isOrdererSignatureNeeded, msps, selectedOrdererMsp, selectedOrderer, isCapabilityModified, translate } = this.props;
+		const { isOrdererSignatureNeeded, msps, selectedOrdererMsp, selectedOrderer, isCapabilityModified, t: translate } = this.props;
 		const selected_orderer_msps = _.has(selectedOrderer, 'raft') ? selectedOrderer.raft.map(x => x.msp_id) : [selectedOrderer.msp_id];
 		let orderer_msps = selectedOrderer && msps ? msps.filter(msp => selected_orderer_msps.includes(msp.msp_id)) : msps;
 		return (

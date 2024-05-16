@@ -44,7 +44,7 @@ class BlockCuttingParams extends Component {
 	};
 
 	render() {
-		const { isChannelUpdate, overrideDefaults, updateState, absolute_max_bytes, max_message_count, preferred_max_bytes, timeout, translate } = this.props;
+		const { isChannelUpdate, overrideDefaults, updateState, absolute_max_bytes, max_message_count, preferred_max_bytes, timeout, t: translate } = this.props;
 		return (
 			<div className="ibp-block-cutting-params">
 				<p className="ibp-channel-section-title">{translate('block_cutting_params')}</p>

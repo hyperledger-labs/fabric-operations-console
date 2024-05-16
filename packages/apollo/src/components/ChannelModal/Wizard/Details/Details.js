@@ -94,7 +94,7 @@ class Details extends Component {
 	};
 
 	render() {
-		const { channelOrderer, isChannelUpdate, checkingOrdererStatus, loadingConsenters, orderers, channelNameError, isOrdererUnavailable, translate, isTlsMissing } = this.props;
+		const { channelOrderer, isChannelUpdate, checkingOrdererStatus, loadingConsenters, orderers, channelNameError, isOrdererUnavailable, t: translate, isTlsMissing } = this.props;
 		const associatedOrdererNotFound = isChannelUpdate && !channelOrderer;
 		const multipleOrderersAssociationsFound = isChannelUpdate && _.size(channelOrderer) > 1;
 		const fields = [
