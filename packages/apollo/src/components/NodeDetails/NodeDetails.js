@@ -17,7 +17,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import Helper from '../../utils/helper';
 
 class NodeDetails extends Component {
@@ -53,7 +53,7 @@ class NodeDetails extends Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<div className="node-details-panel">
 				<div className="node-details-title>">{translate(this.getTitle())}</div>
@@ -79,7 +79,7 @@ class NodeDetails extends Component {
 
 NodeDetails.propTypes = {
 	node: PropTypes.object,
-	translate: PropTypes.func,
+	t: PropTypes.func,
 };
 
-export default withLocalize(NodeDetails);
+export default withTranslation()(NodeDetails);

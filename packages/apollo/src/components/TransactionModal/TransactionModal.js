@@ -16,7 +16,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import SidePanel from '../SidePanel/SidePanel';
 
 class TransactionModal extends Component {
@@ -81,7 +81,7 @@ class TransactionModal extends Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<SidePanel
 				id="transaction"
@@ -127,7 +127,7 @@ TransactionModal.propTypes = {
 	transaction: PropTypes.object,
 	closed: PropTypes.func,
 	settings: PropTypes.object,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
-export default withLocalize(TransactionModal);
+export default withTranslation()(TransactionModal);

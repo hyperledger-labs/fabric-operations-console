@@ -17,7 +17,7 @@
 import { TextArea } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import Helper from '../../utils/helper';
@@ -55,9 +55,9 @@ class ConfigOverride extends Component {
 		let invalidText = undefined;
 		if (this.props.error) {
 			if (this.props.error.error) {
-				invalidText = this.props.translate(this.props.error.error, this.props.error);
+				invalidText = this.props.t(this.props.error.error, this.props.error);
 			} else {
-				invalidText = this.props.translate(this.props.error);
+				invalidText = this.props.t(this.props.error);
 			}
 		}
 		return (
@@ -66,7 +66,7 @@ class ConfigOverride extends Component {
 					id={`${this.props.id}`}
 					value={this.props.text}
 					rows={15}
-					labelText={this.props.translate('edit_config_override')}
+					labelText={this.props.t('edit_config_override')}
 					hideLabel={true}
 					onChange={this.onChange}
 					invalid={!!this.props.error}
@@ -96,4 +96,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(ConfigOverride));
+)(withTranslation()(ConfigOverride));

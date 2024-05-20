@@ -26,9 +26,10 @@ import {
 } from 'carbon-components-react/lib/components/UIShell';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
+import withRouter from '../../hoc/withRouter';
 import { updateState } from '../../redux/commonActions';
 import Helper from '../../utils/helper';
 import { removeFromStorage } from '../../utils/localStorage';
@@ -172,7 +173,7 @@ class TitleBar extends Component {
 		const canLogout = this.props.authScheme !== 'ibmid';
 		const canChangePassword = this.props.authScheme === 'couchdb';
 		const logout_url = this.props.host_url + '/auth/logout';
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		const { needsAttention } = this.props;
 		const needsAttentionStrLength = needsAttention ? needsAttention.toString().length : 0;
 		const productLabel = 'product_label'; // may or may not contain "IBM"
@@ -341,7 +342,7 @@ TitleBar.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
 	onClose: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -362,4 +363,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withRouter(withLocalize(TitleBar)));
+)(withRouter(withTranslation()(TitleBar)));

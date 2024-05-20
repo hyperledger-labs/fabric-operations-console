@@ -16,7 +16,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import emptyImage from '../../assets/images/empty_installed.svg';
 import { clearNotifications, showError, showSuccess, updateState } from '../../redux/commonActions';
@@ -141,7 +141,7 @@ class PeerChaincode extends Component {
 	};
 
 	renderCustomTile = data => {
-		return <>{data.legacy && <div className="ibp-channel-chaincode-status">{this.props.translate('legacy_sc')}</div>}</>;
+		return <>{data.legacy && <div className="ibp-channel-chaincode-status">{this.props.t('legacy_sc')}</div>}</>;
 	};
 
 	async downloadChaincode(cc) {
@@ -235,7 +235,7 @@ const dataProps = {
 	chaincodes: PropTypes.array,
 	error: PropTypes.object,
 	showInstallChaincodeModal: PropTypes.bool,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 	state: PropTypes.string,
 	installedChaincode: PropTypes.object,
 	empty: PropTypes.bool,
@@ -263,4 +263,4 @@ export default connect(
 		showSuccess,
 		clearNotifications,
 	}
-)(withLocalize(PeerChaincode));
+)(withTranslation()(PeerChaincode));

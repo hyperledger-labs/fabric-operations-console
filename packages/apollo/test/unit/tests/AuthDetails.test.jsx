@@ -19,13 +19,13 @@ import { mount } from 'enzyme';
 import chai from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import Logger from '../../../src/components/Log/Logger';
+// import Logger from '../../../src/components/Log/Logger';
 // this is the component we're testing - import it wrapped in curly braces to get the version not connected to the redux store
 import { AuthDetails } from '../../../src/components/AuthDetails/AuthDetails';
 
 chai.should();
 chai.use(sinonChai);
-const should = chai.should();
+// const should = chai.should();
 
 jest.mock('../../../src/components/Form/Form', () => ({ id, fields }) => (
 	<>
@@ -61,7 +61,7 @@ describe('AuthDetails component', () => {
 		props = {
 			scope: SCOPE,
 			updateState: updateStateStub,
-			translate: translateStub,
+			t: translateStub,
 		};
 	});
 
@@ -81,7 +81,7 @@ describe('AuthDetails component', () => {
 	describe('AuthDetails - render with manual entry', () => {
 		it('should render', async() => {
 			const component = mount(<AuthDetails {...props} />);
-			component.setState({ isModeManual: true });
+			component.find(".ibp__auth-configuration--manual").simulate('click');
 			component.find('#' + SCOPE + '-configJson').should.have.lengthOf(0);
 			component.find('.ibp__auth-auth-manual').should.have.lengthOf(1);
 			component.find('#' + SCOPE + '-clientId').should.have.lengthOf(1);

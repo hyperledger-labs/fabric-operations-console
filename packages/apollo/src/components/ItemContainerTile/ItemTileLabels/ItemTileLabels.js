@@ -17,12 +17,12 @@ import { Cloud16, DocumentImport16, IbmCloud16, WarningAltFilled16, WarningFille
 import Helper from '../../../utils/helper';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import _ from 'lodash';
 import * as constants from '../../../utils/constants';
 
-const ItemTileLabels = ({ certificateWarning, custom, isPatchAvailable, location, nodeOU, pending, translate, type }) => {
+const ItemTileLabels = ({ certificateWarning, custom, isPatchAvailable, location, nodeOU, pending, t:translate, type }) => {
 	const platform = useSelector(state => state['settings'] && state['settings'].platform);
 
 	const renderLocation = () => {
@@ -151,7 +151,7 @@ ItemTileLabels.propTypes = {
 	isPatchAvailable: PropTypes.bool,
 	location: PropTypes.string,
 	pending: PropTypes.array,
-	translate: PropTypes.func,
+	t: PropTypes.func,
 	type: PropTypes.string,
 	nodeOU: PropTypes.bool,
 	certificateWarning: PropTypes.oneOfType([PropTypes.array, PropTypes.string, PropTypes.number, PropTypes.bool]),
@@ -162,7 +162,7 @@ TileLabel.propTypes = {
 	className: PropTypes.string,
 	icon: PropTypes.element,
 	label: PropTypes.string,
-	translate: PropTypes.func,
+	t: PropTypes.func,
 };
 
-export default withLocalize(ItemTileLabels);
+export default withTranslation()(ItemTileLabels);

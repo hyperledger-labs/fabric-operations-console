@@ -15,7 +15,7 @@
 */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import Helper from '../../utils/helper';
 
@@ -26,7 +26,7 @@ class AuthSetupSuccess extends Component {
 
 	render = () => {
 		const contactEmail = this.props.adminContactEmail ? this.props.adminContactEmail : '';
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<div>
 				<p className="ibp__auth-title">{translate('success')}</p>
@@ -58,7 +58,7 @@ AuthSetupSuccess.propTypes = {
 	...dataProps,
 	onBack: PropTypes.func,
 	onProceed: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -66,4 +66,4 @@ export default connect(
 		return Helper.mapStateToProps(state[SCOPE], dataProps);
 	},
 	{}
-)(withLocalize(AuthSetupSuccess));
+)(withTranslation()(AuthSetupSuccess));

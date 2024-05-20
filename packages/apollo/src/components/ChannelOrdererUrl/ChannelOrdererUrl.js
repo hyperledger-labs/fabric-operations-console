@@ -14,20 +14,20 @@
  * limitations under the License.
 */
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 
 const ChannelOrdererUrl = () => {
 	return (
 		<div className="ibp-channel-orderer-url-container">
-			<h2>{this.props.translate('orderer_url')}</h2>
+			<h2>{this.props.t('orderer_url')}</h2>
 			<p>Insert url here</p>
 		</div>
 	);
 };
 
 ChannelOrdererUrl.propTypes = {
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
-export default withLocalize(ChannelOrdererUrl);
+export default withTranslation()(ChannelOrdererUrl);

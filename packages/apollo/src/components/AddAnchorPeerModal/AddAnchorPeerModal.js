@@ -15,7 +15,7 @@
 */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { clearNotifications, showError, updateState } from '../../redux/commonActions';
 import ChannelApi from '../../rest/ChannelApi';
@@ -148,7 +148,7 @@ export class AddAnchorPeerModal extends Component {
 	};
 
 	render = () => {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<div>
 				<SidePanel
@@ -243,7 +243,7 @@ AddAnchorPeerModal.propTypes = {
 	onClose: PropTypes.func,
 	onComplete: PropTypes.func,
 	showError: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -257,4 +257,4 @@ export default connect(
 		showError,
 		updateState,
 	}
-)(withLocalize(AddAnchorPeerModal));
+)(withTranslation()(AddAnchorPeerModal));

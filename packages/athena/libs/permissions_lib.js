@@ -784,11 +784,24 @@ module.exports = function (logger, ev, t) {
 		const parsed_auth = t.auth_header_lib.parse_auth(req);
 		const lc_username = (parsed_auth && parsed_auth.name) ? parsed_auth.name.toLowerCase() : null;
 
-		// init roles as manager, else use the ones provided
 		if (!Array.isArray(roles) || roles.length === 0) {
-			roles = [ev.STR.MANAGER_ROLE, ev.STR.WRITER_ROLE, ev.STR.READER_ROLE];
+			t.otcc.getDoc({									// find the api key, its id should be in the username field
+				db_name: ev.DB_SYSTEM,
+				_id: parsed_auth.name,
+			}, (err, doc) => {
+				if (err || !doc) {													// invalid username
+					logger.error(`[permissions] problem getting the api key doc for key id ${parsed_auth.name}`);
+					return cb(err);
+				}
+				return create_token_doc(req, lc_username, doc.roles, expiration_secs, cb);
+			});
+		} else {
+			return create_token_doc(req, lc_username, roles, expiration_secs, cb);
 		}
 
+	};
+
+	const create_token_doc = (req, lc_username, roles, expiration_secs, cb) => {
 		const access_token_doc = exports.generate_access_token(lc_username, roles, expiration_secs);
 
 		// build a notification doc

@@ -17,7 +17,7 @@ import _ from 'lodash';
 import { SkeletonPlaceholder } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { clearNotifications, showBreadcrumb, showError, updateState } from '../../redux/commonActions';
 import ChannelApi from '../../rest/ChannelApi';
@@ -28,6 +28,7 @@ import PageContainer from '../PageContainer/PageContainer';
 import PageHeader from '../PageHeader/PageHeader';
 import TransactionModal from '../TransactionModal/TransactionModal';
 import emptyImage from '../../assets/images/empty_nodes.svg';
+import withRouter from '../../hoc/withRouter';
 
 const SCOPE = 'channelBlock';
 const Log = new Logger(SCOPE);
@@ -148,7 +149,7 @@ class ChannelBlock extends Component {
 	};
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<PageContainer>
 				<div className="bx--row">
@@ -215,7 +216,7 @@ ChannelBlock.propTypes = {
 	showError: PropTypes.func,
 	clearNotifications: PropTypes.func,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -230,4 +231,4 @@ export default connect(
 		showError,
 		updateState,
 	}
-)(withLocalize(ChannelBlock));
+)(withTranslation()(withRouter(ChannelBlock)));

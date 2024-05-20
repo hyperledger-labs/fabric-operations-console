@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Helper from '../../../../utils/helper';
 import { updateState } from '../../../../redux/commonActions';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import Form from '../../../Form/Form';
 import _ from 'lodash';
 
@@ -30,7 +30,7 @@ const SCOPE = 'channelModal';
 // this panel allow selecting what org to use for the *orderer* signature
 class OrdererSignature extends Component {
 	render() {
-		const { isOrdererSignatureNeeded, msps, selectedOrdererMsp, selectedOrderer, isCapabilityModified, translate } = this.props;
+		const { isOrdererSignatureNeeded, msps, selectedOrdererMsp, selectedOrderer, isCapabilityModified, t: translate } = this.props;
 		const selected_orderer_msps = _.has(selectedOrderer, 'raft') ? selectedOrderer.raft.map(x => x.msp_id) : [selectedOrderer.msp_id];
 		let orderer_msps = selectedOrderer && msps ? msps.filter(msp => selected_orderer_msps.includes(msp.msp_id)) : msps;
 		return (
@@ -69,7 +69,7 @@ const dataProps = {
 OrdererSignature.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -79,4 +79,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(OrdererSignature));
+)(withTranslation()(OrdererSignature));

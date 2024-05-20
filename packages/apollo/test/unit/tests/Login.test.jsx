@@ -102,7 +102,7 @@ describe('Login component', () => {
 			hostUrl: undefined,
 			changePassword: undefined,
 			confirmPassword: undefined,
-			translate: translateStub,
+			t: translateStub,
 			updateState: updateStateStub,
 		};
 	});
@@ -290,9 +290,11 @@ describe('Login component', () => {
 		});
 
 		it('should modify window.location.href if login successful', async() => {
+			const onLogin = mySandBox.stub().returns(true);
 			const component = shallow(<Login {...props} />);
 			props.email = 'an@email';
 			props.login_password = 'password';
+			props.onLogin = onLogin;
 			component.setProps(props);
 
 			await component.instance().onLogin('unusedInput');
@@ -300,7 +302,8 @@ describe('Login component', () => {
 			logInfoStub.should.have.been.calledWithExactly(`Logging in as ${props.email}`);
 			loginStub.should.have.been.calledWithExactly(props.email, props.login_password);
 			logDebugStub.should.have.been.calledWithExactly(`Logged in as ${props.email}:`, 'login response');
-			window.location.href.toString().should.equal('/nodes');
+			onLogin.should.have.been.calledOnce;
+			// window.location.href.toString().should.equal('/nodes');
 		});
 
 		it('should log error if login fails', async() => {

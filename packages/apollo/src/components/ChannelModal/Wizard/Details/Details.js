@@ -17,7 +17,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../../../redux/commonActions';
 import Helper from '../../../../utils/helper';
@@ -94,7 +94,7 @@ class Details extends Component {
 	};
 
 	render() {
-		const { channelOrderer, isChannelUpdate, checkingOrdererStatus, loadingConsenters, orderers, channelNameError, isOrdererUnavailable, translate, isTlsMissing } = this.props;
+		const { channelOrderer, isChannelUpdate, checkingOrdererStatus, loadingConsenters, orderers, channelNameError, isOrdererUnavailable, t: translate, isTlsMissing } = this.props;
 		const associatedOrdererNotFound = isChannelUpdate && !channelOrderer;
 		const multipleOrderersAssociationsFound = isChannelUpdate && _.size(channelOrderer) > 1;
 		const fields = [
@@ -176,7 +176,7 @@ const dataProps = {
 Details.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -186,4 +186,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(Details));
+)(withTranslation()(Details));

@@ -18,7 +18,7 @@ import DropdownSkeleton from 'carbon-components-react/lib/components/Dropdown/Dr
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation, Trans } from 'react-i18next';
 import { connect } from 'react-redux';
 import PlusIcon from '../../assets/images/plus.svg';
 import { updateState } from '../../redux/commonActions';
@@ -1463,7 +1463,7 @@ class Form extends Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		try {
 			return (
 				<div className={(this.props.className ? this.props.className + ' ' : '') + 'ibp-form'}
@@ -1507,7 +1507,7 @@ class Form extends Component {
 										{field.tooltip ? (
 											<BlockchainTooltip direction={field.tooltipDirection}
 												type="definition"
-												tooltipText={translate(field.tooltip, field.tooltipOptions)}
+												tooltipText={<Trans>{translate(field.tooltip, field.tooltipOptions)}</Trans>}
 											>
 												{label}
 											</BlockchainTooltip>
@@ -1537,7 +1537,7 @@ Form.propTypes = {
 	formProps: PropTypes.object,
 	className: PropTypes.string,
 	hideLabel: PropTypes.bool,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -1575,4 +1575,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(Form));
+)(withTranslation()(Form));

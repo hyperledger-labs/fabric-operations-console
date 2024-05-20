@@ -16,7 +16,7 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../../../redux/commonActions';
 import IdentityApi from '../../../../rest/IdentityApi';
@@ -50,7 +50,7 @@ class OrgSignature extends Component {
 	}
 
 	render() {
-		const { msps, orgs, mspIdentities, selectedChannelCreator, selectedIdentity, isChannelUpdate, translate } = this.props;
+		const { msps, orgs, mspIdentities, selectedChannelCreator, selectedIdentity, isChannelUpdate, t: translate } = this.props;
 		const fields = [
 			{
 				name: 'selectedChannelCreator',
@@ -116,7 +116,7 @@ const dataProps = {
 OrgSignature.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 	editLoading: PropTypes.bool,
 };
 
@@ -127,4 +127,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(OrgSignature));
+)(withTranslation()(OrgSignature));

@@ -102,7 +102,7 @@ describe('MSPDefinitionModal component', () => {
 
 			onClose: onCloseStub,
 			onComplete: onCompleteStub,
-			translate: translateStub,
+			t: translateStub,
 			updateState: updateStateStub,
 		};
 
@@ -119,7 +119,7 @@ describe('MSPDefinitionModal component', () => {
 
 			onClose: onCloseStub,
 			onComplete: onCompleteStub,
-			translate: translateStub,
+			t: translateStub,
 			updateState: updateStateStub,
 		};
 
@@ -131,7 +131,7 @@ describe('MSPDefinitionModal component', () => {
 
 			onClose: onCloseStub,
 			onComplete: onCompleteStub,
-			translate: translateStub,
+			t: translateStub,
 			updateState: updateStateStub,
 		};
 

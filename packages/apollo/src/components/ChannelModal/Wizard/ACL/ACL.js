@@ -20,7 +20,7 @@ import _ from 'lodash';
 import { connect } from 'react-redux';
 import Helper from '../../../../utils/helper';
 import { updateState } from '../../../../redux/commonActions';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import TranslateLink from '../../../TranslateLink/TranslateLink';
 import ImportantBox from '../../../ImportantBox/ImportantBox';
 import SidePanelWarning from '../../../SidePanelWarning/SidePanelWarning';
@@ -144,7 +144,7 @@ class ACL extends Component {
 	};
 
 	render() {
-		const { aclErrors, selectedACLResource, availableACLResources, selectedACLPolicy, availableACLPolicies, selectedACLRole, acls, translate } = this.props;
+		const { aclErrors, selectedACLResource, availableACLResources, selectedACLPolicy, availableACLPolicies, selectedACLRole, acls, t: translate } = this.props;
 		return (
 			<div className="ibp-channel-acls">
 				<p className="ibp-channel-section-title">{translate('channel_acls')}</p>
@@ -321,7 +321,7 @@ const dataProps = {
 ACL.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -331,7 +331,7 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(ACL));
+)(withTranslation()(ACL));
 
 function DeleteButton(props) {
 	return (
@@ -356,5 +356,5 @@ function DeleteButton(props) {
 
 DeleteButton.propTypes = {
 	onClick: PropTypes.func,
-	translate: PropTypes.func,
+	t: PropTypes.func,
 };

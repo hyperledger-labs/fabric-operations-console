@@ -18,7 +18,7 @@ import SkeletonPlaceholder from 'carbon-components-react/lib/components/Skeleton
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import emptySmartContractImage from '../../assets/images/empty_installed.svg';
 import { clearNotifications, showBreadcrumb, showError, showSuccess, updateBreadcrumb, updateState } from '../../redux/commonActions';
@@ -44,6 +44,7 @@ import PageContainer from '../PageContainer/PageContainer';
 import PageHeader from '../PageHeader/PageHeader';
 import StickySection from '../StickySection/StickySection';
 import ActionsHelper from '../../utils/actionsHelper';
+import withRouter from '../../hoc/withRouter';
 
 const SCOPE = 'channelDetails';
 const Log = new Logger(SCOPE);
@@ -840,7 +841,7 @@ class ChannelDetails extends Component {
 	getNodeStatus = node => {
 		let status;
 		status = node.status;
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return node && status ? (
 			<div className="ibp-node-status-container">
 				<span
@@ -871,7 +872,7 @@ class ChannelDetails extends Component {
 	};
 
 	buildCustomTile(node) {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<div>
 				<p className="ibp-node-peer-tile-name">{translate(node.type)}</p>
@@ -1109,7 +1110,7 @@ class ChannelDetails extends Component {
 					loading={this.props.anchorPeersLoading}
 					disableDelete={!this.channel.orderers || !this.channel.orderers.length}
 					onDeleteAnchorPeers={this.deleteAnchorPeers}
-					translate={this.props.translate}
+					translate={this.props.t}
 					feature_flags={this.props.feature_flags}
 					userInfo={this.props.userInfo}
 				/>
@@ -1203,7 +1204,7 @@ class ChannelDetails extends Component {
 		}
 		let peersNotJoinedYet = this.allPeers ? this.allPeers.filter(x => !this.props.peerList.find(y => y.id === x.id)) : this.allPeers;
 		const { loading, match } = this.props;
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		const isV2 = this.isV2Channel();
 		let peer = this.channel.peers ? this.channel.peers.find(peer => peer.cert && peer.private_key) : null;
 		let peerCerts = peer
@@ -1397,7 +1398,7 @@ ChannelDetails.propTypes = {
 	clearNotifications: PropTypes.func,
 	updateState: PropTypes.func,
 	showSuccess: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -1417,4 +1418,4 @@ export default connect(
 		updateBreadcrumb,
 		showSuccess,
 	}
-)(withLocalize(ChannelDetails));
+)(withTranslation()(withRouter(ChannelDetails)));

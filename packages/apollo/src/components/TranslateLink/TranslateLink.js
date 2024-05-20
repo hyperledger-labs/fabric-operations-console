@@ -15,11 +15,11 @@
 */
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
 const TranslateLink = props => {
-	const translate = props.translate;
+	const translate = props.t;
 	let params = {
 		...props.params,
 	};
@@ -65,11 +65,11 @@ TranslateLink.propTypes = {
 	params: PropTypes.object,
 	className: PropTypes.string,
 	docPrefix: PropTypes.string,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(state => {
 	return {
 		docPrefix: state['settings'] ? state['settings']['docPrefix'] : null,
 	};
-})(withLocalize(TranslateLink));
+})(withTranslation()(TranslateLink));

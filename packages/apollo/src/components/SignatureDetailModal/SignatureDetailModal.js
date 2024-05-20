@@ -18,7 +18,7 @@ import _ from 'lodash';
 import parse from 'parse-duration';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation, Trans } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import { CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';
@@ -1335,7 +1335,7 @@ class SignatureDetailModal extends React.Component {
 			title = 'new_channel_pending_request';
 			desc = 'new_channel_pending_request_desc';
 		}
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		let disableSubmit = false;
 		if (!approved || !ordererApproved) {
 			if (!this.props.signatureData && !this.props.ordererData) {
@@ -1361,11 +1361,11 @@ class SignatureDetailModal extends React.Component {
 				cancelButtonLabel={translate('close')}
 			>
 				<p>
-					{translate(desc, {
+					<Trans>{translate(desc, {
 						org: this.props.request.originator_msp,
 						channel: this.props.request.channel,
 						number_of_signatures: this.props.request.current_policy.number_of_signatures,
-					})}
+					})}</Trans>
 				</p>
 				{this.renderChannelUpdate(translate)}
 				{!!onSubmit && (
@@ -1405,7 +1405,7 @@ SignatureDetailModal.propTypes = {
 	onClose: PropTypes.func,
 	onComplete: PropTypes.func,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -1422,4 +1422,4 @@ export default connect(
 	{
 		forwardRef: true,
 	}
-)(withLocalize(SignatureDetailModal));
+)(withTranslation()(SignatureDetailModal));

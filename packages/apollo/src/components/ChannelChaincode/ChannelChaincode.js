@@ -17,7 +17,7 @@ import { WarningFilled16 } from '@carbon/icons-react/es';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import emptySmartContractImage from '../../assets/images/empty_installed.svg';
 import { showError, updateState } from '../../redux/commonActions';
@@ -190,7 +190,7 @@ class ChannelChaincode extends Component {
 				<div className="ibp-channel-chaincode-version">{data.version}</div>
 				<div className="ibp-channel-chaincode-status">
 					{data.show_warning && <WarningFilled16 className="ibp--item-location-icon ibp-item-location-icon-certificate-warning" />}
-					{this.props.translate(status)}
+					{this.props.t(status)}
 				</div>
 			</>
 		);
@@ -239,10 +239,10 @@ class ChannelChaincode extends Component {
 									id="how-to-button"
 									className="ibp-channel-chaincode-how-to bx--btn bx--btn--tertiary"
 									onClick={() => {
-										window.open(this.props.translate('chaincode_how_to_link', { DOC_PREFIX: this.props.docPrefix }));
+										window.open(this.props.t('chaincode_how_to_link', { DOC_PREFIX: this.props.docPrefix }));
 									}}
 								>
-									{this.props.translate('chaincode_how_to')}
+									{this.props.t('chaincode_how_to')}
 								</button>
 							</div>
 						);
@@ -305,7 +305,7 @@ ChannelChaincode.propTypes = {
 	showError: PropTypes.func,
 	updateState: PropTypes.func,
 	ordererList: PropTypes.array,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -320,4 +320,4 @@ export default connect(
 		showError,
 		updateState,
 	}
-)(withLocalize(ChannelChaincode));
+)(withTranslation()(ChannelChaincode));

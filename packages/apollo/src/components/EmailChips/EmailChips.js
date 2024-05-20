@@ -15,11 +15,11 @@
 */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ChipInput from 'material-ui-chip-input';
-import Avatar from '@material-ui/core/Avatar';
-import Chip from '@material-ui/core/Chip';
-import withStyles from '@material-ui/core/styles/withStyles';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import ChipInput from '../ChipInput';
+import Avatar from '@mui/material/Avatar';
+import Chip from '@mui/material/Chip';
+import withStyles from '@mui/styles/withStyles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const styles = {
 	chipInputText: {
@@ -46,7 +46,7 @@ const styles = {
 	},
 };
 
-const theme = createMuiTheme({
+const theme = createTheme({
 	typography: {
 		useNextVariants: true,
 	},
@@ -56,7 +56,7 @@ class EmailChips extends Component {
 	render = () => {
 		const { classes } = this.props;
 		return (
-			<MuiThemeProvider theme={theme}>
+			<ThemeProvider theme={theme}>
 				<div>
 					<ChipInput
 						id={this.props.id}
@@ -101,7 +101,7 @@ class EmailChips extends Component {
 						chipRenderer={({ value, handleClick, handleDelete }, key) => (
 							<Chip
 								key={key}
-								style={{ margin: '8px 8px 0 0', float: 'left' }}
+								style={{ margin: '8px 8px 0 0', float: 'left', backgroundColor: '#e2e2e2' }}
 								avatar={<Avatar size={32}>{value[0].toUpperCase()}</Avatar>}
 								onClick={handleClick}
 								onDelete={handleDelete}
@@ -110,7 +110,7 @@ class EmailChips extends Component {
 						)}
 					/>
 				</div>
-			</MuiThemeProvider>
+			</ThemeProvider>
 		);
 	};
 }

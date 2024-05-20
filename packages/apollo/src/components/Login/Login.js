@@ -16,7 +16,7 @@
 import { Button } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { updateState } from '../../redux/commonActions';
@@ -45,17 +45,19 @@ export class Login extends Component {
 		});
 
 		// change <title> of the browser tab
-		document.title = this.props.translate('product_label');
+		document.title = this.props.t('product_label');
 	}
 
 	componentWillUnmount() { }
 
-	async onLogin(e) {
+	async onLogin() {
 		try {
 			Log.info(`Logging in as ${this.props.email}`);
 			const resp = await LoginApi.login(this.props.email, this.props.login_password);
 			Log.debug(`Logged in as ${this.props.email}:`, resp);
-			window.location.href = '/nodes';
+			// window.location.href = '/nodes';
+			// window.location.reload(true);
+			this.props.onLogin();
 		} catch (error) {
 			Log.error(`Failed to log in as ${this.props.email}: ${error}`);
 			this.props.updateState(SCOPE, {
@@ -64,7 +66,7 @@ export class Login extends Component {
 		}
 	}
 
-	async onChangePassword(e) {
+	async onChangePassword() {
 		try {
 			Log.info('Changing password');
 			const resp = await LoginApi.changePassword(this.props.currentPassword, this.props.newPassword);
@@ -154,7 +156,7 @@ export class Login extends Component {
 			}
 		}
 
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<Router>
 				<>
@@ -265,7 +267,8 @@ const dataProps = {
 Login.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
+	onLogin: PropTypes.func
 };
 
 export default connect(
@@ -275,4 +278,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(Login));
+)(withTranslation()(Login));

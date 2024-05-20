@@ -16,7 +16,7 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation, Trans } from 'react-i18next';
 import { connect } from 'react-redux';
 import { showBreadcrumb, updateState } from '../../redux/commonActions';
 import { MigrationApi } from '../../rest/MigrationApi';
@@ -35,6 +35,7 @@ import { RestApi } from '../../rest/RestApi';
 import TranslateLink from '../TranslateLink/TranslateLink';
 import * as constants from '../../utils/constants';
 import SVGs from '../Svgs/Svgs';
+import withRouter from '../../hoc/withRouter';
 const SCOPE = 'MigrationPage';
 const Log = new Logger(SCOPE);
 
@@ -396,7 +397,7 @@ class MigrationPage extends Component {
 	// Main Migration Content
 	// --------------------------------------------------------------------------
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		const hasMigrationPerm = this.has_migration_permission();
 		const migrationStatusStr = this.props.overallMigrationStatus;
 		const minCaVersion = (this.props.settings && this.props.settings.MIGRATION_MIN_VERSIONS) ? this.props.settings.MIGRATION_MIN_VERSIONS['fabric-ca'] : '-';
@@ -690,7 +691,7 @@ class MigrationPage extends Component {
 										<br />
 										<p>{translate('mig_wallet_instructions2')}</p>
 										<br />
-										<p>{translate('mig_wallet_instructions3')}</p>
+										<p><Trans>{translate('mig_wallet_instructions3')}</Trans></p>
 										<div className="leftParagraph">
 											<p className="leftParagraph">
 												- New console: <a href={this.props.newConsoleURL}
@@ -717,7 +718,7 @@ class MigrationPage extends Component {
 	// Migration wizard
 	// --------------------------------------------------------------------------
 	renderSidePanel() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		const hasValidFabricVersions = this.props.hasValidFabricVersions;
 		const hasValidK8s = this.props.hasValidK8s;
 		const hasIamTokens = (this.props.userData && this.props.userData.iamAccessToken && this.props.userData.iamRefreshToken) ? true : false;
@@ -985,7 +986,7 @@ class MigrationPage extends Component {
 	// Delete service instance instructions/warnings
 	// --------------------------------------------------------------------------
 	renderDeleteContent() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<div>
 				<div className="ibp-modal-title twistyContent">
@@ -1005,7 +1006,7 @@ class MigrationPage extends Component {
 						</a>
 					</p>
 					<br />
-					<p>{translate('mig_warn_txt')}</p>
+					<p><Trans>{translate('mig_warn_txt')}</Trans></p>
 					<br />
 					<div className="leftParagraphMore">
 						<h4>{translate('mig_exported_wallets')}</h4>
@@ -1067,7 +1068,7 @@ const dataProps = {
 MigrationPage.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
-	translate: PropTypes.func,
+	t: PropTypes.func,
 	history: PropTypes.object,
 };
 
@@ -1076,4 +1077,4 @@ export default connect(state => {
 }, {
 	updateState,
 	showBreadcrumb
-})(withLocalize(MigrationPage));
+})(withTranslation()(withRouter(MigrationPage)));

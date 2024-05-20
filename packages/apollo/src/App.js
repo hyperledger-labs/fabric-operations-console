@@ -16,7 +16,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import './app.scss';
@@ -33,7 +33,7 @@ import StitchApi from './rest/StitchApi';
 import UserSettingsRestApi from './rest/UserSettingsRestApi';
 import ActionsHelper from './utils/actionsHelper';
 import Helper from './utils/helper';
-import localization from './utils/localization';
+// import localization from './utils/localization';
 import NodeStatus from './utils/status';
 
 const SCOPE = 'app';
@@ -44,7 +44,7 @@ class App extends Component {
 	cName = 'App';
 	constructor(props) {
 		super(props);
-		localization.init(props);
+		// localization.init(props);
 
 		this.state = {
 			authScheme: null,
@@ -54,6 +54,10 @@ class App extends Component {
 	async componentDidMount() {
 		NodeStatus.initialize(this.props.dispatch);
 
+		this.initializeAppData();
+	}
+
+	async initializeAppData() {
 		try {
 			const userInfo = await this.getUserInfo();
 			this.props.updateState('userInfo', userInfo);
@@ -187,7 +191,7 @@ class App extends Component {
 			let serviceInfo = null;
 			try {
 				serviceInfo = await NodeRestApi.getServiceInstanceInfo();
-			} catch (err) {
+			} catch {
 				serviceInfo = { info: { isPaid: false } };
 			}
 			features.cluster_data.type = _.get(serviceInfo, 'info.isPaid') ? 'paid' : 'free';
@@ -252,7 +256,7 @@ class App extends Component {
 					try {
 						const temp = JSON.stringify(text).replace(/\\"/g, '"');
 						return temp.substring(1, 1) + temp.substring(1, temp.length - 1);
-					} catch (e) {
+					} catch {
 						return text;
 					}
 				}
@@ -263,7 +267,7 @@ class App extends Component {
 		try {
 			window.remote.apply(window.log, remote_logging_options);
 			window.log.setLevel('debug');
-		} catch (e) {
+		} catch {
 			// might already be applied
 		}
 
@@ -278,7 +282,7 @@ class App extends Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		if (!this.state.authScheme || !this.props.userInfo) {
 			return (
 				<LoadingWithContent withOverlay
@@ -295,7 +299,9 @@ class App extends Component {
 
 				// if using local username/password, send user to our login prompt
 				if (this.state.authScheme.type === 'couchdb') {
-					return <Login />;
+					return <Login onLogin={() => {
+						this.initializeAppData()
+					}} />;
 				}
 
 				// if using sso, send user to sso's login prompt
@@ -313,7 +319,6 @@ class App extends Component {
 
 			// if user is logged in
 			else {
-
 				// if user is logged in but has no access
 				if (!ActionsHelper.canViewOpTools(this.props.userInfo)) {
 					return (
@@ -328,8 +333,7 @@ class App extends Component {
 				// if user is logged in but is using the default password, send user to change pass prompt
 				if (this.state.authScheme.type === 'couchdb' && this.props.userInfo && this.props.userInfo.logged && this.props.userInfo.password_type === 'default') {
 					return <Login hostUrl={this.state.authScheme.host_url}
-						changePassword={true}
-					/>;
+						changePassword={true} />;
 				}
 
 				// if user is logged in and can view the app, render the the app
@@ -346,7 +350,7 @@ class App extends Component {
 const dataProps = {
 	updateState: PropTypes.func,
 	userInfo: PropTypes.object,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 App.propTypes = {
@@ -365,4 +369,4 @@ export default connect(
 			...bindActionCreators({ updateState }, dispatch),
 		};
 	}
-)(withLocalize(App));
+)(withTranslation()(App));

@@ -15,7 +15,7 @@
 */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import Helper from '../../utils/helper';
 import ChangePasswordModal from '../ChangePasswordModal/ChangePasswordModal';
 import { connect } from 'react-redux';
@@ -24,6 +24,7 @@ import LoginApi from '../../rest/LoginApi';
 import { Modal } from 'carbon-components-react';
 import Logger from '../Log/Logger';
 import { NodeRestApi } from '../../rest/NodeRestApi';
+import RenderHTML from "../RenderHTML/RenderHTML";
 
 const SCOPE = 'userProfile';
 const Log = new Logger(SCOPE);
@@ -94,7 +95,7 @@ class UserProfile extends Component {
 	}
 
 	render() {
-		const { name, email, logout_url, canLogout, canChangePassword, translate } = this.props;
+		const { name, email, logout_url, canLogout, canChangePassword, t:translate } = this.props;
 		return (
 			<div id="ibp-user-profile"
 				className={`ibp-user-info-detail-container ${canLogout ? 'ibp-user-info-detail-container-longer' : ''}`}
@@ -157,7 +158,7 @@ class UserProfile extends Component {
 						danger
 						open
 					>
-						<p>{translate('logout_modal', { bust: Date.now() })}</p>
+						<p><RenderHTML value={translate('logout_modal', { bust: Date.now() })}/></p>
 					</Modal>
 				)}
 			</div>
@@ -182,7 +183,7 @@ UserProfile.propTypes = {
 	updateState: PropTypes.func,
 	showSuccess: PropTypes.func,
 	showError: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -194,4 +195,4 @@ export default connect(
 		showSuccess,
 		showError,
 	}
-)(withLocalize(UserProfile));
+)(withTranslation()(UserProfile));

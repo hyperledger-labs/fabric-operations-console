@@ -16,7 +16,7 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import Helper from '../../../../utils/helper';
 import { updateState } from '../../../../redux/commonActions';
@@ -27,7 +27,7 @@ const SCOPE = 'channelModal';
 
 class ChaincodePolicy extends Component {
 	render() {
-		const { translate, policy, orgs, setType, setMembers, lifecycle_policy, endorsement_policy } = this.props;
+		const { t: translate, policy, orgs, setType, setMembers, lifecycle_policy, endorsement_policy } = this.props;
 		const members = policy === 'lifecycle_policy' ? lifecycle_policy.members : endorsement_policy.members;
 		const max = members ? members.length : 1;
 		const options = max > 0 ? [] : [''];
@@ -135,7 +135,7 @@ const dataProps = {
 ChaincodePolicy.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -145,4 +145,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(ChaincodePolicy));
+)(withTranslation()(ChaincodePolicy));

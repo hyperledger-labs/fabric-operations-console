@@ -19,7 +19,7 @@ import { Button, Checkbox, Toggle } from 'carbon-components-react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../../../redux/commonActions';
 import * as constants from '../../../../utils/constants';
@@ -114,7 +114,7 @@ class Consenters extends Component {
 			overrideRaftDefaults,
 			updateState,
 			snapshot_interval_size,
-			translate,
+			t: translate,
 			use_default_consenters,
 			use_osnadmin,
 		} = this.props;
@@ -430,7 +430,7 @@ const dataProps = {
 Consenters.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -440,4 +440,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(Consenters));
+)(withTranslation()(Consenters));

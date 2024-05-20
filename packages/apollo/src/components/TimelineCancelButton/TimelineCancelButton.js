@@ -15,9 +15,9 @@
 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 
-const TimelineCancelButton = ({ onClose, closeMessage, translate }) => {
+const TimelineCancelButton = ({ onClose, closeMessage, t: translate }) => {
 	return (
 		<button className="ibp-timeline-cancel-button"
 			onClick={() => onClose()}
@@ -31,7 +31,7 @@ const TimelineCancelButton = ({ onClose, closeMessage, translate }) => {
 TimelineCancelButton.propTypes = {
 	onClose: PropTypes.func,
 	closeMessage: PropTypes.string,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
-export default withLocalize(TimelineCancelButton);
+export default withTranslation()(TimelineCancelButton);

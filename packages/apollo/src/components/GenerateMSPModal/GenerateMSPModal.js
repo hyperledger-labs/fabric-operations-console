@@ -18,7 +18,7 @@ import { Button, CodeSnippet, ContentSwitcher, InlineLoading, Switch } from 'car
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import { CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';
@@ -1340,7 +1340,7 @@ class GenerateMSPModal extends Component {
 
 	render() {
 		// let haveNoAdminOU = !this.props.fabric_node_ous || !this.props.fabric_node_ous.admin_ou_identifier;
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<SidePanel
 				id="generateMSPModal"
@@ -1410,7 +1410,7 @@ GenerateMSPModal.propTypes = {
 	closed: PropTypes.func,
 	onComplete: PropTypes.func,
 	onClose: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -1423,4 +1423,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(GenerateMSPModal));
+)(withTranslation()(GenerateMSPModal));

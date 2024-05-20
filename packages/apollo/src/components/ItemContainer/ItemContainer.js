@@ -18,7 +18,7 @@ import { Checkbox, Button, DataTable } from 'carbon-components-react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import plusIcon from '../../assets/images/plus.svg';
 import { updateState } from '../../redux/commonActions';
@@ -644,7 +644,7 @@ class ItemContainer extends Component {
 	}
 
 	initializeSearch() {
-		const { items, listMapping, translate } = this.props;
+		const { items, listMapping, t:translate } = this.props;
 		const searchSettings = [];
 		if (listMapping) {
 			const lang = document.documentElement.getAttribute('lang');
@@ -945,7 +945,7 @@ class ItemContainer extends Component {
 	}
 
 	render() {
-		const { translate } = this.props;
+		const { t: translate } = this.props;
 		return (
 			<div className="ibp-item-container">
 				{this.buildHeader(translate)}
@@ -996,7 +996,7 @@ ItemContainer.propTypes = {
 	onPage: PropTypes.func,
 	widerTiles: PropTypes.bool,
 	maxTilesPerPagination: PropTypes.number,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 	customSearch: PropTypes.func,
 };
 
@@ -1009,4 +1009,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(ItemContainer));
+)(withTranslation()(ItemContainer));

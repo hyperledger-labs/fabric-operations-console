@@ -18,7 +18,7 @@ import _ from 'lodash';
 import { InlineNotification } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../../../redux/commonActions';
 import Helper from '../../../../utils/helper';
@@ -68,7 +68,7 @@ class OSNJoin extends Component {
 	// main render
 	render() {
 		const {
-			translate,
+			t: translate,
 			channel_id,
 			block_error,
 		} = this.props;
@@ -202,7 +202,7 @@ const dataProps = {
 OSNJoin.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -212,4 +212,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(OSNJoin));
+)(withTranslation()(OSNJoin));

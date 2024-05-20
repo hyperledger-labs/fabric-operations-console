@@ -76,7 +76,7 @@ describe('AddUserModal component', () => {
 			onComplete: onCompleteStub,
 			updateState: updateStateStub,
 			showError: showErrorStub,
-			translate: translateStub,
+			t: translateStub,
 		};
 	});
 

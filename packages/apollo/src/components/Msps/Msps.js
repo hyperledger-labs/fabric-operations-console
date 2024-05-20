@@ -29,6 +29,7 @@ import Logger from '../Log/Logger';
 import MSPDefinitionModal from '../MSPDefinitionModal/MSPDefinitionModal';
 import PageContainer from '../PageContainer/PageContainer';
 import PageHeader from '../PageHeader/PageHeader';
+import withRouter from '../../hoc/withRouter';
 
 const SCOPE = 'msps';
 const Log = new Logger(SCOPE);
@@ -237,4 +238,4 @@ export default connect(
 		updateState,
 		showSuccess,
 	}
-)(Msps);
+)(withRouter(Msps));

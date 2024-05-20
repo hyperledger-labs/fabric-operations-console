@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Helper from '../../../../utils/helper';
 import { updateState } from '../../../../redux/commonActions';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import TranslateLink from '../../../TranslateLink/TranslateLink';
 import * as constants from '../../../../utils/constants';
 import { Checkbox } from 'carbon-components-react';
@@ -44,7 +44,7 @@ class BlockCuttingParams extends Component {
 	};
 
 	render() {
-		const { isChannelUpdate, overrideDefaults, updateState, absolute_max_bytes, max_message_count, preferred_max_bytes, timeout, translate } = this.props;
+		const { isChannelUpdate, overrideDefaults, updateState, absolute_max_bytes, max_message_count, preferred_max_bytes, timeout, t: translate } = this.props;
 		return (
 			<div className="ibp-block-cutting-params">
 				<p className="ibp-channel-section-title">{translate('block_cutting_params')}</p>
@@ -147,7 +147,7 @@ const dataProps = {
 BlockCuttingParams.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -157,4 +157,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(BlockCuttingParams));
+)(withTranslation()(BlockCuttingParams));

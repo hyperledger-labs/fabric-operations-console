@@ -15,7 +15,7 @@
 */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import TitleBar from '../TitleBar/TitleBar';
@@ -55,7 +55,7 @@ class RequestAccess extends Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		const isIam = this.props.auth_scheme === constants.AUTH_IAM;
 		return (
 			<div>
@@ -104,11 +104,11 @@ RequestAccess.propTypes = {
 	updateState: PropTypes.func,
 	userInfo: PropTypes.object,
 	host_url: PropTypes.string,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(state => {
 	return Helper.mapStateToProps(state[SCOPE], dataProps);
 }, {
 	updateState,
-})(withLocalize(RequestAccess));
+})(withTranslation()(RequestAccess));

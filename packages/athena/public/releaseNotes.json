@@ -1,5 +1,18 @@
 [
 	{
+		"version": "1.0.9-9",
+		"date": "16 May 2024",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			},
+			{
+				"title": "Library updates",
+				"details": "React and other libraries update"
+			}
+		]
+	}, {
 		"version": "1.0.9-5",
 		"date": "09 Apr 2024",
 		"description": [

@@ -74,7 +74,7 @@ describe('AddIdentityModal component', () => {
 			onClose: onCloseStub,
 			onComplete: onCompleteStub,
 			updateState: updateStateStub,
-			translate: translateStub,
+			t: translateStub,
 		};
 	});
 

@@ -228,7 +228,7 @@ describe('ChaincodeModal component', () => {
 			onClose: onCloseStub,
 			onComplete: onCompleteStub,
 			updateState: updateStateStub,
-			translate: translateStub,
+			t: translateStub,
 			members,
 			channel,
 			signature_requests: [],

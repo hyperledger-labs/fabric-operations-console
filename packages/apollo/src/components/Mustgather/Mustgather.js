@@ -17,7 +17,7 @@ import { Button, Loading } from 'carbon-components-react';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { Backoff, ExponentialStrategy } from 'backoff';
 import MustgatherApi from '../../rest/MustgatherApi';
 import SVGs from '../Svgs/Svgs';
@@ -301,22 +301,22 @@ export class Mustgather extends Component {
 	render() {
 		return (
 			<div className="mustgather-container">
-				<p className="mustgather-text">{this.props.translate('mustgather_heading')}</p>
-				<p className="mustgather-text">{this.props.translate('mustgather_description')}</p>
-				<p className="mustgather-text">{this.props.translate('mustgather_description_2')}</p>
-				<p className="mustgather-text">{this.props.translate('mustgather_description_3')}</p>
-				{this.state.mustgather.startedAt && this.renderLastRunTime(this.props.translate)}
+				<p className="mustgather-text">{this.props.t('mustgather_heading')}</p>
+				<p className="mustgather-text">{this.props.t('mustgather_description')}</p>
+				<p className="mustgather-text">{this.props.t('mustgather_description_2')}</p>
+				<p className="mustgather-text">{this.props.t('mustgather_description_3')}</p>
+				{this.state.mustgather.startedAt && this.renderLastRunTime(this.props.t)}
 				{this.state.mustgather.error && (
-					<p className="mustgather-error">{`${this.props.translate('mustgather_error')} ${this.state.mustgather.error.toString()}`}</p>
+					<p className="mustgather-error">{`${this.props.t('mustgather_error')} ${this.state.mustgather.error.toString()}`}</p>
 				)}
-				{!this.state.backOff ? this.renderButtonSection(this.props.translate) : this.renderTimeoutMessage(this.props.translate)}
+				{!this.state.backOff ? this.renderButtonSection(this.props.t) : this.renderTimeoutMessage(this.props.t)}
 			</div>
 		);
 	}
 }
 
-export default connect()(withLocalize(Mustgather));
+export default connect()(withTranslation()(Mustgather));
 
 Mustgather.propTypes = {
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };

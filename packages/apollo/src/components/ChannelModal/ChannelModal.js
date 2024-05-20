@@ -18,7 +18,7 @@ import _ from 'lodash';
 import parse from 'parse-duration';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import ChannelApi from '../../rest/ChannelApi';
@@ -1283,7 +1283,7 @@ class ChannelModal extends Component {
 			orgs: all_orgs,
 			original_orgs: JSON.parse(JSON.stringify(all_orgs)),
 			missingDefinitionError:
-				missingDefinitions.length > 0 ? this.props.translate('missing_msp_definition', { list_of_msps: _.join(missingDefinitions, ',') }) : null,
+				missingDefinitions.length > 0 ? this.props.t('missing_msp_definition', { list_of_msps: _.join(missingDefinitions, ',') }) : null,
 		});
 		this.populateChannelAcls();
 		this.populateACLDropdowns(existingOrgs.map(x => x.msp));
@@ -1312,7 +1312,7 @@ class ChannelModal extends Component {
 		if (admins.length > 0) {
 			for (let i = 1; i <= admins.length; i++) {
 				specificPolicyDropdown.push({
-					name: this.props.translate('channel_specific_policy', {
+					name: this.props.t('channel_specific_policy', {
 						count: i,
 						total: admins.length,
 					}),
@@ -1322,7 +1322,7 @@ class ChannelModal extends Component {
 		}
 		let init_policy = this.props.nOutOf
 			? {
-				name: this.props.translate('channel_specific_policy', {
+				name: this.props.t('channel_specific_policy', {
 					count: this.props.nOutOf.n,
 					total: this.props.nOutOf.outOf,
 				}),
@@ -2270,7 +2270,7 @@ class ChannelModal extends Component {
 	// render all the step components
 	render() {
 		const isHigherCapabilityAvailable = this.isAnyHigherCapabilityAvailable();
-		const { isChannelUpdate, translate } = this.props;
+		const { isChannelUpdate, t: translate } = this.props;
 
 		return (
 			<SidePanel
@@ -2404,7 +2404,7 @@ ChannelModal.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
 	closed: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 	editLoading: PropTypes.bool,
 };
 
@@ -2424,4 +2424,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(ChannelModal));
+)(withTranslation()(ChannelModal));

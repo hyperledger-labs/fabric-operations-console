@@ -15,7 +15,7 @@
 */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import apiIcon from '../../assets/images/api_fill.svg';
 import archDiagram from '../../assets/images/arch_diagram_icon.svg';
@@ -85,7 +85,7 @@ class WelcomeBannerContent extends Component {
 		if (this.props.isOpening) {
 			overlayClassName = 'welcome--banner-transitioning--out';
 		}
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<WelcomeBanner closed={this.props.onClose}
 				ref={welcomeBanner => (this.welcomeBanner = welcomeBanner)}
@@ -205,7 +205,7 @@ const dataProps = {
 WelcomeBannerContent.propTypes = {
 	...dataProps,
 	onClose: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -221,4 +221,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(WelcomeBannerContent));
+)(withTranslation()(WelcomeBannerContent));

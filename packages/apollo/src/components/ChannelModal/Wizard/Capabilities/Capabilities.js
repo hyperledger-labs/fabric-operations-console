@@ -17,7 +17,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../../../redux/commonActions';
 import Helper from '../../../../utils/helper';
@@ -117,7 +117,7 @@ class Capabilities extends Component {
 			selectedApplicationCapability,
 			selectedOrdererCapability,
 			isChannelUpdate,
-			translate,
+			t: translate,
 		} = this.props;
 		const use_default = {
 			name: translate('use_default'),
@@ -242,7 +242,7 @@ const dataProps = {
 Capabilities.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -252,4 +252,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(Capabilities));
+)(withTranslation()(Capabilities));

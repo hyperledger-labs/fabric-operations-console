@@ -17,7 +17,7 @@ import { Button, NumberInputSkeleton, ToggleSmall } from 'carbon-components-reac
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { clearNotifications, showBreadcrumb, showError, updateState, showSuccess } from '../../redux/commonActions';
 import SettingsApi from '../../rest/SettingsApi';
@@ -36,6 +36,7 @@ import { NodeRestApi } from '../../rest/NodeRestApi';
 import IdentityApi from '../../rest/IdentityApi';
 import SidePanel from '../SidePanel/SidePanel';
 import { EventsRestApi } from '../../rest/EventsRestApi';
+import withRouter from '../../hoc/withRouter';
 
 const SCOPE = 'comp_settings';
 const Log = new Logger(SCOPE);
@@ -729,7 +730,7 @@ export class Settings extends Component {
 	}
 
 	render = () => {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		const progress_width = isNaN(this.props.width) ? 0 : this.props.width;
 
 		return (
@@ -798,7 +799,7 @@ const dataProps = {
 Settings.propTypes = {
 	...dataProps,
 	showSuccess: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -816,4 +817,4 @@ export default connect(
 		updateState,
 		showSuccess,
 	}
-)(withLocalize(Settings));
+)(withTranslation()(withRouter(Settings)));

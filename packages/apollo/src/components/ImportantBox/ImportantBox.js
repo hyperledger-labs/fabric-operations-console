@@ -17,11 +17,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation, Trans } from 'react-i18next';
 
 class ImportantBox extends Component {
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<div
 				className={`ibp-important-box-container
@@ -32,7 +32,7 @@ class ImportantBox extends Component {
 				<p className="ibp-important-label">{translate('important')}</p>
 				<div className="ibp-important-box">
 					<p className="ibp-important-text">
-						{this.props.text && translate(this.props.text, this.props.opts)}
+						<Trans>{this.props.text && translate(this.props.text, this.props.opts)}</Trans>
 						{this.props.link && (
 							<a
 								href={translate(this.props.link, { DOC_PREFIX: this.props.docPrefix })}
@@ -58,11 +58,11 @@ ImportantBox.propTypes = {
 	data: PropTypes.any,
 	docPrefix: PropTypes.string,
 	kind: PropTypes.oneOf(['informational', 'strict']),
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(state => {
 	return {
 		docPrefix: state['settings'] ? state['settings']['docPrefix'] : null,
 	};
-})(withLocalize(ImportantBox));
+})(withTranslation()(ImportantBox));

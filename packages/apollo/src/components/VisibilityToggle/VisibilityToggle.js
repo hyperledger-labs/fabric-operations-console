@@ -16,7 +16,7 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import SVGs from '../Svgs/Svgs';
 
 export class VisibilityToggle extends Component {
@@ -81,7 +81,7 @@ export class VisibilityToggle extends Component {
 
 	render() {
 		const visible = this.state ? this.state.visible : this.isVisible();
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<button
 				id={this.props.idToToggle + '-toggle'}
@@ -100,7 +100,7 @@ VisibilityToggle.propTypes = {
 	idToToggle: PropTypes.string,
 	hidden: PropTypes.string,
 	text: PropTypes.string,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
-export default withLocalize(VisibilityToggle);
+export default withTranslation()(VisibilityToggle);

@@ -17,7 +17,7 @@ import { CodeSnippet, SkeletonPlaceholder } from 'carbon-components-react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { clearNotifications, showError, updateState } from '../../redux/commonActions';
 import { ChannelParticipationApi } from '../../rest/ChannelParticipationApi';
@@ -243,7 +243,7 @@ class ChannelParticipationUnjoinModal extends Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<div>
 				<SidePanel
@@ -286,7 +286,7 @@ ChannelParticipationUnjoinModal.propTypes = {
 	...dataProps,
 	onClose: PropTypes.func,
 	onComplete: PropTypes.func,
-	translate: PropTypes.func,
+	t: PropTypes.func,
 };
 
 export default connect(
@@ -300,4 +300,4 @@ export default connect(
 		showError,
 		clearNotifications,
 	}
-)(withLocalize(ChannelParticipationUnjoinModal));
+)(withTranslation()(ChannelParticipationUnjoinModal));

@@ -15,7 +15,7 @@
 */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import Helper from '../../utils/helper';
@@ -119,7 +119,7 @@ class ChangePasswordModal extends Component {
 			this.props.newPassword !== this.props.confirmPassword ||
 			this.props.newPasswordError !== '';
 
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<div>
 				<SidePanel
@@ -204,7 +204,7 @@ ChangePasswordModal.propTypes = {
 	...dataProps,
 	onClose: PropTypes.func,
 	onComplete: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -214,4 +214,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(ChangePasswordModal));
+)(withTranslation()(ChangePasswordModal));

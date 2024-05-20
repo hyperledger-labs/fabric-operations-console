@@ -17,7 +17,7 @@ import { Dropdown } from 'carbon-components-react';
 import DropdownSkeleton from 'carbon-components-react/lib/components/Dropdown/Dropdown.Skeleton';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { showError, updateState } from '../../redux/commonActions';
 import { MspRestApi } from '../../rest/MspRestApi';
@@ -211,7 +211,7 @@ class ImportMspModal extends React.Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<SidePanel
 				id="add-users"
@@ -271,7 +271,7 @@ ImportMspModal.propTypes = {
 	onClose: PropTypes.func,
 	updateState: PropTypes.func,
 	showError: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -282,4 +282,4 @@ export default connect(
 		showError,
 		updateState,
 	}
-)(withLocalize(ImportMspModal));
+)(withTranslation()(ImportMspModal));

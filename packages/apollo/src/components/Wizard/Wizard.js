@@ -17,7 +17,7 @@ import _ from 'lodash';
 import { Loading } from 'carbon-components-react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import Helper from '../../utils/helper';
@@ -286,7 +286,7 @@ class Wizard extends Component {
 	render() {
 		const steps = this.getWizardSteps();
 		const total = steps.length;
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		return (
 			<SidePanel
 				disable_focus_trap={this.props.disable_focus_trap}
@@ -349,7 +349,7 @@ Wizard.propTypes = {
 	submitButtonLabel: PropTypes.string,
 	cancelButtonId: PropTypes.string,
 	cancelButtonLabel: PropTypes.string,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 	showSubmitSpinner: PropTypes.bool,
 	middleButton: PropTypes.object,
 };
@@ -361,4 +361,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(Wizard));
+)(withTranslation()(Wizard));

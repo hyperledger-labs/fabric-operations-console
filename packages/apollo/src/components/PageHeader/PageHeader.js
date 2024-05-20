@@ -17,7 +17,7 @@ import { InlineNotification, NotificationActionButton } from 'carbon-components-
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withLocalize } from 'react-localize-redux';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import { NodeRestApi } from '../../rest/NodeRestApi';
@@ -134,7 +134,7 @@ export class PageHeader extends Component {
 	// change the color/type of the migration banner based on how much time is left
 	detectBannerType(deadline_timestamp_ms) {
 		const time_left_ms = deadline_timestamp_ms - Date.now();
-		console.log('[migration] time remaining', Helper.friendly_ms(time_left_ms, this.props.translate));
+		console.log('[migration] time remaining', Helper.friendly_ms(time_left_ms, this.props.t));
 		if (time_left_ms <= 1000 * 60 * 60 * 24 * 30) {				// <= 30 days
 			return 'error';
 		} else if (time_left_ms <= 1000 * 60 * 60 * 24 * 90) {		// <= 90 days
@@ -348,7 +348,7 @@ export class PageHeader extends Component {
 	}
 
 	render() {
-		const translate = this.props.translate;
+		const translate = this.props.t;
 		const created_parsed_certs = this.parseAllCompCerts(this.props.createdArr);
 		let details = this.buildCertDetailsStr(created_parsed_certs);
 
@@ -509,7 +509,7 @@ const dataProps = {
 PageHeader.propTypes = {
 	...dataProps,
 	updateState: PropTypes.func,
-	translate: PropTypes.func, // Provided by withLocalize
+	t: PropTypes.func, // Provided by withTranslation()
 };
 
 export default connect(
@@ -521,4 +521,4 @@ export default connect(
 	{
 		updateState,
 	}
-)(withLocalize(PageHeader));
+)(withTranslation()(PageHeader));

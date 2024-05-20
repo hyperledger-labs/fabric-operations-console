@@ -46,7 +46,7 @@ describe('SidePanelError component', () => {
 		propsStub = {
 			error: new Error('some error'),
 
-			translate: translateStub,
+			t: translateStub,
 		};
 	});
 
@@ -258,7 +258,7 @@ describe('SidePanelError component', () => {
 		it('should return error if it is a string', () => {
 			const propsStubStringError = {
 				error: 'error string',
-				translate: translateStub,
+				t: translateStub,
 			};
 			const component = mount(<SidePanelError {...propsStubStringError} />);
 
@@ -301,7 +301,7 @@ describe('SidePanelError component', () => {
 		it('should stringify error when unable to do anything else', () => {
 			const propsStubStringError = {
 				error: 1,
-				translate: translateStub,
+				t: translateStub,
 			};
 			const component = mount(<SidePanelError {...propsStubStringError} />);
 
