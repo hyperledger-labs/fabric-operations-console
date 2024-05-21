@@ -643,7 +643,7 @@ function setHeaders(req, res, next) {
 	res.setHeader('X-Content-Type-Options', 'nosniff');									// suggestion by ibm security
 	res.setHeader('X-XSS-Protection', '1; mode=block');									// suggestion by ibm security
 	res.setHeader('X-Frame-Options', 'deny');											// suggestion by ibm security
-	res.setHeader('Server', ev.ATHENA_VERSION);											// needed for ONECLOUD UX302
+	// res.setHeader('Server', ev.ATHENA_VERSION);											// needed for ONECLOUD UX302
 
 	let setNoCache = false;
 	if (req.url.indexOf('/api/') === 0 || req.url.indexOf('/ak/api/') === 0) {			// all api routes follow the pattern /api/* and /ak/api/*

@@ -1683,10 +1683,10 @@
 					"CSP_HEADER_VALUES": [
 						"connect-src *",
 						"default-src 'none'",
-						"font-src 'self' *.s81c.com fonts.gstatic.com",
+						"font-src 'self' *.s81c.com",
 						"frame-ancestors 'none'",
 						"img-src 'self' *.ibm.com appboy-images.com",
-						"script-src 'self' 'unsafe-eval' 'unsafe-inline' *.ibm.com api.segment.com cdn.segment.com console.bluemix.net *.braze.com lpcdn.lpsnmedia.net *.liveperson.net",
+						"script-src 'self' 'unsafe-eval' 'unsafe-inline' *.ibm.com",
 						"style-src 'self' 'unsafe-inline' *.ibm.com"
 					],
 					"DB_SYSTEM": "db-bd000d77c84344e5809bef2ca2313319-system",
