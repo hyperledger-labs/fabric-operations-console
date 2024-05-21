@@ -36,6 +36,7 @@ import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import TranslateLink from '../TranslateLink/TranslateLink';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
+import RenderParamHTML from '../RenderHTML/RenderParamHTML';
 
 const SCOPE = 'caModal';
 const Log = new Logger(SCOPE);
@@ -530,31 +531,25 @@ export class CAModal extends React.Component {
 			>
 				<div className="ibp-remove-ca-desc">
 					<p>
-						{this.props.ca.location === 'ibm_saas'
-							? translate('delete_ca_desc', {
-								name: (
-									<CodeSnippet
-										type="inline"
-										ariaLabel={translate('copy_text', { copyText: this.props.ca.display_name })}
-										light={false}
-										onClick={() => Clipboard.copyToClipboard(this.props.ca.display_name)}
-									>
-										{this.props.ca.display_name}
-									</CodeSnippet>
-								),
-							})
-							: translate('remove_ca_desc', {
-								name: (
-									<CodeSnippet
-										type="inline"
-										ariaLabel={translate('copy_text', { copyText: this.props.ca.display_name })}
-										light={false}
-										onClick={() => Clipboard.copyToClipboard(this.props.ca.display_name)}
-									>
-										{this.props.ca.display_name}
-									</CodeSnippet>
-								),
-							})}
+						{this.props.ca.location === 'ibm_saas' ? RenderParamHTML(translate, 'delete_ca_desc', {
+							name: <CodeSnippet
+								type="inline"
+								ariaLabel={translate('copy_text', { copyText: this.props.ca.display_name })}
+								light={false}
+								onClick={() => Clipboard.copyToClipboard(this.props.ca.display_name)}
+							>
+								{this.props.ca.display_name}
+							</CodeSnippet>
+						}) : RenderParamHTML(translate, 'remove_ca_desc', {
+							name: <CodeSnippet
+								type="inline"
+								ariaLabel={translate('copy_text', { copyText: this.props.ca.display_name })}
+								light={false}
+								onClick={() => Clipboard.copyToClipboard(this.props.ca.display_name)}
+							>
+								{this.props.ca.display_name}
+							</CodeSnippet>
+						})}
 					</p>
 				</div>
 				<div className="ibp-remove-ca-confirm">{translate('remove_ca_confirm')}</div>
@@ -568,7 +563,7 @@ export class CAModal extends React.Component {
 						},
 					]}
 				/>
-			</WizardStep>
+			</WizardStep >
 		);
 	}
 
@@ -582,17 +577,15 @@ export class CAModal extends React.Component {
 				<div>
 					<div className="ibp-remove-peer-desc">
 						<p>
-							{translate('upgrade_node_desc', {
-								name: (
-									<CodeSnippet
-										type="inline"
-										ariaLabel={translate('copy_text', { copyText: this.props.ca.display_name })}
-										light={false}
-										onClick={() => Clipboard.copyToClipboard(this.props.ca.display_name)}
-									>
-										{this.props.ca.display_name}
-									</CodeSnippet>
-								),
+							{RenderParamHTML(translate, 'upgrade_node_desc', {
+								name: <CodeSnippet
+									type="inline"
+									ariaLabel={translate('copy_text', { copyText: this.props.ca.display_name })}
+									light={false}
+									onClick={() => Clipboard.copyToClipboard(this.props.ca.display_name)}
+								>
+									{this.props.ca.display_name}
+								</CodeSnippet>
 							})}
 						</p>
 					</div>
@@ -653,7 +646,7 @@ export class CAModal extends React.Component {
 				<div>
 					<div className="ibp-remove-peer-desc">
 						<p>
-							{translate('confirm_patch_desc', {
+							{RenderParamHTML(translate, 'confirm_patch_desc', {
 								name: (
 									<CodeSnippet
 										type="inline"
@@ -673,7 +666,7 @@ export class CAModal extends React.Component {
 									>
 										{this.props.new_version}
 									</CodeSnippet>
-								),
+								)
 							})}
 						</p>
 					</div>

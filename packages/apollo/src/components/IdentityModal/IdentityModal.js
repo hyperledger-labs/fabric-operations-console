@@ -25,6 +25,7 @@ import Helper from '../../utils/helper';
 import Form from '../Form/Form';
 import Logger from '../Log/Logger';
 import SidePanel from '../SidePanel/SidePanel';
+import RenderParamHTML from '../RenderHTML/RenderParamHTML';
 
 const SCOPE = 'identityModal';
 const Log = new Logger(SCOPE);
@@ -272,7 +273,7 @@ class IdentityModal extends React.Component {
 					<h1 className="ibm-light">{translate('remove_identity')}</h1>
 				</div>
 				<p className="ibp-remove-identity-desc">
-					{translate('remove_identity_desc', {
+					{RenderParamHTML(translate, 'remove_identity_desc', {
 						name: (
 							<CodeSnippet
 								type="inline"

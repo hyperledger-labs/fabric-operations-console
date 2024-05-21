@@ -57,6 +57,7 @@ import SVGs from '../Svgs/Svgs';
 import TranslateLink from '../TranslateLink/TranslateLink';
 import ChannelParticipationDetails from './ChannelParticipationDetails';
 import withRouter from '../../hoc/withRouter';
+import RenderParamHTML from '../RenderHTML/RenderParamHTML';
 
 const SCOPE = 'ordererDetails';
 const Log = new Logger(SCOPE);
@@ -941,7 +942,7 @@ class OrdererDetails extends Component {
 			<div className="pending-node-notice">
 				<div>
 					<h3>{translate('node_requires_attention')}</h3>
-					<p>{translate('node_requires_attention_desc', data)}</p>
+					<p>{RenderParamHTML(translate, 'node_requires_attention_desc', data)}</p>
 					<div>
 						<Button
 							id="go-to-node-button"

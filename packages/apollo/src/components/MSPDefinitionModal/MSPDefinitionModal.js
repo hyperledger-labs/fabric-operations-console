@@ -32,6 +32,7 @@ import JsonInput from '../JsonInput/JsonInput';
 import Logger from '../Log/Logger';
 import SidePanel from '../SidePanel/SidePanel';
 import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
+import RenderParamHTML from '../RenderHTML/RenderParamHTML';
 
 const SCOPE = 'MSPDefinitionModal';
 const Log = new Logger(SCOPE);
@@ -397,7 +398,7 @@ export class MSPDefinitionModal extends Component {
 						<h1 className="ibm-light">{translate('remove_org')}</h1>
 					</div>
 					<p className="ibp-remove-msp-desc">
-						{translate('remove_msp_desc', {
+						{RenderParamHTML(translate, 'remove_msp_desc', {
 							name: (
 								<CodeSnippet
 									type="inline"

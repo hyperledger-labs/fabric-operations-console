@@ -219,7 +219,18 @@ class SignatureDetailModal extends React.Component {
 				name: org.msp_id,
 				type: 'dropdown',
 				options: org.identities || this.props.identities,
-				label: 'signature_for_msp',
+				label: RenderParamHTML(translate, 'signature_for_msp', {
+					msp: (
+						<CodeSnippet
+							type="inline"
+							ariaLabel={translate('copy_text', { copyText: this.getMSPDisplayName(org.msp_id, org.root_certs) })}
+							light={false}
+							onClick={() => Clipboard.copyToClipboard(this.getMSPDisplayName(org.msp_id, org.root_certs))}
+						>
+							{this.getMSPDisplayName(org.msp_id, org.root_certs)}
+						</CodeSnippet>
+					)
+				}),
 				labelOptions: {
 					msp: (
 						<CodeSnippet
@@ -241,7 +252,18 @@ class SignatureDetailModal extends React.Component {
 				name: orderer.msp_id,
 				type: 'dropdown',
 				options: orderer.identities || this.props.identities,
-				label: 'signature_for_msp',
+				label: RenderParamHTML(translate, 'signature_for_msp',{
+					msp: (
+						<CodeSnippet
+							type="inline"
+							ariaLabel={translate('copy_text', { copyText: this.getMSPDisplayName(orderer.msp_id, orderer.root_certs) })}
+							light={false}
+							onClick={() => Clipboard.copyToClipboard(this.getMSPDisplayName(orderer.msp_id, orderer.root_certs))}
+						>
+							{this.getMSPDisplayName(orderer.msp_id, orderer.root_certs)}
+						</CodeSnippet>
+					),
+				}),
 				labelOptions: {
 					msp: (
 						<CodeSnippet
