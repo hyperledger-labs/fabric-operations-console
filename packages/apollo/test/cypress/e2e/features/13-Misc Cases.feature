@@ -48,6 +48,44 @@ Feature: Verify miscellaneous cases of console works as expected
     And I clicked the button with text 'Remove ordering service'
     Then wait "5" seconds
 
+  Scenario: Update MSP Definition
+	When I am on the 'nodes' page
+	And I clicked the 'Ordering Service' orderer
+	Then wait "10" seconds
+	And I clicked element with class '.ibp-orderer-admin-update.ibp-orderer-admin-single'
+	And I clicked the button with title 'Select MSP'
+	Then wait "1" seconds
+	# And I clicked the div with text 'Ordering Service MSP'
+	And I clicked the div with id 'downshift-0-item-0'
+	Then wait "1" seconds
+	And I clicked the button with title 'Select an identity'
+	# And I clicked the div with text 'Ordering Service MSP Admin'
+	And I clicked the div with id 'downshift-1-item-1'
+	And I clicked the button with id 'submit'
+	Then wait "10" seconds
+	Then I should see a success toast with class '.bx--toast-notification__title' which says "The MSP definition for osmsp has been updated successfully."
+	When I am on the 'channels' page
+	And I clicked the div with id 'ibp-tile-channel2'
+	Then wait "5" seconds
+	And I clicked the button with text 'Channel details'
+	And I clicked the div with id 'ibp-tile-org1msp'
+	And I clicked the button with title 'Select MSP'
+	And I clicked the div with text 'Org1 MSP'
+	Then wait "1" seconds
+	And I clicked the button with title 'Select an identity'
+	And I clicked the div with text 'Org1 MSP Admin'
+	And I clicked the button with id 'submit'
+	Then wait "10" seconds
+	Then I should see a success toast with class '.bx--toast-notification__title' which says "The MSP definition for org1msp has been updated successfully."
+	Then wait "5" seconds
+	And I clicked the div with id 'ibp-tile-osmsp'
+	And I clicked the button with title 'Select MSP'
+	And I clicked the div with text 'Ordering Service MSP'
+	Then wait "1" seconds
+	And I clicked the button with id 'submit'
+	Then wait "10" seconds
+	Then I should see a success toast with class '.bx--toast-notification__title' which says "The proposal for updating MSP definition for osmsp has been submitted successfully."
+
   Scenario: Deleting Peer Org1
 	When I clicked the div with id 'ibp-tile-Peer Org1'
     And I clicked the button with id 'peerorg1-sticky-delete-button'
