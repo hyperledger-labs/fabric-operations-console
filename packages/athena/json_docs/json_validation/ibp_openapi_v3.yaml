@@ -9,7 +9,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 3.0.6
+  version: 3.0.0
   x-alternate-name: blockchain
   x-try-it-out-enabled:
     enabled: false
@@ -262,7 +262,7 @@ paths:
                     timestamp: 1537262855753
                     tags:
                       - fabric-ca
-                    version: 1.5.x
+                    version: 1.4.6-1
                     zone: '-'
         401:
           description: Request is unauthorized (invalid credentials).
@@ -505,7 +505,7 @@ paths:
                     tags:
                       - fabric-ca
                     timestamp: 1537262855753
-                    version: 1.5.x
+                    version: 1.4.6-1
                     zone: '-'
         400:
           description: Request is bad (invalid syntax).
@@ -621,7 +621,7 @@ paths:
                     tags:
                       - fabric-ca
                     timestamp: 1537262855753
-                    version: 1.5.x
+                    version: 1.4.6-1
                     zone: '-'
         400:
           description: Request is bad (invalid syntax).
@@ -732,7 +732,7 @@ paths:
                     tags:
                       - fabric-ca
                     timestamp: 1537262855753
-                    version: 1.5.x
+                    version: 1.4.6-1
                     zone: '-'
         400:
           description: Request is bad (invalid syntax).
@@ -843,7 +843,7 @@ paths:
                     tags:
                       - fabric-ca
                     timestamp: 1537262855753
-                    version: 1.5.x
+                    version: 1.4.6-1
                     zone: '-'
         400:
           description: Request is bad (invalid syntax).
@@ -1065,7 +1065,7 @@ paths:
                       - fabric-ca
                     timestamp: 1537262855753
                     type: fabric-peer
-                    version: 2.5.x
+                    version: 1.4.6-1
                     zone: '-'
         400:
           description: Request is bad (invalid syntax).
@@ -1215,7 +1215,7 @@ paths:
                       - fabric-ca
                     timestamp: 1537262855753
                     type: fabric-peer
-                    version: 2.5.x
+                    version: 1.4.6-1
                     zone: '-'
         400:
           description: Request is bad (invalid syntax).
@@ -1344,7 +1344,7 @@ paths:
                       - fabric-ca
                     timestamp: 1537262855753
                     type: fabric-peer
-                    version: 2.5.x
+                    version: 1.4.6-1
                     zone: '-'
         400:
           description: Request is bad (invalid syntax).
@@ -1543,7 +1543,7 @@ paths:
                       - fabric-ca
                     timestamp: 1537262855753
                     type: fabric-peer
-                    version: 2.5.x
+                    version: 1.4.6-1
                     zone: '-'
         400:
           description: Request is bad (invalid syntax).
@@ -1674,7 +1674,7 @@ paths:
                           - fabric-ca
                         timestamp: 1537262855753
                         type: fabric-peer
-                        version: 2.5.x
+                        version: 1.4.6-1
                         zone: '-'
         400:
           description: Request is bad (invalid syntax).
@@ -1818,7 +1818,7 @@ paths:
                       - fabric-ca
                     timestamp: 1537262855753
                     type: fabric-peer
-                    version: 2.5.x
+                    version: 1.4.6-1
                     zone: '-'
         400:
           description: Request is bad (invalid syntax).
@@ -1940,7 +1940,7 @@ paths:
                       - fabric-ca
                     timestamp: 1537262855753
                     type: fabric-peer
-                    version: 2.5.x
+                    version: 1.4.6-1
                     zone: '-'
         400:
           description: Request is bad (invalid syntax).
@@ -2131,7 +2131,7 @@ paths:
                       - fabric-ca
                     timestamp: 1537262855753
                     type: fabric-peer
-                    version: 2.5.x
+                    version: 1.4.6-1
                     zone: '-'
         400:
           description: Request is bad (invalid syntax).
@@ -2296,7 +2296,7 @@ paths:
                     timestamp: 1537262855753
                     tags:
                       - fabric-ca
-                    version: 1.5.x
+                    version: 1.4.6-1
                     zone: '-'
         401:
           description: Request is unauthorized (invalid credentials).
@@ -2831,27 +2831,31 @@ paths:
                   value:
                     versions:
                       ca:
-                        1.5.10-1:
+                        1.4.6-2:
                           default: true
-                          version: 1.5.10-1
+                          version: 1.4.6-2
+                          image: {}
+                        2.1.0-0:
+                          default: true
+                          version: 1.4.6-2
                           image: {}
                       peer:
-                        2.2.15-3:
+                        1.4.6-2:
                           default: true
-                          version: 2.2.15-3
+                          version: 1.4.6-2
                           image: {}
-                        2.5.7-1:
+                        2.1.0-0:
                           default: true
-                          version: 2.5.7-1
+                          version: 1.4.6-2
                           image: {}
                       orderer:
-                        2.2.15-3:
+                        1.4.6-2:
                           default: true
-                          version: 2.2.15-3
+                          version: 1.4.6-2
                           image: {}
-                        2.5.7-1:
+                        2.1.0-0:
                           default: true
-                          version: 2.5.7-1
+                          version: 1.4.6-2
                           image: {}
         401:
           description: Request is unauthorized (invalid credentials).
@@ -3660,7 +3664,7 @@ paths:
                         timestamp: 1537262855753
                         tags:
                           - fabric-ca
-                        version: 1.5.x
+                        version: 1.4.6-1
                         zone: '-'
         401:
           description: Request is unauthorized (invalid credentials).
@@ -3800,7 +3804,7 @@ paths:
                         timestamp: 1537262855753
                         tags:
                           - fabric-ca
-                        version: 1.5.x
+                        version: 1.4.6-1
                         zone: '-'
         401:
           description: Request is unauthorized (invalid credentials).
@@ -3940,7 +3944,7 @@ paths:
                         timestamp: 1537262855753
                         tags:
                           - fabric-ca
-                        version: 1.5.x
+                        version: 1.4.6-1
                         zone: '-'
         222:
           description: Request was successful (zero components were found).
@@ -5130,12 +5134,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Forbidden'
-        400:
-          description: Request is bad (invalid syntax).
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AddUserRequestDataValidation'
 
     delete:
       tags:
@@ -5207,12 +5205,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Forbidden'
-        400:
-          description: Request is bad (invalid syntax).
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EditUserRequestDataValidation'
 
     get:
       tags:
@@ -5400,29 +5392,21 @@ components:
       description: The unique id for the component in Kubernetes. Not available if component was imported.
     version:
       type: string
-      example: 2.5.x
+      example: 1.4.6-1
       description: The cached Hyperledger Fabric release version.
     version_desired:
       type: string
-      example: 2.5.x
+      example: 1.4.6-1
       description: The Hyperledger Fabric release version to use.
-    ca_version_desired:
-      type: string
-      example: 1.5.x
-      description: The Hyperledger Fabric release version to use.
-    ca_version_edit:
-      type: string
-      example: 1.5.x
-      description: The Hyperledger Fabric release version to update to.
     version_edit:
       type: string
-      example: 2.5.x
+      example: 1.4.6-1
       description: The Hyperledger Fabric release version to update to.
-    version_edit_peer: # peers are different, they have an upgrade validation rule below...
+    version_edit_peer: # peers are differnt, they have an upgrade validation rule below...
       type: string
-      example: 2.5.x
+      example: 1.4.6-1
       description: The Hyperledger Fabric peer release version to update to.
-      # you cannot upgrade between some versions like 1.5.x to 2.5.x, unless you ignore err, it does not have node.js v12 only v16
+      # you cannot upgrade between some versions like 1.4.x to 2.4.x, unless you ignore err, it does not have node.js v12 only v16
       # fabric's version compatibility matrix https://github.com/hyperledger/fabric-chaincode-node/blob/main/COMPATIBILITY.md
       x-validate_breaking_version_upgrade:
         1.4.x:
@@ -6020,7 +6004,7 @@ components:
         region:
           $ref: '#/components/schemas/k8s_region'
         version:
-          $ref: '#/components/schemas/ca_version_desired'
+          $ref: '#/components/schemas/version_desired'
 
         # removed 02/11/2020 - use config_override.registry.identities[0].name
         #enroll_id:
@@ -8432,7 +8416,7 @@ components:
             ca:
               $ref: '#/components/schemas/ResourceObject'
         version:
-          $ref: '#/components/schemas/ca_version_edit'
+          $ref: '#/components/schemas/version_edit'
         zone:
           $ref: '#/components/schemas/k8s_zone'
 
@@ -8766,7 +8750,7 @@ components:
         version:
           type: string
           description: The cached Hyperledger Fabric version for this component. [Available on ca/peer/orderer components w/query parameter 'deployment_attrs']
-          example: 2.5.x
+          example: 1.4.6-1
         zone:
           type: string
           description: The Kubernetes zone of this component's deployment. [Available on ca/peer/orderer components w/query parameter 'deployment_attrs']
@@ -8870,7 +8854,7 @@ components:
         timestamp:
           $ref: '#/components/schemas/timestamp_creation'
         version:
-          $ref: '#/components/schemas/ca_version_desired'
+          $ref: '#/components/schemas/version'
         zone:
           $ref: '#/components/schemas/k8s_zone'
 
@@ -9873,7 +9857,7 @@ components:
 
     ResourceObjectFabV1:
       type: object
-      description: This field requires the use of Fabric v1.5.* and **lower**.
+      description: This field requires the use of Fabric v1.4.* and **lower**.
       required:
         - requests
       properties:
@@ -9895,7 +9879,7 @@ components:
 
     ResourceObject:
       type: object
-      description: This field requires the use of Fabric v2.5.* and higher.
+      description: This field requires the use of Fabric v1.4.* and higher.
       required:
         - requests
       properties:
@@ -9907,7 +9891,7 @@ components:
     ResourceObjectCouchDb:
       type: object
       description: |
-        *Legacy field name* Use the field `statedb` instead. This field requires the use of Fabric v2.5.* and higher.
+        *Legacy field name* Use the field `statedb` instead. This field requires the use of Fabric v1.4.* and higher.
       required:
         - requests
       properties:
@@ -10253,9 +10237,9 @@ components:
       description: A supported release of Fabric for this component type.
       additionalProperties: true
       properties:
-        1.5.x:
+        1.4.6-2:
           $ref: '#/components/schemas/FabVersionObject'
-        2.5.x:
+        2.1.0-0:
           $ref: '#/components/schemas/FabVersionObject'
 
     FabVersionObject:
@@ -10268,7 +10252,7 @@ components:
         version:
           type: string
           description: The Fabric version.
-          example: 2.5.x
+          example: 1.4.6-2
         image:
           type: object
           description: Detailed image information for this Fabric release.
@@ -11244,21 +11228,6 @@ components:
               properties:
                 roles:
                   $ref: '#/components/schemas/api_roles'
-    AddUserRequestDataValidation:
-      description: Invalid request payload.
-      type: object
-      properties:
-        statusCode:
-          type: number
-          example: 400
-          enum:
-            - 400
-        msgs:
-          type: array
-          items:
-            type: string
-            description: A descriptive message of what is wrong with the request.
-            example: "invalid role for username: '$EMAIL', must have at least 1 role for username: '$EMAIL', username cannot be '$EMAIL', username already exists, username cannot contain a colon, username cannot contain a '<' or '>' character, username length cannot be less than '$environment.MIN_USERNAME_LEN' character or specified in configuration set in environment variable, username cannot be greater than '$environment.MIN_USERNAME_LEN' character or specified in configuration"
     AddUserResponse:
       type: object
       properties:
@@ -11288,21 +11257,6 @@ components:
       properties:
         uuids:
           $ref: '#/components/schemas/user_ids'
-    EditUserRequestDataValidation:
-      description: Invalid request payload.
-      type: object
-      properties:
-        statusCode:
-          type: number
-          example: 400
-          enum:
-            - 400
-        msgs:
-          type: array
-          items:
-            type: string
-            description: A descriptive message of what is wrong with the request.
-            example: "invalid roles for uuid: '$uuid', must have at least 1 role for uuid: '$uuid', uuid does not exist '$uuid', username already exists, username cannot contain a colon, username cannot contain a '<' or '>' character, username length cannot be less than '$environment.MIN_USERNAME_LEN' character or specified in configuration set in environment variable, username cannot be greater than '$environment.MIN_USERNAME_LEN' character or specified in configuration"
     GetUsersResponse:
       type: object
       properties:
