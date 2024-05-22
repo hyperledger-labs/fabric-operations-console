@@ -34,6 +34,7 @@ import Logger from '../Log/Logger';
 import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
+import RenderParamHTML from '../RenderHTML/RenderParamHTML';
 const semver = require('semver');
 
 const SCOPE = 'signatureDetailModal';
