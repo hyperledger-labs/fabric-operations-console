@@ -36,6 +36,7 @@ import Logger from '../Log/Logger';
 import SidePanel from '../SidePanel/SidePanel';
 import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import Timeline from '../Timeline/Timeline';
+import RenderParamHTML from '../RenderHTML/RenderParamHTML';
 
 const SCOPE = 'generateMSP';
 const Log = new Logger(SCOPE);
@@ -1013,7 +1014,7 @@ class GenerateMSPModal extends Component {
 				) : (
 					<>
 						<p className="ibp-generate-msp-selected-ca-text">
-							{translate('identities_from_chosen_ca', {
+							{RenderParamHTML(translate, 'identities_from_chosen_ca', {
 								name: (
 									<CodeSnippet
 										type="inline"

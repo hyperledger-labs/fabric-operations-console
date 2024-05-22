@@ -42,6 +42,7 @@ import TranslateLink from '../TranslateLink/TranslateLink';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
 import { Checkbox } from 'carbon-components-react';
+import RenderParamHTML from '../RenderHTML/RenderParamHTML';
 
 const SCOPE = 'peerModal';
 const Log = new Logger(SCOPE);
@@ -645,7 +646,7 @@ class PeerModal extends React.Component {
 				<div className="ibp-remove-peer-desc">
 					<p>
 						{this.props.peer.location === 'ibm_saas'
-							? translate('delete_peer_desc', {
+							? RenderParamHTML(translate, 'delete_peer_desc', {
 								name: (
 									<CodeSnippet
 										type="inline"
@@ -657,7 +658,7 @@ class PeerModal extends React.Component {
 									</CodeSnippet>
 								),
 							})
-							: translate('remove_peer_desc', {
+							: RenderParamHTML(translate, 'remove_peer_desc', {
 								name: (
 									<CodeSnippet
 										type="inline"
@@ -717,7 +718,7 @@ class PeerModal extends React.Component {
 			>
 				<div className="ibp-remove-peer-desc">
 					<p>
-						{translate('upgrade_node_desc', {
+						{RenderParamHTML(translate, 'upgrade_node_desc', {
 							name: (
 								<CodeSnippet
 									type="inline"
@@ -837,7 +838,7 @@ class PeerModal extends React.Component {
 			>
 				<div className="ibp-remove-peer-desc">
 					<p>
-						{translate('confirm_patch_desc', {
+						{RenderParamHTML(translate, 'confirm_patch_desc', {
 							name: (
 								<CodeSnippet
 									type="inline"

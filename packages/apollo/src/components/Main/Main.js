@@ -20,7 +20,7 @@ import React, { Component } from 'react';
 import { withIdleTimer } from 'react-idle-timer';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { showError, showSuccess, updateState } from '../../redux/commonActions';
 import LoginApi from '../../rest/LoginApi';
 import SettingsApi from '../../rest/SettingsApi';
@@ -142,7 +142,7 @@ class Main extends Component {
 	render() {
 		const translate = this.props.t;
 		return (
-			<Router>
+			<BrowserRouter>
 				<div className="ibm ibp-main">
 					<TitleBar userInfo={this.props.userInfo}
 						host_url={this.props.host_url}
@@ -156,8 +156,9 @@ class Main extends Component {
 							<ScrollToTop>
 								<Routes>
 									<Route
+										index
 										path="/"
-										render={() => <Navigate to="/nodes" replace={true} />}
+										element={<Navigate to="/nodes" replace={true} />}
 									/>
 									<Route path="/nodes"
 										element={<Nodes />}
@@ -168,92 +169,92 @@ class Main extends Component {
 									/>
 									<Route exact
 										path="/orderer/:clusterIdPath"
-										element={<OrdererDetails/>}
+										element={<OrdererDetails />}
 									/>
 									<Route exact
 										path="/orderer/:clusterIdPath/:nodeId"
-										element={<OrdererDetails/>}
+										element={<OrdererDetails />}
 									/>
 									{/* /debug is a debugging route that exposes a link in the left pane to download the config block of the channel */}
 									<Route exact
 										path="/debug/orderer/:clusterIdPath/:channelId?"
-										element={<OrdererDetails/>}
+										element={<OrdererDetails />}
 									/>
 									<Route path="/ca/:caId"
-										element={<CADetails/>}
+										element={<CADetails />}
 									/>
 									<Route path="/channels"
-										element={<Channels/>}
+										element={<Channels />}
 										exact
 									/>
 									{/* 2023/05/01 the /users route is now legacy, renamed to /access */}
 									<Route path="/users"
-										element={<Access/>}
+										element={<Access />}
 										exact
 									/>
 									<Route path="/access"
-										element={<Access/>}
+										element={<Access />}
 										exact
 									/>
 									<Route path="/peer/:peerId/channel/:channelId"
-										element={<ChannelDetails/>}
+										element={<ChannelDetails />}
 										exact
 									/>
 									{/* /debug is a debugging route that exposes a link in the left pane to download the config block of the channel */}
 									<Route path="/debug/peer/:peerId/channel/:channelId"
-										element={<ChannelDetails/>}
+										element={<ChannelDetails />}
 										exact
 									/>
 									<Route path="/peer/:peerId/channel/:channelId/block/:blockNumber"
-										element={<ChannelBlock/>}
+										element={<ChannelBlock />}
 										exact
 									/>
 									<Route path="/channel/:channelId"
-										element={<ChannelDetails/>}
+										element={<ChannelDetails />}
 										exact
 									/>
 									<Route path="/channel/:channelId/block/:blockNumber"
-										element={<ChannelBlock/>}
+										element={<ChannelBlock />}
 										exact
 									/>
 									<Route path="/smart-contracts"
-										element={<ChaincodesPage/>}
+										element={<ChaincodesPage />}
 										exact
 									/>
 									<Route path="/settings"
-										element={<Settings/>}
+										element={<Settings />}
 										exact
 									/>
 									<Route path="/wallet"
-										element={<Identities/>}
+										element={<Identities />}
 										exact
 									/>
 									<Route path="/organizations"
-										element={<Msps/>}
+										element={<Msps />}
 										exact
 									/>
 									<Route exact
 										path="/organization/:mspId"
-										element={<OrganizationDetails/>}
+										element={<OrganizationDetails />}
 									/>
 									<Route path="/support"
-										element={<Support/>}
+										element={<Support />}
 										exact
 									/>
 									<Route path="/export-identities"
-										element={<Settings/>}
+										element={<Settings />}
 										exact
 									/>
 									<Route path="/migration"
-										element={<MigrationPage/>}
+										element={<MigrationPage />}
 										exact
 									/>
 									<Route exact
 										path="/audit"
-										element={<AuditLogs/>}
+										element={<AuditLogs />}
 									/>
 									<Route path="*"
-										element={<NotFound/>}
+										element={<NotFound />}
 									/>
 								</Routes>
 							</ScrollToTop>
@@ -321,7 +322,7 @@ class Main extends Component {
 						</Modal>
 					)}
 				</div>
-			</Router>
+			</BrowserRouter>
 		);
 	}
 }

@@ -32,6 +32,7 @@ import { NodeRestApi } from '../../rest/NodeRestApi';
 import ImportantBox from '../ImportantBox/ImportantBox';
 import ConfigBlockApi from '../../rest/ConfigBlockApi';
 import { EventsRestApi } from '../../rest/EventsRestApi';
+import RenderParamHTML from '../RenderHTML/RenderParamHTML';
 
 const SCOPE = 'ChannelParticipationUnjoinModal';
 
@@ -177,7 +178,7 @@ class ChannelParticipationUnjoinModal extends Component {
 						<div className="ibp-modal-title">
 							<h1 className="ibm-light">{this.props.channelInfo.name}</h1>
 							<div className="ibp-remove-orderer-confirm">
-								{translate('remove_orderer_channel_desc', {
+								{RenderParamHTML(translate, 'remove_orderer_channel_desc', {
 									name: (
 										<CodeSnippet
 											type="inline"

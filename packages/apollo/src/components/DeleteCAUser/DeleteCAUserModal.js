@@ -26,6 +26,7 @@ import Form from '../Form/Form';
 import Logger from '../Log/Logger';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
+import RenderParamHTML from '../RenderHTML/RenderParamHTML';
 
 const SCOPE = 'deleteCAModal';
 const Log = new Logger(SCOPE);
@@ -62,7 +63,7 @@ class DeleteCAUserModal extends React.Component {
 			>
 				<div className="ibp-remove-ca-user-desc">
 					<p>
-						{translate('remove_ca_user_desc', {
+						{RenderParamHTML(translate, 'remove_ca_user_desc', {
 							enroll_id: (
 								<CodeSnippet
 									type="inline"

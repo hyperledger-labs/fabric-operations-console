@@ -26,6 +26,7 @@ import Form from '../Form/Form';
 import Logger from '../Log/Logger';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
+import RenderParamHTML from '../RenderHTML/RenderParamHTML';
 
 const SCOPE = 'ordererConsenterModal';
 const Log = new Logger(SCOPE);
@@ -40,7 +41,7 @@ class OrdererConsenterModal extends React.Component {
 		});
 	}
 
-	removeConsenter = async() => {
+	removeConsenter = async () => {
 		try {
 			await OrdererRestApi.removeOrdererNodeFromSystemChannel({
 				...this.props.orderer,
@@ -56,7 +57,7 @@ class OrdererConsenterModal extends React.Component {
 		}
 	};
 
-	updateOrdererCerts = async() => {
+	updateOrdererCerts = async () => {
 		try {
 			await this.retryUpdateCert(this.props.orderer.raft || [this.props.orderer]);
 			this.props.onComplete();
@@ -104,7 +105,7 @@ class OrdererConsenterModal extends React.Component {
 			>
 				<div className="ibp-remove-consenter-desc">
 					<p>
-						{translate('remove_consenter_system_channel_desc', {
+						{RenderParamHTML(translate, 'remove_consenter_system_channel_desc', {
 							name: (
 								<CodeSnippet
 									type="inline"
@@ -151,7 +152,7 @@ class OrdererConsenterModal extends React.Component {
 			>
 				<div>
 					<p>
-						{translate('update_consenter_system_channel_desc', {
+						{RenderParamHTML(translate, 'update_consenter_system_channel_desc', {
 							name: (
 								<CodeSnippet
 									type="inline"

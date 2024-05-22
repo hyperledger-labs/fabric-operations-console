@@ -157,94 +157,109 @@ export class Login extends Component {
 		}
 
 		const translate = this.props.t;
+
+		const onSubmit = (e) => {
+			e.preventDefault();
+			if (disableSubmit) return;
+			this.props.changePassword ? this.onChangePassword(e) : this.onLogin(e);
+		}
 		return (
 			<Router>
 				<>
 					<TitleBar hideButtons />
-					<div className="ibp-login-main">
+					<div className="ibp-login-main"
+						onKeyUp={(event) => {
+							if (event.which === 13 || event.keyCode === 13) {
+								event.preventDefault();
+								onSubmit(event);
+							}
+						}}>
 						<div className={`ibp-login-content ${this.props.changePassword ? 'ibp-change-password' : 'ibp-user-login'} `}>
 							<p className="ibp-login-content-title ibm-type-light">
 								{translate(this.props.changePassword ? 'change_your_password' : 'product_label_login')}
 							</p>
-							<form
+							{/* <form
 								onSubmit={e => {
 									e.preventDefault();
 									if (disableSubmit) return;
 
 									this.props.changePassword ? this.onChangePassword(e) : this.onLogin(e);
 								}}
-							>
-								<div className="ibp-login-form">
-									{!this.props.changePassword && (
-										<Form
-											scope={SCOPE}
-											id={SCOPE + '-form'}
-											fields={[
-												{
-													name: 'email',
-													label: 'login_email',
-													placeholder: 'login_email_placeholder',
-													required: true,
-													specialRules: Helper.SPECIAL_RULES_LOGIN_EMAIL,
-												},
-												{
-													name: 'login_password',
-													label: 'login_password',
-													type: 'password',
-													placeholder: 'login_password_placeholder',
-													errorMsg: this.props.loginError ? this.props.loginError : '',
-													required: true,
-												},
-											]}
-											onChange={value => this.onLoginFormChange(value)}
-										/>
-									)}
-									{this.props.changePassword && (
-										<Form
-											scope={SCOPE}
-											id={SCOPE + '-form'}
-											fields={[
-												{
-													name: 'currentPassword',
-													label: 'current_password',
-													type: 'password',
-													placeholder: 'current_password_placeholder',
-													errorMsg: this.props.currentPasswordError,
-													required: true,
-												},
-												{
-													name: 'newPassword',
-													label: 'new_password',
-													type: 'password',
-													errorMsg: this.props.newPasswordError,
-													placeholder: 'new_password_placeholder',
-													required: true,
-												},
-												{
-													name: 'confirmPassword',
-													label: 'confirm_password_label',
-													type: 'password',
-													errorMsg: this.props.confirmPasswordError,
-													disabled: !this.props.newPassword,
-													placeholder: 'confirm_password_placeholder',
-													required: true,
-												},
-											]}
-											onChange={value => this.onPasswordChangeFormChange(value)}
-										/>
-									)}
-								</div>
-								<div className="ibp-login-button">
-									<Button id="login"
-										kind="primary"
-										className="login-button"
-										type="submit"
-										disabled={disableSubmit}
-									>
-										{translate(this.props.changePassword ? 'change_your_password' : 'login')}
-									</Button>
-								</div>
-							</form>
+							> */}
+							<div className="ibp-login-form">
+								{!this.props.changePassword && (
+									<Form
+										scope={SCOPE}
+										id={SCOPE + '-form'}
+										fields={[
+											{
+												name: 'email',
+												label: 'login_email',
+												placeholder: 'login_email_placeholder',
+												required: true,
+												specialRules: Helper.SPECIAL_RULES_LOGIN_EMAIL,
+											},
+											{
+												name: 'login_password',
+												label: 'login_password',
+												type: 'password',
+												placeholder: 'login_password_placeholder',
+												errorMsg: this.props.loginError ? this.props.loginError : '',
+												required: true,
+											},
+										]}
+										onChange={value => this.onLoginFormChange(value)}
+									/>
+								)}
+								{this.props.changePassword && (
+									<Form
+										scope={SCOPE}
+										id={SCOPE + '-form'}
+										fields={[
+											{
+												name: 'currentPassword',
+												label: 'current_password',
+												type: 'password',
+												placeholder: 'current_password_placeholder',
+												errorMsg: this.props.currentPasswordError,
+												required: true,
+											},
+											{
+												name: 'newPassword',
+												label: 'new_password',
+												type: 'password',
+												errorMsg: this.props.newPasswordError,
+												placeholder: 'new_password_placeholder',
+												required: true,
+											},
+											{
+												name: 'confirmPassword',
+												label: 'confirm_password_label',
+												type: 'password',
+												errorMsg: this.props.confirmPasswordError,
+												disabled: !this.props.newPassword,
+												placeholder: 'confirm_password_placeholder',
+												required: true,
+											},
+										]}
+										onChange={value => this.onPasswordChangeFormChange(value)}
+									/>
+								)}
+							</div>
+							<div className="ibp-login-button">
+								<Button id="login"
+									kind="primary"
+									className="login-button"
+									type="button"
+									disabled={disableSubmit}
+									onClick={(e) => {
+										onSubmit(e)
+									}}
+								>
+									{translate(this.props.changePassword ? 'change_your_password' : 'login')}
+								</Button>
+							</div>
+							{/* </form> */}
 						</div>
 					</div>
 				</>

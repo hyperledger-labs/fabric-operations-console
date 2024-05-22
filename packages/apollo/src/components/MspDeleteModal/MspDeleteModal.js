@@ -25,6 +25,7 @@ import Helper from '../../utils/helper';
 import Form from '../Form/Form';
 import Logger from '../Log/Logger';
 import SidePanel from '../SidePanel/SidePanel';
+import RenderParamHTML from '../RenderHTML/RenderParamHTML';
 
 const SCOPE = 'mspDeleteModal';
 const Log = new Logger(SCOPE);
@@ -91,7 +92,7 @@ export class MspDeleteModal extends React.Component {
 					<h1 className="ibm-light">{translate(this.props.ordererAdmin ? 'remove_adminmsp_from_orderer' : 'remove_msp_from_consortium')}</h1>
 				</div>
 				<p className="ibp-remove-msp-desc">
-					{translate(this.props.ordererAdmin ? 'remove_adminmsp_from_orderer_desc' : 'remove_msp_from_consortium_desc', {
+					{RenderParamHTML(translate, this.props.ordererAdmin ? 'remove_adminmsp_from_orderer_desc' : 'remove_msp_from_consortium_desc', {
 						name: (
 							<CodeSnippet
 								type="inline"
