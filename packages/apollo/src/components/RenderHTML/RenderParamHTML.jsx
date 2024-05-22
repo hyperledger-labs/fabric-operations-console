@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 
 const RenderParamHTML = (translate, transKey, mapping) => {
 	let message = translate(transKey);
+	if(message === transKey) {
+		return transKey;
+	}
 	const doms = [];
 	for (const key in mapping) {
 		let parts = message.split(`{{${key}}}`);
