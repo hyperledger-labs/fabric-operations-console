@@ -73,6 +73,7 @@ When(/^I enroll TLS identity for OS1 with secret (?:'|")(.*?)(?:'|") and name (?
 	cy.enterInput(enrollSecret, 'Enter a secret');
 	cy.clickButton('id', 'next')
 	cy.wait(60000)
+	cy.get(`input[title="Enter a name"]`,{ timeout: 180000 }).should('be.visible')
 	cy.enterInput(enrollName, 'Enter a name');
 	cy.clickButton('id', 'submit'); //Add identity to Wallet
 	cy.wait(2000)
