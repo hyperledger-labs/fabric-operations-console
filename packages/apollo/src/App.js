@@ -38,7 +38,7 @@ import NodeStatus from './utils/status';
 
 const SCOPE = 'app';
 const Log = new Logger('App');
-Log.setLogLevel('debug');
+Log.setLogLevel('warn');
 
 class App extends Component {
 	cName = 'App';
