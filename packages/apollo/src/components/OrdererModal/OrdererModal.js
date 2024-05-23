@@ -48,6 +48,7 @@ import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import TranslateLink from '../TranslateLink/TranslateLink';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
+import RenderParamHTML from '../RenderHTML/RenderParamHTML';
 const naturalSort = require('javascript-natural-sort');
 
 const bytes = require('bytes');
@@ -1234,7 +1235,7 @@ class OrdererModal extends React.Component {
 				<div className="ibp-remove-orderer-desc">
 					<p>
 						{this.props.orderer.location === 'ibm_saas'
-							? translate(this.props.orderer.cluster_id && !this.props.orderer.raft ? 'delete_orderer_node_desc' : 'delete_orderer_desc', {
+							? RenderParamHTML(translate, this.props.orderer.cluster_id && !this.props.orderer.raft ? 'delete_orderer_node_desc' : 'delete_orderer_desc', {
 								name: (
 									<CodeSnippet
 										type="inline"
@@ -1246,7 +1247,7 @@ class OrdererModal extends React.Component {
 									</CodeSnippet>
 								),
 							})
-							: translate('remove_orderer_desc', {
+							: RenderParamHTML(translate, 'remove_orderer_desc', {
 								name: (
 									<CodeSnippet
 										type="inline"
@@ -1680,7 +1681,7 @@ class OrdererModal extends React.Component {
 			>
 				<div className="ibp-remove-peer-desc">
 					<p>
-						{translate('upgrade_node_desc', {
+						{RenderParamHTML(translate, 'upgrade_node_desc', {
 							name: (
 								<CodeSnippet
 									type="inline"
@@ -1754,7 +1755,7 @@ class OrdererModal extends React.Component {
 			>
 				<div className="ibp-remove-peer-desc">
 					<p>
-						{translate('confirm_patch_desc', {
+						{RenderParamHTML(translate, 'confirm_patch_desc', {
 							name: (
 								<CodeSnippet
 									type="inline"

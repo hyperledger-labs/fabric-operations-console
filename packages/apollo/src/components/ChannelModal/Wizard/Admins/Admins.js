@@ -80,7 +80,7 @@ class Admins extends Component {
 	}
 
 	render() {
-		const { availableAdmins, invalid_consenter, orderer_orgs, isAdminsModified, selectedAdmin, translate, use_osnadmin } = this.props;
+		const { availableAdmins, invalid_consenter, orderer_orgs, isAdminsModified, selectedAdmin, t: translate, use_osnadmin } = this.props;
 		let options = [];
 		if (availableAdmins) {
 			availableAdmins.forEach(admin => {
