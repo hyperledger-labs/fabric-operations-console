@@ -752,6 +752,8 @@
 	"register": "Register",
 	"add_attribute": "Add attribute",
 	"connection_profile": "Connection profile",
+	"_CREATE_APP_INVOKE_LINK": "{{DOC_PREFIX}}?topic=tutorials-developing-applications#ibm-hlfsupport-console-app-profile",
+	"connection_profile_subtext": "This connection profile is used by your client application to connect to your network. It contains all the endpoint information of your peers, Certificate Authority, and organization MSP ID. Read more [[here]](_CREATE_APP_INVOKE_LINK).",
 	"create_connection_profile": "Create connection profile",
 	"connection_profile_include_ca": "Include CA for user registration and enrollment?",
 	"connection_profile_include_ca_2": "Include {{ca}} for user registration and enrollment?",

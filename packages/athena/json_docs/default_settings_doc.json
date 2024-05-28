@@ -124,7 +124,7 @@
 		"font-src 'self' *.s81c.com",
 		"frame-ancestors 'none'",
 		"object-src 'none'",
-		"img-src 'self' *.ibm.com appboy-images.com",
+		"img-src 'self' *.ibm.com",
 		"script-src 'self' 'unsafe-eval' 'unsafe-inline' *.ibm.com",
 		"style-src 'self' 'unsafe-inline' *.ibm.com"
 	],

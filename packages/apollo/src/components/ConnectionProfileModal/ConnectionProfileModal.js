@@ -33,6 +33,7 @@ import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import TranslateLink from '../TranslateLink/TranslateLink';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
+import RenderParamHTML from '../RenderHTML/RenderParamHTML';
 
 const naturalSort = require('javascript-natural-sort');
 
@@ -211,8 +212,8 @@ class ConnectionProfileModal extends Component {
 	renderSelectCA(translate) {
 		let include_ca = translate('connection_profile_include_ca');
 		if (this.props.selectedCA) {
-			include_ca = translate('connection_profile_include_ca_2', {
-				ca: <span className="ibp-ca-name">{this.props.selectedCA.display_name}</span>,
+			include_ca = RenderParamHTML(translate, 'connection_profile_include_ca_2', {
+				ca: <span className="ibp-ca-name">{this.props.selectedCA.display_name}</span>
 			});
 		}
 		return (
@@ -245,7 +246,7 @@ class ConnectionProfileModal extends Component {
 											includeCA: !this.props.includeCA,
 										});
 									}}
-									onChange={() => {}}
+									onChange={() => { }}
 									aria-label={translate('connection_profile_include_ca')}
 									labelA={translate('no')}
 									labelB={translate('yes')}
@@ -324,7 +325,7 @@ class ConnectionProfileModal extends Component {
 		channels = channels
 			? channels.sort((a, b) => {
 				return naturalSort(a, b);
-			  })
+			})
 			: [];
 		this.props.updateState(SCOPE, {
 			channelData: this.props.channelData,
