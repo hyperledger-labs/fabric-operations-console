@@ -1463,7 +1463,13 @@ class Form extends Component {
 	}
 
 	render() {
-		const translate = this.props.t;
+		const translate = (value) => {
+			if(typeof value === 'string') {
+				return this.props.t(value);
+			} else {
+				return value;
+			}
+		};
 		try {
 			return (
 				<div className={(this.props.className ? this.props.className + ' ' : '') + 'ibp-form'}
