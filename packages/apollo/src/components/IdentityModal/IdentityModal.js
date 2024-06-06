@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { CodeSnippet } from 'carbon-components-react';
+import { CodeSnippet } from "@carbon/react";
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
@@ -250,13 +250,13 @@ class IdentityModal extends React.Component {
 				<p className="ibp-actions-title">{translate('actions')}</p>
 				<div>
 					<button id="export"
-						className="ibp-identity-action bx--btn bx--btn--tertiary bx--btn--sm"
+						className="ibp-identity-action cds--btn cds--btn--tertiary cds--btn--sm"
 						onClick={this.exportIdentity}
 					>
 						{translate('export_certs')}
 					</button>
 					<button id="remove"
-						className="ibp-identity-action bx--btn bx--btn--sm bx--btn--danger"
+						className="ibp-identity-action cds--btn cds--btn--sm cds--btn--danger"
 						onClick={this.showRemoveIdentity}
 					>
 						{translate('remove_identity')}

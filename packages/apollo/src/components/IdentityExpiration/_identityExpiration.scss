@@ -1,6 +1,6 @@
 .ibm {
 	.ibp-identity-expiration {
-		@include carbon--type-style('label-01');
+		@include type-style('label-01');
 		color: $warning;
 		padding-left: 1.25rem;
 		position: relative;
@@ -15,6 +15,6 @@
 	}
 
 	.ibp-identity-admin {
-		@include carbon--type-style('label-01');
+		@include type-style('label-01');
 	}
 }

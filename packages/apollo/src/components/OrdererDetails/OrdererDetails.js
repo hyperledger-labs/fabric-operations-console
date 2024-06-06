@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Button, CodeSnippet, SkeletonText, Tab, Tabs } from 'carbon-components-react';
+import { Button, CodeSnippet, Row, SkeletonText, Tab, TabList, TabPanel, TabPanels, Tabs } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -489,8 +489,8 @@ class OrdererDetails extends Component {
 		const translate = this.props.t;
 		return (
 			<div>
-				<p className="bx--type-zeta ibp-node-orderer-tile-name">{msp.msp}</p>
-				<p className="bx--type-zeta ibp-node-orderer-tile-name">{translate('org')}</p>
+				<p className="cds--type-zeta ibp-node-orderer-tile-name">{msp.msp}</p>
+				<p className="cds--type-zeta ibp-node-orderer-tile-name">{translate('org')}</p>
 			</div>
 		);
 	}
@@ -1311,182 +1311,234 @@ class OrdererDetails extends Component {
 
 		return (
 			<PageContainer>
-				<div>
+				<Row>
 					<PageHeader history={this.props.history}
 						headerName={ordererName ? translate('orderer_details_title', { ordererName: ordererName }) : ''}
 					/>
+				</Row>
+				<Row>
 					{ordererNameSkeleton}
-					<div className="ibp-orderer-details bx--row">
-						{this.props.showAddNode && (
-							<ImportOrdererModal
-								raftParent={this.props.details}
-								systemChannel={this.props.systemChannel}
-								appendingNode={!_.isEmpty(this.props.details)}
-								onClose={this.closeAddOrdererNode}
-								onComplete={() => {
-									this.refresh();
-								}}
-							/>
-						)}
-						{this.props.deleteConsenter && (
-							<OrdererConsenterModal
-								consenter={this.props.deleteConsenter}
-								onClose={this.closeDeleteConsenterModal}
-								onComplete={() => {
-									this.refresh();
-								}}
-								orderer={this.props.details}
-								mode={'delete'}
-							/>
-						)}
-						{this.props.updateConsenter && (
-							<OrdererConsenterModal
-								consenter={this.props.updateConsenter}
-								onClose={this.closeUpdateConsenterModal}
-								onComplete={() => {
-									this.refresh();
-								}}
-								orderer={this.props.details}
-								mode={'update'}
-							/>
-						)}
-						{this.props.selected && (
-							<OrdererModal
-								clusterId={this.props.match.params.clusterIdPath}
-								configtxlator_url={this.props.configtxlator_url}
-								orderer={this.props.selected}
-								singleNodeRaft={_.get(this.props, 'details.raft.length') === 1}
-								ordererModalType={this.props.ordererModalType}
-								onClose={this.closeOrdererSettings}
-								currentCapabilities={this.props.capabilities}
-								isOrdererAdmin={!this.props.disabled}
-								systemChannel={this.props.systemChannel}
-								onComplete={ordererList => {
-									if (this.props.selectedNode) {
-										if (this.props.ordererModalType === 'upgrade') {
-											const details = { ...this.props.details };
-											if (details.raft) {
-												details.raft.forEach(node => {
-													node.status = undefined;
-												});
-											}
-											if (details.pending) {
-												details.pending.forEach(pending => {
-													pending.status = undefined;
-												});
-											}
-											this.props.updateState(SCOPE, {
-												details,
-												selectedNode: {
-													...this.props.selectedNode,
-													status: undefined,
-												},
+					{this.props.showAddNode && (
+						<ImportOrdererModal
+							raftParent={this.props.details}
+							systemChannel={this.props.systemChannel}
+							appendingNode={!_.isEmpty(this.props.details)}
+							onClose={this.closeAddOrdererNode}
+							onComplete={() => {
+								this.refresh();
+							}}
+						/>
+					)}
+					{this.props.deleteConsenter && (
+						<OrdererConsenterModal
+							consenter={this.props.deleteConsenter}
+							onClose={this.closeDeleteConsenterModal}
+							onComplete={() => {
+								this.refresh();
+							}}
+							orderer={this.props.details}
+							mode={'delete'}
+						/>
+					)}
+					{this.props.updateConsenter && (
+						<OrdererConsenterModal
+							consenter={this.props.updateConsenter}
+							onClose={this.closeUpdateConsenterModal}
+							onComplete={() => {
+								this.refresh();
+							}}
+							orderer={this.props.details}
+							mode={'update'}
+						/>
+					)}
+					{this.props.selected && (
+						<OrdererModal
+							clusterId={this.props.match.params.clusterIdPath}
+							configtxlator_url={this.props.configtxlator_url}
+							orderer={this.props.selected}
+							singleNodeRaft={_.get(this.props, 'details.raft.length') === 1}
+							ordererModalType={this.props.ordererModalType}
+							onClose={this.closeOrdererSettings}
+							currentCapabilities={this.props.capabilities}
+							isOrdererAdmin={!this.props.disabled}
+							systemChannel={this.props.systemChannel}
+							onComplete={ordererList => {
+								if (this.props.selectedNode) {
+									if (this.props.ordererModalType === 'upgrade') {
+										const details = { ...this.props.details };
+										if (details.raft) {
+											details.raft.forEach(node => {
+												node.status = undefined;
 											});
-											this.refresh(true);
-										} else {
-											this.refresh();
 										}
-										return;
-									}
-									if (!ordererList) {
-										// Some actions(updating capabilities/block params) do not send the orderer details back
-										ordererList = this.props.details;
-									}
-									if (ordererList) {
-										if (_.isArray(ordererList)) {
-											this.props.updateState(SCOPE, { ordererList });
-										} else {
-											// Clear the associated identity to force the
-											// child components (channels and chaincode) to
-											// be removed from the DOM.  They will be recreated
-											// when we update the state with the new orderer details.
-											const identity = this.props.details.associatedIdentity;
-											this.props.updateState(SCOPE, {
-												details: {
-													...this.props.details,
-													associatedIdentity: null,
-												},
+										if (details.pending) {
+											details.pending.forEach(pending => {
+												pending.status = undefined;
 											});
-											if (!ordererList.associatedIdentity) {
-												ordererList.associatedIdentity = identity;
-											}
-											this.props.updateState(SCOPE, {
-												details: {
-													...ordererList,
-													raft: this.props.details.raft,
-												},
-											});
-											this.refresh();
-											this.props.showBreadcrumb('orderer_details_title', { ordererName: ordererList.cluster_name }, this.props.history.location.pathname);
 										}
+										this.props.updateState(SCOPE, {
+											details,
+											selectedNode: {
+												...this.props.selectedNode,
+												status: undefined,
+											},
+										});
+										this.refresh(true);
+									} else {
+										this.refresh();
 									}
-								}}
-							/>
-						)}
-						<div className="bx--col-lg-4">
-							<div className="ibp-node-details-panel">
-								<div className="ibp-node-details-header">
-									<div className="ibp-node-tags" />
-									<FocusComponent setFocus={this.props.setFocus}>
-										<StickySection
-											openSettings={this.openOrdererSettings}
-											details={this.props.selectedNode || this.props.details}
-											title={this.props.selectedNode ? 'ordering_node_title' : 'ordering_service_title'}
-											exportNode={this.exportOrderer}
-											associateIdentityLabel="ordering_service_identity"
-											loading={this.props.loading}
-											exporting={this.props.exportInProgress}
-											quickActions={this.getQuickActions()}
-											identityNotAssociatedLabel="identity_not_associated_orderer"
-											groups={this.getStickySectionGroups(translate)}
-											noIdentityAssociation={!!this.props.selectedNode}
-											hideDelete={this.props.selectedNode ? !canDelete : false}
-											refreshCerts={this.refreshCerts}
-											hideRefreshCerts={!this.props.selectedNode || (this.props.selectedNode && this.props.selectedNode.location !== 'ibm_saas')}
-											feature_flags={this.props.feature_flags}
-											userInfo={this.props.userInfo}
-										/>
-									</FocusComponent>
-								</div>
+									return;
+								}
+								if (!ordererList) {
+									// Some actions(updating capabilities/block params) do not send the orderer details back
+									ordererList = this.props.details;
+								}
+								if (ordererList) {
+									if (_.isArray(ordererList)) {
+										this.props.updateState(SCOPE, { ordererList });
+									} else {
+										// Clear the associated identity to force the
+										// child components (channels and chaincode) to
+										// be removed from the DOM.  They will be recreated
+										// when we update the state with the new orderer details.
+										const identity = this.props.details.associatedIdentity;
+										this.props.updateState(SCOPE, {
+											details: {
+												...this.props.details,
+												associatedIdentity: null,
+											},
+										});
+										if (!ordererList.associatedIdentity) {
+											ordererList.associatedIdentity = identity;
+										}
+										this.props.updateState(SCOPE, {
+											details: {
+												...ordererList,
+												raft: this.props.details.raft,
+											},
+										});
+										this.refresh();
+										this.props.showBreadcrumb('orderer_details_title', { ordererName: ordererList.cluster_name }, this.props.history.location.pathname);
+									}
+								}
+							}}
+						/>
+					)}
+				</Row>
+				<Row>
+					<div className="ibp-column width-25">
+						<div className="ibp-node-details-panel">
+							<div className="ibp-node-details-header">
+								<div className="ibp-node-tags" />
+								<FocusComponent setFocus={this.props.setFocus}>
+									<StickySection
+										openSettings={this.openOrdererSettings}
+										details={this.props.selectedNode || this.props.details}
+										title={this.props.selectedNode ? 'ordering_node_title' : 'ordering_service_title'}
+										exportNode={this.exportOrderer}
+										associateIdentityLabel="ordering_service_identity"
+										loading={this.props.loading}
+										exporting={this.props.exportInProgress}
+										quickActions={this.getQuickActions()}
+										identityNotAssociatedLabel="identity_not_associated_orderer"
+										groups={this.getStickySectionGroups(translate)}
+										noIdentityAssociation={!!this.props.selectedNode}
+										hideDelete={this.props.selectedNode ? !canDelete : false}
+										refreshCerts={this.refreshCerts}
+										hideRefreshCerts={!this.props.selectedNode || (this.props.selectedNode && this.props.selectedNode.location !== 'ibm_saas')}
+										feature_flags={this.props.feature_flags}
+										userInfo={this.props.userInfo}
+									/>
+								</FocusComponent>
 							</div>
 						</div>
-						<div className="bx--col-lg-12">
-							{this.props.notAvailable && (
-								<div className="ibp-not-available ibp-error-panel">
-									<SidePanelWarning title="orderer_not_available_title"
-										subtitle="orderer_not_available_text"
-									/>
-								</div>
-							)}
-							{_.get(this.props, 'usageInfo.crstatus.type') === 'Warning' && _.get(this.props, 'usageInfo.crstatus.reason') === 'certRenewalRequired' && (
-								<div className="ibp-orderer-warning ibp-error-panel">
-									<SidePanelWarning title="orderer_warning_title"
-										subtitle="orderer_warning_text"
-									/>
-									<TranslateLink className="ibp-orderer-details-cert-expiry-link"
-										text="cert_renew"
-									/>
-								</div>
-							)}
-							{this.props.selectedNode && !this.props.selectedNode.consenter_proposal_fin ? (
-								this.renderPendingNode(translate)
-							) : (
-								<div>
-									{this.props.details && (
-										<Tabs
-											aria-label="sub-navigation"
-											selected={this.props.selectedTab}
-											onSelectionChange={selectedTab => {
-												this.props.updateState(SCOPE, { selectedTab });
-											}}
-										>
+					</div>
 
+					<div className="ibp-column width-75 p-lr-10">
+						{this.props.notAvailable && (
+							<div className="ibp-not-available ibp-error-panel">
+								<SidePanelWarning title="orderer_not_available_title"
+									subtitle="orderer_not_available_text"
+								/>
+							</div>
+						)}
+						{_.get(this.props, 'usageInfo.crstatus.type') === 'Warning' && _.get(this.props, 'usageInfo.crstatus.reason') === 'certRenewalRequired' && (
+							<div className="ibp-orderer-warning ibp-error-panel">
+								<SidePanelWarning title="orderer_warning_title"
+									subtitle="orderer_warning_text"
+								/>
+								<TranslateLink className="ibp-orderer-details-cert-expiry-link"
+									text="cert_renew"
+								/>
+							</div>
+						)}
+						{this.props.selectedNode && !this.props.selectedNode.consenter_proposal_fin ? (
+							this.renderPendingNode(translate)
+						) : (
+							<div>
+								{this.props.details && (
+									<Tabs
+										aria-label="sub-navigation"
+										selected={this.props.selectedTab}
+										onSelectionChange={selectedTab => {
+											this.props.updateState(SCOPE, { selectedTab });
+										}}
+									>
+										<TabList contained>
 											{/* [details section] - an orderer node is NOT selected, this is the top level content */}
 											{!this.props.selectedNode && (
-												<Tab id="ibp-orderer-details"
-													label={translate('details')}
+												<Tab id="ibp-orderer-details">
+													{translate('details')}
+												</Tab>
+											)}
+											{/* [all nodes section] - an orderer node is NOT selected, this is the top level content */}
+											{!this.props.selectedNode && (
+												<Tab id="ibp-orderer-nodes">
+													{translate('ordering_nodes')}
+												</Tab>
+											)}
+											{/* [drill down section] - an orderer node is selected, this is the drill down "info and usage" tab */}
+											{this.props.selectedNode && this.props.selectedNode.consenter_proposal_fin && (
+												<Tab
+													id="ibp-orderer-usage"
+													className={
+														this.props.selectedNode.isUpgradeAvailable &&
+															this.props.selectedNode.location === 'ibm_saas' &&
+															ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)
+															? 'ibp-patch-available-tab'
+															: ''
+													}
 												>
-													{!this.props.loading && this.channelParticipationEnabled(this.props.details) && !this.props.orderer_tls_identity && (
+													{translate('usage_info', {
+														patch: this.props.selectedNode.isUpgradeAvailable &&
+															this.props.selectedNode.location === 'ibm_saas' &&
+															ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) ?
+															(
+																<div className="ibp-details-patch-container">
+																	<div className="ibp-patch-available-tag ibp-node-details"
+																		onClick={() => this.openOrdererSettings('upgrade')}
+																	>
+																		{translate('patch_available')}
+																	</div>
+																</div>
+															) : (
+																''
+															),
+													})}
+												</Tab>
+											)}
+											{/* [drill down section] - an orderer nodes is selected and it is systemless, this is the drill down "Channels" tab */}
+											{this.isSystemLess(this.props.selectedNode) && (
+												<Tab id="ibp-orderer-channels">
+													{translate('channels')}
+												</Tab>
+											)}
+										</TabList>
+
+										<TabPanels>
+											{!this.props.selectedNode && (
+												<TabPanel>
+													{(!this.props.loading && this.channelParticipationEnabled(this.props.details) && !this.props.orderer_tls_identity) && (
 														<div>
 															<SidePanelWarning title="tls_identity_not_found"
 																subtitle={translate(this.isSystemLess(this.props.details) ?
@@ -1549,14 +1601,10 @@ class OrdererDetails extends Component {
 															{this.renderConsenters(translate)}
 														</div>
 													)}
-												</Tab>
+												</TabPanel>
 											)}
-
-											{/* [all nodes section] - an orderer node is NOT selected, this is the top level content */}
 											{!this.props.selectedNode && (
-												<Tab id="ibp-orderer-nodes"
-													label={translate('ordering_nodes')}
-												>
+												<TabPanel>
 													<div className="orderer-details-nodes-container">
 														<ItemContainer
 															containerTitle="ordering_nodes"
@@ -1575,47 +1623,16 @@ class OrdererDetails extends Component {
 															addItems={buttonsOnTheNodesTab}
 														/>
 													</div>
-												</Tab>
+												</TabPanel>
 											)}
-
-											{/* [drill down section] - an orderer node is selected, this is the drill down "info and usage" tab */}
 											{this.props.selectedNode && this.props.selectedNode.consenter_proposal_fin && (
-												<Tab
-													id="ibp-orderer-usage"
-													className={
-														this.props.selectedNode.isUpgradeAvailable &&
-															this.props.selectedNode.location === 'ibm_saas' &&
-															ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)
-															? 'ibp-patch-available-tab'
-															: ''
-													}
-													label={translate('usage_info', {
-														patch: this.props.selectedNode.isUpgradeAvailable &&
-															this.props.selectedNode.location === 'ibm_saas' &&
-															ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) ?
-															(
-																<div className="ibp-details-patch-container">
-																	<div className="ibp-patch-available-tag ibp-node-details"
-																		onClick={() => this.openOrdererSettings('upgrade')}
-																	>
-																		{translate('patch_available')}
-																	</div>
-																</div>
-															) : (
-																''
-															),
-													})}
-												>
+												<TabPanel>
 													<NodeDetails node={this.props.selectedNode} />
 													{this.renderUsage(translate)}
-												</Tab>
+												</TabPanel>
 											)}
-
-											{/* [drill down section] - an orderer nodes is selected and it is systemless, this is the drill down "Channels" tab */}
 											{this.isSystemLess(this.props.selectedNode) && (
-												<Tab id="ibp-orderer-channels"
-													label={translate('channels')}
-												>
+												<TabPanel>
 													<ChannelParticipationDetails
 														selectedNode={this.props.selectedNode}
 														channelList={this.props.channelList}
@@ -1624,35 +1641,35 @@ class OrdererDetails extends Component {
 														unJoinComplete={this.getCPChannelList}
 														drillDown={true}
 													/>
-												</Tab>
+												</TabPanel>
 											)}
-										</Tabs>
-									)}
-								</div>
-							)}
-							{this.props.usageModal && this.props.selectedNode && (
-								<ReallocateModal
-									details={this.props.selectedNode}
-									usageInfo={this.props.usageInfo[this.props.selectedNode.id]}
-									onClose={this.hideUsageModal}
-									onComplete={() => {
-										const usageInfo = this.props.usageInfo;
-										usageInfo[this.props.selectedNode.id] = null;
-										this.props.updateState(SCOPE, { usageInfo });
-										NodeRestApi.getCompsResources(this.props.selectedNode)
-											.then(nodeUsageInfo => {
-												usageInfo[this.props.selectedNode.id] = nodeUsageInfo;
-												this.props.updateState(SCOPE, { usageInfo });
-											})
-											.catch(error => {
-												Log.error(error);
-											});
-									}}
-								/>
-							)}
-						</div>
+										</TabPanels>
+									</Tabs>)}
+							</div>
+						)}
+
+						{this.props.usageModal && this.props.selectedNode && (
+							<ReallocateModal
+								details={this.props.selectedNode}
+								usageInfo={this.props.usageInfo[this.props.selectedNode.id]}
+								onClose={this.hideUsageModal}
+								onComplete={() => {
+									const usageInfo = this.props.usageInfo;
+									usageInfo[this.props.selectedNode.id] = null;
+									this.props.updateState(SCOPE, { usageInfo });
+									NodeRestApi.getCompsResources(this.props.selectedNode)
+										.then(nodeUsageInfo => {
+											usageInfo[this.props.selectedNode.id] = nodeUsageInfo;
+											this.props.updateState(SCOPE, { usageInfo });
+										})
+										.catch(error => {
+											Log.error(error);
+										});
+								}}
+							/>
+						)}
 					</div>
-				</div>
+				</Row>
 			</PageContainer>
 		);
 	}

@@ -2,7 +2,7 @@
 	background-color: $stopped;
 }
 
-.bx--data-table-v2 {
+.cds--data-table {
 
 	.peer-running,
 	.peer-stopped,
@@ -35,9 +35,9 @@
 
 .ibp-node-peer-tile-name,
 .ibp-node-peer-tile-msp {
-	@include carbon--type-style('body-short-01');
-	@include carbon--font-weight('regular');
-	color: $carbon--cool-gray-30;
+	@include type-style('body-short-01');
+	@include font-weight('regular');
+	color: $cool-gray-30;
 }
 
 .ibp-node-peer-tile-msp {

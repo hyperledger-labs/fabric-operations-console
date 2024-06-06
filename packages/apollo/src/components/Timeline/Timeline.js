@@ -17,7 +17,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import TimelineCancelButton from '../TimelineCancelButton/TimelineCancelButton';
-import CheckmarkOutline16 from '@carbon/icons-react/lib/checkmark--outline/16';
+import {CheckmarkOutline} from '@carbon/icons-react';
 
 const Timeline = ({ steps, onClose, selectedTimelineStep, header, estTime, progressWithChecks, t: translate }) => {
 	return (
@@ -47,9 +47,9 @@ const Timeline = ({ steps, onClose, selectedTimelineStep, header, estTime, progr
 											{progressWithChecks && incompleteStep && <span className="ibp-template-timeline-incomplete-step" />}
 											{progressWithChecks && index > selectedTimelineStep.currentStepIndex && <span className="ibp-template-timeline-incomplete-step" />}
 											{progressWithChecks && index < selectedTimelineStep.currentStepIndex && (
-												<CheckmarkOutline16 className="ibp-template-timeline-completed-step-svg" />
+												<CheckmarkOutline size={16} className="ibp-template-timeline-completed-step-svg" />
 											)}
-											{progressWithChecks && completedStep && <CheckmarkOutline16 className="ibp-template-timeline-completed-step-svg" />}
+											{progressWithChecks && completedStep && <CheckmarkOutline size={16} className="ibp-template-timeline-completed-step-svg" />}
 											{progressWithChecks &&
 												selectedTimelineStep.currentStepIndex === index &&
 												selectedTimelineStep.currentStepInsideOfGroupIndex === groupStepIndex && <span className="ibp-template-timeline-current-step" />}

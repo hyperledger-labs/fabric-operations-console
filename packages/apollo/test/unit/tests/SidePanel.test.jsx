@@ -227,7 +227,7 @@ describe('SidePanel component', () => {
 				.find('button')
 				.at(1)
 				.text()
-				.includes('Active loading indicator')
+				.includes('loading')
 				.should.deep.equal(true);
 			component
 				.find('button')
@@ -238,7 +238,7 @@ describe('SidePanel component', () => {
 				.find('.ibp-side-panel-submitting-spinner')
 				.at(0)
 				.text()
-				.includes('Active loading indicator')
+				.includes('loading')
 				.should.deep.equal(true);
 		});
 

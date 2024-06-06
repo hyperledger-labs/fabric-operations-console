@@ -15,7 +15,7 @@
 */
 
 import _ from 'lodash';
-import { InlineNotification } from 'carbon-components-react';
+import { InlineNotification } from "@carbon/react";
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
@@ -25,7 +25,7 @@ import Helper from '../../../../utils/helper';
 import StitchApi from '../../../../rest/StitchApi';
 import ConfigBlockApi from '../../../../rest/ConfigBlockApi';
 import SVGs from '../../../Svgs/Svgs';
-import { Loading } from 'carbon-components-react';
+import { Loading } from "@carbon/react";
 
 const SCOPE = 'channelModal';
 let timer = null;

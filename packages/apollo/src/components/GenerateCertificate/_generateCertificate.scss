@@ -14,7 +14,7 @@
 	margin-bottom: 1rem;
 
 	label {
-		@include carbon--font-weight('semibold');
+		@include font-weight('semibold');
 	}
 
 	textarea {

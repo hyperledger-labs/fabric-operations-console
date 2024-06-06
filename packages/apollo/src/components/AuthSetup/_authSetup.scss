@@ -4,36 +4,36 @@
 }
 
 .ibp__auth-welcome-message {
-	@include carbon--type-style('productive-heading-04');
-	@include carbon--font-weight('light');
+	@include type-style('productive-heading-04');
+	@include font-weight('light');
 	color: $text;
 	margin-top: 3rem;
 }
 
 .ibp__auth-outline {
-	@include carbon--type-style('body-short-02');
-	color: $carbon--cool-gray-30;
+	@include type-style('body-short-02');
+	color: $cool-gray-30;
 	padding: 0.75rem 0 2rem 0;
 }
 
 .ibp__auth-title {
-	@include carbon--type-style('productive-heading-04');
-	@include carbon--font-weight('light');
+	@include type-style('productive-heading-04');
+	@include font-weight('light');
 	color: $text;
 	padding-top: 1.5rem;
 }
 
 .ibp__auth-desc {
-	@include carbon--type-style('body-short-02');
+	@include type-style('body-short-02');
 	color: $text;
 	padding-top: 0.75rem;
 }
 
 .ibp__auth-configuration--input-field {
-	@include carbon--type-style('body-short-01');
-	background: $carbon--cool-gray-80;
-	border: 1px solid $carbon--cool-gray-50;
-	color: $carbon--cool-gray-50;
+	@include type-style('body-short-01');
+	background: $cool-gray-80;
+	border: 1px solid $cool-gray-50;
+	color: $cool-gray-50;
 	height: 2rem;
 	margin: 0.5rem 0rem 1rem 0rem;
 	padding: 0rem 1rem;
@@ -46,7 +46,7 @@
 }
 
 .ibp__auth-configuration--buttons {
-	@include carbon--type-style('body-short-01');
+	@include type-style('body-short-01');
 	border: 0;
 	color: $text;
 	cursor: pointer;
@@ -88,8 +88,8 @@
 	margin-left: 0.5rem;
 	vertical-align: top;
 
-	.bx--tooltip__trigger path,
-	.bx--tooltip__trigger:hover path {
+	.cds--tooltip__trigger path,
+	.cds--tooltip__trigger:hover path {
 		fill: $text;
 	}
 }
@@ -97,5 +97,5 @@
 .ibp-error-panel {
 	background-color: $sidePanelBackground;
 	margin-top: 1.5rem;
-	width: 33rem;
+	// width: 33rem;
 }

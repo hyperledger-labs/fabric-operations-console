@@ -1,24 +1,24 @@
-.bx--btn--secondary {
+.cds--btn--secondary {
 	background-color: $cancelButton;
 	color: $text;
 	min-width: 100px;
 	margin-bottom: 1rem;
 }
 
-.bx--btn--secondary:hover {
+.cds--btn--secondary:hover {
 	background-color: $cancelButtonHover;
 }
 
-.bx--btn--primary {
-	background-color: $action;
-	min-width: 100px;
-}
+// .cds--btn--primary {
+// 	background-color: $action;
+// 	// min-width: 100px;
+// }
 
-.bx--btn--primary:hover {
-	background-color: $actionHover;
-}
+// .cds--btn--primary:hover {
+// 	background-color: $actionHover;
+// }
 
-.bx--file-filename.ibp-json-file-uploader {
+.cds--file-filename.ibp-json-file-uploader {
 	margin-bottom: 0.5rem;
 }
 
@@ -66,7 +66,7 @@
 	position: relative;
 
 	.ibp-json-error-detail {
-		color: $carbon--red-50;
+		color: $red-50;
 		margin-top: 0.5rem;
 		padding: 1rem 1rem 0;
 	}
@@ -75,7 +75,7 @@
 		position: absolute;
 		top: 0.55rem;
 		right: 2.5rem;
-		fill: $carbon--red-50;
+		fill: $red-50;
 	}
 }
 
@@ -88,8 +88,8 @@
 	flex-direction: row;
 	margin-top: 2rem;
 
-	.bx--tooltip__label {
-		@include carbon--type-style('body-short-01');
-		@include carbon--font-weight('semibold');
+	.ibp--tooltip__label {
+		@include type-style('body-short-01');
+		@include font-weight('semibold');
 	}
 }

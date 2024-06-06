@@ -3,12 +3,12 @@
 }
 
 .ibp-upload-pkg {
-	.bx--label {
+	.cds--label {
 		color: #ffffff;
 		font-weight: 600;
 	}
 
-	.bx--label-description {
+	.cds--label-description {
 		font-size: 0.75rem;
 	}
 
@@ -32,16 +32,16 @@
 			}
 		}
 
-		.bx--label {
+		.cds--label {
 			display: none;
 		}
 
-		.bx--text-input__field-wrapper {
-			.bx--text-input__invalid-icon {
+		.cds--text-input__field-wrapper {
+			.cds--text-input__invalid-icon {
 				right: 2.5rem;
 			}
 
-			.bx--text-input--invalid {
+			.cds--text-input--invalid {
 				padding-right: 4rem;
 			}
 		}

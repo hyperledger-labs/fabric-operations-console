@@ -14,7 +14,7 @@
  * limitations under the License.
 */
 
-import { Checkbox } from 'carbon-components-react';
+import { Checkbox } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';

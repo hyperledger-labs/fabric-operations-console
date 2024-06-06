@@ -27,10 +27,10 @@ const Hover = {
 			Hover.timer = setTimeout(function() {
 				Hover.timer = null;
 				Hover.node = document.createElement('div');
-				Hover.node.className = 'bx--tooltip ibp-hover-text';
+				Hover.node.className = 'cds--tooltip ibp-hover-text';
 				Hover.node.appendChild(document.createTextNode(target.innerText));
 				const caret = document.createElement('span');
-				caret.className = 'bx--tooltip__caret';
+				caret.className = 'cds--tooltip__caret';
 				const parent = target.parentNode;
 				const parentStyle = getComputedStyle(parent);
 				if (!parentStyle.getPropertyValue('position')) {

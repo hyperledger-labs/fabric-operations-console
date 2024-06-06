@@ -83,8 +83,8 @@
 		padding: 1.0875rem;
 
 		.ibp-left-nav-text {
-			@include carbon--type-style('body-short-01');
-			@include carbon--font-weight('semibold');
+			@include type-style('body-short-01');
+			@include font-weight('semibold');
 			border-bottom: 0;
 			height: auto;
 			margin-bottom: 0;

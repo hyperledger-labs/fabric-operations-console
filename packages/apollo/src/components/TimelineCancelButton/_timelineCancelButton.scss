@@ -11,13 +11,13 @@
 	width: 19.5rem;
 
 	.ibp-timeline-cancel-button-label {
-		@include carbon--type-style('body-short-01');
-		color: $carbon--blue-50;
+		@include type-style('body-short-01');
+		color: $blue-50;
 	}
 
 	.ibp-timeline-cancel-button-label-subtext {
-		@include carbon--type-style('label-01');
-		color: $carbon--cool-gray-30;
+		@include type-style('label-01');
+		color: $cool-gray-30;
 	}
 
 	&:hover,

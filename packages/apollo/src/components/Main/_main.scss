@@ -6,7 +6,7 @@
 	height: 100%;
 	width: 100%;
 
-	.bx--data-table-v2-container {
+	.cds--data-table-container {
 		overflow: visible;
 		padding-top: 1rem;
 		padding-bottom: 2rem;
@@ -27,6 +27,8 @@
 .ibp-page-content {
 	width: 100%;
 	margin-left: 3.25rem;
+	padding-left: 3.25rem;
+	padding-right: 3.25rem;
 	z-index: $pageContentLayer;
 }
 
@@ -37,7 +39,7 @@
 }
 
 .ibp-timeout-warning {
-	.bx--modal-header {
+	.cds--modal-header {
 		button {
 			display: none;
 		}
@@ -49,11 +51,11 @@
 		margin-top: $spacing-05;
 	}
 
-	.bx--btn--secondary {
+	.cds--btn--secondary {
 		display: none;
 	}
 
-	.bx--modal-close {
+	.cds--modal-close {
 		display: none;
 	}
 }

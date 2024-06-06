@@ -22,12 +22,12 @@ const { getCellText } = require('../helpers/navigation');
 Then(/^I should see a success toast which says (?:'|")(.*?)(?:'|")$/, async expectedMessage => {
 	let successElement;
 	try {
-		successElement = element(by.className('bx--toast-notification__title'));
+		successElement = element(by.className('cds--toast-notification__title'));
 		await browser.wait(ExpectedConditions.visibilityOf(successElement), 15 * 60 * 1000);
 		let successText = await successElement.getText();
 		successText.should.contain(expectedMessage);
 	} catch (err) {
-		successElement = element(by.className('bx--toast-notification__subtitle'));
+		successElement = element(by.className('cds--toast-notification__subtitle'));
 		await browser.wait(ExpectedConditions.visibilityOf(successElement), 15 * 60 * 1000);
 		let successText = await successElement.getText();
 		successText.should.contain(expectedMessage);

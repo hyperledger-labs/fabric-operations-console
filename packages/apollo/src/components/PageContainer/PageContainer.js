@@ -13,19 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
+import { Column, FlexGrid, Grid, Row } from '@carbon/react';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 const PageContainer = props => {
 	return (
-		<div id="main-content"
-			className="ibp-page-container bx--grid"
-			data-floating-menu-container
-		>
+		<FlexGrid fullWidth id="main-content" className="ibp-page-container" data-floating-menu-container>
 			{props.children}
-		</div>
+		</FlexGrid>
 	);
 };
+
+
+{/* <div id="main-content"
+className="ibp-page-container cds--grid"
+data-floating-menu-container
+>
+{props.children}
+</div> */}
 
 PageContainer.propTypes = {
 	children: PropTypes.node,

@@ -19,7 +19,7 @@
 }
 
 .ibp-channel-tile-stats {
-	color: $carbon--cool-gray-40;
+	color: $cool-gray-40;
 	text-align: left;
 	width: 100%;
 	display: flex;
@@ -37,7 +37,7 @@
 
 .ibp-channels-blocks {
 	.ibp-channels-block-text {
-		@include carbon--font-weight('regular');
+		@include font-weight('regular');
 	}
 
 	.ibp-channel-loading-item {
@@ -46,7 +46,7 @@
 }
 
 .ibp-pending-channel-label {
-	@include carbon--type-style('body-short-01');
+	@include type-style('body-short-01');
 	font-size: 0.8rem;
 }
 

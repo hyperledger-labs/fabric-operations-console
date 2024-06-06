@@ -16,7 +16,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Slider } from 'carbon-components-react';
+import { Slider } from "@carbon/react";
 
 const BlockchainSlider = ({ id, value, min, max, step, minLabel, maxLabel, ariaLabelInput, labelText, onChange, formatLabel }) => {
 	let sliderRef = null;

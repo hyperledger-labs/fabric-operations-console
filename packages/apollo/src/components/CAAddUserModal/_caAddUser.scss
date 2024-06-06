@@ -13,12 +13,13 @@
 .ibp-add-users-root-check {
 	display: flex;
 	flex-direction: row;
-	width: 11rem;
+	width: 14rem;
+	align-items: center;
 }
 
 hr {
 	border: 0;
-	border-top: 1px solid $carbon--cool-gray-70;
+	border-top: 1px solid $cool-gray-70;
 	display: block;
 	height: 1px;
 	margin: 1em 0;

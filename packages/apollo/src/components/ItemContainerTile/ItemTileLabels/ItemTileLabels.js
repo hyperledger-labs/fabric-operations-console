@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { Cloud16, DocumentImport16, IbmCloud16, WarningAltFilled16, WarningFilled16 } from '@carbon/icons-react/es';
+import { Cloud, DocumentImport, IbmCloud, WarningAltFilled, WarningFilled } from '@carbon/icons-react';
 import Helper from '../../../utils/helper';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -22,7 +22,7 @@ import { useSelector } from 'react-redux';
 import _ from 'lodash';
 import * as constants from '../../../utils/constants';
 
-const ItemTileLabels = ({ certificateWarning, custom, isPatchAvailable, location, nodeOU, pending, t:translate, type }) => {
+const ItemTileLabels = ({ certificateWarning, custom, isPatchAvailable, location, nodeOU, pending, t: translate, type }) => {
 	const platform = useSelector(state => state['settings'] && state['settings'].platform);
 
 	const renderLocation = () => {
@@ -31,16 +31,16 @@ const ItemTileLabels = ({ certificateWarning, custom, isPatchAvailable, location
 		}
 		return (
 			<>
-				{location !== 'ibm_saas' && <TileLabel icon={<DocumentImport16 className="ibp--item-location-icon" />}
+				{location !== 'ibm_saas' && <TileLabel icon={<DocumentImport size={16} className="ibp--item-location-icon" />}
 					label={'imported'}
 					translate={translate}
 				/>}
 				<TileLabel
 					icon={
 						(platform === 'ibmcloud' && location === 'ibm_saas') || location === 'ibmcloud' ? (
-							<IbmCloud16 className="ibp--item-location-icon" />
+							<IbmCloud size={16} className="ibp--item-location-icon" />
 						) : (
-							<Cloud16 className="ibp--item-location-icon" />
+							<Cloud size={16} className="ibp--item-location-icon" />
 						)
 					}
 					label={location ? location : ''}
@@ -56,7 +56,7 @@ const ItemTileLabels = ({ certificateWarning, custom, isPatchAvailable, location
 		}
 		return (
 			<TileLabel
-				icon={<WarningAltFilled16 className="ibp--item-location-icon ibp-item-location-icon-needs-attention" />}
+				icon={<WarningAltFilled size={16} className="ibp--item-location-icon ibp-item-location-icon-needs-attention" />}
 				label={'requires_attention'}
 				translate={translate}
 			/>
@@ -69,7 +69,7 @@ const ItemTileLabels = ({ certificateWarning, custom, isPatchAvailable, location
 		}
 		return (
 			<TileLabel
-				icon={<WarningFilled16 className="ibp--item-location-icon ibp-item-location-icon-patch-available" />}
+				icon={<WarningFilled size={16} className="ibp--item-location-icon ibp-item-location-icon-patch-available" />}
 				label={'patch_available'}
 				translate={translate}
 			/>
@@ -102,7 +102,7 @@ const ItemTileLabels = ({ certificateWarning, custom, isPatchAvailable, location
 		return (
 			<TileLabel
 				className="ibp-certificate-expiration-warning"
-				icon={<WarningFilled16 className="ibp--item-location-icon ibp-item-location-icon-certificate-warning" />}
+				icon={<WarningFilled size={16} className="ibp--item-location-icon ibp-item-location-icon-certificate-warning" />}
 				label={'cert_warning'}
 				translate={translate}
 			/>

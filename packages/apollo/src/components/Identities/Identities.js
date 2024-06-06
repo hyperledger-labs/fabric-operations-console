@@ -34,6 +34,7 @@ import PageHeader from '../PageHeader/PageHeader';
 import ActionsHelper from '../../utils/actionsHelper';
 import { NodeRestApi } from '../../rest/NodeRestApi';
 import withRouter from '../../hoc/withRouter';
+import { Row } from '@carbon/react';
 
 const SCOPE = 'identities';
 const Log = new Logger(SCOPE);
@@ -197,72 +198,75 @@ class Identities extends Component {
 	render() {
 		return (
 			<PageContainer>
-				<div className="bx--row">
-					<div className="bx--col-lg-13">
-						<PageHeader
-							history={this.props.history}
-							headerName="wallet"
-							staticHeader
+				<Row>
+					<PageHeader
+						history={this.props.history}
+						headerName="wallet"
+						staticHeader
+					/>
+					</Row>
+				<Row>
+					<div className='ibp-column width-100'>
+
+					{this.props.showAddIdentity && <AddIdentityModal onClose={this.closeAddIdenity}
+						onComplete={this.showNewIdentities}
+					/>}
+					{this.props.selected && (
+						<IdentityModal
+							identity={this.props.selected}
+							onClose={this.closeIdentity}
+							onComplete={identities => {
+								this.getIdentities();
+							}}
 						/>
-						{this.props.showAddIdentity && <AddIdentityModal onClose={this.closeAddIdenity}
-							onComplete={this.showNewIdentities}
-						/>}
-						{this.props.selected && (
-							<IdentityModal
-								identity={this.props.selected}
-								onClose={this.closeIdentity}
-								onComplete={identities => {
-									this.getIdentities();
-								}}
-							/>
-						)}
-						<div id="identities-container"
-							className="ibp-identities-section"
-						>
-							<ItemContainer
-								tooltipDirection="right"
-								containerTitle="identities"
-								containerTooltip="identities_heading_tooltip"
-								emptyImage={emptyImage}
-								emptyTitle="empty_identities_title"
-								emptyMessage="empty_identities_text"
-								id="test__identities--add--tile"
-								itemId="identities"
-								isLink
-								loading={this.props.loading}
-								items={this.identities}
-								tileMapping={{
-									title: 'name',
-									custom: data => {
-										return this.buildCustomTile(data);
-									},
-								}}
-								listMapping={[
-									{
-										header: 'name',
-										attr: 'name',
-									},
-									{
-										header: 'connected_to',
-										attr: 'connected',
-									},
-									{
-										header: 'from_ca',
-										attr: 'from_ca',
-									},
-								]}
-								addItems={[
-									{
-										text: 'add_identity',
-										fn: this.openAddIdentity,
-										disabled: ActionsHelper.inReadOnly(this.props.feature_flags),
-									},
-								]}
-								select={this.openIdentity}
-							/>
-						</div>
+					)}
+					<div id="identities-container"
+						className="ibp-identities-section"
+					>
+						<ItemContainer
+							tooltipDirection="right"
+							containerTitle="identities"
+							containerTooltip="identities_heading_tooltip"
+							emptyImage={emptyImage}
+							emptyTitle="empty_identities_title"
+							emptyMessage="empty_identities_text"
+							id="test__identities--add--tile"
+							itemId="identities"
+							isLink
+							loading={this.props.loading}
+							items={this.identities}
+							tileMapping={{
+								title: 'name',
+								custom: data => {
+									return this.buildCustomTile(data);
+								},
+							}}
+							listMapping={[
+								{
+									header: 'name',
+									attr: 'name',
+								},
+								{
+									header: 'connected_to',
+									attr: 'connected',
+								},
+								{
+									header: 'from_ca',
+									attr: 'from_ca',
+								},
+							]}
+							addItems={[
+								{
+									text: 'add_identity',
+									fn: this.openAddIdentity,
+									disabled: ActionsHelper.inReadOnly(this.props.feature_flags),
+								},
+							]}
+							select={this.openIdentity}
+						/>
 					</div>
-				</div>
+					</div>
+				</Row>
 			</PageContainer>
 		);
 	}

@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { InlineNotification, Tab, Tabs } from 'carbon-components-react';
-import SkeletonPlaceholder from 'carbon-components-react/lib/components/SkeletonPlaceholder';
+import { InlineNotification, Tab, Tabs, SkeletonPlaceholder, TabList, TabPanels, TabPanel, Row } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -61,7 +60,7 @@ class ChannelDetails extends Component {
 		this.msp_id = null;
 		this.acls = [];
 		this.anchorPeers = [];
-		this.orgNodes= [];
+		this.orgNodes = [];
 		this.chaincode = [];
 		this.nOutOf = {
 			n: 1,
@@ -1216,23 +1215,25 @@ class ChannelDetails extends Component {
 			: null;
 		return (
 			<PageContainer>
-				<div className="bx--row">
-					<div className="bx--col-lg-4">
-						<PageHeader
-							history={this.props.history}
-							headerName={
-								match.params.channelId ? (
-									translate('channel_title', { channelName: this.props.match.params.channelId })
-								) : (
-									<SkeletonPlaceholder
-										style={{
-											height: '3rem',
-											width: '10rem',
-										}}
-									/>
-								)
-							}
-						/>
+				<Row>
+					<PageHeader
+						history={this.props.history}
+						headerName={
+							match.params.channelId ? (
+								translate('channel_title', { channelName: this.props.match.params.channelId })
+							) : (
+								<SkeletonPlaceholder
+									style={{
+										height: '3rem',
+										width: '10rem',
+									}}
+								/>
+							)
+						}
+					/>
+				</Row>
+				<Row>
+					<div className="ibm-column width-25">
 						<StickySection
 							openSettings={this.openEditChannelModal}
 							title="channel"
@@ -1249,80 +1250,92 @@ class ChannelDetails extends Component {
 							userInfo={this.props.userInfo}
 						/>
 					</div>
-					<div className="bx--col-lg-12">
+					<div className="ibm-column width-75 p-lr-10">
 						<div className="ibp__channel--container">
 							<Tabs aria-label="Tabs">
-								<Tab id="ibp-channel-detail-chaincode"
-									label={translate('chaincode_management')}
-								>
-									{this.props.capabilities && this.props.capabilities.application && isV2 ? (
-										<ChannelChaincode
-											channel={this.channel}
-											peerList={this.props.peerList}
-											members={this.props.members}
-											match={this.props.match}
-											ordererList={this.props.ordererList}
-										/>
-									) : (
-										this.renderInstantiatedChaincode(translate)
-									)}
-								</Tab>
-								<Tab id="ibp-channel-detail-tab-overview"
-									label={translate('transaction_overview')}
-								>
-									{this.renderTransactionOverview(translate)}
-								</Tab>
-								<Tab id="ibp-channel-detail-tab-detail"
-									label={translate('channel_details')}
-								>
-									{this.renderChannelDetails(translate)}
-								</Tab>
+								<TabList contained>
+									<Tab id="ibp-channel-detail-chaincode"
+									>
+										{translate('chaincode_management')}
+									</Tab>
+									<Tab id="ibp-channel-detail-tab-overview"
+									>
+										{translate('transaction_overview')}
+									</Tab>
+									<Tab id="ibp-channel-detail-tab-detail"
+									>
+										{translate('channel_details')}
+									</Tab>
+								</TabList>
+								<TabPanels>
+									<TabPanel>
+										{this.props.capabilities && this.props.capabilities.application && isV2 ? (
+											<ChannelChaincode
+												channel={this.channel}
+												peerList={this.props.peerList}
+												members={this.props.members}
+												match={this.props.match}
+												ordererList={this.props.ordererList}
+											/>
+										) : (
+											this.renderInstantiatedChaincode(translate)
+										)}
+									</TabPanel>
+									<TabPanel>
+										{this.renderTransactionOverview(translate)}
+									</TabPanel>
+									<TabPanel>
+										{this.renderChannelDetails(translate)}
+									</TabPanel>
+								</TabPanels>
 							</Tabs>
 						</div>
 					</div>
-					{!this.props.loading && this.props.showEditChannelModal && (
-						<ChannelModal
-							onClose={this.hideEditChannelModal}
-							onComplete={channelName => {
-								this.props.showSuccess('channel_update_request_submitted', { channelName }, SCOPE);
-								this.getChannel(() => {
-									this.getChannelDetails();
-								});
-							}}
-							channelId={this.props.match.params.channelId}
-							existingOrgs={this.props.members}
-							existingOrdererOrgs={this.props.ordererMembers}
-							existingAcls={this.acls}
-							existingBlockParams={this.blockParams}
-							existingRaftParams={this.raftParams}
-							existingCapabilities={this.capabilities}
-							existingConsenters={this.consenters}
-							existingEndorsementPolicy={this.existingEndorsementPolicy}
-							existingLifecyclePolicy={this.existingLifecyclePolicy}
-							nOutOf={this.nOutOf}
-							channelOrderer={this.orderers && this.orderers.length > 0 ? this.orderers : null}
-							channelPeers={this.props.peerList}
-							editLoading={this.props.editLoading}
-						/>
-					)}
-					{this.props.joinChannelModal && (
-						<JoinChannelModal
-							onClose={this.hideJoinChannelModal}
-							onComplete={() => {
-								this.hideJoinChannelModal();
-								this.props.showSuccess('nodes_added_successfully', {}, SCOPE);
-								this.getChannel(() => {
-									this.getChannelDetails();
-								});
-							}}
-							existingOrderer={this.orderers && this.orderers.length ? this.orderers[0] : null}
-							existingChannel={this.props.match.params.channelId}
-							existingMembers={this.props.members}
-							peers={peersNotJoinedYet}
-							isAddingNode
-						/>
-					)}
-				</div>
+				</Row>
+
+				{!this.props.loading && this.props.showEditChannelModal && (
+					<ChannelModal
+						onClose={this.hideEditChannelModal}
+						onComplete={channelName => {
+							this.props.showSuccess('channel_update_request_submitted', { channelName }, SCOPE);
+							this.getChannel(() => {
+								this.getChannelDetails();
+							});
+						}}
+						channelId={this.props.match.params.channelId}
+						existingOrgs={this.props.members}
+						existingOrdererOrgs={this.props.ordererMembers}
+						existingAcls={this.acls}
+						existingBlockParams={this.blockParams}
+						existingRaftParams={this.raftParams}
+						existingCapabilities={this.capabilities}
+						existingConsenters={this.consenters}
+						existingEndorsementPolicy={this.existingEndorsementPolicy}
+						existingLifecyclePolicy={this.existingLifecyclePolicy}
+						nOutOf={this.nOutOf}
+						channelOrderer={this.orderers && this.orderers.length > 0 ? this.orderers : null}
+						channelPeers={this.props.peerList}
+						editLoading={this.props.editLoading}
+					/>
+				)}
+				{this.props.joinChannelModal && (
+					<JoinChannelModal
+						onClose={this.hideJoinChannelModal}
+						onComplete={() => {
+							this.hideJoinChannelModal();
+							this.props.showSuccess('nodes_added_successfully', {}, SCOPE);
+							this.getChannel(() => {
+								this.getChannelDetails();
+							});
+						}}
+						existingOrderer={this.orderers && this.orderers.length ? this.orderers[0] : null}
+						existingChannel={this.props.match.params.channelId}
+						existingMembers={this.props.members}
+						peers={peersNotJoinedYet}
+						isAddingNode
+					/>
+				)}
+
 				{this.props.showAddAnchorPeer && (
 					<AddAnchorPeerModal
 						onClose={this.closeAddAnchorPeerModal}

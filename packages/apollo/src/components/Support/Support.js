@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { Button, SkeletonText } from 'carbon-components-react';
+import { Button, Row, SkeletonText } from "@carbon/react";
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
@@ -133,7 +133,7 @@ class Support extends Component {
 					href={this.getSupportURL()}
 					rel="noopener noreferrer"
 					target="_blank"
-					kind="secondary"
+					kind="primary"
 					role="link"
 				>
 					<div className="support-button-label">{translate('contact_support')}</div>
@@ -149,13 +149,16 @@ class Support extends Component {
 		const translate = this.props.t;
 		return (
 			<PageContainer>
-				<PageHeader
-					history={this.props.history}
-					headerName="support"
-					staticHeader
-				/>
-				<div className="bx--row">
-					<div className="bx--col-lg-4">
+				<Row>
+					<PageHeader
+						history={this.props.history}
+						headerName="support"
+						staticHeader
+					/>
+				</Row>
+
+				<Row>
+					<div className="ibp-column width-25">
 						<div className="support-left-section">
 							<div className="ibp-support">{this.renderVersionInformation(translate)}</div>
 							<div>
@@ -170,12 +173,12 @@ class Support extends Component {
 							{this.props.mustgather_enabled && ActionsHelper.canManageUsers(this.props.userInfo) && <Mustgather />}
 						</div>
 					</div>
-					<div className="bx--col-lg-12">
+					<div className="ibp-column width-75 p-lr-10">
 						<ReleaseNotes loading={this.props.loading}
 							releaseNotes={this.props.releaseNotes}
 						/>
 					</div>
-				</div>
+				</Row>
 			</PageContainer>
 		);
 	};

@@ -8,9 +8,9 @@
 }
 
 .ibp-usage-footer {
-	@include carbon--type-style('body-short-01');
+	@include type-style('body-short-01');
 	background-color: $inverseBackground;
-	border-top: 3px solid $carbon--blue-50;
+	border-top: 3px solid $blue-50;
 	color: $inverseText;
 	display: flex;
 	flex-direction: row;
@@ -21,7 +21,7 @@
 		padding: 1rem;
 
 		.ibp-usage-footer-heading {
-			@include carbon--font-weight('semibold');
+			@include font-weight('semibold');
 		}
 	}
 }

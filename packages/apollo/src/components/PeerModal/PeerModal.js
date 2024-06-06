@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { CodeSnippet, SkeletonText, ToggleSmall } from 'carbon-components-react';
+import { CodeSnippet, SkeletonText, Toggle } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -41,7 +41,7 @@ import SidePanelError from '../SidePanelError/SidePanelError';
 import TranslateLink from '../TranslateLink/TranslateLink';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
-import { Checkbox } from 'carbon-components-react';
+import { Checkbox } from "@carbon/react";
 import RenderParamHTML from '../RenderHTML/RenderParamHTML';
 
 const SCOPE = 'peerModal';
@@ -574,7 +574,7 @@ class PeerModal extends React.Component {
 					<button
 						id={button.id}
 						key={button.id}
-						className="ibp-ca-action bx--btn bx--btn--tertiary bx--btn--sm"
+						className="ibp-ca-action cds--btn cds--btn--tertiary cds--btn--sm"
 						onClick={() => {
 							if (button.onClick) {
 								button.onClick();
@@ -985,7 +985,7 @@ class PeerModal extends React.Component {
 					<div className="ibp-form">
 						<label className="ibp-form-label">{translate('third_party_ca')}</label>
 						<div className="ibp-form-input">
-							<ToggleSmall
+							<Toggle size="sm"
 								id="toggle-third-party-ca"
 								toggled={this.props.third_party_ca}
 								onToggle={() => {
@@ -1059,7 +1059,7 @@ class PeerModal extends React.Component {
 				<div>
 					<button
 						id="update_hsm_action"
-						className="ibp-peer-action bx--btn bx--btn--tertiary bx--btn--sm"
+						className="ibp-peer-action cds--btn cds--btn--tertiary cds--btn--sm"
 						onClick={() => {
 							this.showAction('update_hsm');
 						}}
@@ -1068,7 +1068,7 @@ class PeerModal extends React.Component {
 					</button>
 					<button
 						id="remove_hsm_action"
-						className="ibp-peer-action bx--btn bx--btn--sm bx--btn--danger"
+						className="ibp-peer-action cds--btn cds--btn--sm cds--btn--danger"
 						onClick={() => {
 							this.showAction('remove_hsm');
 						}}

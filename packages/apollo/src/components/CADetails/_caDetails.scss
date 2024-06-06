@@ -1,13 +1,14 @@
 .ibp-node-details-panel {
 	display: flex;
 	flex-direction: column;
-	max-width: 324px;
+	// max-width: 324px;
+	width: 100%;
 	top: 3rem;
 	position: sticky;
 }
 
 .ibp-node-detail-title {
-	color: $carbon--cool-gray-50;
+	color: $cool-gray-50;
 	line-height: 2rem;
 }
 
@@ -52,8 +53,8 @@
 	}
 }
 
-.ibp-page-container .bx--tabs .bx--tabs__nav .bx--tabs__nav-item,
-.ibp-page-container .bx--tabs .bx--tabs__nav .bx--tabs__nav-item.bx--tabs__nav-item--selected {
+.ibp-page-container .cds--tabs .cds--tabs__nav .cds--tabs__nav-item,
+.ibp-page-container .cds--tabs .cds--tabs__nav .cds--tabs__nav-item.cds--tabs__nav-item--selected {
 	border-bottom: none;
 
 	a {
@@ -69,8 +70,8 @@
 
 	.ibp-node-version-value {
 		margin-top: 1rem;
-		@include carbon--type-style('body-short-01');
-		color: $carbon--cool-gray-30;
+		@include type-style('body-short-01');
+		color: $cool-gray-30;
 	}
 
 	.ibp-upgrade-available {

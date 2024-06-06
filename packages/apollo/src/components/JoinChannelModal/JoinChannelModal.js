@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ToggleSmall } from 'carbon-components-react';
+import { Toggle } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -664,7 +664,7 @@ class JoinChannelModal extends React.Component {
 							<div className="anchor-peer-toggle">
 								<h4 className="settings-toggle-label">{translate('make_anchor_peers')}</h4>
 								<div className="settings-toggle-inner">
-									<ToggleSmall
+									<Toggle size="sm"
 										id="toggle-input"
 										toggled={this.props.make_anchor_peer}
 										onToggle={() => {

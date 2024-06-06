@@ -43,7 +43,7 @@ class FocusComponent extends Component {
 			// don't set focus on form labels (let it find the actual field instead)
 			return false;
 		}
-		if (className === 'bx--tile-input') {
+		if (className === 'cds--tile-input') {
 			// don't set focus on the "hidden" radio button for a tile
 			return false;
 		}

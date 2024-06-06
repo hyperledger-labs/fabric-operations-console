@@ -24,7 +24,7 @@
 			background-color: $itemBackground;
 			border: 1px solid transparent;
 			border-bottom: 1px solid $itemBackground;
-			color: $carbon--white-0;
+			color: $white-0;
 			cursor: pointer;
 			display: inline-flex;
 			flex-direction: column;
@@ -39,7 +39,7 @@
 			width: 100%;
 
 			&.ibp--template-currently-selected {
-				box-shadow: inset 0px 0px 0px 1px $carbon--white-0;
+				box-shadow: inset 0px 0px 0px 1px $white-0;
 
 				.ibp-selected-template-checkmark {
 					opacity: 1;
@@ -56,28 +56,28 @@
 			}
 
 			&:hover {
-				background-color: $carbon--cool-gray-80;
+				background-color: $cool-gray-80;
 
 				.ibp-selected-template-checkmark {
-					fill: $carbon--cool-gray-30;
+					fill: $cool-gray-30;
 				}
 
 				.ibp-selected-template-checkmark {
 					path[data-icon-path='inner-path'] {
 						opacity: 1;
-						fill: $carbon--white-0;
+						fill: $white-0;
 					}
 				}
 			}
 
 			&:focus {
-				box-shadow: inset 0px 0px 0px 2px $carbon--white-0;
+				box-shadow: inset 0px 0px 0px 2px $white-0;
 				outline: 0;
 			}
 
 			.ibp-template-tile-desc {
-				@include carbon--type-style('label-01');
-				color: $ibm-color__cool-gray-30;
+				@include type-style('label-01');
+				color: $cool-gray-30;
 				padding-top: 0.75rem;
 			}
 
@@ -97,7 +97,7 @@
 			}
 
 			.ibp-selected-template-checkmark {
-				fill: $carbon--white-0;
+				fill: $white-0;
 				position: absolute;
 				top: 1rem;
 				right: 1rem;
@@ -116,11 +116,11 @@
 			transition: $basic-duo-transition;
 
 			&:hover {
-				background-color: $carbon--cool-gray-90;
+				background-color: $cool-gray-90;
 			}
 
 			&:focus {
-				box-shadow: inset 0px 0px 0px 2px $carbon--white-0;
+				box-shadow: inset 0px 0px 0px 2px $white-0;
 				outline: 0;
 			}
 
@@ -141,7 +141,7 @@
 					align-items: center;
 					padding-top: 1rem;
 
-					.bx--inline-loading {
+					.cds--inline-loading {
 						width: inherit;
 					}
 				}
@@ -154,43 +154,43 @@
 					right: 0;
 					bottom: 0;
 					// hack to get custom dashed border //
-					background: linear-gradient(90deg, $carbon--cool-gray-80 100%, transparent 100%) top left no-repeat,
+					background: linear-gradient(90deg, $cool-gray-80 100%, transparent 100%) top left no-repeat,
 						linear-gradient(90deg,
 							transparent calc(0.5rem / 2),
-							$carbon--cool-gray-80 calc(0.5rem / 2),
-							$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
+							$cool-gray-80 calc(0.5rem / 2),
+							$cool-gray-80 calc(0.5rem / 2 + 0.5rem),
 							transparent calc(0.5rem / 2 + 0.5rem)) top center repeat-x,
-						linear-gradient(90deg, $carbon--cool-gray-80 100%, transparent 100%) top right no-repeat,
-						linear-gradient(0deg, $carbon--cool-gray-80 100%, transparent 100%) top left no-repeat,
+						linear-gradient(90deg, $cool-gray-80 100%, transparent 100%) top right no-repeat,
+						linear-gradient(0deg, $cool-gray-80 100%, transparent 100%) top left no-repeat,
 						linear-gradient(0deg,
 							transparent calc(0.5rem / 2),
-							$carbon--cool-gray-80 calc(0.5rem / 2),
-							$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
+							$cool-gray-80 calc(0.5rem / 2),
+							$cool-gray-80 calc(0.5rem / 2 + 0.5rem),
 							transparent calc(0.5rem / 2 + 0.5rem)) center left repeat-y,
-						linear-gradient(0deg, $carbon--cool-gray-80 100%, transparent 100%) bottom left no-repeat,
-						linear-gradient(90deg, $carbon--cool-gray-80 100%, transparent 100%) bottom left no-repeat,
+						linear-gradient(0deg, $cool-gray-80 100%, transparent 100%) bottom left no-repeat,
+						linear-gradient(90deg, $cool-gray-80 100%, transparent 100%) bottom left no-repeat,
 						linear-gradient(90deg,
 							transparent calc(0.5rem / 2),
-							$carbon--cool-gray-80 calc(0.5rem / 2),
-							$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
+							$cool-gray-80 calc(0.5rem / 2),
+							$cool-gray-80 calc(0.5rem / 2 + 0.5rem),
 							transparent calc(0.5rem / 2 + 0.5rem)) bottom center repeat-x,
-						linear-gradient(90deg, $carbon--cool-gray-80 100%, transparent 100%) bottom right no-repeat,
-						linear-gradient(0deg, $carbon--cool-gray-80 100%, transparent 100%) top right no-repeat,
+						linear-gradient(90deg, $cool-gray-80 100%, transparent 100%) bottom right no-repeat,
+						linear-gradient(0deg, $cool-gray-80 100%, transparent 100%) top right no-repeat,
 						linear-gradient(0deg,
 							transparent calc(0.5rem / 2),
-							$carbon--cool-gray-80 calc(0.5rem / 2),
-							$carbon--cool-gray-80 calc(0.5rem / 2 + 0.5rem),
+							$cool-gray-80 calc(0.5rem / 2),
+							$cool-gray-80 calc(0.5rem / 2 + 0.5rem),
 							transparent calc(0.5rem / 2 + 0.5rem)) center right repeat-y,
-						linear-gradient(0deg, $carbon--cool-gray-80 100%, transparent 100%) bottom right no-repeat;
+						linear-gradient(0deg, $cool-gray-80 100%, transparent 100%) bottom right no-repeat;
 					background-size: 0.5rem 2px, calc(0.5rem + 0.5rem) 2px, 0.5rem 2px, 2px 0.5rem, 2px calc(0.5rem + 0.5rem), 2px 0.5rem;
 				}
 
 				.ibp--custom-template-drag-desc {
-					@include carbon--type-style('body-short-01');
+					@include type-style('body-short-01');
 					max-width: 13.25rem;
 
 					.ibp--custom-template-browse-link {
-						color: $carbon--blue-30;
+						color: $blue-30;
 					}
 				}
 			}
@@ -204,34 +204,34 @@
 						left: 0;
 						right: 0;
 						bottom: 0;
-						background: linear-gradient(90deg, $carbon--blue-50 100%, transparent 100%) top left no-repeat,
+						background: linear-gradient(90deg, $blue-50 100%, transparent 100%) top left no-repeat,
 							linear-gradient(90deg,
 								transparent calc(0.5rem / 2),
-								$carbon--blue-50 calc(0.5rem / 2),
-								$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
+								$blue-50 calc(0.5rem / 2),
+								$blue-50 calc(0.5rem / 2 + 0.5rem),
 								transparent calc(0.5rem / 2 + 0.5rem)) top center repeat-x,
-							linear-gradient(90deg, $carbon--blue-50 100%, transparent 100%) top right no-repeat,
-							linear-gradient(0deg, $carbon--blue-50 100%, transparent 100%) top left no-repeat,
+							linear-gradient(90deg, $blue-50 100%, transparent 100%) top right no-repeat,
+							linear-gradient(0deg, $blue-50 100%, transparent 100%) top left no-repeat,
 							linear-gradient(0deg,
 								transparent calc(0.5rem / 2),
-								$carbon--blue-50 calc(0.5rem / 2),
-								$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
+								$blue-50 calc(0.5rem / 2),
+								$blue-50 calc(0.5rem / 2 + 0.5rem),
 								transparent calc(0.5rem / 2 + 0.5rem)) center left repeat-y,
-							linear-gradient(0deg, $carbon--blue-50 100%, transparent 100%) bottom left no-repeat,
-							linear-gradient(90deg, $carbon--blue-50 100%, transparent 100%) bottom left no-repeat,
+							linear-gradient(0deg, $blue-50 100%, transparent 100%) bottom left no-repeat,
+							linear-gradient(90deg, $blue-50 100%, transparent 100%) bottom left no-repeat,
 							linear-gradient(90deg,
 								transparent calc(0.5rem / 2),
-								$carbon--blue-50 calc(0.5rem / 2),
-								$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
+								$blue-50 calc(0.5rem / 2),
+								$blue-50 calc(0.5rem / 2 + 0.5rem),
 								transparent calc(0.5rem / 2 + 0.5rem)) bottom center repeat-x,
-							linear-gradient(90deg, $carbon--blue-50 100%, transparent 100%) bottom right no-repeat,
-							linear-gradient(0deg, $carbon--blue-50 100%, transparent 100%) top right no-repeat,
+							linear-gradient(90deg, $blue-50 100%, transparent 100%) bottom right no-repeat,
+							linear-gradient(0deg, $blue-50 100%, transparent 100%) top right no-repeat,
 							linear-gradient(0deg,
 								transparent calc(0.5rem / 2),
-								$carbon--blue-50 calc(0.5rem / 2),
-								$carbon--blue-50 calc(0.5rem / 2 + 0.5rem),
+								$blue-50 calc(0.5rem / 2),
+								$blue-50 calc(0.5rem / 2 + 0.5rem),
 								transparent calc(0.5rem / 2 + 0.5rem)) center right repeat-y,
-							linear-gradient(0deg, $carbon--blue-50 100%, transparent 100%) bottom right no-repeat;
+							linear-gradient(0deg, $blue-50 100%, transparent 100%) bottom right no-repeat;
 						background-size: 0.5rem 2px, calc(0.5rem + 0.5rem) 2px, 0.5rem 2px, 2px 0.5rem, 2px calc(0.5rem + 0.5rem), 2px 0.5rem;
 					}
 				}
@@ -247,28 +247,28 @@
 	}
 
 	.ibp--selected-template-estimate-container {
-		background-color: $carbon--cool-gray-90;
+		background-color: $cool-gray-90;
 		padding: 0;
 		margin: 2rem 0;
 
 		.ibp-template-usage-intro {
-			border-bottom: 1px solid $carbon--cool-gray-100;
+			border-bottom: 1px solid $cool-gray-100;
 			padding: 1rem;
 		}
 
 		.ibp-template-usage-iks {
-			border-bottom: 1px solid $carbon--yellow-20;
-			border-top: 1px solid $carbon--cool-gray-100;
+			border-bottom: 1px solid $yellow-20;
+			border-top: 1px solid $cool-gray-100;
 			padding: 1.5rem 1rem;
 
 			.ibp-template-usage-desc {
-				@include carbon--type-style('label-01');
-				@include carbon--font-weight('semibold');
+				@include type-style('label-01');
+				@include font-weight('semibold');
 				padding-bottom: 0.5rem;
 			}
 
 			.ibp-template-usage-number {
-				@include carbon--type-style('productive-heading-03');
+				@include type-style('productive-heading-03');
 			}
 		}
 	}
@@ -290,11 +290,11 @@
 		padding-bottom: 6rem;
 
 		.ibp-template-diagram-label {
-			color: $carbon--cool-gray-30;
+			color: $cool-gray-30;
 		}
 
 		.ibp-template-diagram-container {
-			border-left: 1px solid $carbon--cool-gray-60;
+			border-left: 1px solid $cool-gray-60;
 			padding: 0rem 2rem;
 			margin: 1rem 0;
 
@@ -304,11 +304,11 @@
 		}
 
 		.ibp-template-export-svg {
-			fill: $carbon--white-0;
+			fill: $white-0;
 			margin-left: 0.5rem;
 		}
 
-		.bx--btn--tertiary {
+		.cds--btn--tertiary {
 			position: relative;
 
 			.ibp-template-export-svg {
@@ -319,7 +319,7 @@
 			&:hover,
 			&:focus {
 				.ibp-template-export-svg {
-					fill: $carbon--cool-gray-90;
+					fill: $cool-gray-90;
 				}
 			}
 		}
@@ -373,11 +373,11 @@
 	}
 
 	h2 {
-		@include carbon--type-style('productive-heading-03');
+		@include type-style('productive-heading-03');
 	}
 
 	.ibp-modal-desc {
-		@include carbon--type-style('body-short-02');
+		@include type-style('body-short-02');
 		color: white;
 		margin-bottom: 1rem;
 	}
@@ -393,7 +393,7 @@
 
 	hr {
 		border: 0;
-		border-top: 1px solid $carbon--cool-gray-70;
+		border-top: 1px solid $cool-gray-70;
 		display: block;
 		height: 1px;
 		margin: 1em 0;
@@ -401,7 +401,7 @@
 	}
 
 	.ibp-channel-sub-section-title {
-		@include carbon--type-style('productive-heading-03');
+		@include type-style('productive-heading-03');
 		line-height: 2.75rem;
 		margin-bottom: 1rem;
 	}
@@ -426,7 +426,7 @@
 		}
 
 		.ibp-vertical-bar {
-			border-left: 1px solid $carbon--cool-gray-70;
+			border-left: 1px solid $cool-gray-70;
 			height: 5rem;
 		}
 
@@ -514,7 +514,7 @@
 			width: 45%;
 
 			&.label {
-				@include carbon--type-style('body-short-01');
+				@include type-style('body-short-01');
 				margin-top: 0;
 			}
 		}
@@ -526,11 +526,11 @@
 			padding-top: 1rem;
 
 			&.label {
-				@include carbon--type-style('body-short-01');
+				@include type-style('body-short-01');
 				padding-top: 0;
 			}
 
-			.bx--checkbox-wrapper {
+			.cds--checkbox-wrapper {
 				margin-right: 2rem;
 				margin-top: 0.5rem;
 				margin-bottom: 0.5rem;
@@ -596,7 +596,7 @@
 	.ibp-channel-use-default-params {
 		margin: 1.5rem 0;
 
-		.bx--checkbox-wrapper {
+		.cds--checkbox-wrapper {
 			margin-bottom: 0.75rem;
 		}
 	}
@@ -607,8 +607,8 @@
 
 	.ibp-channel-table-headers {
 		display: flex;
-		@include carbon--type-style('body-short-01');
-		@include carbon--font-weight('normal');
+		@include type-style('body-short-01');
+		@include font-weight('normal');
 		margin: 0.5rem 0 0.5rem 0;
 
 		.ibp-add-acls-table-resource {
@@ -680,10 +680,10 @@
 	}
 
 	.ibp__text-input {
-		@include carbon--type-style('body-short-01');
-		background: $carbon--cool-gray-80;
-		border: 1px solid $carbon--cool-gray-50;
-		color: $carbon--cool-gray-50;
+		@include type-style('body-short-01');
+		background: $cool-gray-80;
+		border: 1px solid $cool-gray-50;
+		color: $cool-gray-50;
 		height: 2rem;
 		margin: 0.5rem 0rem 1rem 0rem;
 		padding: 0rem 1rem;
@@ -704,8 +704,8 @@
 	}
 
 	.ibp-channel-modal-link {
-		@include carbon--type-style('body-short-02');
-		color: $carbon--blue-40;
+		@include type-style('body-short-02');
+		color: $blue-40;
 	}
 
 	.ibp-capabilities {
@@ -732,9 +732,9 @@
 	}
 
 	.ibp-side-panel-warning {
-		max-width: 75%;
+		// max-width: 75%;
 
-		.bx--inline-notification {
+		.cds--inline-notification {
 			max-width: 100%;
 		}
 	}

@@ -332,7 +332,7 @@ describe('ChaincodeModal component', () => {
 			const component = mount(<ChaincodeModal {...props} />);
 			component.find('.ibp-wizard-step').should.have.lengthOf(3);
 			component.find('#proposal-identity-form-approve_identity').should.have.lengthOf(1);
-			component.find('input#approve_with_pkg').should.have.lengthOf(1);
+			component.find('button#approve_with_pkg').should.have.lengthOf(1);
 			component.find('.ibp-propose-chaincode-summary').should.have.lengthOf(1);
 		});
 	});
@@ -361,8 +361,8 @@ describe('ChaincodeModal component', () => {
 			const component = mount(<ChaincodeModal {...props} />);
 			component.find('.ibp-wizard-step').should.have.lengthOf(4);
 			component.find('#proposal-identity-form-approve_identity').should.have.lengthOf(1);
-			component.find('input#approve_with_pkg').should.have.lengthOf(1);
-			component.find('input#toggle-install-all-peers').should.have.lengthOf(1);
+			component.find('button#approve_with_pkg').should.have.lengthOf(1);
+			component.find('button#toggle-install-all-peers').should.have.lengthOf(1);
 			component.find('.ibp-propose-chaincode-summary').should.have.lengthOf(1);
 		});
 	});

@@ -19,7 +19,7 @@ import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { showBreadcrumb, updateState } from '../../redux/commonActions';
-import { SkeletonText } from 'carbon-components-react';
+import { Grid, Row, Column, SkeletonText } from "@carbon/react";
 import Helper from '../../utils/helper';
 import PageContainer from '../PageContainer/PageContainer';
 //import Logger from '../Log/Logger';
@@ -31,7 +31,7 @@ import SidePanel from '../SidePanel/SidePanel';
 import Clipboard from '../../utils/clipboard';
 import SVGs from '../Svgs/Svgs';
 import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
-import { Checkbox } from 'carbon-components-react';
+import { Checkbox } from "@carbon/react";
 import ActionsHelper from '../../utils/actionsHelper';
 import withRouter from '../../hoc/withRouter';
 
@@ -370,8 +370,9 @@ class AuditLogs extends Component {
 		const lastKey = keys[keys.length - 1];
 		return (
 			<PageContainer>
-				<div className="bx--row migrationPanel">
-					<div className="bx--col-lg-13">
+				<Row className="cds--row migrationPanel">
+					<Column>
+					{/* className="cds--col-lg-13" */}
 						<PageHeader
 							history={this.props.history}
 							headerName="audit_logs"
@@ -383,7 +384,7 @@ class AuditLogs extends Component {
 						}
 
 						{this.props.isManager &&
-							<div>
+							<>
 								{this.props.loading &&
 									<div>
 										<SkeletonText
@@ -409,78 +410,82 @@ class AuditLogs extends Component {
 										<br />
 
 										<div>
-											<div className='bx--label'>{translate('log_columns_desc')}</div>
+											<div className='cds--label'>{translate('log_columns_desc')}</div>
 										</div>
-										<Checkbox
-											id={'activity-checkbox-date'}
-											labelText={translate('date')}
-											wrapperClassName='audit-checkboxes'
-											value='date'
-											checked={this.props.showTableColumns ? this.props.showTableColumns.date : false}
-											onClick={event => {
-												this.onChangeTableColumn(event);
-											}}
-										/>
-										<Checkbox
-											id={'activity-checkbox-log'}
-											labelText={translate('log_title')}
-											wrapperClassName='audit-checkboxes'
-											value='log'
-											checked={this.props.showTableColumns ? this.props.showTableColumns.log : false}
-											onClick={event => {
-												this.onChangeTableColumn(event);
-											}}
-										/>
-										<Checkbox
-											id={'activity-checkbox-by'}
-											labelText={translate('by_title')}
-											wrapperClassName='audit-checkboxes'
-											value='by'
-											checked={this.props.showTableColumns ? this.props.showTableColumns.by : false}
-											onClick={event => {
-												this.onChangeTableColumn(event);
-											}}
-										/>
-										<Checkbox
-											id={'activity-checkbox-api'}
-											labelText={translate('api_title')}
-											wrapperClassName='audit-checkboxes'
-											value='api'
-											checked={this.props.showTableColumns ? this.props.showTableColumns.api : false}
-											onClick={event => {
-												this.onChangeTableColumn(event);
-											}}
-										/>
-										<Checkbox
-											id={'activity-checkbox-code'}
-											labelText={translate('response_code')}
-											wrapperClassName='audit-checkboxes'
-											value='code'
-											checked={this.props.showTableColumns ? this.props.showTableColumns.code : false}
-											onClick={event => {
-												this.onChangeTableColumn(event);
-											}}
-										/>
-										<Checkbox
-											id={'activity-checkbox-outcome'}
-											labelText={translate('outcome_title')}
-											wrapperClassName='audit-checkboxes'
-											value='outcome'
-											checked={this.props.showTableColumns ? this.props.showTableColumns.outcome : false}
-											onClick={event => {
-												this.onChangeTableColumn(event);
-											}}
-										/>
-										<Checkbox
-											id={'activity-checkbox-tx_id'}
-											labelText={translate('tx_id_title')}
-											wrapperClassName='audit-checkboxes'
-											value='tx_id'
-											checked={this.props.showTableColumns ? this.props.showTableColumns.tx_id : false}
-											onClick={event => {
-												this.onChangeTableColumn(event);
-											}}
-										/>
+
+										<div className="checkbox-filter-container">
+											<Checkbox
+												id={'activity-checkbox-date'}
+												labelText={translate('date')}
+												className='audit-checkboxes'
+												value='date'
+												checked={this.props.showTableColumns ? this.props.showTableColumns.date : false}
+												onClick={event => {
+													this.onChangeTableColumn(event);
+												}}
+											/>
+											<Checkbox
+												id={'activity-checkbox-log'}
+												labelText={translate('log_title')}
+												className='audit-checkboxes'
+												value='log'
+												checked={this.props.showTableColumns ? this.props.showTableColumns.log : false}
+												onClick={event => {
+													this.onChangeTableColumn(event);
+												}}
+											/>
+											<Checkbox
+												id={'activity-checkbox-by'}
+												labelText={translate('by_title')}
+												className='audit-checkboxes'
+												value='by'
+												checked={this.props.showTableColumns ? this.props.showTableColumns.by : false}
+												onClick={event => {
+													this.onChangeTableColumn(event);
+												}}
+											/>
+											<Checkbox
+												id={'activity-checkbox-api'}
+												labelText={translate('api_title')}
+												className='audit-checkboxes'
+												value='api'
+												checked={this.props.showTableColumns ? this.props.showTableColumns.api : false}
+												onClick={event => {
+													this.onChangeTableColumn(event);
+												}}
+											/>
+											<Checkbox
+												id={'activity-checkbox-code'}
+												labelText={translate('response_code')}
+												className='audit-checkboxes'
+												value='code'
+												checked={this.props.showTableColumns ? this.props.showTableColumns.code : false}
+												onClick={event => {
+													this.onChangeTableColumn(event);
+												}}
+											/>
+											<Checkbox
+												id={'activity-checkbox-outcome'}
+												labelText={translate('outcome_title')}
+												className='audit-checkboxes'
+												value='outcome'
+												checked={this.props.showTableColumns ? this.props.showTableColumns.outcome : false}
+												onClick={event => {
+													this.onChangeTableColumn(event);
+												}}
+											/>
+											<Checkbox
+												id={'activity-checkbox-tx_id'}
+												labelText={translate('tx_id_title')}
+												className='audit-checkboxes'
+												value='tx_id'
+												checked={this.props.showTableColumns ? this.props.showTableColumns.tx_id : false}
+												onClick={event => {
+													this.onChangeTableColumn(event);
+												}}
+											/>
+
+										</div>
 
 										<ItemContainer
 											emptyImage={emptyImage}
@@ -566,10 +571,10 @@ class AuditLogs extends Component {
 										</div>
 									</SidePanel>
 								}
-							</div>
+							</>
 						}
-					</div>
-				</div >
+					</Column>
+				</Row >
 			</PageContainer >
 		);
 	}

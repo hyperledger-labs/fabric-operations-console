@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { Loading, OverflowMenu, OverflowMenuItem } from 'carbon-components-react';
+import { Loading, OverflowMenu, OverflowMenuItem } from "@carbon/react";
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
@@ -39,7 +39,7 @@ class ItemMenu extends Component {
 					onClick={event => {
 						event.stopPropagation();
 					}}
-					ariaLabel={translate('actions')}
+					aria-label={translate('actions')}
 				>
 					{this.props.menuItems.map((option, index) => {
 						return (
@@ -51,7 +51,7 @@ class ItemMenu extends Component {
 									event.stopPropagation();
 									option.fn();
 								}}
-								primaryFocus={index === 0}
+								// primaryFocus={index === 0}
 								requireTitle={option.requireTitle ? true : false}
 								disabled={option.disabled === true}
 							/>

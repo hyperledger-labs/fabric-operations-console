@@ -19,7 +19,7 @@ import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import TitleBar from '../TitleBar/TitleBar';
-import { Button, Loading } from 'carbon-components-react';
+import { Button, Loading } from "@carbon/react";
 import { updateState } from '../../redux/commonActions';
 import Helper from '../../utils/helper';
 import UserSettingsRestApi from '../../rest/UserSettingsRestApi';
@@ -66,7 +66,7 @@ class RequestAccess extends Component {
 					/>
 				</Router>
 				<div className="ibp-request-access-container">
-					<h3 className="ibp-request-access-label bx--type-gamma">{translate('request_access_header')}</h3>
+					<h3 className="ibp-request-access-label cds--type-gamma">{translate('request_access_header')}</h3>
 					<p>{translate('request_access_details')}</p>
 					<br />
 					<br />

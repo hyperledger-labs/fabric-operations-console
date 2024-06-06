@@ -1,5 +1,5 @@
 .ibp-actions-title {
-	@include carbon--font-weight('semibold');
+	@include font-weight('semibold');
 	color: $field-label-color;
 	margin-bottom: 1rem;
 }
@@ -30,8 +30,8 @@ div .ibp-orderer-action {
 }
 
 .ibp-advanced-config-learn-more {
-	@include carbon--type-style('body-short-02');
-	color: $carbon--blue-40;
+	@include type-style('body-short-02');
+	color: $blue-40;
 	margin-bottom: 1rem;
 	margin-top: 1rem;
 	display: block;
@@ -41,7 +41,7 @@ div .ibp-orderer-action {
 .ibp-error-panel {
 	margin-top: 0.75rem;
 
-	.bx--inline-notification--info {
+	.cds--inline-notification--info {
 		margin: 1.5rem 0;
 		margin-top: 0rem;
 	}

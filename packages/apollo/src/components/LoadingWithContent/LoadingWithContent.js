@@ -14,7 +14,7 @@
  * limitations under the License.
 */
 
-import { Loading } from 'carbon-components-react';
+import { Loading } from "@carbon/react";
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -42,7 +42,7 @@ export default function LoadingWithContent({
 	if (direction === 'vertical') dirClass = 'flex-d-column';
 
 	return (
-		<div className={`ibp-loading-with-content ${withOverlay ? 'bx--loading-overlay' : ''} ${dirClass}`}>
+		<div className={`ibp-loading-with-content ${withOverlay ? 'cds--loading-overlay' : ''} ${dirClass}`}>
 			{active && <Loading small={small}
 				withOverlay={false}
 				description={description}

@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { WarningFilled16 } from '@carbon/icons-react/es';
-import { Checkbox } from 'carbon-components-react';
+import { WarningFilled } from '@carbon/icons-react';
+import { Checkbox } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -455,7 +455,7 @@ class UpdateChannelMspModal extends React.Component {
 			<div className="ibp-modal-desc">
 				{days !== undefined && days < constants.CERTIFICATE_WARNING_DAYS ? (
 					<p className="ibp-msp-cert-expiry">
-						<WarningFilled16 />
+						<WarningFilled size={16} />
 						{translate('admin_certs_expiry') + ': ' + Helper.fromNow(last, translate)}
 					</p>
 				) : (

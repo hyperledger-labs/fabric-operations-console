@@ -20,7 +20,7 @@ import { updateState } from '../../redux/commonActions';
 import ConfigureAuthApi from '../../rest/ConfigureAuthApi';
 import ActionsHelper from '../../utils/actionsHelper';
 import Helper from '../../utils/helper';
-import UserAvatar20 from '@carbon/icons-react/lib/user--avatar/20';
+import { UserAvatar } from '@carbon/icons-react';
 
 const SCOPE = 'userInfo';
 
@@ -53,7 +53,7 @@ export class UserInfo extends Component {
 				<div className="ibp-title-bar-login"
 					id="user-profile-container"
 				>
-					<UserAvatar20 className="ibp-user-info-header-icon" />
+					<UserAvatar size={20} className="ibp-user-info-header-icon" />
 				</div>
 			);
 		} else {

@@ -14,7 +14,7 @@
  * limitations under the License.
 */
 import async from 'async';
-import { Button } from 'carbon-components-react';
+import { Button } from "@carbon/react";
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
@@ -153,8 +153,8 @@ class ChaincodesPage extends Component {
 		const translate = this.props.t;
 		return (
 			<PageContainer setFocus={!this.props.loading}>
-				<div className="bx--row">
-					<div className="bx--col-lg-13">
+				{/* <div className="cds-row">
+					<div className="cds--col-lg-13"> */}
 						<PageHeader
 							history={this.props.history}
 							headerName="chaincode"
@@ -167,7 +167,7 @@ class ChaincodesPage extends Component {
 								<div>
 									<button
 										id="how-to-topic-button"
-										className="how-to-topic-button bx--btn bx--btn--tertiary"
+										className="how-to-topic-button cds--btn cds--btn--tertiary"
 										onClick={() => {
 											window.open(translate('chaincode_how_to_link', { DOC_PREFIX: this.props.docPrefix }));
 										}}
@@ -213,8 +213,8 @@ class ChaincodesPage extends Component {
 								instantiated_array={this.props.instantiated_array}
 							/>
 						</div>
-					</div>
-				</div>
+					{/* </div>
+				</div> */}
 			</PageContainer>
 		);
 	}

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { SkeletonText, Toggle } from 'carbon-components-react';
+import { SkeletonText, Toggle } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -33,7 +33,7 @@ import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import TranslateLink from '../TranslateLink/TranslateLink';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
-import RenderParamHTML from '../RenderHTML/RenderParamHTML';
+import RenderParamHTML from "../RenderHTML/RenderParamHTML";
 
 const naturalSort = require('javascript-natural-sort');
 

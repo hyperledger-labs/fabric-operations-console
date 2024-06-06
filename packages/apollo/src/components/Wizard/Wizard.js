@@ -14,7 +14,7 @@
  * limitations under the License.
 */
 import _ from 'lodash';
-import { Loading } from 'carbon-components-react';
+import { Loading } from "@carbon/react";
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';

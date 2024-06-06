@@ -3,7 +3,7 @@
 }
 
 .ibp-policy-added {
-	@include carbon--type-style('body-short-01');
+	@include type-style('body-short-01');
 	color: $action;
 	margin-top: 1rem;
 
@@ -13,7 +13,7 @@
 }
 
 .ibp-policy-updated {
-	@include carbon--type-style('body-short-01');
+	@include type-style('body-short-01');
 	color: $warning;
 	margin-top: 1rem;
 
@@ -23,7 +23,7 @@
 }
 
 .ibp-policy-removed {
-	@include carbon--type-style('body-short-01');
+	@include type-style('body-short-01');
 	color: $field-error;
 	margin-top: 1rem;
 
@@ -47,7 +47,7 @@
 
 	.ibp-policy-table-row {
 		&:first-child {
-			@include carbon--font-weight('semibold');
+			@include font-weight('semibold');
 		}
 
 		.ibp-policy-table-cell {
@@ -80,14 +80,14 @@
 				display: inline-block;
 				margin-right: 2rem;
 
-				.bx--checkbox-label:before {
+				.cds--checkbox-label:before {
 					border-color: $warning;
 				}
 
-				.bx--checkbox-label[data-contained-checkbox-state='mixed']:before,
-				.bx--checkbox-label[data-contained-checkbox-state='true']:before,
-				.bx--checkbox:checked+.bx--checkbox-label:before,
-				.bx--checkbox:indeterminate+.bx--checkbox-label:before {
+				.cds--checkbox-label[data-contained-checkbox-state='mixed']:before,
+				.cds--checkbox-label[data-contained-checkbox-state='true']:before,
+				.cds--checkbox:checked+.cds--checkbox-label:before,
+				.cds--checkbox:indeterminate+.cds--checkbox-label:before {
 					background-color: $warning;
 				}
 			}
@@ -99,7 +99,7 @@
 	margin-top: 3rem;
 
 	.ibp-side-panel-warning,
-	.bx--inline-notification {
+	.cds--inline-notification {
 		max-width: 100%;
 	}
 }

@@ -1,42 +1,46 @@
-$background: $carbon--cool-gray-100;
-$text: $carbon--white-0;
-$inverseText: $carbon--cool-gray-90;
+@use '@carbon/styles/scss/components/button';
+
+$background: $cool-gray-100;
+$text: $white-0;
+$inverseText: $cool-gray-90;
 $inverseBackground: $text;
 $inverseText: $background;
-$itemBackground: $carbon--cool-gray-90;
-$itemHover: $carbon--cool-gray-80;
-$action: $interactive-01;
-$actionHover: $carbon--blue-70;
-$secondaryAction: $carbon--blue-70;
-$secondaryActionHover: $carbon--blue-80;
-$navigationHover: $carbon--blue-40;
-$cancelButton: $carbon--cool-gray-60;
-$cancelButtonHover: $carbon--cool-gray-70;
-$buttonDisabled: $carbon--cool-gray-80;
-$sidePanelBackground: $carbon--cool-gray-100;
-$success: $carbon--green-50;
-$white: $carbon--white-0;
+$itemBackground: $cool-gray-90;
+$itemHover: $cool-gray-80;
+$action: button.$button-primary;
+// #0f62fe;
+// $interactive-01;
+$actionHover: $blue-70;
+$secondaryAction: $blue-70;
+$secondaryActionHover: $blue-80;
+$navigationHover: $blue-40;
+$cancelButton: $cool-gray-60;
+$cancelButtonHover: $cool-gray-70;
+$buttonDisabled: $cool-gray-80;
+$sidePanelBackground: $cool-gray-100;
+$success: $green-50;
+$white: $white-0;
 
 // alert colors
-$running: $carbon--green-50;
-$pending: $support-03;
-$warning: $support-03;
+$running: $green-50;
+$pending: #f1c21b; //$support-03;
+$warning: #f1c21b; //$support-03;
 $warningSecondary: #735f1b;
-$stopped: $support-01;
-$stoppedSecondary: $carbon--red-80;
+$stopped: #da1e28; //$support-01;
+$stoppedSecondary: $red-80;
 
 // fields
-$field-background: $carbon--cool-gray-90;
-$field-color: $carbon--cool-gray-50;
+$field-background: $cool-gray-90;
+$field-color: $cool-gray-50;
 $field-border: transparent;
-$field-label-color: $carbon--cool-gray-30;
-$field-focus-color: $carbon--cool-gray-10;
-$field-focus-border: $carbon--white-0;
-$field-error: $support-01;
+$field-label-color: $cool-gray-30;
+$field-focus-color: $cool-gray-10;
+$field-focus-border: $white-0;
+$field-error: #da1e28; //$support-01;
 
 // color coding
-$codeKeywordPrimary: $carbon--purple-40;
-$codeKeywordSecondary: $carbon--teal-40;
+$codeKeywordPrimary: $purple-40;
+$codeKeywordSecondary: $teal-40;
 
 // transition
 $basic-duo-transition: all 0.2s cubic-bezier(0.2, 0.2, 0.38, 0.9);
@@ -52,3 +56,9 @@ $panelOpenLayer: 6000;
 $panelOpenButtonLayer: 7000;
 $sidePanelError: 8000;
 $highestLayer: 10001;
+
+$inverse-support-01: $red-60;
+$hover-danger: button.$button-danger-hover;
+$disabled-03: $cool-gray-60;
+$support-01: $red-60;
+$visited-link: $link-visited;

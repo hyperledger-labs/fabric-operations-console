@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { ContentSwitcher, InlineNotification, SkeletonPlaceholder, Switch } from 'carbon-components-react';
+import { ContentSwitcher, InlineNotification, SkeletonPlaceholder, Switch } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { Button, CodeSnippet, Loading, SkeletonText, Toggle, ToggleSmall, Checkbox } from 'carbon-components-react';
+import { Button, CodeSnippet, Loading, SkeletonText, Toggle, Checkbox } from "@carbon/react";
 import _ from 'lodash';
 import parse from 'parse-duration';
 import PropTypes from 'prop-types';
@@ -841,7 +841,7 @@ class OrdererModal extends React.Component {
 					<button
 						id={button.id}
 						key={button.id}
-						className="ibp-ca-action bx--btn bx--btn--tertiary bx--btn--sm"
+						className="ibp-ca-action cds--btn cds--btn--tertiary cds--btn--sm"
 						onClick={() => {
 							if (button.onClick) {
 								button.onClick();
@@ -1951,7 +1951,7 @@ class OrdererModal extends React.Component {
 					<div className="ibp-form">
 						<label className="ibp-form-label">{translate('third_party_ca')}</label>
 						<div className="ibp-form-input">
-							<ToggleSmall
+							<Toggle size="sm"
 								id="toggle-third-party-ca"
 								toggled={this.props.third_party_ca}
 								onToggle={() => {
@@ -2025,7 +2025,7 @@ class OrdererModal extends React.Component {
 				<div>
 					<button
 						id="update_hsm_action"
-						className="ibp-orderer-action bx--btn bx--btn--tertiary bx--btn--sm"
+						className="ibp-orderer-action cds--btn cds--btn--tertiary cds--btn--sm"
 						onClick={() => {
 							this.showAction('update_hsm');
 						}}
@@ -2034,7 +2034,7 @@ class OrdererModal extends React.Component {
 					</button>
 					<button
 						id="remove_hsm_action"
-						className="ibp-orderer-action bx--btn bx--btn--sm bx--btn--danger"
+						className="ibp-orderer-action cds--btn cds--btn--sm cds--btn--danger"
 						onClick={() => {
 							this.showAction('remove_hsm');
 						}}

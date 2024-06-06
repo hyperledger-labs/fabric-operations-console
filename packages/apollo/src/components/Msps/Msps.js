@@ -146,8 +146,8 @@ class Msps extends Component {
 	render() {
 		return (
 			<PageContainer>
-				<div className="bx--row">
-					<div className="bx--col-lg-13">
+				{/* <div className="cds-row">
+					<div className="cds--col-lg-13"> */}
 						<PageHeader
 							history={this.props.history}
 							headerName="msp_heading"
@@ -201,8 +201,8 @@ class Msps extends Component {
 								mspModalType="settings"
 							/>
 						)}
-					</div>
-				</div>
+					{/* </div>
+				</div> */}
 			</PageContainer>
 		);
 	}

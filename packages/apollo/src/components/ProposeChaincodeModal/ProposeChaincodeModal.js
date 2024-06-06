@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { ContentSwitcher, Switch, TextArea, TextInput, Toggle } from 'carbon-components-react';
+import { ContentSwitcher, Switch, TextArea, TextInput, Toggle } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -925,7 +925,7 @@ class ProposeChaincodeModal extends React.Component {
 				policy = (
 					<TextArea
 						name="advanced_policy"
-						className="bx--text__input ibm-label"
+						className="cds--text__input ibm-label"
 						value={this.props.advanced_policy}
 						readOnly
 						labelText={this.props.t('manual_policy')}

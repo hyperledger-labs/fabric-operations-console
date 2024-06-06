@@ -11,8 +11,8 @@
 	display: flex;
 	margin-bottom: 1rem;
 
-	.bx--tooltip__label {
-		@include carbon--type-style('productive-heading-03');
+	.ibp--tooltip__label {
+		@include type-style('productive-heading-03');
 	}
 }
 
@@ -41,7 +41,7 @@
 #settings-client,
 #settings-server {
 	.ibp-form-label {
-		@include carbon--type-style('body-short-01');
+		@include type-style('body-short-01');
 		color: $field-label-color;
 	}
 
@@ -59,7 +59,7 @@
 .settings-toggle {
 	margin-right: 9.275rem;
 
-	.bx--form-item {
+	.cds--form-item {
 		flex-grow: 0;
 	}
 
@@ -70,7 +70,7 @@
 	}
 
 	.settings-toggle-label {
-		@include carbon--type-style('body-short-01');
+		@include type-style('body-short-01');
 		padding-bottom: 0.5rem;
 		width: max-content;
 	}

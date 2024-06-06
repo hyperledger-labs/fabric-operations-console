@@ -9,7 +9,7 @@
 }
 
 .ibp-side-panel-inline-confirmation-container {
-	background-color: $carbon--white-0;
+	background-color: $white-0;
 	border-top: 3px solid $action;
 	color: $inverseText;
 	height: 4.75rem;
@@ -21,11 +21,11 @@
 	transition: $basic-duo-transition;
 
 	.ibp-side-panel-inline-confirmation-title {
-		@include carbon--type-style('productive-heading-01');
+		@include type-style('productive-heading-01');
 	}
 
 	.ibp-side-panel-inline-confirmation-subtitle {
-		@include carbon--type-style('body-short-01');
+		@include type-style('body-short-01');
 	}
 
 	.ibp-side-panel-inline-close-icon {

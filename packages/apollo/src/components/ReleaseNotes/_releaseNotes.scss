@@ -1,6 +1,6 @@
 //Support \/  \/  \/
 .ibp-note-header {
-	border-right: 1px solid $carbon--cool-gray-50;
+	border-right: 1px solid $cool-gray-50;
 	padding-right: 1rem;
 }
 
@@ -10,7 +10,7 @@
 }
 
 .ipb-note-current {
-	@include carbon--type-style('label-01');
+	@include type-style('label-01');
 	padding: 0.25rem 0 0 1rem;
 	min-width: 5rem;
 }
@@ -40,17 +40,17 @@
 }
 
 .ibp-note-version {
-	@include carbon--type-style('body-short-01');
+	@include type-style('body-short-01');
 }
 
 .ibp-note-date {
-	@include carbon--type-style('label-01');
+	@include type-style('label-01');
 	display: inline-block;
 	width: 10rem;
 }
 
 .ibp-note-descrption {
-	@include carbon--type-style('body-short-01');
+	@include type-style('body-short-01');
 	display: inline-block;
 	max-width: 55rem;
 }

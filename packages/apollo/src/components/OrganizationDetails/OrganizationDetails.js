@@ -14,7 +14,7 @@
  * limitations under the License.
 */
 
-import { Button, SkeletonText } from 'carbon-components-react';
+import { Button, Row, SkeletonText } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -281,15 +281,15 @@ class OrganizationDetails extends Component {
 		const translate = this.props.t;
 		return (
 			<PageContainer>
-				<div className="ibp-msp-details bx--row">
-					<div className="bx--col-lg-4">
-						<div className="ibp-node-details-panel">
-							<div className="ibp-node-details-header">
-								{mspName && <PageHeader history={this.props.history}
+				<Row>
+				{mspName && <PageHeader history={this.props.history}
 									headerName={translate('msp_details_title', { mspName: mspName })}
 								/>}
 								{mspNameSkeleton}
-								<StickySection
+				</Row>
+				<Row>
+					<div className="ibp-column width-25">
+					<StickySection
 									openSettings={type => this.openMSPSettings(type)}
 									details={this.props.details}
 									title="organization"
@@ -321,12 +321,10 @@ class OrganizationDetails extends Component {
 										);
 									}}
 								/>
-							</div>
-						</div>
 					</div>
 
-					<div className="bx--col-lg-12">
-						{details && this.props.associatedPeers && this.props.associatedPeers.length > 0 && (
+					<div className="ibp-column width-75 p-lr-10">
+					{details && this.props.associatedPeers && this.props.associatedPeers.length > 0 && (
 							<div>
 								<p className="ibp-msp-joined-peers">{translate('peers')}</p>
 								<PeersComponent history={this.props.history}
@@ -399,6 +397,20 @@ class OrganizationDetails extends Component {
 						{details && this.props.showConnectionProfile && <ConnectionProfileModal onClose={this.closeConnectionProfileModal}
 							msp={details}
 						/>}
+					</div>
+				</Row>
+				<div className="ibp-msp-details cds-row">
+					<div className="cds--col-lg-4">
+						<div className="ibp-node-details-panel">
+							<div className="ibp-node-details-header">
+
+
+							</div>
+						</div>
+					</div>
+
+					<div className="cds--col-lg-12">
+
 					</div>
 				</div>
 			</PageContainer>

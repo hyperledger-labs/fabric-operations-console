@@ -22,22 +22,22 @@
 	top: 1rem;
 }
 
-.bx--btn--secondary,
+.cds--btn--secondary,
 .ibp-join_channel--button.ibp-join_channel--cancel--button {
 	background-color: $cancelButton;
 }
 
-.bx--btn--secondary:hover,
+.cds--btn--secondary:hover,
 .ibp-join_channel--button.ibp-join_channel--cancel--button:hover {
 	background-color: $cancelButtonHover;
 }
 
-.bx--btn--primary,
+// .cds--btn--primary,
 .ibp-join_channel--button.ibp-join_channel--submit--button {
 	background-color: $action;
 }
 
-.bx--btn--primary:hover,
+// .cds--btn--primary:hover,
 .ibp-join_channel--button.ibp-join_channel--submit--button:hover {
 	background-color: $actionHover;
 }
@@ -48,11 +48,11 @@
 	cursor: not-allowed;
 }
 
-.bx--btn--primary {
-	min-width: 100px;
-}
+// .cds--btn--primary {
+// 	min-width: 100px;
+// }
 
-.bx--btn--secondary {
+.cds--btn--secondary {
 	color: $text;
 	min-width: 100px;
 }
@@ -69,7 +69,7 @@
 .anchor-peer-toggle {
 	margin-top: 1.5rem;
 
-	.bx--form-item {
+	.cds--form-item {
 		flex-grow: 0;
 	}
 
@@ -81,7 +81,7 @@
 	}
 
 	.settings-toggle-label {
-		@include carbon--type-style('body-short-01');
+		@include type-style('body-short-01');
 		padding-bottom: 0.5rem;
 		width: max-content;
 	}

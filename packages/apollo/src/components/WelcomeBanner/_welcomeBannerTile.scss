@@ -127,18 +127,18 @@
 	}
 
 	.ibp-welcome-tile-header {
-		@include carbon--font-weight('semibold');
+		@include font-weight('semibold');
 		padding-bottom: 0.5rem;
 		padding-top: 0.75rem;
 	}
 
 	& p {
-		@include carbon--type-style('label-01');
-		color: $carbon--cool-gray-30;
+		@include type-style('label-01');
+		color: $cool-gray-30;
 	}
 
 	& * {
-		@include carbon--type-style('body-short-01');
+		@include type-style('body-short-01');
 	}
 
 	.ibp-welcome-tile-launch-icon {
@@ -152,12 +152,12 @@
 	}
 
 	.ibp-welcome-banner-video-link {
-		@include carbon--type-style('label-01');
+		@include type-style('label-01');
 		border: 0;
 		background: transparent;
 		text-align: left;
 		padding: 0;
-		color: $carbon--blue-40;
+		color: $blue-40;
 		text-decoration: none;
 		border-bottom: 1px solid transparent;
 		cursor: pointer;
@@ -165,7 +165,7 @@
 
 		&:hover,
 		&:focus {
-			border-bottom: 1px solid $carbon--blue-40;
+			border-bottom: 1px solid $blue-40;
 		}
 	}
 }

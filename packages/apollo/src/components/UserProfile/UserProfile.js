@@ -21,7 +21,7 @@ import ChangePasswordModal from '../ChangePasswordModal/ChangePasswordModal';
 import { connect } from 'react-redux';
 import { updateState, showSuccess, showError } from '../../redux/commonActions';
 import LoginApi from '../../rest/LoginApi';
-import { Modal } from 'carbon-components-react';
+import { Modal } from "@carbon/react";
 import Logger from '../Log/Logger';
 import { NodeRestApi } from '../../rest/NodeRestApi';
 import RenderHTML from "../RenderHTML/RenderHTML";

@@ -26,11 +26,11 @@ import WizardStep from '../WizardStep/WizardStep';
 import IdentityApi from '../../rest/IdentityApi';
 import { ChannelParticipationApi } from '../../rest/ChannelParticipationApi';
 import StitchApi from '../../rest/StitchApi';
-import { Loading } from 'carbon-components-react';
-import { InlineNotification } from 'carbon-components-react';
-import { Toggle } from 'carbon-components-react';
+import { Loading } from "@carbon/react";
+import { InlineNotification } from "@carbon/react";
+import { Toggle } from "@carbon/react";
 import * as constants from '../../utils/constants';
-import { WarningFilled16, CheckmarkFilled16, ProgressBarRound16, CircleDash16 } from '@carbon/icons-react/es';
+import { WarningFilled, CheckmarkFilled, ProgressBarRound, CircleDash } from '@carbon/icons-react';
 import { NodeRestApi } from '../../rest/NodeRestApi';
 import async from 'async';
 import { promisify } from 'util';
@@ -1094,16 +1094,18 @@ class JoinOSNChannelModal extends React.Component {
 								{translate('download_gen')}
 							</a>
 
-							<Toggle
-								id="select_all_toggle"
-								className="ibp-join-osn-select-followers"
-								toggled={select_all_toggle}
-								onToggle={this.toggleSelected}
-								onChange={() => { }}
-								aria-label={select_all_toggle ? translate('unselect_all') : translate('select_all')}
-								labelA={translate('select_all')}
-								labelB={translate('unselect_all')}
-							/>
+							<div>
+								<Toggle
+									id="select_all_toggle"
+									className="ibp-join-osn-select-followers"
+									toggled={select_all_toggle}
+									onToggle={this.toggleSelected}
+									onChange={() => { }}
+									aria-label={select_all_toggle ? translate('unselect_all') : translate('select_all')}
+									labelA={translate('select_all')}
+									labelB={translate('unselect_all')}
+								/>
+							</div>
 						</p>
 					)}
 
@@ -1208,22 +1210,22 @@ class JoinOSNChannelModal extends React.Component {
 	renderStatusIcon(status_str, joined) {
 		if (status_str === constants.OSN_JOIN_PENDING) {
 			return (
-				<ProgressBarRound16 title="Node has not joined yet" />
+				<ProgressBarRound size={16} title="Node has not joined yet" />
 			);
 		}
 		if (status_str === constants.OSN_JOIN_SUCCESS || joined) {
 			return (
-				<CheckmarkFilled16 title="Node has joined" />
+				<CheckmarkFilled size={16} title="Node has joined" />
 			);
 		}
 		if (status_str === constants.OSN_JOIN_ERROR) {
 			return (
-				<WarningFilled16 title="Node failed to join" />
+				<WarningFilled size={16} title="Node failed to join" />
 			);
 		}
 
 		return (
-			<CircleDash16 />
+			<CircleDash size={16} />
 		);
 	}
 

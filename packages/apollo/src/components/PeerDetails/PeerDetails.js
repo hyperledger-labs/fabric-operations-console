@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { Button, SkeletonPlaceholder, SkeletonText, Tab, Tabs } from 'carbon-components-react';
+import { Button, SkeletonPlaceholder, SkeletonText, Tab, Tabs, Row, TabList, TabPanels, TabPanel } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -527,12 +527,14 @@ class PeerDetails extends Component {
 		const notAvailable = this.props.notAvailable || (details && details.status === 'unknown');
 		return (
 			<PageContainer>
-				<PageHeader history={this.props.history}
-					headerName={peerName ? translate('peer_details_title', { peerName: peerName }) : ''}
-				/>
-				{peerNameSkeleton}
-				<div className="ibp-peer-details bx--row">
-					<div className="bx--col-lg-4">
+				<Row>
+					<PageHeader history={this.props.history}
+						headerName={peerName ? translate('peer_details_title', { peerName: peerName }) : ''}
+					/>
+					{peerNameSkeleton}
+				</Row>
+				<Row>
+					<div className="ibp-column width-25">
 						<div className="ibp-node-details-panel">
 							<div className="ibp-node-details-header">
 								<div className="ibp-node-tags" />
@@ -553,7 +555,7 @@ class PeerDetails extends Component {
 							</div>
 						</div>
 					</div>
-					<div className="bx--col-lg-12">
+					<div className="ibp-column width-75 p-lr-10">
 						{notAvailable && (
 							<div className="ibp-not-available ibp-error-panel">
 								<SidePanelWarning
@@ -584,51 +586,60 @@ class PeerDetails extends Component {
 						)}
 						{details && (
 							<Tabs aria-label="sub-navigation">
-								<Tab id="ibp-peer-details"
-									label={translate('details')}
-								>
-									{this.props.details && !this.props.details.associatedIdentity ? (
-										<div>{this.renderNoIdentity(translate)}</div>
-									) : (
-										<div>
-											<PeerChannels match={this.props.match}
-												peer={this.props.details}
-												history={this.props.history}
-												parentLoading={this.props.loading}
-												feature_flags={this.props.feature_flags}
-											/>
-											<PeerChaincode match={this.props.match}
-												peer={this.props.details}
-												parentLoading={this.props.loading}
-												feature_flags={this.props.feature_flags}
-											/>
-										</div>
-									)}
-								</Tab>
-								<Tab
-									id="ibp-peer-usage"
-									className={
-										details.isUpgradeAvailable && details.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)
-											? 'ibp-patch-available-tab'
-											: ''
-									}
-									label={translate('usage_info', {
-										patch:
-											details.isUpgradeAvailable && details.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) ? (
-												<div className="ibp-details-patch-container">
-													<div className="ibp-patch-available-tag ibp-node-details"
-														onClick={() => this.openPeerSettings('upgrade')}
-													>
-														{translate('patch_available')}
+								<TabList contained>
+									<Tab id="ibp-peer-details"
+									>
+										{translate('details')}
+									</Tab>
+									<Tab
+										id="ibp-peer-usage"
+										className={
+											details.isUpgradeAvailable && details.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)
+												? 'ibp-patch-available-tab'
+												: ''
+										}
+									>
+										{translate('usage_info', {
+											patch:
+												details.isUpgradeAvailable && details.location === 'ibm_saas' && ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) ? (
+													<div className="ibp-details-patch-container">
+														<div className="ibp-patch-available-tag ibp-node-details"
+															onClick={() => this.openPeerSettings('upgrade')}
+														>
+															{translate('patch_available')}
+														</div>
 													</div>
-												</div>
-											) : (
-												''
-											),
-									})}
-								>
-									{this.renderUsage(translate)}
-								</Tab>
+												) : (
+													''
+												),
+										})}
+									</Tab>
+								</TabList>
+								<TabPanels>
+									<TabPanel>
+										{this.props.details && !this.props.details.associatedIdentity ? (
+											<div>{this.renderNoIdentity(translate)}</div>
+										) : (
+											<div>
+												<PeerChannels match={this.props.match}
+													peer={this.props.details}
+													history={this.props.history}
+													parentLoading={this.props.loading}
+													feature_flags={this.props.feature_flags}
+												/>
+												<PeerChaincode match={this.props.match}
+													peer={this.props.details}
+													parentLoading={this.props.loading}
+													feature_flags={this.props.feature_flags}
+												/>
+											</div>
+										)}
+									</TabPanel>
+
+									<TabPanel>
+										{this.renderUsage(translate)}
+									</TabPanel>
+								</TabPanels>
 							</Tabs>
 						)}
 						{details && this.props.showSettings && (
@@ -705,7 +716,9 @@ class PeerDetails extends Component {
 							/>
 						)}
 					</div>
-				</div>
+
+
+				</Row>
 			</PageContainer>
 		);
 	}

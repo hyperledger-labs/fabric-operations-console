@@ -1,10 +1,10 @@
 .ibp-actions-title {
-	@include carbon--type-style('label-01');
+	@include type-style('label-01');
 	color: $field-label-color;
 	margin-bottom: 1rem;
 }
 
-.ibp-identity-action.bx--btn {
+.ibp-identity-action.cds--btn {
 	margin-right: 1rem;
 }
 
@@ -13,12 +13,12 @@
 }
 
 #confirm_remove:not(:disabled) {
-	background-color: $carbon--red-60;
+	background-color: $red-60;
 }
 
 #confirm_remove:focus,
 #confirm_remove:hover:not(:disabled) {
-	background-color: $carbon--red-60;
+	background-color: $red-60;
 }
 
 .ibp-remove-identity-desc,
@@ -28,6 +28,6 @@
 
 .ibp-expiration-date {
 	margin-top: 0.5rem;
-	@include carbon--type-style('body-short-02');
-	color: $carbon--cool-gray-50;
+	@include type-style('body-short-02');
+	color: $cool-gray-50;
 }
