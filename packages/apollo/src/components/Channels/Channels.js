@@ -736,13 +736,13 @@ class ChannelComponent extends Component {
 		const osnadminFeatsEnabled = this.props.feature_flags ? this.props.feature_flags.osnadmin_feats_enabled : false;
 		return (
 			<PageContainer setFocus={!this.props.loading}>
-				<Row>
+				{/* <Row> */}
 					<PageHeader
 						history={this.props.history}
 						headerName="channels"
 						staticHeader
 					/>
-				</Row>
+				{/* </Row> */}
 				{/* <Row> */}
 					<div id="channels-container"
 						className="ibp__channels--container"
