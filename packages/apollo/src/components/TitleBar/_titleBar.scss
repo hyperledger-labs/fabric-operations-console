@@ -192,6 +192,14 @@
 
 	.cds--header-read-only {
 		background-color: #da1e28;
+
+		a.cds--header__menu-item {
+			background-color: #da1e28;
+
+			&:hover {
+				background-color: #da1e28;
+			}
+		}
 	}
 }
 
