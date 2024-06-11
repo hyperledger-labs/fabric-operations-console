@@ -24,7 +24,7 @@ import { withTranslation } from 'react-i18next';
 import TranslateLink from '../../../TranslateLink/TranslateLink';
 import ImportantBox from '../../../ImportantBox/ImportantBox';
 import SidePanelWarning from '../../../SidePanelWarning/SidePanelWarning';
-import { Button, ContentSwitcher, Switch } from 'carbon-components-react';
+import { Button, ContentSwitcher, Switch } from "@carbon/react";
 import FileUploader from '../../../FileUploader/FileUploader';
 import SVGs from '../../../Svgs/Svgs';
 import Form from '../../../Form/Form';

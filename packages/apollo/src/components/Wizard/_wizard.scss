@@ -1,15 +1,15 @@
 .ibp-wizard-step {
-	@include carbon--font-weight('semibold');
-	color: $carbon--cool-gray-30;
+	@include font-weight('semibold');
+	color: $cool-gray-30;
 	margin-bottom: 1rem;
 }
 
 .ibp-wizard-title {
-	@include carbon--type-style('productive-heading-05');
+	@include type-style('productive-heading-05');
 	margin-bottom: 2rem;
 
-	.bx--tooltip__label {
-		@include carbon--type-style('productive-heading-05');
+	.ibp--tooltip__label {
+		@include type-style('productive-heading-05');
 		font-size: 1.65rem;
 	}
 }
@@ -23,19 +23,19 @@
 }
 
 .ibp-wizard-step-header {
-	@include carbon--type-style('productive-heading-04');
+	@include type-style('productive-heading-04');
 	align-items: baseline;
 	display: flex;
 	padding-top: 1rem;
 
-	.bx--tooltip__label {
-		@include carbon--type-style('productive-heading-04');
+	.ibp--tooltip__label {
+		@include type-style('productive-heading-04');
 		font-size: 1.4rem;
 	}
 }
 
-.ibp-tooltip-text.bx--tooltip {
-	@include carbon--type-style('body-short-01');
+.ibp-tooltip-text.cds--tooltip {
+	@include type-style('body-short-01');
 	max-width: 25rem;
 }
 
@@ -55,7 +55,7 @@
 /*.visible_section {
 	p,
 	a {
-		@include carbon--type-style('body-short-02');
+		@include type-style('body-short-02');
 	}
 }*/
 
@@ -64,9 +64,9 @@
 	.ibp-wizard-first-step,
 	.ibp-wizard-secondary-step {
 		.ibp-wizard-loading {
-			.bx--loading__svg {
-				.bx--loading__stroke {
-					stroke: $carbon--blue-60;
+			.cds--loading__svg {
+				.cds--loading__stroke {
+					stroke: $blue-60;
 				}
 			}
 		}

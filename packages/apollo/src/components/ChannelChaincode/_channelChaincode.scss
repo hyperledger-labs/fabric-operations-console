@@ -3,7 +3,7 @@
 }
 
 .ibp-channel-chaincode-version {
-	background-color: $carbon--cool-gray-70;
+	background-color: $cool-gray-70;
 	border: 2px solid transparent;
 	border-radius: 1rem;
 	line-height: 1rem;
@@ -17,8 +17,8 @@
 }
 
 .ibp-channel-chaincode-status {
-	@include carbon--type-style('label-01');
-	color: $carbon--cool-gray-30;
+	@include type-style('label-01');
+	color: $cool-gray-30;
 	bottom: 1rem;
 	left: 1rem;
 	position: absolute;

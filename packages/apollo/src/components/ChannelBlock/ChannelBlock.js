@@ -14,7 +14,7 @@
  * limitations under the License.
 */
 import _ from 'lodash';
-import { SkeletonPlaceholder } from 'carbon-components-react';
+import { Row, SkeletonPlaceholder } from "@carbon/react";
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
@@ -152,53 +152,49 @@ class ChannelBlock extends Component {
 		const translate = this.props.t;
 		return (
 			<PageContainer>
-				<div className="bx--row">
-					<div className="bx--col-lg-13">
-						<div id="channel-block-container"
-							className="ibp-channel-block"
-						>
-							<PageHeader history={this.props.history}
-								headerName={translate('block_title', { number: this.props.match.params.blockNumber })}
-							/>
-							<div>
-								{this.props.block ? (
-									<p>{translate('block_created', { date: this.props.block.created })}</p>
-								) : (
-									<SkeletonPlaceholder
-										style={{
-											width: '14rem',
-											height: '1.25rem',
-										}}
-									/>
-								)}
-							</div>
-							<ItemContainer
-								containerTitle="transactions"
-								emptyImage={emptyImage}
-								emptyMessage="empty_transactions"
-								emptyTitle="empty_transactions_title"
-								itemId="transactions"
-								loading={this.props.loading}
-								items={this.props.block ? this.props.block.txs : []}
-								listMapping={[
-									{
-										header: 'transaction_id',
-										attr: 'txId',
-									},
-									{
-										header: 'created',
-										attr: 'created',
-									},
-								]}
-								select={this.openTransaction}
-							/>
+				<Row>
+					<div id="channel-block-container" className="ibp-channel-block">
+						<PageHeader history={this.props.history}
+							headerName={translate('block_title', { number: this.props.match.params.blockNumber })}
+						/>
+						<div>
+							{this.props.block ? (
+								<p>{translate('block_created', { date: this.props.block.created })}</p>
+							) : (
+								<SkeletonPlaceholder
+									style={{
+										width: '14rem',
+										height: '1.25rem',
+									}}
+								/>
+							)}
 						</div>
-						{this.props.transaction && <TransactionModal transaction={this.props.transaction}
-							closed={this.closeTransaction}
-							settings={this.props.settings}
-						/>}
+						<ItemContainer
+							containerTitle="transactions"
+							emptyImage={emptyImage}
+							emptyMessage="empty_transactions"
+							emptyTitle="empty_transactions_title"
+							itemId="transactions"
+							loading={this.props.loading}
+							items={this.props.block ? this.props.block.txs : []}
+							listMapping={[
+								{
+									header: 'transaction_id',
+									attr: 'txId',
+								},
+								{
+									header: 'created',
+									attr: 'created',
+								},
+							]}
+							select={this.openTransaction}
+						/>
 					</div>
-				</div>
+					{this.props.transaction && <TransactionModal transaction={this.props.transaction}
+						closed={this.closeTransaction}
+						settings={this.props.settings}
+					/>}
+				</Row>
 			</PageContainer>
 		);
 	}

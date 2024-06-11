@@ -29,7 +29,7 @@
 		"google-protobuf": "3.19.*",
 		"protobufjs": "^7.2.5",
 		"safer-buffer": "2.1.*",
-		"ts-loader": "^5.0.0",
+		"ts-loader": "^9.5.1",
 		"typescript": "^3.0.3",
 		"webpack": "^5.64.4",
 		"webpack-cli": "^4.9.1"

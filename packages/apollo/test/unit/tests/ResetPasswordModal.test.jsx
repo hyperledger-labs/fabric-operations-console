@@ -189,19 +189,19 @@ describe('ResetPasswordModal component', () => {
 	 * componentDidMount is async and not being stubbed,
 	 * so added wait before shallow and instance.componentDidMount().
 	 */
-	describe('ResetPasswordModal - componentDidMount()', () => {
-		let componentDidMountSpy;
+	// describe('ResetPasswordModal - componentDidMount()', () => {
+	// 	let componentDidMountSpy;
 
-		beforeEach(() => {
-			componentDidMountSpy = mySandBox.spy(ResetPasswordModal.prototype, 'componentDidMount');
-			onResetStub = mySandBox.stub(ResetPasswordModal.prototype, 'onReset').resolves();
-		});
+	// 	beforeEach(() => {
+	// 		componentDidMountSpy = mySandBox.spy(ResetPasswordModal.prototype, 'componentDidMount');
+	// 		onResetStub = mySandBox.stub(ResetPasswordModal.prototype, 'onReset').resolves();
+	// 	});
 
-		function genericResetAndStubs(instance) {
-			componentDidMountSpy.resetHistory();
-			updateStateStub.resetHistory();
-		}
-	});
+	// 	function genericResetAndStubs(instance) {
+	// 		componentDidMountSpy.resetHistory();
+	// 		updateStateStub.resetHistory();
+	// 	}
+	// });
 
 	describe('ResetPasswordModal - onReset()', () => {
 		let resetPasswordStub;

@@ -14,7 +14,7 @@
  * limitations under the License.
 */
 
-import { TextArea } from 'carbon-components-react';
+import { TextArea } from "@carbon/react";
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';

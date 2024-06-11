@@ -14,7 +14,7 @@
 	padding-bottom: 4rem;
 	animation: 0.4s cubic-bezier(0.2, 0.2, 0.38, 0.9) 0s 1 slideInFromLeft;
 
-	&.bx--grid {
+	&.cds--grid {
 		max-width: 99rem;
 		margin-right: auto;
 	}
@@ -22,7 +22,7 @@
 
 @media (min-width: 1600px) {
 	.ibp-page-container {
-		&.bx--grid {
+		&.cds--grid {
 			margin: 0;
 		}
 	}

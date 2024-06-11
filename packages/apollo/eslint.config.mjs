@@ -85,18 +85,19 @@ export default [
 			"no-new": 1,
 			"no-trailing-spaces": 1,
 			"no-undef": 2,
-			"no-unused-vars": [
-				1,
-				{
-					"args": "none"
-				}
-			],
+			"no-unused-vars": "off",
+			// "no-unused-vars": [
+			// 	1,
+			// 	{
+			// 		"args": "none"
+			// 	}
+			// ],
 			"no-var": 1,
 			"object-curly-spacing": [1, "always"],
 			"prefer-const": 0,
 			"quotes": [1, "single"],
 			"require-atomic-updates": 0,
-			"semi": [1, "always"],
+			"semi": [0, "always"],
 			"space-before-blocks": 1,
 			"space-in-parens": [1, "never"],
 			"template-curly-spacing": [1, "never"],

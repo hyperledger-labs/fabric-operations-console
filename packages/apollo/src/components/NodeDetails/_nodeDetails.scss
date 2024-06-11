@@ -8,8 +8,8 @@
 	}
 
 	.node-details-data {
-		@include carbon--type-style('label-01');
-		color: $carbon--cool-gray-30;
+		@include type-style('label-01');
+		color: $cool-gray-30;
 		display: grid;
 		grid-column-gap: 1rem;
 		grid-template-columns: 1fr 1fr;

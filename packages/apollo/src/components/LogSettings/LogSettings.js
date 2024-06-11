@@ -17,7 +17,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import { ContentSwitcher, Dropdown, Switch, TextInput } from 'carbon-components-react';
+import { ContentSwitcher, Dropdown, Switch, TextInput } from "@carbon/react";
 import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
 import Form from '../Form/Form';
 import Helper from '../../utils/helper';

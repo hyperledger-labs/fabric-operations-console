@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { Button, SkeletonPlaceholder, SkeletonText, Tab, Tabs } from 'carbon-components-react';
+import { Button, Row, SkeletonPlaceholder, SkeletonText, Tab, TabList, TabPanel, TabPanels, Tabs } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -595,13 +595,16 @@ export class CADetails extends Component {
 		const translate = this.props.t;
 		return (
 			<PageContainer>
-				<PageHeader
-					history={this.props.history}
-					headerName={caName ? translate('ca_details_title', { caName: caName }) : ''}
-				/>
-				{caNameSkeleton}
-				<div className="ibp-ca-details bx--row">
-					<div className="bx--col-lg-4">
+				<Row>
+					<PageHeader
+						history={this.props.history}
+						headerName={caName ? translate('ca_details_title', { caName: caName }) : ''}
+					/>
+				</Row>
+
+				<Row>
+					{caNameSkeleton}
+					<div className="ibp-column width-25">
 						<div className="ibp-node-details-panel">
 							<div className="ibp-node-tags" />
 							<div className="ibp-node-details-header">
@@ -622,50 +625,57 @@ export class CADetails extends Component {
 							</div>
 						</div>
 					</div>
-					<div className="bx--col-lg-12">
-						<Tabs className="ibp-tabs-container"
-							aria-label="sub-navigation"
-						>
-							<Tab id="ibp-ca-detail-tab-root-ca"
-								label={translate('details')}
-							>
-								<div className="ibp-tab-content">
-									<p className="ibp-ca-detail-subtext">{translate('root_ca_subtext')}</p>
-									{this.renderItemContainer(translate)}
-								</div>
-							</Tab>
-							{this.props.details && (
-								<Tab
-									id="ibp-ca-usage"
-									className={
-										this.props.details &&
-											this.props.details.isUpgradeAvailable &&
-											this.props.details.location === 'ibm_saas' &&
-											ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)
-											? 'ibp-patch-available-tab'
-											: ''
-									}
-									label={translate('usage_info', {
-										patch:
+					<div className="ibp-column width-75 p-lr-10">
+						<Tabs className="ibp-tabs-container" aria-label="sub-navigation">
+							<TabList contained>
+								<Tab id="ibp-ca-detail-tab-root-ca">
+									{translate('details')}
+								</Tab>
+								{this.props.details && (
+									<Tab
+										id="ibp-ca-usage"
+										className={
 											this.props.details &&
 												this.props.details.isUpgradeAvailable &&
 												this.props.details.location === 'ibm_saas' &&
-												ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) ?
-												(<div className="ibp-details-patch-container">
-													<div className="ibp-patch-available-tag ibp-node-details"
-														onClick={() => this.openCASettings('upgrade')}
-													>
-														{translate('patch_available')}
+												ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)
+												? 'ibp-patch-available-tab'
+												: ''
+										}
+									>
+										{translate('usage_info', {
+											patch:
+												this.props.details &&
+													this.props.details.isUpgradeAvailable &&
+													this.props.details.location === 'ibm_saas' &&
+													ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) ?
+													(<div className="ibp-details-patch-container">
+														<div className="ibp-patch-available-tag ibp-node-details"
+															onClick={() => this.openCASettings('upgrade')}
+														>
+															{translate('patch_available')}
+														</div>
 													</div>
-												</div>
-												) : (''),
-									})}
-								>
+													) : (''),
+										})}
+									</Tab>
+								)}
+							</TabList>
+
+							<TabPanels>
+								<TabPanel>
+									<div className="ibp-tab-content">
+										<p className="ibp-ca-detail-subtext">{translate('root_ca_subtext')}</p>
+										{this.renderItemContainer(translate)}
+									</div>
+								</TabPanel>
+								{this.props.details && <TabPanel>
 									{this.renderUsage(translate)}
-								</Tab>
-							)}
+								</TabPanel>}
+							</TabPanels>
 						</Tabs>
 					</div>
+
 					<div>
 						{this.props.showCertificate && (
 							<GenerateCertificateModal
@@ -739,7 +749,7 @@ export class CADetails extends Component {
 							/>
 						)}
 					</div>
-				</div>
+				</Row>
 			</PageContainer>
 		);
 	}

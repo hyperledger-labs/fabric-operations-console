@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import Add20 from '@carbon/icons-react/lib/add/20';
-import Upload20 from '@carbon/icons-react/lib/upload/20';
-import { Checkbox, RadioTile, TileGroup } from 'carbon-components-react';
+import {Add, Upload} from '@carbon/icons-react';
+import { Checkbox, RadioTile, TileGroup } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -568,7 +567,7 @@ class ImportCAModal extends React.Component {
 						disabled={!ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)}
 					>
 						<p>{translate('create_ca')}</p>
-						<Add20 className="ibp-fill-color ibp-import-node-add-icon" />
+						<Add size={20} className="ibp-fill-color ibp-import-node-add-icon" />
 					</RadioTile>
 
 					<RadioTile value={constants.IMPORTING}
@@ -577,7 +576,7 @@ class ImportCAModal extends React.Component {
 						disabled={!ActionsHelper.canImportComponent(this.props.userInfo, this.props.feature_flags)}
 					>
 						<p>{translate('import_ca')}</p>
-						<Upload20 className="ibp-fill-color ibp-import-node-add-icon" />
+						<Upload size={20} className="ibp-fill-color ibp-import-node-add-icon" />
 					</RadioTile>
 
 				</TileGroup>
@@ -694,7 +693,7 @@ class ImportCAModal extends React.Component {
 					<div>
 						<button
 							id="edit_config_override"
-							className="ibp-ca-action bx--btn bx--btn--tertiary bx--btn--sm"
+							className="ibp-ca-action cds--btn cds--btn--tertiary cds--btn--sm"
 							onClick={() => {
 								const data = this.getCreateData();
 								const config_override = CertificateAuthorityRestApi.buildConfigOverride(data);
@@ -1052,7 +1051,7 @@ class ImportCAModal extends React.Component {
 								</a>
 							</p>
 							<Form
-								className="bx--radio-button-group--vertical"
+								className="cds--radio-button-group--vertical"
 								scope={SCOPE}
 								id="importSaasCAZone"
 								fields={[

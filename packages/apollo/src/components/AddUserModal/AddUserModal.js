@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { Checkbox } from 'carbon-components-react';
+import { Checkbox } from "@carbon/react";
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
@@ -227,7 +227,7 @@ export class AddUserModal extends Component {
 				},
 			});
 		}
-	}
+	};
 
 	render = () => {
 		let disableSubmit = this.props.disableSave || this.props.submitting || !this.props.roles || !this.props.roles.length || this.props.disableUpdate;

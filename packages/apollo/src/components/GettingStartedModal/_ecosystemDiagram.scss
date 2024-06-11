@@ -90,7 +90,7 @@
 	pointer-events: none;
 
 	&.diagram--text-box {
-		background-color: $carbon--cool-gray-90;
+		background-color: $cool-gray-90;
 		height: 11.25rem;
 		padding: 1rem;
 		width: 23.75rem;
@@ -106,15 +106,15 @@
 	}
 
 	.diagram--text-header {
-		@include carbon--font-weight('semibold');
+		@include font-weight('semibold');
 	}
 
 	.diagram--text {
-		color: $carbon--cool-gray-20;
+		color: $cool-gray-20;
 	}
 
 	.diagram--text-container-inner {
-		background-color: $carbon--cool-gray-90;
+		background-color: $cool-gray-90;
 		padding: 1rem;
 	}
 }

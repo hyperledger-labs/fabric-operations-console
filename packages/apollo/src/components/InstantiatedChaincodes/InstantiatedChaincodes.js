@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { OverflowMenu, OverflowMenuItem } from 'carbon-components-react';
+import { OverflowMenu, OverflowMenuItem } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -85,7 +85,7 @@ class InstantiatedChaincodes extends Component {
 			>
 				<OverflowMenuItem
 					id="upgrade_modal"
-					className="bx--overflow-instantiate-item-btn"
+					className="cds--overflow-instantiate-item-btn"
 					wrapperClassName="overflow-instantiate-item"
 					itemText={translate('upgrade')}
 					onClick={() => {

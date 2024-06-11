@@ -2,13 +2,13 @@
 	padding-bottom: 1rem;
 	display: flex;
 
-	.bx--tooltip__label {
-		@include carbon--type-style('productive-heading-04');
+	.ibp--tooltip__label {
+		@include type-style('productive-heading-04');
 	}
 }
 
 .ibp-access-auth-services-container {
-	background: $carbon--cool-gray-90;
+	background: $cool-gray-90;
 	height: 7.625rem;
 	padding-left: 1.5rem;
 	padding-top: 1rem;
@@ -16,7 +16,7 @@
 }
 
 .ibp-access-iam-info-container {
-	background: $carbon--cool-gray-90;
+	background: $cool-gray-90;
 	height: 12rem;
 	margin-top: 1rem;
 	padding-left: 1.5rem;
@@ -31,26 +31,33 @@
 }
 
 .ibp-access-app-id-label {
-	@include carbon--type-style('body-short-02');
-	@include carbon--font-weight('semibold');
+	@include type-style('body-short-02');
+	@include font-weight('semibold');
 	padding-top: 0.5rem;
 }
 
 .ibp-access-cloud-service-label {
-	@include carbon--type-style('body-short-01');
-	color: $carbon--cool-gray-40 !important;
+	@include type-style('body-short-01');
+	color: $cool-gray-40 !important;
 	margin-top: 0.25rem;
+
+	.cds--tooltip-trigger__wrapper {
+		height: 16px;
+		button {
+			padding: 0;
+		}
+	}
 }
 
-.ibp-access-configure-label.bx--link {
-	@include carbon--type-style('body-short-01');
+.ibp-access-configure-label.cds--link {
+	@include type-style('body-short-01');
 	cursor: pointer;
 	text-decoration: underline;
 }
 
 .ibp-auth-access-modal-title {
-	@include carbon--type-style('productive-heading-05');
-	@include carbon--font-weight('light');
+	@include type-style('productive-heading-05');
+	@include font-weight('light');
 	color: $text;
 }
 
@@ -59,14 +66,14 @@
 }
 
 .ibp-access-iam-title {
-	@include carbon--type-style('productive-heading-03');
-	color: $carbon--cool-gray-10;
+	@include type-style('productive-heading-03');
+	color: $cool-gray-10;
 	padding-top: 1rem;
 }
 
 .ibp-access-iam-desc {
-	@include carbon--type-style('body-short-02');
-	color: $carbon--white-0;
+	@include type-style('body-short-02');
+	color: $white-0;
 	padding-top: 1rem;
 }
 
@@ -75,19 +82,19 @@
 }
 
 .ibp-iam-learn-more {
-	@include carbon--type-style('body-short-01');
-	color: $carbon--blue-40;
+	@include type-style('body-short-01');
+	color: $blue-40;
 	display: block;
 	margin-top: 1.5rem;
 	width: max-content;
 }
 
 .ibp-nodes-iam-invite-users {
-	@include carbon--type-style('body-short-01');
+	@include type-style('body-short-01');
 	background: $action;
 	border: 2px solid transparent;
 	bottom: 0;
-	color: $carbon--white-0;
+	color: $white-0;
 	cursor: pointer;
 	display: inline-block;
 	margin-bottom: 0.5px;
@@ -107,7 +114,7 @@
 
 	&:focus {
 		border: 2px solid $white;
-		box-shadow: inset 0px 0px 0px 1px $carbon--cool-gray-100;
+		box-shadow: inset 0px 0px 0px 1px $cool-gray-100;
 		outline: 0;
 	}
 

@@ -74,7 +74,7 @@ describe('AuthDetails component', () => {
 			const component = mount(<AuthDetails {...props} />);
 			component.find('#' + SCOPE + '-configJson').should.have.lengthOf(1);
 			component.find('.ibp__auth-auth-manual').should.have.lengthOf(0);
-			component.find('.bx--inline-notification').should.have.lengthOf(0);
+			component.find('.cds--inline-notification').should.have.lengthOf(0);
 		});
 	});
 
@@ -95,7 +95,7 @@ describe('AuthDetails component', () => {
 		it('should render', async() => {
 			props.error = 'error';
 			const component = mount(<AuthDetails {...props} />);
-			component.find('.bx--inline-notification').should.have.lengthOf(1);
+			component.find('.cds--inline-notification').should.have.lengthOf(1);
 		});
 	});
 });

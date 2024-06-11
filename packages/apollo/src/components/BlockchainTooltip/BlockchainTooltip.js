@@ -16,8 +16,8 @@
 import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Tooltip, TooltipDefinition } from 'carbon-components-react';
-import Information from '@carbon/icons-react/es/information/16';
+import IBPTooltip from './IBPTooltip';
+import { DefinitionTooltip } from '@carbon/react';
 
 const BlockchainTooltip = ({
 	customIcon,
@@ -47,46 +47,29 @@ const BlockchainTooltip = ({
 		<div className={`${className ? className + ' ' : ''} ibp-tooltip-container ${withCheckbox ? 'ibp-tooltip-container-with-checkbox' : ''}`}>
 			{type === 'definition' ? (
 				/**
-				 * The 'children' of TooltipDefinition will
+				 * The 'children' of DefinitionTooltip will
 				 * be the label that shows for the tooltip
 				 */
 				<>
-					<TooltipDefinition tooltipText={tooltipText}
+					<DefinitionTooltip definition={tooltipText}
 						direction={direction ? direction : 'top'}
 					>
 						{_.isArray(children) ? children[0] : children}
-					</TooltipDefinition>
+					</DefinitionTooltip>
 				</>
 			) : (
 				/**
 				 * The 'children' of Tooltip will be the
 				 * content that shows inside of the tooltip
 				 */
-				<Tooltip
-					{...customIconProp.customIconOnly(customIcon)}
-					triggerText={triggerText ? triggerText : ''}
-					iconDescription="Information tooltip"
+				<IBPTooltip prefixText={triggerText ? triggerText : ''}
+					tooltipText={children}
 					direction={direction ? direction : 'bottom'}
-					className={tooltipClass ? tooltipClass : ''}
 					tabIndex={tabIndex ? tabIndex : 0}
-					menuOffset={
-						menuOffset
-							? menuOffset
-							: direction === 'right'
-								? {
-									left: 12,
-							  }
-								: {
-									right: 'auto',
-									left: -80,
-									top: 16,
-							  }
-					}
-					showIcon={!noIcon}
-					renderIcon={icon ? icon : Information}
-				>
-					<p>{children}</p>
-				</Tooltip>
+					tooltipClass={tooltipClass ? tooltipClass : ''}
+					noIcon={noIcon}
+					icon={icon}
+				/>
 			)}
 		</div>
 	);

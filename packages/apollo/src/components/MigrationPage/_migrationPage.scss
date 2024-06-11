@@ -89,22 +89,22 @@
 		margin: 1.6rem 0 0 1rem;
 	}
 
-	.bx--accordion__heading {
+	.cds--accordion__heading {
 		background: #0353e9;
 	}
 
-	.bx--accordion__heading:hover,
-	.bx--accordion__heading:hover::before {
+	.cds--accordion__heading:hover,
+	.cds--accordion__heading:hover::before {
 		background: #0353e9;
 		border: 1px #fff solid;
 	}
 
-	.bx--accordion__heading,
-	.bx--accordion__heading::before {
+	.cds--accordion__heading,
+	.cds--accordion__heading::before {
 		border: 1px #0353e9 solid;
 	}
 
-	.bx--accordion__content {
+	.cds--accordion__content {
 		padding-right: 1rem;
 	}
 
@@ -117,7 +117,7 @@
 		font-size: 0.9rem;
 	}
 
-	.bx--structured-list-td {
+	.cds--structured-list-td {
 		font-size: .7rem;
 		line-height: 0.8rem;
 	}

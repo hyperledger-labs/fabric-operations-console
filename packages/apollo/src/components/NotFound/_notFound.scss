@@ -15,7 +15,7 @@
 		.ibp-404-header,
 		.ibp-404-desc {
 			padding-bottom: 0.5rem;
-			color: $carbon--cool-gray-30;
+			color: $cool-gray-30;
 		}
 
 		.ibp-404-header:last-of-type {
@@ -32,7 +32,7 @@
 
 	.ibp-404-illustration-container {
 		align-items: center;
-		background: linear-gradient(to bottom, $carbon--blue-90 0%, $carbon--blue-50 75%);
+		background: linear-gradient(to bottom, $blue-90 0%, $blue-50 75%);
 		display: flex;
 		justify-content: center;
 

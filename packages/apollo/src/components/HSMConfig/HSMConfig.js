@@ -14,7 +14,7 @@
  * limitations under the License.
 */
 
-import { ToggleSmall } from 'carbon-components-react';
+import { Toggle } from "@carbon/react";
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
@@ -91,7 +91,7 @@ class HSMConfig extends Component {
 					<div className="ibp-form ibp-hsm-toggle-form">
 						<label className="ibp-form-label">{this.props.t('use_hsm_settings')}</label>
 						<div className="ibp-form-input">
-							<ToggleSmall
+							<Toggle size="sm"
 								id="use_hsm_settings"
 								toggled={!this.props.show_proxy}
 								onToggle={() => {
@@ -110,7 +110,7 @@ class HSMConfig extends Component {
 									}
 									this.props.updateState(this.props.scope, { hsm });
 								}}
-								onChange={() => {}}
+								onChange={() => { }}
 								aria-label={this.props.t('use_hsm_settings')}
 								labelA={this.props.t('no')}
 								labelB={this.props.t('yes')}

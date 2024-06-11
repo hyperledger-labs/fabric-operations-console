@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { WarningFilled16 } from '@carbon/icons-react/es';
+import { WarningFilled } from '@carbon/icons-react';
 import PropTypes from 'prop-types';
 import React from 'react';
 import StitchApi from '../../rest/StitchApi';
@@ -49,7 +49,7 @@ const CertificateList = ({ certs, parsed }) => {
 					)}
 					{days < constants.CERTIFICATE_WARNING_DAYS ? (
 						<span className="ibp-cert-expiry">
-							<WarningFilled16 />
+							<WarningFilled size={16} />
 							{exp}
 						</span>
 					) : (

@@ -84,12 +84,12 @@
 			transition: $basic-duo-transition;
 
 			&:hover {
-				background-color: $carbon--cool-gray-80;
+				background-color: $cool-gray-80;
 			}
 
 			&:focus {
 				box-shadow: inset 0px 0px 0px 2px $white;
-				background-color: $carbon--cool-gray-80;
+				background-color: $cool-gray-80;
 				outline: 0;
 			}
 		}

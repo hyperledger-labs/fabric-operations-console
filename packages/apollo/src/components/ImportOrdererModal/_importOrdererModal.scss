@@ -7,32 +7,32 @@
 	margin-bottom: 2rem;
 }
 
-.bx--btn--secondary {
+.cds--btn--secondary {
 	background-color: $cancelButton;
 	color: $text;
 	min-width: 100px;
 	margin-bottom: 1rem;
 }
 
-.bx--btn--secondary:hover {
+.cds--btn--secondary:hover {
 	background-color: $cancelButtonHover;
 }
 
-.bx--btn--primary {
-	background-color: $action;
-	min-width: 100px;
-}
+// .cds--btn--primary {
+// 	background-color: $action;
+// 	min-width: 100px;
+// }
 
-.bx--btn--primary:hover {
-	background-color: $actionHover;
-}
+// .cds--btn--primary:hover {
+// 	background-color: $actionHover;
+// }
 
-.bx--file-filename.ibp-importOrderer--fileName {
+.cds--file-filename.ibp-importOrderer--fileName {
 	margin-bottom: 0.5rem;
 }
 
 .ibp-panel--content {
-	.bx--file__state-container {
+	.cds--file__state-container {
 		display: none;
 	}
 
@@ -79,7 +79,7 @@ fieldset.ibp-orderer-locations {
 			background-color: $itemHover;
 		}
 
-		&.bx--tile--disabled{
+		&.cds--tile--disabled{
 			background: transparent;
 			color: #555;
 		}
@@ -90,12 +90,12 @@ fieldset.ibp-orderer-locations {
 			right: 1rem;
 		}
 
-		.bx--tile__checkmark {
+		.cds--tile__checkmark {
 			display: none;
 		}
 	}
 
-	.bx--tile--is-selected {
+	.cds--tile--is-selected {
 		outline: 1px solid $action;
 	}
 }
@@ -104,8 +104,8 @@ fieldset.ibp-orderer-locations {
 	margin-bottom: 1rem;
 
 	.summary-label {
-		@include carbon--type-style('body-short-01');
-		color: $carbon--cool-gray-30;
+		@include type-style('body-short-01');
+		color: $cool-gray-30;
 	}
 
 	.summary-value {
@@ -119,7 +119,7 @@ fieldset.ibp-orderer-locations {
 }
 
 .ibp-third-party-ca {
-	.bx--checkbox-wrapper {
+	.cds--checkbox-wrapper {
 		display: inline-block;
 	}
 
@@ -129,9 +129,9 @@ fieldset.ibp-orderer-locations {
 }
 
 .ibp-usage-footer {
-	@include carbon--type-style('body-short-01');
+	@include type-style('body-short-01');
 	background-color: $inverseBackground;
-	border-top: 3px solid $carbon--blue-50;
+	border-top: 3px solid $blue-50;
 	color: $inverseText;
 	display: flex;
 	flex-direction: row;
@@ -142,13 +142,13 @@ fieldset.ibp-orderer-locations {
 		padding: 1rem;
 
 		.ibp-usage-footer-heading {
-			@include carbon--font-weight('semibold');
+			@include font-weight('semibold');
 		}
 	}
 }
 
 #saasCA-enroll_id {
-	.bx--skeleton.bx--dropdown-v2.bx--list-box.bx--form-item {
+	.cds--skeleton.cds--dropdown-v2.cds--list-box.cds--form-item {
 		height: 3.5rem;
 		max-height: 3.5rem;
 	}
@@ -156,7 +156,7 @@ fieldset.ibp-orderer-locations {
 
 #importRaftOrderer {
 	#importRaftOrderer-raft_nodes {
-		.bx--radio-button-wrapper {
+		.cds--radio-button-wrapper {
 			display: flex;
 		}
 	}
@@ -183,12 +183,12 @@ fieldset.ibp-orderer-locations {
 }
 
 .ibp-importOrderer--accordion {
-	.bx--accordion__content {
+	.cds--accordion__content {
 		padding-right: 1rem;
 	}
 
 	.ibp-accordion-form {
-		.bx--radio-button-wrapper .bx--radio-button__label {
+		.cds--radio-button-wrapper .cds--radio-button__label {
 			justify-content: left;
 		}
 	}
@@ -197,7 +197,7 @@ fieldset.ibp-orderer-locations {
 .ibp-zone-selection-div {
 	margin-top: 1rem;
 
-	.bx--toggle__switch {
+	.cds--toggle__switch {
 		span {
 			white-space: nowrap;
 		}
@@ -220,7 +220,7 @@ fieldset.ibp-orderer-locations {
 }
 
 .ibp-orderer-zone-wizard {
-	.bx--radio-button-wrapper .bx--radio-button__label {
+	.cds--radio-button-wrapper .cds--radio-button__label {
 		align-items: left;
 		justify-content: left;
 		margin-top: 0.25rem;

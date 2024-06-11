@@ -122,7 +122,7 @@ Feature: Create and Join a 2.x channel
 		And I clicked the span with text 'Next'
         Then I clicked Create channel button
 		Then wait "10" seconds
-		Then I should see a success toast with class '.bx--toast-notification__title' which says "You have successfully initiated a request to create channel2. This request requires the signature of an ordering service MSP. After the request has been signed and submitted, you will see a pending channel tile. Clicking on this tile will allow you to join a peer to the channel."
+		Then I should see a success toast with class '.cds--toast-notification__title' which says "You have successfully initiated a request to create channel2. This request requires the signature of an ordering service MSP. After the request has been signed and submitted, you will see a pending channel tile. Clicking on this tile will allow you to join a peer to the channel."
 		Then wait "5" seconds
 		# Approving New channel request
 		When I clicked the button with id 'ibp-header-signature-collection-icon'
@@ -149,5 +149,5 @@ Feature: Create and Join a 2.x channel
         And I clicked the span with text 'Peer Org1'
         And I clicked the span with text 'Peer Org2'
         When I clicked the button with id 'submit'
-        Then I should see a success toast with class '.bx--toast-notification__title' which says "You have successfully joined channel2."
+        Then I should see a success toast with class '.cds--toast-notification__title' which says "You have successfully joined channel2."
 		Then the element div with text 'channel2' should be visible on page

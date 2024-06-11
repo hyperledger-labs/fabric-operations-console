@@ -1,6 +1,6 @@
 .ibp-user-info-header-icon {
 	bottom: 2px;
-	fill: $carbon--white-0;
+	fill: $white-0;
 	position: relative;
 }
 
@@ -17,7 +17,7 @@
 		width: 3rem;
 
 		&:hover {
-			background-color: $carbon--cool-gray-90;
+			background-color: $cool-gray-90;
 		}
 
 		&.ibp-header-active-item {
@@ -47,7 +47,7 @@
 
 			&:focus {
 				border: 2px solid $white;
-				box-shadow: inset 0px 0px 0px 1px $carbon--cool-gray-100;
+				box-shadow: inset 0px 0px 0px 1px $cool-gray-100;
 				outline: 0;
 			}
 		}
@@ -55,7 +55,7 @@
 }
 
 .ibp-user-info-detail-container {
-	background-color: $carbon--cool-gray-90;
+	background-color: $cool-gray-90;
 	border-top: 1px solid $itemBackground;
 	padding: 1rem;
 	position: fixed;
@@ -64,14 +64,14 @@
 	width: 16.25rem;
 
 	.ibp-user-info-username {
-		@include carbon--type-style('body-short-01');
-		@include carbon--font-weight('semibold');
-		color: $carbon--cool-gray-20;
+		@include type-style('body-short-01');
+		@include font-weight('semibold');
+		color: $cool-gray-20;
 	}
 
 	.ibp-header-user-info-subtext {
-		@include carbon--type-style('body-short-01');
-		color: $carbon--cool-gray-20;
+		@include type-style('body-short-01');
+		color: $cool-gray-20;
 	}
 
 	.ibp-user-info-detail-content {
@@ -79,8 +79,8 @@
 	}
 
 	.ibp-header-user-info-logout {
-		border-bottom: 1px solid $carbon--cool-gray-80;
-		border-top: 1px solid $carbon--cool-gray-80;
+		border-bottom: 1px solid $cool-gray-80;
+		border-top: 1px solid $cool-gray-80;
 		color: $white;
 		display: block;
 		line-height: 2rem;

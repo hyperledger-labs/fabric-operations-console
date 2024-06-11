@@ -3,7 +3,7 @@
 }
 
 .ibp-actions-title {
-	@include carbon--font-weight('semibold');
+	@include font-weight('semibold');
 	color: $field-label-color;
 	margin-bottom: 1rem;
 }
@@ -30,8 +30,8 @@
 }
 
 .ibp__text-input {
-	@include carbon--type-style('body-short-02');
-	background: $carbon--cool-gray-90;
+	@include type-style('body-short-02');
+	background: $cool-gray-90;
 	border: none;
 	color: white;
 	height: 3rem;
@@ -46,6 +46,6 @@
 }
 
 .ibp-msp-labels {
-	@include carbon--type-style('body-short-01');
-	color: $carbon--cool-gray-30;
+	@include type-style('body-short-01');
+	color: $cool-gray-30;
 }

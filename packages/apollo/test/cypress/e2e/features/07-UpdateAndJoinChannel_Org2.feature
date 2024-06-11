@@ -103,4 +103,4 @@ Feature: Update channel to add Org2
         And I clicked the span with text 'Next'
         And I clicked the span with text 'Next'
         And I clicked the span with text 'Update channel'
-        Then I should see a success toast with class '.bx--toast-notification__title' which says "You have successfully initiated a request to update channel channel1."
+        Then I should see a success toast with class '.cds--toast-notification__title' which says "You have successfully initiated a request to update channel channel1."

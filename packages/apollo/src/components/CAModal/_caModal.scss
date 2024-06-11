@@ -1,6 +1,6 @@
 .ibp-panel--content {
 	.ibp-actions-title {
-		@include carbon--font-weight('semibold');
+		@include font-weight('semibold');
 		align-items: flex-start;
 		color: $field-label-color;
 		margin-bottom: 1rem;
@@ -13,12 +13,12 @@
 }
 
 #confirm_remove:not(:disabled) {
-	background-color: $carbon--red-60;
+	background-color: $red-60;
 }
 
 #confirm_remove:focus,
 #confirm_remove:hover:not(:disabled) {
-	background-color: $carbon--red-60;
+	background-color: $red-60;
 }
 
 .ibp-remove-ca-desc,
@@ -40,7 +40,7 @@
 	margin-bottom: 1rem;
 }
 
-.ibp-ca-action.bx--btn {
+.ibp-ca-action.cds--btn {
 	margin-right: 1rem;
 	margin-bottom: 1rem;
 }

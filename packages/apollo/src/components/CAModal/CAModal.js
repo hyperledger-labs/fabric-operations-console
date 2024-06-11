@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { Checkbox, CodeSnippet, ContentSwitcher, SkeletonText, Switch } from 'carbon-components-react';
+import { Checkbox, CodeSnippet, ContentSwitcher, SkeletonText, Switch } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -433,7 +433,7 @@ export class CAModal extends React.Component {
 					<button
 						id={button.id}
 						key={button.id}
-						className="ibp-ca-action bx--btn bx--btn--tertiary bx--btn--sm"
+						className="ibp-ca-action cds--btn cds--btn--tertiary cds--btn--sm"
 						onClick={() => {
 							if (button.onClick) {
 								button.onClick();
@@ -1080,7 +1080,7 @@ export class CAModal extends React.Component {
 				<div>
 					<button
 						id="update_hsm_action"
-						className="ibp-ca-action bx--btn bx--btn--tertiary bx--btn--sm"
+						className="ibp-ca-action cds--btn cds--btn--tertiary cds--btn--sm"
 						onClick={() => {
 							this.showAction('update_hsm');
 						}}
@@ -1089,7 +1089,7 @@ export class CAModal extends React.Component {
 					</button>
 					<button
 						id="remove_hsm_action"
-						className="ibp-ca-action bx--btn bx--btn--sm bx--btn--danger"
+						className="ibp-ca-action cds--btn cds--btn--sm cds--btn--danger"
 						onClick={() => {
 							this.showAction('remove_hsm');
 						}}

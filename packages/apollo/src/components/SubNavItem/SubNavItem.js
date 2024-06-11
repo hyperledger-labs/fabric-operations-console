@@ -38,7 +38,7 @@ class SubNavItem extends Component {
 				</NavLink>
 				<div className="left-nav-shortened left-nav-item-content">
 					<span className="ibp-left-nav-border" />
-					<h4 className="ibp-left-nav-text bx--type-zeta">{translate(this.props.itemId)}</h4>
+					<h4 className="ibp-left-nav-text cds--type-zeta">{translate(this.props.itemId)}</h4>
 				</div>
 			</div>
 		);

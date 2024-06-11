@@ -1,7 +1,7 @@
 .ibp-complexity-scale-outer-container {
 	align-items: center;
 	display: flex;
-	color: $carbon--cool-gray-30;
+	color: $cool-gray-30;
 
 	.ibp-complexity-level-label {
 		font-size: 0.75rem;
@@ -12,7 +12,7 @@
 		display: flex;
 
 		.ibp-complexity-scale-item {
-			background-color: $carbon--cool-gray-60;
+			background-color: $cool-gray-60;
 			margin-right: 0.25rem;
 			height: 0.125rem;
 			width: 1.5rem;

@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ChevronDown16, Help20, NotificationFilled20 } from '@carbon/icons-react/es';
-import { Tag } from 'carbon-components-react';
+import { ChevronDown, Help, NotificationFilled } from '@carbon/icons-react';
 import {
-	Header,
+	Tag, Header,
 	HeaderGlobalAction,
 	HeaderGlobalBar,
 	HeaderMenuItem,
 	HeaderName,
 	HeaderNavigation,
-	SkipToContent,
-} from 'carbon-components-react/lib/components/UIShell';
+	SkipToContent
+} from "@carbon/react";
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
@@ -53,7 +52,7 @@ class TitleBar extends Component {
 
 	componentDidUpdate(prevProps) {
 		if (this.props.location !== prevProps.location) {
-			const skipToContentElement = document.querySelector('.bx--skip-to-content');
+			const skipToContentElement = document.querySelector('.cds--skip-to-content');
 			if (skipToContentElement) {
 				skipToContentElement.tabIndex = 0;
 			}
@@ -186,7 +185,7 @@ class TitleBar extends Component {
 					aria-label={translate(productLabel)}
 				>
 					<Header aria-label={translate(productLabel)}
-						className={this.props.inReadOnlyMode ? 'bx--header-read-only' : ''}
+						className={this.props.inReadOnlyMode ? 'cds--header-read-only' : ''}
 						title={this.props.inReadOnlyMode ? translate('migration_completion_title') : ''}
 					>
 						<SkipToContent />
@@ -205,16 +204,16 @@ class TitleBar extends Component {
 									onKeyPress={event => this.onKeyPressGetStarted(event, this.props.showWelcomeBanner)}
 									onClick={this.props.showWelcomeBanner ? this.closeWelcomeBanner : this.showWelcomeBanner}
 									className={'ibp-get-started-button' + (this.props.showWelcomeBanner ? ' ibp-get-started-showing ' : '') +
-										(this.props.inReadOnlyMode ? ' bx--header__menu-item-read-only ' : '')}
+										(this.props.inReadOnlyMode ? ' cds--header__menu-item-read-only ' : '')}
 									id="ibp-get-started-menu-button"
 								>
 									{translate('get_started')}
-									<ChevronDown16 className={`ibp-getting-started-button-icon ${this.props.showWelcomeBanner ? 'ibp-getting-started-button-icon-open' : ''}`} />
+									<ChevronDown size={16} className={`ibp-getting-started-button-icon ${this.props.showWelcomeBanner ? 'ibp-getting-started-button-icon-open' : ''}`} />
 								</HeaderMenuItem>
 								<HeaderMenuItem
 									onKeyPress={event => this.goToDocs(event, translate, 'keypress')}
 									onClick={event => this.goToDocs(event, translate, 'click')}
-									className={'ibp-header-menu-item' + (this.props.inReadOnlyMode ? ' bx--header__menu-item-read-only ' : '')}
+									className={'ibp-header-menu-item' + (this.props.inReadOnlyMode ? ' cds--header__menu-item-read-only ' : '')}
 								>
 									{translate('documentation')}
 								</HeaderMenuItem>
@@ -231,11 +230,11 @@ class TitleBar extends Component {
 							</HeaderNavigation>
 						)}
 						{showHeaderButtons && (
-							<HeaderGlobalBar>
+							<HeaderGlobalBar className='title-bar-actions'>
 								<HeaderGlobalAction aria-label={translate('help')}
 									onClick={() => this.props.history.push('/support')}
 								>
-									<Help20 />
+									<Help size={20} />
 								</HeaderGlobalAction>
 								{this.props.logged && (
 									<HeaderGlobalAction
@@ -246,7 +245,7 @@ class TitleBar extends Component {
 									>
 										{needsAttention ? (
 											<div className="ibp-pending-notifications-container">
-												<NotificationFilled20 className="ibp-signature-header-icon"
+												<NotificationFilled size={20} className="ibp-signature-header-icon"
 													title={translate('notifications')}
 												/>
 												<Tag

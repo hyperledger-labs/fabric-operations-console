@@ -1,5 +1,5 @@
 .ibp-nodes-welcome {
-	@include carbon--type-style('body-short-01');
+	@include type-style('body-short-01');
 }
 
 .ibp-nodes-welcome-bar {
@@ -35,7 +35,7 @@
 	text-align: left;
 	width: 9rem;
 	padding: 1rem;
-	background: $carbon--blue-80;
+	background: $blue-80;
 	display: inline-block;
 	cursor: pointer;
 	overflow: hidden;
@@ -54,7 +54,7 @@
 }
 
 .ibp-nodes-welcome-btn-docs:hover {
-	background: $carbon--blue-90;
+	background: $blue-90;
 }
 
 .ibp-nodes-welcome-btn:hover {
@@ -87,7 +87,7 @@
 		top: 0;
 		width: 100%;
 		height: 0.25rem;
-		background: linear-gradient(to right, $carbon--blue-80, $carbon--blue-60);
+		background: linear-gradient(to right, $blue-80, $blue-60);
 	}
 }
 
@@ -107,7 +107,7 @@
 }
 
 .ibp-nodes-welcome-head {
-	@include carbon--type-style('productive-heading-05');
+	@include type-style('productive-heading-05');
 }
 
 .ibp-nodes-welcome-head-collapsed {
@@ -115,7 +115,7 @@
 }
 
 .ibp-nodes-welcome-container-desc {
-	@include carbon--type-style('body-short-01');
+	@include type-style('body-short-01');
 	display: block;
 	max-width: 40rem;
 	padding-bottom: 1rem;
@@ -123,12 +123,12 @@
 }
 
 .ibp-nodes-welcome-desc {
-	@include carbon--type-style('body-short-01');
+	@include type-style('body-short-01');
 	margin: 0rem 0rem 1rem 1rem;
 	width: 38rem;
 
 	.ibp-beta-close-date {
-		@include carbon--font-weight('semibold');
+		@include font-weight('semibold');
 	}
 }
 
@@ -152,7 +152,7 @@
 		top: 0;
 		width: 100%;
 		height: 0.25rem;
-		background: linear-gradient(to right, $carbon--blue-80, $carbon--blue-60);
+		background: linear-gradient(to right, $blue-80, $blue-60);
 	}
 
 	.partyPopperIcon {
@@ -183,7 +183,7 @@
 	border: 2px solid transparent;
 
 	& * {
-		@include carbon--type-style('body-short-01');
+		@include type-style('body-short-01');
 	}
 
 	&:hover {
@@ -192,7 +192,7 @@
 
 	&:focus {
 		border: 2px solid $white;
-		box-shadow: inset 0px 0px 0px 1px $carbon--cool-gray-100;
+		box-shadow: inset 0px 0px 0px 1px $cool-gray-100;
 		outline: 0;
 	}
 
@@ -207,7 +207,7 @@
 }
 
 .ibp-nodes-welcome-start-message {
-	@include carbon--type-style('label-01');
+	@include type-style('label-01');
 	width: 23rem;
 	padding-top: 0.5rem;
 	padding-bottom: 0.5rem;
@@ -239,7 +239,7 @@
 }
 
 .active {
-	background: $carbon--cool-gray-80;
+	background: $cool-gray-80;
 }
 
 //----------Animations----------

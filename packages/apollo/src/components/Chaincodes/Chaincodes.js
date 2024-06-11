@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { OverflowMenu, OverflowMenuItem } from 'carbon-components-react';
+import { OverflowMenu, OverflowMenuItem } from "@carbon/react";
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
@@ -90,7 +90,7 @@ class Chaincodes extends Component {
 			>
 				<OverflowMenuItem
 					id="instantiate_modal"
-					className="bx--overflow-installed-item-btn"
+					className="cds--overflow-installed-item-btn"
 					wrapperClassName="overflow-installed-item"
 					itemText={translate('instantiate')}
 					onClick={() => {

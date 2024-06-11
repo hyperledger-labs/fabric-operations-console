@@ -1,14 +1,21 @@
 $font-path: './assets/fonts';
 @import './overrides';
 
-@import 'carbon-components/scss/globals/scss/styles.scss';
-@import 'carbon-components/scss/globals/scss/_typography.scss';
-@import 'carbon-components/scss/globals/scss/_vars.scss';
-@import 'carbon-components/scss/globals/scss/vendor/@carbon/layout/scss/_breakpoint.scss';
-@import 'carbon-components/scss/globals/scss/_mixins.scss';
-@import '@carbon/type/scss/type.scss';
-@import '@carbon/type/scss/font-face/_mono.scss';
-@import '@carbon/type/scss/font-face/_sans.scss';
+$fonts: (
+	IBM-Plex-Mono: false,
+	IBM-Plex-Sans-Arabic: false,
+	IBM-Plex-Sans-Devanagari: false,
+	IBM-Plex-Sans-Hebrew: false,
+	IBM-Plex-Sans-Thai-Looped: false,
+	IBM-Plex-Sans-Thai: false,
+	IBM-Plex-Sans: false,
+	IBM-Plex-Serif: false,
+);
+
+@import '@carbon/styles';
+
+// @import '@carbon/styles/scss/fonts/_mono.scss';
+// @import '@carbon/styles/scss/fonts/_sans.scss';
 
 @import './variables';
 @import './mixins';

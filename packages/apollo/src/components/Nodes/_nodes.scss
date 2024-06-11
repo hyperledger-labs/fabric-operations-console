@@ -17,11 +17,11 @@
 .ibp-node-upgrade,
 .ibp-details-patch-container {
 	.ibp-patch-available-tag {
-		@include carbon--type-style('label-01');
+		@include type-style('label-01');
 		align-items: center;
 		background: $secondaryActionHover;
 		border-radius: 6.25rem;
-		color: $carbon--blue-30;
+		color: $blue-30;
 		cursor: pointer;
 		display: inline-flex;
 		height: 1.5rem;
@@ -41,7 +41,7 @@
 
 .ibp-node-current-version,
 .ibp-node-new-version {
-	border: 1px solid $carbon--cool-gray-70;
+	border: 1px solid $cool-gray-70;
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
@@ -49,8 +49,8 @@
 	padding: 1.25rem 1.75rem;
 
 	.ibp-node-current-version-label {
-		@include carbon--type-style('body-short-02');
-		color: $carbon--cool-gray-30;
+		@include type-style('body-short-02');
+		color: $cool-gray-30;
 	}
 
 	.ibp-node-name-version {
@@ -58,7 +58,7 @@
 		padding-top: 0.5rem;
 
 		.ibp-node-name {
-			@include carbon--type-style('body-short-02');
+			@include type-style('body-short-02');
 			height: 2rem;
 			line-height: 2rem;
 
@@ -68,8 +68,8 @@
 		}
 
 		.ibp-node-version {
-			@include carbon--type-style('label-01');
-			background: $carbon--blue-80;
+			@include type-style('label-01');
+			background: $blue-80;
 			border-radius: 6.25rem;
 			display: flex;
 			height: 2rem;
@@ -96,14 +96,14 @@
 .ibp-box-connector {
 	width: 1px;
 	height: 38px;
-	background-color: $carbon--cool-gray-70;
+	background-color: $cool-gray-70;
 	position: relative;
 	left: 14rem;
 }
 
 .ibp-new-version-release-notes {
-	@include carbon--type-style('body-short-02');
-	color: $carbon--blue-40;
+	@include type-style('body-short-02');
+	color: $blue-40;
 }
 
 .ibp-node-info-tab {
@@ -116,12 +116,12 @@
 	width: 100%;
 
 	.ibp-node-version-label {
-		@include carbon--type-style('body-short-01');
+		@include type-style('body-short-01');
 		color: white;
 	}
 
 	.ibp-node-version-value {
-		@include carbon--type-style('body-short-01');
+		@include type-style('body-short-01');
 		color: white;
 	}
 

@@ -34,6 +34,7 @@ import PageHeader from '../PageHeader/PageHeader';
 import ActionsHelper from '../../utils/actionsHelper';
 import { NodeRestApi } from '../../rest/NodeRestApi';
 import withRouter from '../../hoc/withRouter';
+import { Row } from '@carbon/react';
 
 const SCOPE = 'identities';
 const Log = new Logger(SCOPE);
@@ -197,13 +198,16 @@ class Identities extends Component {
 	render() {
 		return (
 			<PageContainer>
-				<div className="bx--row">
-					<div className="bx--col-lg-13">
-						<PageHeader
-							history={this.props.history}
-							headerName="wallet"
-							staticHeader
-						/>
+				<Row>
+					<PageHeader
+						history={this.props.history}
+						headerName="wallet"
+						staticHeader
+					/>
+				</Row>
+				<Row>
+					<div className='ibp-column width-100'>
+
 						{this.props.showAddIdentity && <AddIdentityModal onClose={this.closeAddIdenity}
 							onComplete={this.showNewIdentities}
 						/>}
@@ -262,7 +266,7 @@ class Identities extends Component {
 							/>
 						</div>
 					</div>
-				</div>
+				</Row>
 			</PageContainer>
 		);
 	}

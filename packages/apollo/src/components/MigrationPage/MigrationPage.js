@@ -20,13 +20,13 @@ import { withTranslation, Trans } from 'react-i18next';
 import { connect } from 'react-redux';
 import { showBreadcrumb, updateState } from '../../redux/commonActions';
 import { MigrationApi } from '../../rest/MigrationApi';
-import { Accordion, AccordionItem, SkeletonText } from 'carbon-components-react';
+import { Accordion, AccordionItem, SkeletonText } from "@carbon/react";
 import Helper from '../../utils/helper';
 import PageContainer from '../PageContainer/PageContainer';
 import Logger from '../Log/Logger';
 import PageHeader from '../PageHeader/PageHeader';
 import UserSettingsRestApi from '../../rest/UserSettingsRestApi';
-import { Button, Checkbox, Loading } from 'carbon-components-react';
+import { Button, Checkbox, Loading } from "@carbon/react";
 import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
 import SidePanel from '../SidePanel/SidePanel';
 import Form from '../Form/Form';
@@ -425,8 +425,8 @@ class MigrationPage extends Component {
 
 		return (
 			<PageContainer>
-				<div className="bx--row migrationPanel">
-					<div className="bx--col-lg-13">
+				<div className="cds-row migrationPanel">
+					<div className="cds--col-lg-13">
 						<PageHeader
 							history={this.props.history}
 							headerName="migration"

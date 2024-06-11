@@ -1,30 +1,30 @@
 .ibp-transaction-data {
 	margin-top: 1rem;
 	width: 100%;
-	background-color: $carbon--cool-gray-90;
+	background-color: $cool-gray-90;
 	border: solid 2px $field-border;
-	color: $carbon--cool-gray-10;
+	color: $cool-gray-10;
 	line-height: 20px;
 	padding: 0.5rem;
 	overflow: auto;
 }
 
 .ibp-transaction-data div {
-	@include carbon--font-weight('regular');
-	@include carbon--font-face-mono();
-	@include carbon--type-style('code-02');
+	@include font-weight('regular');
+	// @include font-face-mono();
+	@include type-style('code-02');
 	word-break: break-all;
 }
 
 .ibp-transaction-label {
-	@include carbon--font-weight('semibold');
+	@include font-weight('semibold');
 	margin-bottom: 0.5rem;
 }
 
 .ibp-transaction-operation {
 	margin-right: 0.5rem;
 	color: $codeKeywordPrimary;
-	@include carbon--font-weight('semibold');
+	@include font-weight('semibold');
 }
 
 .ibp-transaction-section {
@@ -32,7 +32,7 @@
 }
 
 .ibp-transaction-text {
-	@include carbon--font-weight('semibold');
+	@include font-weight('semibold');
 	color: $field-color;
 	margin-top: 2rem;
 	margin-bottom: 2rem;

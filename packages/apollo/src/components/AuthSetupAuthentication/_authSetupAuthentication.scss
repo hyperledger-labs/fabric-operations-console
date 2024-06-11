@@ -3,9 +3,9 @@
 }
 
 .ibp__auth-proceed-button-link {
-	@include carbon--type-style('body-short-01');
+	@include type-style('body-short-01');
 	align-items: center;
-	background-color: $carbon--blue-40;
+	background-color: $blue-40;
 	color: $text;
 	display: flex;
 	height: 4rem;
@@ -22,7 +22,7 @@
 }
 
 .ibp__auth-proceed-to-config {
-	@include carbon--type-style('body-short-02');
+	@include type-style('body-short-02');
 	color: $text;
 	padding-top: 2.5rem;
 }

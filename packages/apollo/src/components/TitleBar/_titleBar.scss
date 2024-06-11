@@ -43,7 +43,7 @@
 			}
 		}
 
-		.bx--header__menu-item {
+		.cds--header__menu-item {
 			&:hover {
 				background-color: $itemBackground;
 			}
@@ -52,20 +52,20 @@
 		}
 	}
 
-	.bx--header__menu-item-read-only {
-		a.bx--header__menu-item {
+	.cds--header__menu-item-read-only {
+		a.cds--header__menu-item {
 			color: #fff;
 		}
 	}
 
 	.ibp-announcement-button {
-		background-color: $carbon--red-70;
-		color: $carbon--white-0;
+		background-color: $red-70;
+		color: $white-0;
 	}
 
 	#ga-product-label,
 	#beta-product-label {
-		@include carbon--font-weight('semibold');
+		@include font-weight('semibold');
 	}
 
 	#ibp-header-user-profile-icon {
@@ -75,7 +75,7 @@
 		align-items: center;
 	}
 
-	.bx--header__action {
+	.cds--header__action {
 		&:hover {
 			background-color: $itemBackground;
 		}
@@ -96,9 +96,9 @@
 		justify-content: center;
 		position: relative;
 
-		.bx--tag.bx--tag--red.ibp-needs-attention-notification-icon {
-			background-color: $carbon--red-70;
-			color: $carbon--white-0;
+		.cds--tag.cds--tag--red.ibp-needs-attention-notification-icon {
+			background-color: $red-70;
+			color: $white-0;
 			font-size: 0.65rem;
 			height: auto;
 			min-width: 1rem;
@@ -111,7 +111,7 @@
 	}
 
 	#ibp-get-started-menu-button {
-		.bx--text-truncate--end {
+		.cds--text-truncate--end {
 			align-items: center;
 			display: flex;
 
@@ -130,6 +130,24 @@
 		font-size: 0.7rem;
 		margin-left: 1rem;
 		font-weight: 400;
+	}
+}
+
+.title-bar-actions {
+	button {
+		background-color: transparent;
+		padding-top: 0 !important;
+		min-width: 5rem;
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		color: $text-on-color;
+
+		&:hover,
+		&:focus {
+			background-color: $itemHover;
+		}
 	}
 }
 
@@ -155,29 +173,37 @@
 		margin-left: 4rem;
 
 		&:focus {
-			border-color: $carbon--white-0;
-			color: $carbon--gray-10;
+			border-color: $white-0;
+			color: $gray-10;
 			outline: none;
 		}
 	}
 }
 
 .ibp-main {
-	.bx--header {
+	.cds--header {
 		border-bottom: 0;
-		background-color: $carbon--cool-gray-100;
+		background-color: $cool-gray-100;
 
-		.bx--header__nav {
+		.cds--header__nav {
 			display: block;
 		}
 	}
 
-	.bx--header-read-only {
+	.cds--header-read-only {
 		background-color: #da1e28;
+
+		a.cds--header__menu-item {
+			background-color: #da1e28;
+
+			&:hover {
+				background-color: #da1e28;
+			}
+		}
 	}
 }
 
-.bx--skip-to-content {
+.cds--skip-to-content {
 	color: $text;
 	background: $background;
 }

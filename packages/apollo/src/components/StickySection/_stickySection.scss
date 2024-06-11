@@ -1,29 +1,29 @@
 .ibp--node-details-sticky-container-content {
-	margin-top: 1.5rem;
+	// margin-top: 1.5rem;
 
 	.ibp--node-details-sticky-header,
 	.ibp--sticky-section-main-content,
 	.ibp--sticky-section-callout-group-container,
 	.ibp--sticky-section-quick-actions-container {
-		background-color: $carbon--cool-gray-90;
+		background-color: $cool-gray-90;
 	}
 
 	.ibp--node-details-sticky-header {
 		align-items: center;
-		border-bottom: 1px solid $carbon--cool-gray-100;
+		border-bottom: 1px solid $cool-gray-100;
 		display: flex;
 		justify-content: space-between;
 		padding: 1rem;
 
 		.ibp-node-detail-title {
-			@include carbon--type-style('productive-heading-01');
-			color: $carbon--white-0;
+			@include type-style('productive-heading-01');
+			color: $white-0;
 		}
 	}
 
 	.ibp--sticky-section-main-content,
 	.ibp--sticky-section-callout-group-container {
-		border-bottom: 1px solid $carbon--cool-gray-100;
+		border-bottom: 1px solid $cool-gray-100;
 		//min-height: 12rem;
 		padding: 1rem;
 	}
@@ -33,34 +33,34 @@
 			padding-bottom: 1.5rem;
 
 			.ibp--sticky-section-header {
-				@include carbon--type-style('label-01');
-				color: $carbon--cool-gray-30;
+				@include type-style('label-01');
+				color: $cool-gray-30;
 			}
 
 			.ibp--sticky-section-item {
-				@include carbon--type-style('body-short-01');
+				@include type-style('body-short-01');
 			}
 		}
 	}
 
 	.ibp--sticky-section-quick-actions-container {
-		border-top: 1px solid $carbon--cool-gray-100;
+		border-top: 1px solid $cool-gray-100;
 		border-bottom: 0;
 		min-height: 4.625rem;
 		padding: 1rem;
 		margin-top: 1.25rem;
 
 		.ibp--sticky-section-header {
-			@include carbon--type-style('label-01');
-			color: $carbon--cool-gray-30;
+			@include type-style('label-01');
+			color: $cool-gray-30;
 			padding-bottom: 1rem;
 		}
 
 		.ibp--sticky-section-item-button {
-			@include carbon--type-style('body-short-01');
+			@include type-style('body-short-01');
 			border: 0;
 			background: transparent;
-			color: $carbon--blue-40;
+			color: $blue-40;
 			cursor: pointer;
 			text-align: left;
 			padding: 0;
@@ -68,7 +68,7 @@
 	}
 
 	.ibp--sticky-section-callout-group-container {
-		border-top: 1px solid $carbon--cool-gray-100;
+		border-top: 1px solid $cool-gray-100;
 		border-bottom: 0;
 		min-height: 4.625rem;
 		padding: 1rem;
@@ -83,12 +83,12 @@
 			padding-bottom: 1.5rem;
 
 			.ibp--sticky-section-header {
-				@include carbon--type-style('label-01');
-				color: $carbon--cool-gray-30;
+				@include type-style('label-01');
+				color: $cool-gray-30;
 			}
 
 			.ibp--sticky-section-item {
-				@include carbon--type-style('productive-heading-03');
+				@include type-style('productive-heading-03');
 			}
 		}
 	}
@@ -101,7 +101,7 @@
 .ibp-node-detail-icons {
 	display: flex;
 
-	& button.bx--btn {
+	& button.cds--btn {
 		background-color: transparent;
 		margin: 0;
 	}
@@ -113,7 +113,7 @@
 	margin-bottom: 2px;
 	padding: 1rem;
 	padding-top: 1.5rem;
-	background-color: $carbon--cool-gray-90;
+	background-color: $cool-gray-90;
 	color: white;
 	text-align: left;
 	transition: $basic-duo-transition;
@@ -121,11 +121,11 @@
 	width: 100%;
 
 	&.ibp-error-node-not-associated-container {
-		border: 1px solid $carbon--red-50;
+		border: 1px solid $red-50;
 	}
 
 	&:hover {
-		background-color: $carbon--cool-gray-80;
+		background-color: $cool-gray-80;
 	}
 
 	&:focus {
@@ -137,8 +137,8 @@
 		flex: 1;
 
 		p {
-			@include carbon--type-style('body-short-01');
-			color: $carbon--cool-gray-30;
+			@include type-style('body-short-01');
+			color: $cool-gray-30;
 		}
 	}
 

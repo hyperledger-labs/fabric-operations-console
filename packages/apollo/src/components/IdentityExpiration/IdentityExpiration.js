@@ -15,7 +15,7 @@
 */
 
 import _ from 'lodash';
-import { WarningFilled16 } from '@carbon/icons-react/es';
+import { WarningFilled } from '@carbon/icons-react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
@@ -105,7 +105,7 @@ class IdentityExpiration extends Component {
 				{!this.props.admin && <div className="ibp-identity-admin">{translate('non_admin_identity')}</div>}
 				{this.props.expiration && (
 					<div className="ibp-identity-expiration">
-						<WarningFilled16 />
+						<WarningFilled size={16} />
 						{translate('expiration')}: {this.props.expiration}
 					</div>
 				)}

@@ -51,7 +51,7 @@
 	flex-direction: column;
 	margin-bottom: 2rem;
 
-	.bx--skeleton__placeholder {
+	.cds--skeleton__placeholder {
 		border-left: 0;
 		margin-left: 0;
 	}
@@ -94,7 +94,7 @@
 		padding-top: 2.25rem;
 	}
 
-	.bx--table-toolbar {
+	.cds--table-toolbar {
 		display: none;
 	}
 
@@ -110,7 +110,7 @@
 #ibp-peer-usage,
 #ibp-ca-usage,
 #ibp-orderer-usage {
-	&.bx--tabs__nav-link {
+	&.cds--tabs__nav-link {
 		span {
 			align-items: center;
 			display: flex;
@@ -121,7 +121,7 @@
 				padding-left: 0.5rem;
 
 				.ibp-patch-available-tag.ibp-node-details {
-					@include carbon--font-weight('regular');
+					@include font-weight('regular');
 					margin-top: 0;
 				}
 			}
@@ -133,19 +133,19 @@
 	.ibp-patch-button {
 		min-width: 9rem;
 
-		&.bx--btn.bx--btn--tertiary {
+		&.cds--btn.cds--btn--tertiary {
 
-			&:hover svg.bx--btn__icon,
-			&:focus svg.bx--btn__icon {
+			&:hover svg.cds--btn__icon,
+			&:focus svg.cds--btn__icon {
 				fill: $inverseText;
 			}
 		}
 	}
 }
 
-#peer-channels-container {
-	padding-top: 2rem;
-}
+// #peer-channels-container {
+// 	padding-top: 2rem;
+// }
 
 .ibp-peer-details {
 	.ibp--node-details-sticky-container-content {
@@ -154,8 +154,8 @@
 
 	.ibp-node-version-value {
 		margin-top: 1rem;
-		@include carbon--type-style('body-short-01');
-		color: $carbon--cool-gray-30;
+		@include type-style('body-short-01');
+		color: $cool-gray-30;
 	}
 
 	.ibp-upgrade-available {

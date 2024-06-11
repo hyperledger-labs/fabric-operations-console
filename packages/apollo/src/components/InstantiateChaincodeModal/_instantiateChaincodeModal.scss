@@ -35,7 +35,7 @@
 
 .ibp-json-file-details {
 	align-items: center;
-	background: $carbon--cool-gray-80;
+	background: $cool-gray-80;
 	border: 1px solid $text;
 	display: flex;
 	justify-content: space-between;
@@ -44,17 +44,17 @@
 	max-width: 28rem;
 
 	.ibp-json-file-name {
-		@include carbon--type-style('body-short-02');
+		@include type-style('body-short-02');
 		padding-left: 1rem;
 	}
 }
 
 .ibp__advanced-policy---json {
-	@include carbon--type-style('body-short-01');
-	@include carbon--font-face-mono();
-	background: $carbon--cool-gray-80;
-	border: 1px solid $carbon--gray-50;
-	color: $carbon--cool-gray-10;
+	@include type-style('body-short-01');
+	// @include font-face-mono();
+	background: $cool-gray-80;
+	border: 1px solid $gray-50;
+	color: $cool-gray-10;
 	height: 23rem;
 	margin: 1rem 0;
 	padding: 1rem;
@@ -65,12 +65,12 @@
 }
 
 .ibp__advanced-policy-learn-more {
-	@include carbon--type-style('body-short-02');
-	color: $carbon--blue-40;
+	@include type-style('body-short-02');
+	color: $blue-40;
 }
 
 .ibp-chaincode-details {
-	border: 1px solid $carbon--cool-gray-70;
+	border: 1px solid $cool-gray-70;
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
@@ -79,8 +79,8 @@
 	padding: 1.25rem;
 
 	.ibp-instantiated-label {
-		@include carbon--type-style('body-short-02');
-		color: $carbon--cool-gray-30;
+		@include type-style('body-short-02');
+		color: $cool-gray-30;
 	}
 
 	.ibp-instantiated-name-version {
@@ -88,7 +88,7 @@
 		padding-top: 0.5rem;
 
 		.ibp-chaincode-name {
-			@include carbon--type-style('body-short-02');
+			@include type-style('body-short-02');
 			height: 2rem;
 			line-height: 2rem;
 
@@ -98,8 +98,8 @@
 		}
 
 		.ibp-chaincode-version {
-			@include carbon--type-style('label-01');
-			background: $carbon--cool-gray-70;
+			@include type-style('label-01');
+			background: $cool-gray-70;
 			border-radius: 6.25rem;
 			display: flex;
 			height: 2rem;

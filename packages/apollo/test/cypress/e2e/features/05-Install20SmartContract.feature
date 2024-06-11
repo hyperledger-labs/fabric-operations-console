@@ -161,7 +161,7 @@ Feature: 2.0 Lifecycle Flow
         And I clicked the span with text 'Next'
 		And I clicked the span with text 'Next'
         And I clicked the span with text 'Update channel'
-        Then I should see a success toast with class '.bx--toast-notification__title' which says 'You have successfully initiated a request to update channel channel2.'
+        Then I should see a success toast with class '.cds--toast-notification__title' which says 'You have successfully initiated a request to update channel channel2.'
 		# View channel configuration updates
 		When I clicked the button with id 'ibp-header-signature-collection-icon'
 		And I clicked element with class '.ibp-signature-collection-notification-link-text'

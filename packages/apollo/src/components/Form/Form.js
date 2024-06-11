@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { Button, Dropdown, InlineLoading, MultiSelect, RadioButton, SelectableTile, SkeletonText, TextArea, TextInput } from 'carbon-components-react';
-import DropdownSkeleton from 'carbon-components-react/lib/components/Dropdown/Dropdown.Skeleton';
+import { Button, Dropdown, DropdownSkeleton, InlineLoading, MultiSelect, RadioButton, SelectableTile, SkeletonText, TextArea, TextInput } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -285,7 +284,7 @@ class Form extends Component {
 		const markup = (
 			<div className={field.type === 'password' ? 'ibp-input-field-password' : ''}>
 				<TextInput
-					className={field.type === 'password' ? ' ibp-form-password' : ''}
+					// className={field.type === 'password' ? ' ibp-form-password' : ''}
 					id={this.props.id + '-' + field.name}
 					name={field.name}
 					type={field_type}
@@ -350,7 +349,7 @@ class Form extends Component {
 				<TextArea
 					id={this.props.id + '-' + field.name}
 					name={field.name}
-					className="bx--text__input ibm-label"
+					className="cds--text__input ibm-label"
 					value={value || ''}
 					readOnly
 					labelText={translate(field.label || field.name, field.labelOptions)}
@@ -362,7 +361,7 @@ class Form extends Component {
 			<TextArea
 				id={this.props.id + '-' + field.name}
 				name={field.name}
-				className="bx--text__input ibm-label"
+				className="cds--text__input ibm-label"
 				value={value || ''}
 				placeholder={field.placeholder ? translate(field.placeholder) : translate(field.name + '_placeholder')}
 				onChange={evt => {
@@ -471,7 +470,7 @@ class Form extends Component {
 						className="ibp-drop-down-container"
 						onMouseOver={evt => {
 							let target = evt.target;
-							if (target.className === 'bx--list-box__label') {
+							if (target.className === 'cds--list-box__label') {
 								if (value && value.tooltip) {
 									target.title = value.tooltip;
 								} else {
@@ -480,7 +479,7 @@ class Form extends Component {
 									}
 								}
 							}
-							if (target.className === 'bx--list-box__menu-item__option') {
+							if (target.className === 'cds--list-box__menu-item__option') {
 								let id = target.parentNode.id;
 								if (id) {
 									while (id.indexOf('-') > -1) {
@@ -1075,7 +1074,7 @@ class Form extends Component {
 							id={this.props.id + '-' + field.name}
 							name={field.name}
 							type="text"
-							className="bx--text__input ibm-label"
+							className="cds--text__input ibm-label"
 							value={this.props.formProps[field.name].file.name}
 							readOnly={field.readonly}
 							aria-label={translate(field.label || field.name, field.labelOptions)}
@@ -1095,7 +1094,7 @@ class Form extends Component {
 							id={this.props.id + '-' + field.name}
 							name={field.name}
 							type="text"
-							className="bx--text__input ibm-label"
+							className="cds--text__input ibm-label"
 							value={value}
 							readOnly={true}
 							aria-label={translate(field.label || field.name, field.labelOptions)}
@@ -1179,7 +1178,7 @@ class Form extends Component {
 							id={this.props.id + '-' + field.name}
 							name={field.name}
 							type="text"
-							className="bx--text__input ibm-label bx--text-input"
+							className="cds--text__input ibm-label cds--text-input"
 							value={this.props.formProps[field.name].file.name}
 							readOnly={field.readonly}
 							aria-label={translate(field.label || field.name, field.labelOptions)}
@@ -1201,7 +1200,7 @@ class Form extends Component {
 						id={this.props.id + '-' + field.name}
 						name={field.name}
 						type="text"
-						className="bx--text__input ibm-label"
+						className="cds--text__input ibm-label"
 						value={value}
 						readOnly={true}
 						aria-label={translate(field.label || field.name, field.labelOptions)}

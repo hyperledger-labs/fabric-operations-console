@@ -1,16 +1,15 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import PropTypes from "prop-types";
-import Input from "@mui/material/Input";
-import FilledInput from "@mui/material/FilledInput";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import Chip from "@mui/material/Chip";
-import withStyles from "@mui/styles/withStyles";
-import { blue } from "@mui/material/colors";
-import FormControl from "@mui/material/FormControl";
-import FormHelperText from "@mui/material/FormHelperText";
-import cx from "classnames";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
+import Input from '@mui/material/Input';
+import FilledInput from '@mui/material/FilledInput';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import Chip from '@mui/material/Chip';
+import withStyles from '@mui/styles/withStyles';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import cx from 'classnames';
 
 const variantComponent = {
 	standard: Input,
@@ -19,51 +18,49 @@ const variantComponent = {
 };
 
 const styles = (theme) => {
-	const light = theme.palette.mode === "light";
-	const bottomLineColor = light
-		? "rgba(0, 0, 0, 0.42)"
-		: "rgba(255, 255, 255, 0.7)";
+	const light = theme.palette.mode === 'light';
+	const bottomLineColor = light ? 'rgba(0, 0, 0, 0.42)' : 'rgba(255, 255, 255, 0.7)';
 
 	return {
 		root: {},
 		inputRoot: {
-			display: "inline-flex",
-			flexWrap: "wrap",
+			display: 'inline-flex',
+			flexWrap: 'wrap',
 			flex: 1,
 			marginTop: 0,
 			minWidth: 70,
-			"&$outlined,&$filled": {
-				boxSizing: "border-box",
+			'&$outlined,&$filled': {
+				boxSizing: 'border-box',
 			},
-			"&$outlined": {
+			'&$outlined': {
 				paddingTop: 14,
 			},
-			"&$filled": {
+			'&$filled': {
 				paddingTop: 28,
 			},
 		},
 		input: {
-			display: "inline-block",
-			textOverflow: "ellipsis",
-			overflow: "hidden",
-			whiteSpace: "nowrap",
-			appearance: "none", // Remove border in Safari, doesn't seem to break anything in other browsers
-			WebkitTapHighlightColor: "rgba(0,0,0,0)", // Remove mobile color flashing (deprecated style).
-			float: "left",
+			display: 'inline-block',
+			textOverflow: 'ellipsis',
+			overflow: 'hidden',
+			whiteSpace: 'nowrap',
+			appearance: 'none', // Remove border in Safari, doesn't seem to break anything in other browsers
+			WebkitTapHighlightColor: 'rgba(0,0,0,0)', // Remove mobile color flashing (deprecated style).
+			float: 'left',
 			flex: 1,
 		},
 		chipContainer: {
-			display: "flex",
-			flexFlow: "row wrap",
-			cursor: "text",
+			display: 'flex',
+			flexFlow: 'row wrap',
+			cursor: 'text',
 			marginBottom: -2,
 			minHeight: 40,
-			"&$labeled&$standard": {
+			'&$labeled&$standard': {
 				marginTop: 18,
 			},
 		},
 		outlined: {
-			"& input": {
+			'& input': {
 				height: 16,
 				paddingTop: 4,
 				paddingBottom: 12,
@@ -77,28 +74,28 @@ const styles = (theme) => {
 			lineHeight: '1.125rem !important',
 		},
 		filled: {
-			"& input": {
+			'& input': {
 				height: 22,
 				marginBottom: 4,
 				marginTop: 4,
 				paddingTop: 0,
 			},
-			"$marginDense & input": {
+			'$marginDense & input': {
 				height: 26,
 			},
 		},
 		labeled: {},
 		label: {
 			top: 4,
-			"&$outlined&:not($labelShrink)": {
+			'&$outlined&:not($labelShrink)': {
 				top: 2,
-				"$marginDense &": {
+				'$marginDense &': {
 					top: 5,
 				},
 			},
-			"&$filled&:not($labelShrink)": {
+			'&$filled&:not($labelShrink)': {
 				top: 15,
-				"$marginDense &": {
+				'$marginDense &': {
 					top: 20,
 				},
 			},
@@ -112,62 +109,61 @@ const styles = (theme) => {
 		focused: {},
 		disabled: {},
 		underline: {
-			"&:after": {
-				borderBottom: `2px solid ${theme.palette.primary[light ? "dark" : "light"]
-					}`,
+			'&:after': {
+				borderBottom: `2px solid ${theme.palette.primary[light ? 'dark' : 'light']}`,
 				left: 0,
 				bottom: 0,
 				// Doing the other way around crash on IE 11 "''" https://github.com/cssinjs/jss/issues/242
 				content: '""',
-				position: "absolute",
+				position: 'absolute',
 				right: 0,
-				transform: "scaleX(0)",
-				transition: theme.transitions.create("transform", {
+				transform: 'scaleX(0)',
+				transition: theme.transitions.create('transform', {
 					duration: theme.transitions.duration.shorter,
 					easing: theme.transitions.easing.easeOut,
 				}),
-				pointerEvents: "none", // Transparent to the hover style.
+				pointerEvents: 'none', // Transparent to the hover style.
 			},
-			"&$focused:after": {
-				transform: "scaleX(1)",
+			'&$focused:after': {
+				transform: 'scaleX(1)',
 			},
-			"&$error:after": {
+			'&$error:after': {
 				borderBottomColor: theme.palette.error.main,
-				transform: "scaleX(1)", // error is always underlined in red
+				transform: 'scaleX(1)', // error is always underlined in red
 			},
-			"&:before": {
+			'&:before': {
 				borderBottom: `1px solid ${bottomLineColor}`,
 				left: 0,
 				bottom: 0,
 				// Doing the other way around crash on IE 11 "''" https://github.com/cssinjs/jss/issues/242
 				content: '"\\00a0"',
-				position: "absolute",
+				position: 'absolute',
 				right: 0,
-				transition: theme.transitions.create("border-bottom-color", {
+				transition: theme.transitions.create('border-bottom-color', {
 					duration: theme.transitions.duration.shorter,
 				}),
-				pointerEvents: "none", // Transparent to the hover style.
+				pointerEvents: 'none', // Transparent to the hover style.
 			},
-			"&:hover:not($disabled):not($focused):not($error):before": {
+			'&:hover:not($disabled):not($focused):not($error):before': {
 				borderBottom: `2px solid ${theme.palette.text.primary}`,
 				// Reset on touch devices, it doesn't add specificity
-				"@media (hover: none)": {
+				'@media (hover: none)': {
 					borderBottom: `1px solid ${bottomLineColor}`,
 				},
 			},
-			"&$disabled:before": {
-				borderBottomStyle: "dotted",
+			'&$disabled:before': {
+				borderBottomStyle: 'dotted',
 			},
 		},
 		error: {
-			"&:after": {
+			'&:after': {
 				backgroundColor: theme.palette.error.main,
-				transform: "scaleX(1)", // error is always underlined in red
+				transform: 'scaleX(1)', // error is always underlined in red
 			},
 		},
 		chip: {
-			margin: "0 8px 8px 0",
-			float: "left",
+			margin: '0 8px 8px 0',
+			float: 'left',
 		},
 		marginDense: {},
 	};
@@ -185,7 +181,7 @@ class ChipInput extends React.Component {
 		chips: [],
 		errorText: undefined,
 		focusedChip: null,
-		inputValue: "",
+		inputValue: '',
 		isClean: true,
 		isFocused: false,
 		chipsUpdated: false,
@@ -202,7 +198,7 @@ class ChipInput extends React.Component {
 	}
 
 	componentDidMount() {
-		if (this.props.variant === "outlined") {
+		if (this.props.variant === 'outlined') {
 			this.labelNode = ReactDOM.findDOMNode(this.labelRef.current);
 			this.forceUpdate();
 		}
@@ -218,17 +214,13 @@ class ChipInput extends React.Component {
 		if (props.value && props.value.length !== state.prevPropsValue.length) {
 			newState = { prevPropsValue: props.value };
 			if (props.clearInputValueOnChange) {
-				newState.inputValue = "";
+				newState.inputValue = '';
 			}
 		}
 
 		// if change detection is only needed for clearInputValueOnChange
-		if (
-			props.clearInputValueOnChange &&
-			props.value &&
-			props.value.length !== state.prevPropsValue.length
-		) {
-			newState = { prevPropsValue: props.value, inputValue: "" };
+		if (props.clearInputValueOnChange && props.value && props.value.length !== state.prevPropsValue.length) {
+			newState = { prevPropsValue: props.value, inputValue: '' };
 		}
 
 		if (props.disabled) {
@@ -272,10 +264,10 @@ class ChipInput extends React.Component {
 		const value = event.target.value;
 		let addChipOptions;
 		switch (this.props.blurBehavior) {
-			case "add-or-clear":
+			case 'add-or-clear':
 				addChipOptions = { clearInputOnFail: true };
 			// falls through
-			case "add":
+			case 'add':
 				if (this.props.delayBeforeAdd) {
 					// Lets assume that we only want to add the existing content as chip, when
 					// another event has not added a chip within 200ms .
@@ -293,7 +285,7 @@ class ChipInput extends React.Component {
 					this.handleAddChip(value, addChipOptions);
 				}
 				break;
-			case "clear":
+			case 'clear':
 				this.clearInput();
 				break;
 		}
@@ -320,10 +312,7 @@ class ChipInput extends React.Component {
 			}
 		}
 		const chips = this.props.value || this.state.chips;
-		if (
-			this.props.newChipKeyCodes.indexOf(event.keyCode) >= 0 ||
-			this.props.newChipKeys.indexOf(event.key) >= 0
-		) {
+		if (this.props.newChipKeyCodes.indexOf(event.keyCode) >= 0 || this.props.newChipKeys.indexOf(event.key) >= 0) {
 			const result = this.handleAddChip(event.target.value);
 			if (result !== false) {
 				event.preventDefault();
@@ -333,7 +322,7 @@ class ChipInput extends React.Component {
 
 		switch (event.keyCode) {
 			case keyCodes.BACKSPACE:
-				if (event.target.value === "") {
+				if (event.target.value === '') {
 					if (focusedChip != null) {
 						this.handleDeleteChip(chips[focusedChip], focusedChip);
 						if (focusedChip > 0) {
@@ -345,7 +334,7 @@ class ChipInput extends React.Component {
 				}
 				break;
 			case keyCodes.DELETE:
-				if (event.target.value === "" && focusedChip != null) {
+				if (event.target.value === '' && focusedChip != null) {
 					this.handleDeleteChip(chips[focusedChip], focusedChip);
 					if (focusedChip <= chips.length - 1) {
 						this.setState({ focusedChip });
@@ -353,7 +342,7 @@ class ChipInput extends React.Component {
 				}
 				break;
 			case keyCodes.LEFT_ARROW:
-				if (focusedChip == null && event.target.value === "" && chips.length) {
+				if (focusedChip == null && event.target.value === '' && chips.length) {
 					this.setState({ focusedChip: chips.length - 1 });
 				} else if (focusedChip != null && focusedChip > 0) {
 					this.setState({ focusedChip: focusedChip - 1 });
@@ -375,8 +364,7 @@ class ChipInput extends React.Component {
 	handleKeyUp = (event) => {
 		if (
 			!this._preventChipCreation &&
-			(this.props.newChipKeyCodes.indexOf(event.keyCode) >= 0 ||
-				this.props.newChipKeys.indexOf(event.key) >= 0) &&
+			(this.props.newChipKeyCodes.indexOf(event.keyCode) >= 0 || this.props.newChipKeys.indexOf(event.key) >= 0) &&
 			this._keyPressed
 		) {
 			this.clearInput();
@@ -424,21 +412,14 @@ class ChipInput extends React.Component {
 		const chips = this.props.value || this.state.chips;
 
 		if (this.props.dataSourceConfig) {
-			if (typeof chip === "string") {
+			if (typeof chip === 'string') {
 				chip = {
 					[this.props.dataSourceConfig.text]: chip,
 					[this.props.dataSourceConfig.value]: chip,
 				};
 			}
 
-			if (
-				this.props.allowDuplicates ||
-				!chips.some(
-					(c) =>
-						c[this.props.dataSourceConfig.value] ===
-						chip[this.props.dataSourceConfig.value]
-				)
-			) {
+			if (this.props.allowDuplicates || !chips.some((c) => c[this.props.dataSourceConfig.value] === chip[this.props.dataSourceConfig.value])) {
 				if (this.props.value && this.props.onAdd) {
 					this.props.onAdd(chip);
 				} else {
@@ -492,7 +473,7 @@ class ChipInput extends React.Component {
 	 * @public
 	 */
 	clearInput() {
-		this.updateInput("");
+		this.updateInput('');
 	}
 
 	updateInput(value) {
@@ -560,17 +541,11 @@ class ChipInput extends React.Component {
 		} = this.props;
 
 		const chips = value || this.state.chips;
-		const actualInputValue =
-			inputValue != null ? inputValue : this.state.inputValue;
+		const actualInputValue = inputValue != null ? inputValue : this.state.inputValue;
 
-		const hasInput =
-			(this.props.value || actualInputValue).length > 0 ||
-			actualInputValue.length > 0;
+		const hasInput = (this.props.value || actualInputValue).length > 0 || actualInputValue.length > 0;
 		const shrinkFloatingLabel =
-			InputLabelProps.shrink != null
-				? InputLabelProps.shrink
-				: label != null &&
-				(hasInput || this.state.isFocused || chips.length > 0);
+			InputLabelProps.shrink != null ? InputLabelProps.shrink : label != null && (hasInput || this.state.isFocused || chips.length > 0);
 
 		const chipComponents = chips.map((chip, i) => {
 			const value = dataSourceConfig ? chip[dataSourceConfig.value] : chip;
@@ -591,14 +566,12 @@ class ChipInput extends React.Component {
 		});
 
 		const InputMore = {};
-		if (variant === "outlined") {
+		if (variant === 'outlined') {
 			InputMore.notched = shrinkFloatingLabel;
 		}
 
-		if (variant !== "standard") {
-			InputMore.startAdornment = (
-				<React.Fragment>{chipComponents}</React.Fragment>
-			);
+		if (variant !== 'standard') {
+			InputMore.startAdornment = <React.Fragment>{chipComponents}</React.Fragment>;
 		} else {
 			InputProps.disableUnderline = true;
 		}
@@ -609,9 +582,13 @@ class ChipInput extends React.Component {
 			<FormControl
 				ref={rootRef}
 				fullWidth={fullWidth}
-				className={cx(className, {
-					[classes.marginDense]: other.margin === "dense",
-				}, classes.root)}
+				className={cx(
+					className,
+					{
+						[classes.marginDense]: other.margin === 'dense',
+					},
+					classes.root
+				)}
 				error={error}
 				required={chips.length > 0 ? undefined : required}
 				onClick={this.focus}
@@ -649,13 +626,13 @@ class ChipInput extends React.Component {
 				<div
 					className={cx(classes[variant], classes.chipContainer, {
 						[classes.focused]: this.state.isFocused,
-						[classes.underline]: !disableUnderline && variant === "standard",
+						[classes.underline]: !disableUnderline && variant === 'standard',
 						[classes.disabled]: disabled,
 						[classes.labeled]: label != null,
 						[classes.error]: error,
 					})}
 				>
-					{variant === "standard" && chipComponents}
+					{variant === 'standard' && chipComponents}
 					<InputComponent
 						ref={this.input}
 						classes={{
@@ -674,26 +651,14 @@ class ChipInput extends React.Component {
 						label={label}
 						disabled={disabled}
 						fullWidth={fullWidthInput}
-						placeholder={
-							(!hasInput && (shrinkFloatingLabel || label == null)) ||
-								alwaysShowPlaceholder
-								? placeholder
-								: null
-						}
+						placeholder={(!hasInput && (shrinkFloatingLabel || label == null)) || alwaysShowPlaceholder ? placeholder : null}
 						readOnly={readOnly}
 						{...InputProps}
 						{...InputMore}
 					/>
 				</div>
 				{helperText && (
-					<FormHelperText
-						{...FormHelperTextProps}
-						className={
-							FormHelperTextProps
-								? cx(FormHelperTextProps.className, classes.helperText)
-								: classes.helperText
-						}
-					>
+					<FormHelperText {...FormHelperTextProps} className={FormHelperTextProps ? cx(FormHelperTextProps.className, classes.helperText) : classes.helperText}>
 						{helperText}
 					</FormHelperText>
 				)}
@@ -708,7 +673,7 @@ ChipInput.propTypes = {
 	/** If true, the placeholder will always be visible. */
 	alwaysShowPlaceholder: PropTypes.bool,
 	/** Behavior when the chip input is blurred: `'clear'` clears the input, `'add'` creates a chip and `'ignore'` keeps the input. */
-	blurBehavior: PropTypes.oneOf(["clear", "add", "add-or-clear", "ignore"]),
+	blurBehavior: PropTypes.oneOf(['clear', 'add', 'add-or-clear', 'ignore']),
 	/** A function of the type `({ value, text, chip, isFocused, isDisabled, isReadOnly, handleClick, handleDelete, className }, key) => node` that returns a chip based on the given properties. This can be used to customize chip styles.  Each item in the `dataSource` array will be passed to `chipRenderer` as arguments `chip`, `value` and `text`. If `dataSource` is an array of objects and `dataSourceConfig` is present, then `value` and `text` will instead correspond to the object values defined in `dataSourceConfig`. If `dataSourceConfig` is not set and `dataSource` is an array of objects, then a custom `chipRenderer` must be set. `chip` is always the raw value from `dataSource`, either an object or a string. */
 	chipRenderer: PropTypes.func,
 	/** Whether the input value should be cleared if the `value` prop is changed. */
@@ -767,43 +732,32 @@ ChipInput.propTypes = {
 	/** The chips to display (enables controlled mode if set). */
 	value: PropTypes.array,
 	/** The variant of the Input component */
-	variant: PropTypes.oneOf(["outlined", "standard", "filled"]),
+	variant: PropTypes.oneOf(['outlined', 'standard', 'filled']),
 };
 
 ChipInput.defaultProps = {
 	allowDuplicates: false,
-	blurBehavior: "clear",
+	blurBehavior: 'clear',
 	clearInputValueOnChange: false,
 	delayBeforeAdd: false,
 	disableUnderline: false,
 	newChipKeyCodes: [13],
-	newChipKeys: ["Enter"],
-	variant: "standard",
+	newChipKeys: ['Enter'],
+	variant: 'standard',
 };
 
-export default withStyles(styles, { name: "WAMuiChipInput" })(ChipInput);
+export default withStyles(styles, { name: 'WAMuiChipInput' })(ChipInput);
 
-export const defaultChipRenderer = (
-	{
-		value,
-		text,
-		isFocused,
-		isDisabled,
-		isReadOnly,
-		handleClick,
-		handleDelete,
-		className,
-	},
-	key
-) => (
+export const defaultChipRenderer = ({ value, text, isFocused, isDisabled, isReadOnly, handleClick, handleDelete, className }, key) => (
 	<Chip
 		key={key}
 		className={className}
 		style={{
-			pointerEvents: isDisabled || isReadOnly ? "none" : undefined,
+			pointerEvents: isDisabled || isReadOnly ? 'none' : undefined,
 			backgroundColor: '#e2e2e2',
 			opacity: isFocused ? 0.8 : undefined,
-			margin: '8px 8px 0 0', float: 'left',
+			margin: '8px 8px 0 0',
+			float: 'left',
 		}}
 		onClick={handleClick}
 		onDelete={handleDelete}

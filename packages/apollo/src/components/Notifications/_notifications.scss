@@ -4,31 +4,31 @@
 	right: 0px;
 	z-index: $firstLayer;
 
-	.bx--toast-notification__details {
+	.cds--toast-notification__details {
 		position: relative;
 	}
 
-	.bx--toast-notification--info {
+	.cds--toast-notification--info {
 		background-color: $white;
 		border-left: 0.1875rem solid $action;
 	}
 
-	.bx--toast-notification--success {
+	.cds--toast-notification--success {
 		background-color: $white;
 		border-left: 0.1875rem solid $success;
 	}
 
-	.bx--toast-notification__close-button {
+	.cds--toast-notification__close-button {
 		background-color: transparent;
 	}
 
-	.bx--toast-notification__caption,
-	.bx--toast-notification__subtitle {
+	.cds--toast-notification__caption,
+	.cds--toast-notification__subtitle {
 		color: $inverseText;
 	}
 
-	.bx--toast-notification__close-button {
-		.bx--toast-notification__icon {
+	.cds--toast-notification__close-button {
+		.cds--toast-notification__icon {
 			fill: $background;
 		}
 	}
@@ -45,28 +45,28 @@
 		right: -0.75rem;
 		width: auto;
 
-		.bx--loading--small {
-			.bx--loading__svg {
+		.cds--loading--small {
+			.cds--loading__svg {
 				stroke: #0062ff;
 			}
 		}
 	}
 
-	.bx--toast-notification--error {
-		.bx--toast-notification__icon {
-			fill: $carbon--red-60;
+	.cds--toast-notification--error {
+		.cds--toast-notification__icon {
+			fill: $red-60;
 		}
 	}
 
-	.bx--toast-notification--warning {
-		.bx--toast-notification__icon {
+	.cds--toast-notification--warning {
+		.cds--toast-notification__icon {
 			fill: $warning;
 		}
 	}
 
-	.bx--toast-notification--success {
-		.bx--toast-notification__icon {
-			fill: $carbon--green-50;
+	.cds--toast-notification--success {
+		.cds--toast-notification__icon {
+			fill: $green-50;
 		}
 	}
 
@@ -75,14 +75,14 @@
 	}
 
 	.ibp-notification-icon-spin-relative {
-		.bx--loading--small {
-			.bx--loading__svg {
+		.cds--loading--small {
+			.cds--loading__svg {
 				stroke: #0062ff;
 			}
 		}
 	}
 }
 
-.bx--toast-notification__subtitle {
+.cds--toast-notification__subtitle {
 	padding-top: 0.25rem;
 }

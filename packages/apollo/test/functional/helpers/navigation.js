@@ -39,7 +39,7 @@ async function clickCheckbox(property, value) {
 	let checkbox;
 	if (property === 'text') {
 		// Wouldn't handle multiple instances of a class with the same text!
-		checkbox = element(by.cssContainingText('.bx--checkbox-label-text', value));
+		checkbox = element(by.cssContainingText('.cds--checkbox-label-text', value));
 	} else {
 		throw new Error('Property not supported');
 	}
@@ -58,7 +58,7 @@ async function clickCheckboxWithId(id) {
 async function clickSelectItem(value) {
 	const peerItem = element(by.css(`input[name="${value}"]`));
 	await browser.wait(ExpectedConditions.elementToBeClickable(peerItem), 30000);
-	const clickableItem = element(by.cssContainingText('.bx--tile-content', value));
+	const clickableItem = element(by.cssContainingText('.cds--tile-content', value));
 	await browser.sleep(3000);
 	await clickableItem.click();
 }

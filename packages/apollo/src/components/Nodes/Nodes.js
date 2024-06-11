@@ -65,30 +65,32 @@ class Nodes extends Component {
 	render() {
 		return (
 			<PageContainer>
-				<div className="bx--row">
-					<div className="bx--col-lg-13">
-						<WelcomeMessage />
-						<PageHeader
-							history={this.props.history}
-							headerName="nodes"
-							showCertNotice={this.props.showCertNotice}
-							createdArr={this.props.createdArr}
-							staticHeader
-						/>
-						<div className="ibp-nodes-section">
-							<PeersComponent history={this.props.history} />
-						</div>
-						<div className="ibp-nodes-section">
-							<CertificateAuthority
-								history={this.props.history}
-								onCreate={this.triggerCertNotice}
-							/>
-						</div>
-						<div className="ibp-nodes-section">
-							<OrderersComponent history={this.props.history} />
-						</div>
-					</div>
+				{/* <Column> */}
+				<WelcomeMessage />
+
+				<PageHeader
+					history={this.props.history}
+					headerName="nodes"
+					showCertNotice={this.props.showCertNotice}
+					createdArr={this.props.createdArr}
+					staticHeader
+				/>
+
+				<div className="ibp-nodes-section">
+					<PeersComponent history={this.props.history} />
 				</div>
+
+				<div className="ibp-nodes-section">
+					<CertificateAuthority
+						history={this.props.history}
+						onCreate={this.triggerCertNotice}
+					/>
+				</div>
+
+				<div className="ibp-nodes-section">
+					<OrderersComponent history={this.props.history} />
+				</div>
+				{/* </Column> */}
 			</PageContainer>
 		);
 	}

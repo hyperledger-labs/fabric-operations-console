@@ -122,18 +122,18 @@ describe('Settings component', () => {
 		const component = mount(<WrappedSettings {...props} />);
 		component.find('#ExportModal').should.have.lengthOf(0);
 		component.find('#ImportModal').should.have.lengthOf(0);
-		component.find('input#toggle-client-logging').should.have.lengthOf(1);
-		component.find('input#toggle-server-logging').should.have.lengthOf(1);
-		component.find('input#toggle-inactivity-timeouts').should.have.lengthOf(1);
+		component.find('button#toggle-client-logging').should.have.lengthOf(1);
+		component.find('button#toggle-server-logging').should.have.lengthOf(1);
+		component.find('button#toggle-inactivity-timeouts').should.have.lengthOf(1);
 		component.find('button#data_export_button').should.have.lengthOf(1);
 		component.find('button#data_import_button').should.have.lengthOf(1);
 		component
-			.find('input#toggle-client-logging')
+			.find('button#toggle-client-logging')
 			.at(0)
 			.props()
 			['disabled'].should.deep.equal(false);
 		component
-			.find('input#toggle-server-logging')
+			.find('button#toggle-server-logging')
 			.at(0)
 			.props()
 			['disabled'].should.deep.equal(false);
@@ -158,15 +158,15 @@ describe('Settings component', () => {
 		const component = mount(<WrappedSettings {...props} />);
 		component.find('#ExportModal').should.have.lengthOf(0);
 		component.find('#ImportModal').should.have.lengthOf(0);
-		component.find('input#toggle-client-logging').should.have.lengthOf(1);
-		component.find('input#toggle-server-logging').should.have.lengthOf(1);
+		component.find('button#toggle-client-logging').should.have.lengthOf(1);
+		component.find('button#toggle-server-logging').should.have.lengthOf(1);
 		component
-			.find('input#toggle-client-logging')
+			.find('button#toggle-client-logging')
 			.at(0)
 			.props()
 			['disabled'].should.deep.equal(true);
 		component
-			.find('input#toggle-server-logging')
+			.find('button#toggle-server-logging')
 			.at(0)
 			.props()
 			['disabled'].should.deep.equal(true);

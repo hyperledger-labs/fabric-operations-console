@@ -4,7 +4,7 @@
 
 .ibp-import-file-details {
 	align-items: center;
-	background: $carbon--cool-gray-80;
+	background: $cool-gray-80;
 	border: 1px solid $text;
 	display: flex;
 	justify-content: space-between;
@@ -13,7 +13,7 @@
 	max-width: 28rem;
 
 	.ibp-import-file-name {
-		@include carbon--type-style('body-short-02');
+		@include type-style('body-short-02');
 		padding-left: 1rem;
 	}
 
@@ -23,9 +23,9 @@
 		padding-right: 1rem;
 
 		.ibp-import-file-version {
-			@include carbon--type-style('label-01');
+			@include type-style('label-01');
 			align-items: center;
-			background: $carbon--cool-gray-70;
+			background: $cool-gray-70;
 			border-radius: 6.25rem;
 			display: flex;
 			height: 2rem;

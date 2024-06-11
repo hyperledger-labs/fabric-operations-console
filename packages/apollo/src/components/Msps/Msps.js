@@ -146,63 +146,63 @@ class Msps extends Component {
 	render() {
 		return (
 			<PageContainer>
-				<div className="bx--row">
-					<div className="bx--col-lg-13">
-						<PageHeader
-							history={this.props.history}
-							headerName="msp_heading"
-							staticHeader
-						/>
-						<div id="msps-container"
-							className="ibp__msps--container"
-						>
-							<ItemContainer
-								containerTitle="available_msps"
-								containerTooltip="msp_heading_tooltip"
-								tooltipDirection="right"
-								emptyImage={emptyImage}
-								emptyTitle="empty_msps_title"
-								emptyMessage="empty_msps_text"
-								id="msps--add--tile"
-								itemId="msps"
-								isLink
-								loading={this.props.loading}
-								items={this.props.msps}
-								select={this.openMspDetails}
-								tileMapping={{
-									title: 'display_name',
-									custom: data => {
-										return this.buildCustomTile(data);
-									},
-								}}
-								listMapping={[
-									{
-										header: 'msp_name',
-										attr: 'display_name',
-									},
-									{
-										header: 'msp_id',
-										attr: 'msp_id',
-									},
-								]}
-								widerTiles
-								addItems={this.getButtons()}
-								multiAction
-								maxTilesPerPagination={6}
-								view="variableGrid"
-							/>
-						</div>
-						{this.props.createMSPModal && <GenerateMSPModal onClose={this.hideCreateMSPModal}
-							onComplete={this.onGenerateMspCompleted}
-						/>}
-						{this.props.importMSPModal && (
-							<MSPDefinitionModal onClose={this.hideImportMSPModal}
-								onComplete={this.onImportMspCompleted}
-								mspModalType="settings"
-							/>
-						)}
-					</div>
+				{/* <div className="cds-row">
+					<div className="cds--col-lg-13"> */}
+				<PageHeader
+					history={this.props.history}
+					headerName="msp_heading"
+					staticHeader
+				/>
+				<div id="msps-container"
+					className="ibp__msps--container"
+				>
+					<ItemContainer
+						containerTitle="available_msps"
+						containerTooltip="msp_heading_tooltip"
+						tooltipDirection="right"
+						emptyImage={emptyImage}
+						emptyTitle="empty_msps_title"
+						emptyMessage="empty_msps_text"
+						id="msps--add--tile"
+						itemId="msps"
+						isLink
+						loading={this.props.loading}
+						items={this.props.msps}
+						select={this.openMspDetails}
+						tileMapping={{
+							title: 'display_name',
+							custom: data => {
+								return this.buildCustomTile(data);
+							},
+						}}
+						listMapping={[
+							{
+								header: 'msp_name',
+								attr: 'display_name',
+							},
+							{
+								header: 'msp_id',
+								attr: 'msp_id',
+							},
+						]}
+						widerTiles
+						addItems={this.getButtons()}
+						multiAction
+						maxTilesPerPagination={6}
+						view="variableGrid"
+					/>
 				</div>
+				{this.props.createMSPModal && <GenerateMSPModal onClose={this.hideCreateMSPModal}
+					onComplete={this.onGenerateMspCompleted}
+				/>}
+				{this.props.importMSPModal && (
+					<MSPDefinitionModal onClose={this.hideImportMSPModal}
+						onComplete={this.onImportMspCompleted}
+						mspModalType="settings"
+					/>
+				)}
+				{/* </div>
+				</div> */}
 			</PageContainer>
 		);
 	}

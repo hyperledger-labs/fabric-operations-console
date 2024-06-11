@@ -53,20 +53,20 @@ jest.mock('../../../src/components/ImportantBox/ImportantBox', () => {
 });
 
 // mocked out the carbon components as the TextInput component was complaining about missing certain properties
-jest.mock('carbon-components-react', () => {
-	return {
-		__esModule: true,
-		ContentSwitcher: () => {
-			return <></>;
-		},
-		Switch: () => {
-			return <></>;
-		},
-		TextInput: () => {
-			return <></>;
-		},
-	};
-});
+// jest.mock('carbon-components-react', () => {
+// 	return {
+// 		__esModule: true,
+// 		ContentSwitcher: () => {
+// 			return <></>;
+// 		},
+// 		Switch: () => {
+// 			return <></>;
+// 		},
+// 		TextInput: () => {
+// 			return <></>;
+// 		},
+// 	};
+// });
 
 describe('JsonInput component', () => {
 	const SCOPE = 'jsonInput';

@@ -1,6 +1,6 @@
 {
-    "loginUrl": "https://Your-Consoles-URL-Here",
-    "loginUserName": "Username-Here",
-    "loginDefaultPassword": "Password-Here",
-    "loginPassword": "Password-Here"
+    "loginUrl": "https://ibmsupport-ibm-hlfsupport-console-console.localho.st:443",
+    "loginUserName": "admin",
+    "loginDefaultPassword": "password",
+    "loginPassword": "Console@123"
 }

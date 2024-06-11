@@ -14,8 +14,8 @@
  * limitations under the License.
 */
 
-import TrashCan20 from '@carbon/icons-react/lib/trash-can/20';
-import { Button, Checkbox, Toggle } from 'carbon-components-react';
+import { TrashCan } from '@carbon/icons-react';
+import { Button, Checkbox, Toggle } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -240,7 +240,7 @@ class Consenters extends Component {
 														className="ibp-add-channel-table"
 													>
 														<div className="ibp-add-consenter-table-name">
-															<input className="bx--text-input"
+															<input className="cds--text-input"
 																value={name}
 																disabled={true}
 																aria-label={translate('name') + ' ' + name}
@@ -249,14 +249,14 @@ class Consenters extends Component {
 														<Button
 															hasIconOnly
 															type="button"
-															renderIcon={TrashCan20}
+															renderIcon={() => <TrashCan size={20} />}
 															kind="secondary"
 															id={'ibp-remove-consenter-' + i}
 															iconDescription={translate('remove_consenter')}
 															tooltipAlignment="center"
 															tooltipPosition="bottom"
 															className="ibp-consenters-remove"
-															size="default"
+															size="lg"
 															onClick={() => {
 																this.onDeleteConsenter(i);
 															}}

@@ -161,7 +161,7 @@ describe('Login component', () => {
 			component
 				.find('button')
 				.at(0)
-				.hasClass('login-button bx--btn bx--btn--primary')
+				.hasClass('login-button cds--btn cds--btn--primary')
 				.should.equal(true);
 			component
 				.find('button')
@@ -217,7 +217,7 @@ describe('Login component', () => {
 			component
 				.find('button')
 				.at(0)
-				.hasClass('login-button bx--btn bx--btn--primary')
+				.hasClass('login-button cds--btn cds--btn--primary')
 				.should.equal(true);
 			component
 				.find('button')
@@ -269,7 +269,7 @@ describe('Login component', () => {
 			component
 				.find('button')
 				.at(0)
-				.hasClass('login-button bx--btn bx--btn--primary')
+				.hasClass('login-button cds--btn cds--btn--primary')
 				.should.equal(true);
 			component
 				.find('button')

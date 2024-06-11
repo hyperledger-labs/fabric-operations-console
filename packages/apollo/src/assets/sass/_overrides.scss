@@ -1,24 +1,24 @@
 .ibm {
-	.bx--overflow-menu-options {
+	.cds--overflow-menu-options {
 		width: 12rem;
 	}
 
-	.bx--tooltip__trigger.bx--tooltip__trigger--definition+.bx--assistive-text,
-	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--top:after,
-	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--top:focus+.bx--assistive-text,
-	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--top:focus .bx--assistive-text,
-	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--top:hover+.bx--assistive-text,
-	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--top:hover .bx--assistive-text,
-	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--bottom:after,
-	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--bottom:focus+.bx--assistive-text,
-	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--bottom:focus .bx--assistive-text,
-	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--bottom:hover+.bx--assistive-text,
-	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--bottom:hover .bx--assistive-text {
+	.cds--tooltip__trigger.cds--tooltip__trigger--definition+.cds--assistive-text,
+	.cds--tooltip__trigger.cds--tooltip__trigger--definition.cds--tooltip--top:after,
+	.cds--tooltip__trigger.cds--tooltip__trigger--definition.cds--tooltip--top:focus+.cds--assistive-text,
+	.cds--tooltip__trigger.cds--tooltip__trigger--definition.cds--tooltip--top:focus .cds--assistive-text,
+	.cds--tooltip__trigger.cds--tooltip__trigger--definition.cds--tooltip--top:hover+.cds--assistive-text,
+	.cds--tooltip__trigger.cds--tooltip__trigger--definition.cds--tooltip--top:hover .cds--assistive-text,
+	.cds--tooltip__trigger.cds--tooltip__trigger--definition.cds--tooltip--bottom:after,
+	.cds--tooltip__trigger.cds--tooltip__trigger--definition.cds--tooltip--bottom:focus+.cds--assistive-text,
+	.cds--tooltip__trigger.cds--tooltip__trigger--definition.cds--tooltip--bottom:focus .cds--assistive-text,
+	.cds--tooltip__trigger.cds--tooltip__trigger--definition.cds--tooltip--bottom:hover+.cds--assistive-text,
+	.cds--tooltip__trigger.cds--tooltip__trigger--definition.cds--tooltip--bottom:hover .cds--assistive-text {
 		max-width: 20rem;
 	}
 
-	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--top+.bx--assistive-text,
-	.bx--tooltip__trigger.bx--tooltip__trigger--definition.bx--tooltip--bottom+.bx--assistive-text {
+	.cds--tooltip__trigger.cds--tooltip__trigger--definition.cds--tooltip--top+.cds--assistive-text,
+	.cds--tooltip__trigger.cds--tooltip__trigger--definition.cds--tooltip--bottom+.cds--assistive-text {
 		min-width: 20rem;
 	}
 }
@@ -27,6 +27,6 @@ body #teconsent {
 	display: none !important;
 }
 
-.bx--toggle__switch {
+.cds--toggle__switch {
 	white-space: nowrap;
 }

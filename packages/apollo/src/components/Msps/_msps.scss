@@ -24,7 +24,7 @@
 	}
 
 	.ibp-action-tile {
-		background-color: $carbon--blue-60;
+		background-color: $blue-60;
 		overflow: hidden;
 		padding: 1rem;
 		position: relative;
@@ -42,8 +42,8 @@
 }
 
 .ibp-node-msp-tile-name-sub {
-	@include carbon--font-weight('regular');
-	color: $carbon--cool-gray-30;
+	@include font-weight('regular');
+	color: $cool-gray-30;
 }
 
 .ibp-msp-edit,
@@ -62,7 +62,7 @@
 
 	&:hover,
 	&:focus {
-		background-color: $carbon--cool-gray-70;
+		background-color: $cool-gray-70;
 		cursor: pointer;
 	}
 
@@ -102,8 +102,8 @@
 
 .ibp__button--container {
 
-	.bx--btn--secondary+.bx--btn--primary,
-	.bx--btn--tertiary+.bx--btn--danger--primary {
+	.cds--btn--secondary+.cds--btn--primary,
+	.cds--btn--tertiary+.cds--btn--danger--primary {
 		margin-left: 0;
 	}
 }

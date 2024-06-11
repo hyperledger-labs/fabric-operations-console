@@ -82,7 +82,7 @@
 		}
 	}
 
-	.bx--snippet.bx--snippet--inline {
+	.cds--snippet.cds--snippet--inline {
 		z-index: $firstLayer;
 	}
 }
@@ -280,7 +280,7 @@
 	z-index: $panelOpenLayer;
 }
 
-textarea.bx--text__input {
+textarea.cds--text__input {
 	resize: none;
 }
 
@@ -400,7 +400,7 @@ textarea.bx--text__input {
 }
 
 .ibp-large-panel-error {
-	.bx--accordion {
+	.cds--accordion {
 		padding-bottom: 10rem;
 	}
 }

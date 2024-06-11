@@ -3,8 +3,8 @@
 	padding-bottom: 2rem;
 
 	.ibp-page-header-tooltip {
-		.bx--tooltip__label {
-			@include carbon--type-style('productive-heading-05');
+		.ibp--tooltip__label {
+			@include type-style('productive-heading-05');
 		}
 	}
 }
@@ -18,7 +18,7 @@
 
 .threat-style {
 	background: #000 !important;
-	.bx--inline-notification__text-wrapper {
+	.cds--inline-notification__text-wrapper {
 		color: #cc0000;
 		animation: color-change 3s infinite;
 	}

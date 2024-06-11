@@ -15,7 +15,7 @@
  */
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -300,7 +300,7 @@ class App extends Component {
 				// if using local username/password, send user to our login prompt
 				if (this.state.authScheme.type === 'couchdb') {
 					return <Login onLogin={() => {
-						this.initializeAppData()
+						this.initializeAppData();
 					}} />;
 				}
 

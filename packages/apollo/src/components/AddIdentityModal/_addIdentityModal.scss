@@ -6,12 +6,12 @@
 	margin-bottom: 2rem;
 }
 
-.bx--file-filename.ibp-addIdentity--fileName {
+.cds--file-filename.ibp-addIdentity--fileName {
 	margin-bottom: 0.5rem;
 }
 
 .ibp-panel--content {
-	.bx--file__state-container {
+	.cds--file__state-container {
 		display: none;
 	}
 
@@ -41,8 +41,8 @@
 }
 
 .ibp-identity-modal-learn-more {
-	@include carbon--type-style('body-short-02');
-	color: $carbon--blue-40;
+	@include type-style('body-short-02');
+	color: $blue-40;
 	display: block;
 	line-height: 1.5rem;
 	margin-top: 1rem;
@@ -51,6 +51,6 @@
 
 .ibp-expiration-date {
 	margin-top: 0.5rem;
-	@include carbon--type-style('body-short-02');
-	color: $carbon--cool-gray-50;
+	@include type-style('body-short-02');
+	color: $cool-gray-50;
 }

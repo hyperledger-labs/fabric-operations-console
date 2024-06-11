@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { ContentSwitcher, Switch, TextInput } from 'carbon-components-react';
+import { ContentSwitcher, Switch, TextInput } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -26,7 +26,7 @@ import FileUploader from '../FileUploader/FileUploader';
 import Form from '../Form/Form';
 import ImportantBox from '../ImportantBox/ImportantBox';
 import SVGs from '../Svgs/Svgs';
-import { WarningFilled20 } from '@carbon/icons-react/es';
+import { WarningFilled } from '@carbon/icons-react';
 
 const SCOPE = 'jsonInput';
 
@@ -470,7 +470,7 @@ export class JsonInput extends React.Component {
 										aria-label={translate('name')}
 										readOnly={this.props.readOnly}
 									/>
-									{item.error ? <WarningFilled20 className="ibp-file-uploader-error-icon" /> : null}
+									{item.error ? <WarningFilled size={20} className="ibp-file-uploader-error-icon" /> : null}
 									{this.showErrorDetail(item.error, translate)}
 									<button
 										id={this.props.id + '-json-delete-' + i}

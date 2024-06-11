@@ -22,7 +22,7 @@ import { updateState } from '../../../../redux/commonActions';
 import { withTranslation } from 'react-i18next';
 import TranslateLink from '../../../TranslateLink/TranslateLink';
 import * as constants from '../../../../utils/constants';
-import { Checkbox } from 'carbon-components-react';
+import { Checkbox } from "@carbon/react";
 import parse from 'parse-duration';
 import Form from '../../../Form/Form';
 

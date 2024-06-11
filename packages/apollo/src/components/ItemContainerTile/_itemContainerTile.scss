@@ -3,17 +3,20 @@
 	border-bottom: 1px solid $background;
 	border-right: 1px solid $background;
 	color: $text;
-	margin-right: 0.0625rem;
-	margin-bottom: 0.0625rem;
+	// margin-right: 0.0625rem;
+	// margin-bottom: 0.0625rem;
 	padding: 1rem;
 	position: relative;
+	margin: 0.0625rem;
+	margin: 0.0625rem;
+    box-shadow: 0px 0px 4px 0px #{$cool-gray-80}50;
 
 	&.ibp-container-tile-pending {
-		background-color: #{$carbon--cool-gray-90}50;
+		background-color: #{$cool-gray-90}50;
 
 		&:hover,
 		&:focus {
-			background-color: #{$carbon--cool-gray-80}50;
+			background-color: #{$cool-gray-80}50;
 		}
 	}
 
@@ -27,13 +30,26 @@
 		}
 	}
 
-	.bx--overflow-menu {
-		height: 0;
-		overflow: hidden;
+	.cds--overflow-menu__wrapper {
 		position: absolute;
 		right: 0;
 		top: 0.5rem;
+
+		.cds--btn--icon-only {
+			background-color: transparent;
+			padding: 0;
+			height: 24px;
+			width: 24px;
+		}
 	}
+
+	// .cds--overflow-menu {
+	// 	height: 0;
+	// 	overflow: hidden;
+	// 	position: absolute;
+	// 	right: 0;
+	// 	top: 0.5rem;
+	// }
 
 	.ibp-item-menu-loading {
 		position: absolute;
@@ -62,7 +78,7 @@
 	}
 
 	&.ibp-container-tile-placeholder {
-		background: linear-gradient(to bottom, $carbon--cool-gray-90 0%, $carbon--cool-gray-100 95%);
+		background: linear-gradient(to bottom, $cool-gray-90 0%, $cool-gray-100 95%);
 		outline: 0;
 	}
 }
@@ -73,7 +89,7 @@
 	background-color: $itemHover;
 	transition: $basic-duo-transition;
 
-	.bx--overflow-menu {
+	.cds--overflow-menu {
 		height: auto;
 		overflow: visible;
 	}
@@ -87,7 +103,7 @@
 		background-color: $itemHover;
 		transition: $basic-duo-transition;
 
-		.bx--overflow-menu {
+		.cds--overflow-menu {
 			height: auto;
 			overflow: visible;
 		}

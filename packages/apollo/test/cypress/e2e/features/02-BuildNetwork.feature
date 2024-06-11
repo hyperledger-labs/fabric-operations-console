@@ -17,7 +17,7 @@ Feature: Build a network feature
         And I clicked the button with id 'next'
         And I clicked the button with id 'submit'
         Then wait "5" seconds
-        Then I should see a success toast with class '.bx--toast-notification__subtitle' which says "Congratulations! You have successfully created 'Org1 CA'."
+        Then I should see a success toast with class '.cds--toast-notification__subtitle' which says "Congratulations! You have successfully created 'Org1 CA'."
         And the certificate authority with name 'Org1 CA' should have started successfully
 
     Scenario: When associating and enrolling identities for Org1 CA
@@ -56,7 +56,7 @@ Feature: Build a network feature
         And I clicked the button with text 'Export'
         And I clicked the button with text 'Next'
         And I click Create MSP definition button
-        Then I should see a success toast with class '.bx--toast-notification__title' which says "MSP Org1 MSP has been created successfully."
+        Then I should see a success toast with class '.cds--toast-notification__title' which says "MSP Org1 MSP has been created successfully."
 
     Scenario: When creating a peer for Org1
         And I am on the 'nodes' page
@@ -66,7 +66,7 @@ Feature: Build a network feature
         And I provided 'Peer Org1' for the 'Enter the Peer name' input
         And I clicked the button with id 'next'
         And I clicked the button with title 'Select CA'
-        And I clicked the dropdown item 'Org1 CA' with class '.bx--list-box__menu-item__option'
+        And I clicked the dropdown item 'Org1 CA' with class '.cds--list-box__menu-item__option'
         Then wait "2" seconds
         And I clicked the button with title 'peer1'
         And I clicked the div with text 'peer1'
@@ -81,7 +81,7 @@ Feature: Build a network feature
         And I clicked the button with id 'next'
         When I clicked the button with id 'submit'
         Then wait "6" seconds
-        Then I should see a success toast with class '.bx--toast-notification__subtitle' which says "Congratulations! You have successfully created 'Peer Org1'"
+        Then I should see a success toast with class '.cds--toast-notification__subtitle' which says "Congratulations! You have successfully created 'Peer Org1'"
         And the peer with name 'Peer Org1' should have started successfully
 
     Scenario: When creating a certificate authority for the Ordering Service
@@ -95,7 +95,7 @@ Feature: Build a network feature
         And I clicked the button with id 'next'
         And I clicked the button with id 'submit'
         Then wait "3" seconds
-        Then I should see a success toast with class '.bx--toast-notification__subtitle' which says "Congratulations! You have successfully created 'Ordering Service CA'."
+        Then I should see a success toast with class '.cds--toast-notification__subtitle' which says "Congratulations! You have successfully created 'Ordering Service CA'."
         And the certificate authority with name 'Ordering Service CA' should have started successfully
 
     Scenario: When associating and enrolling identities for Ordering Service CA
@@ -137,7 +137,7 @@ Feature: Build a network feature
         And I clicked the button with text 'Export'
         And I clicked the Next button in Create MSP definition screen
         And I click Create MSP definition button
-        Then I should see a success toast with class '.bx--toast-notification__title' which says "MSP Ordering Service MSP has been created successfully."
+        Then I should see a success toast with class '.cds--toast-notification__title' which says "MSP Ordering Service MSP has been created successfully."
 
     Scenario: When creating an ordering service with system channel
         And I am on the 'nodes' page
@@ -151,23 +151,23 @@ Feature: Build a network feature
         And I clicked the button with id 'next'
         Then wait "3" seconds
         And I clicked the button with title 'Select CA'
-        And I clicked the dropdown item 'Ordering Service CA' with class '.bx--list-box__menu-item__option'
+        And I clicked the dropdown item 'Ordering Service CA' with class '.cds--list-box__menu-item__option'
         Then wait "3" seconds
         And I clicked the button with text 'OS1'
-        And I clicked the dropdown item 'OS1' with class '.bx--list-box__menu-item__option'
+        And I clicked the dropdown item 'OS1' with class '.cds--list-box__menu-item__option'
         And I provided 'OS1pw' for the 'Enter a secret' input
         And I clicked the button with title 'Select an MSP'
-        And I clicked the dropdown item 'Ordering Service MSP' with class '.bx--list-box__menu-item__option'
+        And I clicked the dropdown item 'Ordering Service MSP' with class '.cds--list-box__menu-item__option'
         And I clicked the button with title 'Select a Fabric version'
-        And I clicked the dropdown item '2.5' with class '.bx--list-box__menu-item__option'
+        And I clicked the dropdown item '2.5' with class '.cds--list-box__menu-item__option'
         And I clicked the button with id 'next'
         Then wait "2" seconds
         And I clicked the button with title 'Please select an identity from your wallet'
-        And I clicked the dropdown item 'Ordering Service MSP Admin' with class '.bx--list-box__menu-item__option'
+        And I clicked the dropdown item 'Ordering Service MSP Admin' with class '.cds--list-box__menu-item__option'
         And I clicked the button with id 'next'
         When I clicked the button with id 'submit'
         Then wait "6" seconds
-        Then I should see a success toast with class '.bx--toast-notification__subtitle' which says "Congratulations! You have successfully created 'Ordering Service'."
+        Then I should see a success toast with class '.cds--toast-notification__subtitle' which says "Congratulations! You have successfully created 'Ordering Service'."
         And the orderer with name 'Ordering Service' should have started successfully
 
     Scenario: Add Org1 to consortium
@@ -176,7 +176,7 @@ Feature: Build a network feature
         Then wait "10" seconds
         And I clicked the button with title 'Add organization'
         And I clicked the button with title 'Ordering Service MSP (osmsp)'
-        And I clicked the dropdown item 'Org1 MSP (org1msp)' with class '.bx--list-box__menu-item__option'
+        And I clicked the dropdown item 'Org1 MSP (org1msp)' with class '.cds--list-box__menu-item__option'
         When I clicked the button with id 'submit'
         Then wait "10" seconds
         Then a tile with title 'Org1 MSP' should have been created

@@ -20,12 +20,12 @@ class FileUploader extends Component {
 	render() {
 		return (
 			<div className="ibp-file-uploader">
-				<strong className="bx--label">{this.props.labelTitle}</strong>
-				<p className="bx--label-description">{this.props.labelDescription}</p>
+				<strong className="cds--label">{this.props.labelTitle}</strong>
+				<p className="cds--label-description">{this.props.labelDescription}</p>
 				<label
 					id={this.props.id + '-label'}
 					tabIndex={this.props.tabIndex || 0}
-					className={'bx--btn bx--btn--primary' + (this.props.disabled ? ' ibp-btn-disabled' : '')}
+					className={'cds--btn cds--btn--primary' + (this.props.disabled ? ' ibp-btn-disabled' : '')}
 					onKeyDown={evt => {
 						if (evt.which === 13 || evt.which === 32) {
 							this.input.click();
@@ -36,7 +36,7 @@ class FileUploader extends Component {
 					{this.props.buttonLabel}
 				</label>
 				<input
-					className="bx--visually-hidden"
+					className="cds--visually-hidden"
 					ref={input => (this.input = input)}
 					id={this.props.id}
 					disabled={this.props.disabled}

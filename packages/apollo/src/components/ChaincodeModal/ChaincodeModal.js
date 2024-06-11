@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ContentSwitcher, SkeletonText, Switch, TextArea, TextInput, Toggle } from 'carbon-components-react';
+import { ContentSwitcher, SkeletonText, Switch, TextArea, TextInput, Toggle } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -318,7 +318,7 @@ export class ChaincodeModal extends React.Component {
 											{!!identities.length && (
 												<button
 													id={'update-approval-' + org.msp_id}
-													className="bx--btn bx--btn--tertiary bx--btn--sm"
+													className="cds--btn cds--btn--tertiary cds--btn--sm"
 													onClick={() => {
 														this.props.updateState(SCOPE, {
 															selected: org,
@@ -397,7 +397,7 @@ export class ChaincodeModal extends React.Component {
 							<TextArea
 								id="private-data-collections"
 								name="private-data-collections"
-								className="bx--text__input ibm-label"
+								className="cds--text__input ibm-label"
 								value={JSON.stringify(this.props.ccd.collections_obj, null, 4)}
 								readOnly
 								labelText={this.props.t('propose_private_data')}

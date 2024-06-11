@@ -1,5 +1,7 @@
 .ibp-signature-request {
-	@include carbon--theme($carbon--theme--white) {
+	// background-color: $white;
+	// color: $black;
+	// @include theme($theme--white) {
 
 		// Use the white theme here
 		.ibp-signature-request-notification {
@@ -12,7 +14,7 @@
 			min-width: 478px;
 
 			.ibp-signature-request-notification-title {
-				@include carbon--font-weight('semibold');
+				@include font-weight('semibold');
 				margin-bottom: 0.25rem;
 				padding-right: 3.5rem;
 			}
@@ -33,7 +35,7 @@
 		.ibp-signature-request-progress-bar {
 			height: 0.25rem;
 			position: relative;
-			background-color: $carbon--cool-gray-30;
+			background-color: $cool-gray-30;
 			margin-top: 1.5rem;
 			margin-bottom: 0.5rem;
 
@@ -62,20 +64,20 @@
 
 			&:hover,
 			&:focus {
-				border-bottom: 1px solid $carbon--blue-40;
+				border-bottom: 1px solid $blue-40;
 				display: flex;
 			}
 
 			.ibp-signature-collection-notification-link-text {
-				@include carbon--type-style('body-short-01');
-				color: $carbon--blue-60;
+				@include type-style('body-short-01');
+				color: $blue-60;
 			}
 
 			svg {
 				margin-left: 0.5rem;
 
 				g {
-					fill: $carbon--blue-60;
+					fill: $blue-60;
 				}
 			}
 		}
@@ -90,7 +92,7 @@
 			margin: 0;
 		}
 
-		.bx--tooltip__trigger {
+		.cds--tooltip__trigger {
 			align-items: center;
 			display: flex;
 			height: 1.25rem;
@@ -103,18 +105,18 @@
 				width: 1rem;
 
 				path {
-					fill: $carbon--cool-gray-80;
+					fill: $cool-gray-80;
 				}
 			}
 		}
 
-		.bx--tooltip__trigger.bx--tooltip--left:hover .bx--assistive-text {
-			background-color: $carbon--cool-gray-80;
+		.cds--tooltip__trigger.cds--tooltip--left:hover .cds--assistive-text {
+			background-color: $cool-gray-80;
 			color: $text;
 		}
 
-		.bx--tooltip__trigger.bx--tooltip--left::before {
-			border-color: transparent transparent transparent $carbon--cool-gray-80;
+		.cds--tooltip__trigger.cds--tooltip--left::before {
+			border-color: transparent transparent transparent $cool-gray-80;
 		}
 
 		.ibp-signature-request-icons {
@@ -124,8 +126,8 @@
 			right: 1rem;
 			top: 1rem;
 
-			.bx--btn--secondary .bx--btn__icon,
-			.bx--btn--secondary .bx--btn__icon path:not([data-icon-path]):not([fill="none"]) {
+			.cds--btn--ghost .cds--btn__icon-only,
+			.cds--btn--ghost .cds--btn__icon-only path:not([data-icon-path]):not([fill="none"]) {
 				fill: #000;
 			}
 
@@ -141,14 +143,14 @@
 				min-width: 2rem;
 
 				svg {
-					g {
+					path {
 						fill: rgb(19, 23, 26);
 					}
 				}
 
 				&:hover,
 				&:focus {
-					background-color: $carbon--cool-gray-10;
+					background-color: $cool-gray-10;
 				}
 
 				&:focus {
@@ -159,7 +161,7 @@
 				.ibp-signature-request-icon {
 					margin: 0;
 
-					.bx--tooltip__trigger {
+					.cds--tooltip__trigger {
 						align-items: center;
 						display: flex;
 						height: 1.25rem;
@@ -172,7 +174,7 @@
 							width: 1rem;
 
 							path {
-								fill: $carbon--cool-gray-80;
+								fill: $cool-gray-80;
 							}
 						}
 					}
@@ -180,25 +182,27 @@
 			}
 		}
 
-		.bx--form-item.bx--checkbox-wrapper {
-			.bx--checkbox:focus+.ibp-notification-archive-checkbox.bx--checkbox-label::before {
+		.cds--form-item.cds--checkbox-wrapper {
+			.cds--checkbox:focus+.cds--checkbox-label::before {
 				border-color: $action;
 			}
 
-			.bx--checkbox:checked+.ibp-notification-archive-checkbox.bx--checkbox-label::before {
+			.cds--checkbox:checked+.cds--checkbox-label::before {
 				background-color: $itemBackground;
 			}
 
-			.ibp-notification-archive-checkbox {
-				&.bx--checkbox-label::before {
+			// .ibp-notification-archive-checkbox {
+				// &
+				.cds--checkbox-label::before {
 					border-color: $itemBackground;
 				}
 
-				&.bx--checkbox-label::after {
-					border-left-color: $carbon--white-0;
-					border-bottom-color: $carbon--white-0;
+				// &
+				.cds--checkbox-label::after {
+					border-left-color: $white-0;
+					border-bottom-color: $white-0;
 				}
-			}
+			// }
 		}
 
 		.ibp-signature-request-notification-loading-skeleton {
@@ -232,8 +236,8 @@
 		}
 
 		.signature-request-failed-org {
-			@include carbon--font-weight('semibold');
+			@include font-weight('semibold');
 			margin-left: 2rem;
 		}
-	}
+	// }
 }

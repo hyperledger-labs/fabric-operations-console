@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import TrashCan20 from '@carbon/icons-react/lib/trash-can/20';
-import { Button, CodeSnippet, ContentSwitcher, InlineLoading, Switch } from 'carbon-components-react';
+import {TrashCan} from '@carbon/icons-react';
+import { Button, CodeSnippet, ContentSwitcher, InlineLoading, Switch } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -768,21 +768,21 @@ class GenerateMSPModal extends Component {
 
 	renderRootCerts = translate => {
 		return (
-			<div className="ibp-generate-msp-cert-section-root">
+            <div className="ibp-generate-msp-cert-section-root">
 				<div className="ibp-tooltip-wrap ibp-msp-tooltip">
 					<BlockchainTooltip triggerText={translate('root_certs')}>{translate('generate_msp_rootcert_tooltip')}</BlockchainTooltip>
 				</div>
 				<div>
 					{this.props.rootCerts.map((rootCert, i) => {
 						return (
-							<div key={'rootCert_' + i}
+                            <div key={'rootCert_' + i}
 								className="ibp-msp-row"
 							>
 								<div className="ibp-msp-input">
 									<input
 										id={'ibp-root-cert-' + i}
 										type="text"
-										className="bx--text-input"
+										className="cds--text-input"
 										placeholder={translate('root_cert_placeholder')}
 										value={rootCert.cert}
 										onChange={event => {
@@ -796,45 +796,45 @@ class GenerateMSPModal extends Component {
 									<Button
 										hasIconOnly
 										type="button"
-										renderIcon={TrashCan20}
+										renderIcon={() => <TrashCan size={20} />}
 										kind="secondary"
 										id={'ibp-remove-root-cert-' + i}
 										iconDescription={translate('remove_cert')}
 										tooltipAlignment="center"
 										tooltipPosition="bottom"
 										className="ibp-msp-remove"
-										size="default"
+										size="lg"
 										onClick={() => {
 											this.onDeleteRootCert(i);
 										}}
 									/>
 								)}
 							</div>
-						);
+                        );
 					})}
 					{this.props.gettingRootCerts && <InlineLoading />}
 				</div>
 			</div>
-		);
+        );
 	};
 
 	renderTLSRootCerts = translate => {
 		return (
-			<div className="ibp-generate-msp-cert-section-tls">
+            <div className="ibp-generate-msp-cert-section-tls">
 				<div className="ibp-tooltip-wrap ibp-msp-tooltip">
 					<BlockchainTooltip triggerText={translate('tls_root_certs')}>{translate('generate_msp_tls_rootcert_tooltip')}</BlockchainTooltip>
 				</div>
 				<div>
 					{this.props.tlsRootCerts.map((tlsRootCert, i) => {
 						return (
-							<div key={'tlsRootCert_' + i}
+                            <div key={'tlsRootCert_' + i}
 								className="ibp-msp-row"
 							>
 								<div className="ibp-msp-input">
 									<input
 										id={'ibp-tls-root-cert-' + i}
 										type="text"
-										className="bx--text-input"
+										className="cds--text-input"
 										placeholder={translate('tls_root_cert_placeholder')}
 										value={tlsRootCert.cert}
 										onChange={event => {
@@ -848,25 +848,25 @@ class GenerateMSPModal extends Component {
 									<Button
 										hasIconOnly
 										type="button"
-										renderIcon={TrashCan20}
+										renderIcon={() => <TrashCan size={20} />}
 										kind="secondary"
 										id={'ibp-remove-tls-root-cert-' + i}
 										className="ibp-msp-remove"
 										iconDescription={translate('remove_cert')}
 										tooltipAlignment="center"
 										tooltipPosition="bottom"
-										size="default"
+										size="lg"
 										onClick={() => {
 											this.onDeleteTLSRootCert(i);
 										}}
 									/>
 								)}
 							</div>
-						);
+                        );
 					})}
 				</div>
 			</div>
-		);
+        );
 	};
 
 	addOUIdentifier = certificate => {
@@ -885,7 +885,7 @@ class GenerateMSPModal extends Component {
 		const { enroll_id, enroll_secret, identity_name } = this.props;
 		return (
 			<div>
-				<p className="bx--type-delta ibp-generate-cert-label">{translate('generate_certificate')}</p>
+				<p className="cds--type-delta ibp-generate-cert-label">{translate('generate_certificate')}</p>
 				<Form
 					scope={SCOPE}
 					id={SCOPE}
@@ -991,7 +991,7 @@ class GenerateMSPModal extends Component {
 		const { admins, ca, identity, identityType } = this.props;
 		const caName = ca.name;
 		return (
-			<div>
+            <div>
 				<p className="ibp-generate-msp-wizard-desc">{translate('admins_desc')}</p>
 				<ContentSwitcher
 					className="ibp-identity-type-toggle"
@@ -1055,14 +1055,14 @@ class GenerateMSPModal extends Component {
 						<div>
 							{admins.map((admin, i) => {
 								return (
-									<div key={'admin_' + i}
+                                    <div key={'admin_' + i}
 										className="ibp-msp-row"
 									>
 										<div className="ibp-msp-input">
 											<input
 												id={'ibp-msp-admin-' + i}
 												type="text"
-												className="bx--text-input"
+												className="cds--text-input"
 												placeholder={translate('admin_certificate_placeholder')}
 												value={admin.cert}
 												onChange={event => {
@@ -1076,27 +1076,27 @@ class GenerateMSPModal extends Component {
 											<Button
 												hasIconOnly
 												type="button"
-												renderIcon={TrashCan20}
+												renderIcon={() => <TrashCan size={20} />}
 												kind="secondary"
 												id={'ibp-remove-admin-' + i}
 												iconDescription={translate('remove_cert')}
 												tooltipAlignment="center"
 												tooltipPosition="bottom"
 												className="ibp-msp-remove"
-												size="default"
+												size="lg"
 												onClick={() => {
 													this.onDeleteAdmin(i);
 												}}
 											/>
 										)}
 									</div>
-								);
+                                );
 							})}
 						</div>
 					</div>
 				)}
 			</div>
-		);
+        );
 	};
 
 	renderMSPTimeline(translate) {
@@ -1131,7 +1131,7 @@ class GenerateMSPModal extends Component {
 											<input
 												id={`ibp-msp-admin-${key}-${i}`}
 												type="text"
-												className="bx--text-input"
+												className="cds--text-input"
 												value={item.cert}
 												disabled={true}
 												aria-label={translate('admin_certificate')}

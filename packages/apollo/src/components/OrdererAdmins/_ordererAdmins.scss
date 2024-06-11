@@ -2,12 +2,12 @@
 	padding: 2rem 0;
 
 	.ibp-node-msp-tile-name-sub {
-		@include carbon--font-weight('regular');
-		color: $carbon--cool-gray-30;
+		@include font-weight('regular');
+		color: $cool-gray-30;
 	}
 
 	.ibp-orderer-admin-ou {
-		color: $carbon--cool-gray-40;
+		color: $cool-gray-40;
 		bottom: 1rem;
 		margin-right: 1rem;
 		position: absolute;
@@ -31,11 +31,11 @@
 		width: 1.875rem;
 
 		&:hover {
-			background-color: $carbon--cool-gray-70;
+			background-color: $cool-gray-70;
 		}
 
 		&:focus {
-			box-shadow: inset 0 0 0 2px $carbon--white-0;
+			box-shadow: inset 0 0 0 2px $white-0;
 		}
 
 		svg {

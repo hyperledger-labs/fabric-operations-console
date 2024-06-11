@@ -24,7 +24,7 @@ import Form from '../Form/Form';
 //import Logger from '../Log/Logger';
 import Wizard from '../Wizard/Wizard';
 import WizardStep from '../WizardStep/WizardStep';
-import { ToggleSmall } from 'carbon-components-react';
+import { Row, Toggle } from "@carbon/react";
 import SidePanelWarning from '../SidePanelWarning/SidePanelWarning';
 import * as constants from '../../utils/constants';
 import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
@@ -121,7 +121,7 @@ class EditAuthSchemePanel extends Component {
 		} else if (value.confirm_default_password) {
 			this.validate_confirm();
 		}
-	}
+	};
 
 	// check if confirmation password input matches new password input
 	validate_confirm = () => {
@@ -129,7 +129,7 @@ class EditAuthSchemePanel extends Component {
 		this.props.updateState(SCOPE, {
 			confirmPasswordError: (newPassword && newPassword === this.props.confirm_default_password) ? '' : 'passwords_do_not_match',
 		});
-	}
+	};
 
 	// detect if any changes have been made to auth settings
 	authSettingsAreSame = () => {
@@ -167,7 +167,7 @@ class EditAuthSchemePanel extends Component {
 			}
 		}
 		return true;
-	}
+	};
 
 	// detect if required fields are set and valid
 	requiredFieldsAreValid = () => {
@@ -183,7 +183,7 @@ class EditAuthSchemePanel extends Component {
 			}
 		}
 		return false;
-	}
+	};
 
 	// render the auth scheme side panel wizard
 	renderUpdateConfiguration(translate) {
@@ -351,7 +351,7 @@ class EditAuthSchemePanel extends Component {
 								>
 									{translate('debug_logs_tooltip')}
 								</BlockchainTooltip>
-								<ToggleSmall
+								<Toggle size="sm"
 									id="toggle-debug-access-logs"
 									toggled={this.props.debug === 'on'}
 									onToggle={() => {
@@ -405,25 +405,27 @@ class EditAuthSchemePanel extends Component {
 									]}
 									onChange={value => this.onPassChange(value)}
 								/>
-								<BlockchainTooltip direction="right"
-									triggerText={translate('allow_default_keep_label')}
-									className='allow-default-label'
-								>
-									{translate('allow_default_keep_tooltip')}
-								</BlockchainTooltip>
-								<ToggleSmall
-									id="toggle-allow-default-access"
-									toggled={this.props.allowDefault}
-									onToggle={() => {
-										this.props.updateState(SCOPE, {
-											allowDefault: !this.props.allowDefault,
-										});
-									}}
-									labelA={translate('disabled')}
-									labelB={translate('enabled')}
-									aria-label={translate('allow_default_keep_label')}
-									className='allow-default-wrap'
-								/>
+								<Row>
+									<BlockchainTooltip direction="right"
+										triggerText={translate('allow_default_keep_label')}
+										className='allow-default-label'
+									>
+										{translate('allow_default_keep_tooltip')}
+									</BlockchainTooltip>
+									<Toggle size="sm"
+										id="toggle-allow-default-access"
+										toggled={this.props.allowDefault}
+										onToggle={() => {
+											this.props.updateState(SCOPE, {
+												allowDefault: !this.props.allowDefault,
+											});
+										}}
+										labelA={translate('disabled')}
+										labelB={translate('enabled')}
+										aria-label={translate('allow_default_keep_label')}
+										className='allow-default-wrap'
+									/>
+								</Row>
 							</div>}
 					</div>
 				</div>

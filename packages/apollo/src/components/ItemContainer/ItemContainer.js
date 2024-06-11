@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-import { Table16 } from '@carbon/icons-react/es';
-import { Checkbox, Button, DataTable } from 'carbon-components-react';
+import { Table as TableIcon } from '@carbon/icons-react';
+import { Checkbox, Button, DataTable } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -25,10 +25,11 @@ import { updateState } from '../../redux/commonActions';
 import Helper from '../../utils/helper';
 import Hover from '../../utils/hover';
 import BlockchainPagination from '../BlockchainPagination/BlockchainPagination';
-import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
+// import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
 import ItemContainerTile from '../ItemContainerTile/ItemContainerTile';
 import ItemMenu from '../ItemMenu/ItemMenu';
 import SVGs from '../Svgs/Svgs';
+import IBPTooltip from '../BlockchainTooltip/IBPTooltip';
 
 const {
 	TableContainer,
@@ -114,21 +115,20 @@ class ItemContainer extends Component {
 		if (views.length < 2 || !this.props.items || !this.props.items.length) {
 			return (
 				<div>
-					<div className="ibp-title-bar-container">
-						{this.props.containerTitle && this.props.tileMapping && (
+					{this.props.containerTitle && this.props.tileMapping && (
+						<div className="ibp-title-bar-container">
 							<h3 className="ibp-title-bar-container-header">
 								{!this.props.containerTooltip ? (
 									translate(this.props.containerTitle)
 								) : (
-									<BlockchainTooltip triggerText={translate(this.props.containerTitle)}
+									<IBPTooltip prefixText={translate(this.props.containerTitle)}
+										tooltipText={translate(this.props.containerTooltip)}
 										direction={this.props.tooltipDirection}
-									>
-										{translate(this.props.containerTooltip)}
-									</BlockchainTooltip>
+									/>
 								)}
 							</h3>
-						)}
-					</div>
+						</div>
+					)}
 					{this.props.tileMapping && this.props.containerDesc && !this.props.containerDescLink && (
 						<div className="ibp-title-desc-container">
 							<p>{translate(this.props.containerDesc)}</p>
@@ -165,11 +165,10 @@ class ItemContainer extends Component {
 								{!this.props.containerTooltip ? (
 									translate(this.props.containerTitle)
 								) : (
-									<BlockchainTooltip triggerText={translate(this.props.containerTitle)}
+									<IBPTooltip prefixText={translate(this.props.containerTitle)}
+										tooltipText={translate(this.props.containerTooltip)}
 										direction={this.props.tooltipDirection}
-									>
-										{translate(this.props.containerTooltip)}
-									</BlockchainTooltip>
+									/>
 								)}
 							</h3>
 						)}
@@ -192,7 +191,7 @@ class ItemContainer extends Component {
 											title={'Toggle grid view'}
 										/>
 									) : (
-										<Table16 aria-label={'Toggle list view'}
+										<TableIcon size={16} aria-label={'Toggle list view'}
 											className="ibp--svg-white-fill"
 										/>
 									)}
@@ -381,7 +380,7 @@ class ItemContainer extends Component {
 		// to account for the checkbox, this allows the empty row to have the correct width
 		return (
 			<>
-				<div className="ibp__button--container">{this.buildButtons(translate)}</div>
+				{(this.props.addItems && this.props.addItems.length) ? <div className="ibp__button--container">{this.buildButtons(translate)}</div> : null}
 				<div className="ibp-container-grid-box"
 					role="grid"
 					aria-label={translate(this.props.containerTitle || 'grid_view')}
@@ -470,13 +469,11 @@ class ItemContainer extends Component {
 							disabled={button.decoupleFromLoading ? (this.props.disableAddItem || button.disabled) :
 								(this.props.disableAddItem || this.props.loading || button.disabled)}
 						>
-							{!button.tooltip && <span className="ibp__button-text bx--type-zeta">{translate(button.text)}</span>}
+							{!button.tooltip && <span className="ibp__button-text cds--type-zeta">{translate(button.text)}</span>}
 							{button.tooltip && (
-								<BlockchainTooltip noIcon
-									triggerText={<span className="ibp__button-text bx--type-zeta">{translate(button.text)}</span>}
-								>
-									{translate(button.tooltip)}
-								</BlockchainTooltip>
+								<IBPTooltip prefixText={<span className="ibp__button-text cds--type-zeta">{translate(button.text)}</span>}
+									tooltipText={translate(button.tooltip)}
+								/>
 							)}
 							<SVGs extendClass={{ 'ibp-container-list-add-button-img': true }}
 								type={button.icon || 'plus'}
@@ -599,7 +596,7 @@ class ItemContainer extends Component {
 				return <TableCell />;
 			}
 			return (
-				<TableCell>
+				<TableCell className='action-td'>
 					<ItemMenu menuItems={this.props.menuItems(row)}
 						loading={row.loading}
 					/>
@@ -644,7 +641,7 @@ class ItemContainer extends Component {
 	}
 
 	initializeSearch() {
-		const { items, listMapping, t:translate } = this.props;
+		const { items, listMapping, t: translate } = this.props;
 		const searchSettings = [];
 		if (listMapping) {
 			const lang = document.documentElement.getAttribute('lang');
@@ -772,7 +769,7 @@ class ItemContainer extends Component {
 			headers.push({
 				key: 'actions',
 				header: '',
-				width: '5%',
+				width: '6%',
 			});
 		}
 		renderedItems.forEach(item => {
@@ -792,11 +789,10 @@ class ItemContainer extends Component {
 									{!this.props.containerTooltip ? (
 										translate(this.props.containerTitle)
 									) : (
-										<BlockchainTooltip triggerText={translate(this.props.containerTitle)}
+										<IBPTooltip prefixText={translate(this.props.containerTitle)}
+											tooltipText={translate(this.props.containerTooltip)}
 											direction={this.props.tooltipDirection}
-										>
-											{translate(this.props.containerTooltip)}
-										</BlockchainTooltip>
+										/>
 									)}
 								</h3>
 							}
