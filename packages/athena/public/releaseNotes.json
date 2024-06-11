@@ -1,5 +1,18 @@
 [
 	{
+		"version": "1.0.9-14",
+		"date": "04 July 2024",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			},
+			{
+				"title": "UI Library Update",
+				"details": "Update Carbon UI library"
+			}
+		]
+	}, {
 		"version": "1.0.9-13",
 		"date": "22 May 2024",
 		"description": [
