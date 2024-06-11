@@ -14,15 +14,7 @@
  * limitations under the License.
  */
 import { ChevronDown, Help, NotificationFilled } from '@carbon/icons-react';
-import {
-	Tag, Header,
-	HeaderGlobalAction,
-	HeaderGlobalBar,
-	HeaderMenuItem,
-	HeaderName,
-	HeaderNavigation,
-	SkipToContent
-} from "@carbon/react";
+import { Tag, Header, HeaderGlobalAction, HeaderGlobalBar, HeaderMenuItem, HeaderName, HeaderNavigation, SkipToContent } from '@carbon/react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
@@ -117,7 +109,7 @@ class TitleBar extends Component {
 		});
 	};
 
-	onComplete = refresh => {
+	onComplete = (refresh) => {
 		if (this.props.details) {
 			// Check if the user is viewing the channel details
 			const path = window.location.href.toLowerCase();
@@ -153,7 +145,7 @@ class TitleBar extends Component {
 		this.props.history.push('/nodes');
 	};
 
-	onKeyPressGoHome = event => {
+	onKeyPressGoHome = (event) => {
 		if (event.key === 'Enter') {
 			return this.goHome();
 		}
@@ -162,7 +154,11 @@ class TitleBar extends Component {
 
 	goToDocs = (event, translate, type) => {
 		if ((event.key === 'Enter' && type === 'keypress') || type === 'click') {
-			window.open(translate('mainDocs', { DOC_PREFIX: this.props.docPrefix }));
+			if (this.props.console_type == 'hlfoc') {
+				window.open(translate('mainDocs2', { DOC_PREFIX: this.props.docPrefix }));
+			} else {
+				window.open(translate('mainDocs', { DOC_PREFIX: this.props.docPrefix }));
+			}
 		}
 	};
 
@@ -184,35 +180,37 @@ class TitleBar extends Component {
 					className={`ibp-title-bar ${showHeaderButtons ? 'ibp-user-logged-in' : 'ibp-user-logged-out'}`}
 					aria-label={translate(productLabel)}
 				>
-					<Header aria-label={translate(productLabel)}
+					<Header
+						aria-label={translate(productLabel)}
 						className={this.props.inReadOnlyMode ? 'cds--header-read-only' : ''}
 						title={this.props.inReadOnlyMode ? translate('migration_completion_title') : ''}
 					>
 						<SkipToContent />
-						<HeaderName prefix=""
-							onClick={this.goHome}
-							onKeyPress={event => this.onKeyPressGoHome(event)}
-							className="ibp-carbon-product-name"
-							tabIndex="0"
-						>
+						<HeaderName prefix="" onClick={this.goHome} onKeyPress={(event) => this.onKeyPressGoHome(event)} className="ibp-carbon-product-name" tabIndex="0">
 							{translate(productLabel)}
 							{this.props.inReadOnlyMode && <span className="readOnlyWrap">{translate('readOnlyTxt')}</span>}
 						</HeaderName>
 						{this.props.logged && showHeaderButtons && (
 							<HeaderNavigation aria-label={translate(productLabel)}>
 								<HeaderMenuItem
-									onKeyPress={event => this.onKeyPressGetStarted(event, this.props.showWelcomeBanner)}
+									onKeyPress={(event) => this.onKeyPressGetStarted(event, this.props.showWelcomeBanner)}
 									onClick={this.props.showWelcomeBanner ? this.closeWelcomeBanner : this.showWelcomeBanner}
-									className={'ibp-get-started-button' + (this.props.showWelcomeBanner ? ' ibp-get-started-showing ' : '') +
-										(this.props.inReadOnlyMode ? ' cds--header__menu-item-read-only ' : '')}
+									className={
+										'ibp-get-started-button' +
+										(this.props.showWelcomeBanner ? ' ibp-get-started-showing ' : '') +
+										(this.props.inReadOnlyMode ? ' cds--header__menu-item-read-only ' : '')
+									}
 									id="ibp-get-started-menu-button"
 								>
 									{translate('get_started')}
-									<ChevronDown size={16} className={`ibp-getting-started-button-icon ${this.props.showWelcomeBanner ? 'ibp-getting-started-button-icon-open' : ''}`} />
+									<ChevronDown
+										size={16}
+										className={`ibp-getting-started-button-icon ${this.props.showWelcomeBanner ? 'ibp-getting-started-button-icon-open' : ''}`}
+									/>
 								</HeaderMenuItem>
 								<HeaderMenuItem
-									onKeyPress={event => this.goToDocs(event, translate, 'keypress')}
-									onClick={event => this.goToDocs(event, translate, 'click')}
+									onKeyPress={(event) => this.goToDocs(event, translate, 'keypress')}
+									onClick={(event) => this.goToDocs(event, translate, 'click')}
 									className={'ibp-header-menu-item' + (this.props.inReadOnlyMode ? ' cds--header__menu-item-read-only ' : '')}
 								>
 									{translate('documentation')}
@@ -230,10 +228,8 @@ class TitleBar extends Component {
 							</HeaderNavigation>
 						)}
 						{showHeaderButtons && (
-							<HeaderGlobalBar className='title-bar-actions'>
-								<HeaderGlobalAction aria-label={translate('help')}
-									onClick={() => this.props.history.push('/support')}
-								>
+							<HeaderGlobalBar className="title-bar-actions">
+								<HeaderGlobalAction aria-label={translate('help')} onClick={() => this.props.history.push('/support')}>
 									<Help size={20} />
 								</HeaderGlobalAction>
 								{this.props.logged && (
@@ -245,9 +241,7 @@ class TitleBar extends Component {
 									>
 										{needsAttention ? (
 											<div className="ibp-pending-notifications-container">
-												<NotificationFilled size={20} className="ibp-signature-header-icon"
-													title={translate('notifications')}
-												/>
+												<NotificationFilled size={20} className="ibp-signature-header-icon" title={translate('notifications')} />
 												<Tag
 													className="ibp-needs-attention-notification-icon"
 													title={translate('notification_count')}
@@ -260,10 +254,7 @@ class TitleBar extends Component {
 												</Tag>
 											</div>
 										) : (
-											<SVGs type="notification"
-												extendClass={{ 'ibp-signature-header-icon': true }}
-												title={translate('notifications')}
-											/>
+											<SVGs type="notification" extendClass={{ 'ibp-signature-header-icon': true }} title={translate('notifications')} />
 										)}
 									</HeaderGlobalAction>
 								)}
@@ -285,28 +276,15 @@ class TitleBar extends Component {
 						)}
 					</Header>
 					{this.props.logged && showHeaderButtons && this.props.showSignatureCollection && (
-						<SignatureCollection onWelcomeClose={this.closeWelcomeBanner}
-							onClose={this.closeSignatureCollections}
-							showRequests
-						/>
+						<SignatureCollection onWelcomeClose={this.closeWelcomeBanner} onClose={this.closeSignatureCollections} showRequests />
 					)}
 					{this.props.logged && showHeaderButtons && this.props.details && !this.props.details.ccd && (
-						<SignatureDetailModal request={this.props.details}
-							msps={this.props.msps}
-							closed={this.hideDetails}
-							onComplete={this.onComplete}
-						/>
+						<SignatureDetailModal request={this.props.details} msps={this.props.msps} closed={this.hideDetails} onComplete={this.onComplete} />
 					)}
 					{this.props.logged && showHeaderButtons && this.props.details && this.props.details.ccd && (
-						<ChaincodeModal channelId={this.props.details.channel}
-							ccd={this.props.details.ccd}
-							onClose={this.hideDetails}
-							onComplete={this.onComplete}
-						/>
+						<ChaincodeModal channelId={this.props.details.channel} ccd={this.props.details.ccd} onClose={this.hideDetails} onComplete={this.onComplete} />
 					)}
-					{this.props.showWelcomeBanner && <WelcomeBannerContent onClose={this.closeWelcomeBanner}
-						closeWelcome={this.props.closeWelcome}
-					/>}
+					{this.props.showWelcomeBanner && <WelcomeBannerContent onClose={this.closeWelcomeBanner} closeWelcome={this.props.closeWelcome} />}
 					{this.props.showUserInfo && (
 						<UserProfile
 							closeUserProfile={this.closeUserProfile}
@@ -342,10 +320,11 @@ TitleBar.propTypes = {
 	updateState: PropTypes.func,
 	onClose: PropTypes.func,
 	t: PropTypes.func, // Provided by withTranslation()
+	console_type: PropTypes.string,
 };
 
 export default connect(
-	state => {
+	(state) => {
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;
 		newProps['authScheme'] = state['settings'] ? state['settings']['authScheme'] : null;
@@ -357,6 +336,7 @@ export default connect(
 		newProps['showUserInfo'] = state['userInfo'] ? state['userInfo']['showUserInfo'] : false;
 		newProps['host_url'] = state['settings'] ? state['settings']['host_url'] : null;
 		newProps['docPrefix'] = state['settings'] ? state['settings']['docPrefix'] : null;
+		newProps['console_type'] = state['settings'] ? state['settings']['console_type'] : null;
 		return newProps;
 	},
 	{
