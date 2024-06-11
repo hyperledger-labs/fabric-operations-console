@@ -12,14 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { showBreadcrumb, updateState } from '../../redux/commonActions';
-import { Grid, Row, Column, SkeletonText } from "@carbon/react";
+import { Grid, Row, Column, SkeletonText } from '@carbon/react';
 import Helper from '../../utils/helper';
 import PageContainer from '../PageContainer/PageContainer';
 //import Logger from '../Log/Logger';
@@ -31,7 +31,7 @@ import SidePanel from '../SidePanel/SidePanel';
 import Clipboard from '../../utils/clipboard';
 import SVGs from '../Svgs/Svgs';
 import BlockchainTooltip from '../BlockchainTooltip/BlockchainTooltip';
-import { Checkbox } from "@carbon/react";
+import { Checkbox } from '@carbon/react';
 import ActionsHelper from '../../utils/actionsHelper';
 import withRouter from '../../hoc/withRouter';
 
@@ -71,12 +71,12 @@ class AuditLogs extends Component {
 			const logs = await EventsRestApi.getLogs({ limit: this.PAGE_SIZE, skip: 0 });
 			this.props.updateState(SCOPE, {
 				logs: logs ? logs.notifications : [],
-				displayLogCount: logs ? logs.total : 0,			// the total number to display in the table (w/filters)
+				displayLogCount: logs ? logs.total : 0, // the total number to display in the table (w/filters)
 				logsLoading: false,
 				showingPage: 1,
 				showDetails: null,
 				copyFlash: false,
-				allLogsCount: logs ? logs.total : 0,			// the actual number of all logs w/o filters
+				allLogsCount: logs ? logs.total : 0, // the actual number of all logs w/o filters
 			});
 		} catch (e) {
 			console.error('e', e);
@@ -84,7 +84,7 @@ class AuditLogs extends Component {
 	}
 
 	// open log and show all details
-	showLogDetails = log => {
+	showLogDetails = (log) => {
 		this.props.updateState(SCOPE, {
 			showDetails: log,
 		});
@@ -96,7 +96,7 @@ class AuditLogs extends Component {
 	};
 
 	// download ALL audit logs as a text file
-	downloadAllLogs = async log => {
+	downloadAllLogs = async (log) => {
 		try {
 			const logs = await EventsRestApi.getLogs({ limit: this.numberOfTotalLogs(), skip: 0 });
 			this.props.updateState(SCOPE, {
@@ -109,7 +109,7 @@ class AuditLogs extends Component {
 	};
 
 	// download audit log as a text file
-	downloadLogs = log => {
+	downloadLogs = (log) => {
 		const start = (this.props.showingPage - 1) * this.PAGE_SIZE;
 		const end = start + this.PAGE_SIZE;
 		this.downloadFile(start, end);
@@ -157,7 +157,9 @@ class AuditLogs extends Component {
 		// if we already have this page data, skip
 		if (this.props.logs.length > page * this.PAGE_SIZE) {
 			let first_log_pos = page * this.PAGE_SIZE + 1;
-			if (first_log_pos < 0) { first_log_pos = 0; }
+			if (first_log_pos < 0) {
+				first_log_pos = 0;
+			}
 			if (this.props.logs[first_log_pos] && this.props.logs[first_log_pos].id) {
 				this.props.updateState(SCOPE, {
 					showingPage: page - 1,
@@ -200,29 +202,34 @@ class AuditLogs extends Component {
 
 	// pretty print json key
 	renderKey(key) {
-		return (<span className='logJsonLine'>
-			<span className='logJsonQuote'>&quot;</span>
-			<span className='logJsonKey'>{key}</span>
-			<span className='logJsonQuote'>&quot;</span>
-			<span className='logJsonColon'>:</span>
-		</span>
+		return (
+			<span className="logJsonLine">
+				<span className="logJsonQuote">&quot;</span>
+				<span className="logJsonKey">{key}</span>
+				<span className="logJsonQuote">&quot;</span>
+				<span className="logJsonColon">:</span>
+			</span>
 		);
 	}
 
 	// pretty print json value
 	renderValue(val, last) {
 		if (typeof val === 'number' || typeof val === 'boolean') {
-			return (<span>
-				<span className='logJsonValSp'>{val}</span>
-				<span className='logJsonComma'>{last ? '' : ','}</span>
-			</span>);
+			return (
+				<span>
+					<span className="logJsonValSp">{val}</span>
+					<span className="logJsonComma">{last ? '' : ','}</span>
+				</span>
+			);
 		} else {
-			return (<span>
-				<span className='logJsonQuoteVal'>&quot;</span>
-				<span className='logJsonVal'>{val}</span>
-				<span className='logJsonQuoteVal'>&quot;</span>
-				<span className='logJsonComma'>{last ? '' : ','}</span>
-			</span>);
+			return (
+				<span>
+					<span className="logJsonQuoteVal">&quot;</span>
+					<span className="logJsonVal">{val}</span>
+					<span className="logJsonQuoteVal">&quot;</span>
+					<span className="logJsonComma">{last ? '' : ','}</span>
+				</span>
+			);
 		}
 	}
 
@@ -230,9 +237,9 @@ class AuditLogs extends Component {
 	onChangeTableColumn(event) {
 		const showTableColumns = JSON.parse(JSON.stringify(this.props.showTableColumns));
 		if (event.target && event.target.value && showTableColumns && showTableColumns[event.target.value] !== undefined) {
-			showTableColumns[event.target.value] = !showTableColumns[event.target.value];	// flip it
+			showTableColumns[event.target.value] = !showTableColumns[event.target.value]; // flip it
 			this.props.updateState(SCOPE, {
-				showTableColumns: showTableColumns
+				showTableColumns: showTableColumns,
 			});
 		}
 	}
@@ -258,67 +265,60 @@ class AuditLogs extends Component {
 							</span>
 						);
 					},*/
-					width: 2
+					width: 2,
 				});
 			}
 			if (this.props.showTableColumns.log) {
 				ret.push({
-
 					header: 'log_title',
 					attr: 'log',
 					translate: false,
-					width: 4
+					width: 4,
 				});
 			}
 
-
 			if (this.props.showTableColumns.by) {
 				ret.push({
-
 					header: 'by_title',
 					attr: 'by',
 					translate: false,
-					width: 2
+					width: 2,
 				});
 			}
 
 			if (this.props.showTableColumns.api) {
 				ret.push({
-
 					header: 'api_title',
 					attr: 'http_details',
 					translate: false,
-					width: 2
+					width: 2,
 				});
 			}
 
 			if (this.props.showTableColumns.code) {
 				ret.push({
-
 					header: 'response_code',
 					attr: 'response_code',
 					translate: false,
-					width: 1
+					width: 1,
 				});
 			}
 
 			if (this.props.showTableColumns.outcome) {
 				ret.push({
-
 					header: 'outcome_title',
 					attr: 'status',
 					translate: false,
-					width: 1
+					width: 1,
 				});
 			}
-
 
 			if (this.props.showTableColumns.tx_id) {
 				ret.push({
 					header: 'tx_id_title',
 					attr: 'tx_id',
 					translate: false,
-					width: 1
+					width: 1,
 				});
 			}
 		}
@@ -343,13 +343,13 @@ class AuditLogs extends Component {
 		});
 
 		if (!query) {
-			return await this.getLogs();							// if no search terms, do normal api
+			return await this.getLogs(); // if no search terms, do normal api
 		} else {
 			try {
 				const logs = await EventsRestApi.getLogs({ limit: this.numberOfTotalLogs(), skip: 0, search: query });
 				this.props.updateState(SCOPE, {
 					logs: logs ? logs.notifications : [],
-					displayLogCount: logs ? logs.returning : 0,		// in this case the total should reflect the number of logs after applying the filter
+					displayLogCount: logs ? logs.returning : 0, // in this case the total should reflect the number of logs after applying the filter
 					showingPage: 1,
 					logsLoading: false,
 				});
@@ -372,20 +372,14 @@ class AuditLogs extends Component {
 			<PageContainer>
 				<Row className="cds--row migrationPanel">
 					<Column>
-					{/* className="cds--col-lg-13" */}
-						<PageHeader
-							history={this.props.history}
-							headerName="audit_logs"
-							staticHeader
-						/>
+						{/* className="cds--col-lg-13" */}
+						<PageHeader history={this.props.history} headerName="audit_logs" staticHeader />
 
-						{!this.props.isManager &&
-							<p>{translate('audit_no_access_msg')}</p>
-						}
+						{!this.props.isManager && <p>{translate('audit_no_access_msg')}</p>}
 
-						{this.props.isManager &&
+						{this.props.isManager && (
 							<>
-								{this.props.loading &&
+								{this.props.loading && (
 									<div>
 										<SkeletonText
 											style={{
@@ -396,95 +390,91 @@ class AuditLogs extends Component {
 										/>
 										<SkeletonText />
 									</div>
-								}
+								)}
 
-								{!this.props.loading &&
+								{!this.props.loading && (
 									<div>
-										<BlockchainTooltip triggerText={translate('audit_logs_title')}
-											direction='right'
-											className='audit-style-wrap'
-										>
+										<BlockchainTooltip triggerText={translate('audit_logs_title')} direction="right" className="audit-style-wrap">
 											{translate('audit_table_desc')}
 										</BlockchainTooltip>
 
 										<br />
 
 										<div>
-											<div className='cds--label'>{translate('log_columns_desc')}</div>
+											<div className="cds--label">{translate('log_columns_desc')}</div>
 										</div>
 
 										<div className="checkbox-filter-container">
 											<Checkbox
 												id={'activity-checkbox-date'}
 												labelText={translate('date')}
-												className='audit-checkboxes'
-												value='date'
+												className="audit-checkboxes"
+												value="date"
 												checked={this.props.showTableColumns ? this.props.showTableColumns.date : false}
-												onClick={event => {
+												onClick={(event) => {
 													this.onChangeTableColumn(event);
 												}}
 											/>
 											<Checkbox
 												id={'activity-checkbox-log'}
 												labelText={translate('log_title')}
-												className='audit-checkboxes'
-												value='log'
+												className="audit-checkboxes"
+												value="log"
 												checked={this.props.showTableColumns ? this.props.showTableColumns.log : false}
-												onClick={event => {
+												onClick={(event) => {
 													this.onChangeTableColumn(event);
 												}}
 											/>
 											<Checkbox
 												id={'activity-checkbox-by'}
 												labelText={translate('by_title')}
-												className='audit-checkboxes'
-												value='by'
+												className="audit-checkboxes"
+												value="by"
 												checked={this.props.showTableColumns ? this.props.showTableColumns.by : false}
-												onClick={event => {
+												onClick={(event) => {
 													this.onChangeTableColumn(event);
 												}}
 											/>
 											<Checkbox
 												id={'activity-checkbox-api'}
 												labelText={translate('api_title')}
-												className='audit-checkboxes'
-												value='api'
+												className="audit-checkboxes"
+												value="api"
 												checked={this.props.showTableColumns ? this.props.showTableColumns.api : false}
-												onClick={event => {
+												onClick={(event) => {
 													this.onChangeTableColumn(event);
 												}}
 											/>
 											<Checkbox
 												id={'activity-checkbox-code'}
 												labelText={translate('response_code')}
-												className='audit-checkboxes'
-												value='code'
+												className="audit-checkboxes"
+												value="code"
 												checked={this.props.showTableColumns ? this.props.showTableColumns.code : false}
-												onClick={event => {
+												onClick={(event) => {
 													this.onChangeTableColumn(event);
 												}}
 											/>
 											<Checkbox
 												id={'activity-checkbox-outcome'}
 												labelText={translate('outcome_title')}
-												className='audit-checkboxes'
-												value='outcome'
+												className="audit-checkboxes"
+												value="outcome"
 												checked={this.props.showTableColumns ? this.props.showTableColumns.outcome : false}
-												onClick={event => {
+												onClick={(event) => {
 													this.onChangeTableColumn(event);
 												}}
 											/>
 											<Checkbox
 												id={'activity-checkbox-tx_id'}
 												labelText={translate('tx_id_title')}
-												className='audit-checkboxes'
-												value='tx_id'
+												className="audit-checkboxes"
+												value="tx_id"
 												checked={this.props.showTableColumns ? this.props.showTableColumns.tx_id : false}
-												onClick={event => {
+												onClick={(event) => {
 													this.onChangeTableColumn(event);
 												}}
 											/>
-
 										</div>
 
 										<ItemContainer
@@ -495,13 +485,13 @@ class AuditLogs extends Component {
 											itemId="audit_logs"
 											loading={this.props.loading || this.props.logsLoading}
 											items={this.props.logs}
-											menuItems={log => [
+											menuItems={(log) => [
 												{
 													text: 'view_details',
 													fn: () => {
 														this.showLogDetails(log);
 													},
-												}
+												},
 											]}
 											listMapping={this.buildTableColumns()}
 											buttonText="register_user"
@@ -516,9 +506,9 @@ class AuditLogs extends Component {
 											}}
 										/>
 									</div>
-								}
+								)}
 
-								{this.props.showDetails &&
+								{this.props.showDetails && (
 									<SidePanel
 										id="ibp--template-full-page-side-panel"
 										closed={() => {
@@ -526,56 +516,57 @@ class AuditLogs extends Component {
 												showDetails: null,
 											});
 										}}
-										ref={sidePanel => (this.sidePanel = sidePanel)}
+										ref={(sidePanel) => (this.sidePanel = sidePanel)}
 										buttons={[
 											{
 												id: 'close-log-button',
 												text: translate('close'),
 												type: 'button',
-											}
+											},
 										]}
 										fullPageCenter
 										hideClose={false}
 									>
 										<div className="ibp-full-page-center-panel-container">
-											<h1>
-												{translate('details')}
-											</h1>
-											<p className='logDescWrap'>{translate('log_detail_desc')}</p>
-											<button className='logCopyButton'
+											<h1>{translate('details')}</h1>
+											<p className="logDescWrap">{translate('log_detail_desc')}</p>
+											<button
+												className="logCopyButton"
 												onClick={() => {
 													this.props.updateState(SCOPE, {
-														copyFlash: true
+														copyFlash: true,
 													});
 													Clipboard.copyToClipboard(JSON.stringify(log_details, null, '\t'));
 													setTimeout(() => {
 														this.props.updateState(SCOPE, {
-															copyFlash: false
+															copyFlash: false,
 														});
 													}, 200);
 												}}
 												title={translate('copy_log_button_tooltip')}
 											>
-												<SVGs type="copy"
-													width="20px"
-													title={translate('copy_log_button_tooltip')}
-												/>
+												<SVGs type="copy" width="20px" title={translate('copy_log_button_tooltip')} />
 											</button>
 											<div className={'logDetailsWrap' + (this.props.copyFlash ? ' flashCopyButton ' : '')}>
-												<div className='logJsonBracket'>{'{'}</div>
-												{log_details && Object.keys(log_details).map(key => {
-													return <div key={key}>{this.renderKey(key)} {this.renderValue(log_details[key], key === lastKey)}</div>;
-												})}
-												<div className='logJsonBracket'>{'}'}</div>
+												<div className="logJsonBracket">{'{'}</div>
+												{log_details &&
+													Object.keys(log_details).map((key) => {
+														return (
+															<div key={key}>
+																{this.renderKey(key)} {this.renderValue(log_details[key], key === lastKey)}
+															</div>
+														);
+													})}
+												<div className="logJsonBracket">{'}'}</div>
 											</div>
 										</div>
 									</SidePanel>
-								}
+								)}
 							</>
-						}
+						)}
 					</Column>
-				</Row >
-			</PageContainer >
+				</Row>
+			</PageContainer>
 		);
 	}
 }
@@ -603,11 +594,14 @@ AuditLogs.propTypes = {
 	history: PropTypes.object,
 };
 
-export default connect(state => {
-	let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
-	newProps['userInfo'] = state['userInfo'];
-	return newProps;
-}, {
-	updateState,
-	showBreadcrumb
-})(withTranslation()(withRouter(AuditLogs)));
+export default connect(
+	(state) => {
+		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
+		newProps['userInfo'] = state['userInfo'];
+		return newProps;
+	},
+	{
+		updateState,
+		showBreadcrumb,
+	}
+)(withTranslation()(withRouter(AuditLogs)));

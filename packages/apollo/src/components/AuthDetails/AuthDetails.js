@@ -12,8 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
-import { InlineNotification } from "@carbon/react";
+ */
+import { InlineNotification } from '@carbon/react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
@@ -41,13 +41,13 @@ export class AuthDetails extends Component {
 		}
 	}
 
-	handleInputChange = event => {
+	handleInputChange = (event) => {
 		this.props.updateState(this.props.scope, {
 			configJson: '',
 		});
 	};
 
-	retrieveDataFromJson = obj => {
+	retrieveDataFromJson = (obj) => {
 		try {
 			let data = JSON.parse(obj.configJson);
 			let error_message;
@@ -103,20 +103,14 @@ export class AuthDetails extends Component {
 					/>
 				)}
 
-				<div className="ibp__auth-configuration--manual"
-					onClick={this.toggleMode}
-				>
+				<div className="ibp__auth-configuration--manual" onClick={this.toggleMode}>
 					{!this.state.isModeManual && translate('enter_manually')}
 					{this.state.isModeManual && translate('enter_json')}
 				</div>
 
 				{this.props.error && !this.state.isModeManual && (
 					<div className="ibp__auth-configuration--error-message">
-						<InlineNotification kind="error"
-							title={translate(this.props.error)}
-							subtitle=""
-							hideCloseButton={true}
-						/>
+						<InlineNotification kind="error" title={translate(this.props.error)} subtitle="" hideCloseButton={true} />
 					</div>
 				)}
 			</div>
@@ -137,7 +131,7 @@ AuthDetails.propTypes = {
 };
 
 export default connect(
-	state => {
+	(state) => {
 		return {};
 	},
 	{

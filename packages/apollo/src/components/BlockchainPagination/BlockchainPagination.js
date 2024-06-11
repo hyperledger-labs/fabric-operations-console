@@ -12,11 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Pagination } from "@carbon/react";
+import { Pagination } from '@carbon/react';
 
 const BlockchainPagination = ({
 	id,
@@ -58,9 +58,7 @@ const BlockchainPagination = ({
 		);
 	}
 	return (
-		<div id={id}
-			className="cds--pagination"
-		>
+		<div id={id} className="cds--pagination">
 			<div className="cds--pagination__left">
 				<span className="cds--pagination__text">{itemRangeText(min, max, totalItems)}</span>
 			</div>
@@ -78,7 +76,7 @@ const BlockchainPagination = ({
 						min={1}
 						max={pages}
 						value={page}
-						onChange={evt => {
+						onChange={(evt) => {
 							let value = Number(evt.target.value);
 							if (isNaN(value)) value = 1;
 							if (value < 1) value = 1;
