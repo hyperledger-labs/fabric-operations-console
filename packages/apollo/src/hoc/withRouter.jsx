@@ -7,7 +7,7 @@ const withRouter = (Component) => {
 		const navigate = useNavigate();
 		// const history = useNavigate();
 		const history = {
-			push: (to, options)=> {
+			push: (to, options) => {
 				console.log('to, options', to, options);
 				navigate(to, options)
 			},
@@ -18,7 +18,7 @@ const withRouter = (Component) => {
 		};
 		const params = useParams();
 
-		return <Component {...props} match={{params}} location={location} navigate={navigate} params={params} history={history} />;
+		return <Component {...props} match={{ params }} location={location} navigate={navigate} params={params} history={history} />;
 	}
 
 	return ComponentWithRouterProp;

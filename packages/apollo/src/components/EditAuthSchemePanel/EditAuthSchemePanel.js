@@ -121,7 +121,7 @@ class EditAuthSchemePanel extends Component {
 		} else if (value.confirm_default_password) {
 			this.validate_confirm();
 		}
-	}
+	};
 
 	// check if confirmation password input matches new password input
 	validate_confirm = () => {
@@ -129,7 +129,7 @@ class EditAuthSchemePanel extends Component {
 		this.props.updateState(SCOPE, {
 			confirmPasswordError: (newPassword && newPassword === this.props.confirm_default_password) ? '' : 'passwords_do_not_match',
 		});
-	}
+	};
 
 	// detect if any changes have been made to auth settings
 	authSettingsAreSame = () => {
@@ -167,7 +167,7 @@ class EditAuthSchemePanel extends Component {
 			}
 		}
 		return true;
-	}
+	};
 
 	// detect if required fields are set and valid
 	requiredFieldsAreValid = () => {
@@ -183,7 +183,7 @@ class EditAuthSchemePanel extends Component {
 			}
 		}
 		return false;
-	}
+	};
 
 	// render the auth scheme side panel wizard
 	renderUpdateConfiguration(translate) {

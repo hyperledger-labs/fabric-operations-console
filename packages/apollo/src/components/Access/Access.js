@@ -209,13 +209,13 @@ export class Access extends Component {
 			delModalType: type,
 			delThings: things,
 		});
-	}
+	};
 
 	closeDeleteModal = type => {
 		this.props.updateState(SCOPE, {
 			showDeleteModal: false,
 		});
-	}
+	};
 
 	checkRole = (user, role) => {
 		if (user && user.roles && user.roles.includes(role)) {
@@ -365,7 +365,7 @@ export class Access extends Component {
 				</div>
 			</div>
 		);
-	}
+	};
 
 	render() {
 		const isIam = this.props.auth_scheme === constants.AUTH_IAM;

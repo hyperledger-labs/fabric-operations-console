@@ -735,39 +735,39 @@ export class Settings extends Component {
 			<PageContainer>
 				{/* <div className="cds-row">
 					<div className="cds--col-lg-13"> */}
-						<PageHeader
-							history={this.props.history}
-							headerName="settings"
-							staticHeader
-						/>
-						<div>
-							{this.renderTransactionData(translate)}
-							{this.renderLogging(translate)}
-							{this.renderInactivityTimeouts(translate)}
-							<div>
-								<Button id="save_settings"
-									className="ibp-save-changes"
-									onClick={this.saveSettings}
-									disabled={!this.props.isAdmin || this.props.saving}
-								>
-									{translate('save_changes')}
-								</Button>
-								{this.props.saving && (<div>
-									{translate('restarting')}
-									<div id="ibp-progress-bar-wrap">
-										<div id="ibp-progress-bar"
-											style={{
-												width: progress_width + '%'
-											}}
-										/>
-									</div>
-								</div>)}
+				<PageHeader
+					history={this.props.history}
+					headerName="settings"
+					staticHeader
+				/>
+				<div>
+					{this.renderTransactionData(translate)}
+					{this.renderLogging(translate)}
+					{this.renderInactivityTimeouts(translate)}
+					<div>
+						<Button id="save_settings"
+							className="ibp-save-changes"
+							onClick={this.saveSettings}
+							disabled={!this.props.isAdmin || this.props.saving}
+						>
+							{translate('save_changes')}
+						</Button>
+						{this.props.saving && (<div>
+							{translate('restarting')}
+							<div id="ibp-progress-bar-wrap">
+								<div id="ibp-progress-bar"
+									style={{
+										width: progress_width + '%'
+									}}
+								/>
 							</div>
-							{this.renderVersionDebug(translate)}
-							{this.renderDataManagement(translate)}
-							{window && window.location && window.location.href && window.location.href.includes('debug') && this.renderDeleteSection(translate)}
-						</div>
-					{/* </div>
+						</div>)}
+					</div>
+					{this.renderVersionDebug(translate)}
+					{this.renderDataManagement(translate)}
+					{window && window.location && window.location.href && window.location.href.includes('debug') && this.renderDeleteSection(translate)}
+				</div>
+				{/* </div>
 				</div> */}
 			</PageContainer>
 		);

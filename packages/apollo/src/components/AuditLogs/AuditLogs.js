@@ -93,7 +93,7 @@ class AuditLogs extends Component {
 	// get the total number of logs (regardless of how many are on the current page)
 	numberOfTotalLogs = () => {
 		return this.props.allLogsCount || 100000;
-	}
+	};
 
 	// download ALL audit logs as a text file
 	downloadAllLogs = async log => {

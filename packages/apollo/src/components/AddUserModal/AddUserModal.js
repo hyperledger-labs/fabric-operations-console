@@ -227,7 +227,7 @@ export class AddUserModal extends Component {
 				},
 			});
 		}
-	}
+	};
 
 	render = () => {
 		let disableSubmit = this.props.disableSave || this.props.submitting || !this.props.roles || !this.props.roles.length || this.props.disableUpdate;

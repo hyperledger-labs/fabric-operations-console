@@ -23,6 +23,6 @@ const IBPTooltip = ({
 			className={tooltipClass ? tooltipClass : ''}
 		/>}
 	</div>);
-}
+};
 
 export default IBPTooltip;

@@ -204,67 +204,67 @@ class Identities extends Component {
 						headerName="wallet"
 						staticHeader
 					/>
-					</Row>
+				</Row>
 				<Row>
 					<div className='ibp-column width-100'>
 
-					{this.props.showAddIdentity && <AddIdentityModal onClose={this.closeAddIdenity}
-						onComplete={this.showNewIdentities}
-					/>}
-					{this.props.selected && (
-						<IdentityModal
-							identity={this.props.selected}
-							onClose={this.closeIdentity}
-							onComplete={identities => {
-								this.getIdentities();
-							}}
-						/>
-					)}
-					<div id="identities-container"
-						className="ibp-identities-section"
-					>
-						<ItemContainer
-							tooltipDirection="right"
-							containerTitle="identities"
-							containerTooltip="identities_heading_tooltip"
-							emptyImage={emptyImage}
-							emptyTitle="empty_identities_title"
-							emptyMessage="empty_identities_text"
-							id="test__identities--add--tile"
-							itemId="identities"
-							isLink
-							loading={this.props.loading}
-							items={this.identities}
-							tileMapping={{
-								title: 'name',
-								custom: data => {
-									return this.buildCustomTile(data);
-								},
-							}}
-							listMapping={[
-								{
-									header: 'name',
-									attr: 'name',
-								},
-								{
-									header: 'connected_to',
-									attr: 'connected',
-								},
-								{
-									header: 'from_ca',
-									attr: 'from_ca',
-								},
-							]}
-							addItems={[
-								{
-									text: 'add_identity',
-									fn: this.openAddIdentity,
-									disabled: ActionsHelper.inReadOnly(this.props.feature_flags),
-								},
-							]}
-							select={this.openIdentity}
-						/>
-					</div>
+						{this.props.showAddIdentity && <AddIdentityModal onClose={this.closeAddIdenity}
+							onComplete={this.showNewIdentities}
+						/>}
+						{this.props.selected && (
+							<IdentityModal
+								identity={this.props.selected}
+								onClose={this.closeIdentity}
+								onComplete={identities => {
+									this.getIdentities();
+								}}
+							/>
+						)}
+						<div id="identities-container"
+							className="ibp-identities-section"
+						>
+							<ItemContainer
+								tooltipDirection="right"
+								containerTitle="identities"
+								containerTooltip="identities_heading_tooltip"
+								emptyImage={emptyImage}
+								emptyTitle="empty_identities_title"
+								emptyMessage="empty_identities_text"
+								id="test__identities--add--tile"
+								itemId="identities"
+								isLink
+								loading={this.props.loading}
+								items={this.identities}
+								tileMapping={{
+									title: 'name',
+									custom: data => {
+										return this.buildCustomTile(data);
+									},
+								}}
+								listMapping={[
+									{
+										header: 'name',
+										attr: 'name',
+									},
+									{
+										header: 'connected_to',
+										attr: 'connected',
+									},
+									{
+										header: 'from_ca',
+										attr: 'from_ca',
+									},
+								]}
+								addItems={[
+									{
+										text: 'add_identity',
+										fn: this.openAddIdentity,
+										disabled: ActionsHelper.inReadOnly(this.props.feature_flags),
+									},
+								]}
+								select={this.openIdentity}
+							/>
+						</div>
 					</div>
 				</Row>
 			</PageContainer>

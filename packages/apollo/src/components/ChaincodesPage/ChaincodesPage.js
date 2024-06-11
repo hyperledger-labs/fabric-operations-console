@@ -155,65 +155,65 @@ class ChaincodesPage extends Component {
 			<PageContainer setFocus={!this.props.loading}>
 				{/* <div className="cds-row">
 					<div className="cds--col-lg-13"> */}
-						<PageHeader
-							history={this.props.history}
-							headerName="chaincode"
-							staticHeader
-						/>
-						<div className="lifecycle-20-notice">
-							<div>
-								<h3>{translate('smart_contract_20_lifecycle_notice_title')}</h3>
-								<p>{translate('smart_contract_20_lifecycle_notice_desc')}</p>
-								<div>
-									<button
-										id="how-to-topic-button"
-										className="how-to-topic-button cds--btn cds--btn--tertiary"
-										onClick={() => {
-											window.open(translate('chaincode_how_to_link', { DOC_PREFIX: this.props.docPrefix }));
-										}}
-									>
-										{translate('how_to_topic')}
-										<SVGs extendClass={{ 'ibp-container-list-add-button-img': true }}
-											type={'launch'}
-										/>
-									</button>
-									<Button
-										id="go-to-channel-button"
-										className="go-to-channel-button"
-										onClick={() => {
-											window.location.href = `${this.props.host_url}/channels`;
-										}}
-									>
-										{translate('go_to_channel')}
-										<SVGs type="arrowRight"
-											width="16px"
-											height="16px"
-										/>
-									</Button>
-								</div>
-							</div>
-							<RequiresAttentionImage className="ibp-requires-attention-image" />
+				<PageHeader
+					history={this.props.history}
+					headerName="chaincode"
+					staticHeader
+				/>
+				<div className="lifecycle-20-notice">
+					<div>
+						<h3>{translate('smart_contract_20_lifecycle_notice_title')}</h3>
+						<p>{translate('smart_contract_20_lifecycle_notice_desc')}</p>
+						<div>
+							<button
+								id="how-to-topic-button"
+								className="how-to-topic-button cds--btn cds--btn--tertiary"
+								onClick={() => {
+									window.open(translate('chaincode_how_to_link', { DOC_PREFIX: this.props.docPrefix }));
+								}}
+							>
+								{translate('how_to_topic')}
+								<SVGs extendClass={{ 'ibp-container-list-add-button-img': true }}
+									type={'launch'}
+								/>
+							</button>
+							<Button
+								id="go-to-channel-button"
+								className="go-to-channel-button"
+								onClick={() => {
+									window.location.href = `${this.props.host_url}/channels`;
+								}}
+							>
+								{translate('go_to_channel')}
+								<SVGs type="arrowRight"
+									width="16px"
+									height="16px"
+								/>
+							</Button>
 						</div>
-						<div className="ibp-chaincodepage-component">
-							<Chaincodes
-								peers={this.props.peers}
-								reload={() => this.refreshData()}
-								loading={this.props.loading}
-								installedChaincodeList={this.props.chaincodeList}
-								instantiatedChaincodeList={this.props.instantiated_array}
-								feature_flags={this.props.feature_flags}
-							/>
-						</div>
+					</div>
+					<RequiresAttentionImage className="ibp-requires-attention-image" />
+				</div>
+				<div className="ibp-chaincodepage-component">
+					<Chaincodes
+						peers={this.props.peers}
+						reload={() => this.refreshData()}
+						loading={this.props.loading}
+						installedChaincodeList={this.props.chaincodeList}
+						instantiatedChaincodeList={this.props.instantiated_array}
+						feature_flags={this.props.feature_flags}
+					/>
+				</div>
 
-						<div className="ibp-chaincodepage-component">
-							<InstantiatedChaincodes
-								loading={this.props.loading}
-								reload={() => this.refreshData()}
-								installedChaincodeList={this.props.chaincodeList}
-								instantiated_array={this.props.instantiated_array}
-							/>
-						</div>
-					{/* </div>
+				<div className="ibp-chaincodepage-component">
+					<InstantiatedChaincodes
+						loading={this.props.loading}
+						reload={() => this.refreshData()}
+						installedChaincodeList={this.props.chaincodeList}
+						instantiated_array={this.props.instantiated_array}
+					/>
+				</div>
+				{/* </div>
 				</div> */}
 			</PageContainer>
 		);

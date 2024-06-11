@@ -282,49 +282,49 @@ class OrganizationDetails extends Component {
 		return (
 			<PageContainer>
 				<Row>
-				{mspName && <PageHeader history={this.props.history}
-									headerName={translate('msp_details_title', { mspName: mspName })}
-								/>}
-								{mspNameSkeleton}
+					{mspName && <PageHeader history={this.props.history}
+						headerName={translate('msp_details_title', { mspName: mspName })}
+					/>}
+					{mspNameSkeleton}
 				</Row>
 				<Row>
 					<div className="ibp-column width-25">
-					<StickySection
-									openSettings={type => this.openMSPSettings(type)}
-									details={this.props.details}
-									title="organization"
-									exportNode={() => this.exportMSP()}
-									loading={this.props.loading}
-									groups={this.getStickySectionGroups(translate)}
-									hideRefreshCerts
-									feature_flags={this.props.feature_flags}
-									userInfo={this.props.userInfo}
-									custom={() => {
-										return (
-											<Button
-												id="open-connection-profile"
-												kind="primary"
-												disabled={_.isEmpty(this.props.details)}
-												className="ibp-open-connection-profile"
-												onClick={this.openConnectionProfileModal}
-											>
-												{translate('create_connection_profile')}
-												<span
-													style={{
-														position: 'absolute',
-														right: '1rem',
-													}}
-												>
-													+
-												</span>
-											</Button>
-										);
-									}}
-								/>
+						<StickySection
+							openSettings={type => this.openMSPSettings(type)}
+							details={this.props.details}
+							title="organization"
+							exportNode={() => this.exportMSP()}
+							loading={this.props.loading}
+							groups={this.getStickySectionGroups(translate)}
+							hideRefreshCerts
+							feature_flags={this.props.feature_flags}
+							userInfo={this.props.userInfo}
+							custom={() => {
+								return (
+									<Button
+										id="open-connection-profile"
+										kind="primary"
+										disabled={_.isEmpty(this.props.details)}
+										className="ibp-open-connection-profile"
+										onClick={this.openConnectionProfileModal}
+									>
+										{translate('create_connection_profile')}
+										<span
+											style={{
+												position: 'absolute',
+												right: '1rem',
+											}}
+										>
+											+
+										</span>
+									</Button>
+								);
+							}}
+						/>
 					</div>
 
 					<div className="ibp-column width-75 p-lr-10">
-					{details && this.props.associatedPeers && this.props.associatedPeers.length > 0 && (
+						{details && this.props.associatedPeers && this.props.associatedPeers.length > 0 && (
 							<div>
 								<p className="ibp-msp-joined-peers">{translate('peers')}</p>
 								<PeersComponent history={this.props.history}
