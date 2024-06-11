@@ -45,7 +45,7 @@ Feature: Verify Console APIs works as expected
 		And I clicked the button with id 'btn-deleteApiKey'
 		And I clicked the button with id 'delete'
 		Then the element div with text 'There are no API keys yet' should be visible on page
-		Then I should see a success toast with class '.bx--toast-notification__title' which says "The selected API keys have been successfully removed."
+		Then I should see a success toast with class '.cds--toast-notification__title' which says "The selected API keys have been successfully removed."
 
     Scenario: Search activity log for creating and deleting API key
         When I clicked the div with id 'test__navigation--item--audit_logs'

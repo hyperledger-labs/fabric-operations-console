@@ -63,7 +63,7 @@ Feature: Verify miscellaneous cases of console works as expected
 	And I clicked the div with id 'downshift-1-item-1'
 	And I clicked the button with id 'submit'
 	Then wait "10" seconds
-	Then I should see a success toast with class '.bx--toast-notification__title' which says "The MSP definition for osmsp has been updated successfully."
+	Then I should see a success toast with class '.cds--toast-notification__title' which says "The MSP definition for osmsp has been updated successfully."
 	When I am on the 'channels' page
 	And I clicked the div with id 'ibp-tile-channel2'
 	Then wait "5" seconds
@@ -76,7 +76,7 @@ Feature: Verify miscellaneous cases of console works as expected
 	And I clicked the div with text 'Org1 MSP Admin'
 	And I clicked the button with id 'submit'
 	Then wait "10" seconds
-	Then I should see a success toast with class '.bx--toast-notification__title' which says "The MSP definition for org1msp has been updated successfully."
+	Then I should see a success toast with class '.cds--toast-notification__title' which says "The MSP definition for org1msp has been updated successfully."
 	Then wait "5" seconds
 	And I clicked the div with id 'ibp-tile-osmsp'
 	And I clicked the button with title 'Select MSP'
@@ -84,7 +84,7 @@ Feature: Verify miscellaneous cases of console works as expected
 	Then wait "1" seconds
 	And I clicked the button with id 'submit'
 	Then wait "10" seconds
-	Then I should see a success toast with class '.bx--toast-notification__title' which says "The proposal for updating MSP definition for osmsp has been submitted successfully."
+	Then I should see a success toast with class '.cds--toast-notification__title' which says "The proposal for updating MSP definition for osmsp has been submitted successfully."
 
   Scenario: Deleting Peer Org1
 	When I clicked the div with id 'ibp-tile-Peer Org1'

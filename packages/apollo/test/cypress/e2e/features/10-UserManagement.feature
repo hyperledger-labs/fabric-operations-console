@@ -12,7 +12,7 @@ Feature: Verify User Management functionality
 	And I provided 'writeruser@ibm.com' for input field with id 'users'
 	And I click label with property 'for' and value 'role_writer'
 	And I clicked the button with id 'add_new_users'
-	Then I should see a success toast with class '.bx--toast-notification__details' which says "User writeruser@ibm.com has been successfully added."
+	Then I should see a success toast with class '.cds--toast-notification__details' which says "User writeruser@ibm.com has been successfully added."
 	Given I am logged out from console
 	When I am on the login page
 	And I am logged in for first time as 'writeruser@ibm.com' user
@@ -29,7 +29,7 @@ Feature: Verify User Management functionality
 	And I provided 'readeruser@ibm.com' for input field with id 'users'
 	And I click label with property 'for' and value 'role_reader'
 	And I clicked the button with id 'add_new_users'
-	Then I should see a success toast with class '.bx--toast-notification__details' which says "User readeruser@ibm.com has been successfully added."
+	Then I should see a success toast with class '.cds--toast-notification__details' which says "User readeruser@ibm.com has been successfully added."
 	Given I am logged out from console
 	When I am on the login page
 	And I am logged in for first time as 'readeruser@ibm.com' user

@@ -111,23 +111,23 @@ Feature: Build a network without system channel
         And I clicked the button with id 'next'
         Then wait "3" seconds
         And I clicked the button with title 'Select CA'
-        And I clicked the dropdown item 'Ordering Service CA' with class '.bx--list-box__menu-item__option'
+        And I clicked the dropdown item 'Ordering Service CA' with class '.cds--list-box__menu-item__option'
         Then wait "3" seconds
         And I clicked the button with text 'OS1'
-        And I clicked the dropdown item 'OS1' with class '.bx--list-box__menu-item__option'
+        And I clicked the dropdown item 'OS1' with class '.cds--list-box__menu-item__option'
         And I provided 'OS1pw' for the 'Enter a secret' input
         And I clicked the button with title 'Select an MSP'
-        And I clicked the dropdown item 'Ordering Service MSP' with class '.bx--list-box__menu-item__option'
+        And I clicked the dropdown item 'Ordering Service MSP' with class '.cds--list-box__menu-item__option'
         And I clicked the button with title 'Select a Fabric version'
-        And I clicked the dropdown item '2.5' with class '.bx--list-box__menu-item__option'
+        And I clicked the dropdown item '2.5' with class '.cds--list-box__menu-item__option'
         And I clicked the button with id 'next'
         Then wait "3" seconds
         And I clicked the button with title 'Please select an identity from your wallet'
-        And I clicked the dropdown item 'Ordering Service MSP Admin' with class '.bx--list-box__menu-item__option'
+        And I clicked the dropdown item 'Ordering Service MSP Admin' with class '.cds--list-box__menu-item__option'
         And I clicked the button with id 'next'
         When I clicked the button with id 'submit'
         Then wait "6" seconds
-        Then I should see a success toast with class '.bx--toast-notification__subtitle' which says "Congratulations! You have successfully created 'No_SysCh_OS'."
+        Then I should see a success toast with class '.cds--toast-notification__subtitle' which says "Congratulations! You have successfully created 'No_SysCh_OS'."
         And the orderer with name 'Ordering Service' should have started successfully
 
 	Scenario: When creating a channel using orderer without system channel
@@ -174,7 +174,7 @@ Feature: Build a network without system channel
 		Then wait "3" seconds
         When I clicked the button with id 'submit'
 		Then wait "5" seconds
-        Then I should see a success toast with class '.bx--toast-notification__title' which says "You have successfully joined channel5."
+        Then I should see a success toast with class '.cds--toast-notification__title' which says "You have successfully joined channel5."
 		Then wait "3" seconds
 
 	Scenario: Verify Orderer without system channel has joined channel
@@ -192,7 +192,7 @@ Feature: Build a network without system channel
         And I clicked the span with text 'Peer Org1'
         And I clicked the span with text 'Peer Org2'
         When I clicked the button with id 'submit'
-        Then I should see a success toast with class '.bx--toast-notification__title' which says "You have successfully joined channel5."
+        Then I should see a success toast with class '.cds--toast-notification__title' which says "You have successfully joined channel5."
 
     Scenario: Install and Propose 2.0 Smart Contract as Org1
         And I am on the 'channels' page
@@ -266,7 +266,7 @@ Feature: Build a network without system channel
         And I clicked the span with text 'Next'
         And I clicked the span with text 'Next'
         And I clicked the span with text 'Update channel'
-        Then I should see a success toast with class '.bx--toast-notification__title' which says 'You have successfully initiated a request to update channel channel5.'
+        Then I should see a success toast with class '.cds--toast-notification__title' which says 'You have successfully initiated a request to update channel channel5.'
 		# View channel configuration updates
 		When I clicked the button with id 'ibp-header-signature-collection-icon'
 		And I clicked element with class '.ibp-signature-collection-notification-link-text'
