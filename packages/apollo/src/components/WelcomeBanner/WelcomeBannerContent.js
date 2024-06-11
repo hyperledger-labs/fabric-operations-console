@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
@@ -46,21 +46,59 @@ class WelcomeBannerContent extends Component {
 
 	openDocLink = (event, type, translate) => {
 		if (type === 'build') {
-			window.open(translate('_LINK2', { DOC_PREFIX: this.props.docPrefix }));
+			if (this.props.console_type === 'hlfoc') {
+				window.open(translate('build_network_hlfoc', { DOC_PREFIX: this.props.docPrefix }));
+			} else {
+				window.open(translate('_LINK2', { DOC_PREFIX: this.props.docPrefix }));
+			}
+		} else if (type === 'arch_hlfoc') {
+			if (this.props.console_type === 'hlfoc') {
+				window.open(translate('hlfoc_arch', { DOC_PREFIX: this.props.docPrefix }));
+			} else {
+				this.showDiagram();
+			}
 		} else if (type === 'join') {
-			window.open(translate('1joinDocs', { DOC_PREFIX: this.props.docPrefix }));
+			if (this.props.console_type === 'hlfoc') {
+				window.open(translate('join_network_hlfoc', { DOC_PREFIX: this.props.docPrefix }));
+			} else {
+				window.open(translate('1joinDocs', { DOC_PREFIX: this.props.docPrefix }));
+			}
 		} else if (type === 'developSm') {
-			window.open(translate('develop_vs_code_link', { DOC_PREFIX: this.props.docPrefix }));
+			if (this.props.console_type === 'hlfoc') {
+				window.open(translate('develop_vs_code_link2', { DOC_PREFIX: this.props.docPrefix }));
+			} else {
+				window.open(translate('develop_vs_code_link', { DOC_PREFIX: this.props.docPrefix }));
+			}
 		} else if (type === 'deploySm') {
-			window.open(translate('2deployDocs', { DOC_PREFIX: this.props.docPrefix }));
+			if (this.props.console_type === 'hlfoc') {
+				window.open(translate('deploy_sm_hlfoc', { DOC_PREFIX: this.props.docPrefix }));
+			} else {
+				window.open(translate('2deployDocs', { DOC_PREFIX: this.props.docPrefix }));
+			}
 		} else if (type === 'goFurther') {
-			window.open(translate('api_docs_link'));
+			if (this.props.console_type === 'hlfoc') {
+				window.open(translate('api_doc_hlfoc', { DOC_PREFIX: this.props.docPrefix }));
+			} else {
+				window.open(translate('api_docs_link'));
+			}
 		} else if (type === 'channelDocs') {
-			window.open(translate('channelDocs', { DOC_PREFIX: this.props.docPrefix }));
+			if (this.props.console_type === 'hlfoc') {
+				window.open(translate('channel_doc_hlfoc', { DOC_PREFIX: this.props.docPrefix }));
+			} else {
+				window.open(translate('channelDocs', { DOC_PREFIX: this.props.docPrefix }));
+			}
 		} else if (type === 'growDocs') {
-			window.open(translate('growDocs', { DOC_PREFIX: this.props.docPrefix }));
+			if (this.props.console_type === 'hlfoc') {
+				window.open(translate('build_network_hlfoc', { DOC_PREFIX: this.props.docPrefix }));
+			} else {
+				window.open(translate('growDocs', { DOC_PREFIX: this.props.docPrefix }));
+			}
 		} else if (type === 'growResourcesDocs') {
-			window.open(translate('growResourcesDocs', { DOC_PREFIX: this.props.docPrefix }));
+			if (this.props.console_type === 'hlfoc') {
+				window.open(translate('build_network_hlfoc', { DOC_PREFIX: this.props.docPrefix }));
+			} else {
+				window.open(translate('growResourcesDocs', { DOC_PREFIX: this.props.docPrefix }));
+			}
 		} else if (type === 'video') {
 			event.stopPropagation();
 			window.open('http://ibm.biz/BlockchainPlatformSeries2');
@@ -74,7 +112,7 @@ class WelcomeBannerContent extends Component {
 		return;
 	};
 
-	showDiagram = page => {
+	showDiagram = (page) => {
 		setInStorage('showDiagram', true);
 		this.welcomeBanner.closeWelcome();
 		this.props.onClose();
@@ -87,21 +125,17 @@ class WelcomeBannerContent extends Component {
 		}
 		const translate = this.props.t;
 		return (
-			<WelcomeBanner closed={this.props.onClose}
-				ref={welcomeBanner => (this.welcomeBanner = welcomeBanner)}
-			>
+			<WelcomeBanner closed={this.props.onClose} ref={(welcomeBanner) => (this.welcomeBanner = welcomeBanner)}>
 				<>
 					<div className="ibp-welcome-banner-content">
 						<div className="ibp-welcome-banner-row">
-							<WelcomeBannerGroup header={translate('understand')}
-								className="ibp-welcome-group-understand"
-							>
+							<WelcomeBannerGroup header={translate('understand')} className="ibp-welcome-group-understand">
 								<WelcomeBannerTile
 									description={translate('arch_desc')}
 									header={translate('typical_arch')}
 									internalLink
 									mainTileIcon={archDiagram}
-									tileClick={() => this.showDiagram()}
+									tileClick={(event) => this.openDocLink(event, 'arch_hlfoc', translate)}
 								/>
 							</WelcomeBannerGroup>
 							<WelcomeBannerGroup header={translate('build')}>
@@ -109,29 +143,29 @@ class WelcomeBannerContent extends Component {
 									description={translate('develop_sm_desc')}
 									header={translate('develop_sm')}
 									mainTileIcon={developSCIcon}
-									tileClick={event => this.openDocLink(event, 'developSm', translate)}
+									tileClick={(event) => this.openDocLink(event, 'developSm', translate)}
 								/>
 								<WelcomeBannerTile
 									description={translate('build_network_desc')}
 									header={translate('build_network')}
 									linkText={translate('watch_video_en')}
 									mainTileIcon={buildIcon}
-									tileClick={event => this.openDocLink(event, 'build', translate)}
-									tileKeyPress={event => this.onKeyPressDocLink(event, 'build', translate)}
-									videoLinkClick={event => this.openDocLink(event, 'video')}
+									tileClick={(event) => this.openDocLink(event, 'build', translate)}
+									tileKeyPress={(event) => this.onKeyPressDocLink(event, 'build', translate)}
+									videoLinkClick={(event) => this.openDocLink(event, 'video')}
 									videoTile
 								/>
 								<WelcomeBannerTile
 									description={translate('join_network_desc')}
 									header={translate('join_network')}
 									mainTileIcon={joinIcon}
-									tileClick={event => this.openDocLink(event, 'join', translate)}
+									tileClick={(event) => this.openDocLink(event, 'join', translate)}
 								/>
 								<WelcomeBannerTile
 									description={translate('deploy_sm_desc')}
 									header={translate('deploy_sm')}
 									mainTileIcon={deploySMIcon}
-									tileClick={event => this.openDocLink(event, 'deploySm', translate)}
+									tileClick={(event) => this.openDocLink(event, 'deploySm', translate)}
 								/>
 							</WelcomeBannerGroup>
 						</div>
@@ -141,13 +175,13 @@ class WelcomeBannerContent extends Component {
 									description={translate('getting_started_channel_docs_desc')}
 									header={translate('getting_started_channel_docs_title')}
 									mainTileIcon={governanceIcon}
-									tileClick={event => this.openDocLink(event, 'channelDocs', translate)}
+									tileClick={(event) => this.openDocLink(event, 'channelDocs', translate)}
 								/>
 								<WelcomeBannerTile
 									description={translate('api_doc_desc')}
 									header={translate('api_doc_header')}
 									mainTileIcon={apiIcon}
-									tileClick={event => this.openDocLink(event, 'goFurther', translate)}
+									tileClick={(event) => this.openDocLink(event, 'goFurther', translate)}
 								/>
 							</WelcomeBannerGroup>
 						</div>
@@ -157,13 +191,13 @@ class WelcomeBannerContent extends Component {
 									description={translate('getting_started_grow_desc')}
 									header={translate('getting_started_grow_title')}
 									mainTileIcon={growNetworkIcon}
-									tileClick={event => this.openDocLink(event, 'growDocs', translate)}
+									tileClick={(event) => this.openDocLink(event, 'growDocs', translate)}
 								/>
 								<WelcomeBannerTile
 									description={translate('getting_started_grow_resources_desc')}
 									header={translate('getting_started_grow_resources_title')}
 									mainTileIcon={growResourcesIcon}
-									tileClick={event => this.openDocLink(event, 'growResourcesDocs', translate)}
+									tileClick={(event) => this.openDocLink(event, 'growResourcesDocs', translate)}
 								/>
 							</WelcomeBannerGroup>
 						</div>
@@ -175,19 +209,13 @@ class WelcomeBannerContent extends Component {
 							aria-label="Close welcome banner"
 							aria-labelledby="ibp-getting-started-button-label"
 						>
-							<span id="ibp-getting-started-button-label"
-								hidden
-							>
+							<span id="ibp-getting-started-button-label" hidden>
 								{translate('close_get_started_menu')}
 							</span>
-							<SVGs type="arrowUp"
-								extendClass={{ 'ibp-arrow-up': true }}
-							/>
+							<SVGs type="arrowUp" extendClass={{ 'ibp-arrow-up': true }} />
 						</button>
 					</div>
-					{!this.props.isClosing && !this.props.isClosed && <div onClick={this.props.onClose}
-						className={`welcome-banner-overlay ${overlayClassName}`}
-					/>}
+					{!this.props.isClosing && !this.props.isClosed && <div onClick={this.props.onClose} className={`welcome-banner-overlay ${overlayClassName}`} />}
 				</>
 			</WelcomeBanner>
 		);
@@ -200,6 +228,7 @@ const dataProps = {
 	isClosing: PropTypes.bool,
 	isClosed: PropTypes.bool,
 	isOpening: PropTypes.bool,
+	console_type: PropTypes.string,
 };
 
 WelcomeBannerContent.propTypes = {
@@ -209,13 +238,14 @@ WelcomeBannerContent.propTypes = {
 };
 
 export default connect(
-	state => {
+	(state) => {
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['docPrefix'] = state['settings'] ? state['settings']['docPrefix'] : null;
 		newProps['bmixUrl'] = state['settings'] ? state['settings']['bmixUrl'] : null;
 		newProps['showDiagram'] = state['main'] ? state['main']['showDiagram'] : null;
 		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;
 		newProps['userInfo'] = state['userInfo'] ? state['userInfo'] : null;
+		newProps['console_type'] = state['settings'] ? state['settings']['console_type'] : null;
 		return newProps;
 	},
 	{

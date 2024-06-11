@@ -15,7 +15,7 @@
  */
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -154,7 +154,7 @@ class App extends Component {
 			ibp: 'https://cloud.ibm.com/docs/blockchain',
 			support: 'https://www.ibm.com/docs/en/hlf-support/1.0.0',
 			software: 'https://www.ibm.com/docs/en/blockchain-platform/2.5.4',
-			hlfoc: 'https://www.ibm.com/docs/en/hlf-support/1.0.0',
+			hlfoc: 'https://hyperledger-fabric.readthedocs.io/en/release-2.5',
 		};
 		const docUrlRoot = settings.CONSOLE_TYPE && docUrlMap[settings.CONSOLE_TYPE] ? docUrlMap[settings.CONSOLE_TYPE] : docUrlMap.hlfoc;
 
