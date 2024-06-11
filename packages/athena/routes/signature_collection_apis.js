@@ -16,9 +16,6 @@
 //------------------------------------------------------------
 // Signature Collection API Routes
 //------------------------------------------------------------
-// import { getSigCollectionsMock } from '../../mockServices/mockResponses';
-const mocks = require('../../mockServices/mockResponses/signatureCollection');
-
 module.exports = (logger, ev, t) => {
 	const app = t.express.Router();
 
@@ -35,27 +32,24 @@ module.exports = (logger, ev, t) => {
 	});
 
 	function getSigCollections(req, res) {
-		console.log('request received');
-		console.log('getSigCollectionsMock', mocks.getSigCollectionsMock);
-		return res.status(200).json(mocks.getSigCollectionsMock);
-		// if (t.ot_misc.is_v2plus_route(req)) {
-		// 	req._validate_path = '/ak/api/' + t.validate.pick_ver(req) + '/signature_collections';
-		// 	logger.debug('[pre-flight] setting validate route:', req._validate_path);
-		// }
+		if (t.ot_misc.is_v2plus_route(req)) {
+			req._validate_path = '/ak/api/' + t.validate.pick_ver(req) + '/signature_collections';
+			logger.debug('[pre-flight] setting validate route:', req._validate_path);
+		}
 
-		// t.validate.request(req, res, t.validate.query_filter_orderers, () => {
-		// 	t.signature_collection_lib.getSignatureCollections(req, (err, ret) => {
-		// 		if (err) {
-		// 			return res.status(t.ot_misc.get_code(err)).json(err);
-		// 		} else {
-		// 			let code = 200;
-		// 			if (t.signature_collection_lib.group_query_param_is_set(req)) {
-		// 				code = 210;				// the group by channels param uses a different response format, identified by the 210 code
-		// 			}
-		// 			return res.status(code).json(ret);
-		// 		}
-		// 	});
-		// });
+		t.validate.request(req, res, t.validate.query_filter_orderers, () => {
+			t.signature_collection_lib.getSignatureCollections(req, (err, ret) => {
+				if (err) {
+					return res.status(t.ot_misc.get_code(err)).json(err);
+				} else {
+					let code = 200;
+					if (t.signature_collection_lib.group_query_param_is_set(req)) {
+						code = 210;				// the group by channels param uses a different response format, identified by the 210 code
+					}
+					return res.status(code).json(ret);
+				}
+			});
+		});
 	}
 
 	//--------------------------------------------------
