@@ -46,21 +46,69 @@ class WelcomeBannerContent extends Component {
 
 	openDocLink = (event, type, translate) => {
 		if (type === 'build') {
-			window.open(translate('_LINK2', { DOC_PREFIX: this.props.docPrefix }));
+			if(this.props.console_type === 'hlfoc'){
+				window.open(translate('build_network_hlfoc', { DOC_PREFIX: this.props.docPrefix }));
+			}
+			else{
+				window.open(translate('_LINK2', { DOC_PREFIX: this.props.docPrefix }));
+			}
+		} else if(type === 'arch_hlfoc'){
+			if(this.props.console_type === 'hlfoc'){
+				window.open(translate('hlfoc_arch', { DOC_PREFIX: this.props.docPrefix }));
+			}
+			else{
+				this.showDiagram()
+			}
 		} else if (type === 'join') {
-			window.open(translate('1joinDocs', { DOC_PREFIX: this.props.docPrefix }));
+
+			if(this.props.console_type === 'hlfoc'){
+				window.open(translate('join_network_hlfoc', { DOC_PREFIX: this.props.docPrefix }));
+			}
+			else{
+				window.open(translate('1joinDocs', { DOC_PREFIX: this.props.docPrefix }));
+			}
 		} else if (type === 'developSm') {
-			window.open(translate('develop_vs_code_link', { DOC_PREFIX: this.props.docPrefix }));
+			if(this.props.console_type === 'hlfoc'){
+				window.open(translate('develop_vs_code_link2', { DOC_PREFIX: this.props.docPrefix }));
+			}
+			else{
+				window.open(translate('develop_vs_code_link', { DOC_PREFIX: this.props.docPrefix }));
+			}
 		} else if (type === 'deploySm') {
-			window.open(translate('2deployDocs', { DOC_PREFIX: this.props.docPrefix }));
+			if(this.props.console_type === 'hlfoc'){
+				window.open(translate('deploy_sm_hlfoc', { DOC_PREFIX: this.props.docPrefix }));
+			}
+			else{
+				window.open(translate('2deployDocs', { DOC_PREFIX: this.props.docPrefix }));
+			}
 		} else if (type === 'goFurther') {
-			window.open(translate('api_docs_link'));
+			if(this.props.console_type === 'hlfoc'){
+				window.open(translate('api_doc_hlfoc', { DOC_PREFIX: this.props.docPrefix }));
+			}
+			else{
+				window.open(translate('api_docs_link'));
+			}
 		} else if (type === 'channelDocs') {
-			window.open(translate('channelDocs', { DOC_PREFIX: this.props.docPrefix }));
+			if(this.props.console_type === 'hlfoc'){
+				window.open(translate('channel_doc_hlfoc', { DOC_PREFIX: this.props.docPrefix }));
+			}
+			else{
+				window.open(translate('channelDocs', { DOC_PREFIX: this.props.docPrefix }));
+			}
 		} else if (type === 'growDocs') {
-			window.open(translate('growDocs', { DOC_PREFIX: this.props.docPrefix }));
+			if(this.props.console_type === 'hlfoc'){
+				window.open(translate('build_network_hlfoc', { DOC_PREFIX: this.props.docPrefix }));
+			}
+			else{
+				window.open(translate('growDocs', { DOC_PREFIX: this.props.docPrefix }));
+			}
 		} else if (type === 'growResourcesDocs') {
-			window.open(translate('growResourcesDocs', { DOC_PREFIX: this.props.docPrefix }));
+			if(this.props.console_type === 'hlfoc'){
+				window.open(translate('build_network_hlfoc', { DOC_PREFIX: this.props.docPrefix }));
+			}
+			else{
+				window.open(translate('growResourcesDocs', { DOC_PREFIX: this.props.docPrefix }));
+			}
 		} else if (type === 'video') {
 			event.stopPropagation();
 			window.open('http://ibm.biz/BlockchainPlatformSeries2');
@@ -101,7 +149,7 @@ class WelcomeBannerContent extends Component {
 									header={translate('typical_arch')}
 									internalLink
 									mainTileIcon={archDiagram}
-									tileClick={() => this.showDiagram()}
+									tileClick={event => this.openDocLink(event, 'arch_hlfoc', translate)}
 								/>
 							</WelcomeBannerGroup>
 							<WelcomeBannerGroup header={translate('build')}>
@@ -200,6 +248,7 @@ const dataProps = {
 	isClosing: PropTypes.bool,
 	isClosed: PropTypes.bool,
 	isOpening: PropTypes.bool,
+	console_type: PropTypes.string,
 };
 
 WelcomeBannerContent.propTypes = {
@@ -216,6 +265,7 @@ export default connect(
 		newProps['showDiagram'] = state['main'] ? state['main']['showDiagram'] : null;
 		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;
 		newProps['userInfo'] = state['userInfo'] ? state['userInfo'] : null;
+		newProps['console_type'] = state['settings'] ? state['settings']['console_type'] : null;
 		return newProps;
 	},
 	{

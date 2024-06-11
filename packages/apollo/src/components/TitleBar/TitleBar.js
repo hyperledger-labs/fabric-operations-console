@@ -163,7 +163,12 @@ class TitleBar extends Component {
 
 	goToDocs = (event, translate, type) => {
 		if ((event.key === 'Enter' && type === 'keypress') || type === 'click') {
-			window.open(translate('mainDocs', { DOC_PREFIX: this.props.docPrefix }));
+			if(this.props.console_type == 'hlfoc'){
+				window.open(translate('mainDocs2', { DOC_PREFIX: this.props.docPrefix }));
+			}
+			else{
+				window.open(translate('mainDocs', { DOC_PREFIX: this.props.docPrefix }));
+			}
 		}
 	};
 
@@ -336,6 +341,7 @@ const dataProps = {
 	closeWelcome: PropTypes.bool,
 	details: PropTypes.object,
 	inReadOnlyMode: PropTypes.bool,
+	console_type: PropTypes.string,
 };
 
 TitleBar.propTypes = {
@@ -358,6 +364,7 @@ export default connect(
 		newProps['showUserInfo'] = state['userInfo'] ? state['userInfo']['showUserInfo'] : false;
 		newProps['host_url'] = state['settings'] ? state['settings']['host_url'] : null;
 		newProps['docPrefix'] = state['settings'] ? state['settings']['docPrefix'] : null;
+		newProps['console_type'] = state['settings'] ? state['settings']['console_type'] : null;
 		return newProps;
 	},
 	{
