@@ -12,8 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
-import { Checkbox } from "@carbon/react";
+ */
+import { Checkbox } from '@carbon/react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
@@ -83,13 +83,13 @@ export class AddUserModal extends Component {
 		return isValid;
 	};*/
 
-	validateUser = chipText => {
+	validateUser = (chipText) => {
 		const separators = [' ', ','];
 		const users = chipText.split(new RegExp(separators.join('|'), 'g'));
-		const chips = users.filter(t => t.length > 0).map(t => t.trim());
+		const chips = users.filter((t) => t.length > 0).map((t) => t.trim());
 
 		let isValid = true;
-		chips.forEach(chip => {
+		chips.forEach((chip) => {
 			if (chip && this.props.existingUsers.includes(chip)) {
 				this.props.updateState(SCOPE, {
 					error: 'duplicate_user_not_allowed',
@@ -111,21 +111,21 @@ export class AddUserModal extends Component {
 	};
 
 	handleAddChip = (...addedChips) => {
-		let newUsers = this.props.newUsers ? [...this.props.newUsers, ...addedChips.filter(val => val !== undefined)] : [...addedChips];
-		newUsers = newUsers.filter(user => !this.props.existingUsers.includes(user));
+		let newUsers = this.props.newUsers ? [...this.props.newUsers, ...addedChips.filter((val) => val !== undefined)] : [...addedChips];
+		newUsers = newUsers.filter((user) => !this.props.existingUsers.includes(user));
 		this.props.updateState(SCOPE, {
 			newUsers: newUsers,
 			disableSave: false,
 		});
 	};
 
-	handleDeleteChip = deletedChip => {
+	handleDeleteChip = (deletedChip) => {
 		let save = false;
 		if (this.props.newUsers.length === 1 && this.props.newUsers.includes(deletedChip)) {
 			save = true;
 		}
 		this.props.updateState(SCOPE, {
-			newUsers: this.props.newUsers.filter(c => c !== deletedChip),
+			newUsers: this.props.newUsers.filter((c) => c !== deletedChip),
 			disableSave: save,
 		});
 	};
@@ -135,7 +135,7 @@ export class AddUserModal extends Component {
 		if (event.target.checked) {
 			roles = role === 'manager' ? ['manager', 'writer', 'reader'] : role === 'writer' ? ['writer', 'reader'] : ['reader'];
 		} else {
-			roles = roles.filter(r => r !== role);
+			roles = roles.filter((r) => r !== role);
 		}
 		this.props.updateState(SCOPE, {
 			roles: roles,
@@ -157,7 +157,7 @@ export class AddUserModal extends Component {
 					},
 				};
 				this.props.updateState(SCOPE, { submitting: true });
-				ConfigureAuthApi.editUsers(body).then(resp => {
+				ConfigureAuthApi.editUsers(body).then((resp) => {
 					this.props.updateState(SCOPE, { submitting: false });
 					if (resp.message === 'ok') {
 						this.sidePanel.closeSidePanel();
@@ -177,14 +177,14 @@ export class AddUserModal extends Component {
 				}
 
 				const userEmails = [];
-				Object.keys(body.users).map(email => {
+				Object.keys(body.users).map((email) => {
 					userEmails.push(email);
 					return true;
 				});
 
 				this.props.updateState(SCOPE, { submitting: true });
 				ConfigureAuthApi.addUsers(body)
-					.then(resp => {
+					.then((resp) => {
 						this.props.updateState(SCOPE, { submitting: false });
 						if (resp.message === 'ok') {
 							this.sidePanel.closeSidePanel();
@@ -193,7 +193,7 @@ export class AddUserModal extends Component {
 							this.props.showError('error_add_users', {}, SCOPE);
 						}
 					})
-					.catch(error => {
+					.catch((error) => {
 						this.props.updateState(SCOPE, {
 							submitting: false,
 							error: {
@@ -239,7 +239,7 @@ export class AddUserModal extends Component {
 				<SidePanel
 					id="add-users"
 					closed={this.props.onClose}
-					ref={sidePanel => (this.sidePanel = sidePanel)}
+					ref={(sidePanel) => (this.sidePanel = sidePanel)}
 					buttons={[
 						{
 							id: 'cancel',
@@ -247,10 +247,16 @@ export class AddUserModal extends Component {
 						},
 						{
 							id: 'add_new_users',
-							text: this.props.modalType === 'apikey' ? (this.props.isEditing ? translate('edit_apikey_header') : translate('add_new_apikey')) :
-								this.props.isEditing ? translate('update') : translate('add_new_users'),
+							text:
+								this.props.modalType === 'apikey'
+									? this.props.isEditing
+										? translate('edit_apikey_header')
+										: translate('add_new_apikey')
+									: this.props.isEditing
+										? translate('update')
+										: translate('add_new_users'),
 							onClick: this.onSave,
-							disabled: (this.props.modalType === 'apikey') ? disableSubmitApiKey : disableSubmit,
+							disabled: this.props.modalType === 'apikey' ? disableSubmitApiKey : disableSubmit,
 							type: 'submit',
 						},
 					]}
@@ -258,9 +264,16 @@ export class AddUserModal extends Component {
 					submitting={this.props.submitting}
 				>
 					<div>
-						<h1 className="ibp-auth-settings-modal-title">{
-							translate(this.props.modalType === 'apikey' ? (this.props.isEditing ? 'edit_apikey_header' : 'add_new_apikey') :
-								this.props.isEditing ? 'edit_user_header' : 'add_new_users')}
+						<h1 className="ibp-auth-settings-modal-title">
+							{translate(
+								this.props.modalType === 'apikey'
+									? this.props.isEditing
+										? 'edit_apikey_header'
+										: 'add_new_apikey'
+									: this.props.isEditing
+										? 'edit_user_header'
+										: 'add_new_users'
+							)}
 						</h1>
 
 						{/* adding users content*/}
@@ -325,16 +338,16 @@ export class AddUserModal extends Component {
 						)}
 						{this.props.isEditing && this.props.disableUpdate && (
 							<div className="ibp-error-panel">
-								<SidePanelWarning title="only_manager_title"
-									subtitle="only_manager_desc"
-								/>
+								<SidePanelWarning title="only_manager_title" subtitle="only_manager_desc" />
 							</div>
 						)}
 						<div className="ibp-auth-settings-roles-title ibp-tooltip-wrap">
 							<span className="ibp-user-tooltip">
-								<BlockchainTooltip type="definition"
-									tooltipText={translate(this.props.modalType === 'apikey' ? 'apikey_role_tooltip' :
-										this.props.isEditing ? 'edit_user_role_tooltip' : 'user_role_tooltip')}
+								<BlockchainTooltip
+									type="definition"
+									tooltipText={translate(
+										this.props.modalType === 'apikey' ? 'apikey_role_tooltip' : this.props.isEditing ? 'edit_user_role_tooltip' : 'user_role_tooltip'
+									)}
 								>
 									{translate('specify_roles')}
 								</BlockchainTooltip>
@@ -347,7 +360,7 @@ export class AddUserModal extends Component {
 								labelText={translate('manager')}
 								checked={this.props.roles && this.props.roles.includes('manager')}
 								disabled={this.props.disableUpdate}
-								onClick={event => {
+								onClick={(event) => {
 									this.onChangeRole('manager', event);
 								}}
 							/>
@@ -361,7 +374,7 @@ export class AddUserModal extends Component {
 								labelText={translate('writer')}
 								checked={this.props.roles && this.props.roles.includes('writer')}
 								disabled={this.props.roles && this.props.roles.includes('manager')}
-								onClick={event => {
+								onClick={(event) => {
 									this.onChangeRole('writer', event);
 								}}
 							/>
@@ -375,7 +388,7 @@ export class AddUserModal extends Component {
 								labelText={translate('reader')}
 								checked={this.props.roles && this.props.roles.includes('reader')}
 								disabled={this.props.roles && this.props.roles.includes('writer')}
-								onClick={event => {
+								onClick={(event) => {
 									this.onChangeRole('reader', event);
 								}}
 							/>
@@ -414,7 +427,7 @@ AddUserModal.propTypes = {
 };
 
 export default connect(
-	state => {
+	(state) => {
 		return Helper.mapStateToProps(state[SCOPE], dataProps);
 	},
 	{

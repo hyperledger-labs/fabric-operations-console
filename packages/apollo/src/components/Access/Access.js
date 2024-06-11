@@ -12,8 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
-import { Loading, OverflowMenu, OverflowMenuItem, SkeletonText } from "@carbon/react";
+ */
+import { Loading, OverflowMenu, OverflowMenuItem, SkeletonText } from '@carbon/react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
@@ -59,73 +59,80 @@ export class Access extends Component {
 		this.props.updateState(SCOPE, {
 			loading: true,
 		});
-		ConfigureAuthApi.getAuthScheme(skip_cache).then(resp => {
-			ConfigureAuthApi.listUsers(skip_cache).then(resp2 => {
-				let all_users = [];
+		ConfigureAuthApi.getAuthScheme(skip_cache).then(
+			(resp) => {
+				ConfigureAuthApi.listUsers(skip_cache).then((resp2) => {
+					let all_users = [];
 
-				// first find the current user and put them first
-				for (const id in resp2.users) {
-					if (this.props.userInfo && this.props.userInfo.loggedInAs && resp2.users[id].email === this.props.userInfo.loggedInAs.email) {
+					// first find the current user and put them first
+					for (const id in resp2.users) {
+						if (this.props.userInfo && this.props.userInfo.loggedInAs && resp2.users[id].email === this.props.userInfo.loggedInAs.email) {
+							all_users.push({
+								uuid: id,
+								id: resp2.users[id].email, // multi select items need an "id" field
+								email: resp2.users[id].email,
+								created: new Date(resp2.users[id].created).toDateString(),
+								roles: resp2.users[id].roles,
+								disabled: true,
+							});
+							if (resp2.users[id].roles.includes('manager')) {
+								admin_count = admin_count + 1;
+							}
+							delete resp2.users[id];
+							break;
+						}
+					}
+
+					// second list the users that are pending
+					for (const id in resp2.users) {
+						if (resp2.users[id] && (!Array.isArray(resp2.users[id].roles) || resp2.users[id].roles.length === 0)) {
+							all_users.push({
+								uuid: id,
+								id: resp2.users[id].email, // multi select items need an "id" field
+								email: resp2.users[id].email,
+								created: new Date(resp2.users[id].created).toDateString(),
+								roles: resp2.users[id].roles,
+							});
+							delete resp2.users[id];
+						}
+					}
+
+					// last list everyone else
+					for (const id in resp2.users) {
 						all_users.push({
 							uuid: id,
-							id: resp2.users[id].email,		// multi select items need an "id" field
+							id: resp2.users[id].email, // multi select items need an "id" field
 							email: resp2.users[id].email,
 							created: new Date(resp2.users[id].created).toDateString(),
 							roles: resp2.users[id].roles,
-							disabled: true,
 						});
-						if (resp2.users[id].roles.includes('manager')) { admin_count = admin_count + 1; }
-						delete resp2.users[id];
-						break;
+						if (resp2.users[id].roles.includes('manager')) {
+							admin_count = admin_count + 1;
+						}
 					}
-				}
 
-				// second list the users that are pending
-				for (const id in resp2.users) {
-					if (resp2.users[id] && (!Array.isArray(resp2.users[id].roles) || resp2.users[id].roles.length === 0)) {
-						all_users.push({
-							uuid: id,
-							id: resp2.users[id].email,		// multi select items need an "id" field
-							email: resp2.users[id].email,
-							created: new Date(resp2.users[id].created).toDateString(),
-							roles: resp2.users[id].roles,
-						});
-						delete resp2.users[id];
-					}
-				}
-
-				// last list everyone else
-				for (const id in resp2.users) {
-					all_users.push({
-						uuid: id,
-						id: resp2.users[id].email,			// multi select items need an "id" field
-						email: resp2.users[id].email,
-						created: new Date(resp2.users[id].created).toDateString(),
-						roles: resp2.users[id].roles,
+					this.props.updateState(SCOPE, {
+						loading: false,
+						oauth_url: resp.oauth_url,
+						secret: resp.secret,
+						tenant_id: resp.tenant_id,
+						client_id: resp.client_id,
+						all_users: all_users,
+						isManager: this.props.userInfo ? ActionsHelper.canManageUsers(this.props.userInfo) : false,
+						isWriter: this.props.userInfo ? ActionsHelper.canManageApiKeys(this.props.userInfo) : false,
+						auth_scheme: resp.auth_scheme,
+						in_read_only_mode: resp.in_read_only_mode === true,
 					});
-					if (resp2.users[id].roles.includes('manager')) { admin_count = admin_count + 1; }
-				}
-
+				});
+			},
+			(error) => {
+				Log.error(error);
 				this.props.updateState(SCOPE, {
 					loading: false,
-					oauth_url: resp.oauth_url,
-					secret: resp.secret,
-					tenant_id: resp.tenant_id,
-					client_id: resp.client_id,
-					all_users: all_users,
-					isManager: this.props.userInfo ? ActionsHelper.canManageUsers(this.props.userInfo) : false,
-					isWriter: this.props.userInfo ? ActionsHelper.canManageApiKeys(this.props.userInfo) : false,
-					auth_scheme: resp.auth_scheme,
-					in_read_only_mode: resp.in_read_only_mode === true,
 				});
-			});
-		}, error => {
-			Log.error(error);
-			this.props.updateState(SCOPE, {
-				loading: false,
-			});
-			this.props.showError('error_getting_auth_details', {}, SCOPE);
-		});
+				this.props.showError('error_getting_auth_details', {}, SCOPE);
+			}
+		);
 	};
 
 	// get all the api keys
@@ -139,7 +146,7 @@ export class Access extends Component {
 			const all_keys = [];
 			for (const id in resp.keys) {
 				all_keys.push({
-					id: resp.keys[id].api_key,			// multi select items need an "id" field
+					id: resp.keys[id].api_key, // multi select items need an "id" field
 					api_key: resp.keys[id].api_key,
 					description: resp.keys[id].description,
 					created: new Date(resp.keys[id].ts_created).toDateString(),
@@ -162,7 +169,7 @@ export class Access extends Component {
 		});
 	};
 
-	openEditUserModal = user => {
+	openEditUserModal = (user) => {
 		if (admin_count < 2 && user.roles.includes('manager')) {
 			this.props.updateState(SCOPE, {
 				showAddUserModal: true,
@@ -170,8 +177,7 @@ export class Access extends Component {
 				user: user,
 				disableUpdate: true,
 			});
-		}
-		else {
+		} else {
 			this.props.updateState(SCOPE, {
 				showAddUserModal: true,
 				editMode: true,
@@ -181,7 +187,7 @@ export class Access extends Component {
 		}
 	};
 
-	openResetPasswordModal = user => {
+	openResetPasswordModal = (user) => {
 		this.props.updateState(SCOPE, {
 			showResetPasswordModal: true,
 			user: user,
@@ -211,7 +217,7 @@ export class Access extends Component {
 		});
 	};
 
-	closeDeleteModal = type => {
+	closeDeleteModal = (type) => {
 		this.props.updateState(SCOPE, {
 			showDeleteModal: false,
 		});
@@ -221,10 +227,7 @@ export class Access extends Component {
 		if (user && user.roles && user.roles.includes(role)) {
 			return (
 				<div className="ibp-access-member-role-icon">
-					<SVGs type="circleFilled"
-						width="8px"
-						height="8px"
-					/>
+					<SVGs type="circleFilled" width="8px" height="8px" />
 				</div>
 			);
 		}
@@ -235,32 +238,20 @@ export class Access extends Component {
 		const translate = this.props.t;
 
 		// is a new registered user
-		if ((!Array.isArray(user.roles) || user.roles.length === 0)) {
-			return (
-				<div className="ibp-access-member-new-icon">
-					{translate('pending_user_icon_txt')}
-				</div>
-			);
+		if (!Array.isArray(user.roles) || user.roles.length === 0) {
+			return <div className="ibp-access-member-new-icon">{translate('pending_user_icon_txt')}</div>;
 		}
 
 		// this row if for the currently logged in user
 		else if (this.props.userInfo && this.props.userInfo.loggedInAs && user.id === this.props.userInfo.loggedInAs.email) {
-			return (
-				<div className="ibp-access-member-you-icon">
-					{translate('current_user_icon_txt')}
-				</div>
-			);
+			return <div className="ibp-access-member-you-icon">{translate('current_user_icon_txt')}</div>;
 		}
 	};
 
-	overflowMenu = user => {
+	overflowMenu = (user) => {
 		const translate = this.props.t;
 		let overflow = (
-			<OverflowMenu id={`overflow-user-${user.id}`}
-				flipped={true}
-				ariaLabel={translate('actions')}
-				iconDescription={translate('actions')}
-			>
+			<OverflowMenu id={`overflow-user-${user.id}`} flipped={true} ariaLabel={translate('actions')} iconDescription={translate('actions')}>
 				<OverflowMenuItem
 					id="update_role"
 					itemText={translate('update_role')}
@@ -304,25 +295,17 @@ export class Access extends Component {
 		const inReadOnlyMode = this.props.in_read_only_mode;
 		return (
 			<div className="ibp-access-row">
-				<h3 className="ibp-access-auth-services-label">
-					{translate('authentication_services')}
-				</h3>
+				<h3 className="ibp-access-auth-services-label">{translate('authentication_services')}</h3>
 
 				<div className="ibp-access-auth-services-container">
 					{this.props.auth_scheme ? (
 						<div className="ibp-access-app-id-label">
 							{isIbmId ? translate('ibm_id') : isIam ? translate('identity_and_access_management') : isCouchDb ? translate('couchdb') : translate('oauth')}
-							{!isIam && this.props.isManager && !inReadOnlyMode &&
-								<button className="ibp-access-button"
-									onClick={() => this.openEditAuthSchemePanel()}
-									title={translate('access_gear_title')}
-								>
-									<SVGs type="settings"
-										title={translate('access_gear_title')}
-										extendClass={{ 'ibp-access-gear-icon': true }}
-									/>
+							{!isIam && this.props.isManager && !inReadOnlyMode && (
+								<button className="ibp-access-button" onClick={() => this.openEditAuthSchemePanel()} title={translate('access_gear_title')}>
+									<SVGs type="settings" title={translate('access_gear_title')} extendClass={{ 'ibp-access-gear-icon': true }} />
 								</button>
-							}
+							)}
 						</div>
 					) : (
 						<SkeletonText
@@ -333,35 +316,47 @@ export class Access extends Component {
 							}}
 						/>
 					)}
-					{this.props.auth_scheme &&
+					{this.props.auth_scheme && (
 						<div className="ibp-access-cloud-service-label">
 							{/* the authentication line*/}
-							<BlockchainTooltip direction="right"
-								triggerText={isIbmId ? translate('ibm_cloud_desc') :
-									isIam ? translate('ibm_cloud_desc') :
-										isCouchDb ? translate('local_desc') :
-											translate('oauth_desc')}
+							<BlockchainTooltip
+								direction="right"
+								triggerText={
+									isIbmId ? translate('ibm_cloud_desc') : isIam ? translate('ibm_cloud_desc') : isCouchDb ? translate('local_desc') : translate('oauth_desc')
+								}
 							>
-								{isIbmId ? translate('authentication_services_tooltip_ibp') :
-									isIam ? translate('authentication_services_tooltip_ibp') :
-										isCouchDb ? translate('authentication_services_tooltip_local') :
-											translate('authentication_services_tooltip_oauth')}
+								{isIbmId
+									? translate('authentication_services_tooltip_ibp')
+									: isIam
+										? translate('authentication_services_tooltip_ibp')
+										: isCouchDb
+											? translate('authentication_services_tooltip_local')
+											: translate('authentication_services_tooltip_oauth')}
 							</BlockchainTooltip>
 
 							{/* the authorization line*/}
-							<BlockchainTooltip direction="right"
-								triggerText={isIbmId ? translate('ibm_cloud_perm_desc') :
-									isIam ? translate('ibm_cloud_perm_desc') :
-										isCouchDb ? translate('local_perm_desc') :
-											translate('oauth_perm_desc')}
+							<BlockchainTooltip
+								direction="right"
+								triggerText={
+									isIbmId
+										? translate('ibm_cloud_perm_desc')
+										: isIam
+											? translate('ibm_cloud_perm_desc')
+											: isCouchDb
+												? translate('local_perm_desc')
+												: translate('oauth_perm_desc')
+								}
 							>
-								{isIbmId ? translate('authorize_services_tooltip_ibp') :
-									isIam ? translate('authorize_services_tooltip_ibp') :
-										isCouchDb ? translate('authorize_services_tooltip_oauth') :
-											translate('authorize_services_tooltip_local')}
+								{isIbmId
+									? translate('authorize_services_tooltip_ibp')
+									: isIam
+										? translate('authorize_services_tooltip_ibp')
+										: isCouchDb
+											? translate('authorize_services_tooltip_oauth')
+											: translate('authorize_services_tooltip_local')}
 							</BlockchainTooltip>
 						</div>
-					}
+					)}
 				</div>
 			</div>
 		);
@@ -370,20 +365,19 @@ export class Access extends Component {
 	render() {
 		const isIam = this.props.auth_scheme === constants.AUTH_IAM;
 		const translate = this.props.t;
-		const hasPendingUsers = Array.isArray(this.props.all_users) && this.props.all_users.filter(x => {		// see if any usernames are pending (have no roles)
-			return (!Array.isArray(x.roles) || x.roles.length === 0);
-		}).length > 0;
+		const hasPendingUsers =
+			Array.isArray(this.props.all_users) &&
+			this.props.all_users.filter((x) => {
+				// see if any usernames are pending (have no roles)
+				return !Array.isArray(x.roles) || x.roles.length === 0;
+			}).length > 0;
 		const inReadOnlyMode = this.props.in_read_only_mode;
 
 		return (
 			<PageContainer>
 				{/* <div className="cds-row">
 					<div className="cds--col-lg-13"> */}
-				<PageHeader
-					history={this.props.history}
-					headerName="access_title"
-					staticHeader
-				/>
+				<PageHeader history={this.props.history} headerName="access_title" staticHeader />
 
 				{/* auth scheme tile content */}
 				{!this.props.loading && <this.renderAuthTileSection />}
@@ -404,17 +398,17 @@ export class Access extends Component {
 							isManager={this.props.isManager}
 							checkRole={this.checkRole}
 							buildAttentionCell={this.buildAttentionCell}
-							overflowMenu={(this.props.isManager && !inReadOnlyMode) ? this.overflowMenu : null}
+							overflowMenu={this.props.isManager && !inReadOnlyMode ? this.overflowMenu : null}
 							authScheme={this.props.auth_scheme}
 							inReadOnlyMode={this.props.in_read_only_mode}
 						/>
 
-						{hasPendingUsers && <p className='tinyTextWhite'>{translate('pending_user_title')}</p>}
+						{hasPendingUsers && <p className="tinyTextWhite">{translate('pending_user_title')}</p>}
 					</div>
 				)}
 
 				{/* apikey table content */}
-				{!isIam && (this.props.isManager) && (
+				{!isIam && this.props.isManager && (
 					<div>
 						<ApiKeys
 							loading={this.props.loading}
@@ -430,9 +424,7 @@ export class Access extends Component {
 							checkRole={this.checkRole}
 							inReadOnlyMode={this.props.in_read_only_mode}
 						/>
-						{Array.isArray(this.props.all_apikeys) && this.props.all_apikeys.length > 0 &&
-							<p className='tinyTextWhite'>{translate('api_key_warning_txt')}</p>
-						}
+						{Array.isArray(this.props.all_apikeys) && this.props.all_apikeys.length > 0 && <p className="tinyTextWhite">{translate('api_key_warning_txt')}</p>}
 					</div>
 				)}
 
@@ -451,10 +443,10 @@ export class Access extends Component {
 				{this.props.showAddUserModal && !this.props.editMode && (
 					<AddUserModal
 						isCouchBasedAuth={this.props.auth_scheme === constants.AUTH_COUCHDB}
-						existingUsers={this.props.all_users.map(details => details.id)}
+						existingUsers={this.props.all_users.map((details) => details.id)}
 						onClose={this.closeAddUserModal}
 						modalType={this.props.addModalType}
-						onComplete={data => {
+						onComplete={(data) => {
 							if (this.props.addModalType === 'apikey') {
 								this.getApikeyDetails(true);
 								this.props.updateState(SCOPE, {
@@ -475,11 +467,11 @@ export class Access extends Component {
 				{/* edit user roles modal */}
 				{this.props.showAddUserModal && this.props.editMode && (
 					<AddUserModal
-						existingUsers={this.props.all_users.map(details => details.id)}
+						existingUsers={this.props.all_users.map((details) => details.id)}
 						userDetails={this.props.user}
 						onClose={this.closeAddUserModal}
 						disableUpdate={this.props.disableUpdate}
-						onComplete={email => {
+						onComplete={(email) => {
 							this.props.showSuccess('user_update_successful', { email }, SCOPE);
 							admin_count = 0;
 							this.getAuthDetails(true);
@@ -492,7 +484,7 @@ export class Access extends Component {
 					<ResetPasswordModal
 						user={this.props.user}
 						onClose={this.closeResetPasswordModal}
-						onComplete={response => {
+						onComplete={(response) => {
 							this.props.showSuccess('reset_password_successful', { user: response.user }, SCOPE);
 						}}
 					/>
@@ -505,24 +497,25 @@ export class Access extends Component {
 						oauthServerUrl={this.props.oauth_url}
 						secret={this.props.secret}
 						tenantId={this.props.tenant_id}
-						adminUsers={this.props.admin_list ? this.props.admin_list.map(user => user.email) : []}
-						generalUsers={this.props.general_list ? this.props.general_list.map(user => user.email) : []}
+						adminUsers={this.props.admin_list ? this.props.admin_list.map((user) => user.email) : []}
+						generalUsers={this.props.general_list ? this.props.general_list.map((user) => user.email) : []}
 						onClose={this.closeEditAuthSchemePanel}
 						onComplete={(type) => {
 							this.props.updateState(SCOPE, {
 								showLoginTimer: true,
 								showLoginType: type,
-								loginTimeRemaining_s: 120,		// time in seconds to threaten user with
+								loginTimeRemaining_s: 120, // time in seconds to threaten user with
 							});
 
 							if (type === constants.AUTH_OAUTH) {
 								clearInterval(login_interval);
 								login_interval = setInterval(() => {
 									this.props.updateState(SCOPE, {
-										loginTimeRemaining_s: (this.props.loginTimeRemaining_s > 0) ? this.props.loginTimeRemaining_s - 1 : 0,
+										loginTimeRemaining_s: this.props.loginTimeRemaining_s > 0 ? this.props.loginTimeRemaining_s - 1 : 0,
 									});
 
-									if (this.props.loginTimeRemaining_s <= 0) {		// reload the page if they waited this long
+									if (this.props.loginTimeRemaining_s <= 0) {
+										// reload the page if they waited this long
 										window.location.href = '/auth/logout';
 									}
 								}, 1000);
@@ -539,15 +532,18 @@ export class Access extends Component {
 						deleteArr={this.props.delThings}
 						modalType={this.props.delModalType}
 						onClose={this.closeDeleteModal}
-						onComplete={removedItems => {
+						onComplete={(removedItems) => {
 							if (this.props.delModalType === 'apikey') {
-								this.props.showSuccess((Array.isArray(removedItems) && removedItems.length > 1) ?
-									'apikeys_removed_successful' : 'apikey_removed_successful', SCOPE
+								this.props.showSuccess(
+									Array.isArray(removedItems) && removedItems.length > 1 ? 'apikeys_removed_successful' : 'apikey_removed_successful',
+									SCOPE
 								);
 								this.getApikeyDetails(true);
 							} else {
-								this.props.showSuccess((Array.isArray(removedItems) && removedItems.length > 1) ?
-									'users_removed_successful' : 'user_removed_successful', { email: removedItems.join(', ') }, SCOPE
+								this.props.showSuccess(
+									Array.isArray(removedItems) && removedItems.length > 1 ? 'users_removed_successful' : 'user_removed_successful',
+									{ email: removedItems.join(', ') },
+									SCOPE
 								);
 								admin_count = 0;
 								this.getAuthDetails(true);
@@ -565,7 +561,7 @@ export class Access extends Component {
 								showApiSecret: false,
 							});
 						}}
-						ref={sidePanel => (this.sidePanel = sidePanel)}
+						ref={(sidePanel) => (this.sidePanel = sidePanel)}
 						buttons={[
 							{
 								id: 'api_key_secret_reveal',
@@ -584,7 +580,7 @@ export class Access extends Component {
 							<br />
 							<Form
 								scope={SCOPE}
-								className='access-form-apikey-secret'
+								className="access-form-apikey-secret"
 								id={SCOPE}
 								fields={[
 									{
@@ -592,14 +588,14 @@ export class Access extends Component {
 										label: 'apikey_label',
 										placeholder: 'apikey_label',
 										readonly: true,
-										default: this.props.apikey_reveal
+										default: this.props.apikey_reveal,
 									},
 									{
 										name: 'api_secret',
 										label: 'api_secret_label',
 										placeholder: 'api_secret_label',
 										readonly: true,
-										default: this.props.api_secret_reveal
+										default: this.props.api_secret_reveal,
 									},
 								]}
 							/>
@@ -618,7 +614,7 @@ export class Access extends Component {
 							});
 							window.location.href = '/auth/logout';
 						}}
-						ref={sidePanel => (this.sidePanel = sidePanel)}
+						ref={(sidePanel) => (this.sidePanel = sidePanel)}
 						buttons={[
 							{
 								id: 'access-logout-butt',
@@ -629,29 +625,33 @@ export class Access extends Component {
 						fullPageCenter
 						hideClose={true}
 					>
-						{this.props.showLoginType === constants.AUTH_OAUTH && <div className="ibp-full-page-center-panel-container">
-							<h1>{translate('login_req_header')}</h1>
-							<br />
-							<br />
-							<p>{translate('login_required_txt1')}</p>
-							<br />
-							<h3>{this.props.loginTimeRemaining_s} secs remaining</h3>
-							<br />
-							<p>{translate('login_required_txt2')}</p>
-						</div>}
-						{this.props.showLoginType === constants.AUTH_COUCHDB && <div className="ibp-full-page-center-panel-container">
-							<h1>{translate('logout_header')}</h1>
-							<br />
-							<br />
-							<p>{translate('logout_required_txt1')}</p>
-							<br />
-							<p>{translate('logout_required_txt2')}</p>
-						</div>}
+						{this.props.showLoginType === constants.AUTH_OAUTH && (
+							<div className="ibp-full-page-center-panel-container">
+								<h1>{translate('login_req_header')}</h1>
+								<br />
+								<br />
+								<p>{translate('login_required_txt1')}</p>
+								<br />
+								<h3>{this.props.loginTimeRemaining_s} secs remaining</h3>
+								<br />
+								<p>{translate('login_required_txt2')}</p>
+							</div>
+						)}
+						{this.props.showLoginType === constants.AUTH_COUCHDB && (
+							<div className="ibp-full-page-center-panel-container">
+								<h1>{translate('logout_header')}</h1>
+								<br />
+								<br />
+								<p>{translate('logout_required_txt1')}</p>
+								<br />
+								<p>{translate('logout_required_txt2')}</p>
+							</div>
+						)}
 					</SidePanel>
 				)}
 				{/* </div>
 				</div> */}
-			</PageContainer >
+			</PageContainer>
 		);
 	}
 }
@@ -697,7 +697,7 @@ Access.propTypes = {
 	t: PropTypes.func, // Provided by withTranslation()
 };
 export default connect(
-	state => {
+	(state) => {
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['userInfo'] = state['userInfo'];
 		newProps['docPrefix'] = state['settings'] ? state['settings']['docPrefix'] : null;
@@ -737,46 +737,43 @@ export function AuthenticatedUsers(props) {
 			listMapping={[
 				{
 					header: '',
-					custom: data => {
+					custom: (data) => {
 						return props.buildAttentionCell(data);
 					},
 				},
 				{
 					header: 'username_label',
 					attr: 'email',
-					width: 4
+					width: 4,
 				},
 				{
 					header: 'date_added',
 					attr: 'created',
-					width: 2
+					width: 2,
 				},
 				{
 					header: 'manager',
-					custom: data => {
+					custom: (data) => {
 						return props.checkRole(data, 'manager');
 					},
 				},
 				{
 					header: 'writer',
-					custom: data => {
+					custom: (data) => {
 						return props.checkRole(data, 'writer');
 					},
 				},
 				{
 					header: 'reader',
-					custom: data => {
+					custom: (data) => {
 						return props.checkRole(data, 'reader');
 					},
 				},
 				{
 					header: 'empty',
-					custom: user => {
+					custom: (user) => {
 						if (user.deleting) {
-							return <Loading withOverlay={false}
-								small
-								className="ibp-deleting-spinner"
-							/>;
+							return <Loading withOverlay={false} small className="ibp-deleting-spinner" />;
 						}
 						if (props.overflowMenu) {
 							return props.overflowMenu(user);
@@ -787,11 +784,11 @@ export function AuthenticatedUsers(props) {
 			addItems={
 				props.isManager
 					? [
-						{
-							text: 'add_new_users',
-							fn: props.onAdd,
-						},
-					]
+							{
+								text: 'add_new_users',
+								fn: props.onAdd,
+							},
+						]
 					: []
 			}
 			selectItem={
@@ -852,44 +849,41 @@ export function ApiKeys(props) {
 				{
 					header: 'apikey_description_label',
 					attr: 'description',
-					width: 3
+					width: 3,
 				},
 				{
 					header: 'date_added',
 					attr: 'created',
-					width: 2
+					width: 2,
 				},
 				{
 					header: 'apikey_label',
 					attr: 'api_key',
-					width: 2
+					width: 2,
 				},
 				{
 					header: 'manager',
-					custom: data => {
+					custom: (data) => {
 						return props.checkRole(data, 'manager');
 					},
 				},
 				{
 					header: 'writer',
-					custom: data => {
+					custom: (data) => {
 						return props.checkRole(data, 'writer');
 					},
 				},
 				{
 					header: 'reader',
-					custom: data => {
+					custom: (data) => {
 						return props.checkRole(data, 'reader');
 					},
 				},
 				{
 					header: 'empty',
-					custom: user => {
+					custom: (user) => {
 						if (user.deleting) {
-							return <Loading withOverlay={false}
-								small
-								className="ibp-deleting-spinner"
-							/>;
+							return <Loading withOverlay={false} small className="ibp-deleting-spinner" />;
 						}
 						if (props.overflowMenu) {
 							return props.overflowMenu(user);
@@ -898,17 +892,17 @@ export function ApiKeys(props) {
 				},
 			]}
 			addItems={
-				(props.isManager)
+				props.isManager
 					? [
-						{
-							text: 'add_new_apikey',
-							fn: props.onAdd,
-						},
-					]
+							{
+								text: 'add_new_apikey',
+								fn: props.onAdd,
+							},
+						]
 					: []
 			}
 			selectItem={
-				(props.isManager && !props.inReadOnlyMode)
+				props.isManager && !props.inReadOnlyMode
 					? {
 						id: 'deleteApiKey',
 						text: 'delete',
@@ -940,8 +934,5 @@ ApiKeys.propTypes = {
 };
 
 export function DeleteButton() {
-	return <SVGs type={'trash'}
-		width="16px"
-		height="18px"
-	/>;
+	return <SVGs type={'trash'} width="16px" height="18px" />;
 }

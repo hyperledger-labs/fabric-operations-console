@@ -147,21 +147,23 @@ class App extends Component {
 		Log.debug('Received application settings. console build type:', settings.CONSOLE_BUILD_TYPE);
 
 		let crn = settings.CRN;
-		if (!crn.account_id) { crn.account_id = 'n/a'; }
+		if (!crn.account_id) {
+			crn.account_id = 'n/a';
+		}
 		const docUrlMap = {
-			'ibp': 'https://cloud.ibm.com/docs/blockchain',
-			'support': 'https://www.ibm.com/docs/en/hlf-support/1.0.0',
-			'software': 'https://www.ibm.com/docs/en/blockchain-platform/2.5.4',
-			'hlfoc': 'https://www.ibm.com/docs/en/hlf-support/1.0.0',
+			ibp: 'https://cloud.ibm.com/docs/blockchain',
+			support: 'https://www.ibm.com/docs/en/hlf-support/1.0.0',
+			software: 'https://www.ibm.com/docs/en/blockchain-platform/2.5.4',
+			hlfoc: 'https://www.ibm.com/docs/en/hlf-support/1.0.0',
 		};
-		const docUrlRoot = (settings.CONSOLE_TYPE && docUrlMap[settings.CONSOLE_TYPE]) ? docUrlMap[settings.CONSOLE_TYPE] : docUrlMap.hlfoc;
+		const docUrlRoot = settings.CONSOLE_TYPE && docUrlMap[settings.CONSOLE_TYPE] ? docUrlMap[settings.CONSOLE_TYPE] : docUrlMap.hlfoc;
 
 		const modifiedCrnString = settings.CRN_STRING && settings.CRN_STRING.indexOf('::') !== -1 && settings.CRN_STRING.slice(0, -1);
 		let features = {
 			feature_flags: settings.FEATURE_FLAGS,
 			CRN: crn,
 			crn_string: modifiedCrnString,
-			bmixUrl: 'https://cloud.ibm.com',		// this link is only used to show the nicer API ui, which is relevant to all console builds, (except the auth section)
+			bmixUrl: 'https://cloud.ibm.com', // this link is only used to show the nicer API ui, which is relevant to all console builds, (except the auth section)
 			docPrefix: docUrlRoot,
 			cluster_data: settings.CLUSTER_DATA,
 			host_url: settings.HOST_URL,
@@ -250,7 +252,7 @@ class App extends Component {
 					pad(date.getUTCMilliseconds(), 3)
 				);
 			},
-			format: log => {
+			format: (log) => {
 				// create a log format similar to athena
 				function encodeNewLines(text) {
 					try {
@@ -285,9 +287,7 @@ class App extends Component {
 		const translate = this.props.t;
 		if (!this.state.authScheme || !this.props.userInfo) {
 			return (
-				<LoadingWithContent withOverlay
-					description={translate('loading')}
-				>
+				<LoadingWithContent withOverlay description={translate('loading')}>
 					<h3>{translate('loading')}</h3>
 				</LoadingWithContent>
 			);
@@ -296,21 +296,22 @@ class App extends Component {
 
 			// if user is not logged in at all...
 			if (!this.props.userInfo || !this.props.userInfo.logged) {
-
 				// if using local username/password, send user to our login prompt
 				if (this.state.authScheme.type === 'couchdb') {
-					return <Login onLogin={() => {
-						this.initializeAppData();
-					}} />;
+					return (
+						<Login
+							onLogin={() => {
+								this.initializeAppData();
+							}}
+						/>
+					);
 				}
 
 				// if using sso, send user to sso's login prompt
 				else {
 					window.location.href = '/auth/login';
 					return (
-						<LoadingWithContent withOverlay
-							description={translate('redirecting_login')}
-						>
+						<LoadingWithContent withOverlay description={translate('redirecting_login')}>
 							<h3>{translate('redirecting_login')}</h3>
 						</LoadingWithContent>
 					);
@@ -322,7 +323,8 @@ class App extends Component {
 				// if user is logged in but has no access
 				if (!ActionsHelper.canViewOpTools(this.props.userInfo)) {
 					return (
-						<RequestAccess adminContact={this.state.authScheme.admin_contact_email}
+						<RequestAccess
+							adminContact={this.state.authScheme.admin_contact_email}
 							userInfo={this.props.userInfo}
 							host_url={this.state.authScheme.host_url}
 							auth_scheme={this.state.authScheme.type}
@@ -332,16 +334,13 @@ class App extends Component {
 
 				// if user is logged in but is using the default password, send user to change pass prompt
 				if (this.state.authScheme.type === 'couchdb' && this.props.userInfo && this.props.userInfo.logged && this.props.userInfo.password_type === 'default') {
-					return <Login hostUrl={this.state.authScheme.host_url}
-						changePassword={true} />;
+					return <Login hostUrl={this.state.authScheme.host_url} changePassword={true} />;
 				}
 
 				// if user is logged in and can view the app, render the the app
 				Log.info('Starting application!');
 				this.setupRemoteLogging(); // setup the remote logging after the user has logged in to avoid hitting api lockout
-				return <Main userInfo={this.props.userInfo}
-					host_url={this.state.authScheme.host_url}
-				/>;
+				return <Main userInfo={this.props.userInfo} host_url={this.state.authScheme.host_url} />;
 			}
 		}
 	}
@@ -358,12 +357,12 @@ App.propTypes = {
 };
 
 export default connect(
-	state => {
+	(state) => {
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['userInfo'] = state['userInfo'] ? state['userInfo'] : null;
 		return newProps;
 	},
-	dispatch => {
+	(dispatch) => {
 		return {
 			dispatch,
 			...bindActionCreators({ updateState }, dispatch),
