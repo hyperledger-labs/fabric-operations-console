@@ -223,105 +223,107 @@ class GenerateMSPModal extends Component {
 	};
 
 	onSelectRootCA = (value, valid) => {
-		this.props.updateState(SCOPE, {
-			ca: value.selectedRootCA,
-			enroll_id: value.selectedRootCA.enroll_id,
-			enroll_secret: value.selectedRootCA.enroll_secret,
-			rootCerts: [],
-			tlsRootCerts: [],
-			notAvailable: false,
-			gettingRootCerts: true,
-		});
-		CertificateAuthorityRestApi.getRootCertificate(value.selectedRootCA, false)
-			.then(async cert => {
-				let rootCerts = [];
-				let intermediateCerts = [];
-				let certArray = Helper.getCertArray(cert);
-				certArray.forEach(myCert => {
-					let parseCert = StitchApi.parseCertificate(myCert);
-					if (parseCert) {
-						if (parseCert.issuer === parseCert.subject) {
-							rootCerts = [
-								{
-									cert: parseCert.base_64_pem,
-									isReadOnly: true,
-								},
-							];
-						} else {
-							intermediateCerts.push(parseCert.base_64_pem);
+		setTimeout(() => {
+			this.props.updateState(SCOPE, {
+				ca: value.selectedRootCA,
+				enroll_id: value.selectedRootCA.enroll_id,
+				enroll_secret: value.selectedRootCA.enroll_secret,
+				rootCerts: [],
+				tlsRootCerts: [],
+				notAvailable: false,
+				gettingRootCerts: true,
+			});
+			CertificateAuthorityRestApi.getRootCertificate(value.selectedRootCA, false)
+				.then(async cert => {
+					let rootCerts = [];
+					let intermediateCerts = [];
+					let certArray = Helper.getCertArray(cert);
+					certArray.forEach(myCert => {
+						let parseCert = StitchApi.parseCertificate(myCert);
+						if (parseCert) {
+							if (parseCert.issuer === parseCert.subject) {
+								rootCerts = [
+									{
+										cert: parseCert.base_64_pem,
+										isReadOnly: true,
+									},
+								];
+							} else {
+								intermediateCerts.push(parseCert.base_64_pem);
+							}
 						}
-					}
-				});
+					});
 
-				const current_root_certs = _.size(rootCerts) > 0 ? [rootCerts[0].cert] : [];
-				const current_intermediate_certs = _.size(intermediateCerts) > 0 ? [intermediateCerts[0].cert] : [];
-				const duplicateMSPExists = await MspRestApi.checkIfMSPExists(this.props.msp_id, current_root_certs, current_intermediate_certs);
-				if (duplicateMSPExists) {
+					const current_root_certs = _.size(rootCerts) > 0 ? [rootCerts[0].cert] : [];
+					const current_intermediate_certs = _.size(intermediateCerts) > 0 ? [intermediateCerts[0].cert] : [];
+					const duplicateMSPExists = await MspRestApi.checkIfMSPExists(this.props.msp_id, current_root_certs, current_intermediate_certs);
+					if (duplicateMSPExists) {
+						this.props.updateState(SCOPE, {
+							duplicateMspError: true,
+							loading: false,
+							gettingRootCerts: false,
+						});
+					} else {
+						if (intermediateCerts && intermediateCerts.length > 0) {
+							this.addOUIdentifier(intermediateCerts[0]);
+						} else {
+							this.addOUIdentifier(rootCerts[0].cert);
+						}
+						this.props.updateState(SCOPE, { rootCerts, intermediate_certs: intermediateCerts });
+						this.addRootCert(rootCerts);
+						CertificateAuthorityRestApi.getRootCertificate(value.selectedRootCA, true)
+							.then(cert => {
+								let tlsRootCerts = [];
+								let tlsIntermediateCerts = [];
+								let certArray = Helper.getCertArray(cert);
+								certArray.forEach(myCert => {
+									let parseCert = StitchApi.parseCertificate(myCert);
+									if (parseCert) {
+										if (parseCert.issuer === parseCert.subject) {
+											tlsRootCerts = [
+												{
+													cert: parseCert.base_64_pem,
+													isReadOnly: true,
+												},
+											];
+										} else {
+											tlsIntermediateCerts.push(parseCert.base_64_pem);
+										}
+									}
+								});
+								this.props.updateState(SCOPE, {
+									tlsRootCerts,
+									tls_intermediate_certs: tlsIntermediateCerts,
+									notAvailable: false,
+									gettingRootCerts: false,
+									duplicateMspError: false,
+								});
+								this.addTLSRootCert(tlsRootCerts);
+							})
+							.then(() => {
+								this.loadUsersFromCA(value.selectedRootCA.id);
+							})
+							.catch(tls_error => {
+								Log.error('Error occurred while getting CA root cert from TLS CA ', tls_error);
+								this.props.updateState(SCOPE, {
+									loading: false,
+									gettingRootCerts: false,
+									duplicateMspError: false,
+								});
+								this.addTLSRootCert();
+							});
+					}
+				})
+				.catch(error => {
+					Log.error('Error occurred while getting CA root cert ', error);
 					this.props.updateState(SCOPE, {
-						duplicateMspError: true,
 						loading: false,
 						gettingRootCerts: false,
 					});
-				} else {
-					if (intermediateCerts && intermediateCerts.length > 0) {
-						this.addOUIdentifier(intermediateCerts[0]);
-					} else {
-						this.addOUIdentifier(rootCerts[0].cert);
-					}
-					this.props.updateState(SCOPE, { rootCerts, intermediate_certs: intermediateCerts });
-					this.addRootCert(rootCerts);
-					CertificateAuthorityRestApi.getRootCertificate(value.selectedRootCA, true)
-						.then(cert => {
-							let tlsRootCerts = [];
-							let tlsIntermediateCerts = [];
-							let certArray = Helper.getCertArray(cert);
-							certArray.forEach(myCert => {
-								let parseCert = StitchApi.parseCertificate(myCert);
-								if (parseCert) {
-									if (parseCert.issuer === parseCert.subject) {
-										tlsRootCerts = [
-											{
-												cert: parseCert.base_64_pem,
-												isReadOnly: true,
-											},
-										];
-									} else {
-										tlsIntermediateCerts.push(parseCert.base_64_pem);
-									}
-								}
-							});
-							this.props.updateState(SCOPE, {
-								tlsRootCerts,
-								tls_intermediate_certs: tlsIntermediateCerts,
-								notAvailable: false,
-								gettingRootCerts: false,
-								duplicateMspError: false,
-							});
-							this.addTLSRootCert(tlsRootCerts);
-						})
-						.then(() => {
-							this.loadUsersFromCA(value.selectedRootCA.id);
-						})
-						.catch(tls_error => {
-							Log.error('Error occurred while getting CA root cert from TLS CA ', tls_error);
-							this.props.updateState(SCOPE, {
-								loading: false,
-								gettingRootCerts: false,
-								duplicateMspError: false,
-							});
-							this.addTLSRootCert();
-						});
-				}
-			})
-			.catch(error => {
-				Log.error('Error occurred while getting CA root cert ', error);
-				this.props.updateState(SCOPE, {
-					loading: false,
-					gettingRootCerts: false,
+					this.addRootCert();
 				});
-				this.addRootCert();
-			});
-		this.checkCAHealth(value.selectedRootCA);
+			this.checkCAHealth(value.selectedRootCA);
+		}, 100);
 	};
 
 	loadUsersFromCA(ca_id) {
