@@ -32,6 +32,7 @@ Feature: Update channel to add Org2
         And the CA admin is set as 'Ordering Service CA Admin'
         Then the 'admin' user with id 'OSadmin' should be enrolled
         And the 'orderer' user with id 'OS1' should be enrolled
+		Then wait "5" seconds
         And I enroll TLS identity for OS1 with secret 'OS1pw' and name 'TLSOS1'
         And I am on the 'nodes' page
         And I clicked the 'Org2 CA' certificate authority

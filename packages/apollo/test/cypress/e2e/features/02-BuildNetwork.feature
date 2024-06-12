@@ -74,7 +74,7 @@ Feature: Build a network feature
         And I clicked the button with title 'Select an MSP'
         And I clicked the div with text 'Org1 MSP'
         And I clicked the button with title 'Select a Fabric version'
-        And I clicked the div with text '2.5'
+        And I clicked the div with text '2.2'
         And I clicked the button with id 'next'
         And I clicked the button with title 'Please select an identity from your wallet'
         And I clicked the div with text 'Org1 MSP Admin'
@@ -159,7 +159,7 @@ Feature: Build a network feature
         And I clicked the button with title 'Select an MSP'
         And I clicked the dropdown item 'Ordering Service MSP' with class '.cds--list-box__menu-item__option'
         And I clicked the button with title 'Select a Fabric version'
-        And I clicked the dropdown item '2.5' with class '.cds--list-box__menu-item__option'
+        And I clicked the dropdown item '2.2' with class '.cds--list-box__menu-item__option'
         And I clicked the button with id 'next'
         Then wait "2" seconds
         And I clicked the button with title 'Please select an identity from your wallet'

@@ -11,7 +11,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "regression": "cypress run -e TAGS=\"@regression\" --headed --browser chrome --spec 'e2e/features/*.feature'",
+    "regressionchrome": "cypress run -e TAGS=\"@regression\" --headed --browser chrome --spec 'e2e/features/*.feature'",
+   	"regressionfirefox": "cypress run -e TAGS=\"@regression\" --headed --browser firefox --spec 'e2e/features/*.feature'",
     "regression-headless": "cypress run -e TAGS=\"@regression\" --browser chrome --spec 'e2e/features/*.feature'",
     "runonexistingconsole": "cypress run -e TAGS=\"@runonconsole\" --headed --browser chrome --spec 'e2e/features/*.feature'",
     "buildnetwork": "cypress run --headed --browser chrome --spec 'e2e/features/2-BuildNetwork.feature'"
@@ -22,7 +23,7 @@
     "@badeball/cypress-cucumber-preprocessor": "^18.0.5",
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.0",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
-    "cypress": "^13.3.0",
+    "cypress": "^13.11.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-watch-and-reload": "^1.10.9",
     "esbuild": "^0.19.2",

@@ -20,7 +20,11 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 	return false
   })
 
-Given("I go to the console", () => {
+Cypress.on('uncaught exception', (err, runnable) => {
+	return false
+})
+
+  Given("I go to the console", () => {
     cy.fixture("config.json").then((data) => {
       cy.visit(data.loginUrl)
     })

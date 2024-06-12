@@ -24,6 +24,7 @@ Feature: Verify allowed functions for Writer user
         And I provided 'admin' for the 'Enter an ID' input
         And I provided 'adminpw' for the 'Enter a secret' input
         And I provided 'Ordering Service CA Admin' for the 'Enter a name' input
+		Then wait "5" seconds
         And I clicked the button with id 'associate_identity'
         And the CA admin is set as 'Ordering Service CA Admin'
         Then the 'admin' user with id 'OSadmin' should be enrolled

@@ -80,26 +80,26 @@ Feature: Build a network without system channel
       And I clicked the button with id 'associate_identity'
       Then wait "2" seconds
 
-#   Scenario: Upgrading Peer and Ordering Service node to latest
-#       And I clicked the 'Peer Org1' peer
-#       And I clicked the button with id 'ibp-peer-usage'
-#       And I clicked the button with id 'patch_node'
-#       And I clicked the checkbox with text 'I understand this is a potentially breaking change. Upgrade anyway.'
-#       And I clicked the button with id 'next'
-#       And I provided 'Peer Org1' for the 'Type node name here' input
-#       And I clicked the button with text 'Upgrade Fabric version'
-#       Then wait "20" seconds
-#       And I am on the 'nodes' page
-#       And I clicked the 'Ordering Service' orderer
-#       Then wait "10" seconds
-#       And I clicked the button with id 'ibp-orderer-nodes'
-#       And I clicked the div with id 'ibp-tile-Ordering Service_1'
-#       And I clicked the button with text 'Upgrade version'
-#       And I clicked the button with id 'next'
-#       And I provided 'Ordering Service_1' for the 'Type node name here' input
-#       And I clicked the button with text 'Upgrade Fabric version'
-#       Then wait "10" seconds
-#       And I am on the 'nodes' page
+	Scenario: Upgrading Peer and Ordering Service node to latest
+		And I clicked the 'Peer Org1' peer
+		And I clicked the button with id 'ibp-peer-usage'
+		And I clicked the button with id 'patch_node'
+		And I clicked the checkbox with text 'I understand this is a potentially breaking change. Upgrade anyway.'
+		And I clicked the button with id 'next'
+		And I provided 'Peer Org1' for the 'Type node name here' input
+		And I clicked the button with text 'Upgrade Fabric version'
+		Then wait "20" seconds
+		And I am on the 'nodes' page
+		And I clicked the 'Ordering Service' orderer
+		Then wait "10" seconds
+		And I clicked the button with id 'ibp-orderer-nodes'
+		And I clicked the div with id 'ibp-tile-Ordering Service_1'
+		And I clicked the button with text 'Upgrade version'
+		And I clicked the button with id 'next'
+		And I provided 'Ordering Service_1' for the 'Type node name here' input
+		And I clicked the button with text 'Upgrade Fabric version'
+		Then wait "10" seconds
+		And I am on the 'nodes' page
 
   Scenario: When creating an ordering service without system channel
         And I clicked the button with title 'Add ordering service'
@@ -288,3 +288,41 @@ Feature: Build a network without system channel
 		And I clicked the div with text 'Org2 MSP Admin'
 		And I clicked the button with id 'submit'
 		Then the element div with text 'No approval notifications' should be visible on page
+
+	Scenario: Update MSP Definition
+		When I am on the 'nodes' page
+		And I clicked the 'Ordering Service' orderer
+		Then wait "10" seconds
+		And I clicked element with class '.ibp-orderer-admin-update.ibp-orderer-admin-single'
+		And I clicked the button with title 'Select MSP'
+		Then wait "1" seconds
+		# And I clicked the div with text 'Ordering Service MSP'
+		And I clicked the div with id 'downshift-0-item-0'
+		Then wait "1" seconds
+		And I clicked the button with title 'Select an identity'
+		# And I clicked the div with text 'Ordering Service MSP Admin'
+		And I clicked the div with id 'downshift-1-item-1'
+		And I clicked the button with id 'submit'
+		Then wait "10" seconds
+		Then I should see a success toast with class '.cds--toast-notification__title' which says "The MSP definition for osmsp has been updated successfully."
+		When I am on the 'channels' page
+		And I clicked the div with id 'ibp-tile-channel2'
+		Then wait "5" seconds
+		And I clicked the button with text 'Channel details'
+		And I clicked the div with id 'ibp-tile-org1msp'
+		And I clicked the button with title 'Select MSP'
+		And I clicked the div with text 'Org1 MSP'
+		Then wait "1" seconds
+		And I clicked the button with title 'Select an identity'
+		And I clicked the div with text 'Org1 MSP Admin'
+		And I clicked the button with id 'submit'
+		Then wait "10" seconds
+		Then I should see a success toast with class '.cds--toast-notification__title' which says "The MSP definition for org1msp has been updated successfully."
+		Then wait "5" seconds
+		And I clicked the div with id 'ibp-tile-osmsp'
+		And I clicked the button with title 'Select MSP'
+		And I clicked the div with text 'Ordering Service MSP'
+		Then wait "1" seconds
+		And I clicked the button with id 'submit'
+		Then wait "10" seconds
+		Then I should see a success toast with class '.cds--toast-notification__title' which says "The proposal for updating MSP definition for osmsp has been submitted successfully."
