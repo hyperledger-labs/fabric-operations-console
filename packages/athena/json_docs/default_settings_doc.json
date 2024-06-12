@@ -119,7 +119,6 @@
 		}
 	},
 	"csp_header_values": [
-		"connect-src *",
 		"default-src 'none'",
 		"font-src 'self' *.s81c.com",
 		"frame-ancestors 'none'",
