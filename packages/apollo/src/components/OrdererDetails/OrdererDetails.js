@@ -1283,6 +1283,179 @@ class OrdererDetails extends Component {
 		}
 		const hasAssociatedIdentities = this.props.details && this.props.details.associatedIdentities && this.props.details.associatedIdentities.length > 0;
 
+		const tabItems = [];
+		if (this.props.details) {
+			if (!this.props.selectedNode) {
+				{/* [details section] - an orderer node is NOT selected, this is the top level content */}
+			  tabItems.push({
+				tab: () => <Tab id="ibp-orderer-details">{translate('details')}</Tab>,
+				panel: () => {
+				  return (
+					<TabPanel>
+					  {!this.props.loading &&
+						this.channelParticipationEnabled(this.props.details) &&
+						!this.props.orderer_tls_identity && (
+						  <div>
+							<SidePanelWarning
+							  title="tls_identity_not_found"
+							  subtitle={translate(
+								this.isSystemLess(this.props.details)
+								  ? "orderer_tls_admin_identity_not_found"
+								  : "orderer_tls_admin_identity_not_found2"
+							  )}
+							/>
+						  </div>
+						)}
+
+					  {/*
+						its possible for an orderer to be at fabric v2.4, have CP features enabled, but still have a system channel, (it is not systemless yet)
+						so we still need to show them the ChannelParticipationDetails modal, which has the ability to remove the system channel
+						*/}
+					  {this.channelParticipationEnabled(this.props.details) &&
+						this.props.orderer_tls_identity && (
+						  <ChannelParticipationDetails
+							selectedNode={this.props.selectedNode}
+							channelList={this.props.channelList}
+							details={this.props.details}
+							unJoinComplete={this.getCPChannelList}
+							loading={this.props.loading}
+							isSystemLess={this.isSystemLess(this.props.details)}
+							drillDown={false}
+						  />
+						)}
+					  {!this.props.loading && !hasAssociatedIdentities && (
+						<div className="ibp-orderer-no-identity">
+						  <p>{translate("orderer_no_identity")}</p>
+						  <Button
+							id="no-identity-button"
+							onClick={() => this.openOrdererSettings("associate")}
+						  >
+							{translate("associate_identity")}
+						  </Button>
+						</div>
+					  )}
+					  {!this.isSystemLess(this.props.details) &&
+						hasAssociatedIdentities && (
+						  <div>
+							{this.renderPendingNotice(translate)}
+							{this.renderRunningPartial(translate)}
+							{this.renderMissingEndorsementNotice(translate)}
+							<OrdererAdmins
+							  admins={this.props.admins}
+							  members={this.props.members}
+							  orderer={this.props.details}
+							  configtxlator_url={this.props.configtxlator_url}
+							  onClose={this.onClose}
+							  clusterId={this.props.match.params.clusterIdPath}
+							  loading={this.props.sysChLoading}
+							  disableAddItem={this.props.disabled}
+							  feature_flags={this.props.feature_flags}
+							/>
+							<OrdererMembers
+							  admins={this.props.admins}
+							  members={this.props.members}
+							  configtxlator_url={this.props.configtxlator_url}
+							  clusterId={this.props.match.params.clusterIdPath}
+							  onClose={this.onClose}
+							  loading={this.props.sysChLoading}
+							  disableAddItem={this.props.disabled}
+							  feature_flags={this.props.feature_flags}
+							/>
+							{this.renderConsenters(translate)}
+						  </div>
+						)}
+					</TabPanel>
+				  );
+				},
+			  });
+			{/* [all nodes section] - an orderer node is NOT selected, this is the top level content */}
+			  tabItems.push({
+				tab: () => <Tab id="ibp-orderer-nodes">{translate('ordering_nodes')}</Tab>,
+				panel: () => {
+				  return (
+					<TabPanel>
+					  <div className="orderer-details-nodes-container">
+						<ItemContainer
+						  containerTitle="ordering_nodes"
+						  itemId="ordering-nodes"
+						  id="ordering-nodes"
+						  pageSize={subnodes.length}
+						  isLink
+						  items={subnodes}
+						  tileMapping={{
+							title: "display_name",
+							custom: (data) => {
+							  return this.buildNodeTile(data);
+							},
+						  }}
+						  select={this.openNodeDetails}
+						  addItems={buttonsOnTheNodesTab}
+						/>
+					  </div>
+					</TabPanel>
+				  );
+				},
+			  });
+			}
+
+			if (this.props.selectedNode && this.props.selectedNode.consenter_proposal_fin) {
+				{/* [drill down section] - an orderer node is selected, this is the drill down "info and usage" tab */}
+			  tabItems.push({
+				tab: () => <Tab
+				id="ibp-orderer-usage"
+				className={
+					this.props.selectedNode.isUpgradeAvailable &&
+					this.props.selectedNode.location === 'ibm_saas' &&
+					ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)
+						? 'ibp-patch-available-tab'
+						: ''
+				}
+			>
+				{translate('usage_info')}
+				{this.props.selectedNode.isUpgradeAvailable &&
+				this.props.selectedNode.location === 'ibm_saas' &&
+				ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) ? (
+					<div className="ibp-details-patch-container">
+						<div className="ibp-patch-available-tag ibp-node-details" onClick={() => this.openOrdererSettings('upgrade')}>
+							{translate('patch_available')}
+						</div>
+					</div>
+				) : (
+					''
+				)}
+			</Tab>,
+				panel: () => {
+				  return (
+					<TabPanel>
+					  <NodeDetails node={this.props.selectedNode} />
+					  {this.renderUsage(translate)}
+					</TabPanel>
+				  );
+				},
+			  });
+			}
+			if (this.isSystemLess(this.props.selectedNode)) {
+				{/* [drill down section] - an orderer nodes is selected and it is systemless, this is the drill down "Channels" tab */}
+			  tabItems.push({
+				tab: () => <Tab id="ibp-orderer-channels">{translate('channels')}</Tab>,
+				panel: () => {
+				  return (
+					<TabPanel>
+					  <ChannelParticipationDetails
+						selectedNode={this.props.selectedNode}
+						channelList={this.props.channelList}
+						details={this.props.details}
+						loading={this.props.loading}
+						unJoinComplete={this.getCPChannelList}
+						drillDown={true}
+					  />
+					</TabPanel>
+				  );
+				},
+			  });
+			}
+		}
+
 		return (
 			<PageContainer>
 				<Row>
@@ -1445,154 +1618,18 @@ class OrdererDetails extends Component {
 								{this.props.details && (
 									<Tabs
 										aria-label="sub-navigation"
-										selected={this.props.selectedTab}
-										onSelectionChange={(selectedTab) => {
+										defaultSelectedIndex={this.props.selectedTab ? this.props.selectedTab.selectedIndex : this.props.selectedTab}
+										selectedIndex={this.props.selectedTab ? this.props.selectedTab.selectedIndex : this.props.selectedTab}
+										onChange={(selectedTab) => {
 											this.props.updateState(SCOPE, { selectedTab });
 										}}
 									>
 										<TabList contained>
-											{/* [details section] - an orderer node is NOT selected, this is the top level content */}
-											{!this.props.selectedNode && <Tab id="ibp-orderer-details">{translate('details')}</Tab>}
-											{/* [all nodes section] - an orderer node is NOT selected, this is the top level content */}
-											{!this.props.selectedNode && <Tab id="ibp-orderer-nodes">{translate('ordering_nodes')}</Tab>}
-											{/* [drill down section] - an orderer node is selected, this is the drill down "info and usage" tab */}
-											{this.props.selectedNode && this.props.selectedNode.consenter_proposal_fin && (
-												<Tab
-													id="ibp-orderer-usage"
-													className={
-														this.props.selectedNode.isUpgradeAvailable &&
-														this.props.selectedNode.location === 'ibm_saas' &&
-														ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)
-															? 'ibp-patch-available-tab'
-															: ''
-													}
-												>
-													{translate('usage_info')}
-													{this.props.selectedNode.isUpgradeAvailable &&
-													this.props.selectedNode.location === 'ibm_saas' &&
-													ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) ? (
-														<div className="ibp-details-patch-container">
-															<div className="ibp-patch-available-tag ibp-node-details" onClick={() => this.openOrdererSettings('upgrade')}>
-																{translate('patch_available')}
-															</div>
-														</div>
-													) : (
-														''
-													)}
-												</Tab>
-											)}
-											{/* [drill down section] - an orderer nodes is selected and it is systemless, this is the drill down "Channels" tab */}
-											{this.isSystemLess(this.props.selectedNode) && <Tab id="ibp-orderer-channels">{translate('channels')}</Tab>}
+											{tabItems.map(item => item.tab())}
 										</TabList>
 
 										<TabPanels>
-											{!this.props.selectedNode && (
-												<TabPanel>
-													{!this.props.loading && this.channelParticipationEnabled(this.props.details) && !this.props.orderer_tls_identity && (
-														<div>
-															<SidePanelWarning
-																title="tls_identity_not_found"
-																subtitle={translate(
-																	this.isSystemLess(this.props.details) ? 'orderer_tls_admin_identity_not_found' : 'orderer_tls_admin_identity_not_found2'
-																)}
-															/>
-														</div>
-													)}
-
-													{/*
-													its possible for an orderer to be at fabric v2.4, have CP features enabled, but still have a system channel, (it is not systemless yet)
-													so we still need to show them the ChannelParticipationDetails modal, which has the ability to remove the system channel
-													*/}
-													{this.channelParticipationEnabled(this.props.details) && this.props.orderer_tls_identity && (
-														<ChannelParticipationDetails
-															selectedNode={this.props.selectedNode}
-															channelList={this.props.channelList}
-															details={this.props.details}
-															unJoinComplete={this.getCPChannelList}
-															loading={this.props.loading}
-															isSystemLess={this.isSystemLess(this.props.details)}
-															drillDown={false}
-														/>
-													)}
-													{!this.props.loading && !hasAssociatedIdentities && (
-														<div className="ibp-orderer-no-identity">
-															<p>{translate('orderer_no_identity')}</p>
-															<Button id="no-identity-button" onClick={() => this.openOrdererSettings('associate')}>
-																{translate('associate_identity')}
-															</Button>
-														</div>
-													)}
-													{!this.isSystemLess(this.props.details) && hasAssociatedIdentities && (
-														<div>
-															{this.renderPendingNotice(translate)}
-															{this.renderRunningPartial(translate)}
-															{this.renderMissingEndorsementNotice(translate)}
-															<OrdererAdmins
-																admins={this.props.admins}
-																members={this.props.members}
-																orderer={this.props.details}
-																configtxlator_url={this.props.configtxlator_url}
-																onClose={this.onClose}
-																clusterId={this.props.match.params.clusterIdPath}
-																loading={this.props.sysChLoading}
-																disableAddItem={this.props.disabled}
-																feature_flags={this.props.feature_flags}
-															/>
-															<OrdererMembers
-																admins={this.props.admins}
-																members={this.props.members}
-																configtxlator_url={this.props.configtxlator_url}
-																clusterId={this.props.match.params.clusterIdPath}
-																onClose={this.onClose}
-																loading={this.props.sysChLoading}
-																disableAddItem={this.props.disabled}
-																feature_flags={this.props.feature_flags}
-															/>
-															{this.renderConsenters(translate)}
-														</div>
-													)}
-												</TabPanel>
-											)}
-											{!this.props.selectedNode && (
-												<TabPanel>
-													<div className="orderer-details-nodes-container">
-														<ItemContainer
-															containerTitle="ordering_nodes"
-															itemId="ordering-nodes"
-															id="ordering-nodes"
-															pageSize={subnodes.length}
-															isLink
-															items={subnodes}
-															tileMapping={{
-																title: 'display_name',
-																custom: (data) => {
-																	return this.buildNodeTile(data);
-																},
-															}}
-															select={this.openNodeDetails}
-															addItems={buttonsOnTheNodesTab}
-														/>
-													</div>
-												</TabPanel>
-											)}
-											{this.props.selectedNode && this.props.selectedNode.consenter_proposal_fin && (
-												<TabPanel>
-													<NodeDetails node={this.props.selectedNode} />
-													{this.renderUsage(translate)}
-												</TabPanel>
-											)}
-											{this.isSystemLess(this.props.selectedNode) && (
-												<TabPanel>
-													<ChannelParticipationDetails
-														selectedNode={this.props.selectedNode}
-														channelList={this.props.channelList}
-														details={this.props.details}
-														loading={this.props.loading}
-														unJoinComplete={this.getCPChannelList}
-														drillDown={true}
-													/>
-												</TabPanel>
-											)}
+										{tabItems.map(item => item.panel())}
 										</TabPanels>
 									</Tabs>
 								)}
@@ -1648,7 +1685,7 @@ const dataProps = {
 	capabilities: PropTypes.object,
 	exportInProgress: PropTypes.bool,
 	selectedNode: PropTypes.object,
-	selectedTab: PropTypes.number,
+	selectedTab: PropTypes.any,
 	showAddNode: PropTypes.bool,
 	addToSystemChannelInProgress: PropTypes.bool,
 	error: PropTypes.object,
