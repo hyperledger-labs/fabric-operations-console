@@ -248,9 +248,11 @@ class GenerateCertificateModal extends Component {
 				<div className="ibp-enroll-results">
 					<div>
 						<p className="ibp-modal-desc">
-							{translate('generate_cert_desc', {
-								action: translate(this.props.selectedUser ? 'generate_cert' : 'reenroll'),
-							})}
+							<Trans>
+								{translate('generate_cert_desc', {
+									action: translate(this.props.selectedUser ? 'generate_cert' : 'reenroll'),
+								})}
+							</Trans>
 						</p>
 					</div>
 					<Form
