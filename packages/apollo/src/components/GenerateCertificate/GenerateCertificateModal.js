@@ -16,7 +16,7 @@
 import { Button } from "@carbon/react";
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { withTranslation } from 'react-i18next';
+import { Trans, withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateState } from '../../redux/commonActions';
 import { CertificateAuthorityRestApi } from '../../rest/CertificateAuthorityRestApi';
@@ -248,9 +248,11 @@ class GenerateCertificateModal extends Component {
 				<div className="ibp-enroll-results">
 					<div>
 						<p className="ibp-modal-desc">
-							{translate('generate_cert_desc', {
-								action: translate(this.props.selectedUser ? 'generate_cert' : 'reenroll'),
-							})}
+							<Trans>
+								{translate('generate_cert_desc', {
+									action: translate(this.props.selectedUser ? 'generate_cert' : 'reenroll'),
+								})}
+							</Trans>
 						</p>
 					</div>
 					<Form

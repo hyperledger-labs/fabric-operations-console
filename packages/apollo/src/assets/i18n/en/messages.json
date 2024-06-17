@@ -1569,7 +1569,7 @@
 	"orderer_storage_warning": "Storage can only be set during the creation of an ordering service.  Please plan around this when sizing below.",
 	"peer_storage_warning": "Storage can only be set during the creation of a peer.  Please plan around this when sizing below.",
 	"usage": "Usage",
-	"usage_info": "Info and usage {{patch}}",
+	"usage_info": "Info and usage",
 	"not_available_for_free_cluster": "Usage information is not available for free clusters.",
 	"resource_allocation_desc": "Please refer to your cluster configuration when setting these values because this console does not manage them for you.",
 	"import_resource_desc": "If you are uncertain what values to set, these default values are acceptable for a standard cluster. Storage on these containers cannot be adjusted after creation using this console. The CPU and memory can be adjusted at any time as long as resources exist in your cluster.",

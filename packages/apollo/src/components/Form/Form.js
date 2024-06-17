@@ -822,10 +822,10 @@ class Form extends Component {
 								id={this.props.id + '-' + optionId}
 								name={optionValue}
 								className={`ibp-multi-select-item ${disabled ? 'ibp-multi-select-item-disabled' : ''}`}
-								handleClick={() => {
+								onClick={() => {
 									this.onMultiSelectChange(field, option);
 								}}
-								handleKeyDown={evt => {
+								onKeyDown={evt => {
 									if (evt.which === null) {
 										this.onMultiSelectChange(field, option);
 									}
