@@ -235,6 +235,11 @@ const Helper = {
 				tls_cert: _.get(node, 'msp.component.tls_cert'),
 				tls_ca_root_cert: _.get(node, 'msp.tlsca.root_certs[0]'),
 			};
+
+			if(node.node_ou) {
+				exportNode.node_ou = node.node_ou;
+			}
+
 			if (zipExport) {
 				exportNode.id = node.id;
 				exportNode.associatedIdentityName = node.associatedIdentityName;
