@@ -589,7 +589,7 @@ export class CADetails extends Component {
 					<PageHeader history={this.props.history} headerName={caName ? translate('ca_details_title', { caName: caName }) : ''} />
 				</Row>
 
-				<Row>
+				<Row className='ibp-ca-details'>
 					{caNameSkeleton}
 					<div className="ibp-column width-25">
 						<div className="ibp-node-details-panel">
