@@ -892,6 +892,10 @@ class ImportPeerModal extends React.Component {
 						{
 							name: 'location',
 							required: false,
+						},,
+						{
+							name: 'node_ou',
+							required: false,
 						},
 					]}
 					onChange={this.onChange}
