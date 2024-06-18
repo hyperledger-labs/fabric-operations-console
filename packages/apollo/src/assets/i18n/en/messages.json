@@ -1450,7 +1450,7 @@
 	"fabric_node_to_be_updated": "Fabric node to be updated",
 	"new_version": "Upgrade to",
 	"view_release_notes": "View Release notes",
-	"release_notes_docs": "{{DOC_PREFIX}}?topic=253-whats-new",
+	"release_notes_docs": "{{DOC_PREFIX}}?topic=help-patch-history",
 	"node_unavailable_during_upgrade_title": "Node unavailable during upgrade",
 	"node_unavailable_during_upgrade_desc": "The node is not able to process transactions during the upgrade. To avoid disruptions to your network, it is recommended to have another node available to respond to transactions or requests.",
 	"peer_v1_v2_upgrade_title": "Peer state database warning",
