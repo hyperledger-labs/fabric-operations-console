@@ -1160,7 +1160,9 @@ class OrdererModal extends React.Component {
 				throw newError;
 			}
 		}, Promise.resolve());
-		this.props.onComplete();
+		setTimeout(() => {
+			this.props.onComplete();
+		}, 10);
 		return;
 	}
 
