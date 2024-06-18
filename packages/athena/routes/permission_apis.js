@@ -323,7 +323,7 @@ module.exports = function (logger, ev, t) {
 			}
 		});
 	});
-	app.get('/ak/api/v3/identity/token/:id', t.middleware.verify_apiKey_action_ak, (req, res) => {
+	app.get('/ak/api/v3/identity/token/:id', t.middleware.verify_apiKey_action_ak_view, (req, res) => {
 		t.permissions_lib.get_access_token(req.params.id, (err, ret) => {
 			if (err) {
 				return res.status(t.ot_misc.get_code(err)).json(err);
