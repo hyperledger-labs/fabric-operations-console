@@ -468,6 +468,7 @@ export class JsonInput extends React.Component {
 											this.checkData(this.props.data);
 										}}
 										aria-label={translate('name')}
+										labelText=''
 										readOnly={this.props.readOnly}
 									/>
 									{item.error ? <WarningFilled size={20} className="ibp-file-uploader-error-icon" /> : null}
