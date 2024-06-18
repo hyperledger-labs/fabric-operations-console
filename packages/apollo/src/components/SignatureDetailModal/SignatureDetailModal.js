@@ -631,6 +631,7 @@ class SignatureDetailModal extends React.Component {
 										<TextInput readOnly={true}
 											disabled
 											value={msp_id}
+											labelText=''
 										/>
 									</div>
 								</div>

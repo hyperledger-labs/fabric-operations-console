@@ -89,7 +89,8 @@ export default [
 			// "no-unused-vars": [
 			// 	1,
 			// 	{
-			// 		"args": "none"
+			// 		"args": "none",
+			// 		"varsIgnorePattern": "React"
 			// 	}
 			// ],
 			"no-var": 1,
