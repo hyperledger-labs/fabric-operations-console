@@ -501,7 +501,7 @@ class Form extends Component {
 							label={field.name}
 							id={field.name}
 							name={field.name}
-							ariaLabel={translate(field.label || field.name, field.labelOptions)}
+							aria-label={translate(field.label || field.name, field.labelOptions)}
 							items={fixed_options}
 							selectedItem={fixed_value ? fixed_value : field.default}
 							disabled={field.disabled}
@@ -531,15 +531,18 @@ class Form extends Component {
 								return '';
 							}}
 							onChange={(item) => {
+								console.log('dropdown on change');
 								const data = {};
 								data[field.name] = this.fixChangedItem(field.options, item.selectedItem);
-								this.props.updateState(this.props.scope, data);
-								if (this.props.onChange) {
-									const valid = this.isFormValid({
-										...this.props,
-										...data,
-									});
-									this.props.onChange(data, valid, field, this.props.formProps);
+								if (JSON.stringify(this.props.scope[field.name]) !== JSON.stringify(data[field.name])) {
+									this.props.updateState(this.props.scope, data);
+									if (this.props.onChange) {
+										const valid = this.isFormValid({
+											...this.props,
+											...data,
+										});
+										this.props.onChange(data, valid, field, this.props.formProps);
+									}
 								}
 							}}
 						/>
