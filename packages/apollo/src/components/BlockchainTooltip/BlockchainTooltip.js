@@ -88,7 +88,7 @@ BlockchainTooltip.propTypes = {
 	triggerText: PropTypes.any,
 	noIcon: PropTypes.bool,
 	type: PropTypes.oneOf(['definition', 'standard']),
-	tooltipText: PropTypes.string,
+	tooltipText: PropTypes.any,
 	withCheckbox: PropTypes.bool,
 };
 

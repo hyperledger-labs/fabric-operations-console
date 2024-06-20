@@ -22,7 +22,7 @@ import Helper from '../../utils/helper';
 
 class NodeDetails extends Component {
 	getTitle() {
-		switch (this.props.node.type) {
+		switch (this.props.node?.type) {
 			case 'fabric-peer':
 			case 'peer':
 				return 'peer_information';

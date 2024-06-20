@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {TrashCan} from '@carbon/icons-react';
-import { Button, CodeSnippet, ContentSwitcher, InlineLoading, Switch } from "@carbon/react";
+import { TrashCan } from '@carbon/icons-react';
+import { Button, CodeSnippet, ContentSwitcher, InlineLoading, Switch } from '@carbon/react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -91,10 +91,10 @@ class GenerateMSPModal extends Component {
 	}
 
 	async getIdentities(rootCerts) {
-		const updatedRootCerts = rootCerts.filter(x => x.cert !== '');
+		const updatedRootCerts = rootCerts.filter((x) => x.cert !== '');
 		let rootCertsToCheck = [];
-		updatedRootCerts.map(rootCert => rootCertsToCheck.push(rootCert.cert));
-		this.props.intermediate_certs.forEach(icert => rootCertsToCheck.push(icert));
+		updatedRootCerts.map((rootCert) => rootCertsToCheck.push(rootCert.cert));
+		this.props.intermediate_certs.forEach((icert) => rootCertsToCheck.push(icert));
 		try {
 			const rootCertIdentities = await IdentityApi.getIdentitiesForCerts(rootCertsToCheck);
 			this.props.updateState(SCOPE, {
@@ -189,7 +189,7 @@ class GenerateMSPModal extends Component {
 	getCAs = () => {
 		this.props.updateState(SCOPE, { loading: true });
 		CertificateAuthorityRestApi.getCAs()
-			.then(caList => {
+			.then((caList) => {
 				this.props.updateState(SCOPE, {
 					cas: caList,
 					loading: false,
@@ -197,7 +197,7 @@ class GenerateMSPModal extends Component {
 				this.addAdmin();
 				return caList;
 			})
-			.then(caList => {
+			.then((caList) => {
 				// this.loadUsersFromCA(caList[0].id);
 				this.props.updateState(SCOPE, {
 					loading: false,
@@ -223,115 +223,117 @@ class GenerateMSPModal extends Component {
 	};
 
 	onSelectRootCA = (value, valid) => {
-		this.props.updateState(SCOPE, {
-			ca: value.selectedRootCA,
-			enroll_id: value.selectedRootCA.enroll_id,
-			enroll_secret: value.selectedRootCA.enroll_secret,
-			rootCerts: [],
-			tlsRootCerts: [],
-			notAvailable: false,
-			gettingRootCerts: true,
-		});
-		CertificateAuthorityRestApi.getRootCertificate(value.selectedRootCA, false)
-			.then(async cert => {
-				let rootCerts = [];
-				let intermediateCerts = [];
-				let certArray = Helper.getCertArray(cert);
-				certArray.forEach(myCert => {
-					let parseCert = StitchApi.parseCertificate(myCert);
-					if (parseCert) {
-						if (parseCert.issuer === parseCert.subject) {
-							rootCerts = [
-								{
-									cert: parseCert.base_64_pem,
-									isReadOnly: true,
-								},
-							];
-						} else {
-							intermediateCerts.push(parseCert.base_64_pem);
+		setTimeout(() => {
+			this.props.updateState(SCOPE, {
+				ca: value.selectedRootCA,
+				enroll_id: value.selectedRootCA.enroll_id,
+				enroll_secret: value.selectedRootCA.enroll_secret,
+				rootCerts: [],
+				tlsRootCerts: [],
+				notAvailable: false,
+				gettingRootCerts: true,
+			});
+			CertificateAuthorityRestApi.getRootCertificate(value.selectedRootCA, false)
+				.then(async (cert) => {
+					let rootCerts = [];
+					let intermediateCerts = [];
+					let certArray = Helper.getCertArray(cert);
+					certArray.forEach((myCert) => {
+						let parseCert = StitchApi.parseCertificate(myCert);
+						if (parseCert) {
+							if (parseCert.issuer === parseCert.subject) {
+								rootCerts = [
+									{
+										cert: parseCert.base_64_pem,
+										isReadOnly: true,
+									},
+								];
+							} else {
+								intermediateCerts.push(parseCert.base_64_pem);
+							}
 						}
-					}
-				});
+					});
 
-				const current_root_certs = _.size(rootCerts) > 0 ? [rootCerts[0].cert] : [];
-				const current_intermediate_certs = _.size(intermediateCerts) > 0 ? [intermediateCerts[0].cert] : [];
-				const duplicateMSPExists = await MspRestApi.checkIfMSPExists(this.props.msp_id, current_root_certs, current_intermediate_certs);
-				if (duplicateMSPExists) {
+					const current_root_certs = _.size(rootCerts) > 0 ? [rootCerts[0].cert] : [];
+					const current_intermediate_certs = _.size(intermediateCerts) > 0 ? [intermediateCerts[0].cert] : [];
+					const duplicateMSPExists = await MspRestApi.checkIfMSPExists(this.props.msp_id, current_root_certs, current_intermediate_certs);
+					if (duplicateMSPExists) {
+						this.props.updateState(SCOPE, {
+							duplicateMspError: true,
+							loading: false,
+							gettingRootCerts: false,
+						});
+					} else {
+						if (intermediateCerts && intermediateCerts.length > 0) {
+							this.addOUIdentifier(intermediateCerts[0]);
+						} else {
+							this.addOUIdentifier(rootCerts[0].cert);
+						}
+						this.props.updateState(SCOPE, { rootCerts, intermediate_certs: intermediateCerts });
+						this.addRootCert(rootCerts);
+						CertificateAuthorityRestApi.getRootCertificate(value.selectedRootCA, true)
+							.then((cert) => {
+								let tlsRootCerts = [];
+								let tlsIntermediateCerts = [];
+								let certArray = Helper.getCertArray(cert);
+								certArray.forEach((myCert) => {
+									let parseCert = StitchApi.parseCertificate(myCert);
+									if (parseCert) {
+										if (parseCert.issuer === parseCert.subject) {
+											tlsRootCerts = [
+												{
+													cert: parseCert.base_64_pem,
+													isReadOnly: true,
+												},
+											];
+										} else {
+											tlsIntermediateCerts.push(parseCert.base_64_pem);
+										}
+									}
+								});
+								this.props.updateState(SCOPE, {
+									tlsRootCerts,
+									tls_intermediate_certs: tlsIntermediateCerts,
+									notAvailable: false,
+									gettingRootCerts: false,
+									duplicateMspError: false,
+								});
+								this.addTLSRootCert(tlsRootCerts);
+							})
+							.then(() => {
+								this.loadUsersFromCA(value.selectedRootCA.id);
+							})
+							.catch((tls_error) => {
+								Log.error('Error occurred while getting CA root cert from TLS CA ', tls_error);
+								this.props.updateState(SCOPE, {
+									loading: false,
+									gettingRootCerts: false,
+									duplicateMspError: false,
+								});
+								this.addTLSRootCert();
+							});
+					}
+				})
+				.catch((error) => {
+					Log.error('Error occurred while getting CA root cert ', error);
 					this.props.updateState(SCOPE, {
-						duplicateMspError: true,
 						loading: false,
 						gettingRootCerts: false,
 					});
-				} else {
-					if (intermediateCerts && intermediateCerts.length > 0) {
-						this.addOUIdentifier(intermediateCerts[0]);
-					} else {
-						this.addOUIdentifier(rootCerts[0].cert);
-					}
-					this.props.updateState(SCOPE, { rootCerts, intermediate_certs: intermediateCerts });
-					this.addRootCert(rootCerts);
-					CertificateAuthorityRestApi.getRootCertificate(value.selectedRootCA, true)
-						.then(cert => {
-							let tlsRootCerts = [];
-							let tlsIntermediateCerts = [];
-							let certArray = Helper.getCertArray(cert);
-							certArray.forEach(myCert => {
-								let parseCert = StitchApi.parseCertificate(myCert);
-								if (parseCert) {
-									if (parseCert.issuer === parseCert.subject) {
-										tlsRootCerts = [
-											{
-												cert: parseCert.base_64_pem,
-												isReadOnly: true,
-											},
-										];
-									} else {
-										tlsIntermediateCerts.push(parseCert.base_64_pem);
-									}
-								}
-							});
-							this.props.updateState(SCOPE, {
-								tlsRootCerts,
-								tls_intermediate_certs: tlsIntermediateCerts,
-								notAvailable: false,
-								gettingRootCerts: false,
-								duplicateMspError: false,
-							});
-							this.addTLSRootCert(tlsRootCerts);
-						})
-						.then(() => {
-							this.loadUsersFromCA(value.selectedRootCA.id);
-						})
-						.catch(tls_error => {
-							Log.error('Error occurred while getting CA root cert from TLS CA ', tls_error);
-							this.props.updateState(SCOPE, {
-								loading: false,
-								gettingRootCerts: false,
-								duplicateMspError: false,
-							});
-							this.addTLSRootCert();
-						});
-				}
-			})
-			.catch(error => {
-				Log.error('Error occurred while getting CA root cert ', error);
-				this.props.updateState(SCOPE, {
-					loading: false,
-					gettingRootCerts: false,
+					this.addRootCert();
 				});
-				this.addRootCert();
-			});
-		this.checkCAHealth(value.selectedRootCA);
+			this.checkCAHealth(value.selectedRootCA);
+		}, 100);
 	};
 
 	loadUsersFromCA(ca_id) {
 		this.props.updateState(SCOPE, { loadingUsers: true });
 		return CertificateAuthorityRestApi.getUsersFromCAId(ca_id, 'ca')
-			.then(all_users => {
+			.then((all_users) => {
 				if (!all_users) {
 					all_users = [];
 				}
-				const users = all_users.filter(user => user.type === 'admin');
+				const users = all_users.filter((user) => user.type === 'admin');
 				if (users && users.length) {
 					this.props.updateState(SCOPE, {
 						enroll_id: users[0].id,
@@ -344,7 +346,7 @@ class GenerateMSPModal extends Component {
 					loadingUsers: false,
 				});
 			})
-			.catch(error => {
+			.catch((error) => {
 				Log.error(error);
 				this.props.updateState(SCOPE, {
 					enroll_id: '',
@@ -356,7 +358,7 @@ class GenerateMSPModal extends Component {
 			});
 	}
 
-	checkCAHealth = ca => {
+	checkCAHealth = (ca) => {
 		this.timestamp = new Date().getTime();
 		setTimeout(() => {
 			// after 5 seconds, if we still do not have a response, show
@@ -388,9 +390,9 @@ class GenerateMSPModal extends Component {
 			const opts = {
 				msp_id: this.props.msp_id,
 				display_name: this.props.msp_name,
-				root_certs: this.props.rootCerts.filter(x => x.cert !== '').map(x => x.cert),
-				tls_root_certs: this.props.tlsRootCerts.filter(x => x.cert !== '').map(x => x.cert),
-				admins: this.props.admins.filter(x => x.cert !== '').map(x => x.cert),
+				root_certs: this.props.rootCerts.filter((x) => x.cert !== '').map((x) => x.cert),
+				tls_root_certs: this.props.tlsRootCerts.filter((x) => x.cert !== '').map((x) => x.cert),
+				admins: this.props.admins.filter((x) => x.cert !== '').map((x) => x.cert),
 				intermediate_certs: this.props.intermediate_certs,
 				tls_intermediate_certs: this.props.tls_intermediate_certs,
 				revocation_list: this.props.revocation_list,
@@ -430,11 +432,11 @@ class GenerateMSPModal extends Component {
 		}
 	}
 
-	onError = error => {
+	onError = (error) => {
 		this.props.updateState(SCOPE, { error });
 	};
 
-	addIdentityToWallet = cert => {
+	addIdentityToWallet = (cert) => {
 		IdentityApi.createIdentity([
 			{
 				name: cert.name,
@@ -447,7 +449,7 @@ class GenerateMSPModal extends Component {
 					cert: cert.certificate,
 					isReadOnly: true,
 				};
-				let existing_admins = this.props.admins.filter(admin => admin.cert !== '');
+				let existing_admins = this.props.admins.filter((admin) => admin.cert !== '');
 				const admins = existing_admins ? [...existing_admins, new_admin] : [new_admin];
 				this.props.updateState(SCOPE, {
 					generatedCert: cert,
@@ -458,15 +460,15 @@ class GenerateMSPModal extends Component {
 				this.addAdmin(admins);
 				Log.debug('Identity added to wallet', cert);
 			})
-			.catch(error => {
+			.catch((error) => {
 				Log.error(error);
 				this.props.updateState(SCOPE, {
 					error: error.title
 						? error
 						: {
-							title: 'error_add_identity',
-							details: error.details ? error.details : error,
-						},
+								title: 'error_add_identity',
+								details: error.details ? error.details : error,
+							},
 					loadingCert: false,
 				});
 			});
@@ -480,7 +482,7 @@ class GenerateMSPModal extends Component {
 			loadingCert: true,
 		});
 		CertificateAuthorityRestApi.generateCertificate(opts)
-			.then(resp => {
+			.then((resp) => {
 				let cert = {
 					name: this.props.identity_name,
 					private_key: resp.private_key,
@@ -489,7 +491,7 @@ class GenerateMSPModal extends Component {
 				};
 				this.addIdentityToWallet(cert);
 			})
-			.catch(error => {
+			.catch((error) => {
 				Log.error(error);
 				let error_message = 'error_generate_cert';
 				if (error && error.msg && typeof error.msg === 'string' && error.msg.indexOf('Authentication failure') >= 0) {
@@ -519,11 +521,11 @@ class GenerateMSPModal extends Component {
 		});
 	};
 
-	addRootCert = rootCerts => {
+	addRootCert = (rootCerts) => {
 		if (!rootCerts) {
 			rootCerts = this.props.rootCerts;
 		}
-		let hasBlankRow = rootCerts ? rootCerts.find(x => x.cert === '') : false;
+		let hasBlankRow = rootCerts ? rootCerts.find((x) => x.cert === '') : false;
 		if (!hasBlankRow) {
 			let blank_cert = {
 				cert: '',
@@ -536,11 +538,11 @@ class GenerateMSPModal extends Component {
 		}
 	};
 
-	addTLSRootCert = tlsRootCerts => {
+	addTLSRootCert = (tlsRootCerts) => {
 		if (!tlsRootCerts) {
 			tlsRootCerts = this.props.tlsRootCerts;
 		}
-		let hasBlankRow = tlsRootCerts ? tlsRootCerts.find(x => x.cert === '') : false;
+		let hasBlankRow = tlsRootCerts ? tlsRootCerts.find((x) => x.cert === '') : false;
 		if (!hasBlankRow) {
 			let blank_cert = {
 				cert: '',
@@ -551,11 +553,11 @@ class GenerateMSPModal extends Component {
 		}
 	};
 
-	addAdmin = admins => {
+	addAdmin = (admins) => {
 		if (!admins) {
 			admins = this.props.admins;
 		}
-		let hasBlankRow = admins ? admins.find(x => x.cert === '') : false;
+		let hasBlankRow = admins ? admins.find((x) => x.cert === '') : false;
 		if (!hasBlankRow) {
 			let blank_admin = {
 				cert: '',
@@ -566,9 +568,9 @@ class GenerateMSPModal extends Component {
 		}
 	};
 
-	onDeleteRootCert = index => {
+	onDeleteRootCert = (index) => {
 		let updated = this.props.rootCerts.filter((c, i) => i !== index);
-		let hasBlankRow = updated.find(x => x.cert === '');
+		let hasBlankRow = updated.find((x) => x.cert === '');
 		if (!hasBlankRow) {
 			updated.push({
 				cert: '',
@@ -580,9 +582,9 @@ class GenerateMSPModal extends Component {
 		this.getIdentities(updated);
 	};
 
-	onDeleteTLSRootCert = index => {
+	onDeleteTLSRootCert = (index) => {
 		let updated = this.props.tlsRootCerts.filter((c, i) => i !== index);
-		let hasBlankRow = updated.find(x => x.cert === '');
+		let hasBlankRow = updated.find((x) => x.cert === '');
 		if (!hasBlankRow) {
 			updated.push({
 				cert: '',
@@ -593,9 +595,9 @@ class GenerateMSPModal extends Component {
 		});
 	};
 
-	onDeleteAdmin = index => {
+	onDeleteAdmin = (index) => {
 		let updated = this.props.admins.filter((c, i) => i !== index);
-		let hasBlankRow = updated.find(x => x.cert === '');
+		let hasBlankRow = updated.find((x) => x.cert === '');
 		if (!hasBlankRow) {
 			updated.push({
 				cert: '',
@@ -636,7 +638,7 @@ class GenerateMSPModal extends Component {
 		}
 	};
 
-	validateMspid = value => {
+	validateMspid = (value) => {
 		let mspid = value.msp_id;
 		if (mspid) {
 			let invalidCharacters = false;
@@ -683,7 +685,7 @@ class GenerateMSPModal extends Component {
 		});
 	};
 
-	renderMSPDetails = translate => {
+	renderMSPDetails = (translate) => {
 		const { msp_name, msp_id } = this.props;
 		return (
 			<div>
@@ -723,7 +725,7 @@ class GenerateMSPModal extends Component {
 		);
 	};
 
-	renderRootCertDetails = translate => {
+	renderRootCertDetails = (translate) => {
 		const { ca, loading } = this.props;
 		return (
 			<div>
@@ -746,18 +748,14 @@ class GenerateMSPModal extends Component {
 							]}
 							onChange={this.onSelectRootCA}
 						/>
-						{this.props.notAvailable && <SidePanelWarning title="ca_not_available_title"
-							subtitle="ca_not_available_text"
-						/>}
+						{this.props.notAvailable && <SidePanelWarning title="ca_not_available_title" subtitle="ca_not_available_text" />}
 						<div className="ibp-generate-msp-cert-section">
 							{!loading && this.props.selectedRootCA && this.props.selectedRootCA.type === 'fabric-ca' && this.renderRootCerts(translate)}
 							{!loading && this.props.selectedRootCA && this.props.selectedRootCA.type === 'fabric-ca' && this.renderTLSRootCerts(translate)}
 						</div>
 						{this.props.duplicateMspError && (
 							<div className="ibp-root-cert-details">
-								<SidePanelWarning title="duplicate_mspid_error_title"
-									subtitle={translate('duplicate_mspid_error_desc')}
-								/>
+								<SidePanelWarning title="duplicate_mspid_error_title" subtitle={translate('duplicate_mspid_error_desc')} />
 							</div>
 						)}
 					</div>
@@ -766,18 +764,16 @@ class GenerateMSPModal extends Component {
 		);
 	};
 
-	renderRootCerts = translate => {
+	renderRootCerts = (translate) => {
 		return (
-            <div className="ibp-generate-msp-cert-section-root">
+			<div className="ibp-generate-msp-cert-section-root">
 				<div className="ibp-tooltip-wrap ibp-msp-tooltip">
 					<BlockchainTooltip triggerText={translate('root_certs')}>{translate('generate_msp_rootcert_tooltip')}</BlockchainTooltip>
 				</div>
 				<div>
 					{this.props.rootCerts.map((rootCert, i) => {
 						return (
-                            <div key={'rootCert_' + i}
-								className="ibp-msp-row"
-							>
+							<div key={'rootCert_' + i} className="ibp-msp-row">
 								<div className="ibp-msp-input">
 									<input
 										id={'ibp-root-cert-' + i}
@@ -785,7 +781,7 @@ class GenerateMSPModal extends Component {
 										className="cds--text-input"
 										placeholder={translate('root_cert_placeholder')}
 										value={rootCert.cert}
-										onChange={event => {
+										onChange={(event) => {
 											this.onChangeRootCert(i, event.target.value);
 										}}
 										disabled={rootCert.isReadOnly}
@@ -810,26 +806,24 @@ class GenerateMSPModal extends Component {
 									/>
 								)}
 							</div>
-                        );
+						);
 					})}
 					{this.props.gettingRootCerts && <InlineLoading />}
 				</div>
 			</div>
-        );
+		);
 	};
 
-	renderTLSRootCerts = translate => {
+	renderTLSRootCerts = (translate) => {
 		return (
-            <div className="ibp-generate-msp-cert-section-tls">
+			<div className="ibp-generate-msp-cert-section-tls">
 				<div className="ibp-tooltip-wrap ibp-msp-tooltip">
 					<BlockchainTooltip triggerText={translate('tls_root_certs')}>{translate('generate_msp_tls_rootcert_tooltip')}</BlockchainTooltip>
 				</div>
 				<div>
 					{this.props.tlsRootCerts.map((tlsRootCert, i) => {
 						return (
-                            <div key={'tlsRootCert_' + i}
-								className="ibp-msp-row"
-							>
+							<div key={'tlsRootCert_' + i} className="ibp-msp-row">
 								<div className="ibp-msp-input">
 									<input
 										id={'ibp-tls-root-cert-' + i}
@@ -837,7 +831,7 @@ class GenerateMSPModal extends Component {
 										className="cds--text-input"
 										placeholder={translate('tls_root_cert_placeholder')}
 										value={tlsRootCert.cert}
-										onChange={event => {
+										onChange={(event) => {
 											this.onChangeTLSRootCert(i, event.target.value);
 										}}
 										disabled={tlsRootCert.isReadOnly}
@@ -862,14 +856,14 @@ class GenerateMSPModal extends Component {
 									/>
 								)}
 							</div>
-                        );
+						);
 					})}
 				</div>
 			</div>
-        );
+		);
 	};
 
-	addOUIdentifier = certificate => {
+	addOUIdentifier = (certificate) => {
 		let state = {};
 		if (this.props.feature_flags && this.props.feature_flags.enable_ou_identifier) {
 			state.fabric_node_ous = ChannelApi.getNodeOUIdentifier(certificate);
@@ -881,7 +875,7 @@ class GenerateMSPModal extends Component {
 		});
 	};
 
-	renderGenerateCertificate = translate => {
+	renderGenerateCertificate = (translate) => {
 		const { enroll_id, enroll_secret, identity_name } = this.props;
 		return (
 			<div>
@@ -893,7 +887,7 @@ class GenerateMSPModal extends Component {
 						{
 							name: 'enroll_id',
 							type: this.props.users.length ? 'dropdown' : undefined,
-							options: this.props.users.length ? this.props.users.map(user => user.id) : [],
+							options: this.props.users.length ? this.props.users.map((user) => user.id) : [],
 							tooltip: 'generate_msp_enroll_id_tooltip',
 							required: true,
 							specialRules: Helper.SPECIAL_RULES_ENROLL_ID,
@@ -937,16 +931,10 @@ class GenerateMSPModal extends Component {
 						<div>
 							{!this.props.generatedCert.isDownloaded && (
 								<div className="ibp-error-panel">
-									<SidePanelWarning title="please_note"
-										subtitle="download_cert_first"
-									/>
+									<SidePanelWarning title="please_note" subtitle="download_cert_first" />
 								</div>
 							)}
-							<Button id="btn-export-certificate"
-								kind="secondary"
-								className="ibp-generate-certificate"
-								onClick={this.onDownloadCert}
-							>
+							<Button id="btn-export-certificate" kind="secondary" className="ibp-generate-certificate" onClick={this.onDownloadCert}>
 								{translate('export_node_config')}
 							</Button>
 						</div>
@@ -956,7 +944,7 @@ class GenerateMSPModal extends Component {
 		);
 	};
 
-	toggleIdentityType = translate => {
+	toggleIdentityType = (translate) => {
 		const { msp_name } = this.props;
 		this.props.updateState(SCOPE, {
 			admins: [],
@@ -971,11 +959,11 @@ class GenerateMSPModal extends Component {
 		} else {
 			const generatedCertAdmin = this.props.generatedCert.certificate
 				? [
-					{
-						cert: this.props.generatedCert.certificate,
-						isReadOnly: true,
-					},
-				]
+						{
+							cert: this.props.generatedCert.certificate,
+							isReadOnly: true,
+						},
+					]
 				: [];
 			this.props.updateState(SCOPE, {
 				identityType: 'new',
@@ -987,27 +975,19 @@ class GenerateMSPModal extends Component {
 		}
 	};
 
-	renderAdmins = translate => {
+	renderAdmins = (translate) => {
 		const { admins, ca, identity, identityType } = this.props;
 		const caName = ca.name;
 		return (
-            <div>
+			<div>
 				<p className="ibp-generate-msp-wizard-desc">{translate('admins_desc')}</p>
 				<ContentSwitcher
 					className="ibp-identity-type-toggle"
 					onChange={() => this.toggleIdentityType(translate)}
 					selectedIndex={identityType === 'existing' ? 1 : 0}
 				>
-					<Switch kind="button"
-						id="ibp-use-new-identity"
-						name="new"
-						text={translate('use_new_identity')}
-					/>
-					<Switch kind="button"
-						id="ibp-use-existing-identity"
-						name="existing"
-						text={translate('use_existing_identity')}
-					/>
+					<Switch kind="button" id="ibp-use-new-identity" name="new" text={translate('use_new_identity')} />
+					<Switch kind="button" id="ibp-use-existing-identity" name="existing" text={translate('use_existing_identity')} />
 				</ContentSwitcher>
 				{identityType === 'new' ? (
 					this.renderGenerateCertificate(translate)
@@ -1055,9 +1035,7 @@ class GenerateMSPModal extends Component {
 						<div>
 							{admins.map((admin, i) => {
 								return (
-                                    <div key={'admin_' + i}
-										className="ibp-msp-row"
-									>
+									<div key={'admin_' + i} className="ibp-msp-row">
 										<div className="ibp-msp-input">
 											<input
 												id={'ibp-msp-admin-' + i}
@@ -1065,7 +1043,7 @@ class GenerateMSPModal extends Component {
 												className="cds--text-input"
 												placeholder={translate('admin_certificate_placeholder')}
 												value={admin.cert}
-												onChange={event => {
+												onChange={(event) => {
 													this.onChangeAdmin(i, event.target.value);
 												}}
 												disabled={admin.isReadOnly}
@@ -1090,13 +1068,13 @@ class GenerateMSPModal extends Component {
 											/>
 										)}
 									</div>
-                                );
+								);
 							})}
 						</div>
 					</div>
 				)}
 			</div>
-        );
+		);
 	};
 
 	renderMSPTimeline(translate) {
@@ -1124,9 +1102,7 @@ class GenerateMSPModal extends Component {
 						<div className="ibp-summary-section-array-value">
 							{value.map((item, i) => {
 								return (
-									<div key={'item_' + i}
-										className="ibp-summary-section-value"
-									>
+									<div key={'item_' + i} className="ibp-summary-section-value">
 										{isCert && item.cert.length ? (
 											<input
 												id={`ibp-msp-admin-${key}-${i}`}
@@ -1188,15 +1164,15 @@ class GenerateMSPModal extends Component {
 							{this.renderSummary(translate, 'msp_id', msp_id)}
 							{this.renderSummary(translate, 'admin_cert', identity_name)}
 							{this.renderSummary(translate, 'selected_ca', caName)}
-							{rootCerts && rootCerts.filter(x => x.cert !== '').length > 1 && this.renderSummary(translate, 'root_certs', rootCerts, true)}
+							{rootCerts && rootCerts.filter((x) => x.cert !== '').length > 1 && this.renderSummary(translate, 'root_certs', rootCerts, true)}
 							{this.props.intermediate_certs &&
 								this.props.intermediate_certs.length > 0 &&
 								this.renderSummary(translate, 'intermediate_ca', this.props.intermediate_certs)}
-							{tlsRootCerts && tlsRootCerts.filter(x => x.cert !== '').length > 1 && this.renderSummary(translate, 'tls_root_certs', tlsRootCerts, true)}
+							{tlsRootCerts && tlsRootCerts.filter((x) => x.cert !== '').length > 1 && this.renderSummary(translate, 'tls_root_certs', tlsRootCerts, true)}
 							{this.props.tls_intermediate_certs &&
 								this.props.tls_intermediate_certs.length > 0 &&
 								this.renderSummary(translate, 'tls_intermediate_ca', this.props.tls_intermediate_certs)}
-							{admins && admins.filter(x => x.cert !== '').length > 1 && this.renderSummary(translate, 'admins', admins, true)}
+							{admins && admins.filter((x) => x.cert !== '').length > 1 && this.renderSummary(translate, 'admins', admins, true)}
 						</>
 					)}
 				</div>
@@ -1236,9 +1212,9 @@ class GenerateMSPModal extends Component {
 	updateTimelineSteps = (enable, all, currentGroup, currentStep) => {
 		let updatedSteps = [];
 		this.props.timelineSteps.forEach((group, index) => {
-			group.forEach(subGroup => {
+			group.forEach((subGroup) => {
 				if (all) {
-					subGroup.groupSteps.forEach(step => {
+					subGroup.groupSteps.forEach((step) => {
 						step.isLink = enable;
 					});
 				} else {
@@ -1260,14 +1236,14 @@ class GenerateMSPModal extends Component {
 		});
 	};
 
-	isStepCompleted = step => {
+	isStepCompleted = (step) => {
 		const { invalidMspError, msp_name_valid, msp_name, msp_id } = this.props;
-		let haveNoAdminCert = !this.props.admins || this.props.admins.filter(x => x.cert !== '').length === 0;
+		let haveNoAdminCert = !this.props.admins || this.props.admins.filter((x) => x.cert !== '').length === 0;
 		let complete;
 		if (step === 'msp_details') {
 			complete = msp_id && !invalidMspError && msp_name && msp_name_valid;
 		} else if (step === 'root_ca_details') {
-			complete = this.props.rootCerts && this.props.rootCerts.filter(x => x.cert !== '').length !== 0;
+			complete = this.props.rootCerts && this.props.rootCerts.filter((x) => x.cert !== '').length !== 0;
 		} else if (step === 'additional_msp_admins' || step === 'summary') {
 			complete =
 				!this.props.loading &&
@@ -1277,20 +1253,20 @@ class GenerateMSPModal extends Component {
 				this.props.msp_name &&
 				this.props.msp_name_valid &&
 				this.props.rootCerts &&
-				this.props.rootCerts.filter(x => x.cert !== '').length !== 0 &&
+				this.props.rootCerts.filter((x) => x.cert !== '').length !== 0 &&
 				!haveNoAdminCert;
 		}
 		if (complete && !this.completedSteps.includes(step)) {
 			this.completedSteps.push(step);
 		} else if (!complete && this.completedSteps.includes(step)) {
 			let copy = JSON.parse(JSON.stringify(this.completedSteps));
-			let filteredSteps = copy.filter(x => x !== step);
+			let filteredSteps = copy.filter((x) => x !== step);
 			this.completedSteps = filteredSteps;
 		}
 		return complete;
 	};
 
-	getButtons = translate => {
+	getButtons = (translate) => {
 		let buttons = [];
 		let back;
 		let next;
@@ -1346,7 +1322,7 @@ class GenerateMSPModal extends Component {
 			<SidePanel
 				id="generateMSPModal"
 				closed={this.props.onClose}
-				ref={sidePanel => (this.sidePanel = sidePanel)}
+				ref={(sidePanel) => (this.sidePanel = sidePanel)}
 				buttons={this.getButtons(translate)}
 				error={this.props.error}
 				submitting={this.props.submitting}
@@ -1415,7 +1391,7 @@ GenerateMSPModal.propTypes = {
 };
 
 export default connect(
-	state => {
+	(state) => {
 		let newProps = Helper.mapStateToProps(state[SCOPE], dataProps);
 		newProps['host_url'] = state['settings'] ? state['settings']['host_url'] : null;
 		newProps['feature_flags'] = state['settings'] ? state['settings']['feature_flags'] : null;

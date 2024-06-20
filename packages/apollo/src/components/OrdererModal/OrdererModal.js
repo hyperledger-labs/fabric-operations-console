@@ -1143,7 +1143,7 @@ class OrdererModal extends React.Component {
 
 	async associateIdentityWithOrderer() {
 		const keys = Object.keys(this.props.associatedIdentities);
-		keys.reduce(async (previousPromise, msp_id) => {
+		await keys.reduce(async (previousPromise, msp_id) => {
 			await previousPromise;
 			const id = this.props.associatedIdentities[msp_id];
 			try {
@@ -1160,7 +1160,9 @@ class OrdererModal extends React.Component {
 				throw newError;
 			}
 		}, Promise.resolve());
+
 		this.props.onComplete();
+
 		return;
 	}
 
@@ -1178,11 +1180,11 @@ class OrdererModal extends React.Component {
 			const options = this.props.applicableIdentities[msp_id] ? [do_not_associate, ...this.props.applicableIdentities[msp_id]] : [];
 			fields.push({
 				name: 'identity_' + msp_id,
+				label: 'orderer_admin_identity',
 				type: 'dropdown',
 				tooltip: 'existing_identity_dropdown_tooltip',
 				options,
 				required: false,
-				label: 'orderer_admin_identity',
 				default: !this.identities || !this.identities.length ? translate('no_identities') : msp_identity ? msp_identity : do_not_associate,
 			});
 		});
@@ -1201,13 +1203,18 @@ class OrdererModal extends React.Component {
 						id={SCOPE + '-associate'}
 						fields={fields}
 						onChange={data => {
+							console.log('triggering with data', data);
 							const changed = Object.keys(data);
 							const associatedIdentities = { ...this.props.associatedIdentities };
 							changed.forEach(field => {
 								const msp_id = field.substring(9);
 								associatedIdentities[msp_id] = data[field];
 							});
-							this.props.updateState(SCOPE, { associatedIdentities });
+							setTimeout(() => {
+								if (JSON.stringify(this.props.associatedIdentities) !== JSON.stringify(associatedIdentities)) {
+									this.props.updateState(SCOPE, { associatedIdentities });
+								}
+							}, 100);
 						}}
 					/>
 				</div>

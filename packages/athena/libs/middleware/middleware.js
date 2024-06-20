@@ -93,6 +93,7 @@ module.exports = function (logger, ev, t) {
 	// manage api keys (not valid on SaaS)
 	exports.verify_apiKey_action_session = [eTrack, blockReadOnlyMode, needApiKeyAction, checkAuthentication, permitAction];
 	exports.verify_apiKey_action_ak = [eTrack, blockReadOnlyMode, needApiKeyAction, allowAkToDoAction];
+	exports.verify_apiKey_action_ak_view = [eTrack, blockReadOnlyMode, needViewAction, allowAkToDoAction];
 
 	// manage generate bearer token using api key
 	exports.verify_apiKey_bearer_action_session = [eTrack, blockReadOnlyMode, needViewAction, checkAuthentication, permitAction];

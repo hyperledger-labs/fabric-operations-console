@@ -88,6 +88,7 @@ class MspDetailsModal extends React.Component {
 											className="ibp__text-input"
 											value={rootCert}
 											disabled
+											labelText=''
 										/>
 									</div>
 								</div>
@@ -115,6 +116,7 @@ class MspDetailsModal extends React.Component {
 											className="ibp__text-input"
 											value={admin}
 											disabled
+											labelText=''
 										/>
 									</div>
 								</div>

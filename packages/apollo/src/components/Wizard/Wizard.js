@@ -12,9 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 import _ from 'lodash';
-import { Loading } from "@carbon/react";
+import { Loading } from '@carbon/react';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
@@ -39,7 +39,7 @@ class Wizard extends Component {
 
 	onCancel = () => {
 		this.props.updateState(SCOPE, {
-			error: '',		// clear/hide the error message on cancel
+			error: '', // clear/hide the error message on cancel
 		});
 
 		const steps = this.getWizardSteps();
@@ -71,7 +71,7 @@ class Wizard extends Component {
 	getWizardSteps() {
 		const steps = [];
 		const children = _.isArray(this.props.children) ? this.props.children : [this.props.children];
-		children.forEach(child => {
+		children.forEach((child) => {
 			if (this.isWizardStep(child)) {
 				steps.push(child);
 			}
@@ -98,21 +98,23 @@ class Wizard extends Component {
 					submitting: true,
 					error: undefined,
 				});
-				steps[this.props.step - 1].props
-					.onNext()
-					.then(() => {
-						this.props.updateState(SCOPE, {
-							submitting: false,
-							step: this.props.step + 1,
+				setTimeout(() => {
+					steps[this.props.step - 1].props
+						.onNext()
+						.then(() => {
+							this.props.updateState(SCOPE, {
+								submitting: false,
+								step: this.props.step + 1,
+							});
+							this.setFocus();
+						})
+						.catch((error) => {
+							this.props.updateState(SCOPE, {
+								submitting: false,
+								error,
+							});
 						});
-						this.setFocus();
-					})
-					.catch(error => {
-						this.props.updateState(SCOPE, {
-							submitting: false,
-							error,
-						});
-					});
+				}, 5);
 			} else {
 				this.props.updateState(SCOPE, {
 					step: this.props.step + 1,
@@ -124,20 +126,22 @@ class Wizard extends Component {
 				submitting: true,
 				error: undefined,
 			});
-			this.props
-				.onSubmit()
-				.then(() => {
-					this.props.updateState(SCOPE, {
-						submitting: false,
+			setTimeout(() => {
+				this.props
+					.onSubmit()
+					.then(() => {
+						this.props.updateState(SCOPE, {
+							submitting: false,
+						});
+						this.sidePanel.closeSidePanel();
+					})
+					.catch((error) => {
+						this.props.updateState(SCOPE, {
+							submitting: false,
+							error,
+						});
 					});
-					this.sidePanel.closeSidePanel();
-				})
-				.catch(error => {
-					this.props.updateState(SCOPE, {
-						submitting: false,
-						error,
-					});
-				});
+			}, 10);
 		}
 	};
 
@@ -147,25 +151,19 @@ class Wizard extends Component {
 		const children = _.isArray(this.props.children) ? this.props.children : [this.props.children];
 		return (
 			<div>
-				{children.map(child => {
+				{children.map((child) => {
 					key++;
 					if (!this.isWizardStep(child)) {
 						return <div key={'key_' + key}>{child}</div>;
 					}
 					step++;
 					return (
-						<div key={'key_' + key}
-							className={this.props.step !== step ? 'hidden_section' : 'visible_section'}
-						>
+						<div key={'key_' + key} className={this.props.step !== step ? 'hidden_section' : 'visible_section'}>
 							<p className="ibp-wizard-step-header-desc">
 								{!!child.props.headerDesc && child.props.headerDesc}
 								{child.props.headerLink && child.props.headerLinkText && <div className="ibp-wizard-link-spacer" />}
 								{child.props.headerLink && child.props.headerLinkText && (
-									<a className="ibp-link"
-										href={child.props.headerLink}
-										target="_blank"
-										rel="noopener noreferrer"
-									>
+									<a className="ibp-link" href={child.props.headerLink} target="_blank" rel="noopener noreferrer">
 										{child.props.headerLinkText}
 									</a>
 								)}
@@ -203,7 +201,7 @@ class Wizard extends Component {
 		let step = 0;
 		let submitDisabled = false;
 		const children = _.isArray(this.props.children) ? this.props.children : [this.props.children];
-		children.forEach(child => {
+		children.forEach((child) => {
 			if (this.isWizardStep(child)) {
 				step++;
 				if (this.props.step === step) {
@@ -291,7 +289,7 @@ class Wizard extends Component {
 			<SidePanel
 				disable_focus_trap={this.props.disable_focus_trap}
 				closed={this.props.onClose}
-				ref={sidePanel => (this.sidePanel = sidePanel)}
+				ref={(sidePanel) => (this.sidePanel = sidePanel)}
 				buttons={this.getButtons(steps, translate)}
 				error={this.getErrorMessage(translate)}
 				submitting={this.props.submitting || this.props.showSubmitSpinner}
@@ -310,16 +308,12 @@ class Wizard extends Component {
 							})}
 						</div>
 					)}
-					{total === 1 && (
-						<div className="ibp-wizard-step">&nbsp;</div>
-					)}
+					{total === 1 && <div className="ibp-wizard-step">&nbsp;</div>}
 					{!!this.props.title && <h1 className="ibp-wizard-title">{translate(this.props.title)}</h1>}
 					<FocusComponent setFocus={this.props.setFocus}>{this.renderChildren(translate)}</FocusComponent>
 
 					{/* loading animation/spinner svg here */}
-					{this.props.loading && <Loading withOverlay={false}
-						className="ibp-wizard-loading"
-					/>}
+					{this.props.loading && <Loading withOverlay={false} className="ibp-wizard-loading" />}
 				</div>
 			</SidePanel>
 		);
@@ -355,7 +349,7 @@ Wizard.propTypes = {
 };
 
 export default connect(
-	state => {
+	(state) => {
 		return Helper.mapStateToProps(state[SCOPE], dataProps);
 	},
 	{
