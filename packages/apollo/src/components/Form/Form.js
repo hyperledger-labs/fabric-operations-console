@@ -541,7 +541,10 @@ class Form extends Component {
 											...this.props,
 											...data,
 										});
-										this.props.onChange(data, valid, field, this.props.formProps);
+										// Setting it to above updateState digest before update child state
+										setTimeout(() => {
+											this.props.onChange(data, valid, field, this.props.formProps);
+										}, 10);
 									}
 								}
 							}}
