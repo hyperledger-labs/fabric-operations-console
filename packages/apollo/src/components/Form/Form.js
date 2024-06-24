@@ -536,16 +536,13 @@ class Form extends Component {
 								setTimeout(() => {
 									if (JSON.stringify(this.props.scope[field.name]) !== JSON.stringify(data[field.name])) {
 										this.props.updateState(this.props.scope, data);
-										// Setting it to above updateState digest before update child state
-										setTimeout(() => {
-											if (this.props.onChange) {
-												const valid = this.isFormValid({
-													...this.props,
-													...data,
-												});
-												this.props.onChange(data, valid, field, this.props.formProps);
-											}
-										}, 50);
+										if (this.props.onChange) {
+											const valid = this.isFormValid({
+												...this.props,
+												...data,
+											});
+											this.props.onChange(data, valid, field, this.props.formProps);
+										}
 									}
 								}, 20);
 							}}
