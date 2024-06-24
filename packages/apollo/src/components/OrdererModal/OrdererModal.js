@@ -1203,7 +1203,6 @@ class OrdererModal extends React.Component {
 						id={SCOPE + '-associate'}
 						fields={fields}
 						onChange={data => {
-							console.log('triggering with data', data);
 							const changed = Object.keys(data);
 							const associatedIdentities = { ...this.props.associatedIdentities };
 							changed.forEach(field => {
