@@ -75,9 +75,8 @@ export default [
 				}
 			],
 			"max-depth": [1, 8],
-			"max-len": [1, 200],
+			"max-len": [1, 300],
 			"max-params": [1, 7],
-			"new-cap": 1,
 			"no-bitwise": 1,
 			"no-console": "off",
 			"no-multi-spaces": 1,

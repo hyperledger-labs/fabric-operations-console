@@ -7,7 +7,7 @@ const withRouter = (Component) => {
 		const navigate = useNavigate();
 		const history = {
 			push: (to, options) => {
-				if(!to.includes("undefined")) {
+				if (!to.includes("undefined")) {
 					navigate(to, options)
 				}
 			},

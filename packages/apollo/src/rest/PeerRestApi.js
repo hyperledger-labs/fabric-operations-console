@@ -449,7 +449,7 @@ class PeerRestApi {
 			if (!_.get(exportedPeer, 'msp.tlsca.root_certs')) {
 				_.set(exportedPeer, 'msp.tlsca.root_certs', [some_peer_record.tls_ca_root_cert || some_peer_record.pem]);
 			}
-			if(some_peer_record.node_ou) {
+			if (some_peer_record.node_ou) {
 				exportedPeer.node_ou = some_peer_record.node_ou;
 			}
 			return NodeRestApi.importComponent(exportedPeer);
