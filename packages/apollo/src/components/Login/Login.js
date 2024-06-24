@@ -173,7 +173,8 @@ export class Login extends Component {
 								event.preventDefault();
 								onSubmit(event);
 							}
-						}}>
+						}}
+					>
 						<div className={`ibp-login-content ${this.props.changePassword ? 'ibp-change-password' : 'ibp-user-login'} `}>
 							<p className="ibp-login-content-title ibm-type-light">
 								{translate(this.props.changePassword ? 'change_your_password' : 'product_label_login')}

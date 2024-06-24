@@ -17,7 +17,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import TimelineCancelButton from '../TimelineCancelButton/TimelineCancelButton';
-import {CheckmarkOutline} from '@carbon/icons-react';
+import { CheckmarkOutline } from '@carbon/icons-react';
 
 const Timeline = ({ steps, onClose, selectedTimelineStep, header, estTime, progressWithChecks, t: translate }) => {
 	return (

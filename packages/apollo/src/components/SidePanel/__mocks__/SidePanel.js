@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-/* eslint-disable react/prop-types */
+
+// /* eslint-disable react/prop-types */
 
 /**
  * this file is used to return a mock implementation of the SidePanel component

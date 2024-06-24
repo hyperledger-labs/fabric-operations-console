@@ -26,12 +26,12 @@ const PageContainer = props => {
 };
 
 
-{/* <div id="main-content"
+{ /* <div id="main-content"
 className="ibp-page-container cds--grid"
 data-floating-menu-container
 >
 {props.children}
-</div> */}
+</div> */ }
 
 PageContainer.propTypes = {
 	children: PropTypes.node,

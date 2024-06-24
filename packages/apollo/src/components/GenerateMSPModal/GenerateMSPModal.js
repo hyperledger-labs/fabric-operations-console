@@ -466,9 +466,9 @@ class GenerateMSPModal extends Component {
 					error: error.title
 						? error
 						: {
-								title: 'error_add_identity',
-								details: error.details ? error.details : error,
-							},
+							title: 'error_add_identity',
+							details: error.details ? error.details : error,
+						},
 					loadingCert: false,
 				});
 			});
@@ -959,11 +959,11 @@ class GenerateMSPModal extends Component {
 		} else {
 			const generatedCertAdmin = this.props.generatedCert.certificate
 				? [
-						{
-							cert: this.props.generatedCert.certificate,
-							isReadOnly: true,
-						},
-					]
+					{
+						cert: this.props.generatedCert.certificate,
+						isReadOnly: true,
+					},
+				]
 				: [];
 			this.props.updateState(SCOPE, {
 				identityType: 'new',

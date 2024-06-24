@@ -253,7 +253,7 @@ class SignatureDetailModal extends React.Component {
 				name: orderer.msp_id,
 				type: 'dropdown',
 				options: orderer.identities || this.props.identities,
-				label: RenderParamHTML(translate, 'signature_for_msp',{
+				label: RenderParamHTML(translate, 'signature_for_msp', {
 					msp: (
 						<CodeSnippet
 							type="inline"
