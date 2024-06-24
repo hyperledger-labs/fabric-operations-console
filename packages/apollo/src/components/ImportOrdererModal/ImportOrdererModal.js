@@ -1599,7 +1599,8 @@ class ImportOrdererModal extends React.Component {
 								this.props.updateState(SCOPE, {
 									saasCAValid: valid,
 								});
-								if (data.saas_ca && data.saas_ca !== this.props.saas_ca) {
+								// if (data.saas_ca && data.saas_ca !== this.props.saas_ca) {
+								if (data.saas_ca) {
 									this.loadUsersFromCA(data.saas_ca);
 								}
 								this.checkMsp(data.admin_msp);
