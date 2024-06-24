@@ -95,7 +95,6 @@ export default [
 			"no-var": 1,
 			"object-curly-spacing": [1, "always"],
 			"prefer-const": 0,
-			"quotes": [1, "single"],
 			"require-atomic-updates": 0,
 			"semi": [0, "always"],
 			"space-before-blocks": 1,
