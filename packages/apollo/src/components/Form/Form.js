@@ -531,7 +531,6 @@ class Form extends Component {
 								return '';
 							}}
 							onChange={(item) => {
-								console.log('dropdown on change');
 								const data = {};
 								data[field.name] = this.fixChangedItem(field.options, item.selectedItem);
 								setTimeout(() => {

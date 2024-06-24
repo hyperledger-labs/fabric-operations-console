@@ -16,12 +16,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
-import localization from '../utils/localization';
+// import localization from '../utils/localization';
 
 class LocalizeWrapper extends React.Component {
 	constructor(props) {
 		super(props);
-		localization.init(props);
+		// localization.init(props);
 	}
 	render() {
 		const { children } = this.props;

@@ -294,6 +294,7 @@ class OrdererDetails extends Component {
 	}
 
 	checkHealth(orderer, skipStatusCache) {
+		let nodeStatus = {};
 		NodeStatus.getStatus(
 			{
 				...orderer,
@@ -302,7 +303,7 @@ class OrdererDetails extends Component {
 			SCOPE,
 			'details',
 			(id, status) => {
-				const nodeStatus = { ...this.props.nodeStatus };
+				// nodeStatus = { ...nodeStatus, ...this.props.nodeStatus };
 				nodeStatus[id] = status;
 				this.props.updateState(SCOPE, { nodeStatus });
 				if (this.timestamp) {
@@ -629,7 +630,11 @@ class OrdererDetails extends Component {
 									>
 										{translate('view_release_notes')}
 									</a>
-									<Button id="patch_node" kind="primary" className="ibp-patch-button" onClick={() => this.openOrdererSettings('upgrade')}>
+									<Button id="patch_node"
+										kind="primary"
+										className="ibp-patch-button"
+										onClick={() => this.openOrdererSettings('upgrade')}
+									>
 										{translate('update_version')}
 									</Button>
 								</div>
@@ -786,12 +791,16 @@ class OrdererDetails extends Component {
 		const translate = this.props.t;
 		return status ? (
 			<div className="ibp-node-status-container">
-				<span className={`ibp-node-status ${className}`} tabIndex="0" />
+				<span className={`ibp-node-status ${className}`}
+					tabIndex="0"
+				/>
 				<span className="ibp-node-status-label">{translate(node.operations_url ? status : 'status_undetected')}</span>
 			</div>
 		) : (
 			<div className="ibp-node-status-container">
-				<span className="ibp-node-status ibp-node-status-skeleton" tabIndex="0" />
+				<span className="ibp-node-status ibp-node-status-skeleton"
+					tabIndex="0"
+				/>
 				<span className="ibp-node-status-label">{translate('status_pending')}</span>
 			</div>
 		);
@@ -850,15 +859,24 @@ class OrdererDetails extends Component {
 								}}
 							/>
 						) : (
-							<Button id="connect-node-button" className="connect-node-button" onClick={() => this.addToSystemChannel()} disabled={this.props.disabled}>
+							<Button id="connect-node-button"
+								className="connect-node-button"
+								onClick={() => this.addToSystemChannel()}
+								disabled={this.props.disabled}
+							>
 								{translate('add_to_system_channel')}
-								<SVGs type="arrowRight" width="16px" height="16px" />
+								<SVGs type="arrowRight"
+									width="16px"
+									height="16px"
+								/>
 							</Button>
 						)}
 					</div>
 					{this.props.error && <SidePanelError error={this.props.error} />}
 				</div>
-				<RequiresAttentionImage2 className="ibp-requires-attention-image" alt="" />
+				<RequiresAttentionImage2 className="ibp-requires-attention-image"
+					alt=""
+				/>
 			</div>
 		);
 	}
@@ -876,7 +894,9 @@ class OrdererDetails extends Component {
 					<h3>{translate('running_partial')}</h3>
 					<p>{translate('running_partial_desc')}</p>
 				</div>
-				<RequiresAttentionImage className="ibp-requires-attention-image" alt="" />
+				<RequiresAttentionImage className="ibp-requires-attention-image"
+					alt=""
+				/>
 			</div>
 		);
 	}
@@ -896,7 +916,9 @@ class OrdererDetails extends Component {
 						<Trans>{translate('missing_endorsement_policy_desc', { orgs: this.props.missingEndorsementOrgs.join(',') })}</Trans>
 					</p>
 				</div>
-				<RequiresAttentionImage className="ibp-requires-attention-image ibp-requires-attention-small-image" alt="" />
+				<RequiresAttentionImage className="ibp-requires-attention-image ibp-requires-attention-small-image"
+					alt=""
+				/>
 			</div>
 		);
 	}
@@ -931,11 +953,16 @@ class OrdererDetails extends Component {
 							}}
 						>
 							{translate('go_to_node')}
-							<SVGs type="arrowRight" width="16px" height="16px" />
+							<SVGs type="arrowRight"
+								width="16px"
+								height="16px"
+							/>
 						</Button>
 					</div>
 				</div>
-				<RequiresAttentionImage className="ibp-requires-attention-image" alt="" />
+				<RequiresAttentionImage className="ibp-requires-attention-image"
+					alt=""
+				/>
 			</div>
 		);
 	}
@@ -1290,10 +1317,12 @@ class OrdererDetails extends Component {
 					/* [details section] - an orderer node is NOT selected, this is the top level content */
 				}
 				tabItems.push({
-					tab: () => <Tab id="ibp-orderer-details">{translate('details')}</Tab>,
-					panel: () => {
+					tab: (index) => <Tab id="ibp-orderer-details"
+						key={index}
+					>{translate('details')}</Tab>,
+					panel: (index) => {
 						return (
-							<TabPanel>
+							<TabPanel key={index}>
 								{!this.props.loading && this.channelParticipationEnabled(this.props.details) && !this.props.orderer_tls_identity && (
 									<div>
 										<SidePanelWarning
@@ -1323,7 +1352,9 @@ class OrdererDetails extends Component {
 								{!this.props.loading && !hasAssociatedIdentities && (
 									<div className="ibp-orderer-no-identity">
 										<p>{translate('orderer_no_identity')}</p>
-										<Button id="no-identity-button" onClick={() => this.openOrdererSettings('associate')}>
+										<Button id="no-identity-button"
+											onClick={() => this.openOrdererSettings('associate')}
+										>
 											{translate('associate_identity')}
 										</Button>
 									</div>
@@ -1365,10 +1396,12 @@ class OrdererDetails extends Component {
 					/* [all nodes section] - an orderer node is NOT selected, this is the top level content */
 				}
 				tabItems.push({
-					tab: () => <Tab id="ibp-orderer-nodes">{translate('ordering_nodes')}</Tab>,
-					panel: () => {
+					tab: (index) => <Tab id="ibp-orderer-nodes"
+						key={index}
+					>{translate('ordering_nodes')}</Tab>,
+					panel: (index) => {
 						return (
-							<TabPanel>
+							<TabPanel key={index}>
 								<div className="orderer-details-nodes-container">
 									<ItemContainer
 										containerTitle="ordering_nodes"
@@ -1398,34 +1431,37 @@ class OrdererDetails extends Component {
 					/* [drill down section] - an orderer node is selected, this is the drill down "info and usage" tab */
 				}
 				tabItems.push({
-					tab: () => (
+					tab: (index) => (
 						<Tab
 							id="ibp-orderer-usage"
 							className={
 								this.props.selectedNode.isUpgradeAvailable &&
-								this.props.selectedNode.location === 'ibm_saas' &&
-								ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)
+									this.props.selectedNode.location === 'ibm_saas' &&
+									ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags)
 									? 'ibp-patch-available-tab'
 									: ''
 							}
+							key={index}
 						>
 							{translate('usage_info')}
 							{this.props.selectedNode.isUpgradeAvailable &&
-							this.props.selectedNode.location === 'ibm_saas' &&
-							ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) ? (
-								<div className="ibp-details-patch-container">
-									<div className="ibp-patch-available-tag ibp-node-details" onClick={() => this.openOrdererSettings('upgrade')}>
-										{translate('patch_available')}
+								this.props.selectedNode.location === 'ibm_saas' &&
+								ActionsHelper.canCreateComponent(this.props.userInfo, this.props.feature_flags) ? (
+									<div className="ibp-details-patch-container">
+										<div className="ibp-patch-available-tag ibp-node-details"
+											onClick={() => this.openOrdererSettings('upgrade')}
+										>
+											{translate('patch_available')}
+										</div>
 									</div>
-								</div>
-							) : (
-								''
-							)}
+								) : (
+									''
+								)}
 						</Tab>
 					),
-					panel: () => {
+					panel: (index) => {
 						return (
-							<TabPanel>
+							<TabPanel key={index}>
 								<NodeDetails node={this.props.selectedNode} />
 								{this.renderUsage(translate)}
 							</TabPanel>
@@ -1438,10 +1474,12 @@ class OrdererDetails extends Component {
 					/* [drill down section] - an orderer nodes is selected and it is systemless, this is the drill down "Channels" tab */
 				}
 				tabItems.push({
-					tab: () => <Tab id="ibp-orderer-channels">{translate('channels')}</Tab>,
-					panel: () => {
+					tab: (index) => <Tab id="ibp-orderer-channels"
+						key={index}
+					>{translate('channels')}</Tab>,
+					panel: (index) => {
 						return (
-							<TabPanel>
+							<TabPanel key={index}>
 								<ChannelParticipationDetails
 									selectedNode={this.props.selectedNode}
 									channelList={this.props.channelList}
@@ -1460,7 +1498,9 @@ class OrdererDetails extends Component {
 		return (
 			<PageContainer>
 				<Row>
-					<PageHeader history={this.props.history} headerName={ordererName ? translate('orderer_details_title', { ordererName: ordererName }) : ''} />
+					<PageHeader history={this.props.history}
+						headerName={ordererName ? translate('orderer_details_title', { ordererName: ordererName }) : ''}
+					/>
 				</Row>
 				<Row>
 					{ordererNameSkeleton}
@@ -1603,13 +1643,19 @@ class OrdererDetails extends Component {
 					<div className="ibp-column width-75 p-lr-10">
 						{this.props.notAvailable && (
 							<div className="ibp-not-available ibp-error-panel">
-								<SidePanelWarning title="orderer_not_available_title" subtitle="orderer_not_available_text" />
+								<SidePanelWarning title="orderer_not_available_title"
+									subtitle="orderer_not_available_text"
+								/>
 							</div>
 						)}
 						{_.get(this.props, 'usageInfo.crstatus.type') === 'Warning' && _.get(this.props, 'usageInfo.crstatus.reason') === 'certRenewalRequired' && (
 							<div className="ibp-orderer-warning ibp-error-panel">
-								<SidePanelWarning title="orderer_warning_title" subtitle="orderer_warning_text" />
-								<TranslateLink className="ibp-orderer-details-cert-expiry-link" text="cert_renew" />
+								<SidePanelWarning title="orderer_warning_title"
+									subtitle="orderer_warning_text"
+								/>
+								<TranslateLink className="ibp-orderer-details-cert-expiry-link"
+									text="cert_renew"
+								/>
 							</div>
 						)}
 						{this.props.selectedNode && !this.props.selectedNode.consenter_proposal_fin ? (
@@ -1625,9 +1671,9 @@ class OrdererDetails extends Component {
 											this.props.updateState(SCOPE, { selectedTab });
 										}}
 									>
-										<TabList contained>{tabItems.map((item) => item.tab())}</TabList>
+										<TabList contained>{tabItems.map((item, index) => item.tab(index))}</TabList>
 
-										<TabPanels>{tabItems.map((item) => item.panel())}</TabPanels>
+										<TabPanels>{tabItems.map((item, index) => item.panel(index))}</TabPanels>
 									</Tabs>
 								)}
 							</div>
