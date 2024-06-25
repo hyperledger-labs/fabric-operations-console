@@ -236,7 +236,7 @@ const Helper = {
 				tls_ca_root_cert: _.get(node, 'msp.tlsca.root_certs[0]'),
 			};
 
-			if(node.node_ou) {
+			if (node.node_ou) {
 				exportNode.node_ou = node.node_ou;
 			}
 

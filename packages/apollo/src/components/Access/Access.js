@@ -784,11 +784,11 @@ export function AuthenticatedUsers(props) {
 			addItems={
 				props.isManager
 					? [
-							{
-								text: 'add_new_users',
-								fn: props.onAdd,
-							},
-						]
+						{
+							text: 'add_new_users',
+							fn: props.onAdd,
+						},
+					]
 					: []
 			}
 			selectItem={
@@ -894,11 +894,11 @@ export function ApiKeys(props) {
 			addItems={
 				props.isManager
 					? [
-							{
-								text: 'add_new_apikey',
-								fn: props.onAdd,
-							},
-						]
+						{
+							text: 'add_new_apikey',
+							fn: props.onAdd,
+						},
+					]
 					: []
 			}
 			selectItem={

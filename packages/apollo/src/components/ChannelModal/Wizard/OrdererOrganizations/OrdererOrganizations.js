@@ -14,7 +14,7 @@
  * limitations under the License.
 */
 
-import {TrashCan} from '@carbon/icons-react';
+import { TrashCan } from '@carbon/icons-react';
 import { Button, Checkbox } from "@carbon/react";
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -180,7 +180,7 @@ export class OrdererOrganizations extends Component {
 		) : [];
 
 		return (
-            <div className="ibp-channel-organizations">
+			<div className="ibp-channel-organizations">
 				<p className="ibp-channel-section-title">{translate('channel_orderer_organizations')}</p>
 				<p className="ibp-channel-section-desc">
 					{isChannelUpdate ? translate('update_channel_organization_desc') : translate('create_channel_orderer_org_desc')}
@@ -246,7 +246,7 @@ export class OrdererOrganizations extends Component {
 					{ordering_orgs &&
 						ordering_orgs.map((org, i) => {
 							return (
-                                <div key={'org_' + i}
+								<div key={'org_' + i}
 									className="ibp-add-orgs-table"
 								>
 									<div className="ibp-add-orgs-msp">
@@ -291,7 +291,7 @@ export class OrdererOrganizations extends Component {
 										}}
 									/>
 								</div>
-                            );
+							);
 						})}
 					{missingDefinitionError && (
 						<div className="ibp-missing-definition-error">
@@ -302,7 +302,7 @@ export class OrdererOrganizations extends Component {
 					)}
 				</div>
 			</div>
-        );
+		);
 	}
 }
 

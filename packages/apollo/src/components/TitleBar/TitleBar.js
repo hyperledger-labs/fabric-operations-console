@@ -154,7 +154,7 @@ class TitleBar extends Component {
 
 	goToDocs = (event, translate, type) => {
 		if ((event.key === 'Enter' && type === 'keypress') || type === 'click') {
-			if (this.props.console_type == 'hlfoc') {
+			if (this.props.console_type === 'hlfoc') {
 				window.open(translate('mainDocs2', { DOC_PREFIX: this.props.docPrefix }));
 			} else {
 				window.open(translate('mainDocs', { DOC_PREFIX: this.props.docPrefix }));
