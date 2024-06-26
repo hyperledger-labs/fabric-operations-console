@@ -8,8 +8,9 @@ Feature: Verify miscellaneous cases of console works as expected
     And I am on the 'nodes' page
 
   Scenario: Run mustgather tool
+	Then wait "2" seconds
     When I am on Help page
-    Then wait "5" seconds
+	Then wait "5" seconds
     And I clicked the button with text 'Start mustgather'
     Then wait "60" seconds
     And I clicked the div with text 'Download results'

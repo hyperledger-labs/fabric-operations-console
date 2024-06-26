@@ -82,23 +82,26 @@ Feature: Build a network without system channel
 
 	Scenario: Upgrading Peer and Ordering Service node to latest
 		And I clicked the 'Peer Org1' peer
-		And I clicked the button with id 'ibp-peer-usage'
-		And I clicked the button with id 'patch_node'
+		# And I clicked the button with id 'ibp-peer-usage'
+		And I clicked element with class 'div.ibp-details-patch-container'
+		# And I clicked the button with id 'patch_node'
 		And I clicked the checkbox with text 'I understand this is a potentially breaking change. Upgrade anyway.'
 		And I clicked the button with id 'next'
 		And I provided 'Peer Org1' for the 'Type node name here' input
 		And I clicked the button with text 'Upgrade Fabric version'
 		Then wait "20" seconds
+		Then Text should exist 'You are up to date with the latest version of Hyperledger Fabric'
 		And I am on the 'nodes' page
 		And I clicked the 'Ordering Service' orderer
 		Then wait "10" seconds
-		And I clicked the button with id 'ibp-orderer-nodes'
+		And I clicked element whose id ends with ':-tab-1'
 		And I clicked the div with id 'ibp-tile-Ordering Service_1'
 		And I clicked the button with text 'Upgrade version'
 		And I clicked the button with id 'next'
 		And I provided 'Ordering Service_1' for the 'Type node name here' input
 		And I clicked the button with text 'Upgrade Fabric version'
-		Then wait "10" seconds
+		Then wait "20" seconds
+		Then Text should exist 'You are up to date with the latest version of Hyperledger Fabric'
 		And I am on the 'nodes' page
 
   Scenario: When creating an ordering service without system channel
@@ -137,9 +140,11 @@ Feature: Build a network without system channel
         And I clicked the span with text 'Next'
         And I provided 'channel5' for the 'Enter a name for your channel' input
         And I clicked the button with title 'Select from available ordering services'
-        And I clicked the div with id 'downshift-0-item-0'
+        # And I clicked the div with id 'downshift-0-item-0'
+		And I clicked the div with text 'No_SysCh_OS'
 		Then wait "5" seconds
-        And I clicked the span with text 'Next'
+        # And I clicked the span with text 'Next'
+		And I clicked element with class '#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
         And I clicked the button with title 'Select MSP'
         And I clicked the div with text 'Org1 MSP (org1msp)'
         And I clicked the button with text 'Add'
@@ -148,26 +153,36 @@ Feature: Build a network without system channel
         And I clicked the div with text 'Org2 MSP (org2msp)'
         And I clicked the button with text 'Add'
         And I clicked the 'admin' role for 'org2msp'
-        And I clicked the span with text 'Next'
-        And I clicked the button with title 'Select policy'
+        # And I clicked the span with text 'Next'
+		And I clicked element with class '#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
+		And I clicked the button with title 'Select policy'
         And I clicked the div with text '1 out of 2'
-        And I clicked the span with text 'Next'
-        And I clicked the div with id 'selectedOrg'
+        # And I clicked the span with text 'Next'
+		And I clicked element with class '#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
+		And I clicked the div with id 'selectedOrg'
         And I clicked the div with text 'Ordering Service MSP (osmsp)'
         And I clicked the button with text 'Add'
         And I clicked the 'admin' role for 'osmsp'
-        And I clicked the span with text 'Next'
-        And I clicked the div with id 'selectedApplicationCapability'
+        # And I clicked the span with text 'Next'
+		And I clicked element with class '#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
+		And I clicked the div with id 'selectedApplicationCapability'
         And I clicked the div with text '2.0.0'
         And I clicked the div with id 'selectedOrdererCapability'
-		And I clicked element with class '#selectedOrdererCapability > div > div:nth-child(2)'
-        And I clicked the span with text 'Next'
-        And I clicked the span with text 'Next'
-        And I clicked the span with text 'Next'
-        And I clicked the span with text 'Next'
-        And I clicked the span with text 'Next'
-        And I clicked the span with text 'Next'
-        Then I clicked Create channel button
+		# And I clicked element with class '#selectedOrdererCapability > div > div:nth-child(2)'
+		And I clicked element with class '#selectedOrdererCapability > ul > li:nth-child(2) > div'
+		# And I clicked the span with text 'Next'
+		And I clicked element with class '#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
+		# And I clicked the span with text 'Next'
+		And I clicked element with class '#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
+		# And I clicked the span with text 'Next'
+		And I clicked element with class '#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
+		# And I clicked the span with text 'Next'
+		And I clicked element with class '#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
+		# And I clicked the span with text 'Next'
+		And I clicked element with class '#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
+		# And I clicked the span with text 'Next'
+		And I clicked element with class '#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
+		Then I clicked Create channel button
 		Then wait "3" seconds
 		Then I should see Create Genesis screen with message to to join orderer
 		And I clicked the button with text 'Continue'
@@ -189,9 +204,11 @@ Feature: Build a network without system channel
 		And I clicked the button with id 'next'
         And I provided 'channel5' for the 'Enter the channel name' input
 		And I clicked the button with id 'next'
-        And I clicked the span with text 'Peer Org1'
-        And I clicked the span with text 'Peer Org2'
-        When I clicked the button with id 'submit'
+        # And I clicked the span with text 'Peer Org1'
+		And I click label with property 'for' and value 'joinChannelModal-peer-peerorg1'
+		# And I clicked the span with text 'Peer Org2'
+		And I click label with property 'for' and value 'joinChannelModal-peer-peerorg2'
+		When I clicked the button with id 'submit'
         Then I should see a success toast with class '.cds--toast-notification__title' which says "You have successfully joined channel5."
 
     Scenario: Install and Propose 2.0 Smart Contract as Org1
@@ -252,20 +269,29 @@ Feature: Build a network without system channel
 		And I clicked the button with title 'Select an identity'
 		And I clicked the div with text 'Org2 MSP Admin'
 		Then wait "1" seconds
-        And I clicked the span with text 'Next'
-        And I clicked the span with text 'Next'
-        And I clicked the span with text 'Next'
-        And I clicked the span with text 'Next'
-        And I clicked the span with text 'Next'
-        And I clicked the span with text 'Next'
+        # And I clicked the span with text 'Next'
+        And I clicked element with class '#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
+		# And I clicked the span with text 'Next'
+		And I clicked element with class '#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
+		# And I clicked the span with text 'Next'
+        And I clicked element with class '#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
+		# And I clicked the span with text 'Next'
+        And I clicked element with class '#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
+		# And I clicked the span with text 'Next'
+        And I clicked element with class '#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
+		# And I clicked the span with text 'Next'
+		And I clicked element with class '#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
 		And I provided '13' for input field with id 'channelModal-block-params-absolute_max_bytes_mb-input-for-slider'
 		And I provided '510' for input field with id 'channelModal-block-params-max_message_count-input-for-slider'
-        And I clicked the span with text 'Next'
-        And I clicked the button with title 'Select the MSP'
+        # And I clicked the span with text 'Next'
+        And I clicked element with class '#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
+		And I clicked the button with title 'Select the MSP'
         And I clicked the div with text 'Ordering Service MSP (osmsp)'
-        And I clicked the span with text 'Next'
-        And I clicked the span with text 'Next'
-        And I clicked the span with text 'Update channel'
+        # And I clicked the span with text 'Next'
+        And I clicked element with class '#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
+		# And I clicked the span with text 'Next'
+        And I clicked element with class '#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
+		And I clicked the span with text 'Update channel'
         Then I should see a success toast with class '.cds--toast-notification__title' which says 'You have successfully initiated a request to update channel channel5.'
 		# View channel configuration updates
 		When I clicked the button with id 'ibp-header-signature-collection-icon'
@@ -297,11 +323,13 @@ Feature: Build a network without system channel
 		And I clicked the button with title 'Select MSP'
 		Then wait "1" seconds
 		# And I clicked the div with text 'Ordering Service MSP'
-		And I clicked the div with id 'downshift-0-item-0'
+		# And I clicked the div with id 'downshift-0-item-0'
+		And I clicked element with class '#orderingservicemsp > div'
 		Then wait "1" seconds
 		And I clicked the button with title 'Select an identity'
 		# And I clicked the div with text 'Ordering Service MSP Admin'
-		And I clicked the div with id 'downshift-1-item-1'
+		# And I clicked the div with id 'downshift-1-item-1'
+		And I clicked element with class '#submit_identity > ul> li:nth-child(2) > div'
 		And I clicked the button with id 'submit'
 		Then wait "10" seconds
 		Then I should see a success toast with class '.cds--toast-notification__title' which says "The MSP definition for osmsp has been updated successfully."
@@ -314,7 +342,8 @@ Feature: Build a network without system channel
 		And I clicked the div with text 'Org1 MSP'
 		Then wait "1" seconds
 		And I clicked the button with title 'Select an identity'
-		And I clicked the div with text 'Org1 MSP Admin'
+		# And I clicked the div with text 'Org1 MSP Admin'
+		And I clicked element with class '#submit_identity > ul> li:nth-child(2) > div'
 		And I clicked the button with id 'submit'
 		Then wait "10" seconds
 		Then I should see a success toast with class '.cds--toast-notification__title' which says "The MSP definition for org1msp has been updated successfully."
