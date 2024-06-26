@@ -614,7 +614,7 @@ export class CADetails extends Component {
 					</div>
 					<div className="ibp-column width-75 p-lr-10">
 						<Tabs className="ibp-tabs-container" aria-label="sub-navigation">
-							<TabList contained>
+							<TabList>
 								<Tab id="ibp-ca-detail-tab-root-ca">{translate('details')}</Tab>
 								{this.props.details && (
 									<Tab

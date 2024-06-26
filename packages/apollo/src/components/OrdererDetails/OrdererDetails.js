@@ -1671,7 +1671,7 @@ class OrdererDetails extends Component {
 											this.props.updateState(SCOPE, { selectedTab });
 										}}
 									>
-										<TabList contained>{tabItems.map((item, index) => item.tab(index))}</TabList>
+										<TabList fullWidth>{tabItems.map((item, index) => item.tab(index))}</TabList>
 
 										<TabPanels>{tabItems.map((item, index) => item.panel(index))}</TabPanels>
 									</Tabs>
