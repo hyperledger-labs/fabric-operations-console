@@ -51,12 +51,12 @@ Feature: Verify Console APIs works as expected
         When I clicked the div with id 'test__navigation--item--audit_logs'
         Then I should see table with id 'table-audit_logs'
         Then I should see div with id 'audit-logs'
-        And I provided 'creating api key' for input field with id "1"
+        And I provided 'creating api key' for input field with class ".cds--search-input"
         Then I should see audit log row with text 'creating api key' and id 'audit-logs-log_title-0'
         Then I should see audit log row with text 'POST:/api/v3/permissions/keys' and id 'audit-logs-api_title-0'
         Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
         Then I reload the page
-        And I provided 'deleting api key' for input field with id "1"
+        And I provided 'deleting api key' for input field with class ".cds--search-input"
         Then I should see audit log row with text 'deleting api key' and id 'audit-logs-log_title-0'
         Then I should see audit log row with text 'DELETE:/api/v3/permissions/{apikey}' and id 'audit-logs-api_title-0'
         Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'

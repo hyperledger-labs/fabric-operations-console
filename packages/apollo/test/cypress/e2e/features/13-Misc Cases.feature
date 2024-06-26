@@ -9,7 +9,8 @@ Feature: Verify miscellaneous cases of console works as expected
 
   Scenario: Run mustgather tool
 	Then wait "2" seconds
-    When I am on Help page
+    # When I am on Help page
+	When I clicked element with class '#title_bar > header > div > span'
 	Then wait "5" seconds
     And I clicked the button with text 'Start mustgather'
     Then wait "60" seconds

@@ -83,7 +83,8 @@ Feature: Create and Join a 1.x channel
 
     Scenario: When creating a channel
         And I clicked the button with title 'Create channel'
-        And I clicked the span with text 'Next'
+        # And I clicked the span with text 'Next'
+		And I clicked element with class '#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
         And I provided 'channel1' for the 'Enter a name for your channel' input
         And I clicked the button with title 'Select from available ordering services'
 		# And I clicked the div with text 'Ordering Service'
