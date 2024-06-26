@@ -35,6 +35,7 @@ class FocusComponent extends Component {
 		let className = element.className;
 		className = className && typeof className === 'string' ? className.trim() : '';
 		const currentStyle = element.tagName ? window.getComputedStyle(element) : {};
+
 		if (currentStyle.display === 'none') {
 			// don't set focus on hidden sections
 			return false;
@@ -51,6 +52,14 @@ class FocusComponent extends Component {
 			// don't set focus on toolips
 			return false;
 		}
+
+		// To disable default focus on code snippet
+		if (element?.children?.length) {
+			if (element.children[0].tagName.toLowerCase() === 'code') {
+				return false;
+			}
+		}
+
 		let tabIndex = element.getAttribute ? element.getAttribute('tabIndex') : element.tabIndex;
 		if (tabIndex) {
 			tabIndex = Number(tabIndex);
