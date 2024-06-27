@@ -7,6 +7,6 @@
   },
   "scripts":{
 	  "prepare": "husky install",
-	  "install-detect-secrets": "pip install --upgrade git+https://github.com/ibm/detect-secrets.git@master#egg=detect-secrets"
+	  "install-detect-secrets": "pip3 install --upgrade git+https://github.com/ibm/detect-secrets.git@master#egg=detect-secrets"
   }
 }
