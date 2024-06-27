@@ -1,5 +1,4 @@
-@support @runonconsole @apicases
-# Due to open bugs Console API cases are failing. Hence, moving it out from regression test suit.
+@support @runonconsole @apicases @regression
 Feature: Verify Console APIs works as expected
 
 	Background: Login to console
