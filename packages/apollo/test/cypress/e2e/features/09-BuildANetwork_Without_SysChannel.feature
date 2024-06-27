@@ -137,7 +137,8 @@ Feature: Build a network without system channel
         And I am on the 'channels' page
         And I clicked the button with title 'Create channel'
         And I clicked the checkbox with text 'Advanced channel configuration'
-        And I clicked the span with text 'Next'
+        # And I clicked the span with text 'Next'
+		And I clicked element with class '#ibp--template-full-page-side-panel > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
         And I provided 'channel5' for the 'Enter a name for your channel' input
         And I clicked the button with title 'Select from available ordering services'
         # And I clicked the div with id 'downshift-0-item-0'
