@@ -1253,7 +1253,7 @@ class ChannelDetails extends Component {
 					<div className="ibm-column width-75 p-lr-10">
 						<div className="ibp__channel--container">
 							<Tabs aria-label="Tabs">
-								<TabList contained>
+								<TabList>
 									<Tab id="ibp-channel-detail-chaincode">
 										{translate('chaincode_management')}
 									</Tab>

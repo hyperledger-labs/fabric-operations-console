@@ -570,7 +570,7 @@ class PeerDetails extends Component {
 						)}
 						{details && (
 							<Tabs aria-label="sub-navigation">
-								<TabList contained>
+								<TabList>
 									<Tab id="ibp-peer-details">{translate('details')}</Tab>
 									<Tab
 										id="ibp-peer-usage"
