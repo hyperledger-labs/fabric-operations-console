@@ -99,18 +99,21 @@ Feature: Join a network feature
         And I clicked the button with title 'Create MSP definition'
         And I provided 'Org2 MSP' for the 'Enter name for the MSP' input
         And I provided 'org2msp' for the 'Enter the MSP ID' input
-        And I clicked the span with text 'Next'
-        And I clicked the button with title 'Select a root Certificate Authority'
+        # And I clicked the span with text 'Next'
+		And I clicked element with class '#generateMSPModal > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
+		And I clicked the button with title 'Select a root Certificate Authority'
         And I clicked the div with text 'Org2 CA'
         And wait "3" seconds
-        And I clicked the span with text 'Next'
+        #And I clicked the span with text 'Next'
+		And I clicked element with class '#generateMSPModal > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
         And I clicked the button with title 'org2admin'
         And I clicked the div with text 'org2admin'
         And I provided 'org2adminpw' for the 'Enter a secret' input
         And I provided 'Org2 MSP Admin' for the 'Enter name for the identity to be stored in your Wallet' input
         And I clicked the button with text 'Generate'
         And I clicked the button with text 'Export'
-        And I clicked the span with text 'Next'
+        #And I clicked the span with text 'Next'
+		And I clicked element with class '#generateMSPModal > div.ibp-button-container.ibp-vertical-panel-button-container > button:nth-child(2) > span'
         And I click Create MSP definition button
         Then I should see a success toast with class '.cds--toast-notification__title' which says "MSP Org2 MSP has been created successfully."
 
