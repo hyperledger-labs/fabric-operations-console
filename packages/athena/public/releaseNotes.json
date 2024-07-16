@@ -1,5 +1,18 @@
 [
 	{
+		"version": "1.0.9-23",
+		"date": "16 July 2024",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			},
+			{
+				"title": "Node v20",
+				"details": "Updated to use Node v20.15.1"
+			}
+		]
+	},{
 		"version": "1.0.9-22",
 		"date": "04 July 2024",
 		"description": [
