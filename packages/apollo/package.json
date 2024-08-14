@@ -20,6 +20,7 @@
 		"classnames": "^2.5.1",
 		"debug": "^4.3.4",
 		"deep-diff": "^1.0.2",
+		"elliptic": "^6.5.7",
 		"esbuild": "^0.14.47",
 		"esbuild-plugin-svgr": "^1.0.1",
 		"esbuild-sass-plugin": "^2.3.1",
