@@ -27,7 +27,7 @@
 		"url": "https://github.ibm.com/IBM-Blockchain/athena.git"
 	},
 	"dependencies": {
-		"async": "3.2.*",
+		"async": "^3.2.5",
 		"axios": "^1.7.4",
 		"bn.js": "4.11.*",
 		"body-parser": "^1.18.3",
