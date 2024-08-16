@@ -5,8 +5,11 @@
     "husky": "^6.0.0",
     "lerna": "^6.0.1"
   },
-  "scripts":{
-	  "prepare": "husky install",
-	  "install-detect-secrets": "pip install --upgrade git+https://github.com/ibm/detect-secrets.git@master#egg=detect-secrets"
+  "scripts": {
+    "prepare": "husky install",
+    "install-detect-secrets": "pip install --upgrade git+https://github.com/ibm/detect-secrets.git@master#egg=detect-secrets"
+  },
+  "dependencies": {
+    "async": "^3.2.5"
   }
 }
