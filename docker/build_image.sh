@@ -15,8 +15,8 @@ docker build \
 	--build-arg CONSOLE_TAG=${GIT_TAG} \
 	--pull -f ${SRC_DIR}/console/Dockerfile ${SRC_DIR}/../packages/.
 
-docker tag ${IMAGE_BUILD_NAME} ghcr.io/hyperledger-labs/fabric-console:latest
+docker tag ${IMAGE_BUILD_NAME} ghcr.io/senofi/fabric-console:latest
 if [[ -n $GIT_TAG ]]; then
-	echo "Creating tagged image $GIT_TAG:"
-	docker tag ${IMAGE_BUILD_NAME} ghcr.io/hyperledger-labs/fabric-console:${GIT_TAG}
+  	echo "Creating tagged image $GIT_TAG:"
+	docker tag ${IMAGE_BUILD_NAME} ghcr.io/senofi/fabric-console:${GIT_TAG}
 fi

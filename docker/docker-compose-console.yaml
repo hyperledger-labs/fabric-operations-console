@@ -7,7 +7,7 @@ networks:
 services:
     fabric-console:
         container_name: fabric-console
-        image: ghcr.io/hyperledger-labs/fabric-console:latest
+        image: ghcr.io/senofi/fabric-console:latest
         ports:
             - "3000:3000"
         volumes:

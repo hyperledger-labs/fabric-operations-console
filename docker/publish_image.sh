@@ -8,10 +8,10 @@ echo "Found tag $GIT_TAG"
 # Push the images
 echo "Pushing 'latest' image:"
 echo ${GITHUB_TOKEN} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-docker push ghcr.io/hyperledger-labs/fabric-console:latest
+docker push ghcr.io/senofi/fabric-console:latest
 
 # -n means if GIT_TAG's length is greater than 0
 if [[ -n $GIT_TAG ]]; then
-	echo "Pushing tagged image $GIT_TAG:"
-	docker push ghcr.io/hyperledger-labs/fabric-console:${GIT_TAG}
+  echo "Pushing tagged image $GIT_TAG:"
+	docker push ghcr.io/senofi/fabric-console:${GIT_TAG}
 fi
