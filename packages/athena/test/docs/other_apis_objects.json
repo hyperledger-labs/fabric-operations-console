@@ -213,7 +213,8 @@
 		"TRANSACTION_VISIBILITY",
 		"VERSIONS",
 		"LDAP",
-		"MAX_COMPONENTS"
+		"MAX_COMPONENTS",
+		"IDENTITY_STORE_TYPE"
 	],
 	"ev_settings_keys_subset2": [
 		"HTTP_TIMEOUT",

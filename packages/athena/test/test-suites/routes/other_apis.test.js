@@ -41,6 +41,7 @@ const createStubs = () => {
 		update: sinon.stub(ev, 'update'),
 		writeDoc: sinon.stub(tools.otcc, 'writeDoc'),
 		retry_req: sinon.stub(tools.misc, 'retry_req'),
+		vault_client: sinon.stub(tools.vault_client, 'getIsInitialized'),
 	};
 };
 

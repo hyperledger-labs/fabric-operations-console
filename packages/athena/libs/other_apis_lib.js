@@ -126,6 +126,7 @@ module.exports = function (logger, ev, t) {
 			MIGRATION_STATUS: ev.MIGRATION_STATUS || {},
 			CONSOLE_TYPE: ev.CONSOLE_TYPE || '?',
 			CONSOLE_BUILD_TYPE: ev.CONSOLE_BUILD_TYPE || undefined,
+			IDENTITY_STORE_TYPE: t.vault_client.getIsInitialized() ? 'vault' : 'local',
 		};
 		return t.misc.sortItOut(ret);
 	};

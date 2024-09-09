@@ -190,11 +190,12 @@ class IdentityModal extends React.Component {
 		const fields = [
 			{
 				name: 'name',
-				tooltip: 'edit_identity_name_tooltip',
+				tooltip: IdentityApi.canRemoveIdentity() ? 'edit_identity_name_tooltip' : 'edit_identity_name_disabled_tooltip',
 				tooltipDirection: 'bottom',
 				required: true,
 				default: this.props.name,
 				specialRules: Helper.SPECIAL_RULES_IDENTITY_NAME,
+				disabled: !IdentityApi.canRemoveIdentity()
 			},
 			{
 				name: 'cert',
@@ -258,6 +259,8 @@ class IdentityModal extends React.Component {
 					<button id="remove"
 						className="ibp-identity-action cds--btn cds--btn--sm cds--btn--danger"
 						onClick={this.showRemoveIdentity}
+						disabled={!IdentityApi.canRemoveIdentity()}
+						title={!IdentityApi.canRemoveIdentity() && translate('remove_identity_storage_disabled_tooltip')}
 					>
 						{translate('remove_identity')}
 					</button>

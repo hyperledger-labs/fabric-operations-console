@@ -35,6 +35,7 @@ import ActionsHelper from './utils/actionsHelper';
 import Helper from './utils/helper';
 // import localization from './utils/localization';
 import NodeStatus from './utils/status';
+import IdentityApi from './rest/IdentityApi';
 
 const SCOPE = 'app';
 const Log = new Logger('App');
@@ -58,20 +59,23 @@ class App extends Component {
 	}
 
 	async initializeAppData() {
-		try {
-			const userInfo = await this.getUserInfo();
-			this.props.updateState('userInfo', userInfo);
-			await this.getAuthData();
-		} catch (error) {
-			Log.error(`Failed to get user info: ${error}`);
-		}
-
 		let settings;
 		try {
 			settings = await this.getApplicationSettings();
 		} catch (error) {
 			Log.error(`Failed to get application settings: ${error}`);
 			return;
+		}
+
+		// Set identity store type
+		IdentityApi.init(settings.IDENTITY_STORE_TYPE);
+
+		try {
+			const userInfo = await this.getUserInfo();
+			this.props.updateState('userInfo', userInfo);
+			await this.getAuthData();
+		} catch (error) {
+			Log.error(`Failed to get user info: ${error}`);
 		}
 
 		try {
