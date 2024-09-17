@@ -1,6 +1,6 @@
 module github.com/IBM-Blockchain/fabric-deployer
 
-go 1.20
+go 1.23
 
 require (
 	// points to fabric-operator repo of api branch
