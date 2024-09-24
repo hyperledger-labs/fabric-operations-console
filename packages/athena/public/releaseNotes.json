@@ -1,5 +1,14 @@
 [
 	{
+		"version": "1.0.9-26",
+		"date": "01 Oct 2024",
+		"description": [
+			{
+				"title": "Security fixes",
+				"details": "Dependency updates."
+			}
+		]
+	},{
 		"version": "1.0.9-25",
 		"date": "20 Aug 2024",
 		"description": [
