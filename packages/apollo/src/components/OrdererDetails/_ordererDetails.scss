@@ -222,7 +222,8 @@
 
 .ibp-orderer-channel-info,
 .ibp-orderer-channel-unjoin,
-.ibp-orderer-channel-join {
+.ibp-orderer-channel-join,
+.ibp-orderer-channel-edit {
 	align-items: center;
 	background: transparent;
 	border: 0;
@@ -261,6 +262,10 @@
 
 .ibp-orderer-channel-info {
 	right: 3rem;
+}
+
+.ibp-orderer-channel-edit {
+	right: 7rem;
 }
 
 .ibp-remove-orderer-confirm {
