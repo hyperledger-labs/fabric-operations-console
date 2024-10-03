@@ -4,7 +4,7 @@
 module.exports = function (logger, ev, t) {
 	const app = t.express.Router();
 
-	const vaultClient = t.vault_client
+	const vaultClient = t.vault_client;
 
 	// Check if Vault client initialised middleware
 	const checkIfVaultInitialisedMiddleware = (req, res, next) => {
