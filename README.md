@@ -159,7 +159,7 @@ The properly configured JSON file should be accessible to the console at the fol
 /server/conf/vault/vault-config.json
 ```
 
-You may consult the official HashiCorp Vault documentation for detailed instructions on how to create and configure a HashiCorp Vault secrets engine, user, and respective authentication method and access policy.
+You may consult the official [HashiCorp Vault documentation](https://developer.hashicorp.com/vault/docs) for detailed instructions on how to create and configure a HashiCorp Vault secrets engine, user, and respective authentication method and access policy.
 
 
 You can transition from an operational Fabric Operations Console browser store wallet to the HashiCorp Vault wallet by first performing a bulk export of your existing identities. Be sure to complete this export before activating the HashiCorp Vault wallet in your console. Once the export is finished and the console is set up with the new wallet, you can then bulk import the identities into it. This process will ensure that the imported identities are stored in the new wallet. Similarly, the same method can be applied when moving from the HashiCorp Vault wallet to a local browser store-based wallet.
