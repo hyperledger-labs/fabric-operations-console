@@ -21,7 +21,7 @@ TAG ?= $(shell git rev-parse --short HEAD)
 PULL ?= $(TRAVIS_PULL_REQUEST)
 ARCH ?= $(shell go env GOARCH)
 BRANCH ?= $(shell git branch --show-current)
-GO_VER ?= 1.20.6
+GO_VER ?= 1.23.1
 BUILD_ID = $(shell git rev-parse --short HEAD)
 BUILD_DATE = $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 
