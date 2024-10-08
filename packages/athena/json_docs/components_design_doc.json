@@ -25,6 +25,12 @@
 		"all_ids": {
 			"map": "function (doc) { emit(['doc_id', doc._id], 1); if(doc.cluster_id) emit(['cluster_id', doc.cluster_id], 1) } ",
 			"reduce": "_count"
-		}
+		},
+		"by_msp_id_not_empty": {
+      "map": "function (doc) { if (doc.msp_id) emit(doc._id, doc.msp_id); } "
+    },
+		"msp_by_msp_id": {
+      "map": "function (doc) { if (doc.type && doc.type === 'msp') emit(doc.msp_id, doc); } "
+    }
 	}
 }

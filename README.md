@@ -133,6 +133,38 @@ You should be able to manage channels, Using 2.0 lifecycle to install, approve, 
 * URL - http://127.0.0.1:5985/_utils/
 * Login - admin/password
 
+# Configure Fabric Operations Console Wallet With Hashicorp Vault
+The Fabric Operations Console wallet stores and manages the cryptographic materials that represent different entities and identities who interact on the Hyperledger Fabric network. By default, the wallet stores the crypto materials inside the browser's local store. If that is the preferred setup, no further configuration or action is needed to configure the wallet.
+
+HashiCorp Vault is an open-source tool designed to manage secrets and protect sensitive data like certificates, tokens, passwords, etc. If you decide to use HashiCorp Vault to securely store and manage the cryptographic materials, you may configure the wallet to use HashiCorp Vault.
+
+The configuration is a JSON file with the following structure:
+
+```json
+{
+    "vaultEnginePath": "{% engine path %}",
+    "authMethodPath": "{% user authentication path %}",
+    "url": "{% Hashicorp Vault API url %}",
+    "username": "{% user name %}",
+    "password": "{% user password %}",
+    "vaultPath": "{% folder path to store the crypto materials %}",
+    "apiVersion": "v1"
+}
+```
+
+The wallet requires a KV secrets engine path. You may create a new secrets engine dedicated to the console wallet. The configured user should be enabled with a username and password authentication method. The user should have a proper access policy to work with the configured secrets engine. You may configure the vault path variable to a convenient name. This path points to the root path under the configured secrets engine where your cryptographic materials will be stored and accessed by the wallet.
+
+The properly configured JSON file should be accessible to the console at the following path:
+```
+/server/conf/vault/vault-config.json
+```
+
+You may consult the official [HashiCorp Vault documentation](https://developer.hashicorp.com/vault/docs) for detailed instructions on how to create and configure a HashiCorp Vault secrets engine, user, and respective authentication method and access policy.
+
+
+You can transition from an operational Fabric Operations Console browser store wallet to the HashiCorp Vault wallet by first performing a bulk export of your existing identities. Be sure to complete this export before activating the HashiCorp Vault wallet in your console. Once the export is finished and the console is set up with the new wallet, you can then bulk import the identities into it. This process will ensure that the imported identities are stored in the new wallet. Similarly, the same method can be applied when moving from the HashiCorp Vault wallet to a local browser store-based wallet.
+
+
 # Developing Fabric Operations Console
 This repository is managed using [Lerna](https://github.com/lerna/lerna).
 

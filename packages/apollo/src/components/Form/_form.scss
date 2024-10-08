@@ -155,6 +155,7 @@
 		padding-right: 1rem;
 		padding-bottom: 1rem;
 		@include font-weight('regular');
+		color: #fff;
 
 		.ibp-multi-select-item {
 			min-height: 1rem;
@@ -167,8 +168,6 @@
 		.ibp-multi-select-item-disabled:active {
 			pointer-events: none;
 		}
-
-		color: #fff;
 
 		.ibp-tooltip-container {
 			margin-left: 0rem;

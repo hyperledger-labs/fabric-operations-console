@@ -328,6 +328,7 @@ tools.keys_lib = require('../../libs/keys_lib.js')(logger, ev, tools);
 tools.pillow = require('../../libs/pillow_talk.js')(logger, ev, tools, { db_name: ev.DB_COMPONENTS });
 tools.logging_apis_lib = require('../../libs/logging_apis_lib.js')(logger, ev, tools);
 tools.log_lib = require('../../libs/log_lib.js')(tools);
+tools.vault_client = require('../../libs/vault_client_lib.js')(logger, ev, tools);
 tools.other_apis_lib = require('../../libs/other_apis_lib.js')(logger, ev, tools);
 tools.permissions_lib = require('../../libs/permissions_lib.js')(logger, ev, tools);
 tools.signature_collection_lib = require('../../libs/signature_collection_lib.js')(logger, ev, tools);
