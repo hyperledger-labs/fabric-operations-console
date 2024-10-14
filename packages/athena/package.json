@@ -37,7 +37,7 @@
 		"elliptic": "^6.5.7",
 		"express": "^4.19.2",
 		"express-rate-limit": "3.4.*",
-		"express-session": "1.15.*",
+		"express-session": "^1.18.1",
 		"http-proxy": "1.18.*",
 		"js-yaml": "^4.1.0",
 		"jsrsasign": "^11.0.0",
