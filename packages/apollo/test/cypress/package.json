@@ -335,7 +335,7 @@
     "uuid": "^8.3.2",
     "verror": "^1.10.0",
     "watchpack": "^2.4.0",
-    "webpack": "^5.88.2",
+    "webpack": "^5.95.0",
     "webpack-sources": "^3.2.3",
     "which": "^2.0.2",
     "workerpool": "^6.2.1",
