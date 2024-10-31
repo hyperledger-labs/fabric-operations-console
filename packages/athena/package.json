@@ -34,7 +34,7 @@
 		"chokidar": "3.0.*",
 		"compression": "1.7.*",
 		"cors": "2.8.*",
-		"elliptic": "^6.5.7",
+		"elliptic": "^6.6.0",
 		"express": "^4.19.2",
 		"express-rate-limit": "3.4.*",
 		"express-session": "^1.18.1",
