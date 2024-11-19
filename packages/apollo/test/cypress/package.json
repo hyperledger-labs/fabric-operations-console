@@ -104,7 +104,7 @@
     "concat-map": "^0.0.1",
     "core-util-is": "^1.0.2",
     "cosmiconfig": "^8.2.0",
-    "cross-spawn": "^7.0.3",
+    "cross-spawn": "^7.0.6",
     "dashdash": "^1.14.1",
     "dayjs": "^1.11.9",
     "debug": "^4.3.4",
