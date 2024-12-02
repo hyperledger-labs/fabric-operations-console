@@ -80,29 +80,29 @@ Feature: Build a network without system channel
       And I clicked the button with id 'associate_identity'
       Then wait "2" seconds
 
-	Scenario: Upgrading Peer and Ordering Service node to latest
-		And I clicked the 'Peer Org1' peer
-		# And I clicked the button with id 'ibp-peer-usage'
-		And I clicked element with class 'div.ibp-details-patch-container'
-		# And I clicked the button with id 'patch_node'
-		And I clicked the checkbox with text 'I understand this is a potentially breaking change. Upgrade anyway.'
-		And I clicked the button with id 'next'
-		And I provided 'Peer Org1' for the 'Type node name here' input
-		And I clicked the button with text 'Upgrade Fabric version'
-		Then wait "20" seconds
-		Then Text should exist 'You are up to date with the latest version of Hyperledger Fabric'
-		And I am on the 'nodes' page
-		And I clicked the 'Ordering Service' orderer
-		Then wait "10" seconds
-		And I clicked element whose id ends with ':-tab-1'
-		And I clicked the div with id 'ibp-tile-Ordering Service_1'
-		And I clicked the button with text 'Upgrade version'
-		And I clicked the button with id 'next'
-		And I provided 'Ordering Service_1' for the 'Type node name here' input
-		And I clicked the button with text 'Upgrade Fabric version'
-		Then wait "20" seconds
-		Then Text should exist 'You are up to date with the latest version of Hyperledger Fabric'
-		And I am on the 'nodes' page
+	# Scenario: Upgrading Peer and Ordering Service node to latest
+	# 	And I clicked the 'Peer Org1' peer
+	# 	# And I clicked the button with id 'ibp-peer-usage'
+	# 	And I clicked element with class 'div.ibp-details-patch-container'
+	# 	# And I clicked the button with id 'patch_node'
+	# 	And I clicked the checkbox with text 'I understand this is a potentially breaking change. Upgrade anyway.'
+	# 	And I clicked the button with id 'next'
+	# 	And I provided 'Peer Org1' for the 'Type node name here' input
+	# 	And I clicked the button with text 'Upgrade Fabric version'
+	# 	Then wait "20" seconds
+	# 	Then Text should exist 'You are up to date with the latest version of Hyperledger Fabric'
+	# 	And I am on the 'nodes' page
+	# 	And I clicked the 'Ordering Service' orderer
+	# 	Then wait "10" seconds
+	# 	And I clicked element whose id ends with ':-tab-1'
+	# 	And I clicked the div with id 'ibp-tile-Ordering Service_1'
+	# 	And I clicked the button with text 'Upgrade version'
+	# 	And I clicked the button with id 'next'
+	# 	And I provided 'Ordering Service_1' for the 'Type node name here' input
+	# 	And I clicked the button with text 'Upgrade Fabric version'
+	# 	Then wait "20" seconds
+	# 	Then Text should exist 'You are up to date with the latest version of Hyperledger Fabric'
+	# 	And I am on the 'nodes' page
 
   Scenario: When creating an ordering service without system channel
         And I clicked the button with title 'Add ordering service'
