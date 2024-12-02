@@ -73,8 +73,8 @@ Feature: Build a network feature
         And I provided 'peer1pw' for the 'Enter a secret' input
         And I clicked the button with title 'Select an MSP'
         And I clicked the div with text 'Org1 MSP'
-        And I clicked the button with title 'Select a Fabric version'
-        And I clicked the div with text '2.5'
+        # And I clicked the button with title 'Select a Fabric version'
+        # And I clicked the div with text '2.5'
         And I clicked the button with id 'next'
         And I clicked the button with title 'Please select an identity from your wallet'
         And I clicked the div with text 'Org1 MSP Admin'
