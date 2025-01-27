@@ -2,7 +2,8 @@ name: Build Deployer image
 
 on:
   push:
-    branches: [main]
+    tags:
+      - '*'
 
 jobs:
   image:
@@ -10,7 +11,7 @@ jobs:
     steps:
       - name: Granting private modules access
         run: |
-          git config --global url."https://${{ secrets.ACCESS_TOKEN }}:x-oauth-basic@github.com/IBM-Blockchain".insteadOf "https://github.com/IBM-Blockchain" 
+          git config --global url."https://${{ secrets.GITHUB_TOKEN }}:x-oauth-basic@github.com/IBM-Blockchain".insteadOf "https://github.com/IBM-Blockchain"
       - name: Checkout fabric-deployer repo
         uses: actions/checkout@v3
       - name: Build
