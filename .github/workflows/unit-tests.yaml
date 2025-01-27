@@ -20,12 +20,6 @@ name: Deployer unit-tests
 on:
   pull_request:
     branches: [main]
-
-defaults:
-  run:
-    working-directory: ./packages/fabric-deployer`
-    shell: bash
-
 env:
   GOPRIVATE: "github.com/IBM-Blockchain/*"
   GOPROXY: "https://proxy.golang.org,direct"
