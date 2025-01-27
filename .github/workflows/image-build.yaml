@@ -1,5 +1,4 @@
 name: Build Deployer image
-
 on:
   push:
     tags:

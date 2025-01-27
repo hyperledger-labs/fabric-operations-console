@@ -23,7 +23,7 @@ on:
 
 defaults:
   run:
-    working-directory: ./packages/deployer
+    working-directory: ./packages/fabric-deployer`
     shell: bash
 
 env:
