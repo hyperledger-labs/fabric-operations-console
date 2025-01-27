@@ -36,6 +36,7 @@ jobs:
     steps:
       - name: Granting private modules access
         run: |
+          echo "Current working directory: $(pwd)"
           git config --global url."https://${{ secrets.GITHUB_TOKEN }}:x-oauth-basic@github.com/IBM-Blockchain".insteadOf "https://github.com/IBM-Blockchain"
           echo $KUBECONFIGJSON > /tmp/kubeconfig.json
       - name: Checkout code
