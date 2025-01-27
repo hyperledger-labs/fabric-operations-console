@@ -25,7 +25,10 @@ on:
 env:
   GOPRIVATE: "github.com/IBM-Blockchain/*"
   GOPROXY: "https://proxy.golang.org,direct"
-
+defaults:
+  run:
+    working-directory: ./packages/deployer
+    shell: bash
 jobs:
   make-checks:
     runs-on: ubuntu-latest
