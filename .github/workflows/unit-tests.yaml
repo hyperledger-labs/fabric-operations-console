@@ -28,7 +28,7 @@ env:
   GOPROXY: "https://proxy.golang.org,direct"
 
 jobs:
-  unit-tests:
+  deployer-unit-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Granting private modules access
@@ -36,14 +36,18 @@ jobs:
           echo "Current working directory: $(pwd)"
           git config --global url."https://${{ secrets.GITHUB_TOKEN }}:x-oauth-basic@github.com/IBM-Blockchain".insteadOf "https://github.com/IBM-Blockchain"
           echo $KUBECONFIGJSON > /tmp/kubeconfig.json
-          sudo apt-get install make
+
       - name: Checkout code
         uses: actions/checkout@v3
+
       - name: Set up go
         uses: actions/setup-go@v3
         with:
           go-version: 1.23.x
+      - name: Set up Make step
+        run: sudo apt-get install make
       - name: Run gosec
         run: make gosec
+        working-directory: ./
       - name: Run tests
         run: make test
