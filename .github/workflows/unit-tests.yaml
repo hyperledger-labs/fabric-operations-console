@@ -15,11 +15,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
 name: Deployer unit-tests
 
 on:
   pull_request:
-    branches: [main]
+    branches:
+      - main
+
 env:
   GOPRIVATE: "github.com/IBM-Blockchain/*"
   GOPROXY: "https://proxy.golang.org,direct"
@@ -33,6 +36,7 @@ jobs:
           echo "Current working directory: $(pwd)"
           git config --global url."https://${{ secrets.GITHUB_TOKEN }}:x-oauth-basic@github.com/IBM-Blockchain".insteadOf "https://github.com/IBM-Blockchain"
           echo $KUBECONFIGJSON > /tmp/kubeconfig.json
+          sudo apt-get install make
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Set up go
