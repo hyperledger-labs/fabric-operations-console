@@ -49,8 +49,6 @@ jobs:
        - name: Check Go version
          run: go version
        - name: Run Gosec Security Scanner
-         uses: securego/gosec@master
-         with:
-           args: .
+         run: ls -la && scripts/go-sec.sh
        - name: Test with the Go CLI
          run: ls -la && scripts/run_unit_test.sh
