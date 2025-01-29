@@ -34,6 +34,9 @@ jobs:
   deployer-unit-tests:
     name: Deployer Unit Tests
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/fabric-deployer
     steps:
        - uses: actions/setup-go@v5
          name: Install Go
@@ -44,7 +47,6 @@ jobs:
          with:
            fetch-depth: 0
        - name: Set working directory and run command
-         working-directory: packages/fabric-deployer
          run: |
            ls -la
        - name: Check Go version
@@ -52,6 +54,6 @@ jobs:
        - name: Run Gosec Security Scanner
          uses: securego/gosec@master
          with:
-           args: ./...
+           args: .
        - name: Test with the Go CLI
-         run: go test
+         run: ls -la && scripts/run_unit_test.sh
