@@ -46,11 +46,11 @@ jobs:
          uses: actions/checkout@v4
          with:
            fetch-depth: 0
-       - name: Set working directory and run command
-         run: |
-           ls -la
        - name: Check Go version
          run: go version
-
+       - name: Run Gosec Security Scanner
+         uses: securego/gosec@master
+         with:
+           args: .
        - name: Test with the Go CLI
          run: ls -la && scripts/run_unit_test.sh
