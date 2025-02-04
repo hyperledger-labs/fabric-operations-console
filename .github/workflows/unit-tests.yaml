@@ -54,6 +54,15 @@ jobs:
            echo "PATH: $PATH"
        - name: List repository files
          run: ls -la
+       # Install gosec
+       - name: Install gosec
+         run: |
+           go install github.com/securego/gosec/v2/cmd/gosec@latest
+           echo "gosec installed at $(which gosec)"
+       - name: Verify Working Directory
+         run: |
+           echo "Working Directory: $(pwd)"
+           scripts/go-sec.sh
        - name: Run Gosec Security Scanner
          uses: securego/gosec@master
          with:
