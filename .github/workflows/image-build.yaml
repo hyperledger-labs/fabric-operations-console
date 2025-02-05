@@ -15,9 +15,6 @@ jobs:
       contents: read
       packages: write
     steps:
-      - name: Install dependencies
-        run: |
-          sudo apt-get update && sudo apt-get install curl build-essential -y
       - name: Checkout fabric-deployer repo
         uses: actions/checkout@v4
       - name: List repository files
