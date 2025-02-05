@@ -8,6 +8,9 @@ jobs:
   build-deployer-image:
     name: Build Deployer Image
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/fabric-deployer
     permissions:
       contents: read
       packages: write
@@ -19,8 +22,6 @@ jobs:
         uses: actions/checkout@v4
       - name: List repository files
         run: ls -la
-      - name: Set up Make
-        run: sudo apt-get install -y make
       - name: Build
         run: make image
       #- name: Push
