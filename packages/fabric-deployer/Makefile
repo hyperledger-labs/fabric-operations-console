@@ -32,7 +32,7 @@ BUILD_ARGS=--build-arg ARCH=$(ARCH)
 BUILD_ARGS+=--build-arg BUILD_ID=$(BUILD_ID)
 BUILD_ARGS+=--build-arg BUILD_DATE=$(BUILD_DATE)
 BUILD_ARGS+=--build-arg GO_VER=$(GO_VER)
-BUILD_ARGS+=--build-arg GO_VER=$(GO_TOOLSET_VER)
+BUILD_ARGS+=--build-arg GO_TOOLSET_VER=$(GO_TOOLSET_VER)
 
 # LOGGING
 LOG_MSG=$(shell command -v figlet 2> /dev/null)
