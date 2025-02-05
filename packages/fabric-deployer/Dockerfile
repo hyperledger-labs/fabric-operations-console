@@ -17,6 +17,7 @@
 #
 ARG ARCH
 ARG GO_VER
+ARG GO_TOOLSET_VER
 
 ########## Build deployer binary ##########
 FROM registry.access.redhat.com/ubi8/go-toolset:$GO_TOOLSET_VER as builder
