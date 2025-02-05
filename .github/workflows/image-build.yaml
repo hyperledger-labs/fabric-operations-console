@@ -1,24 +1,32 @@
 name: Build Deployer image
 on:
-  push:
-    tags:
-      - '*'
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  image:
+  build-deployer-image:
+    name: Build Deployer Image
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/fabric-deployer
     permissions:
       contents: read
       packages: write
     steps:
-      - name: Granting private modules access
+      - name: Install dependencies
         run: |
-          git config --global url."https://${{ secrets.GITHUB_TOKEN }}:x-oauth-basic@github.com/IBM-Blockchain".insteadOf "https://github.com/IBM-Blockchain"
+          sudo apt-get update && sudo apt-get install curl build-essential -y
       - name: Checkout fabric-deployer repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+      - name: List repository files
+        run: ls -la
+      - name: Set up Make
+        run: sudo apt-get install -y make
       - name: Build
         run: make image
-      - name: Push
-        run: |
-          docker login ghcr.io -u $GITHUB_ACTOR -p ${{ secrets.CR_TOKEN }}
-          make image-push image-push-latest
+      #- name: Push
+       # env:
+        #  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #run: ./docker/publish_image.sh
