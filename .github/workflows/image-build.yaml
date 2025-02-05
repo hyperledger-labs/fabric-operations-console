@@ -8,9 +8,6 @@ jobs:
   build-deployer-image:
     name: Build Deployer Image
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: packages/fabric-deployer
     permissions:
       contents: read
       packages: write
