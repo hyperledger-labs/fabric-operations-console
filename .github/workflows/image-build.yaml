@@ -1,0 +1,27 @@
+name: Build Deployer image
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-deployer-image:
+    name: Build Deployer Image
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/fabric-deployer
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout fabric-deployer repo
+        uses: actions/checkout@v4
+      - name: List repository files
+        run: ls -la
+      - name: Build
+        run: make image
+      #- name: Push
+       # env:
+        #  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #run: ./docker/publish_image.sh

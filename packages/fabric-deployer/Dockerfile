@@ -17,9 +17,11 @@
 #
 ARG ARCH
 ARG GO_VER
+ARG GO_TOOLSET_VER
+
 
 ########## Build deployer binary ##########
-FROM registry.access.redhat.com/ubi8/go-toolset:$GO_VER as builder
+FROM registry.access.redhat.com/ubi8/go-toolset:$GO_TOOLSET_VER as builder
 ADD . /go/src/github.com/IBM-Blockchain/fabric-deployer
 WORKDIR /go/src/github.com/IBM-Blockchain/fabric-deployer
 

@@ -22,8 +22,10 @@ PULL ?= $(TRAVIS_PULL_REQUEST)
 ARCH ?= $(shell go env GOARCH)
 BRANCH ?= $(shell git branch --show-current)
 GO_VER ?= 1.23.1
+GO_TOOLSET_VER ?= 1.2
 BUILD_ID = $(shell git rev-parse --short HEAD)
 BUILD_DATE = $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
+BUILD_ARGS+=--build-arg GO_TOOLSET_VER=$(GO_TOOLSET_VER)
 
 DOCKER_IMAGE_REPO ?= us.icr.io
 
