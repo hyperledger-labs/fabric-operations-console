@@ -22,7 +22,7 @@ PULL ?= $(TRAVIS_PULL_REQUEST)
 ARCH ?= $(shell go env GOARCH)
 BRANCH ?= $(shell git branch --show-current)
 GO_VER ?= 1.23.1
-GO_TOOLSET_VER ?= 1.2
+GO_TOOLSET_VER ?= 1.22
 BUILD_ID = $(shell git rev-parse --short HEAD)
 BUILD_DATE = $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 
