@@ -24,7 +24,7 @@ ARG GO_TOOLSET_VER
 FROM registry.access.redhat.com/ubi8/ubi-minimal as builder
 RUN echo "GO_VER=${GO_VER}" && echo "ARCH=${ARCH}"
 RUN microdnf install -y make gcc tar gzip gcc-c++ && microdnf clean all
-RUN curl -sL https://go.dev/dl/go${GO_VER}.linux-${ARCH}.tar.gz | tar zxf - -C /usr/local
+RUN curl -sL https://go.dev/dl/go1.23.1.linux-amd64.tar.gz | tar zxf - -C /usr/local
 ENV PATH="/usr/local/go/bin:$PATH"
 
 ADD . /go/src/github.com/IBM-Blockchain/fabric-deployer
