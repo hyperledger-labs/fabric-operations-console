@@ -23,7 +23,8 @@ ARG GO_TOOLSET_VER
 ########## Build deployer binary ##########
 FROM registry.access.redhat.com/ubi8/ubi-minimal as builder
 RUN microdnf install -y make gcc gcc-c++ && microdnf clean all
-
+RUN curl -sL https://go.dev/dl/go${GO_VER}.linux-${ARCH}.tar.gz | tar zxf - -C /usr/local
+ENV PATH="/usr/local/go/bin:$PATH"
 
 ADD . /go/src/github.com/IBM-Blockchain/fabric-deployer
 WORKDIR /go/src/github.com/IBM-Blockchain/fabric-deployer
