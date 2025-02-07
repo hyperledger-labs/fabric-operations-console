@@ -55,6 +55,7 @@ PRINT_BLUE=awk '{ print "\033[1;34m" $$0 "\033[1;0m" }'
 build: ## Builds the starter pack
 	@$(LOG_MSG) Building binary ... | $(PRINT_BLUE)
 	go build -o /tmp/build/_output/bin/deployer .
+	ls -la
 #	@scripts/build_image.sh
 
 # Run go fmt against code
