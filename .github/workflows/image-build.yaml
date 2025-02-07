@@ -36,4 +36,6 @@ jobs:
       - name: Build
         run: make image
       - name: Push
-        run: make build-push
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+          make image-push image-push-latest

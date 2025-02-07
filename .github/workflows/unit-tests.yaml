@@ -54,6 +54,8 @@ jobs:
            echo "PATH: $PATH"
        - name: List repository files
          run: ls -la
+       - name: license header checks
+         run: scripts/check-license.sh
        # Install gosec
        - name: Install gosec
          run: |
