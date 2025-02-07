@@ -25,10 +25,12 @@ jobs:
         name: Install Go
         with:
            go-version: ${{ env.GO_VER }}
-      - name: Check Go version
-        run: go version
       - name: Checkout fabric-deployer repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check Go version
+        run: go version
       - name: List repository files
         run: ls -la
       - name: Build
