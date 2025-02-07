@@ -52,8 +52,8 @@ PRINT_BLUE=awk '{ print "\033[1;34m" $$0 "\033[1;0m" }'
 
 build: ## Builds the starter pack
 	@$(LOG_MSG) Building binary ... | $(PRINT_BLUE)
-	go build -o /tmp/build/_output/bin/deployer github.com/IBM-Blockchain/fabric-deployer
-
+	go build -o /tmp/build/_output/bin/deployer .
+	ls -la /tmp/build/_output/bin
 # Run go fmt against code
 fmt:
 	go fmt ./...
@@ -85,7 +85,7 @@ image-push-latest:
 	@$(LOG_MSG) Pushing image '$(IMAGE):latest' ... | $(PRINT_BLUE)
 	docker push $(IMAGE):latest-$(ARCH)
 
-build-push: image push ## Builds and pushes the image
+build-push: image image-push ## Builds and pushes the image
 
 .PHONY: license
 license:
