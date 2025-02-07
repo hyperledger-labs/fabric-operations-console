@@ -22,8 +22,8 @@ ARG GO_TOOLSET_VER
 
 ########## Build deployer binary ##########
 FROM registry.access.redhat.com/ubi8/go-toolset:$GO_TOOLSET_VER as builder
-ADD . /go/src/github.com/hyperledger-labs/fabric-operations-console/packages/fabric-deployer
-WORKDIR /go/src/github.com/hyperledger-labs/fabric-operations-console/packages/fabric-deployer
+ADD . /go/src/github.com/IBM-Blockchain/fabric-deployer
+WORKDIR /go/src/github.com/IBM-Blockchain/fabric-deployer
 
 ## use the make command to build and generate the binary
 RUN make build
