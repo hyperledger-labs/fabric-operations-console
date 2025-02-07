@@ -87,7 +87,7 @@ image-push-latest:
 	@$(LOG_MSG) Pushing image '$(IMAGE):latest' ... | $(PRINT_BLUE)
 	docker push $(IMAGE):latest-$(ARCH)
 
-build-push: image push ## Builds and pushes the image
+build-push: image image-push ## Builds and pushes the image
 
 .PHONY: license
 license:
