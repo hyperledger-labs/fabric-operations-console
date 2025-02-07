@@ -33,7 +33,6 @@ ADD . /go/src/github.com/hyperledger-labs/fabric-operations-console/fabric-deplo
 WORKDIR /go/src/github.com/hyperledger-labs/fabric-operations-console/fabric-deployer
 
 ## use the make command to build and generate the binary
-RUN chmod +x scripts/build_image.sh
 RUN make build
 
 ########## Final image ##########
