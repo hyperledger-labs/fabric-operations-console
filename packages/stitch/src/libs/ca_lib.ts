@@ -38,6 +38,9 @@ export { getCaIdentities, scGenCSR, getCaAffiliations, registerCaIdentity, enrol
 function getCaIdentities(opts: CaInput, cb: Function) {
 	const options = JSON.parse(JSON.stringify(opts));
 	options.body_obj = null;						// set null for token gen
+	// set path and method for token gen
+	options.path = build_ca_path(options, '/api/v1/identities');
+	options.method = 'GET';
 
 	let called_cb = false;
 	generateCaAuthToken(options, (_: any, token: string) => {
@@ -80,6 +83,9 @@ function getCaIdentities(opts: CaInput, cb: Function) {
 function getCaAffiliations(opts: CaInput, cb: Function) {
 	const options = JSON.parse(JSON.stringify(opts));
 	options.body_obj = null;						// set null for token gen
+	// set path and method for token gen
+	options.path = build_ca_path(options, '/api/v1/affiliations');
+	options.method = 'GET';
 
 	let called_cb = false;
 	generateCaAuthToken(options, (_: any, token: string) => {
@@ -160,6 +166,9 @@ function registerCaIdentity(opts: CaReg, cb: Function) {
 		type: options.new_identity.type,
 		max_enrollments: Number(options.new_identity.max_enrollments)
 	};
+	// set path and method for token gen
+	options.path = build_ca_path(options, '/api/v1/identities');
+	options.method = 'POST';
 
 	let called_cb = false;
 	generateCaAuthToken(options, (_: any, token: string) => {
@@ -283,6 +292,9 @@ function reenrollCaIdentity(opts: CaInput, cb: Function) {
 				caName: options.ca_name,
 				certificate_request: csrPEM,
 			};
+			// set path and method for token gen
+			options.path = build_ca_path(options, '/api/v1/reenroll');
+			options.method = 'POST';
 
 			let called_cb = false;
 			generateCaAuthToken(options, (_: any, token: string) => {
@@ -338,15 +350,18 @@ function get_CN_from_str(str: any) {
 */
 function deleteCaIdentity(opts: CaInput, cb: Function) {
 	const options = JSON.parse(JSON.stringify(opts));
-	options.body_obj = null;							// set null for token gen
-
 	const parsed = parseCertificate(opts.client_cert_b64pem);
+	const enroll_id = opts.enroll_id || get_CN_from_str(parsed.subject_parts.CN);
+	options.body_obj = null;							// set null for token gen
+	// set path and method for token gen
+	options.path = build_ca_path(options, '/api/v1/identities/' + enroll_id);
+	options.method = 'DELETE';
+
 	if (!parsed || !parsed.subject_parts || !parsed.subject_parts.CN) {
 		return cb(fmt_ca_err({ funk: 'deleteCaIdentity' }, null, 'unable to delete id b/c cannot find enroll id in cert'), null);
 	} else {
 		let called_cb = false;
 		generateCaAuthToken(options, (_: any, token: string) => {
-			const enroll_id = opts.enroll_id || get_CN_from_str(parsed.subject_parts.CN);
 			const fetch_options = {
 				host: build_ca_url(options, '/api/v1/identities/' + enroll_id),
 				authorization: token,
@@ -386,6 +401,21 @@ function build_ca_url(opts: { ca_name: string, host: string }, path: string) {
 		}
 	}
 	return opts.host;
+}
+
+// ------------------------------------------------------------------------------------------------------
+// construct the path to use for the ca, same logic as build_ca_url (above) but without the starting host
+// ------------------------------------------------------------------------------------------------------
+function build_ca_path(opts: { ca_name: string, host: string }, path: string) {
+	if (opts.ca_name) {									// finding the ca name in input obj
+		return path + '?ca=' + opts.ca_name;
+	} else {
+		const parts = opts.host.split('?');				// finding the ca name in url as query param
+		if (parts && parts.length >= 2) {
+			return path + '?' + parts[1];	// parts[1] holds the ca name
+		}
+	}
+	return path;
 }
 
 // ----------------------------------------------------------------
@@ -505,6 +535,8 @@ interface CaInput {
 	ext: Ext | null;
 	enroll_id: string | null;
 	timeout_ms: number | null;
+	path: string;
+	method: string;
 }
 
 interface CaReg extends CaInput {
