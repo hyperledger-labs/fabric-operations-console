@@ -458,7 +458,7 @@ function fmtKey(key: object | string, type: string) {
 //------------------------------------------------------------------
 // Generate authorization token required for accessing fabric-ca APIs
 //------------------------------------------------------------------
-function generateCaAuthToken(opts: { client_prv_key_b64pem: string, client_cert_b64pem: string, body_obj: any }, cb: Function) {
+function generateCaAuthToken(opts: { client_prv_key_b64pem: string, client_cert_b64pem: string, body_obj: any, path: string, method: string }, cb: Function) {
 	let prvKeyPem = decode_b64_pem(opts.client_prv_key_b64pem);
 	let client_cert_b64pem = btoa(decode_b64_pem(opts.client_cert_b64pem));	// decode and encode to catch non encoded certs
 	let payload = null;
@@ -468,6 +468,11 @@ function generateCaAuthToken(opts: { client_prv_key_b64pem: string, client_cert_
 		payload = reqBodyB64 + '.' + client_cert_b64pem;
 	} else {
 		payload = '.' + client_cert_b64pem;
+	}
+
+	if (opts.path && opts.method) {
+		const s = btoa(opts.path);
+		payload = opts.method + '.' + s + '.' + payload;
 	}
 
 	scSign({ prvKeyPEM: prvKeyPem, b_msg: utf8StrToUint8Array(payload) }, (_: any, b_signature: any) => {	// subtle crypto method does not need the has function
