@@ -45,7 +45,6 @@ export default [
 			},
 		},
 		"rules": {
-			"react/jsx-max-props-per-line": [1, { "maximum": 1 }],
 			"react/jsx-closing-bracket-location": [1, "line-aligned"],
 			"array-bracket-spacing": 0,
 			"space-before-function-paren": 0,
@@ -76,9 +75,8 @@ export default [
 				}
 			],
 			"max-depth": [1, 8],
-			"max-len": [1, 200],
+			"max-len": [1, 300],
 			"max-params": [1, 7],
-			"new-cap": 1,
 			"no-bitwise": 1,
 			"no-console": "off",
 			"no-multi-spaces": 1,
@@ -89,13 +87,13 @@ export default [
 			// "no-unused-vars": [
 			// 	1,
 			// 	{
-			// 		"args": "none"
+			// 		"args": "none",
+			// 		"varsIgnorePattern": "React"
 			// 	}
 			// ],
 			"no-var": 1,
 			"object-curly-spacing": [1, "always"],
 			"prefer-const": 0,
-			"quotes": [1, "single"],
 			"require-atomic-updates": 0,
 			"semi": [0, "always"],
 			"space-before-blocks": 1,

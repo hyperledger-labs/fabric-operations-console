@@ -55,19 +55,24 @@ module.exports = (logger, ev, t) => {
 	//------------------------------------------------------------------
 	// Generate authorization token required for accessing fabric-ca APIs
 	//------------------------------------------------------------------
-	exports.generateAuthToken = (reqBody) => {
+	exports.generateAuthToken = (reqBody, path, method) => {
 		// specific signing procedure is according to:
 		// https://github.com/hyperledger/fabric-ca/blob/master/util/util.go#L213
 		let cert = Buffer.from(t.signingIdentity.certificate).toString('base64');
-		let bodyAndCert;
+		let signString;
 		if (reqBody) {
 			let body = Buffer.from(JSON.stringify(reqBody)).toString('base64');
-			bodyAndCert = body + '.' + cert;
+			signString = body + '.' + cert;
 		} else {
-			bodyAndCert = '.' + cert;
+			signString = '.' + cert;
 		}
 
-		let sig = t.signing_lib.sign(bodyAndCert, { hashFunction: t.cryptoSuite.hash.bind(t.cryptoSuite), signingIdentity: t.signingIdentity });
+		if (path && method) {
+			const s = Buffer.from(path).toString('base64');
+			signString = method + '.' + s + '.' + signString;
+		}
+
+		let sig = t.signing_lib.sign(signString, { hashFunction: t.cryptoSuite.hash.bind(t.cryptoSuite), signingIdentity: t.signingIdentity });
 
 		let b64Sign = Buffer.from(sig, 'hex').toString('base64');
 		return cert + '.' + b64Sign;

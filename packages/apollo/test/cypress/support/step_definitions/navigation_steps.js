@@ -20,7 +20,11 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 	return false
   })
 
-Given("I go to the console", () => {
+Cypress.on('uncaught exception', (err, runnable) => {
+	return false
+})
+
+  Given("I go to the console", () => {
     cy.fixture("config.json").then((data) => {
       cy.visit(data.loginUrl)
     })
@@ -80,7 +84,7 @@ Given(/^I clicked the checkbox with (text) (?:'|")(.*?)(?:'|")$/, (property, val
 });
 
 Then(/^I am on Help page$/, () => {
-  cy.get('#title_bar > header > div > button:nth-child(1)').click()
+  cy.get('#title_bar > header > div > span').click()
   cy.wait(1000)
 });
 
@@ -98,6 +102,11 @@ Given(/^I clicked element with class (?:'|")(.*?)(?:'|")$/, (className) => {
 	cy.wait(500)
 	cy.get(className).first().should('be.visible').click()
   });
+
+Given(/^I clicked element whose id ends with (?:'|")(.*?)(?:'|")$/, (value) => {
+cy.wait(500)
+cy.get(`[id$="${value}"]`).first().should('be.visible').click()
+});
 
 Then(/^the table row with id (?:'|")(.*?)(?:'|") does not exist on page$/, value => {
 cy.wait(1000)

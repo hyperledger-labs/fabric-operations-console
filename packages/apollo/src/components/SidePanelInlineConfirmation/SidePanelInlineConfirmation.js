@@ -15,7 +15,7 @@
 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Close} from '@carbon/icons-react';
+import { Close } from '@carbon/icons-react';
 
 const SidePanelInlineConfirmation = props => {
 	return (

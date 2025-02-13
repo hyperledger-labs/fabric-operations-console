@@ -176,7 +176,11 @@ small {
 }
 
 .cds--tabs {
-	border-bottom: 1px solid $cool-gray-70;
+	// border-bottom: 1px solid $cool-gray-70;
+
+	.cds--tab--overflow-nav-button {
+		display: none;
+	}
 
 	.cds--tabs__nav {
 		.cds--tabs__nav-item.cds--tabs__nav-item--selected {
@@ -568,6 +572,9 @@ small {
 }
 
 .ibp-patch-available-tab {
+	.cds--tabs__nav-item-label {
+		text-align: center;
+	}
 	.cds--tabs__nav-link {
 		width: auto;
 

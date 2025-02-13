@@ -982,10 +982,10 @@ class ProposeChaincodeModal extends React.Component {
 									</>
 								)}
 								<Trans>{this.props.t('this_proposal')}
-								{/* , { */}
+									{/* , { */}
 									{/* org: this.props.propose_org ? <span className="ibp-highlight-msp">{this.props.propose_org.msp_id}</span> : null, */}
-								{/* })} */}
-								{this.props.propose_org ? <span className="ibp-highlight-msp">{this.props.propose_org.msp_id}</span>: null}
+									{/* })} */}
+									{this.props.propose_org ? <span className="ibp-highlight-msp">{this.props.propose_org.msp_id}</span>: null}
 								</Trans>
 							</>
 						}

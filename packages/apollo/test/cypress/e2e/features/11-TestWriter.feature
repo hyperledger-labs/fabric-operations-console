@@ -2,7 +2,7 @@
 Feature: Verify allowed functions for Writer user
 
   Background: Login to console
-    Given I go to the console
+    When I go to the console
 	And I am logged in as 'writeruser@ibm.com' user
     And I am ready to get started
 
@@ -24,6 +24,7 @@ Feature: Verify allowed functions for Writer user
         And I provided 'admin' for the 'Enter an ID' input
         And I provided 'adminpw' for the 'Enter a secret' input
         And I provided 'Ordering Service CA Admin' for the 'Enter a name' input
+		Then wait "5" seconds
         And I clicked the button with id 'associate_identity'
         And the CA admin is set as 'Ordering Service CA Admin'
         Then the 'admin' user with id 'OSadmin' should be enrolled
@@ -100,6 +101,7 @@ Feature: Verify allowed functions for Writer user
 		And I am on the 'nodes' page
 
 	Scenario: Writer is not allowed to modify Access
+		Then wait "5" seconds
 		And I am on the 'access' page
 		Then Message should be displayed 'Contact a user with the "Manager" role'
 
@@ -109,6 +111,7 @@ Feature: Verify allowed functions for Writer user
 		Then Button should be enabled for id 'data_import_button'
 
 	Scenario: For Writers registering new user should be enabled
+		Then wait "5" seconds
 		And I am on the 'nodes' page
 		And I clicked the 'Org1 CA' certificate authority
 		Then Button should be enabled for title 'Register user'
@@ -136,7 +139,8 @@ Feature: Verify allowed functions for Writer user
 	Scenario: Deleting imported Ordering Service_1
 		And I navigate to the 'nodes' page
 		And I clicked the node 'Ordering Service'
-		And I clicked the button with id 'ibp-orderer-nodes'
+		# And I clicked the button with id 'ibp-orderer-nodes'
+		And I clicked element whose id ends with ':-tab-1'
 		And I clicked the node 'Ordering Service_1'
 		And I clicked the button with id 'orderingservice_1-sticky-delete-button'
 		And I provided 'Ordering Service_1' for the 'Type here' input
@@ -145,7 +149,8 @@ Feature: Verify allowed functions for Writer user
 	Scenario: Importing Ordering Service_1
 		And I navigate to the 'nodes' page
 		And I clicked the node 'Ordering Service'
-		And I clicked the button with id 'ibp-orderer-nodes'
+		# And I clicked the button with id 'ibp-orderer-nodes'
+		And I clicked element whose id ends with ':-tab-1'
 		And I clicked the button with title 'Add another node'
 		And I clicked the div with text 'Import an existing ordering node'
 		And I clicked the button with id 'next'

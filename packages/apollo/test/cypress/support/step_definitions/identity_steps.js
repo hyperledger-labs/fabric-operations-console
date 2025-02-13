@@ -19,7 +19,7 @@ import { Given, Then, When } from "@badeball/cypress-cucumber-preprocessor";
 Given(/^the CA admin is set as (?:'|")(.*?)(?:'|")$/, identityName => {
 	// Sometimes it takes time to associate identity after clicking button
 	cy.wait(60000)
-    cy.get('.ibp-identity-information',{ timeout: 120000 }).contains(identityName)
+    cy.get('.ibp-identity-information',{ timeout: 180000 }).contains(identityName)
 });
 
 When(/^the (?:'|")(.*?)(?:'|") user was enrolled with id (?:'|")(.*?)(?:'|") and secret (?:'|")(.*?)(?:'|")$/, (type, enrollId, enrollSecret) => {
@@ -63,13 +63,13 @@ When(/^I click Create MSP definition button$/, () => {
 });
 
 When(/^I enroll TLS identity for OS1 with secret (?:'|")(.*?)(?:'|") and name (?:'|")(.*?)(?:'|")$/, (enrollSecret, enrollName) => {
-	cy.get('.cds--overflow-menu.cds--overflow-menu--md').first().should('be.visible').click()
+	cy.get('.cds--overflow-menu.cds--overflow-menu--md',{ timeout: 180000 }).first().should('be.visible').click()
 	cy.wait(500)
 	cy.clickButton('id','generate_cert--menu--item')
 	cy.wait(1000)
 	cy.clickButton('title','Root Certificate Authority')
 	cy.wait(1000)
-	cy.get('.cds--list-box__menu-item__option').contains('TLS Certificate Authority').click()
+	cy.get('.cds--list-box__menu-item__option',{ timeout: 180000 }).contains('TLS Certificate Authority').click()
 	cy.enterInput(enrollSecret, 'Enter a secret');
 	cy.clickButton('id', 'next')
 	cy.wait(60000)

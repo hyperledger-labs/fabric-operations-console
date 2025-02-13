@@ -5,11 +5,11 @@ const withRouter = (Component) => {
 	const ComponentWithRouterProp = (props) => {
 		const location = useLocation();
 		const navigate = useNavigate();
-		// const history = useNavigate();
 		const history = {
 			push: (to, options) => {
-				console.log('to, options', to, options);
-				navigate(to, options)
+				if (!to.includes("undefined")) {
+					navigate(to, options)
+				}
 			},
 			location: location,
 			goBack: () => {

@@ -1,6 +1,68 @@
 [
 	{
-		"version": "1.0.9-17",
+		"version": "1.0.9-32",
+		"date": "04 Feb 2025",
+		"description": [
+			{
+				"title": "Update auth header token for CA v1.5.14",
+				"details": "New versions of Fabric CA (v1.5.14 and later) has new authentication header. Hence, auth header token for CA is updated to support CA 1.5.14 and later."
+			},
+			{
+				"title": "Security fixes",
+				"details": "Dependency updates."
+			}
+		]
+	},{
+		"version": "1.0.9-31",
+		"date": "28 Jan 2025",
+		"description": [
+			{
+				"title": "Security fixes",
+				"details": "Dependency updates."
+			}
+		]
+	},{
+		"version": "1.0.9-29",
+		"date": "03 Dec 2024",
+		"description": [
+			{
+				"title": "Security fixes",
+				"details": "Dependency updates."
+			}
+		]
+	},{
+		"version": "1.0.9-26",
+		"date": "01 Oct 2024",
+		"description": [
+			{
+				"title": "Security fixes",
+				"details": "Dependency updates."
+			}
+		]
+	},{
+		"version": "1.0.9-25",
+		"date": "20 Aug 2024",
+		"description": [
+			{
+				"title": "Security fixes",
+				"details": "Dependency updates."
+			}
+		]
+	},{
+		"version": "1.0.9-24",
+		"date": "26 July 2024",
+		"description": [
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			},
+			{
+				"title": "Node v20",
+				"details": "Updated to use Node v20.15.1"
+			}
+		]
+	},{
+		"version": "1.0.9-22",
 		"date": "04 July 2024",
 		"description": [
 			{

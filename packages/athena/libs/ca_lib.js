@@ -88,14 +88,17 @@ module.exports = (logger, ev, t) => {
 		const err = {};
 		err.statusCode = 500;
 
+		const path = fabricCAClient.baseAPI + 'identities' + '?ca=' + fabricCAClient.ca_name;
+		const method = 'GET';
+
 		// get the auth token
-		const auth_token = t.fabric_utils.generateAuthToken(null);
+		const auth_token = t.fabric_utils.generateAuthToken(null, path, method);
 
 		// build the request object to get all identities
 		const options = {
 			baseUrl: fabricCAClient.protocol + '//' + fabricCAClient.hostname + ':' + fabricCAClient.port,
-			url: fabricCAClient.baseAPI + 'identities' + '?ca=' + fabricCAClient.ca_name,
-			method: 'GET',
+			url: path,
+			method: method,
 			headers: {
 				Authorization: auth_token
 			},
@@ -151,15 +154,18 @@ module.exports = (logger, ev, t) => {
 		const err = {};
 		err.statusCode = 500;
 
+		const path = fabricCAClient.baseAPI + 'identities';
+		const method = 'POST';
+
 		// get the auth token
-		const auth_token = t.fabric_utils.generateAuthToken(newIdentity);
+		const auth_token = t.fabric_utils.generateAuthToken(newIdentity, path, method);
 
 		// build the request object to get all identities
 		const options = {
 			baseUrl: fabricCAClient.protocol + '//' + fabricCAClient.hostname + ':' + fabricCAClient.port,
-			url: fabricCAClient.baseAPI + 'identities',
+			url: path,
 			body: JSON.stringify(newIdentity),
-			method: 'POST',
+			method: method,
 			headers: {
 				Authorization: auth_token
 			},
@@ -223,14 +229,17 @@ module.exports = (logger, ev, t) => {
 		const err = {};
 		err.statusCode = 500;
 
+		const path = fabricCAClient.baseAPI + 'affiliations' + '?ca=' + fabricCAClient.ca_name;
+		const method = 'GET';
+
 		// get the auth token
-		const auth_token = t.fabric_utils.generateAuthToken(null);
+		const auth_token = t.fabric_utils.generateAuthToken(null, path, method);
 
 		// build the request object to get all identities
 		const options = {
 			baseUrl: fabricCAClient.protocol + '//' + fabricCAClient.hostname + ':' + fabricCAClient.port,
-			url: fabricCAClient.baseAPI + 'affiliations' + '?ca=' + fabricCAClient.ca_name,
-			method: 'GET',
+			url: path,
+			method: method,
 			headers: {
 				Authorization: auth_token
 			},
@@ -303,15 +312,18 @@ module.exports = (logger, ev, t) => {
 				certificate_request: t.key_lib.generateCSR('CN=' + fabricCAClient.enrollmentID, pair.prvKeyObj)
 			};
 
+			const path = fabricCAClient.baseAPI + 'reenroll';
+			const method = 'POST';
+
 			// get the auth token (csr)
-			const auth_token = t.fabric_utils.generateAuthToken(reenrollCSR, t.signingIdentity);
+			const auth_token = t.fabric_utils.generateAuthToken(reenrollCSR, path, method);
 
 			// build the request re-enroll the user
 			const options = {
 				baseUrl: fabricCAClient.protocol + '//' + fabricCAClient.hostname + ':' + fabricCAClient.port,
-				url: fabricCAClient.baseAPI + 'reenroll',
+				url: path,
 				body: JSON.stringify(reenrollCSR),
-				method: 'POST',
+				method: method,
 				headers: {
 					Authorization: auth_token
 				},
@@ -377,14 +389,17 @@ module.exports = (logger, ev, t) => {
 		const err = {};
 		err.statusCode = 500;
 
+		const path = fabricCAClient.baseAPI + 'identities/' + enroll_id_to_delete;
+		const method = 'DELETE';
+
 		// get the auth token
-		const auth_token = t.fabric_utils.generateAuthToken(null);
+		const auth_token = t.fabric_utils.generateAuthToken(null, path, method);
 
 		// build the request object to get all identities
 		const options = {
 			baseUrl: fabricCAClient.protocol + '//' + fabricCAClient.hostname + ':' + fabricCAClient.port,
-			url: fabricCAClient.baseAPI + 'identities/' + enroll_id_to_delete,
-			method: 'DELETE',
+			url: path,
+			method: method,
 			headers: {
 				Authorization: auth_token
 			},

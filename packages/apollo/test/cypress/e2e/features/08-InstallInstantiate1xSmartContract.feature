@@ -5,7 +5,6 @@ Feature: 1.x Smart Contract flow
         Given I go to the console
         And I am logged in
         And I am ready to get started
-        And I am on the 'smart_contracts' page
 
    # Cypress launches new test runner / browser with clean state and that clears wallet that we store in browser local storage
     # https://github.com/cypress-io/cypress/issues/28186#issuecomment-1787344347
@@ -82,6 +81,7 @@ Feature: 1.x Smart Contract flow
 		Then wait "2" seconds
 
     Scenario: Install 1.x Smart Contract on Org1 and Org2 peers
+        Given I am on the 'smart_contracts' page
         And I clicked the button with title 'Install smart contract'
         And I upload file 'fixtures/test_data/chaincodes/fabcar_go_2.1.1.cds' to 'file-uploader-cds' input
         And I clicked the button with text 'Next'
@@ -92,6 +92,7 @@ Feature: 1.x Smart Contract flow
         Then I should see button with id 'overflow-installed-fabcar_2.1.1'
 
     Scenario: Instantiate 1.x Smart Contract on channel1
+		Given I am on the 'smart_contracts' page
         And I clicked the button with id 'overflow-installed-fabcar_2.1.1'
         And I clicked the button with id 'instantiate_modal'
         And I clicked the button with title 'Select channel'

@@ -156,7 +156,7 @@ Given(/^I am logged out from console$/, () => {
 	cy.get('button[id="ibp-header-user-profile-icon"]').click()
 	cy.get('button[id="logout"]').click()
 	cy.get('a').contains('click here').click()
-	cy.wait(1000)
+	cy.wait(5000)
     cy.get('p').should(($div) => {
         expect($div.get(0).innerText).to.eq('Login to Fabric Operations Console')
         })

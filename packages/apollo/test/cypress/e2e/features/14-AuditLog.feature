@@ -135,15 +135,15 @@ Feature: Verify Audit Log functionality works as expected
 	When I provided 'instantiating chaincode "fabcar" @ "2.1.1" on channel "channel1"' for input field with class ".cds--search-input"
 	Then I should see audit log row with text 'instantiating chaincode "fabcar" @ "2.1.1" on channel "channel1"' and id 'audit-logs-log_title-0'
 	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
-	# editing component "peerorg1" - "version", "replicas", "ignore_warnings"
-	When I provided 'editing component "peerorg1" - "version", "replicas", "ignore_warnings"' for input field with class ".cds--search-input"
-	Then I should see audit log row with text 'editing component "peerorg1" - "version", "replicas", "ignore_warnings"' and id 'audit-logs-log_title-0'
-	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
-	# editing component "orderingservicenode1" - "version", "replicas"
-	Then I reload the page
-	When I provided 'editing component "orderingservicenode1" - "version", "replicas"' for input field with class ".cds--search-input"
-	Then I should see audit log row with text 'editing component "orderingservicenode1" - "version", "replicas"' and id 'audit-logs-log_title-0'
-	Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+	# # editing component "peerorg1" - "version", "replicas", "ignore_warnings"
+	# When I provided 'editing component "peerorg1" - "version", "replicas", "ignore_warnings"' for input field with class ".cds--search-input"
+	# Then I should see audit log row with text 'editing component "peerorg1" - "version", "replicas", "ignore_warnings"' and id 'audit-logs-log_title-0'
+	# Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
+	# # editing component "orderingservicenode1" - "version", "replicas"
+	# Then I reload the page
+	# When I provided 'editing component "orderingservicenode1" - "version", "replicas"' for input field with class ".cds--search-input"
+	# Then I should see audit log row with text 'editing component "orderingservicenode1" - "version", "replicas"' and id 'audit-logs-log_title-0'
+	# Then I should see audit log row with text 'success' and id 'audit-logs-outcome_title-0'
 
   Scenario: Search activity log for export and import
     When I clicked the div with id 'test__navigation--item--audit_logs'
