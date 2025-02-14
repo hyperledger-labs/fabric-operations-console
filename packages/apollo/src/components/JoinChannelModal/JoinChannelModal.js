@@ -227,6 +227,7 @@ class JoinChannelModal extends React.Component {
 			channelId: selectedChannel,
 			configtxlator_url: this.props.configtxlator_url,
 			identityInfo,
+			requestingMspId: peerDetails.msp_id,
 		};
 		let current_config = null;
 		let genesis_config = null;
