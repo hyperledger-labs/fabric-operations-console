@@ -15,7 +15,7 @@
  */
 
 import _ from 'lodash';
-import { parse } from 'parse-duration';
+import parse from 'parse-duration';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
