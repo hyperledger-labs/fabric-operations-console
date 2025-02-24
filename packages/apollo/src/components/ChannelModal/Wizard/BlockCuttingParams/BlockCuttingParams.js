@@ -23,11 +23,11 @@ import { withTranslation } from 'react-i18next';
 import TranslateLink from '../../../TranslateLink/TranslateLink';
 import * as constants from '../../../../utils/constants';
 import { Checkbox } from "@carbon/react";
-import parse from 'parse-duration';
 import Form from '../../../Form/Form';
 
 const bytes = require('bytes');
 const SCOPE = 'channelModal';
+const parse = require("parse-duration")
 
 // This is step "block_cutting_params"
 //
