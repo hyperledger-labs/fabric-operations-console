@@ -15,7 +15,7 @@
 */
 import { Checkbox, CodeSnippet, TextInput } from "@carbon/react";
 import _ from 'lodash';
-import parse from 'parse-duration';
+import { parse } from 'parse-duration';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation, Trans } from 'react-i18next';
