@@ -39,7 +39,7 @@ const semver = require('semver');
 const SCOPE = 'signatureDetailModal';
 const Log = new Logger(SCOPE);
 const bytes = require('bytes');
-const parse = require("parse-duration")
+const parse = require('parse-duration');
 
 class SignatureDetailModal extends React.Component {
 	componentDidMount() {
