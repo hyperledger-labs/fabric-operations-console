@@ -27,7 +27,8 @@ import Form from '../../../Form/Form';
 
 const bytes = require('bytes');
 const SCOPE = 'channelModal';
-const parse = require('parse-duration');
+// const parse = require('parse-duration');
+import parse from "../../../../utils/parseDuration";
 
 // This is step "block_cutting_params"
 //

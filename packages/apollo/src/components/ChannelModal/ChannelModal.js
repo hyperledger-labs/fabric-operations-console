@@ -51,7 +51,8 @@ const acl_resources = require('../../utils/acl/resources.json');
 const bytes = require('bytes');
 const semver = require('semver');
 const url = require('url');
-const parse = require('parse-duration');
+//const parse = require('parse-duration');
+import parse from "../../utils/parseDuration";
 
 const SCOPE = 'channelModal';
 const Log = new Logger(SCOPE);

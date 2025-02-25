@@ -52,7 +52,8 @@ const naturalSort = require('javascript-natural-sort');
 
 const bytes = require('bytes');
 const semver = require('semver');
-const parse = require('parse-duration');
+// const parse = require('parse-duration');
+import parse from "../../utils/parseDuration";
 
 const SCOPE = 'ordererModal';
 const Log = new Logger(SCOPE);
