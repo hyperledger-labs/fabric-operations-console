@@ -30,6 +30,7 @@ const Log = new Logger('OrdererRestApi');
 
 const ORDERER_TYPE = 'fabric-orderer';
 const LEGACY_ORDERER_TYPE = 'orderer';
+import parse from "../utils/parseDuration";
 
 class OrdererRestApi {
 	static systemChannel = 'testchainid';
@@ -751,7 +752,7 @@ class OrdererRestApi {
 
 			let timeout = block_params.timeout;
 			if (timeout) {
-				const parse = require('parse-duration');
+				// const parse = require('parse-duration');
 				let time_ms = parse(timeout);
 				if (time_ms < parse(constants.TIMEOUT_MIN) || time_ms > parse(constants.TIMEOUT_MAX)) {
 					throw new Error('\'BatchTimeout\' out of range');
@@ -858,7 +859,7 @@ class OrdererRestApi {
 
 		let tick_interval = raft_params.tick_interval;
 		if (tick_interval) {
-			const parse = require('parse-duration');
+			// const parse = require('parse-duration');
 			let time_ms = parse(tick_interval);
 			if (time_ms < parse(constants.TICK_INTERVAL_MIN) || time_ms > parse(constants.TICK_INTERVAL_MAX)) {
 				throw new Error('\'Tick Interval\' out of range');
