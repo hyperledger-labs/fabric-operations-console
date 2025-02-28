@@ -356,7 +356,7 @@ module.exports = function (logger, ev, t) {
 				if (req.body.default_user_password) {
 					const result = owasp.test(req.body.default_user_password);
 					if (result && Array.isArray(result.errors) && result.errors.length > 0) {
-						logger.error('[default pass] not a viable password. rule failures');
+						logger.error(`[default pass] Password rule failures: ${result.errors.join(', ')}`);
 						return cb({ statusCode: 400, msg: result.errors }, edited_settings_doc);
 					}
 					edited_settings_doc.default_user_password = req.body.default_user_password;
