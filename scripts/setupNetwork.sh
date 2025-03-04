@@ -1,20 +1,27 @@
 #!/bin/bash
 
 SRC_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )" # Where the script lives
-FABRIC_VERSION="2.2.3"
-CA_VERSION="1.5.2"
+FABRIC_VERSION="2.5.11"
+CA_VERSION="1.5.15"
 
 function networkUp() {
 	networkDown
 	cd $SRC_DIR/..
-	curl -sSL https://bit.ly/2ysbOFE | bash -s -- ${FABRIC_VERSION} ${CA_VERSION}
+	curl -sSLO https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh && chmod +x install-fabric.sh
+	./install-fabric.sh --fabric-version ${FABRIC_VERSION} --ca-version ${CA_VERSION}
+
 	cd fabric-samples
-	if [ "${FABRIC_VERSION}" == "2.2.3" ]; then
+
+	# default to fabric-samples main branch unless v2.2.x is downloaded
+	if [[ "${FABRIC_VERSION}" =~ ^2\.2\.[0-9]+$ ]]; then
 		git checkout release-2.2
 	fi
 	cd test-network
 	./network.sh up createChannel -ca -c mychannel -s couchdb
-	./network.sh deployCC -ccn fabcar -ccv 1 -cci initLedger -ccl go -ccp ../chaincode/fabcar/go/
+
+	# Uncomment to install asset-transfer-basic or fabcar
+	# ./network.sh deployCC -ccn basicgo -ccp ../asset-transfer-basic/chaincode-go/ -ccl go
+	# ./network.sh deployCC -ccn fabcar -ccv 1 -cci initLedger -ccl go -ccp ../chaincode/fabcar/go/
 }
 
 function networkDown() {
