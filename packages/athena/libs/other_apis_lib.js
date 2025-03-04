@@ -17,6 +17,15 @@
 // other_apis_lib.js - other apis functions
 //------------------------------------------------------------
 module.exports = function (logger, ev, t) {
+	const owasp = require('owasp-password-strength-test');
+	owasp.config({
+		allowPassphrases: true,
+		maxLength: ev.MAX_PASSWORD_LEN,
+		minLength: ev.MIN_PASSWORD_LEN,
+		minPhraseLength: ev.MIN_PASSPHRASE_LEN,
+		minOptionalTestsToPass: 4,
+	});
+
 	const exports = {};
 	exports.login_timer = null;
 
@@ -345,6 +354,11 @@ module.exports = function (logger, ev, t) {
 
 				// couchdb setting edits
 				if (req.body.default_user_password) {
+					const result = owasp.test(req.body.default_user_password);
+					if (result && Array.isArray(result.errors) && result.errors.length > 0) {
+						logger.error(`[default pass] Password rule failures: ${result.errors.join(', ')}`);
+						return cb({ statusCode: 400, msg: result.errors }, edited_settings_doc);
+					}
 					edited_settings_doc.default_user_password = req.body.default_user_password;
 				}
 				if (typeof req.body.allow_default_password === 'boolean') {
