@@ -1,5 +1,22 @@
 [
 	{
+		"version": "1.0.9-35",
+		"date": "11 Mar 2025",
+		"description": [
+			{
+				"title": "Update auth header token for CA v1.5.14",
+				"details": "New versions of Fabric CA (v1.5.14 and later) has new authentication header. Hence, auth header token for CA is updated to support CA 1.5.14 and later."
+			},
+			{
+				"title": "Security fixes",
+				"details": "Dependency updates."
+			},
+			{
+				"title": "Bug & security fixes",
+				"details": "Miscellaneous fixes & dependency updates."
+			}
+		]
+	},{
 		"version": "1.0.9-32",
 		"date": "04 Feb 2025",
 		"description": [
