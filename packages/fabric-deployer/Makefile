@@ -16,7 +16,7 @@
 # limitations under the License.
 #
 
-IMAGE ?= ghcr.io/ibm-blockchain/fabric-deployer
+IMAGE ?= ghcr.io/hyperledger-labs/fabric-deployer
 TAG ?= $(shell git rev-parse --short HEAD)
 PULL ?= $(TRAVIS_PULL_REQUEST)
 ARCH ?= $(shell go env GOARCH)
