@@ -15,7 +15,6 @@
 */
 import { Button, CodeSnippet, Loading, SkeletonText, Toggle, Checkbox } from "@carbon/react";
 import _ from 'lodash';
-import parse from 'parse-duration';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
@@ -53,6 +52,8 @@ const naturalSort = require('javascript-natural-sort');
 
 const bytes = require('bytes');
 const semver = require('semver');
+// const parse = require('parse-duration');
+import parse from "../../utils/parseDuration";
 
 const SCOPE = 'ordererModal';
 const Log = new Logger(SCOPE);

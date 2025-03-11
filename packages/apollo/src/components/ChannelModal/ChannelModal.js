@@ -15,7 +15,6 @@
  */
 
 import _ from 'lodash';
-import parse from 'parse-duration';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
@@ -52,6 +51,8 @@ const acl_resources = require('../../utils/acl/resources.json');
 const bytes = require('bytes');
 const semver = require('semver');
 const url = require('url');
+//const parse = require('parse-duration');
+import parse from "../../utils/parseDuration";
 
 const SCOPE = 'channelModal';
 const Log = new Logger(SCOPE);

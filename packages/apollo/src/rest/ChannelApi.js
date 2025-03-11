@@ -33,6 +33,7 @@ const org_template = require('../utils/configtx/org_template.json');
 const bytes = require('bytes');
 const diff = require('deep-diff');
 const urlParser = require('url');
+import parse from "../utils/parseDuration";
 
 const Log = new Logger('ChannelApi');
 
@@ -742,7 +743,7 @@ class ChannelApi {
 
 		let timeout = block_params.timeout;
 		if (timeout) {
-			const parse = require('parse-duration');
+			// const parse = require('parse-duration');
 			let time_ms = parse(timeout);
 			if (time_ms < parse(constants.TIMEOUT_MIN) || time_ms > parse(constants.TIMEOUT_MAX)) {
 				return '\'BatchTimeout\' out of range';
@@ -790,7 +791,7 @@ class ChannelApi {
 
 		let tick_interval = raft_params.tick_interval;
 		if (tick_interval) {
-			const parse = require('parse-duration');
+			// const parse = require('parse-duration');
 			let time_ms = parse(tick_interval);
 			if (time_ms < parse(constants.TICK_INTERVAL_MIN) || time_ms > parse(constants.TICK_INTERVAL_MAX)) {
 				return '\'Tick Interval\' out of range';
