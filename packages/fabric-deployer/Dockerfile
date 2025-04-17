@@ -19,9 +19,16 @@ ARG ARCH
 ARG GO_VER
 
 ########## Build deployer binary ##########
-FROM registry.access.redhat.com/ubi8/go-toolset:$GO_VER as builder
-ADD . /go/src/github.com/IBM-Blockchain/fabric-deployer
-WORKDIR /go/src/github.com/IBM-Blockchain/fabric-deployer
+FROM registry.access.redhat.com/ubi8/ubi-minimal as builder
+ARG ARCH
+ARG GO_VER
+RUN echo "GO_VER=${GO_VER}" && echo "ARCH=${ARCH}"
+RUN microdnf install -y make gcc tar gzip gcc-c++ && microdnf clean all
+RUN curl -sL https://go.dev/dl/go${GO_VER}.linux-${ARCH}.tar.gz | tar zxf - -C /usr/local
+ENV PATH="/usr/local/go/bin:$PATH"
+
+ADD . /go/src/github.com/hyperledger-labs/fabric-operations-console/fabric-deployer
+WORKDIR /go/src/github.com/hyperledger-labs/fabric-operations-console/fabric-deployer
 
 ## use the make command to build and generate the binary
 RUN make build
