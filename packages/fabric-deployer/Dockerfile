@@ -19,7 +19,7 @@ ARG ARCH
 ARG GO_VER
 
 ########## Build deployer binary ##########
-FROM registry.access.redhat.com/ubi8/ubi-minimal as builder
+FROM registry.access.redhat.com/ubi9/ubi-minimal as builder
 ARG ARCH
 ARG GO_VER
 RUN echo "GO_VER=${GO_VER}" && echo "ARCH=${ARCH}"
@@ -34,7 +34,7 @@ WORKDIR /go/src/github.com/hyperledger-labs/fabric-operations-console/fabric-dep
 RUN make build
 
 ########## Final image ##########
-FROM registry.access.redhat.com/ubi8/ubi-minimal
+FROM registry.access.redhat.com/ubi9/ubi-minimal
 ARG BUILD_ID
 ARG BUILD_DATE
 

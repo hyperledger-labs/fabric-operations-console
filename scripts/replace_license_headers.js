@@ -162,7 +162,7 @@ function replace_license_headers_in_files(opts, cb) {
 			'.scss$',
 			'.css$',
 			'.proto$',
-			'.ubi8$',
+			'.ubi9$',
 			'.feature$',
 			'.tgz$',
 			'.cds$',
