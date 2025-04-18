@@ -8,7 +8,7 @@
 : "${COMMIT:=$(git rev-parse --short HEAD)}"
 : "${GIT_TAG:=$(git describe | grep -v -)}"
 : "${ARCH:=amd64}"
-: "${BASEOS:=ubi8}"
+: "${BASEOS:=ubi9}"
 
 IMAGE_NAME1=op-tools
 IMAGE_NAME2=ibp-console
