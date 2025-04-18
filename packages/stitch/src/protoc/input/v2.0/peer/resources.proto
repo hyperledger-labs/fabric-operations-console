@@ -29,7 +29,7 @@ message ChaincodeValidation {
     bytes argument = 2; // When 'vscc' a marshaled VSCCArgs
 }
 
-// VSCCArgs is passed (marshaled) as a parameter to the VSCC imlementation via the
+// VSCCArgs is passed (marshaled) as a parameter to the VSCC implementation via the
 // argument field of the ChaincodeValidation message.
 message VSCCArgs {
     string endorsement_policy_ref = 1;  // A named reference to an endorsement policy,

@@ -199,7 +199,7 @@ SignedTransaction
                      \_ ChaincodeAction          (the actions for this proposal)
 */
 
-// ChaincodeHeaderExtension is the Header's extentions message to be used when
+// ChaincodeHeaderExtension is the Header's extensions message to be used when
 // the Header's type is CHAINCODE.  This extensions is used to specify which
 // chaincode to invoke and what should appear on the ledger.
 message ChaincodeHeaderExtension {
