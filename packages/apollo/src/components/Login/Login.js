@@ -18,7 +18,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router';
 import { updateState } from '../../redux/commonActions';
 import LoginApi from '../../rest/LoginApi';
 import Helper from '../../utils/helper';
