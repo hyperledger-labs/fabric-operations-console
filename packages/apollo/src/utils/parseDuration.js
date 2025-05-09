@@ -1,9 +1,9 @@
 const unit = Object.create(null);
 
 const m = 60000,
-  h = m * 60,
-  d = h * 24,
-  y = d * 365.25;
+	h = m * 60,
+	d = h * 24,
+	y = d * 365.25;
 
 unit.year = unit.yr = unit.y = y;
 unit.month = unit.mo = unit.mth = y / 12;
@@ -37,34 +37,34 @@ export default function parse(str = '', format = 'ms') {
 
 	String(str)
 	  .replace(
-		new RegExp(`(\\d)[${parse.unit.placeholder}${parse.unit.group}](\\d)`, 'g'),
-		'$1$2'
+			new RegExp(`(\\d)[${parse.unit.placeholder}${parse.unit.group}](\\d)`, 'g'),
+			'$1$2'
 	  ) // clean up group separators / placeholders
 	  .replace(parse.unit.decimal, '.') // normalize decimal separator
 	  .replace(durationRE, (_, n, units) => {
-		// if no units, find next smallest units or fall back to format value
-		// eg. 1h30 -> 1h30m
-		if (!units) {
-		  if (prevUnits) {
-			for (const u in parse.unit) {
-			  if (parse.unit[u] < prevUnits) {
-				units = u;
-				break;
-			  }
+			// if no units, find next smallest units or fall back to format value
+			// eg. 1h30 -> 1h30m
+			if (!units) {
+				if (prevUnits) {
+					for (const u in parse.unit) {
+						if (parse.unit[u] < prevUnits) {
+							units = u;
+							break;
+			  			}
+					}
+				} else {
+					units = format;
+				}
+			} else {
+				units = units.toLowerCase();
 			}
-		  } else {
-			units = format;
-		  }
-		} else {
-		  units = units.toLowerCase();
-		}
 
-		prevUnits = units = parse.unit[units] || parse.unit[units.replace(/s$/, '')];
+			prevUnits = units = parse.unit[units] || parse.unit[units.replace(/s$/, '')];
 
-		if (units) {
-		  result = (result || 0) + n * units;
-		}
+			if (units) {
+				result = (result || 0) + n * units;
+			}
 	  });
 
 	return result && (result / (parse.unit[format] || 1)) * (str[0] === '-' ? -1 : 1);
-  }
+}
