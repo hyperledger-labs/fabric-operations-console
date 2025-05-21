@@ -26,7 +26,7 @@ on:
 env:
   GOPATH: /opt/go
   PATH: /opt/go/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin
-  GO_VER: 1.23.5
+  GO_VER: 1.24.3
 
 jobs:
   deployer-unit-tests:
