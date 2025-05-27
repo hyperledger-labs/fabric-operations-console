@@ -11,5 +11,8 @@
   },
   "dependencies": {
     "async": "^3.2.5"
+  },
+  "overrides": {
+	"tar": "^6.2.1"
   }
 }
