@@ -329,11 +329,18 @@ class JoinChannelModal extends React.Component {
 			await this.checkPeerMappings(this.props.peer);
 		}
 		// Find the channel members
+		let mspId = "";
 		try {
+
+			if (this.props.peer) {
+				const peerDetails = await PeerRestApi.getPeerDetails(this.props.peer[0].id, true);
+				mspId  = peerDetails.msp_id;
+			}
 			let options = {
 				ordererId: selectedOrderer.node_id,
 				channelId: selectedChannel,
-				configtxlator_url: this.props.configtxlator_url
+				configtxlator_url: this.props.configtxlator_url,
+				requestingMspId: mspId,
 			};
 			let config = await OrdererRestApi.getChannelConfig(options);
 			let memberIds = this.props.existingMembers.map(x => x.id);
@@ -359,6 +366,9 @@ class JoinChannelModal extends React.Component {
 		} catch (error) {
 			this.props.updateState(SCOPE, { loading: false });
 			Log.error('An error occurred when filtering peer list', error);
+			if(error.code && error.code === "no_certs_available") {
+				return;
+			}
 			return Promise.reject({
 				title: error.code || 'error_join_channel_not_found',
 				details: error,
