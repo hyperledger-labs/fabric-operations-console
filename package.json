@@ -3,16 +3,19 @@
   "private": true,
   "devDependencies": {
     "husky": "^6.0.0",
-    "lerna": "^6.0.1"
+    "lerna": "^6.0.1",
+    "mocha": "^11.7.1"
   },
   "scripts": {
     "prepare": "husky install",
     "install-detect-secrets": "pip install --upgrade git+https://github.com/ibm/detect-secrets.git@master#egg=detect-secrets"
   },
   "dependencies": {
-    "async": "^3.2.5"
+    "async": "^3.2.5",
+    "minimatch": "^10.0.3",
+    "semver": "^7.5.1"
   },
   "overrides": {
-	"tar": "^6.2.1"
+    "tar": "^6.2.1"
   }
 }
