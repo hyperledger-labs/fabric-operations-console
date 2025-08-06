@@ -316,7 +316,7 @@
     "thenify-all": "^1.6.0",
     "throttleit": "^1.0.0",
     "through": "^2.3.8",
-    "tmp": "^0.2.1",
+    "tmp": "^0.2.4",
     "to-regex-range": "^5.0.1",
     "toposort": "^2.0.2",
     "tough-cookie": "^4.1.3",
