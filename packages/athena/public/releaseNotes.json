@@ -1,8 +1,18 @@
 [
 	{
+		"version": "1.0.9-40",
+		"date": "12 Aug 2025",
+		"description": [
+			{
+				"title": "Security fixes",
+				"details": "Dependency updates."
+			}
+		]
+	},
+	{
 		"version": "1.0.9-39",
 		"date": "16 Jul 2025",
-		"description": [			
+		"description": [
 			{
 				"title": "Security fixes",
 				"details": "Dependency updates."
@@ -12,7 +22,7 @@
 	{
 		"version": "1.0.9-37",
 		"date": "18 Apr 2025",
-		"description": [			
+		"description": [
 			{
 				"title": "Security fixes",
 				"details": "Dependency updates."
@@ -21,7 +31,7 @@
 	},{
 		"version": "1.0.9-36",
 		"date": "17 Apr 2025",
-		"description": [			
+		"description": [
 			{
 				"title": "Security fixes",
 				"details": "Dependency updates."
