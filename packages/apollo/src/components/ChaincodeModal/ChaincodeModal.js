@@ -45,6 +45,7 @@ const Log = new Logger(SCOPE);
 
 export class ChaincodeModal extends React.Component {
 	componentDidMount() {
+		Log.debug('componentDidMount -> getData()');
 		this.getData();
 	}
 
@@ -80,6 +81,7 @@ export class ChaincodeModal extends React.Component {
 	}
 
 	async getData() {
+		Log.debug('getData() start');
 		this.props.updateState(SCOPE, { loading: true });
 		this.clearData();
 		const channel = await this.getChannelInformation();
@@ -89,6 +91,7 @@ export class ChaincodeModal extends React.Component {
 			await this.getMspInformation();
 		}
 		this.props.updateState(SCOPE, { loading: false });
+		Log.debug('getData() done');
 	}
 
 	async getChannelInformation() {
@@ -107,6 +110,11 @@ export class ChaincodeModal extends React.Component {
 		}
 		this.props.updateState(SCOPE, {
 			channel,
+		});
+		Log.debug('getChannelInformation()', {
+			channel_id: channel && channel.id,
+			peer_count: channel && channel.peers ? channel.peers.length : 0,
+			orderer_count: channel && channel.orderers ? channel.orderers.length : 0,
 		});
 		return channel;
 	}
@@ -136,6 +144,7 @@ export class ChaincodeModal extends React.Component {
 			});
 		}
 		this.props.updateState(SCOPE, { members });
+		Log.debug('getChannelMembers()', { count: members.length, msp_ids: members.map(m => m.id) });
 		return members;
 	}
 
@@ -159,6 +168,14 @@ export class ChaincodeModal extends React.Component {
 			});
 		}
 		if (signatureRequest) {
+			Log.debug('getSignatureRequest() found existing signatureRequest', {
+				channel_id: channel.id,
+				sequence: signatureRequest.ccd && signatureRequest.ccd.chaincode_sequence,
+				chaincode_id: signatureRequest.ccd && signatureRequest.ccd.chaincode_id,
+				orgs2sign_initial: signatureRequest.orgs2sign ? signatureRequest.orgs2sign.length : 0,
+				signature_count_initial: signatureRequest.signature_count,
+				required_initial: _.get(signatureRequest, 'current_policy.number_of_signatures', 1),
+			});
 			for (let i = 0; i < members.length; i++) {
 				const member = members[i];
 				let test = signatureRequest.orgs2sign.filter(org => org.msp_id === member.id);
@@ -210,6 +227,12 @@ export class ChaincodeModal extends React.Component {
 				host: channel.peers[0].url2use,
 				channel_id: channel.id,
 			});
+			Log.debug('getSignatureRequest() computed values', {
+				signature_count: signatureRequest.signature_count,
+				required: _.get(signatureRequest, 'current_policy.number_of_signatures', 1),
+				orgs2sign_final: signatureRequest.orgs2sign ? signatureRequest.orgs2sign.length : 0,
+				committed,
+			});
 		} else {
 			// no signature request, so get existing approvals
 			const opts = {
@@ -241,12 +264,20 @@ export class ChaincodeModal extends React.Component {
 					signature,
 				});
 			}
+			Log.debug('getSignatureRequest() no active signatureRequest; built committed approvals', {
+				approvals_count: commited_approvals.length,
+			});
 		}
 		this.props.updateState(SCOPE, {
 			signatureRequest,
 			approvals,
 			committed,
 			commited_approvals,
+		});
+		Log.debug('getSignatureRequest() updated state', {
+			has_signatureRequest: !!signatureRequest,
+			committed,
+			approvals_summary: approvals.map(a => `${a.msp_id}:${a.approved ? 'Y' : 'N'}`),
 		});
 		return signatureRequest;
 	}
@@ -285,6 +316,12 @@ export class ChaincodeModal extends React.Component {
 				ready_to_commit = true;
 			}
 		}
+		Log.debug('renderApprovals()', {
+			committed,
+			number_of_signatures,
+			required_signatures,
+			ready_to_commit,
+		});
 		return (
 			<div className="ibp-chaincode-approval">
 				{Helper.renderFieldSummary(
@@ -1088,6 +1125,17 @@ export class ChaincodeModal extends React.Component {
 	}
 
 	render() {
+		Log.debug('render() evaluating submit button', {
+			selected: !!this.props.selected,
+			show_commit: !!this.props.show_commit,
+			committed: !!this.props.committed,
+			signatureRequest: this.props.signatureRequest
+				? {
+					signature_count: this.props.signatureRequest.signature_count,
+					required: _.get(this.props, 'signatureRequest.current_policy.number_of_signatures', 1),
+				}
+				: null,
+		});
 		let button = undefined;
 		let onSubmit = undefined;
 		if (this.props.signatureRequest) {
@@ -1097,15 +1145,29 @@ export class ChaincodeModal extends React.Component {
 					onSubmit = this.props.show_commit
 						? this.onCommit
 						: () => {
+							Log.debug('render() begin_commit selected, toggling commit view');
 							this.props.updateState(SCOPE, { show_commit: true });
 							return Promise.reject();
 						};
+				} else {
+					Log.debug('render() begin_commit disabled: not enough signatures', {
+						current: this.props.signatureRequest.signature_count,
+						required: _.get(this.props, 'signatureRequest.current_policy.number_of_signatures', 1),
+					});
 				}
+			} else {
+				Log.debug('render() begin_commit disabled: chaincode already committed');
 			}
+		} else {
+			Log.debug('render() begin_commit disabled: no signatureRequest');
 		}
 		if (this.props.selected) {
 			button = this.props.t(this.props.selected.signature ? 'update_proposal' : 'approve_proposal');
 			onSubmit = this.onApprove;
+			Log.debug('render() approve/update button active', {
+				selected_msp: this.props.selected && this.props.selected.msp_id,
+				hasSignature: !!(this.props.selected && this.props.selected.signature),
+			});
 		}
 		return (
 			<Wizard onClose={this.props.onClose}
