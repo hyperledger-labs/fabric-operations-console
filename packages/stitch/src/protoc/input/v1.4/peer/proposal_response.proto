@@ -75,7 +75,7 @@ message Response {
 message ProposalResponsePayload {
 
 	// Hash of the proposal that triggered this response. The hash is used to
-	// link a response with its proposal, both for bookeeping purposes on an
+	// link a response with its proposal, both for bookkeeping purposes on an
 	// asynchronous system and for security reasons (accountability,
 	// non-repudiation). The hash usually covers the entire Proposal message
 	// (byte-by-byte). However this implies that the hash can only be verified
