@@ -35,7 +35,7 @@
 		"compression": "^1.8.1",
 		"cors": "2.8.*",
 		"elliptic": "^6.6.1",
-		"express": "^4.19.2",
+		"express": "^4.22.1",
 		"express-rate-limit": "3.4.*",
 		"express-session": "^1.18.1",
 		"http-proxy": "1.18.*",
