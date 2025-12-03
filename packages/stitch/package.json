@@ -41,7 +41,7 @@
 		"karma-chrome-launcher": "^2.2.0",
 		"karma-coverage": "^2.0.2",
 		"karma-mocha": "2.0.*",
-		"mocha": "^9.1.*",
+		"mocha": "^11.7.*",
 		"tslint": "^6.1.0"
 	},
 	"overrides": {
