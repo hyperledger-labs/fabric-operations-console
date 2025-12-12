@@ -161,9 +161,11 @@ export class ChaincodeModal extends React.Component {
 					request.ccd &&
 					request.ccd.chaincode_sequence === this.props.ccd.chaincode_sequence &&
 					request.ccd.chaincode_id === this.props.ccd.chaincode_id &&
-					request.channel === channel.id
+					request.channel === channel.id &&
+					request.ccd.chaincode_version === this.props.ccd.chaincode_version
 				) {
 					signatureRequest = request;
+					Log.debug("SignatureRequest Struct", request)
 				}
 			});
 		}
