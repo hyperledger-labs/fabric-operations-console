@@ -1,5 +1,19 @@
 [
 	{
+		"version": "1.0.9-45",
+		"date": "30 Dec 2025",
+		"description": [
+			{
+				"title": "Fixed Commit button not appearing in smart contract proposal",
+				"details": "Added additional checks for signature requests."
+			},
+			{
+				"title": "Security fixes",
+				"details": "Dependency updates."
+			}
+		]
+	},
+	{
 		"version": "1.0.9-44",
 		"date": "10 Nov 2025",
 		"description": [
