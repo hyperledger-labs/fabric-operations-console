@@ -19,8 +19,11 @@
 name: Build and Push Deployer image
 on:
   push:
+    branches:
+      - main
     tags:
       - '*'
+  workflow_dispatch:
 env:
   GOPATH: /opt/go
   PATH: /opt/go/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin
