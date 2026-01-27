@@ -1,11 +1,20 @@
-name: Build gRPC Web Build
+name: Build and Push gRPC Web Proxy
 
 on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
   workflow_dispatch:
 
 jobs:
   grpc-web:
+    name: Build and Push gRPC Web Proxy
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
 
