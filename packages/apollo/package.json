@@ -57,6 +57,7 @@
 		"start": "npm run cp && npm run build",
 		"build": "node esbuild.js",
 		"test": "jest",
+		"audit": "better-npm-audit audit --production",
 		"pretty-quick": "pretty-quick",
 		"lint": "eslint src",
 		"lint-fix": "eslint src --fix",
