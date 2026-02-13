@@ -18,16 +18,36 @@ jobs:
   test-suite:
     name: Test suite
     runs-on: ubuntu-latest
+    services:
+      couchdb:
+        image: couchdb:3.3
+        env:
+          COUCHDB_USER: admin
+          COUCHDB_PASSWORD: password
+        ports:
+          - 5984:5984
+        options: >-
+          --health-cmd "curl -f http://localhost:5984/_up || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18.x
-      - name: Setup CouchDB
-        uses: iamssen/couchdb-github-action@master
-        with:
-          couchdb-version: '3.3'
+      - name: Wait for CouchDB
+        run: |
+          echo "Waiting for CouchDB to be ready..."
+          for i in {1..30}; do
+            if curl -f ${{ env.DB_CONNECTION_STRING }} 2>/dev/null; then
+              echo "CouchDB is ready!"
+              break
+            fi
+            echo "Waiting... ($i/30)"
+            sleep 2
+          done
       - run: curl ${{ env.DB_CONNECTION_STRING }}
       - run: npm config set registry https://registry.npmjs.org/
       - run: npm ci
@@ -38,16 +58,36 @@ jobs:
   start-athena:
     name: Start Athena
     runs-on: ubuntu-latest
+    services:
+      couchdb:
+        image: couchdb:3.3
+        env:
+          COUCHDB_USER: admin
+          COUCHDB_PASSWORD: password
+        ports:
+          - 5984:5984
+        options: >-
+          --health-cmd "curl -f http://localhost:5984/_up || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18.x
-      - name: Setup CouchDB
-        uses: iamssen/couchdb-github-action@master
-        with:
-          couchdb-version: '3.3'
+      - name: Wait for CouchDB
+        run: |
+          echo "Waiting for CouchDB to be ready for Athena..."
+          for i in {1..30}; do
+            if curl -f ${{ env.DB_CONNECTION_STRING }} 2>/dev/null; then
+              echo "CouchDB is ready for Athena!"
+              break
+            fi
+            echo "Waiting... ($i/30)"
+            sleep 2
+          done
       - run: curl ${{ env.DB_CONNECTION_STRING }}
       - run: npm config set registry https://registry.npmjs.org/
       - run: npm ci
