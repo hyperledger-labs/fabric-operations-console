@@ -43,7 +43,7 @@ type Options struct {
 	ConfigPath      string
 	DBConnectionURL string
 	Username        string
-	Password        string
+	Password        string	// #nosec G117
 	KubeConfig      string
 }
 
@@ -343,7 +343,7 @@ type TLSConfig struct {
 // BasicAuth provides implementation to store basic auth info
 type BasicAuth struct {
 	Username string `json:"username"`
-	Password string `json:"password"`
+	Password string `json:"password"`	// #nosec G117
 }
 
 type Timeouts struct {

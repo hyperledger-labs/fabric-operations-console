@@ -57,6 +57,7 @@
 		"start": "npm run cp && npm run build",
 		"build": "node esbuild.js",
 		"test": "jest",
+		"audit": "better-npm-audit audit --production",
 		"pretty-quick": "pretty-quick",
 		"lint": "eslint src",
 		"lint-fix": "eslint src --fix",
@@ -168,6 +169,7 @@
 		"optionator": "^0.9.1",
 		"tough-cookie": "^4.1.3",
 		"browserify-sign": "^4.2.2",
-		"cross-spawn": "^7.0.6"
+		"cross-spawn": "^7.0.6",
+		"qs": "^6.14.2"
 	}
 }

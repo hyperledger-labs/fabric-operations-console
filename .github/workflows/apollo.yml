@@ -33,7 +33,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18.x
-      - run: npm audit --production
+      - run: npm i -g better-npm-audit && npm run audit
 
   build-code:
     name: Build code
