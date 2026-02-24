@@ -21,6 +21,7 @@ const chai = require('chai');
 const expect = chai.expect;
 const crypto_suite_objects = require('../../docs/create_crypto_suite_objects.json');
 const tools = common.tools;
+const BN = require('bn.js');
 const crypto_lib = require('../../../libs/fabric_ca_services/create_crypto_suite.js')(common.logger, common.ev, tools);
 const crypto_suite = crypto_lib.createCryptoSuite();
 
@@ -62,18 +63,11 @@ describe('create_crypto_suite.js', () => {
 										prvKeyHex: 'abcdef',
 										ecparams: {
 											name: 'secp256r1',
-											n: {
-												length: 10,
-												negative: 0,
-												red: null,
-												words: [
-													6497617
-												]
-											}
+											n: new BN('FFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551', 16)
 										}
 									}
 								};
-								const digest = 'AB CD EF GH';
+								const digest = 'ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789';
 								const sign = crypto_suite.sign(key, digest);
 								expect(JSON.stringify(sign)).to.equal(JSON.stringify(crypto_suite_objects.sign_valid_response));
 								done();
@@ -95,14 +89,7 @@ describe('create_crypto_suite.js', () => {
 										prvKeyHex: 'abcdef',
 										ecparams: {
 											name: 'secp256r1',
-											n: {
-												length: 10,
-												negative: 0,
-												red: null,
-												words: [
-													6497617
-												]
-											}
+											n: new BN('FFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551', 16)
 										}
 									}
 								};
@@ -119,18 +106,11 @@ describe('create_crypto_suite.js', () => {
 										prvKeyHex: 'abcdef',
 										ecparams: {
 											name: null,
-											n: {
-												length: 10,
-												negative: 0,
-												red: null,
-												words: [
-													6497617
-												]
-											}
+											n: new BN('FFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551', 16)
 										}
 									}
 								};
-								const digest = 'AB CD EF GH';
+								const digest = 'ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789';
 								expect(crypto_suite.sign.bind(crypto_suite, key, digest)).to.throw(
 									'Can not find the half order needed to calculate "s" value for immalleable signatures. Unsupported curve name: null'
 								);
