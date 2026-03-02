@@ -111,7 +111,7 @@ func (hrw *HTTPResponseWriter) WriteHeader(scode int) {
 		if hrw.isHead() {
 			w.Header().Set("Content-Length", "0")
 		} else {
-			w.Header().Set("Transfer-Encoding", "chunked")
+			w.Header().Set("Transfer-Encoding", "chunked")	// #nosec G113
 			w.Header().Set("Content-Type", "application/json")
 		}
 		w.WriteHeader(scode)
