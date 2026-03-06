@@ -290,7 +290,7 @@
     "seed-random": "^2.2.0",
     "seedrandom": "^3.0.5",
     "semver": "^7.5.4",
-    "serialize-javascript": "^6.0.0",
+    "serialize-javascript": "^7.0.3",
     "shebang-command": "^2.0.0",
     "shebang-regex": "^3.0.0",
     "side-channel": "^1.0.4",
