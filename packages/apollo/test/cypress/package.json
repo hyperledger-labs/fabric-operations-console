@@ -110,7 +110,7 @@
     "debug": "^4.3.4",
     "decamelize": "^4.0.0",
     "delayed-stream": "^1.0.0",
-    "diff": "^4.0.2",
+    "diff": "^8.0.3",
     "eastasianwidth": "^0.2.0",
     "ecc-jsbn": "^0.1.2",
     "electron-to-chromium": "^1.4.506",
