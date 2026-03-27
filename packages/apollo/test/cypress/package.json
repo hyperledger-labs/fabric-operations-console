@@ -344,7 +344,7 @@
     "xmlbuilder": "^15.1.1",
     "y18n": "^5.0.8",
     "yallist": "^4.0.0",
-    "yaml": "^2.3.2",
+    "yaml": "^2.8.3",
     "yargs": "^16.2.0",
     "yargs-parser": "^20.2.4",
     "yargs-unparser": "^2.0.0",
