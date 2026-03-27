@@ -5,6 +5,9 @@ on:
     branches:
       - main
       - experimental
+    paths:
+      - 'packages/apollo/**'
+      - '.github/workflows/apollo.yml'
 
 defaults:
   run:
