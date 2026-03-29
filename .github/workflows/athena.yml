@@ -5,6 +5,9 @@ on:
     branches:
       - main
       - experimental
+    paths:
+      - 'packages/athena/**'
+      - '.github/workflows/athena.yml'
 
 defaults:
   run:
