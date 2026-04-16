@@ -27,7 +27,7 @@
 		"buffer": "^6.0.3",
 		"fs-extra": "^10.1.0",
 		"google-protobuf": "3.19.*",
-		"protobufjs": "^7.2.5",
+		"protobufjs": "^7.5.5",
 		"safer-buffer": "2.1.*",
 		"ts-loader": "^9.5.1",
 		"typescript": "^3.0.3",
