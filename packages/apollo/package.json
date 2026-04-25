@@ -29,7 +29,7 @@
 		"i18next": "^23.11.2",
 		"javascript-natural-sort": "^0.7.1",
 		"jszip": "^3.10.1",
-		"lodash": "^4.17.20",
+		"lodash": "^4.18.1",
 		"material-ui-chip-input-v5": "^1.0.0",
 		"node-stdlib-browser": "^1.2.0",
 		"parse-duration": "^2.1.3",
