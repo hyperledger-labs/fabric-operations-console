@@ -24,14 +24,14 @@ message ChaincodeIdentifier {
 // ChaincodeValidation instructs the peer how transactions for this chaincode should be
 // validated.  The only validation mechanism which ships with fabric today is the standard
 // 'vscc' validation mechanism.  This built in validation method utilizes an endorsement policy
-// which checks that a sufficient number of signatures have been included.  The 'arguement'
+// which checks that a sufficient number of signatures have been included.  The 'argument'
 // field encodes any parameters required by the validation implementation.
 message ChaincodeValidation {
     string name = 1;    // Specifies which code to run to validate transactions, defaults to 'vscc'
     bytes argument = 2; // When 'vscc' a marshaled VSCCArgs
 }
 
-// VSCCArgs is passed (marshaled) as a parameter to the VSCC imlementation via the
+// VSCCArgs is passed (marshaled) as a parameter to the VSCC implementation via the
 // argument field of the ChaincodeValidation message.
 message VSCCArgs {
     string endorsement_policy_ref = 1;  // A named reference to an endorsement policy,
