@@ -3,5 +3,10 @@
 		"active": true,
 		"notes": "No fix is available yet. Skipping to allow the pipeline to proceed.",
 		"expiry": 1803859200000
+	},
+	"1116970": {
+		"active": true,
+		"notes": "uuid contains breaking change. Skipping for now to allow pipeline to proceed.",
+		"expiry": 1803859200000
 	}
 }
