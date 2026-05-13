@@ -23,7 +23,7 @@ import IdentityApi from './IdentityApi';
 import { RestApi } from './RestApi';
 import StitchApi from './StitchApi';
 
-const uuidv4 = require('uuid/v4');
+const { v4: uuidv4 } = require('uuid');
 const Log = new Logger('SignatureRequestApi');
 
 class SignatureRestApi {

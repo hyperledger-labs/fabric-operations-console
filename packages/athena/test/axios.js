@@ -23,7 +23,7 @@ const tools = {										// stateless util libs should go here, ~8% faster start
 	path: require('path'),
 	async: require('async'),
 	crypto: require('crypto'),
-	uuidv4: require('uuid/v4'),
+	uuidv4: require('uuid').v4,
 	yaml: require('js-yaml'),
 	os: require('os'),
 	NodeCache: require('node-cache'),
