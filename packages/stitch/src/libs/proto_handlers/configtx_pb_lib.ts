@@ -215,7 +215,7 @@ export class ConfigTxLib {
 	__decode_config_update(protobuf: Uint8Array) {
 		const ConfigUpdate = __pb_root.lookupType('common.ConfigUpdate');
 		const message = ConfigUpdate.decode(protobuf);
-		const json = ConfigUpdate.toObject(message, { defaults: false });
+		const json = ConfigUpdate.toObject(message, { defaults: false, longs: Number });
 
 		// decode the SignaturePolicyEnvelope && ImplicitMetaPolicy binary parts
 		const formatted_config_update = this.__format_config_update_json(json, { to: 'json' });

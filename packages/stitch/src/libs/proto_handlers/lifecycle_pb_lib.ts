@@ -246,7 +246,7 @@ export class LifecycleLib {
 	__decode_query_chaincode_definition_result(b_response: Uint8Array) {
 		const QueryChaincodeDefinitionResult = __pb_root.lookupType('lifecycle.QueryChaincodeDefinitionResult');	// not plural
 		const p_result = QueryChaincodeDefinitionResult.decode(b_response);
-		const resp = QueryChaincodeDefinitionResult.toObject(p_result, { defaults: true, bytes: String });
+		const resp = QueryChaincodeDefinitionResult.toObject(p_result, { defaults: true, bytes: String, longs: Number });
 		resp.validationParameter = decode_validationParameter(resp.validationParameter);
 		resp.collections = decode_collections(resp.collections);
 		return resp;
@@ -256,7 +256,7 @@ export class LifecycleLib {
 	__decode_query_chaincode_definitions_result(b_response: Uint8Array) {
 		const QueryChaincodeDefinitionsResult = __pb_root.lookupType('lifecycle.QueryChaincodeDefinitionsResult');	// plural
 		const p_result = QueryChaincodeDefinitionsResult.decode(b_response);
-		const resp = QueryChaincodeDefinitionsResult.toObject(p_result, { defaults: true, bytes: String });
+		const resp = QueryChaincodeDefinitionsResult.toObject(p_result, { defaults: true, bytes: String, longs: Number });
 		if (resp.chaincodeDefinitions) {
 			for (let i in resp.chaincodeDefinitions) {
 				resp.chaincodeDefinitions[i].validationParameter = decode_validationParameter(resp.chaincodeDefinitions[i].validationParameter);
