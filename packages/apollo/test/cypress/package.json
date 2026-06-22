@@ -26,7 +26,7 @@
     "cypress": "^14.5.4",
     "cypress-file-upload": "^5.0.8",
     "cypress-watch-and-reload": "^1.10.15",
-    "esbuild": "^0.25.1",
+    "esbuild": "^0.28.1",
     "ts-loader": "^9.4.4",
     "typescript": "^5.2.2"
   },
