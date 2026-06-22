@@ -44,7 +44,8 @@ var _ = Describe("Patch APIs", func() {
 					Name: "ca1",
 				},
 				CSP: &v1ca.BCCSP{
-					ProviderName: "sw",
+					Default: "SW",
+					SW:      &v1ca.SwOpts{},
 				},
 			},
 		}
@@ -163,7 +164,7 @@ var _ = Describe("Patch APIs", func() {
 				}
 
 				return config.CAConfig.CSP.ProviderName
-			}).Should(Equal("pkcs11"))
+			}).Should(Equal("PKCS11"))
 		})
 
 		By("setting new CA config values", func() {
@@ -336,7 +337,7 @@ var _ = Describe("Patch APIs", func() {
 				}
 
 				return config.CAConfig.CSP.ProviderName
-			}).Should(Equal("pkcs11"))
+			}).Should(Equal("PKCS11"))
 		})
 	})
 })
@@ -364,7 +365,7 @@ func addConfigPatch(req *api.UpdateRequest) {
 	caConfig := &v1ca.ServerConfig{
 		CAConfig: v1ca.CAConfig{
 			CSP: &v1ca.BCCSP{
-				ProviderName: "pkcs11",
+				ProviderName: "PKCS11",
 			},
 		},
 	}
