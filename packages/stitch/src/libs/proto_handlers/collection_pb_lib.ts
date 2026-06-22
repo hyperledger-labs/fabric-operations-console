@@ -152,7 +152,7 @@ export class CollectionLib {
 	__decode_collection_config_package(bin: Uint8Array, full: boolean) {
 		const CollectionConfigPackage = __pb_root.lookupType('protos.CollectionConfigPackage');
 		const p_result = CollectionConfigPackage.decode(bin);
-		let obj = CollectionConfigPackage.toObject(p_result, { defaults: true, bytes: Uint8Array });
+		let obj = CollectionConfigPackage.toObject(p_result, { defaults: true, bytes: Uint8Array, longs: Number });
 
 		if (obj && obj.config && full === true) {				// fully decode is requested
 			for (let i in obj.config) {
