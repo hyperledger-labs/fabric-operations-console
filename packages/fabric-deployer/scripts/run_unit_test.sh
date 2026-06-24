@@ -38,9 +38,18 @@ PKGS=`go list github.com/IBM-Blockchain/fabric-deployer/... | grep -v -f <(print
 COVERAGE=$TEST_COVERAGE
 if [ "$COVERAGE" = true ]; then
   go test -cover -v $PKGS | tee test.results
+  TEST_EXIT_CODE=${PIPESTATUS[0]}
   $PWD/scripts/check_test_results.sh test.results
+  CHECK_EXIT_CODE=$?
+  # Exit with non-zero if either tests failed or coverage check failed
+  if [ $TEST_EXIT_CODE -ne 0 ] || [ $CHECK_EXIT_CODE -ne 0 ]; then
+    exit 1
+  fi
 else
-  go test -cover $PKGS
+  go test -cover $PKGS 2>&1 | grep -v "no such tool \"covdata\""
+  # Capture the exit code from go test, ignoring the covdata warning
+  TEST_EXIT_CODE=${PIPESTATUS[0]}
+  exit $TEST_EXIT_CODE
 fi
 
-exit $?
+exit 0
