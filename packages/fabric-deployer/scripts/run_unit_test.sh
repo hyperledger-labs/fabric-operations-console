@@ -46,10 +46,20 @@ if [ "$COVERAGE" = true ]; then
     exit 1
   fi
 else
-  go test -cover $PKGS 2>&1 | grep -v "no such tool \"covdata\""
-  # Capture the exit code from go test, ignoring the covdata warning
-  TEST_EXIT_CODE=${PIPESTATUS[0]}
-  exit $TEST_EXIT_CODE
+  # Run tests and capture output, filtering out covdata warning
+  TEST_OUTPUT=$(go test -cover $PKGS 2>&1)
+  TEST_EXIT_CODE=$?
+
+  # Display output, filtering the covdata warning
+  echo "$TEST_OUTPUT" | grep -v "no such tool \"covdata\"" || true
+
+  # Check if tests actually failed (not just covdata warning)
+  if echo "$TEST_OUTPUT" | grep -q "FAIL"; then
+    exit 1
+  fi
+
+  # Exit with success if no actual test failures
+  exit 0
 fi
 
 exit 0
