@@ -28,7 +28,7 @@
 	},
 	"dependencies": {
 		"async": "^3.2.5",
-		"axios": "^1.15.2",
+		"axios": "^1.18.0",
 		"bn.js": "^5.2.3",
 		"body-parser": "^1.20.5",
 		"chokidar": "3.0.*",
