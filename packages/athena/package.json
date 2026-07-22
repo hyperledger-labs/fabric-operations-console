@@ -30,7 +30,7 @@
 		"async": "^3.2.5",
 		"axios": "^1.15.2",
 		"bn.js": "^5.2.3",
-		"body-parser": "^1.20.5",
+		"body-parser": "^1.20.6",
 		"chokidar": "3.0.*",
 		"compression": "^1.8.1",
 		"cors": "2.8.*",
