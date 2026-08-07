@@ -762,7 +762,7 @@ module.exports = function (logger, t, noInterval, noAutoRun) {
 			if (settings_doc.console_build_type === 'non-saas') {
 				console_type = 'support';
 			} else if (settings_doc.console_build_type === 'saas') {
-				console_type = 'ibp';
+				console_type = 'support';
 			}
 		}
 
