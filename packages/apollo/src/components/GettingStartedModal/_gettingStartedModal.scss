@@ -187,15 +187,14 @@
 	min-width: 22.75rem;
 	padding: 0.5rem;
 	position: relative;
+	align-items: center;
+	display: flex;
+	margin: 1rem 0;
 
 	.ibp--template--attached-file-name {
 		@include type-style('label-01');
 		padding-left: 0.75rem;
 	}
-
-	align-items: center;
-	display: flex;
-	margin: 1rem 0;
 
 	.ibp-template-remove-file-icon {
 		cursor: pointer;

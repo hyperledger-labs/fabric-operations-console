@@ -33,7 +33,11 @@ tags:
   - name: Administer the console
     description: APIs to change or monitor the Fabric Operations console.
   - name: Download examples
-    description: APIs to get postman collections and OpenAPI files.
+    description: APIs to get postman collections and swagger files.
+  - name: IBP Software APIs
+    description: APIs that are only available for IBP Software (OpenShift Container Platform or IBM Cloud Private)
+  - name: Manage identities in Vault
+    description: APIs to get, create, edit, or delete identities in Vault.
 #
 #
 #
@@ -4919,57 +4923,143 @@ paths:
               schema:
                 $ref: '#/components/schemas/Bad'
 
-  /ak/api/v3/configblocks/{id}:
-    post:
+  /ak/api/v3/vault/identity:
+    get:
       tags:
-        - Manage component
-      summary: Get a single config block tx
-      description: Create Channel with single config block
-      operationId: create_channel
-      parameters:
-        - $ref: "#/components/parameters/PathTxId"
-      requestBody:
-        description: The action to perform.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/StoreChannelConfigBlock"
-        required: true
-      x-sdk-operations:
-        request-examples:
-          curl:
-            - name: Example request
-              example:
-                - type: code
-                  lang: curl
-                  source:
-                    - |-
-                      curl -X POST "https://{REPLACE_HOSTNAME_AND_PORT}/api/v[123]/configblocks/{tx_id}" \
-                      -H "Content-Type: application/json" \
-                      -H "Authorization: Bearer {Access-Token}" \
-                      -d "{
-                            \"channel": "mychannel",
-                            \"block_b64": "string"
-                          }"
+        - Manage identities in Vault
+      summary: Get all identities from Vault.
+      description: Get all identities stored in Vault.
+      operationId: get_identities
+      x-ibm-events:
+        events:
+          - name: blockchain.identities.read
       responses:
         200:
-          description: Channel created successfully.
+          description: Request was successful.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/StoreChannelConfigBlockResponse"
+                $ref: '#/components/schemas/IdentitiesDto'
         401:
           description: Request is unauthorized (invalid credentials).
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Unauthorized"
+                $ref: '#/components/schemas/Unauthorized'
         403:
-          description: Request is bad (invalid syntax).
+          description: Request is forbidden (credentials lack permission).
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BadRequest"
+                $ref: '#/components/schemas/Forbidden'
+        '4XX':
+          description: Other error responses.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
+        '5XX':
+          description: Internal server error responses.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
+
+    put:
+      tags:
+        - Manage identities in Vault
+      summary: Create new or update existing identities in Vault.
+      description: Creates or updates all provided identities in Vault.
+      operationId: create_update_identities
+      requestBody:
+        description: Identies payload.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentitiesDto'
+      x-ibm-events:
+        events:
+          - name: blockchain.identity.save
+      responses:
+        200:
+          description: Request was successful. No content.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdentitiesDto'
+        401:
+          description: Request is unauthorized (invalid credentials).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        403:
+          description: Request is forbidden (credentials lack permission).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '4XX':
+          description: Other error responses.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
+        '5XX':
+          description: Internal server error responses.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
+
+  /ak/api/v3/vault/identity/{name}:
+    get:
+      tags:
+        - Manage identities in Vault
+      summary: Get identity data by secret name
+      description: Get the identity data by the name of the secret where the identity is stored.
+      operationId: get_identity
+      parameters:
+        - in: path
+          name: name
+          description: The name of the identity.
+          required: true
+          schema:
+            type: string
+      x-ibm-events:
+        events:
+          - name: blockchain.identities.read
+      responses:
+        200:
+          description: Request was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdentitiesDto'
+        401:
+          description: Request is unauthorized (invalid credentials).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        403:
+          description: Request is forbidden (credentials lack permission).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '4XX':
+          description: Other error responses.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
+        '5XX':
+          description: Internal server error responses.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseErrorResponse'
   #
   #
   #
@@ -8756,6 +8846,24 @@ components:
           description: The Kubernetes zone of this component's deployment. [Available on ca/peer/orderer components w/query parameter 'deployment_attrs']
           example: '-'
 
+    IdentitiesDto:
+      type: object
+      description: Contains identity objects. An identity object contains certificate and price key data.
+      additionalProperties:
+        type: object
+        $ref: '#/components/schemas/IdentityDto'
+
+    IdentityDto:
+      type: object
+      description: Identity object. Contains certificate and private key.
+      properties:
+        cert:
+          type: string
+          description: Contains the certificate.
+        private_key:
+          type: string
+          description: The private key of the identity
+
     PeerResponse:
       type: object
       description: Contains the details of a peer.
@@ -9199,6 +9307,10 @@ components:
               type: string
               example: v0.4.31
               description: The tag of the build powering this Fabric Operations console
+        IDENTITY_STORE_TYPE:
+          type: string
+          description: The type of identity store being used. 'vault' or 'local'
+          example: 'vault'
 
     GetNotificationsResponse:
       type: object
@@ -10317,6 +10429,20 @@ components:
             - missing
             - deleted
 
+    BaseErrorResponse:
+      type: object
+      description: Base error response to be used for common errors.
+      properties:
+        statusCode:
+          type: number
+          example: 404
+        msg:
+          type: string
+          example: Error while deleting identity secret with name <secret name>.
+        reason:
+          type: string
+          description: The original error or some other clarifying information.
+
     EmptyArrayResponse:
       type: object
       description: No components were found or exist.
@@ -11284,46 +11410,6 @@ components:
           type: string
           description: The latest config block of the system channel. Base 64 encoded. To obtain this block, you must use a **Fabric API**. This config block should list this ordering node as a valid consenter on the system-channel.
           example: bWFzc2l2ZSBiaW5hcnkgb2YgYSBjb25maWcgYmxvY2sgd291bGQgYmUgaGVyZSBpZiB0aGlzIHdhcyByZWFsLCBwbGVhc2UgZG9udCBzZW5kIHRoaXM=
-
-    StoreChannelConfigBlock:
-      type: object
-      required:
-        - channel
-        - block_b64
-      properties:
-        channel:
-          type: string
-          x-validate_regex_must_pass: channel_name
-          x-validate_regex_error_msg: "The channel name can contain only lowercase characters, numbers, or dashes, and should start with a letter."
-        block_b64:
-          type: string
-    StoreChannelConfigBlockResponse:
-      type: object
-      properties:
-        block_b64:
-          type: string
-          example: accepted
-        channel:
-          type: string
-          description: name of the channel.
-          example: mychannel
-        id:
-          type: string
-          description: id of the channel.
-          example: channelid
-        timestamp:
-          type: number
-          description: UNIX timestamp of component creation, UTC, ms.
-          example: 1549490200312
-        type:
-          type: string
-          description: block type
-          example: config-block
-        visibility:
-          type: string
-          description: visiblity level
-          example: inbox
-
   #
   #
   #

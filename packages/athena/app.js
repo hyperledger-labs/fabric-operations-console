@@ -408,6 +408,7 @@ function setup_routes_and_start() {
 	// ---------------
 	// Add other libs to tools
 	// ---------------
+	tools.vault_client = require('./libs/vault_client_lib.js')(logger, ev, tools);
 	tools.caches = require('./app_setup/cache.js')(logger, ev, tools);
 	tools.ca_lib = require('./libs/ca_lib.js')(logger, ev, tools);
 	tools.proxy_lib = require('./libs/proxy_lib.js')(logger, ev, tools);
@@ -513,6 +514,7 @@ function setup_routes_and_start() {
 	app.use('/', require('./routes/logging_apis.js')(logger, ev, tools));
 	app.use('/', require('./routes/other_apis.js')(logger, ev, tools));
 	app.use('/', require('./routes/component_apis.js')(logger, ev, tools));
+	app.use('/', require('./routes/vault_apis.js')(logger, ev, tools));
 	app.use('/', require('./routes/legacy/component_apis_v1.js')(logger, ev, tools));
 	app.use('/', require('./routes/proxy_apis.js')(logger, ev, tools));
 	app.use('/', require('./routes/deployer_apis.js')(logger, ev, tools));

@@ -44,11 +44,10 @@
 		}
 
 		.cds--header__menu-item {
+			cursor: pointer;
 			&:hover {
 				background-color: $itemBackground;
 			}
-
-			cursor: pointer;
 		}
 	}
 

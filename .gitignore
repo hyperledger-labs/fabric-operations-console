@@ -108,3 +108,6 @@ dist
 packages/athena/json_docs/json_validation/ibp_openapi_v3.publish.yaml
 packages/athena/env/dev.json
 .github/workflows/workspace.code-workspace
+
+# IDEs
+.idea

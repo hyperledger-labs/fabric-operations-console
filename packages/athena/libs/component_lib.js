@@ -1872,5 +1872,69 @@ module.exports = function (logger, ev, t) {
 		}
 	};
 
+	//--------------------------------------------------
+	// Get first msp_id from database for provided _id from components.
+	//--------------------------------------------------
+	exports.get_msp_ids_by_ids = (req, component_ids, cb) => {
+		const opts = {
+			db_name: ev.DB_COMPONENTS,		// db for peers/cas/orderers/msps/etc docs
+			_id: '_design/athena-v1',		// name of design doc
+			view: 'by_msp_id_not_empty',
+			SKIP_CACHE: t.ot_misc.skip_cache(req),
+			query: t.misc.formatObjAsQueryParams({ keys: component_ids }),
+			expires: 1000 * 60 * 5,
+		};
+
+		t.otcc.getDesignDocView(opts, (err, resp) => {
+			if (err) {
+				logger.error('[component] error getting components by components\' ids:', err);
+				return cb(err);
+			} else {
+				const id_msp_id_map = {};
+				if (resp) {
+					for (let i in resp.rows) {
+						const row = resp.rows[i];
+						if (row) {
+							id_msp_id_map[row.key] = row.value;
+						}
+					}
+				}
+				return cb(null, id_msp_id_map);
+			}
+		});
+	};
+
+	//--------------------------------------------------
+	// Get organizations by msp_id from database.
+	//--------------------------------------------------
+	exports.get_msp_by_msp_id = (req, msp_ids, cb) => {
+		const opts = {
+			db_name: ev.DB_COMPONENTS,		// db for peers/cas/orderers/msps/etc docs
+			_id: '_design/athena-v1',		// name of design doc
+			view: 'msp_by_msp_id',
+			SKIP_CACHE: t.ot_misc.skip_cache(req),
+			query: t.misc.formatObjAsQueryParams({ keys: msp_ids }),
+			expires: 1000 * 60 * 5,
+		};
+
+		t.otcc.getDesignDocView(opts, (err, resp) => {
+			if (err) {
+				logger.error('[component] error getting all runnable components:', err);
+				return cb(err);
+			} else {
+				const msp_map = {};
+				if (resp) {
+					for (let i in resp.rows) {
+						const row = resp.rows[i];
+						if (row) {
+							msp_map[row.key] = row.value;
+						}
+					}
+				}
+				return cb(null, msp_map);
+			}
+		});
+	};
+
 	return exports;
 };
