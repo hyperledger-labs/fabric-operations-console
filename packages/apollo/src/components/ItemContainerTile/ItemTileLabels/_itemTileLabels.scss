@@ -16,6 +16,7 @@
 
 		.ibp--item-location-icon {
 			fill: $cool-gray-30;
+			margin-right: 0.5rem;
 
 			&.ibp-item-location-icon-patch-available {
 				fill: $blue-50;
@@ -24,8 +25,6 @@
 			&.ibp-item-location-icon-needs-attention {
 				fill: $yellow-20;
 			}
-
-			margin-right: 0.5rem;
 		}
 	}
 

@@ -16,6 +16,7 @@
 import _ from 'lodash';
 import StitchApi from './StitchApi';
 import UserSettingsRestApi from './UserSettingsRestApi';
+import IdentityStoreFactory from '../identity_store/IdentityStoreFactory';
 import { EventsRestApi } from './EventsRestApi';
 const naturalSort = require('javascript-natural-sort');
 
@@ -24,10 +25,15 @@ const LOCAL_STORAGE_KEY = 'ibp_identities';
 class IdentityApi {
 	static userInfo = null;
 	static identityData = null;
+	static store = null;
 
 	static PEER_NODE_TYPE = 'peers';
 	static CA_NODE_TYPE = 'cas';
 	static ORDERER_NODE_TYPE = 'orderer';
+
+	static init(identityStorageType) {
+		IdentityApi.store = IdentityStoreFactory.getInstance(identityStorageType);
+	}
 
 	static async getKey() {
 		const returnKey = function () {
@@ -52,19 +58,13 @@ class IdentityApi {
 
 	static async load() {
 		const key = await IdentityApi.getKey();
-		const data = localStorage.getItem(key);
-		if (data) {
-			IdentityApi.identityData = await StitchApi.decrypt(data);
-		} else {
-			IdentityApi.identityData = {};
-		}
+		IdentityApi.identityData = await IdentityApi.store.get(key);
 		return IdentityApi.identityData;
 	}
 
 	static async save() {
 		const key = await IdentityApi.getKey();
-		const encrypted = await StitchApi.encrypt(IdentityApi.identityData);
-		localStorage.setItem(key, encrypted);
+		return IdentityApi.store.save(key, IdentityApi.identityData);
 	}
 
 	// delete/remove all identity data
@@ -163,13 +163,17 @@ class IdentityApi {
 		}
 	}
 
+	static canRemoveIdentity() {
+		return IdentityApi.store.canRemoveIdentity();
+	}
+
 	static async removeIdentity(name) {
 		await IdentityApi.load();
 		if (!IdentityApi.identityData[name]) {
 			throw String('identity does not exists');
 		} else {
-			delete IdentityApi.identityData[name];
-			await IdentityApi.save();
+      const key = await IdentityApi.getKey();
+      await IdentityApi.store.removeIdentity(name, key, IdentityApi.identityData);
 
 			try {
 				EventsRestApi.recordActivity({ status: 'success', log: 'removing identity from user\'s  wallet' });
@@ -177,6 +181,7 @@ class IdentityApi {
 				console.error('unable to record removing the identity', e);
 			}
 
+			await IdentityApi.load();
 			return IdentityApi.getArray();
 		}
 	}

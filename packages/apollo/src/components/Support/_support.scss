@@ -27,13 +27,12 @@
 }
 
 .support-contact-section {
+	padding-top: 3rem;
 	.support-contact-button {
 		@include type-style('body-short-02');
 		height: 5rem;
 		width: 100%;
 	}
-
-	padding-top: 3rem;
 
 	// .cds--btn--secondary
 	.ibp__add--item--button-with-text {
