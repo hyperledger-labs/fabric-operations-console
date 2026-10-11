@@ -32,7 +32,7 @@
 		"bn.js": "^5.2.3",
 		"body-parser": "^1.20.5",
 		"chokidar": "3.0.*",
-		"compression": "^1.8.1",
+		"compression": "^1.8.2",
 		"cors": "2.8.*",
 		"elliptic": "^6.6.1",
 		"express": "^4.22.2",
